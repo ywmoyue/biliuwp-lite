@@ -338,3 +338,8 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/src/BiliLite.JSBridge/BiliLite.JSBridge.csproj
+/src/BiliLite.UWP/BiliLite.UWP.csproj
+/src/BiliLite.UWP/Package.appxmanifest
+/src/BiliLite.UWP/BiliLite.UWP.csproj
+/src/BiliLite.UWP/Package.appxmanifest
