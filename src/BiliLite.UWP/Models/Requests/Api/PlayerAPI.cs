@@ -83,13 +83,13 @@ namespace BiliLite.Models.Requests.Api
             return api;
         }
 
-        public ApiModel LivePlayUrl(string cid, int qn = 0)
+        public ApiModel LivePlayUrl(string room_id, int qn = 0)
         {
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
-                baseUrl = $"https://api.live.bilibili.com/room/v1/Room/playUrl",
-                parameter = $"cid={cid}&qn={qn}&platform=web"
+                baseUrl = $"https://api.live.bilibili.com/xlive/web-room/v2/index/getRoomPlayInfo",
+                parameter = $"room_id={room_id}&qn={qn}&protocol=0,1&format=0,2&codec=0,1"  //"cid={cid}&qn={qn}&platform=web"
             };
             //api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidVideoKey);
             return api;
@@ -252,8 +252,9 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public string GenerateMPD(GenerateMPDModel generate)
         {
+            var baseUrl = SettingService.GetValue(SettingConstants.Other.BILI_LITE_WEB_API_BASE_URL, ApiConstants.BILI_LITE_WEB_API_DEFAULT_BASE_URL);
             var par = Newtonsoft.Json.JsonConvert.SerializeObject(generate);
-            return $"{ApiHelper.IL_BASE_URL}/api/player/generatempd?par={Uri.EscapeDataString(par)}";
+            return $"{baseUrl}api/player/generatempd?par={Uri.EscapeDataString(par)}";
         }
     }
 }
