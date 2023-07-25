@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Bilibili.Tv.Interfaces.Dm.V1;
 using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Services;
@@ -78,7 +79,7 @@ namespace BiliLite.Modules
             var playerInfo = new PlayerInfo();
             try
             {
-                var api = PlayerAPI.GetPlayerInfo(aid: aid, cid: cid, "");
+                var api = await PlayerAPI.GetPlayerInfo(aid: aid, cid: cid, "");
                 var result = await api.Request();
                 if (result.status)
                 {
@@ -133,7 +134,7 @@ namespace BiliLite.Modules
                 sw.Start();
 
                 var data = await PlayerAPI.SegDanmaku(cid, segment_index).url.GetStream();
-                var result = Proto.Reply.DmSegMobileReply.Parser.ParseFrom(data);
+                var result = DmSegMobileReply.Parser.ParseFrom(data);
                 foreach (var item in result.Elems)
                 {
                     NSDanmaku.Model.DanmakuLocation location = NSDanmaku.Model.DanmakuLocation.Scroll;
