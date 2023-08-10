@@ -171,4 +171,33 @@
         MultiFlv,
         Dash
     }
+
+    public enum DynamicType
+    {
+        /// <summary>
+        /// 用户关注动态
+        /// </summary>
+        UserDynamic,
+        /// <summary>
+        /// 话题动态
+        /// </summary>
+        Topic,
+        /// <summary>
+        /// 个人空间动态
+        /// </summary>
+        Space
+    }
+
+    public enum AnimeType
+    {
+        /// <summary>
+        /// 番剧
+        /// </summary>
+        Bangumi = 1,
+
+        /// <summary>
+        /// 国创
+        /// </summary>
+        GuoChuang = 4
+    }
 }
