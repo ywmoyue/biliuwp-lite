@@ -63,17 +63,17 @@
         /// <summary>
         /// 返回或关闭页面
         /// </summary>
-        Back=0,
+        Back = 0,
 
         /// <summary>
         /// 打开新标签页但不跳转 
         /// </summary>
-        NewTap=1,
+        NewTap = 1,
 
         /// <summary>
         /// 无操作
         /// </summary>
-        None=2,
+        None = 2,
     }
 
     public enum DownloadType
@@ -199,5 +199,20 @@
         /// 国创
         /// </summary>
         GuoChuang = 4
+    }
+
+    public enum DanmakuEngineType
+    {
+        NSDanmaku = 0,
+        FrostDanmakuMaster = 1,
+    }
+
+    public enum PlayUrlCodecMode
+    {
+        // int flv=0, dash=1,dash_hevc=2
+        FLV = 0,
+        DASH_H264 = 1,
+        DASH_H265 = 2,
+        DASH_AV1 = 3
     }
 }
