@@ -136,9 +136,18 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Models\Common\UserDynamic\UserDynamicCtrlItem.cs" />
+    <Compile Include="Models\Common\UserDynamic\UserDynamicDisplayTypesMap.cs" />
+    <Compile Include="Models\Common\UserDynamic\UserDynamicParseOneRowInfoActionsMap.cs" />
+    <Compile Include="ViewModels\UserDynamic\UserDynamicItemDisplayViewModel.cs" />
+    <Compile Include="Models\Common\UserDynamic\UserDynamicItemDisplayOneRowInfo.cs" />
+    <Compile Include="Models\Common\UserDynamic\UserDynamicItemDisplayImageInfo.cs" />
+    <Compile Include="Models\Common\UserDynamic\UserDynamicItemDisplayShortVideoInfo.cs" />
+    <Compile Include="Models\Common\UserDynamic\UserDynamicItemDisplayCommands.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Extensions\ColorExtensions.cs" />
     <Compile Include="Extensions\DanmakuExtensions.cs" />
+    <Compile Include="Models\Builders\DynamicItemDisplayModelBuilder.cs" />
     <Compile Include="Models\Common\ComboBoxItemData.cs" />
     <Compile Include="Models\Common\Comment\CommentItem.cs" />
     <Compile Include="Models\Common\Comment\CommentMemberFansDetailModel.cs" />
@@ -155,6 +164,7 @@
     <Compile Include="Models\Common\Comment\DataCommentModel.cs" />
     <Compile Include="Models\Common\Comment\LoadCommentInfo.cs" />
     <Compile Include="Models\Common\Danmaku\CompareDanmakuItem.cs" />
+    <Compile Include="Models\Common\UpdateJsonAddressOptions.cs" />
     <Compile Include="Models\Common\Player\ChangePlayerEngine.cs" />
     <Compile Include="Models\Common\Player\PlayerOpenResult.cs" />
     <Compile Include="Extensions\MapperExtensions.cs" />
@@ -205,6 +215,7 @@
     <Compile Include="Models\Common\Recommend\RecommendThreePointV2ItemModel.cs" />
     <Compile Include="Models\Common\Recommend\RecommendThreePointV2ItemReasonsModel.cs" />
     <Compile Include="Models\Common\Recommend\RecommendItemModel.cs" />
+    <Compile Include="Models\Exceptions\DynamicDisplayTypeUnsupportedException.cs" />
     <Compile Include="Models\Requests\ApiParams\RecommondFeedbackParams.cs" />
     <Compile Include="Controls\DataTemplateSelectors\DynamicItemDataTemplateSelector.cs" />
     <Compile Include="Models\Common\Dynamic\DynamicDescModel.cs" />
@@ -280,7 +291,7 @@
     <Compile Include="Models\Download\DownloadUrlInfo.cs" />
     <Compile Include="Models\Download\DownloadGUIDInfo.cs" />
     <Compile Include="Models\Download\DownloadInfo.cs" />
-    <Compile Include="Models\Common\CustomizedErrorException.cs" />
+    <Compile Include="Models\Exceptions\CustomizedErrorException.cs" />
     <Compile Include="Models\Common\Subtitle.cs" />
     <Compile Include="Models\Requests\Api\AccountApi.cs" />
     <Compile Include="Models\Responses\SearchSuggestResponse.cs" />
@@ -353,15 +364,14 @@
     <Compile Include="Controls\Dynamic\DynamicRepostControl.xaml.cs">
       <DependentUpon>DynamicRepostControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Dynamic\DisplayModel.cs" />
     <Compile Include="Controls\Dynamic\DynamicControl.xaml.cs">
       <DependentUpon>DynamicControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Dynamic\DynamicItemControl.xaml.cs">
       <DependentUpon>DynamicItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Dynamic\DynamicItemDataTemplateSelector.cs" />
-    <Compile Include="Controls\Dynamic\DynamicParse.cs" />
+    <Compile Include="Controls\DataTemplateSelectors\UserDynamicItemDataTemplateSelector.cs" />
+    <Compile Include="Extensions\DynamicParseExtensions.cs" />
     <Compile Include="Controls\ImageViewerControl.xaml.cs">
       <DependentUpon>ImageViewerControl.xaml</DependentUpon>
     </Compile>
@@ -451,7 +461,6 @@
     <Compile Include="Modules\Live\LiveCenter\LiveAttentionVM.cs" />
     <Compile Include="Modules\Live\LiveCenter\LiveCenterHistoryVM.cs" />
     <Compile Include="Modules\Live\LiveCenter\LiveCenterVM.cs" />
-    <Compile Include="Modules\Live\LiveDanmaku.cs" />
     <Compile Include="Modules\Live\LiveMessage.cs" />
     <Compile Include="Modules\Live\LiveRecommendVM.cs" />
     <Compile Include="Modules\Other\FindMoreVM.cs" />
@@ -473,8 +482,8 @@
     <Compile Include="Modules\IModules.cs" />
     <Compile Include="Modules\Detail\LiveRoomVM.cs" />
     <Compile Include="Modules\Home\LiveVM.cs" />
-    <Compile Include="Modules\User\DynamicRepostVM.cs" />
-    <Compile Include="Modules\User\DynamicVM.cs" />
+    <Compile Include="ViewModels\UserDynamic\UserDynamicRepostViewModel.cs" />
+    <Compile Include="ViewModels\UserDynamic\UserDynamicViewModel.cs" />
     <Compile Include="Modules\User\LoginVM.cs" />
     <Compile Include="Modules\User\SendDynamic\AtVM.cs" />
     <Compile Include="Modules\User\HistoryVM.cs" />
@@ -1028,6 +1037,9 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper">
       <Version>10.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="BrotliSharpLib">
+      <Version>0.3.3</Version>
     </PackageReference>
     <PackageReference Include="DanmakuFrostMaster.muyan">
       <Version>1.0.2</Version>

@@ -17,6 +17,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using BiliLite.Extensions;
 using BiliLite.Models.Common;
+using BiliLite.Models.Exceptions;
 using BiliLite.Services;
 
 namespace BiliLite.Modules
@@ -32,7 +33,7 @@ namespace BiliLite.Modules
         Live.LiveMessage liveMessage;
         public event EventHandler<LiveRoomPlayUrlModel> ChangedPlayUrl;
         public event EventHandler<LiveRoomEndAnchorLotteryInfoModel> LotteryEnd;
-        public event EventHandler<string> AddNewDanmu;
+        public event EventHandler<DanmuMsgModel> AddNewDanmu;
 
         readonly Timer timer;
         readonly Timer timer_box;
@@ -71,8 +72,7 @@ namespace BiliLite.Modules
                 case MessageType.ConnectSuccess:
                     Messages.Add(new DanmuMsgModel()
                     {
-                        username = message.ToString(),
-                        uname_color = new SolidColorBrush(Colors.Gray)
+                        UserName = message.ToString(),
                     });
                     break;
                 case MessageType.Online:
@@ -81,26 +81,13 @@ namespace BiliLite.Modules
                 case MessageType.Danmu:
                     {
                         var m = message as DanmuMsgModel;
-                        m.uname_color = new SolidColorBrush(Colors.Gray);
-                        if (m.medalColor != null && m.medalColor != "")
-                        {
-                            m.ul_color = new SolidColorBrush(m.ulColor.StrToColor());
-                        }
-                        else
-                        {
-                            m.ul_color = new SolidColorBrush(Colors.Gray);
-                        }
-                        if (m.medalColor != null && m.medalColor != "")
-                        {
-                            m.medal_color = new SolidColorBrush(m.medalColor.StrToColor());
-                        }
-
+                        m.ShowUserLevel=Visibility.Visible;
                         if (Messages.Count >= CleanCount)
                         {
                             Messages.Clear();
                         }
                         Messages.Add(m);
-                        AddNewDanmu?.Invoke(this, m.text);
+                        AddNewDanmu?.Invoke(this, m);
                     }
                     break;
                 case MessageType.Gift:
@@ -116,7 +103,7 @@ namespace BiliLite.Modules
                         ShowGiftMessage = true;
                         hide_gift_flag = 1;
                         var info = message as GiftMsgModel;
-                        info.gif = _allGifts.FirstOrDefault(x => x.id == info.giftId)?.gif ?? Constants.App.TRANSPARENT_IMAGE;
+                        info.Gif = _allGifts.FirstOrDefault(x => x.id == info.GiftId)?.gif ?? Constants.App.TRANSPARENT_IMAGE;
                         GiftMessage.Add(info);
                         if (!timer_auto_hide_gift.Enabled)
                         {
@@ -132,12 +119,9 @@ namespace BiliLite.Modules
                         {
                             Messages.Add(new DanmuMsgModel()
                             {
-                                isVip = ((info.svip) ? Visibility.Collapsed : Visibility.Visible),
-                                isBigVip = ((info.svip) ? Visibility.Visible : Visibility.Collapsed),
-                                hasUL = Visibility.Collapsed,
-                                username = info.uname,
-                                uname_color = new SolidColorBrush(Colors.HotPink),
-                                text = " 进入直播间"
+                                UserName = info.UserName,
+                                UserNameColor = "#FFFF69B4",//Colors.HotPink
+                                Text = " 进入直播间"
                             });
                         }
                     }
@@ -149,12 +133,9 @@ namespace BiliLite.Modules
                         {
                             Messages.Add(new DanmuMsgModel()
                             {
-                                isVip = ((info.svip) ? Visibility.Collapsed : Visibility.Visible),
-                                isBigVip = ((info.svip) ? Visibility.Visible : Visibility.Collapsed),
-                                hasUL = Visibility.Collapsed,
-                                username = info.uname,
-                                uname_color = new SolidColorBrush(Colors.HotPink),
-                                text = " (舰长)进入直播间"
+                                UserName = info.UserName,
+                                UserNameColor = "#FFFF69B4",//Colors.HotPink
+                                Text = " (舰长)进入直播间"
                             });
                         }
                     }
@@ -183,6 +164,23 @@ namespace BiliLite.Modules
                     break;
 
                 case MessageType.GuardBuy:
+                    {
+                        var info = message as GuardBuyMsgModel;
+                        Messages.Add(new DanmuMsgModel()
+                        {
+                            UserName = info.UserName,
+                            UserNameColor = "#FFFF69B4",//Colors.HotPink
+                            Text = $"成为了{info.GiftName}"
+                        });
+                        // 刷新舰队列表
+                        _ = GetGuardList();
+                    }
+                    break;
+                case MessageType.RoomChange:
+                    {
+                        var info = message as RoomChangeMsgModel;
+                        RoomTitle = info.Title;
+                    }
                     break;
                 default:
                     break;
@@ -277,6 +275,17 @@ namespace BiliLite.Modules
         /// 直播ID
         /// </summary>
         public int RoomID { get; set; }
+
+        private string _roomTitle;
+        /// <summary>
+        /// 房间标题
+        /// </summary>
+        public string RoomTitle
+        {
+            get { return _roomTitle; }
+            set { _roomTitle = value; DoPropertyChanged("RoomTitle"); }
+        }
+
 
         public ObservableCollection<DanmuMsgModel> Messages { get; set; }
         public ObservableCollection<GiftMsgModel> GiftMessage { get; set; }
@@ -488,7 +497,7 @@ namespace BiliLite.Modules
                 var acceptQnList = codec.accept_qn;
                 qualites ??= data.data.playurl_info.playurl.g_qn_desc.Where(item => acceptQnList.Contains(item.qn)).ToList();
                 current_qn = data.data.playurl_info.playurl.g_qn_desc.FirstOrDefault(x => x.qn == codec.current_qn);
-                
+
                 var urlList = codec.url_info.Select(urlInfo => new LiveRoomRealPlayUrlsModel { url = urlInfo.host + codec.base_url + urlInfo.extra, name = urlInfo.name }).ToList();
 
                 urls = urlList;
@@ -537,6 +546,7 @@ namespace BiliLite.Modules
                     if (data.success)
                     {
                         RoomID = data.data.room_info.room_id;
+                        RoomTitle = data.data.room_info.title;
                         Online = data.data.room_info.online;
                         Liveing = data.data.room_info.live_status == 1;
                         LiveInfo = data.data;
@@ -605,24 +615,31 @@ namespace BiliLite.Modules
                 {
                     uid = SettingService.Account.UserID;
                 }
-                if (liveMessage == null)
-                {
-                    liveMessage = new LiveMessage();
-                }
-                await liveMessage.Connect(roomId, uid, cancelSource.Token);
+                liveMessage ??= new LiveMessage();
+
+                var buvidResults = await liveRoomAPI.GetBuvid().Request();
+                var buvidData = await buvidResults.GetJson<ApiDataModel<LiveBuvidModel>>();
+                var buvid = buvidData.data.b_3;
+
+                var danmukuResults = await liveRoomAPI.GetDanmukuInfo(roomId).Request();
+                var danmukuData = await danmukuResults.GetJson<ApiDataModel<LiveDanmukuInfoModel>>();
+                var token = danmukuData.data.token;
+                var host = danmukuData.data.host_list[0].host;
+
+                await liveMessage.Connect(roomId, uid, token, buvid, host, cancelSource.Token);
             }
             catch (TaskCanceledException)
             {
                 Messages.Add(new DanmuMsgModel()
                 {
-                    username = "取消连接"
+                    UserName = "取消连接"
                 });
             }
             catch (Exception ex)
             {
                 Messages?.Add(new DanmuMsgModel()
                 {
-                    username = "连接失败:" + ex.Message
+                    UserName = "连接失败:" + ex.Message
                 });
             }
 
@@ -1885,6 +1902,24 @@ namespace BiliLite.Modules
             public int ts { get; set; }
             public string token { get; set; }
             public LiveRoomSuperChatUserInfoModel user_info { get; set; }
+        }
+
+        public class LiveDanmukuInfoModel
+        {
+            public string token { get; set; }
+
+            public List<LiveDanmukuHostModel> host_list { get; set; }
+        }
+
+        public class LiveDanmukuHostModel
+        {
+            public string host { get; set; }
+        }
+
+        public class LiveBuvidModel
+        {
+            public string b_3 { get; set; }
+            public string b_4 { get; set; }
         }
     }
 
