@@ -14,8 +14,9 @@ using System.ComponentModel;
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using BiliLite.Extensions;
-using BrotliSharpLib;
 using System.IO.Compression;
+using Brotli;
+
 /*
 * 参考文档:
 * https://github.com/lovelyyoshino/Bilibili-Live-API/blob/master/API.WebSocket.md
@@ -430,17 +431,8 @@ namespace BiliLite.Modules.Live
         /// <returns></returns>
         private byte[] DecompressDataWithBrotli(byte[] data)
         {
-            using var decompressedStream = new BrotliStream(new MemoryStream(data), CompressionMode.Decompress);
-            using var outBuffer = new MemoryStream();
-            var block = new byte[1024];
-            while (true)
-            {
-                var bytesRead = decompressedStream.Read(block, 0, block.Length);
-                if (bytesRead <= 0)
-                    break;
-                outBuffer.Write(block, 0, bytesRead);
-            }
-            return outBuffer.ToArray();
+            var decompressData = data.DecompressFromBrotli();
+            return decompressData;
         }
 
         public void Dispose()
