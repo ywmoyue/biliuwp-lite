@@ -9,14 +9,11 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media;
 using System.ComponentModel;
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using BiliLite.Extensions;
 using System.IO.Compression;
-using Brotli;
-using Google.Protobuf.WellKnownTypes;
 
 /*
 * 参考文档:
@@ -163,7 +160,7 @@ namespace BiliLite.Modules.Live
                     uid = uid,
                     buvid = buvid,
                     key = token,
-                    protover = 3,
+                    protover = 2,
                     //暂时不要加上platform，否则未登录时会隐藏用户名
                     //platform = "web"
                 }), 7), WebSocketMessageType.Binary, true, CancellationToken.None);
@@ -476,8 +473,7 @@ namespace BiliLite.Modules.Live
         /// <returns></returns>
         private byte[] DecompressDataWithBrotli(byte[] data)
         {
-            var decompressData = data.DecompressFromBrotli();
-            return decompressData;
+            throw new NotImplementedException();
         }
 
         public void Dispose()
