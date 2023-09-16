@@ -1,6 +1,6 @@
 {
-    "version": "4.6.14",
-    "version_num": 40614,
+    "version": "4.6.15",
+    "version_num": 40615,
     "version_desc": "更新内容:\r\n\r\n* 直播支持彩色弹幕\r\n\r\n* 支持设置检查版本更新使用的镜像git地址，支持手动检查版本更新\r\n\r\n* 修复部分视频启用长评论折叠后无响应\r\n\r\n* 修复播放视频获取弹幕不全\r\n\r\n* 修复直播接收弹幕不全r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
     "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
     "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
