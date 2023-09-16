@@ -1038,8 +1038,8 @@
     <PackageReference Include="AutoMapper">
       <Version>10.1.1</Version>
     </PackageReference>
-    <PackageReference Include="BrotliSharpLib">
-      <Version>0.3.3</Version>
+    <PackageReference Include="Brotli.NET">
+      <Version>2.1.1</Version>
     </PackageReference>
     <PackageReference Include="DanmakuFrostMaster.muyan">
       <Version>1.0.2</Version>

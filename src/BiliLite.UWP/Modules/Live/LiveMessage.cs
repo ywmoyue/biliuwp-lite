@@ -14,9 +14,10 @@ using System.ComponentModel;
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using BiliLite.Extensions;
-using BrotliSharpLib;
 using System.IO.Compression;
+using Brotli;
 using Google.Protobuf.WellKnownTypes;
+
 /*
 * 参考文档:
 * https://github.com/lovelyyoshino/Bilibili-Live-API/blob/master/API.WebSocket.md
@@ -234,7 +235,7 @@ namespace BiliLite.Modules.Live
                         {
                             msg.DanmuColor = color.ToString();
                         }
-                       
+
                         if (obj["info"][2] != null && obj["info"][2].ToArray().Length != 0)
                         {
                             msg.UserName = obj["info"][2][1].ToString() + ":";
@@ -303,7 +304,7 @@ namespace BiliLite.Modules.Live
                     {
                         w.UserName = obj["data"]["uname"].ToString();
                         w.UserID = obj["data"]["uid"].ToString();
-                       
+
                         NewMessage?.Invoke(MessageType.Welcome, w);
                     }
 
@@ -352,11 +353,11 @@ namespace BiliLite.Modules.Live
                     }
                     return;
                 }
-                if(cmd== "ROOM_CHANGE")
+                if (cmd == "ROOM_CHANGE")
                 {
                     if (obj["data"] != null)
                     {
-                        NewMessage?.Invoke(MessageType.RoomChange,new RoomChangeMsgModel()
+                        NewMessage?.Invoke(MessageType.RoomChange, new RoomChangeMsgModel()
                         {
                             Title = obj["data"]["title"].ToString(),
                             AreaID = obj["data"]["area_id"].ToInt32(),
@@ -475,17 +476,8 @@ namespace BiliLite.Modules.Live
         /// <returns></returns>
         private byte[] DecompressDataWithBrotli(byte[] data)
         {
-            using var decompressedStream = new BrotliStream(new MemoryStream(data), CompressionMode.Decompress);
-            using var outBuffer = new MemoryStream();
-            var block = new byte[1024];
-            while (true)
-            {
-                var bytesRead = decompressedStream.Read(block, 0, block.Length);
-                if (bytesRead <= 0)
-                    break;
-                outBuffer.Write(block, 0, bytesRead);
-            }
-            return outBuffer.ToArray();
+            var decompressData = data.DecompressFromBrotli();
+            return decompressData;
         }
 
         public void Dispose()
@@ -505,7 +497,7 @@ namespace BiliLite.Modules.Live
         /// <summary>
         /// 弹幕颜色，默认白色
         /// </summary>
-        public string DanmuColor { get; set; }= "#FFFFFFFF";
+        public string DanmuColor { get; set; } = "#FFFFFFFF";
         /// <summary>
         /// 用户名
         /// </summary>
@@ -570,7 +562,7 @@ namespace BiliLite.Modules.Live
         /// 是否显示用户等级
         /// </summary>
         public Visibility ShowUserLevel { get; set; } = Visibility.Collapsed;
-        
+
     }
     public class GiftMsgModel
     {
