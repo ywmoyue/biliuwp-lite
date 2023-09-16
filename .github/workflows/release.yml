@@ -7,6 +7,26 @@ on:
         description: '版本号'
         required: true
         default: '0.0.0.0'
+      enableX64:
+        description: '启用x64'
+        required: true
+        default: true
+        type: boolean
+      enableX86:
+        description: '启用x86'
+        required: true
+        default: true
+        type: boolean
+      enableArm64:
+        description: '启用Arm64'
+        required: true
+        default: true
+        type: boolean
+      enableArm32:
+        description: '启用Arm32'
+        required: true
+        default: false
+        type: boolean
 
 jobs:
   release:
@@ -39,6 +59,13 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: EchoInput
+      run: |
+         echo 启用x64编译 ${{ github.event.inputs.enableX64 }}
+         echo 启用x86编译 ${{ github.event.inputs.enableX86 }}
+         echo 启用Arm64编译 ${{ github.event.inputs.enableArm64 }}
+         echo 启用Arm编译 ${{ github.event.inputs.enableArm32 }}
+
     - name: Download and process necessary files
       run: |
         curl --location $env:Webdav_addr --header "$env:Webdav_auth" -o "$env:UWP_Project_Directory/$env:SigningCertificate" --insecure
@@ -59,30 +86,14 @@ jobs:
         version-sdk: 18362
         features: 'OptionId.WindowsPerformanceToolkit,OptionId.WindowsDesktopDebuggers,OptionId.AvrfExternal,OptionId.NetFxSoftwareDevelopmentKit,OptionId.WindowsSoftwareLogoToolkit,OptionId.IpOverUsb,OptionId.MSIInstallTools,OptionId.SigningTools,OptionId.UWPManaged,OptionId.UWPCPP,OptionId.UWPLocalized,OptionId.DesktopCPPx86,OptionId.DesktopCPPx64,OptionId.DesktopCPParm,OptionId.DesktopCPParm64'
 
-
     - name: Update manifest version
       run: |
         [xml]$manifest = get-content ".\$env:UWP_Project_Directory\Package.appxmanifest"
         $manifest.Package.Identity.Version = "${{github.event.inputs.version}}"
         $manifest.save(".\$env:UWP_Project_Directory\Package.appxmanifest")
-        
-    - name: Build x64
-      run: msbuild $env:UWP_Project_Directory /p:Platform=x64 /p:Configuration=Release /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=$env:SigningCertificatePasswd  /restore
-      env:
-        BuildMode: SideloadOnly
-        Configuration: Release
 
-    - name: Build x86
-      run: msbuild $env:UWP_Project_Directory /p:Platform=x86 /p:Configuration=Release /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=$env:SigningCertificatePasswd  /restore
-      env:
-        BuildMode: SideloadOnly
-        Configuration: Release
-
-    - name: Build ARM64
-      run: msbuild $env:UWP_Project_Directory /p:Platform=ARM64 /p:Configuration=Release /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=$env:SigningCertificatePasswd  /restore
-      env:
-        BuildMode: SideloadOnly
-        Configuration: Release
+    - name: Create Package Directory
+      run: New-Item -ItemType Directory -Path C:\Package
 
     - name: document processing
       run: |
@@ -91,51 +102,113 @@ jobs:
         npm install
         node index.js --waitTime=35000 --pageUrl="http://markdown.muyan233.top:352/?fileUrl=https%3A%2F%2Fraw.githubusercontent.com%2Fywmoyue%2Fbiliuwp-lite%2Fmaster%2Fdocument%2Finstall-readme.md" --pdfFilePath="安装教程.pdf"
         cd ..
-        cp ./OnlinePageToPDF-Node/安装教程.pdf ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x64_Test\安装教程.pdf
-        cp ./OnlinePageToPDF-Node/安装教程.pdf ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x86_Test\安装教程.pdf
-        cp ./OnlinePageToPDF-Node/安装教程.pdf ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_ARM64_Test\安装教程.pdf
-      
-    - name: Create Package Directory
-      run: New-Item -ItemType Directory -Path C:\Package
-      
+        cp ./OnlinePageToPDF-Node/安装教程.pdf C:\Package\安装教程.pdf
+        
+    - name: Build x64
+      run: |
+        msbuild $env:UWP_Project_Directory /p:Platform=x64 /p:Configuration=Release /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=$env:SigningCertificatePasswd  /restore
+      env:
+        BuildMode: SideloadOnly
+        Configuration: Release
+      if: github.event.inputs.enableX64 == 'true'
+
+    - name: copy x64 document
+      run: cp C:\Package\安装教程.pdf ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x64_Test\安装教程.pdf
+      if: github.event.inputs.enableX64 == 'true'
+
     - name: Create x64 archive
       run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x64_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x64.zip
-    
-    - name: Create x86 archive
-      run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x86_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x86.zip
-
-    - name: Create ARM64 archive
-      run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_ARM64_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_ARM64.zip
+      if: github.event.inputs.enableX64 == 'true'
 
     - name: Update x64 release asset
       id: upload-release-asset-x64
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN  }}
+      if: github.event.inputs.enableX64 == 'true'
       with:
         upload_url: ${{ steps.release-drafter.outputs.upload_url }}
         asset_path: C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x64.zip
         asset_name: ${{env.AppName}}_${{github.event.inputs.version}}_x64.zip
         asset_content_type: application/zip
-        
+
+    - name: Build x86
+      run: msbuild $env:UWP_Project_Directory /p:Platform=x86 /p:Configuration=Release /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=$env:SigningCertificatePasswd  /restore
+      if: github.event.inputs.enableX86 == 'true'
+      env:
+        BuildMode: SideloadOnly
+        Configuration: Release
+
+    - name: copy x86 document
+      run: cp C:\Package\安装教程.pdf ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x86_Test\安装教程.pdf
+      if: github.event.inputs.enableX86 == 'true'
+
+    - name: Create x86 archive
+      run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x86_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x86.zip
+      if: github.event.inputs.enableX86 == 'true'
+
     - name: Update x86 release asset
       id: upload-release-asset-x86
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN  }}
+      if: github.event.inputs.enableX86 == 'true'
       with:
         upload_url: ${{ steps.release-drafter.outputs.upload_url }}
         asset_path: C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x86.zip
         asset_name: ${{env.AppName}}_${{github.event.inputs.version}}_x86.zip
         asset_content_type: application/zip
 
+    - name: Build ARM64
+      run: msbuild $env:UWP_Project_Directory /p:Platform=ARM64 /p:Configuration=Release /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=$env:SigningCertificatePasswd  /restore
+      if: github.event.inputs.enableArm64 == 'true'
+      env:
+        BuildMode: SideloadOnly
+        Configuration: Release
+
+    - name: copy arm64 document
+      run: cp C:\Package\安装教程.pdf ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_ARM64_Test\安装教程.pdf
+      if: github.event.inputs.enableArm64 == 'true'
+
+    - name: Create ARM64 archive
+      run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_ARM64_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_ARM64.zip
+      if: github.event.inputs.enableArm64 == 'true'
+
     - name: Update ARM64 release asset
       id: upload-release-asset-ARM64
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN  }}
+      if: github.event.inputs.enableArm64 == 'true'
       with:
         upload_url: ${{ steps.release-drafter.outputs.upload_url }}
         asset_path: C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_ARM64.zip
         asset_name: ${{env.AppName}}_${{github.event.inputs.version}}_ARM64.zip
+        asset_content_type: application/zip
+
+    - name: Build ARM32
+      run: msbuild $env:UWP_Project_Directory /p:Platform=ARM /p:Configuration=Release /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=$env:SigningCertificatePasswd  /restore
+      if: github.event.inputs.enableArm32 == 'true'
+      env:
+        BuildMode: SideloadOnly
+        Configuration: Release
+
+    - name: copy arm32 document
+      run: cp C:\Package\安装教程.pdf ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_ARM_Test\安装教程.pdf
+      if: github.event.inputs.enableArm32 == 'true'
+
+    - name: Create ARM32 archive
+      run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_ARM_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_ARM.zip
+      if: github.event.inputs.enableArm32 == 'true'
+
+    - name: Update ARM32 release asset
+      id: upload-release-asset-ARM32
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN  }}
+      if: github.event.inputs.enableArm32 == 'true'
+      with:
+        upload_url: ${{ steps.release-drafter.outputs.upload_url }}
+        asset_path: C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_ARM.zip
+        asset_name: ${{env.AppName}}_${{github.event.inputs.version}}_ARM.zip
         asset_content_type: application/zip
