@@ -1675,7 +1675,11 @@ namespace BiliLite.Controls
             {
                 return;
             }
-            quality.DashInfo.Audio = soundQuality.Audio;
+
+            if (soundQuality != null)
+            {
+                quality.DashInfo.Audio = soundQuality.Audio;
+            }
             current_quality_info = quality;
             current_audio_quality_info = soundQuality;
             if (!await ChangeQualityGetPlayUrls(quality, soundQuality))
