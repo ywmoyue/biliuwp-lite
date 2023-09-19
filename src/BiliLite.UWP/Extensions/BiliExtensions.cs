@@ -89,6 +89,7 @@ namespace BiliLite.Extensions
                 var num = $"{SystemInformation.ApplicationVersion.Major}{SystemInformation.ApplicationVersion.Minor.ToString("00")}{SystemInformation.ApplicationVersion.Build.ToString("00")}";
                 _logger.Log($"BiliLite.UWP version: {num}", LogType.Necessary);
                 var result = await new GitApi().CheckUpdate().Request();
+                if (result == null || string.IsNullOrEmpty(result.results)) throw new Exception("请求更新信息失败");
                 var ver = JsonConvert.DeserializeObject<NewVersionResponse>(result.results);
                 var ignoreVersion = SettingService.GetValue(SettingConstants.Other.IGNORE_VERSION, "");
                 if (ignoreVersion.Equals(ver.Version)) return;
@@ -132,8 +133,9 @@ namespace BiliLite.Extensions
                     await dialog.ShowAsync();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.Error($"检查更新失败：{ex.Message}", ex);
             }
         }
     }
