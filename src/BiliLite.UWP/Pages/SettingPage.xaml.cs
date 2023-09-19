@@ -1008,7 +1008,7 @@ namespace BiliLite.Pages
                 case ApiHelper.KGITHUB_GIT_RAW_URL:
                     {
                         mirrorDonateText.Visibility = Visibility.Visible;
-                        mirrorDonateUrl.NavigateUri = new Uri("https://help.kgithub.com/donate");
+                        mirrorDonateUrl.NavigateUri = new Uri("https://help.kkgithub.com/donate");
                         break;
                     }
                 case ApiHelper.GIT_RAW_URL:
