@@ -121,7 +121,7 @@
                           HorizontalAlignment="Left" ItemsSource="{Binding Path=ImagesInfo}">
                     <GridView.ItemTemplate>
                         <DataTemplate>
-                            <HyperlinkButton Padding="0" Command="{Binding Path=UserDynamicItemDisplayCommands.ImageCommand}" CommandParameter="{Binding}">
+                            <HyperlinkButton Padding="0" Command="{Binding Path=ImageCommand}" CommandParameter="{Binding}">
                                 <Border  CornerRadius="4" >
                                     <controls:ImageEx  
                         IsCacheEnabled="True" 
