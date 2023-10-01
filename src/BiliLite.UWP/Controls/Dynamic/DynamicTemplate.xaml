@@ -153,24 +153,26 @@
         </Border>
     </DataTemplate>
     <DataTemplate x:Key="Season">
-        <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="0" Background="Transparent"  Command="{Binding Path=UserDynamicItemDisplayCommands.LaunchUrlCommand}" CommandParameter="{Binding Path=ContentDisplayInfo.Url}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
+        <StackPanel CornerRadius="8" Padding="12" Background="{ThemeResource CardColor}">
+            <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="0" Background="Transparent"  Command="{Binding Path=UserDynamicItemDisplayCommands.LaunchUrlCommand}" CommandParameter="{Binding Path=ContentDisplayInfo.Url}">
                 <Grid>
-                    <Border CornerRadius="4">
-                        <Image Source="{Binding Path=ContentDisplayInfo.Cover}" Width="160"></Image>
-                    </Border>
-                </Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Border CornerRadius="4">
+                            <Image Source="{Binding Path=ContentDisplayInfo.Cover}" Width="160"></Image>
+                        </Border>
+                    </Grid>
 
-                <StackPanel HorizontalAlignment="Stretch" Grid.Column="1" Margin="8 4 8 0">
-                    <TextBlock Text="{Binding Path=ContentDisplayInfo.Title}" Foreground="{ThemeResource TextColor}" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap"></TextBlock>
-                    <TextBlock Margin="0 8 0 0" Text="{Binding Path=ContentDisplayInfo.SubTitle}" FontSize="14" Foreground="Gray"></TextBlock>
-                </StackPanel>
-            </Grid>
-        </Button>
+                    <StackPanel HorizontalAlignment="Stretch" Grid.Column="1" Margin="8 4 8 0">
+                        <TextBlock Text="{Binding Path=ContentDisplayInfo.Title}" Foreground="{ThemeResource TextColor}" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap"></TextBlock>
+                        <TextBlock Margin="0 8 0 0" Text="{Binding Path=ContentDisplayInfo.SubTitle}" FontSize="14" Foreground="Gray"></TextBlock>
+                    </StackPanel>
+                </Grid>
+            </Button>
+        </StackPanel>
     </DataTemplate>
     <DataTemplate x:Key="Repost">
         <local:DynamicItemControl ViewModel="{Binding}">
