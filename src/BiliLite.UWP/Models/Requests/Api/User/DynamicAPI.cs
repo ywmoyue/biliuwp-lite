@@ -1,30 +1,12 @@
 ﻿using BiliLite.Models.Common;
 using BiliLite.Services;
 using System;
+using BiliLite.Models.Common.UserDynamic;
 
 namespace BiliLite.Models.Requests.Api.User
 {
     public class DynamicAPI
     {
-        public enum UserDynamicType
-        {
-            /// <summary>
-            /// 全部
-            /// </summary>
-            All = 0,
-            /// <summary>
-            /// 追番、追剧
-            /// </summary>
-            Season = 2,
-            /// <summary>
-            /// 视频
-            /// </summary>
-            Video = 1,
-            /// <summary>
-            /// 专栏
-            /// </summary>
-            Article = 3
-        }
         /// <summary>
         /// 读取动态列表
         /// </summary>

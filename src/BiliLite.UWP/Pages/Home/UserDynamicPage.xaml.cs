@@ -6,6 +6,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using BiliLite.Extensions;
+using BiliLite.Models.Common.UserDynamic;
 using BiliLite.ViewModels.UserDynamic;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -42,7 +43,7 @@ namespace BiliLite.Pages.Home
             repost.UserDynamicRepostViewModel.Clear();
         }
         string dynamic_id;
-        private void UserDynamicViewModelOpenCommentEvent(object sender, Controls.Dynamic.UserDynamicItemDisplayViewModel e)
+        private void UserDynamicViewModelOpenCommentEvent(object sender, UserDynamicItemDisplayViewModel e)
         {
             // splitView.IsPaneOpen = true;
             dynamic_id = e.DynamicID;
@@ -127,12 +128,9 @@ namespace BiliLite.Pages.Home
 
         private void pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if ((int)m_userDynamicViewModel.UserDynamicType != pivot.SelectedIndex)
-            {
-                m_userDynamicViewModel.UserDynamicType = (DynamicAPI.UserDynamicType)pivot.SelectedIndex;
-                m_userDynamicViewModel.Refresh();
-            }
-
+            if ((int)m_userDynamicViewModel.UserDynamicType == pivot.SelectedIndex) return;
+            m_userDynamicViewModel.UserDynamicType = (UserDynamicType)pivot.SelectedIndex;
+            m_userDynamicViewModel.Refresh();
         }
 
         private void btnGrid_Click(object sender, RoutedEventArgs e)

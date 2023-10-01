@@ -136,9 +136,12 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Models\Common\UserDynamic\IUserDynamicContentDisplayInfo.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicCtrlItem.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicDisplayTypesMap.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicParseOneRowInfoActionsMap.cs" />
+    <Compile Include="Models\Common\UserDynamic\UserDynamicSeasonDisplayInfo.cs" />
+    <Compile Include="Models\Common\UserDynamic\UserDynamicType.cs" />
     <Compile Include="ViewModels\UserDynamic\UserDynamicItemDisplayViewModel.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicItemDisplayOneRowInfo.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicItemDisplayImageInfo.cs" />

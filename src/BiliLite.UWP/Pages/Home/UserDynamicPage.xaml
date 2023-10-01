@@ -130,20 +130,9 @@
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
                                 <Setter Property="MaxWidth" Value="800"></Setter>
                                 <Setter Property="Margin" Value="4"></Setter>
-
                             </Style>
                         </controls:MyListView.ItemContainerStyle>
-                        <!--<ListView.ItemsPanel>-->
-                        <!--<ItemsPanelTemplate>
-                     
-                            <controls1:StaggeredPanel DesiredColumnWidth="500"
-                                             HorizontalAlignment="Stretch"
-                                             ColumnSpacing="-12"
-                                             RowSpacing="8" />
-                        </ItemsPanelTemplate>-->
 
-                        <!--</ListView.ItemsPanel>-->
-                        
                     </controls:MyListView>
                     <ProgressRing Grid.Row="1" VerticalAlignment="Bottom" Margin="8" IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_userDynamicViewModel.Loading,Mode=OneWay}"></ProgressRing>
                     <StackPanel Orientation="Vertical"  Grid.Row="1" VerticalAlignment="Bottom" Margin="20 12" HorizontalAlignment="Right">

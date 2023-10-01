@@ -248,6 +248,8 @@
         /// </summary>
         Season,
 
+        SeasonV2,
+
         /// <summary>
         /// 音乐
         /// </summary>

@@ -1,5 +1,5 @@
 ﻿using System;
-using BiliLite.Controls.Dynamic;
+using BiliLite.ViewModels.UserDynamic;
 
 namespace BiliLite.Models.Exceptions
 {

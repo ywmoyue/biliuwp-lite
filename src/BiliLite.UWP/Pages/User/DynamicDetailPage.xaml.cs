@@ -29,7 +29,7 @@ namespace BiliLite.Pages.User
             repost.UserDynamicRepostViewModel.Clear();
         }
         string dynamic_id;
-        private void UserDynamicViewModelOpenCommentEvent(object sender, Controls.Dynamic.UserDynamicItemDisplayViewModel e)
+        private void UserDynamicViewModelOpenCommentEvent(object sender, UserDynamicItemDisplayViewModel e)
         {
             //splitView.IsPaneOpen = true;
             dynamic_id = e.DynamicID;

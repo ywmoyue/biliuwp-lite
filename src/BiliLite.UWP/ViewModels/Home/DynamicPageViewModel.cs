@@ -8,6 +8,7 @@ using BiliLite.Controls.DataTemplateSelectors;
 using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Dynamic;
+using BiliLite.Models.Common.UserDynamic;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests.Api.User;
 using BiliLite.Models.Responses;
@@ -120,10 +121,10 @@ namespace BiliLite.ViewModels.Home
 
         private async Task<List<DynamicItemModel>> GetDynItems(string idx)
         {
-            var api = m_dynamicApi.DyanmicNew(DynamicAPI.UserDynamicType.Video);
+            var api = m_dynamicApi.DyanmicNew(UserDynamicType.Video);
             if (idx != "")
             {
-                api = m_dynamicApi.HistoryDynamic(idx, DynamicAPI.UserDynamicType.Video);
+                api = m_dynamicApi.HistoryDynamic(idx, UserDynamicType.Video);
             }
 
             var results = await api.Request();

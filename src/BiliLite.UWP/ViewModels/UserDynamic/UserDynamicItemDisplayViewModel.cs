@@ -5,7 +5,7 @@ using BiliLite.Models.Common.UserDynamic;
 using BiliLite.ViewModels.Common;
 using PropertyChanged;
 
-namespace BiliLite.Controls.Dynamic
+namespace BiliLite.ViewModels.UserDynamic
 {
     public class UserDynamicItemDisplayViewModel : BaseViewModel
     {
@@ -206,5 +206,7 @@ namespace BiliLite.Controls.Dynamic
 
         [DoNotNotify]
         public UserDynamicItemDisplayCommands UserDynamicItemDisplayCommands { get; set; }
+
+        public IUserDynamicContentDisplayInfo ContentDisplayInfo { get; set; }
     }
 }

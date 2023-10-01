@@ -6,11 +6,13 @@ using Bilibili.App.Dynamic.V2;
 using Bilibili.App.Interface.V1;
 using Bilibili.Tv.Interfaces.Dm.V1;
 using BiliLite.Controls.Dynamic;
+using BiliLite.Models.Common;
 using BiliLite.Models.Common.Anime;
 using BiliLite.Models.Common.Comment;
 using BiliLite.Models.Common.Dynamic;
 using BiliLite.Models.Common.Season;
 using BiliLite.Models.Common.User;
+using BiliLite.Models.Common.UserDynamic;
 using BiliLite.Models.Common.Video.Detail;
 using BiliLite.Models.Download;
 using BiliLite.Models.Dynamic;
@@ -19,8 +21,10 @@ using BiliLite.ViewModels.Comment;
 using BiliLite.ViewModels.Download;
 using BiliLite.ViewModels.Home;
 using BiliLite.ViewModels.Season;
+using BiliLite.ViewModels.UserDynamic;
 using BiliLite.ViewModels.Video;
 using Microsoft.Extensions.DependencyInjection;
+using DynamicType = Bilibili.App.Dynamic.V2.DynamicType;
 
 namespace BiliLite.Extensions
 {
@@ -75,7 +79,19 @@ namespace BiliLite.Extensions
                     .ForMember(dest => dest.Type, opt => opt.MapFrom(src => DynamicParseExtensions.ParseType(src.type)))
                     .ForMember(dest => dest.IsSelf, opt => opt.MapFrom(src => src.uid == SettingService.Account.UserID))
                     .ForMember(dest => dest.Liked, opt => opt.MapFrom(src => src.is_liked == 1));
+
+                expression.CreateMap<FollowListItem, UserDynamicItemDisplayViewModel>()
+                    .ForMember(dest => dest.Type, opt => opt.MapFrom(src => UserDynamicDisplayType.SeasonV2))
+                    .ForMember(dest => dest.ContentDisplayInfo, opt => opt.MapFrom(src =>
+                        new UserDynamicSeasonDisplayInfo()
+                        {
+                            Url = src.Url,
+                            Cover = src.Cover,
+                            SubTitle = src.SubTitle,
+                            Title = src.Title,
+                        }));
             }));
+
             services.AddSingleton<IMapper>(mapper);
             return services;
         }

@@ -53,7 +53,6 @@ namespace BiliLite.Services
 
         public async Task<DynVideoReply> GetDynVideo(int page, string historyOffset, string updateBaseline)
         {
-
             var message = new DynVideoReq()
             {
                 LocalTime = 8,
