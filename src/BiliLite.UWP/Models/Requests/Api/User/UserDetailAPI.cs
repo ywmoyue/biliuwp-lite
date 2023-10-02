@@ -126,13 +126,14 @@ namespace BiliLite.Models.Requests.Api.User
         /// <param name="page">页数</param>
         /// <param name="pagesize">每页数量</param>
         /// <returns></returns>
-        public ApiModel Followings(string mid, int page = 1, int pagesize = 30, int tid = 0, string keyword = "", FollowingsOrder order = FollowingsOrder.attention)
+        public async Task<ApiModel> Followings(string mid, int page = 1, int pagesize = 30, int tid = 0, string keyword = "", FollowingsOrder order = FollowingsOrder.attention)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/relation/followings",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&vmid={mid}&ps={pagesize}&pn={page}&order=desc&order_type={(order == FollowingsOrder.attention ? "attention" : "")}",
+                parameter = $"vmid={mid}&ps={pagesize}&pn={page}&order=desc&order_type={(order == FollowingsOrder.attention ? "attention" : "")}",
+                need_cookie = true,
             };
             if (tid == -1 && keyword != "")
             {
@@ -144,7 +145,7 @@ namespace BiliLite.Models.Requests.Api.User
                 api.baseUrl = $"{ApiHelper.API_BASE_URL}/x/relation/tag";
                 api.parameter += $"&tagid={tid}&mid={mid}";
             }
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter = await ApiHelper.GetWbiSign(api.parameter);
             return api;
         }
 
