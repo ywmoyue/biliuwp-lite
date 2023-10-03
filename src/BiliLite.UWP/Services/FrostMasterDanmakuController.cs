@@ -20,7 +20,7 @@ namespace BiliLite.Services
         {
             DanmakuViewModel = new DanmakuViewModel()
             {
-                ShowAreaControl = false,
+                ShowAreaControl = true,
                 ShowBoldControl = false,
                 ShowBoldStyleControl = false,
                 IsHide = false,
@@ -118,11 +118,17 @@ namespace BiliLite.Services
             m_danmakuMaster.SetIsTextBold(bold);
         }
 
-        public override void SetDensity(int density)
+        public override void SetArea(double area)
         {
-            base.SetDensity(density);
-            m_danmakuMaster.SetRollingDensity(density-1);
+            base.SetArea(area);
+            m_danmakuMaster.SetRollingAreaRatio((int)(area*10));
         }
+
+        //public override void SetDensity(int density)
+        //{
+        //    base.SetDensity(density);
+        //    //m_danmakuMaster.SetRollingDensity(density-1);
+        //}
 
         public override void Load(IEnumerable danmakuList)
         {

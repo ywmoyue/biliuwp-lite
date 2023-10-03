@@ -7,6 +7,7 @@ using BiliLite.Models.Common;
 using BiliLite.Models.Common.UserDynamic;
 using BiliLite.Models.Dynamic;
 using BiliLite.Models.Exceptions;
+using BiliLite.ViewModels.UserDynamic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

@@ -1,0 +1,162 @@
+labels:
+  - "bug"
+  - "待规划"
+body:
+  - type: textarea
+    id: description
+    validations:
+      required: true
+    attributes:
+      label: Bug 描述
+      description: 请简短的描述你遇到的问题
+
+  - type: textarea
+    id: steps
+    validations:
+      required: true
+    attributes:
+      label: 操作步骤
+      render: plain text
+      description: 详细描述复现问题的步骤
+      placeholder: |
+        示例步骤:
+        1. 打开应用
+        2. 进入 '...'
+        3. 点击 '....'
+        4. 滚动至 '....'
+        5. 发现问题
+
+  - type: textarea
+    id: expected-result
+    validations:
+      required: true
+    attributes:
+      label: 期望结果
+      description: 详细描述期望的正常表现
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 截图
+      description: 如果可以，提交截图更有助于我们分析问题
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志
+      description: 如果可以，提交日志更有助于我们分析问题。但请注意，日志可能泄露你的敏感信息，如果介意，可以在提交完issue后将日志文件发送至开发者邮箱
+      placeholder: |
+        日志文件在应用的设置页帮助页最底下可以找到
+        开发者邮箱在应用设置页关于页可以找到
+
+  - type: textarea
+    id: identify-bug
+    validations:
+      required: false
+    attributes:
+      label: 已定位描述
+      description: 如果你有一定的问题定位手段，描述一下你的分析过程
+      placeholder: |
+        可以不填，或在issue评论中给出
+
+  - type: dropdown
+    id: env-package-source
+    attributes:
+      label: 应用来源
+      description: 你是从哪里下载的应用呢？
+      options:
+        - Github/其他Github镜像站
+        - 其它
+      default: 0
+
+  - type: dropdown
+    id: install-mode
+    attributes:
+      multiple: true
+      label: 安装方式
+      description: 你安装应用使用的什么方式，如果是使用appx直接安装，建议试试卸载应用后使用脚本安装还会不会出现该问题
+      options:
+        - appx直接安装
+        - 脚本安装
+
+  - type: input
+    id: env-package-other-source
+    attributes:
+      label: 其它来源
+      description: 如果你是从其它地方下载的应用，请注明来源
+
+  - type: dropdown
+    id: env-os-version
+    attributes:
+      label: 系统版本
+      description: 选择一个你发现问题的系统版本
+      multiple: true
+      options:
+        - Windows 10 1809 (Build 17763)
+        - Windows 10 1903 (Build 18362)
+        - Windows 10 1909 (Build 18363)
+        - Windows 10 2004 (Build 19041)
+        - Windows 10 20H2 (Build 19042)
+        - Windows 10 21H1 (Build 19043)
+        - Windows 11 21H2 (Build 22000)
+        - 其它 (需注明)
+
+  - type: input
+    id: env-os-version-other
+    attributes:
+      label: 其它系统版本
+      description: 如果你是在特别的系统版本中运行应用，请注明系统版本
+
+  - type: dropdown
+    id: env-device-type
+    attributes:
+      multiple: true
+      label: 设备类型
+      description: 选择你当前运行应用的设备类型
+      options:
+        - 台式机
+        - 平板
+        - 笔记本
+        - 其他
+
+  - type: dropdown
+    id: env-arch
+    attributes:
+      multiple: true
+      label: 设备架构
+      description: 选择你当前运行应用的设备系统架构
+      options:
+        - x86
+        - x64
+        - Arm64
+      default: 1
+
+  - type: dropdown
+    id: app-arch
+    attributes:
+      multiple: true
+      label: 应用架构
+      description: 选择你当前运行应用的架构
+      options:
+        - x86
+        - x64
+        - Arm64
+      default: 1
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 备注
+      description: 添加你认为有必要的信息
+
+  - type: dropdown
+    id: contribute
+    attributes:
+      label: 代码贡献
+      description: 您是否愿意为此问题贡献代码？如果您有能力和时间，我们非常欢迎您提交代码来解决此问题，这将使项目更加完善和高效
+      options:
+        - 是，我愿意提交代码
+        - 我更擅长发现问题
+      default: 1
+    validations:
+      required: false

@@ -5,7 +5,8 @@
     xmlns:converters="using:BiliLite.Converters"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:local="using:BiliLite.Controls.Dynamic"
-    xmlns:dataTemplateSelectors="using:BiliLite.Controls.DataTemplateSelectors">
+    xmlns:dataTemplateSelectors="using:BiliLite.Controls.DataTemplateSelectors"
+    xmlns:userDynamic="using:BiliLite.ViewModels.UserDynamic">
     <dataTemplateSelectors:UserDynamicItemDataTemplateSelector x:Key="select" 
         TextTemplate="{StaticResource Text}"
         MissTemplate="{StaticResource Miss}"
@@ -14,6 +15,7 @@
         Photo2x2Template="{StaticResource Photo2x2}"
         Photo3x3Template="{StaticResource Photo3x3}"
         ShortVideoTemplate="{StaticResource ShortVideo}"
+        SeasonTemplate="{StaticResource Season}"
         OneRowTemplate="{StaticResource OneRow}"
         OtherTemplate="{StaticResource Other}">
     </dataTemplateSelectors:UserDynamicItemDataTemplateSelector>
@@ -121,7 +123,7 @@
                           HorizontalAlignment="Left" ItemsSource="{Binding Path=ImagesInfo}">
                     <GridView.ItemTemplate>
                         <DataTemplate>
-                            <HyperlinkButton Padding="0" Command="{Binding Path=UserDynamicItemDisplayCommands.ImageCommand}" CommandParameter="{Binding}">
+                            <HyperlinkButton Padding="0" Command="{Binding Path=ImageCommand}" CommandParameter="{Binding}">
                                 <Border  CornerRadius="4" >
                                     <controls:ImageEx  
                         IsCacheEnabled="True" 
@@ -149,6 +151,28 @@
                 <TextBlock Margin="0 0 8 0" Text="{Binding Path=ContentStr}" TextWrapping="Wrap" IsTextSelectionEnabled="True"></TextBlock>
             </StackPanel>
         </Border>
+    </DataTemplate>
+    <DataTemplate x:Key="Season">
+        <StackPanel CornerRadius="8" Padding="12" Background="{ThemeResource CardColor}">
+            <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="0" Background="Transparent"  Command="{Binding Path=UserDynamicItemDisplayCommands.LaunchUrlCommand}" CommandParameter="{Binding Path=ContentDisplayInfo.Url}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Border CornerRadius="4">
+                            <Image Source="{Binding Path=ContentDisplayInfo.Cover}" Width="160"></Image>
+                        </Border>
+                    </Grid>
+
+                    <StackPanel HorizontalAlignment="Stretch" Grid.Column="1" Margin="8 4 8 0">
+                        <TextBlock Text="{Binding Path=ContentDisplayInfo.Title}" Foreground="{ThemeResource TextColor}" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap"></TextBlock>
+                        <TextBlock Margin="0 8 0 0" Text="{Binding Path=ContentDisplayInfo.SubTitle}" FontSize="14" Foreground="Gray"></TextBlock>
+                    </StackPanel>
+                </Grid>
+            </Button>
+        </StackPanel>
     </DataTemplate>
     <DataTemplate x:Key="Repost">
         <local:DynamicItemControl ViewModel="{Binding}">

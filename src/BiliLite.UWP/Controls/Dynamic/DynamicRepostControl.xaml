@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    xmlns:dynamic="using:BiliLite.Controls.Dynamic"
+    xmlns:userDynamic="using:BiliLite.ViewModels.UserDynamic"
     d:DesignHeight="300"
     d:DesignWidth="400">
 
@@ -24,7 +24,7 @@
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="dynamic:UserDynamicItemDisplayViewModel">
+                <DataTemplate x:DataType="userDynamic:UserDynamicItemDisplayViewModel">
                     <StackPanel>
                         <HyperlinkButton Command="{x:Bind Path=UserDynamicItemDisplayCommands.UserCommand,Mode=OneWay}" CommandParameter="{x:Bind Path=Mid,Mode=OneWay}" Padding="0" VerticalAlignment="Top" >
                             <StackPanel Orientation="Horizontal" >

@@ -1,5 +1,4 @@
-﻿using BiliLite.Controls.Dynamic;
-using BiliLite.Models;
+﻿using BiliLite.Models;
 using BiliLite.Models.Requests.Api.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -15,6 +14,7 @@ using BiliLite.Extensions;
 using BiliLite.Models.Responses;
 using BiliLite.Models.Common;
 using BiliLite.Services;
+using BiliLite.ViewModels.UserDynamic;
 
 namespace BiliLite.Modules.User
 {

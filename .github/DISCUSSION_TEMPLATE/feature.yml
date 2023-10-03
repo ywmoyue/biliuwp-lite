@@ -1,0 +1,39 @@
+labels:
+  - "需求"
+  - "待规划"
+body:
+  - type: textarea
+    id: feature-description
+    validations:
+      required: true
+    attributes:
+      label: 问题描述
+      description: 描述你想要的功能的使用场景
+      placeholder: |
+        我想要xxx，以便于xxx
+
+  - type: textarea
+    id: solution-description
+    validations:
+      required: true
+    attributes:
+      label: 描述解决方案
+      description: 描述你期望的该功能的具体细节
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: 附加信息
+      description: 添加一些你认为有必要的备注信息，或者展示一些能表现你思路的草图/设计图
+
+  - type: dropdown
+    id: contribute
+    attributes:
+      label: 代码贡献
+      description: 您是否愿意为此需求贡献代码？如果您有能力和时间，我们非常欢迎您提交代码来实现此需求，这将使项目更加完善和高效
+      options:
+        - 是，我愿意提交代码
+        - 否
+      default: 1
+    validations:
+      required: false

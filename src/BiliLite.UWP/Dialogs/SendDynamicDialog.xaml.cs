@@ -1,5 +1,4 @@
-﻿using BiliLite.Controls.Dynamic;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Modules;
 using BiliLite.Modules.User;
@@ -8,6 +7,7 @@ using System;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using BiliLite.ViewModels.UserDynamic;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 

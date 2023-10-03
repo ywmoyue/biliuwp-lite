@@ -8,6 +8,7 @@ using Windows.Foundation;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 using AutoMapper;
+using Bilibili.App.Dynamic.V2;
 using BiliLite.Controls.Dynamic;
 using BiliLite.Dialogs;
 using BiliLite.Extensions;
@@ -30,6 +31,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using static BiliLite.Models.Requests.Api.User.DynamicAPI;
 using DynamicItemDataTemplateSelector = BiliLite.Controls.DataTemplateSelectors.DynamicItemDataTemplateSelector;
+using DynamicType = BiliLite.Models.Common.DynamicType;
 
 namespace BiliLite.ViewModels.UserDynamic
 {
@@ -42,6 +44,7 @@ namespace BiliLite.ViewModels.UserDynamic
         private DynamicItemDataTemplateSelector m_dynamicItemDataTemplateSelector;
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly IMapper m_mapper;
+        private readonly GrpcService m_grpcService;
 
         #endregion
 
@@ -50,6 +53,7 @@ namespace BiliLite.ViewModels.UserDynamic
         public UserDynamicViewModel()
         {
             m_mapper = App.ServiceProvider.GetRequiredService<IMapper>();
+            m_grpcService = App.ServiceProvider.GetService<GrpcService>();
             m_dynamicApi = new DynamicAPI();
             m_watchLaterVm = new WatchLaterVM();
             m_dynamicItemDataTemplateSelector = new DynamicItemDataTemplateSelector();
@@ -439,6 +443,18 @@ namespace BiliLite.ViewModels.UserDynamic
             }
         }
 
+        private async Task GetSeasonDynamic()
+        {
+            var result = await m_grpcService.GetDynVideo(0, string.Empty, string.Empty);
+            var dynItems = m_mapper.Map<IEnumerable<FollowListItem>, List<UserDynamicItemDisplayViewModel>>(
+                result.VideoFollowList.List);
+            dynItems.ForEach(x=>x.UserDynamicItemDisplayCommands=new UserDynamicItemDisplayCommands()
+            {
+                LaunchUrlCommand = LaunchUrlCommand
+            });
+            Items = new ObservableCollection<UserDynamicItemDisplayViewModel>(dynItems);
+        }
+
         private async Task GetDynamicDetailCore(string id)
         {
             var api = m_dynamicApi.DynamicDetail(id);
@@ -483,9 +499,15 @@ namespace BiliLite.ViewModels.UserDynamic
                 CanLoadMore = false;
                 Loading = true;
 
-                var results = await RequestGetDynamic(idx);
-
-                HandleDynamicResults(results);
+                if (UserDynamicType == UserDynamicType.Season)
+                {
+                    await GetSeasonDynamic();
+                }
+                else
+                {
+                    var results = await RequestGetDynamic(idx);
+                    HandleDynamicResults(results);
+                }
             }
             catch (CustomizedErrorException ex)
             {

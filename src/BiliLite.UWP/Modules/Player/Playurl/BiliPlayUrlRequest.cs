@@ -23,6 +23,8 @@ namespace BiliLite.Modules.Player.Playurl
         protected bool IsDownload { get; set; } = false;
         protected readonly PlayerAPI playerAPI = new PlayerAPI();
         protected readonly gRPC.Api.PlayURL playUrlApi = new PlayURL();
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+
         /// <summary>
         /// 是否开启替换CDN选项
         /// </summary>
@@ -126,7 +128,25 @@ namespace BiliLite.Modules.Player.Playurl
         private async Task<BiliDashItem> ParseBiliPlayUrlInfoAudioDash(BiliPlayUrlQualitesInfo info, JObject playUrlInfoResult,
             int quality, List<int> qualites, string userAgent, string referer, bool isProxy, int soundQualityId = 0)
         {
-            var audios = JsonConvert.DeserializeObject<List<DashItemModel>>(playUrlInfoResult["dash"]["audio"].ToString());
+            if (!playUrlInfoResult.TryGetValue("dash", out var dashData))
+            {
+                _logger.Warn("获取Dash数据失败");
+                return null;
+            }
+
+            if (!((JObject)dashData).TryGetValue("audio", out var audiosToken))
+            {
+                _logger.Warn("获取音频播放地址失败");
+                return null;
+            }
+
+            var audios = JsonConvert.DeserializeObject<List<DashItemModel>>(audiosToken.ToString());
+
+            if (audios == null)
+            {
+                _logger.Warn("获取音频播放地址失败");
+                return null;
+            }
 
             BiliFlacItem flacAudio;
 
@@ -194,7 +214,7 @@ namespace BiliLite.Modules.Player.Playurl
             BiliDashItem currentAudio = null;
 
             //部分视频没有音频文件
-            if (audios != null && audios.Count > 0)
+            if (audios.Any())
             {
                 var audioQuality = info.AudioQualites.FirstOrDefault(x => x.QualityID == soundQualityId);
                 var defaultAudio = qn > 64 ? audios.LastOrDefault() : audios.FirstOrDefault();
