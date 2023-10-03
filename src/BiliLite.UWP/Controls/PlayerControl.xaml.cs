@@ -530,6 +530,7 @@ namespace BiliLite.Controls
             {
                 if (miniWin) return;
                 SettingService.SetValue<double>(SettingConstants.VideoDanmaku.AREA, DanmuSettingArea.Value);
+                m_danmakuController.SetArea(DanmuSettingArea.Value);
             });
 
             //弹幕速度
@@ -559,11 +560,17 @@ namespace BiliLite.Controls
             //弹幕最大值
             DanmuSettingMaxNum.Value = SettingService.GetValue<double>(SettingConstants.VideoDanmaku.MAX_NUM, 0);
             m_danmakuController.SetDensity((int)DanmuSettingMaxNum.Value);
-            DanmuSettingMaxNum.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
+            DanmuSettingMaxNum.ValueChanged += async (e, args) =>
             {
                 SettingService.SetValue<double>(SettingConstants.VideoDanmaku.MAX_NUM, DanmuSettingMaxNum.Value);
                 m_danmakuController.SetDensity((int)DanmuSettingMaxNum.Value);
-            });
+                if (!m_useNsDanmaku)
+                {
+                    var segIndex = Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                    if (segIndex <= 0) segIndex = 1;
+                    await LoadDanmaku(segIndex);
+                }
+            };
 
             //弹幕云屏蔽等级
             DanmuSettingShieldLevel.Value = SettingService.GetValue<int>(SettingConstants.VideoDanmaku.SHIELD_LEVEL, 0);
@@ -820,8 +827,15 @@ namespace BiliLite.Controls
                 danmakus = danmakus.Where(x => !Regex.IsMatch(x.Text, item));
             }
 
-            //danmakus = danmakus.GroupBy(x => x.StartMs).ToDictionary(x => (int)x.Key, x => x.ToList())
-            //    .TakeIf(max > 0, max).SelectMany(x=>x.Value);
+            // 同屏密度
+            if (max > 0)
+            {
+                // 弹幕按每秒分组，每组取前x项
+                danmakus = danmakus.GroupBy(x => (x.StartMs / 1000) * 1000)
+                    .ToDictionary(x => (int)x.Key, x => x.ToList())
+                    .SelectMany(x => x.Value.Take(max));
+            }
+
             return danmakus.ToList();
         }
 
