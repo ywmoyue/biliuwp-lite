@@ -1,7 +1,7 @@
 {
-    "version": "4.6.15",
-    "version_num": 40615,
-    "version_desc": "更新内容:\r\n\r\n* 直播支持彩色弹幕\r\n\r\n* 支持设置检查版本更新使用的镜像git地址，支持手动检查版本更新\r\n\r\n* 修复部分视频启用长评论折叠后无响应\r\n\r\n* 修复播放视频获取弹幕不全\r\n\r\n* 修复直播接收弹幕不全r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+    "version": "4.6.16",
+    "version_num": 40616,
+    "version_desc": "更新内容:\r\n\r\n* 更换kgithub的最新域名\r\n\r\n* 优化使用寒霜弹幕使时的弹幕密度选项\r\n\r\n* 修复无音频视频无法播放问题\r\n\r\n* 修复动态图片2*2时无法点击查看大图\r\n\r\n* 修复首页动态页中追番追剧不显示\r\n\r\n* 修复关注列表与收藏夹不显示新用户及其发布视频\r\n\r\n* 修复弹幕显示区域选项不生效\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
     "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
     "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
