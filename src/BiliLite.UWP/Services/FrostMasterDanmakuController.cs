@@ -21,7 +21,7 @@ namespace BiliLite.Services
             DanmakuViewModel = new DanmakuViewModel()
             {
                 ShowAreaControl = true,
-                ShowBoldControl = false,
+                ShowBoldControl = true,
                 ShowBoldStyleControl = false,
                 IsHide = false,
             };
