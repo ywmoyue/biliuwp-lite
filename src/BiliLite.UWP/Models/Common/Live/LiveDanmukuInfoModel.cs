@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace BiliLite.Modules.LiveRoomDetailModels
+namespace BiliLite.Models.Common.Live
 {
     public class LiveDanmukuInfoModel
     {

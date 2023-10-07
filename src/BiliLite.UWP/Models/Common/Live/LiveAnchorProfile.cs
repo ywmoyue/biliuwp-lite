@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using BiliLite.Models.Common;
 using Newtonsoft.Json;
 
-namespace BiliLite.Modules.LiveRoomDetailModels
+namespace BiliLite.Models.Common.Live
 {
     public class LiveAnchorProfile
     {

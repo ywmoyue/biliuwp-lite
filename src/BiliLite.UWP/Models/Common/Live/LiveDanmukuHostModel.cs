@@ -1,4 +1,4 @@
-﻿namespace BiliLite.Modules.LiveRoomDetailModels
+﻿namespace BiliLite.Models.Common.Live
 {
     public class LiveDanmukuHostModel
     {

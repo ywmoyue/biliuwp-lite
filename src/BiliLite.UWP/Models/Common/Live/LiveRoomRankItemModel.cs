@@ -1,7 +1,6 @@
-﻿using BiliLite.Models.Common;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace BiliLite.Modules.LiveRoomDetailModels
+namespace BiliLite.Models.Common.Live
 {
     public class LiveRoomRankItemModel
     {

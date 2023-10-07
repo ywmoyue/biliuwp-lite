@@ -3,7 +3,6 @@ using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Modules;
 using BiliLite.Modules.Live;
-using BiliLite.Modules.LiveRoomDetailModels;
 using BiliLite.Services;
 using FFmpegInteropX;
 using Microsoft.UI.Xaml.Controls;
@@ -20,7 +19,6 @@ using Windows.Graphics.Imaging;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.System.Display;
-using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -30,6 +28,8 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Models.Common.Live;
+using BiliLite.ViewModels.Live;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -45,7 +45,7 @@ namespace BiliLite.Pages
         DisplayRequest dispRequest;
         readonly MediaSourceConfig _config;
         FFmpegInteropX.FFmpegMediaSource interopMSS;
-        LiveRoomVM liveRoomVM;
+        LiveRoomViewModel m_liveRoomViewModel;
         SettingVM settingVM;
         readonly MediaPlayer mediaPlayer;
         DispatcherTimer timer_focus;
@@ -70,7 +70,7 @@ namespace BiliLite.Pages
             controlTimer.Tick += ControlTimer_Tick;
             settingVM = new SettingVM();
 
-            liveRoomVM = new LiveRoomVM();
+            m_liveRoomViewModel = new LiveRoomViewModel();
             mediaPlayer = new MediaPlayer();
             mediaPlayer.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
             mediaPlayer.PlaybackSession.BufferingStarted += PlaybackSession_BufferingStarted;
@@ -79,9 +79,9 @@ namespace BiliLite.Pages
             mediaPlayer.MediaOpened += MediaPlayer_MediaOpened;
             mediaPlayer.MediaEnded += MediaPlayer_MediaEnded; ;
             mediaPlayer.MediaFailed += MediaPlayer_MediaFailed;
-            liveRoomVM.ChangedPlayUrl += LiveRoomVM_ChangedPlayUrl;
-            liveRoomVM.AddNewDanmu += LiveRoomVM_AddNewDanmu;
-            liveRoomVM.LotteryEnd += LiveRoomVM_LotteryEnd;
+            m_liveRoomViewModel.ChangedPlayUrl += LiveRoomViewModelChangedPlayUrl;
+            m_liveRoomViewModel.AddNewDanmu += LiveRoomViewModelAddNewDanmu;
+            m_liveRoomViewModel.LotteryEnd += LiveRoomViewModelLotteryEnd;
             this.Loaded += LiveDetailPage_Loaded;
             this.Unloaded += LiveDetailPage_Unloaded;
         }
@@ -117,7 +117,7 @@ namespace BiliLite.Pages
             }
 
         }
-        private void LiveRoomVM_LotteryEnd(object sender, LiveRoomEndAnchorLotteryInfoModel e)
+        private void LiveRoomViewModelLotteryEnd(object sender, LiveRoomEndAnchorLotteryInfoModel e)
         {
             var str = "";
             foreach (var item in e.AwardUsers)
@@ -130,7 +130,7 @@ namespace BiliLite.Pages
 
         }
 
-        private void LiveRoomVM_AddNewDanmu(object sender, DanmuMsgModel e)
+        private void LiveRoomViewModelAddNewDanmu(object sender, DanmuMsgModel e)
         {
             if (DanmuControl.Visibility == Visibility.Visible)
             {
@@ -156,7 +156,7 @@ namespace BiliLite.Pages
         {
             await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                liveRoomVM.Liveing = false;
+                m_liveRoomViewModel.Liveing = false;
                 url = "";
                 player.SetMediaPlayer(null);
             });
@@ -213,7 +213,7 @@ namespace BiliLite.Pages
             try
             {
                 var str = $"Url: {url}\r\n";
-                str += $"Quality: {liveRoomVM.current_qn.desc}({liveRoomVM.current_qn.qn})\r\n";
+                str += $"Quality: {m_liveRoomViewModel.CurrentQn.Desc}({m_liveRoomViewModel.CurrentQn.Qn})\r\n";
                 str += $"Video Codec: {interopMSS.CurrentVideoStream.CodecName}\r\nAudio Codec:{interopMSS.AudioStreams[0].CodecName}\r\n";
                 str += $"Resolution: {interopMSS.CurrentVideoStream.PixelWidth} x {interopMSS.CurrentVideoStream.PixelHeight}\r\n";
                 str += $"Video Bitrate: {interopMSS.CurrentVideoStream.Bitrate / 1024} Kbps\r\n";
@@ -261,12 +261,12 @@ namespace BiliLite.Pages
 
         string url = "";
         bool flag = false;
-        private void LiveRoomVM_ChangedPlayUrl(object sender, LiveRoomPlayUrlModel e)
+        private void LiveRoomViewModelChangedPlayUrl(object sender, LiveRoomPlayUrlModel e)
         {
             flag = true;
-            BottomCBLine.ItemsSource = liveRoomVM.urls;
+            BottomCBLine.ItemsSource = m_liveRoomViewModel.Urls;
             BottomCBLine.SelectedIndex = 0;
-            BottomCBQuality.SelectedItem = liveRoomVM.current_qn;
+            BottomCBQuality.SelectedItem = m_liveRoomViewModel.CurrentQn;
             flag = false;
         }
         private void LiveDetailPage_Unloaded(object sender, RoutedEventArgs e)
@@ -406,13 +406,13 @@ namespace BiliLite.Pages
                 interopMSS.Dispose();
                 interopMSS = null;
             }
-            liveRoomVM?.Dispose();
+            m_liveRoomViewModel?.Dispose();
             //取消屏幕常亮
             if (dispRequest != null)
             {
                 dispRequest = null;
             }
-            liveRoomVM = null;
+            m_liveRoomViewModel = null;
             SetFullScreen(false);
             MiniWidnows(false);
         }
@@ -424,13 +424,13 @@ namespace BiliLite.Pages
             {
                 LoadSetting();
                 roomid = e.Parameter.ToString();
-                await liveRoomVM.LoadLiveRoomDetail(roomid);
-                Title = liveRoomVM.LiveInfo.AnchorInfo.BaseInfo.Uname + "的直播间";
-                ChangeTitle(liveRoomVM.LiveInfo.AnchorInfo.BaseInfo.Uname + "的直播间");
+                await m_liveRoomViewModel.LoadLiveRoomDetail(roomid);
+                Title = m_liveRoomViewModel.LiveInfo.AnchorInfo.BaseInfo.Uname + "的直播间";
+                ChangeTitle(m_liveRoomViewModel.LiveInfo.AnchorInfo.BaseInfo.Uname + "的直播间");
             }
             else
             {
-                Title = (liveRoomVM.LiveInfo?.AnchorInfo?.BaseInfo?.Uname ?? "") + "直播间";
+                Title = (m_liveRoomViewModel.LiveInfo?.AnchorInfo?.BaseInfo?.Uname ?? "") + "直播间";
                 MessageCenter.ChangeTitle(this, Title);
             }
         }
@@ -520,11 +520,11 @@ namespace BiliLite.Pages
 
             //互动清理数量
             LiveSettingCount.Value = SettingService.GetValue<int>(SettingConstants.Live.DANMU_CLEAN_COUNT, 200);
-            liveRoomVM.CleanCount = LiveSettingCount.Value.ToInt32();
+            m_liveRoomViewModel.CleanCount = LiveSettingCount.Value.ToInt32();
             LiveSettingCount.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
             {
                 SettingService.SetValue(SettingConstants.Live.DANMU_CLEAN_COUNT, LiveSettingCount.Value);
-                liveRoomVM.CleanCount = LiveSettingCount.Value.ToInt32();
+                m_liveRoomViewModel.CleanCount = LiveSettingCount.Value.ToInt32();
             });
 
             //硬解视频
@@ -552,41 +552,41 @@ namespace BiliLite.Pages
             });
             //自动打开宝箱
             LiveSettingAutoOpenBox.IsOn = SettingService.GetValue<bool>(SettingConstants.Live.AUTO_OPEN_BOX, true);
-            liveRoomVM.AutoReceiveFreeSilver = LiveSettingAutoOpenBox.IsOn;
+            m_liveRoomViewModel.AutoReceiveFreeSilver = LiveSettingAutoOpenBox.IsOn;
             LiveSettingAutoOpenBox.Toggled += new RoutedEventHandler((e, args) =>
             {
-                liveRoomVM.AutoReceiveFreeSilver = LiveSettingAutoOpenBox.IsOn;
+                m_liveRoomViewModel.AutoReceiveFreeSilver = LiveSettingAutoOpenBox.IsOn;
                 SettingService.SetValue<bool>(SettingConstants.Live.AUTO_OPEN_BOX, LiveSettingAutoOpenBox.IsOn);
             });
 
             //屏蔽礼物信息
             LiveSettingDotReceiveGiftMsg.IsOn = SettingService.GetValue<bool>(SettingConstants.Live.HIDE_GIFT, false);
-            liveRoomVM.ReceiveGiftMsg = !LiveSettingDotReceiveGiftMsg.IsOn;
+            m_liveRoomViewModel.ReceiveGiftMsg = !LiveSettingDotReceiveGiftMsg.IsOn;
             LiveSettingDotReceiveGiftMsg.Toggled += new RoutedEventHandler((e, args) =>
             {
-                liveRoomVM.ReceiveGiftMsg = !LiveSettingDotReceiveGiftMsg.IsOn;
+                m_liveRoomViewModel.ReceiveGiftMsg = !LiveSettingDotReceiveGiftMsg.IsOn;
                 if (LiveSettingAutoOpenBox.IsOn)
                 {
-                    liveRoomVM.ShowGiftMessage = false;
+                    m_liveRoomViewModel.ShowGiftMessage = false;
                 }
                 SettingService.SetValue<bool>(SettingConstants.Live.HIDE_GIFT, LiveSettingDotReceiveGiftMsg.IsOn);
             });
 
             //屏蔽进场信息
             LiveSettingDotReceiveWelcomeMsg.IsOn = SettingService.GetValue<bool>(SettingConstants.Live.HIDE_WELCOME, false);
-            liveRoomVM.ReceiveWelcomeMsg = !LiveSettingDotReceiveWelcomeMsg.IsOn;
+            m_liveRoomViewModel.ReceiveWelcomeMsg = !LiveSettingDotReceiveWelcomeMsg.IsOn;
             LiveSettingDotReceiveWelcomeMsg.Toggled += new RoutedEventHandler((e, args) =>
             {
-                liveRoomVM.ReceiveWelcomeMsg = !LiveSettingDotReceiveWelcomeMsg.IsOn;
+                m_liveRoomViewModel.ReceiveWelcomeMsg = !LiveSettingDotReceiveWelcomeMsg.IsOn;
                 SettingService.SetValue<bool>(SettingConstants.Live.HIDE_WELCOME, LiveSettingDotReceiveWelcomeMsg.IsOn);
             });
 
             //屏蔽抽奖信息
             LiveSettingDotReceiveLotteryMsg.IsOn = SettingService.GetValue<bool>(SettingConstants.Live.HIDE_LOTTERY, false);
-            liveRoomVM.ReceiveLotteryMsg = !LiveSettingDotReceiveLotteryMsg.IsOn;
+            m_liveRoomViewModel.ReceiveLotteryMsg = !LiveSettingDotReceiveLotteryMsg.IsOn;
             LiveSettingDotReceiveWelcomeMsg.Toggled += new RoutedEventHandler((e, args) =>
             {
-                liveRoomVM.ReceiveLotteryMsg = !LiveSettingDotReceiveLotteryMsg.IsOn;
+                m_liveRoomViewModel.ReceiveLotteryMsg = !LiveSettingDotReceiveLotteryMsg.IsOn;
                 SettingService.SetValue<bool>(SettingConstants.Live.HIDE_LOTTERY, LiveSettingDotReceiveLotteryMsg.IsOn);
             });
 
@@ -643,8 +643,8 @@ namespace BiliLite.Pages
                 return;
             }
             var item = BottomCBQuality.SelectedItem as LiveRoomWebUrlQualityDescriptionItemModel;
-            SettingService.SetValue(SettingConstants.Live.DEFAULT_QUALITY, item.qn);
-            await liveRoomVM.GetPlayUrl(liveRoomVM.RoomID, item.qn);
+            SettingService.SetValue(SettingConstants.Live.DEFAULT_QUALITY, item.Qn);
+            await m_liveRoomViewModel.GetPlayUrl(m_liveRoomViewModel.RoomID, item.Qn);
         }
 
         private async void BottomCBLine_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -653,7 +653,7 @@ namespace BiliLite.Pages
             {
                 return;
             }
-            url = liveRoomVM.urls[BottomCBLine.SelectedIndex].url;
+            url = m_liveRoomViewModel.Urls[BottomCBLine.SelectedIndex].Url;
             await SetPlayer(url);
         }
 
@@ -745,13 +745,13 @@ namespace BiliLite.Pages
 
         private async void BottomBtnRefresh_Click(object sender, RoutedEventArgs e)
         {
-            await liveRoomVM.LoadLiveRoomDetail(roomid);
+            await m_liveRoomViewModel.LoadLiveRoomDetail(roomid);
         }
 
         private void btnSendGift_Click(object sender, RoutedEventArgs e)
         {
             var giftInfo = (sender as Button).DataContext as LiveGiftItem;
-            liveRoomVM.SendGift(giftInfo).RunWithoutAwait();
+            m_liveRoomViewModel.SendGift(giftInfo).RunWithoutAwait();
         }
 
         private async void TopBtnScreenshot_Click(object sender, RoutedEventArgs e)
@@ -804,12 +804,12 @@ namespace BiliLite.Pages
 
         private async void BtnOpenBox_Click(object sender, RoutedEventArgs e)
         {
-            await liveRoomVM.GetFreeSilver();
+            await m_liveRoomViewModel.GetFreeSilver();
         }
 
         private void BtnOpenUser_Click(object sender, RoutedEventArgs e)
         {
-            if (liveRoomVM.LiveInfo == null)
+            if (m_liveRoomViewModel.LiveInfo == null)
             {
                 return;
             }
@@ -818,7 +818,7 @@ namespace BiliLite.Pages
                 icon = Symbol.Account,
                 title = "用户信息",
                 page = typeof(UserInfoPage),
-                parameters = liveRoomVM.LiveInfo.RoomInfo.Uid
+                parameters = m_liveRoomViewModel.LiveInfo.RoomInfo.Uid
             });
         }
 
@@ -829,7 +829,7 @@ namespace BiliLite.Pages
                 Notify.ShowMessageToast("弹幕内容不能为空");
                 return;
             }
-            var result = await liveRoomVM.SendDanmu(DanmuText.Text);
+            var result = await m_liveRoomViewModel.SendDanmu(DanmuText.Text);
             if (result)
             {
                 DanmuText.Text = "";
@@ -839,12 +839,12 @@ namespace BiliLite.Pages
 
         private async void BtnAttention_Click(object sender, RoutedEventArgs e)
         {
-            if (liveRoomVM.LiveInfo != null)
+            if (m_liveRoomViewModel.LiveInfo != null)
             {
-                var result = await new VideoDetailPageViewModel().AttentionUP(liveRoomVM.LiveInfo.RoomInfo.Uid.ToString(), 1);
+                var result = await new VideoDetailPageViewModel().AttentionUP(m_liveRoomViewModel.LiveInfo.RoomInfo.Uid.ToString(), 1);
                 if (result)
                 {
-                    liveRoomVM.Attention = true;
+                    m_liveRoomViewModel.Attention = true;
                 }
             }
 
@@ -852,21 +852,21 @@ namespace BiliLite.Pages
 
         private async void BtnCacnelAttention_Click(object sender, RoutedEventArgs e)
         {
-            if (liveRoomVM.LiveInfo != null)
+            if (m_liveRoomViewModel.LiveInfo != null)
             {
-                var result = await new VideoDetailPageViewModel().AttentionUP(liveRoomVM.LiveInfo.RoomInfo.Uid.ToString(), 2);
+                var result = await new VideoDetailPageViewModel().AttentionUP(m_liveRoomViewModel.LiveInfo.RoomInfo.Uid.ToString(), 2);
                 if (result)
                 {
-                    liveRoomVM.Attention = false;
+                    m_liveRoomViewModel.Attention = false;
                 }
             }
         }
 
         private async void pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (pivot.SelectedIndex == 3 && liveRoomVM.Guards.Count == 0)
+            if (pivot.SelectedIndex == 3 && m_liveRoomViewModel.Guards.Count == 0)
             {
-                await liveRoomVM.GetGuardList();
+                await m_liveRoomViewModel.GetGuardList();
             }
         }
 
@@ -888,8 +888,8 @@ namespace BiliLite.Pages
             {
                 return;
             }
-            liveRoomVM.DoPropertyChanged("SelectRank");
-            var data = cb_Rank.SelectedItem as LiveRoomRankVM;
+            m_liveRoomViewModel.EmitSelectRankUpdate();
+            var data = cb_Rank.SelectedItem as LiveRoomRankViewModel;
             if (!data.Loading && data.Items.Count == 0)
             {
 
@@ -911,9 +911,9 @@ namespace BiliLite.Pages
 
         private async void BtnSendLotteryDanmu_Click(object sender, RoutedEventArgs e)
         {
-            if (liveRoomVM.anchorLotteryVM != null && liveRoomVM.anchorLotteryVM.LotteryInfo != null && !string.IsNullOrEmpty(liveRoomVM.anchorLotteryVM.LotteryInfo.Danmu))
+            if (m_liveRoomViewModel.AnchorLotteryViewModel != null && m_liveRoomViewModel.AnchorLotteryViewModel.LotteryInfo != null && !string.IsNullOrEmpty(m_liveRoomViewModel.AnchorLotteryViewModel.LotteryInfo.Danmu))
             {
-                var result = await liveRoomVM.SendDanmu(liveRoomVM.anchorLotteryVM.LotteryInfo.Danmu);
+                var result = await m_liveRoomViewModel.SendDanmu(m_liveRoomViewModel.AnchorLotteryViewModel.LotteryInfo.Danmu);
                 if (result)
                 {
                     Notify.ShowMessageToast("弹幕发送成功");
@@ -1140,13 +1140,13 @@ namespace BiliLite.Pages
         private async void btnSendBagGift_Click(object sender, RoutedEventArgs e)
         {
             var giftInfo = (sender as Button).DataContext as LiveGiftItem;
-            await Task.Run(() => liveRoomVM.SendBagGift(giftInfo)).ConfigureAwait(false);
+            await Task.Run(() => m_liveRoomViewModel.SendBagGift(giftInfo)).ConfigureAwait(false);
         }
         private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
         {
             DataRequest request = args.Request;
-            request.Data.Properties.Title = liveRoomVM.LiveInfo.RoomInfo.Title;
-            request.Data.SetWebLink(new Uri("https://live.bilibili.com/" + liveRoomVM.RoomID));
+            request.Data.Properties.Title = m_liveRoomViewModel.LiveInfo.RoomInfo.Title;
+            request.Data.SetWebLink(new Uri("https://live.bilibili.com/" + m_liveRoomViewModel.RoomID));
         }
         private void btnShare_Click(object sender, RoutedEventArgs e)
         {
@@ -1154,13 +1154,13 @@ namespace BiliLite.Pages
         }
         private void btnShareCopy_Click(object sender, RoutedEventArgs e)
         {
-            $"{liveRoomVM.LiveInfo.RoomInfo.Title} - {liveRoomVM.LiveInfo.AnchorInfo.BaseInfo.Uname}的直播间\r\nhttps://live.bilibili.com/{liveRoomVM.RoomID}".SetClipboard();
+            $"{m_liveRoomViewModel.LiveInfo.RoomInfo.Title} - {m_liveRoomViewModel.LiveInfo.AnchorInfo.BaseInfo.Uname}的直播间\r\nhttps://live.bilibili.com/{m_liveRoomViewModel.RoomID}".SetClipboard();
             Notify.ShowMessageToast("已复制内容到剪切板");
         }
 
         private void btnShareCopyUrl_Click(object sender, RoutedEventArgs e)
         {
-            ("https://live.bilibili.com/" + liveRoomVM.RoomID).SetClipboard();
+            ("https://live.bilibili.com/" + m_liveRoomViewModel.RoomID).SetClipboard();
             Notify.ShowMessageToast("已复制链接到剪切板");
         }
 

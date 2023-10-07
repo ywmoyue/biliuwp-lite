@@ -14,6 +14,7 @@ using BiliLite.Models.Common;
 using BiliLite.Services;
 using BiliLite.Extensions;
 using System.IO.Compression;
+using BiliLite.ViewModels.Live;
 
 /*
 * 参考文档:
@@ -522,7 +523,7 @@ namespace BiliLite.Modules.Live
         {
             get
             {
-                return LiveRoomVM.Titles.FirstOrDefault(x => x.Id == UserTitleID)?.Img;
+                return LiveRoomViewModel.Titles.FirstOrDefault(x => x.Id == UserTitleID)?.Img;
             }
         }
         /// <summary>

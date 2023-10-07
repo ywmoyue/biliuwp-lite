@@ -9,10 +9,10 @@
     xmlns:fa="using:FontAwesome5"
     mc:Ignorable="d"
     xmlns:danmaku="using:NSDanmaku.Controls"
-    xmlns:model="using:BiliLite.Modules.LiveRoomDetailModels"
     xmlns:model_live="using:BiliLite.Modules.Live"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:live="using:BiliLite.Models.Common.Live"
     Background="Transparent">
     <Page.Resources>
         <convert:DatetimeConvert x:Key="datetime" ></convert:DatetimeConvert>
@@ -351,7 +351,7 @@
                     </Grid>
                     <!--亮度-->
                     <Grid x:Name="BrightnessShield" Tapped="Grid_Tapped" Background="#99000000" Opacity="0"></Grid>
-                    <TextBlock Visibility="{x:Bind Path=liveRoomVM.Liveing,Mode=OneWay,Converter={StaticResource display}}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" Foreground="Gray">主播正在换女装</TextBlock>
+                    <TextBlock Visibility="{x:Bind Path=m_liveRoomViewModel.Liveing,Mode=OneWay,Converter={StaticResource display}}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" Foreground="Gray">主播正在换女装</TextBlock>
                     <StackPanel x:Name="PlayerLoading" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <ProgressRing IsActive="True" Width="56" Height="56"></ProgressRing>
                         <TextBlock x:Name="PlayerLoadText" TextAlignment="Center" Margin="0 8" Foreground="Gray">加载中</TextBlock>
@@ -377,7 +377,7 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock x:Name="TopTitle" VerticalAlignment="Center" Foreground="White" FontSize="18" Margin="12 0" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=liveRoomVM.RoomTitle,Mode=OneWay}"></TextBlock>
+                                <TextBlock x:Name="TopTitle" VerticalAlignment="Center" Foreground="White" FontSize="18" Margin="12 0" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=m_liveRoomViewModel.RoomTitle,Mode=OneWay}"></TextBlock>
                                 <StackPanel Grid.Column="1" Orientation="Horizontal">
 
                                     <Button x:Name="TopBtnShare" Foreground="White" Background="Transparent" Padding="0" Width="48" Height="48">
@@ -490,7 +490,7 @@
                                                 <KeyboardAccelerator Key="F5"></KeyboardAccelerator>
                                             </HyperlinkButton.KeyboardAccelerators>
                                         </HyperlinkButton>
-                                        <TextBlock x:Name="BottomTextPostion" VerticalAlignment="Center" Foreground="White" Margin="8 0" FontSize="18" Text="{x:Bind Path=liveRoomVM.LiveTime,Mode=OneWay}"></TextBlock>
+                                        <TextBlock x:Name="BottomTextPostion" VerticalAlignment="Center" Foreground="White" Margin="8 0" FontSize="18" Text="{x:Bind Path=m_liveRoomViewModel.LiveTime,Mode=OneWay}"></TextBlock>
 
 
                                         <Button x:Name="TopBtnOpenDanmaku" Click="TopBtnOpenDanmaku_Click" Visibility="{x:Bind Path=DanmuControl.Visibility,Mode=OneWay,Converter={StaticResource display}}" Background="Transparent" Padding="0" Width="48" Height="48">
@@ -558,10 +558,22 @@
                                             </Button.Flyout>
                                         </Button>
 
-                                        <ComboBox x:Name="BottomCBQuality" Visibility="{x:Bind Path=liveRoomVM.Liveing,Mode=OneWay}" ItemsSource="{x:Bind Path=liveRoomVM.qualites,Mode=OneWay}" SelectionChanged="BottomCBQuality_SelectionChanged" DisplayMemberPath="desc" ToolTipService.ToolTip="清晰度" HorizontalContentAlignment="Center" Style="{StaticResource PlayerComboBoxStyle}" Foreground="White" BorderThickness="0" FontSize="18" Width="80" VerticalAlignment="Center" Background="Transparent">
+                                        <ComboBox x:Name="BottomCBQuality" 
+                                                  Visibility="{x:Bind Path=m_liveRoomViewModel.Liveing,Mode=OneWay}" 
+                                                  ItemsSource="{x:Bind Path=m_liveRoomViewModel.Qualites,Mode=OneWay}" 
+                                                  SelectionChanged="BottomCBQuality_SelectionChanged" 
+                                                  DisplayMemberPath="Desc" 
+                                                  ToolTipService.ToolTip="清晰度" 
+                                                  HorizontalContentAlignment="Center" 
+                                                  Style="{StaticResource PlayerComboBoxStyle}" 
+                                                  Foreground="White" 
+                                                  BorderThickness="0" 
+                                                  FontSize="18" Width="80" 
+                                                  VerticalAlignment="Center" 
+                                                  Background="Transparent">
 
                                         </ComboBox>
-                                        <ComboBox x:Name="BottomCBLine"  Visibility="{x:Bind Path=liveRoomVM.Liveing,Mode=OneWay}" Width="80" SelectionChanged="BottomCBLine_SelectionChanged" DisplayMemberPath="name" ToolTipService.ToolTip="线路" HorizontalContentAlignment="Center" Style="{StaticResource PlayerComboBoxStyle}" Foreground="White" BorderThickness="0" FontSize="18" VerticalAlignment="Center" Background="Transparent">
+                                        <ComboBox x:Name="BottomCBLine"  Visibility="{x:Bind Path=m_liveRoomViewModel.Liveing,Mode=OneWay}" Width="80" SelectionChanged="BottomCBLine_SelectionChanged" DisplayMemberPath="Name" ToolTipService.ToolTip="线路" HorizontalContentAlignment="Center" Style="{StaticResource PlayerComboBoxStyle}" Foreground="White" BorderThickness="0" FontSize="18" VerticalAlignment="Center" Background="Transparent">
 
                                         </ComboBox>
 
@@ -618,35 +630,35 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Horizontal" >
-                        <Button Background="Transparent"  Margin="4" Visibility="{x:Bind Path=liveRoomVM.ShowBox,Mode=OneWay}">
+                        <Button Background="Transparent"  Margin="4" Visibility="{x:Bind Path=m_liveRoomViewModel.ShowBox,Mode=OneWay}">
                             <StackPanel>
                                 <Image Width="32" Height="32" Source="ms-appx:///Assets/Icon/ic_live_precious_box_closed.png"></Image>
-                                <TextBlock TextAlignment="Center" FontSize="12" Margin="0 4 0 0" Text="{x:Bind Path=liveRoomVM.BoxTime,Mode=OneWay}"></TextBlock>
+                                <TextBlock TextAlignment="Center" FontSize="12" Margin="0 4 0 0" Text="{x:Bind Path=m_liveRoomViewModel.BoxTime,Mode=OneWay}"></TextBlock>
                             </StackPanel>
                         </Button>
-                        <Button Click="BtnOpenBox_Click" Background="Transparent"  Margin="4" Visibility="{x:Bind Path=liveRoomVM.OpenBox,Mode=OneWay}">
+                        <Button Click="BtnOpenBox_Click" Background="Transparent"  Margin="4" Visibility="{x:Bind Path=m_liveRoomViewModel.OpenBox,Mode=OneWay}">
                             <StackPanel>
                                 <Image Width="32" Height="32" Source="ms-appx:///Assets/Icon/ic_live_precious_box_open.png"></Image>
                                 <TextBlock TextAlignment="Center" FontSize="12" Margin="0 4 0 0">可领取</TextBlock>
                             </StackPanel>
                         </Button>
-                        <Button Click="BtnOpenBox_Click" Visibility="{x:Bind Path=liveRoomVM.anchorLotteryVM.Show,Mode=OneWay}" Background="Transparent"  Margin="4" >
+                        <Button Click="BtnOpenBox_Click" Visibility="{x:Bind Path=m_liveRoomViewModel.AnchorLotteryViewModel.Show,Mode=OneWay}" Background="Transparent"  Margin="4" >
                             <StackPanel>
                                 <Image Width="32" Height="32" Source="ms-appx:///Assets/Live/lottery.png"></Image>
-                                <TextBlock TextAlignment="Center" FontSize="12" Margin="0 4 0 0" Text="{x:Bind Path=liveRoomVM.anchorLotteryVM.DownTime,Mode=OneWay}"></TextBlock>
+                                <TextBlock TextAlignment="Center" FontSize="12" Margin="0 4 0 0" Text="{x:Bind Path=m_liveRoomViewModel.AnchorLotteryViewModel.DownTime,Mode=OneWay}"></TextBlock>
                             </StackPanel>
                             <Button.Flyout>
                                 <Flyout x:Name="FlyoutLottery">
                                     <StackPanel Width="240">
                                         <Grid  Margin="0 0 0 4">
                                             <TextBlock FontSize="20" >天选时刻</TextBlock>
-                                            <TextBlock FontSize="20" HorizontalAlignment="Right" Text="{x:Bind Path=liveRoomVM.anchorLotteryVM.DownTime,Mode=OneWay}"></TextBlock>
+                                            <TextBlock FontSize="20" HorizontalAlignment="Right" Text="{x:Bind Path=m_liveRoomViewModel.AnchorLotteryViewModel.DownTime,Mode=OneWay}"></TextBlock>
                                         </Grid>
-                                        <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">奖品名称：</Run><Run Text="{x:Bind Path=liveRoomVM.anchorLotteryVM.LotteryInfo.AwardName,Mode=OneWay}"/></TextBlock>
-                                        <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">中奖人数：</Run><Run Text="{x:Bind Path=liveRoomVM.anchorLotteryVM.LotteryInfo.AwardNum,Mode=OneWay}"/>人</TextBlock>
-                                        <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">弹幕口令：</Run><Run Text="{x:Bind Path=liveRoomVM.anchorLotteryVM.LotteryInfo.Danmu,Mode=OneWay}"/></TextBlock>
-                                        <TextBlock Margin="0 4" TextWrapping="Wrap" Visibility="{x:Bind Path=liveRoomVM.anchorLotteryVM.LotteryInfo.ShowGift,Mode=OneWay}"><Run Foreground="Gray">赠送礼物：</Run><Run Text="{x:Bind Path=liveRoomVM.anchorLotteryVM.LotteryInfo.GiftName,Mode=OneWay}"/>x<Run Text="{x:Bind Path=liveRoomVM.anchorLotteryVM.LotteryInfo.GiftNum,Mode=OneWay}"/></TextBlock>
-                                        <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">限制条件：</Run><Run Text="{x:Bind Path=liveRoomVM.anchorLotteryVM.LotteryInfo.RequireText,Mode=OneWay}"/></TextBlock>
+                                        <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">奖品名称：</Run><Run Text="{x:Bind Path=m_liveRoomViewModel.AnchorLotteryViewModel.LotteryInfo.AwardName,Mode=OneWay}"/></TextBlock>
+                                        <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">中奖人数：</Run><Run Text="{x:Bind Path=m_liveRoomViewModel.AnchorLotteryViewModel.LotteryInfo.AwardNum,Mode=OneWay}"/>人</TextBlock>
+                                        <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">弹幕口令：</Run><Run Text="{x:Bind Path=m_liveRoomViewModel.AnchorLotteryViewModel.LotteryInfo.Danmu,Mode=OneWay}"/></TextBlock>
+                                        <TextBlock Margin="0 4" TextWrapping="Wrap" Visibility="{x:Bind Path=m_liveRoomViewModel.AnchorLotteryViewModel.LotteryInfo.ShowGift,Mode=OneWay}"><Run Foreground="Gray">赠送礼物：</Run><Run Text="{x:Bind Path=m_liveRoomViewModel.AnchorLotteryViewModel.LotteryInfo.GiftName,Mode=OneWay}"/>x<Run Text="{x:Bind Path=m_liveRoomViewModel.AnchorLotteryViewModel.LotteryInfo.GiftNum,Mode=OneWay}"/></TextBlock>
+                                        <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">限制条件：</Run><Run Text="{x:Bind Path=m_liveRoomViewModel.AnchorLotteryViewModel.LotteryInfo.RequireText,Mode=OneWay}"/></TextBlock>
                                         <Button x:Name="BtnSendLotteryDanmu" Click="BtnSendLotteryDanmu_Click" Margin="0 4 0 0" HorizontalAlignment="Stretch">一键发弹幕</Button>
                                     </StackPanel>
                                 </Flyout>
@@ -661,18 +673,18 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <StackPanel Margin="4" VerticalAlignment="Center" Visibility="{x:Bind Path=liveRoomVM.Logined,Mode=OneWay}">
+                        <StackPanel Margin="4" VerticalAlignment="Center" Visibility="{x:Bind Path=m_liveRoomViewModel.Logined,Mode=OneWay}">
                             <StackPanel Orientation="Horizontal">
                                 <Image Width="16" Source="ms-appx:///Assets/Icon/ic_live_center_silver_recharge.png"></Image>
-                                <TextBlock FontSize="12" Margin="8 0" VerticalAlignment="Center" Text="{x:Bind Path=liveRoomVM.WalletInfo.Silver,Converter={StaticResource numberToStringConvert},Mode=OneWay}"></TextBlock>
+                                <TextBlock FontSize="12" Margin="8 0" VerticalAlignment="Center" Text="{x:Bind Path=m_liveRoomViewModel.WalletInfo.Silver,Converter={StaticResource numberToStringConvert},Mode=OneWay}"></TextBlock>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal"  Margin="0 8 0 0" >
                                 <Image Width="16" Source="ms-appx:///Assets/Icon/ic_live_center_gold_recharge.png"></Image>
-                                <TextBlock FontSize="12" Margin="8 0" VerticalAlignment="Center" Text="{x:Bind Path=liveRoomVM.WalletInfo.Gold,Converter={StaticResource numberToStringConvert},Mode=OneWay}"></TextBlock>
+                                <TextBlock FontSize="12" Margin="8 0" VerticalAlignment="Center" Text="{x:Bind Path=m_liveRoomViewModel.WalletInfo.Gold,Converter={StaticResource numberToStringConvert},Mode=OneWay}"></TextBlock>
                             </StackPanel>
 
                         </StackPanel>
-                        <Button  Grid.Column="2" Visibility="{x:Bind Path=liveRoomVM.ShowBag,Mode=OneWay}" Command="{x:Bind Path=liveRoomVM.RefreshBagCommand}" Background="Transparent" Margin="4">
+                        <Button  Grid.Column="2" Visibility="{x:Bind Path=m_liveRoomViewModel.ShowBag,Mode=OneWay}" Command="{x:Bind Path=m_liveRoomViewModel.RefreshBagCommand}" Background="Transparent" Margin="4">
                             <StackPanel>
                                 <Grid Width="32" Height="32">
                                     <fa:FontAwesome  Icon="Solid_Sync"></fa:FontAwesome>
@@ -680,29 +692,29 @@
                                 <TextBlock  TextAlignment="Center" FontSize="12" Margin="0 4 0 0" Text="刷新"></TextBlock>
                             </StackPanel>
                         </Button>
-                        <Button Grid.Column="3" Background="Transparent" Margin="4" Command="{x:Bind Path=liveRoomVM.ShowBagCommand}">
+                        <Button Grid.Column="3" Background="Transparent" Margin="4" Command="{x:Bind Path=m_liveRoomViewModel.ShowBagCommand}">
                             <Grid>
                                 <StackPanel>
                                     <Grid Width="32" Height="32">
                                         <fa:FontAwesome Foreground="OrangeRed" Icon="Solid_Gift"></fa:FontAwesome>
                                     </Grid>
 
-                                    <TextBlock Visibility="{x:Bind Path=liveRoomVM.ShowBag,Mode=OneWay,Converter={StaticResource display}}" TextAlignment="Center" FontSize="12" Margin="0 4 0 0" Text="我的礼物"></TextBlock>
-                                    <TextBlock Visibility="{x:Bind Path=liveRoomVM.ShowBag,Mode=OneWay}" TextAlignment="Center" FontSize="12" Margin="0 4 0 0" Text="礼物列表"></TextBlock>
+                                    <TextBlock Visibility="{x:Bind Path=m_liveRoomViewModel.ShowBag,Mode=OneWay,Converter={StaticResource display}}" TextAlignment="Center" FontSize="12" Margin="0 4 0 0" Text="我的礼物"></TextBlock>
+                                    <TextBlock Visibility="{x:Bind Path=m_liveRoomViewModel.ShowBag,Mode=OneWay}" TextAlignment="Center" FontSize="12" Margin="0 4 0 0" Text="礼物列表"></TextBlock>
                                 </StackPanel>
 
                             </Grid>
                         </Button>
 
-                        <ScrollViewer Grid.Column="1" Visibility="{x:Bind Path=liveRoomVM.ShowBag,Mode=OneWay,Converter={StaticResource display}}" HorizontalScrollBarVisibility="Auto" HorizontalScrollMode="Enabled" >
-                            <ItemsControl  ItemsSource="{x:Bind Path=liveRoomVM.Gifts,Mode=OneWay}">
+                        <ScrollViewer Grid.Column="1" Visibility="{x:Bind Path=m_liveRoomViewModel.ShowBag,Mode=OneWay,Converter={StaticResource display}}" HorizontalScrollBarVisibility="Auto" HorizontalScrollMode="Enabled" >
+                            <ItemsControl  ItemsSource="{x:Bind Path=m_liveRoomViewModel.Gifts,Mode=OneWay}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <ItemsStackPanel Orientation="Horizontal"></ItemsStackPanel>
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
-                                    <DataTemplate x:DataType="model:LiveGiftItem">
+                                    <DataTemplate x:DataType="live:LiveGiftItem">
                                         <Button Background="Transparent"  Margin="4">
                                             <Grid>
                                                 <StackPanel>
@@ -743,15 +755,15 @@
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
                         </ScrollViewer>
-                        <ScrollViewer Grid.Column="1" Visibility="{x:Bind Path=liveRoomVM.ShowBag,Mode=OneWay}" HorizontalScrollBarVisibility="Auto" HorizontalScrollMode="Enabled" >
-                            <ItemsControl  ItemsSource="{x:Bind Path=liveRoomVM.BagGifts,Mode=OneWay}">
+                        <ScrollViewer Grid.Column="1" Visibility="{x:Bind Path=m_liveRoomViewModel.ShowBag,Mode=OneWay}" HorizontalScrollBarVisibility="Auto" HorizontalScrollMode="Enabled" >
+                            <ItemsControl  ItemsSource="{x:Bind Path=m_liveRoomViewModel.BagGifts,Mode=OneWay}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <ItemsStackPanel Orientation="Horizontal"></ItemsStackPanel>
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
-                                    <DataTemplate x:DataType="model:LiveGiftItem">
+                                    <DataTemplate x:DataType="live:LiveGiftItem">
                                         <Button Background="Transparent"  Margin="4">
                                             <Grid>
                                                 <StackPanel>
@@ -813,16 +825,16 @@
                     <HyperlinkButton Padding="0" Click="BtnOpenUser_Click">
                         <Ellipse Width="48" Height="48" >
                             <Ellipse.Fill>
-                                <ImageBrush Stretch="UniformToFill" ImageSource="{x:Bind Path=liveRoomVM.LiveInfo.AnchorInfo.BaseInfo.Face,Converter={StaticResource imageConvert2},ConverterParameter='64h',Mode=OneWay}"/>
+                                <ImageBrush Stretch="UniformToFill" ImageSource="{x:Bind Path=m_liveRoomViewModel.LiveInfo.AnchorInfo.BaseInfo.Face,Converter={StaticResource imageConvert2},ConverterParameter='64h',Mode=OneWay}"/>
                             </Ellipse.Fill>
                         </Ellipse>
                     </HyperlinkButton>
                     <StackPanel Grid.Column="1" Margin="8 0" VerticalAlignment="Center">
-                        <TextBlock Text="{x:Bind Path=liveRoomVM.LiveInfo.AnchorInfo.BaseInfo.Uname,Mode=OneWay}"></TextBlock>
-                        <TextBlock Margin="0 4 0 0" Foreground="Gray" FontSize="12"> 人气:<Run Text="{x:Bind Path=liveRoomVM.Online,Converter={StaticResource numberToStringConvert},Mode=OneWay}"/> 粉丝:<Run Text="{x:Bind Path=liveRoomVM.LiveInfo.AnchorInfo.RelationInfo.Attention,Converter={StaticResource numberToStringConvert},Mode=OneWay}"/></TextBlock>
+                        <TextBlock Text="{x:Bind Path=m_liveRoomViewModel.LiveInfo.AnchorInfo.BaseInfo.Uname,Mode=OneWay}"></TextBlock>
+                        <TextBlock Margin="0 4 0 0" Foreground="Gray" FontSize="12"> 人气:<Run Text="{x:Bind Path=m_liveRoomViewModel.Online,Converter={StaticResource numberToStringConvert},Mode=OneWay}"/> 粉丝:<Run Text="{x:Bind Path=m_liveRoomViewModel.LiveInfo.AnchorInfo.RelationInfo.Attention,Converter={StaticResource numberToStringConvert},Mode=OneWay}"/></TextBlock>
                     </StackPanel>
-                    <Button x:Name="BtnAttention" Click="BtnAttention_Click" FontSize="12" Visibility="{x:Bind Path=liveRoomVM.Attention,Mode=OneWay,Converter={StaticResource display}}" Grid.Column="2" Background="{ThemeResource HighLightColor}" Foreground="White">关注</Button>
-                    <Button x:Name="BtnCacnelAttention" Click="BtnCacnelAttention_Click" FontSize="12" Visibility="{x:Bind Path=liveRoomVM.Attention,Mode=OneWay}" Grid.Column="2">已关注</Button>
+                    <Button x:Name="BtnAttention" Click="BtnAttention_Click" FontSize="12" Visibility="{x:Bind Path=m_liveRoomViewModel.Attention,Mode=OneWay,Converter={StaticResource display}}" Grid.Column="2" Background="{ThemeResource HighLightColor}" Foreground="White">关注</Button>
+                    <Button x:Name="BtnCacnelAttention" Click="BtnCacnelAttention_Click" FontSize="12" Visibility="{x:Bind Path=m_liveRoomViewModel.Attention,Mode=OneWay}" Grid.Column="2">已关注</Button>
                 </Grid>
                 <Pivot Grid.Row="1" x:Name="pivot" SelectionChanged="pivot_SelectionChanged">
                     <PivotItem Margin="0">
@@ -837,7 +849,7 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <ScrollViewer VerticalAlignment="Top" Padding="0 0 0 8" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto" HorizontalScrollMode="Auto">
-                                <ItemsControl ItemsSource="{x:Bind Path=liveRoomVM.SuperChats,Mode=OneWay}">
+                                <ItemsControl ItemsSource="{x:Bind Path=m_liveRoomViewModel.SuperChats,Mode=OneWay}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <ItemsStackPanel Orientation="Horizontal"></ItemsStackPanel>
@@ -904,7 +916,7 @@
                                 </ItemsControl>
                             </ScrollViewer>
 
-                            <ListView x:Name="list_chat" Grid.Row="1" ItemsSource="{x:Bind Path=liveRoomVM.Messages,Mode=OneWay}" ItemTemplate="{StaticResource chat}" SelectionMode="None" IsItemClickEnabled="False" >
+                            <ListView x:Name="list_chat" Grid.Row="1" ItemsSource="{x:Bind Path=m_liveRoomViewModel.Messages,Mode=OneWay}" ItemTemplate="{StaticResource chat}" SelectionMode="None" IsItemClickEnabled="False" >
                                 <ListView.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView"/>
@@ -921,7 +933,7 @@
                             </ListView>
                             
                             
-                            <ListView ItemsSource="{x:Bind Path=liveRoomVM.GiftMessage,Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="False" Visibility="{x:Bind Path=liveRoomVM.ShowGiftMessage,Mode=OneWay}" Grid.Row="2" >
+                            <ListView ItemsSource="{x:Bind Path=m_liveRoomViewModel.GiftMessage,Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="False" Visibility="{x:Bind Path=m_liveRoomViewModel.ShowGiftMessage,Mode=OneWay}" Grid.Row="2" >
                                 <ListView.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <ItemsStackPanel VerticalAlignment="Bottom" ItemsUpdatingScrollMode="KeepLastItemInView"/>
@@ -954,28 +966,28 @@
                                 <Grid HorizontalAlignment="Center">
                                     <Ellipse Width="56" Height="56" >
                                         <Ellipse.Fill>
-                                            <ImageBrush Stretch="UniformToFill" ImageSource="{x:Bind Path=liveRoomVM.Profile.Face,Mode=OneWay,Converter={StaticResource imageConvert2},ConverterParameter='56h'}"/>
+                                            <ImageBrush Stretch="UniformToFill" ImageSource="{x:Bind Path=m_liveRoomViewModel.Profile.Face,Mode=OneWay,Converter={StaticResource imageConvert2},ConverterParameter='56h'}"/>
                                         </Ellipse.Fill>
                                     </Ellipse>
-                                    <Image Width="24" Height="24" HorizontalAlignment="Right" VerticalAlignment="Bottom" Source="{x:Bind Path=liveRoomVM.Profile.Verify,Mode=OneWay}"></Image>
+                                    <Image Width="24" Height="24" HorizontalAlignment="Right" VerticalAlignment="Bottom" Source="{x:Bind Path=m_liveRoomViewModel.Profile.Verify,Mode=OneWay}"></Image>
                                 </Grid>
 
 
-                                <TextBlock TextAlignment="Center" Text="{x:Bind Path=liveRoomVM.Profile.Uname,Mode=OneWay}"></TextBlock>
-                                <TextBlock TextAlignment="Center" FontSize="12" Foreground="Gray" Text="{x:Bind Path=liveRoomVM.Profile.Desc,Mode=OneWay}"></TextBlock>
+                                <TextBlock TextAlignment="Center" Text="{x:Bind Path=m_liveRoomViewModel.Profile.Uname,Mode=OneWay}"></TextBlock>
+                                <TextBlock TextAlignment="Center" FontSize="12" Foreground="Gray" Text="{x:Bind Path=m_liveRoomViewModel.Profile.Desc,Mode=OneWay}"></TextBlock>
 
                                 <TextBlock Margin="4">分区</TextBlock>
-                                <TextBlock Margin="4" Foreground="Gray" Text="{x:Bind Path=liveRoomVM.Profile.AreaName,Mode=OneWay}"></TextBlock>
+                                <TextBlock Margin="4" Foreground="Gray" Text="{x:Bind Path=m_liveRoomViewModel.Profile.AreaName,Mode=OneWay}"></TextBlock>
                                 <TextBlock Margin="4">荣誉</TextBlock>
-                                <GridView ItemsSource="{x:Bind Path=liveRoomVM.Profile.GloryInfo,Mode=OneWay}" HorizontalAlignment="Center" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden"  SelectionMode="None" IsItemClickEnabled="False">
+                                <GridView ItemsSource="{x:Bind Path=m_liveRoomViewModel.Profile.GloryInfo,Mode=OneWay}" HorizontalAlignment="Center" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden"  SelectionMode="None" IsItemClickEnabled="False">
                                     <GridView.ItemTemplate>
-                                        <DataTemplate>
-                                            <HyperlinkButton Padding="0" Margin="0" NavigateUri="{Binding jump_url}">
+                                        <DataTemplate x:DataType="live:LiveAnchorProfileGloryInfo">
+                                            <HyperlinkButton Padding="0" Margin="0" NavigateUri="{x:Bind JumpUrl}">
                                                 <StackPanel>
-                                                    <Image HorizontalAlignment="Center" Width="56" Height="56" Source="{Binding pic_url}"></Image>
-                                                    <TextBlock FontSize="12" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" Text="{Binding name}"></TextBlock>
-                                                    <TextBlock FontSize="10" HorizontalAlignment="Center" Foreground="Gray" TextTrimming="CharacterEllipsis" Text="{Binding activity_name}"></TextBlock>
-                                                    <TextBlock FontSize="10" HorizontalAlignment="Center" Foreground="Gray" TextTrimming="CharacterEllipsis" Text="{Binding activity_date}"></TextBlock>
+                                                    <Image HorizontalAlignment="Center" Width="56" Height="56" Source="{x:Bind PicUrl}"></Image>
+                                                    <TextBlock FontSize="12" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" Text="{x:Bind Name}"></TextBlock>
+                                                    <TextBlock FontSize="10" HorizontalAlignment="Center" Foreground="Gray" TextTrimming="CharacterEllipsis" Text="{x:Bind ActivityName}"></TextBlock>
+                                                    <TextBlock FontSize="10" HorizontalAlignment="Center" Foreground="Gray" TextTrimming="CharacterEllipsis" Text="{x:Bind ActivityDate}"></TextBlock>
                                                 </StackPanel>
                                             </HyperlinkButton>
 
@@ -1001,13 +1013,13 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <ComboBox x:Name="cb_Rank" SelectionChanged="cb_Rank_SelectionChanged"  ItemsSource="{x:Bind Path=liveRoomVM.Ranks,Mode=OneWay}" SelectedItem="{x:Bind Path=liveRoomVM.SelectRank,Mode=TwoWay}" HorizontalAlignment="Stretch" Margin="8 4" DisplayMemberPath="Title"></ComboBox>
+                            <ComboBox x:Name="cb_Rank" SelectionChanged="cb_Rank_SelectionChanged"  ItemsSource="{x:Bind Path=m_liveRoomViewModel.Ranks,Mode=OneWay}" SelectedItem="{x:Bind Path=m_liveRoomViewModel.SelectRank,Mode=TwoWay}" HorizontalAlignment="Stretch" Margin="8 4" DisplayMemberPath="Title"></ComboBox>
                             <Grid Grid.Row="1">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8 0">
                                     <StackPanel>
-                                        <ListView ItemClick="ListView_ItemClick" ItemsSource="{x:Bind Path=liveRoomVM.SelectRank.Items,Mode=OneWay}" Margin="0 8" SelectionMode="None" IsItemClickEnabled="True">
+                                        <ListView ItemClick="ListView_ItemClick" ItemsSource="{x:Bind Path=m_liveRoomViewModel.SelectRank.Items,Mode=OneWay}" Margin="0 8" SelectionMode="None" IsItemClickEnabled="True">
                                             <ListView.ItemTemplate>
-                                                <DataTemplate x:DataType="model:LiveRoomRankItemModel">
+                                                <DataTemplate x:DataType="live:LiveRoomRankItemModel">
                                                     <Grid >
                                                         <StackPanel Orientation="Horizontal">
                                                             <TextBlock Width="20" TextAlignment="Center" FontWeight="Bold" Text="{x:Bind Rank}" VerticalAlignment="Center"></TextBlock>
@@ -1047,26 +1059,26 @@
                                             </ListView.ItemContainerStyle>
 
                                         </ListView>
-                                        <HyperlinkButton  Command="{x:Bind Path=liveRoomVM.SelectRank.LoadMoreCommand,Mode=OneWay}" Visibility="{x:Bind Path=liveRoomVM.SelectRank.CanLoadMore,Mode=OneWay}" Foreground="Gray" HorizontalAlignment="Center" >
+                                        <HyperlinkButton  Command="{x:Bind Path=m_liveRoomViewModel.SelectRank.LoadMoreCommand,Mode=OneWay}" Visibility="{x:Bind Path=m_liveRoomViewModel.SelectRank.CanLoadMore,Mode=OneWay}" Foreground="Gray" HorizontalAlignment="Center" >
                                             <TextBlock>加载更多</TextBlock>
                                         </HyperlinkButton>
-                                        <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=liveRoomVM.SelectRank.Loading,Mode=OneWay}"></ProgressRing>
+                                        <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_liveRoomViewModel.SelectRank.Loading,Mode=OneWay}"></ProgressRing>
                                     </StackPanel>
                                 </ScrollViewer>
-                                <TextBlock  Visibility="{x:Bind Path=liveRoomVM.SelectRank.Items.Count,Mode=OneWay,Converter={StaticResource display},ConverterParameter=0}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Gray">好像还没有榜单啊</TextBlock>
+                                <TextBlock  Visibility="{x:Bind Path=m_liveRoomViewModel.SelectRank.Items.Count,Mode=OneWay,Converter={StaticResource display},ConverterParameter=0}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Gray">好像还没有榜单啊</TextBlock>
                             </Grid>
                         </Grid>
                     </PivotItem>
                     <PivotItem Margin="0">
                         <PivotItem.Header>
-                            <TextBlock FontSize="16">大航海(<Run Text="{x:Bind Path=liveRoomVM.LiveInfo.GuardInfo.Count,Mode=OneWay}"/>)</TextBlock>
+                            <TextBlock FontSize="16">大航海(<Run Text="{x:Bind Path=m_liveRoomViewModel.LiveInfo.GuardInfo.Count,Mode=OneWay}"/>)</TextBlock>
                         </PivotItem.Header>
                         <Grid>
                             <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8 0">
                                 <StackPanel>
-                                    <ListView x:Name="list_Guard" ItemClick="list_Guard_ItemClick" ItemsSource="{x:Bind Path=liveRoomVM.Guards,Mode=OneWay}" Margin="0 8" SelectionMode="None" IsItemClickEnabled="True">
+                                    <ListView x:Name="list_Guard" ItemClick="list_Guard_ItemClick" ItemsSource="{x:Bind Path=m_liveRoomViewModel.Guards,Mode=OneWay}" Margin="0 8" SelectionMode="None" IsItemClickEnabled="True">
                                         <ListView.ItemTemplate>
-                                            <DataTemplate x:DataType="model:LiveGuardRankItem">
+                                            <DataTemplate x:DataType="live:LiveGuardRankItem">
                                                 <StackPanel Orientation="Horizontal">
                                                     <Image Width="24" Height="24" Source="{x:Bind RankImg}"></Image>
                                                     <TextBlock Margin="8 0 0 0" VerticalAlignment="Center" Text="{x:Bind Username}"></TextBlock>
@@ -1081,13 +1093,13 @@
                                         </ListView.ItemContainerStyle>
 
                                     </ListView>
-                                    <HyperlinkButton  Command="{x:Bind Path=liveRoomVM.LoadMoreGuardCommand}" Visibility="{x:Bind Path=liveRoomVM.LoadingGuard,Mode=OneWay,Converter={StaticResource display}}" Foreground="Gray" HorizontalAlignment="Center" >
+                                    <HyperlinkButton  Command="{x:Bind Path=m_liveRoomViewModel.LoadMoreGuardCommand}" Visibility="{x:Bind Path=m_liveRoomViewModel.LoadingGuard,Mode=OneWay,Converter={StaticResource display}}" Foreground="Gray" HorizontalAlignment="Center" >
                                         <TextBlock>加载更多</TextBlock>
                                     </HyperlinkButton>
-                                    <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=liveRoomVM.LoadingGuard,Mode=OneWay}"></ProgressRing>
+                                    <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_liveRoomViewModel.LoadingGuard,Mode=OneWay}"></ProgressRing>
                                 </StackPanel>
                             </ScrollViewer>
-                            <TextBlock x:Name="noGuardRank" Visibility="{x:Bind Path=liveRoomVM.Guards.Count,Mode=OneWay,Converter={StaticResource display},ConverterParameter=0}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Gray">好像没有人上船啊</TextBlock>
+                            <TextBlock x:Name="noGuardRank" Visibility="{x:Bind Path=m_liveRoomViewModel.Guards.Count,Mode=OneWay,Converter={StaticResource display},ConverterParameter=0}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Gray">好像没有人上船啊</TextBlock>
                         </Grid>
 
                     </PivotItem>
@@ -1095,6 +1107,6 @@
             </Grid>
 
         </Grid>
-        <ProgressRing IsActive="True"  HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{x:Bind Path=liveRoomVM.Loading,Mode=OneWay}"></ProgressRing>
+        <ProgressRing IsActive="True"  HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{x:Bind Path=m_liveRoomViewModel.Loading,Mode=OneWay}"></ProgressRing>
     </Grid>
 </local:BasePage>
