@@ -103,7 +103,7 @@ namespace BiliLite.Modules
                         ShowGiftMessage = true;
                         hide_gift_flag = 1;
                         var info = message as GiftMsgModel;
-                        info.Gif = _allGifts.FirstOrDefault(x => x.id == info.GiftId)?.gif ?? Constants.App.TRANSPARENT_IMAGE;
+                        info.Gif = _allGifts.FirstOrDefault(x => x.Id == info.GiftId)?.Gif ?? Constants.App.TRANSPARENT_IMAGE;
                         GiftMessage.Add(info);
                         if (!timer_auto_hide_gift.Enabled)
                         {
@@ -237,7 +237,7 @@ namespace BiliLite.Modules
                     });
                     return;
                 }
-                var start_time = TimeExtensions.TimestampToDatetime(LiveInfo.room_info.live_start_time);
+                var start_time = TimeExtensions.TimestampToDatetime(LiveInfo.RoomInfo.LiveStartTime);
                 var ts = DateTime.Now - start_time;
 
                 await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
@@ -545,18 +545,18 @@ namespace BiliLite.Modules
                     var data = await result.GetData<LiveInfoModel>();
                     if (data.success)
                     {
-                        RoomID = data.data.room_info.room_id;
-                        RoomTitle = data.data.room_info.title;
-                        Online = data.data.room_info.online;
-                        Liveing = data.data.room_info.live_status == 1;
+                        RoomID = data.data.RoomInfo.RoomId;
+                        RoomTitle = data.data.RoomInfo.Title;
+                        Online = data.data.RoomInfo.Online;
+                        Liveing = data.data.RoomInfo.LiveStatus == 1;
                         LiveInfo = data.data;
                         if (Ranks == null)
                         {
                             Ranks = new List<LiveRoomRankVM>() {
-                                new LiveRoomRankVM(RoomID,data.data.room_info.uid,"金瓜子榜","gold-rank"),
-                                new LiveRoomRankVM(RoomID,data.data.room_info.uid,"今日礼物榜","today-rank"),
-                                new LiveRoomRankVM(RoomID,data.data.room_info.uid,"七日礼物榜","seven-rank"),
-                                new LiveRoomRankVM(RoomID,data.data.room_info.uid,"粉丝榜","fans"),
+                                new LiveRoomRankVM(RoomID,data.data.RoomInfo.Uid,"金瓜子榜","gold-rank"),
+                                new LiveRoomRankVM(RoomID,data.data.RoomInfo.Uid,"今日礼物榜","today-rank"),
+                                new LiveRoomRankVM(RoomID,data.data.RoomInfo.Uid,"七日礼物榜","seven-rank"),
+                                new LiveRoomRankVM(RoomID,data.data.RoomInfo.Uid,"粉丝榜","fans"),
                             };
                             SelectRank = Ranks[0];
                             DoPropertyChanged("SelectRank");
@@ -583,7 +583,7 @@ namespace BiliLite.Modules
                             await GetTitles();
                         }
                         EntryRoom();
-                        ReceiveMessage(data.data.room_info.room_id);
+                        ReceiveMessage(data.data.RoomInfo.RoomId);
                     }
                     else
                     {
@@ -619,12 +619,12 @@ namespace BiliLite.Modules
 
                 var buvidResults = await liveRoomAPI.GetBuvid().Request();
                 var buvidData = await buvidResults.GetJson<ApiDataModel<LiveBuvidModel>>();
-                var buvid = buvidData.data.b_3;
+                var buvid = buvidData.data.B3;
 
                 var danmukuResults = await liveRoomAPI.GetDanmukuInfo(roomId).Request();
                 var danmukuData = await danmukuResults.GetJson<ApiDataModel<LiveDanmukuInfoModel>>();
-                var token = danmukuData.data.token;
-                var host = danmukuData.data.host_list[0].host;
+                var token = danmukuData.data.Token;
+                var host = danmukuData.data.HostList[0].Host;
 
                 await liveMessage.Connect(roomId, uid, token, buvid, host, cancelSource.Token);
             }
@@ -666,19 +666,19 @@ namespace BiliLite.Modules
                         {
                             SuperChats.Add(new SuperChatMsgModel()
                             {
-                                background_bottom_color = item.background_bottom_color,
-                                background_color = item.background_color,
-                                background_image = item.background_image,
-                                end_time = item.end_time,
-                                face = item.user_info.face,
-                                face_frame = item.user_info.face_frame,
-                                font_color = string.IsNullOrEmpty(item.font_color) ? "#FFFFFF" : item.font_color,
-                                max_time = item.end_time - item.start_time,
-                                message = item.message,
-                                price = item.price,
-                                start_time = item.start_time,
-                                time = item.time,
-                                username = item.user_info.uname
+                                background_bottom_color = item.BackgroundBottomColor,
+                                background_color = item.BackgroundColor,
+                                background_image = item.BackgroundImage,
+                                end_time = item.EndTime,
+                                face = item.UserInfo.Face,
+                                face_frame = item.UserInfo.FaceFrame,
+                                font_color = string.IsNullOrEmpty(item.FontColor) ? "#FFFFFF" : item.FontColor,
+                                max_time = item.EndTime - item.StartTime,
+                                message = item.Message,
+                                price = item.Price,
+                                start_time = item.StartTime,
+                                time = item.Time,
+                                username = item.UserInfo.Uname
                             });
                         }
                     }
@@ -763,7 +763,7 @@ namespace BiliLite.Modules
                 {
                     return;
                 }
-                var result = await liveRoomAPI.GiftList(LiveInfo.room_info.area_id, LiveInfo.room_info.parent_area_id, RoomID).Request();
+                var result = await liveRoomAPI.GiftList(LiveInfo.RoomInfo.AreaId, LiveInfo.RoomInfo.ParentAreaId, RoomID).Request();
                 if (result.status)
                 {
                     var data = await result.GetData<JObject>();
@@ -782,11 +782,11 @@ namespace BiliLite.Modules
                                 if (ls != null)
                                     foreach (var item in ls)
                                     {
-                                        var _gift = list.FirstOrDefault(x => x.id == item.gift_id);
+                                        var _gift = list.FirstOrDefault(x => x.Id == item.GiftId);
                                         var gift = _gift.ObjectClone();
-                                        gift.gift_num = item.gift_num;
-                                        gift.corner_mark = item.corner_mark;
-                                        gift.bag_id = item.bag_id;
+                                        gift.GiftNum = item.GiftNum;
+                                        gift.CornerMark = item.CornerMark;
+                                        gift.BagId = item.BagId;
                                         BagGifts.Add(gift);
                                     }
                                 //WalletInfo = data.data;
@@ -818,14 +818,14 @@ namespace BiliLite.Modules
         {
             try
             {
-                var result = await liveRoomAPI.AnchorProfile(LiveInfo.room_info.uid).Request();
+                var result = await liveRoomAPI.AnchorProfile(LiveInfo.RoomInfo.Uid).Request();
                 if (result.status)
                 {
                     var data = await result.GetData<LiveAnchorProfile>();
                     if (data.success)
                     {
                         Profile = data.data;
-                        Attention = Profile.relation_status > 1;
+                        Attention = Profile.RelationStatus > 1;
                     }
                     else
                     {
@@ -851,7 +851,7 @@ namespace BiliLite.Modules
         {
             try
             {
-                var result = await liveRoomAPI.GiftList(LiveInfo.room_info.area_id, LiveInfo.room_info.parent_area_id, RoomID).Request();
+                var result = await liveRoomAPI.GiftList(LiveInfo.RoomInfo.AreaId, LiveInfo.RoomInfo.ParentAreaId, RoomID).Request();
                 if (result.status)
                 {
                     var data = await result.GetData<JObject>();
@@ -860,17 +860,17 @@ namespace BiliLite.Modules
                         var list = JsonConvert.DeserializeObject<List<LiveGiftItem>>(data.data["list"].ToString());
                         if (_allGifts == null || _allGifts.Count == 0) { _allGifts = list; }
 
-                        var result_room = await liveRoomAPI.RoomGifts(LiveInfo.room_info.area_id, LiveInfo.room_info.parent_area_id, RoomID).Request();
+                        var result_room = await liveRoomAPI.RoomGifts(LiveInfo.RoomInfo.AreaId, LiveInfo.RoomInfo.ParentAreaId, RoomID).Request();
                         if (result_room.status)
                         {
                             var data_room = await result_room.GetData<JObject>();
                             var list_room = JsonConvert.DeserializeObject<List<LiveRoomGiftItem>>(data_room.data["list"].ToString());
                             List<LiveGiftItem> ls = new List<LiveGiftItem>() {
-                               list.FirstOrDefault(x=>x.id==1)
+                               list.FirstOrDefault(x=>x.Id==1)
                             };
                             foreach (var item in list_room)
                             {
-                                ls.Add(list.FirstOrDefault(x => x.id == item.gift_id));
+                                ls.Add(list.FirstOrDefault(x => x.Id == item.GiftId));
                             }
                             Gifts = ls;
                         }
@@ -910,7 +910,7 @@ namespace BiliLite.Modules
             {
                 LoadingGuard = true;
                 LoadMoreGuard = false;
-                var result = await liveRoomAPI.GuardList(LiveInfo.room_info.uid, RoomID, GuardPage).Request();
+                var result = await liveRoomAPI.GuardList(LiveInfo.RoomInfo.Uid, RoomID, GuardPage).Request();
                 if (result.status)
                 {
                     var data = await result.GetData<JObject>();
@@ -1085,7 +1085,7 @@ namespace BiliLite.Modules
             }
             try
             {
-                var result = await liveRoomAPI.SendGift(LiveInfo.room_info.uid, liveGiftItem.id, liveGiftItem.num, RoomID, liveGiftItem.coin_type, liveGiftItem.price).Request();
+                var result = await liveRoomAPI.SendGift(LiveInfo.RoomInfo.Uid, liveGiftItem.Id, liveGiftItem.Num, RoomID, liveGiftItem.CoinType, liveGiftItem.Price).Request();
                 if (result.status)
                 {
                     var data = await result.GetData<object>();
@@ -1119,7 +1119,7 @@ namespace BiliLite.Modules
             }
             try
             {
-                var result = await liveRoomAPI.SendBagGift(LiveInfo.room_info.uid, liveGiftItem.id, liveGiftItem.num, liveGiftItem.bag_id, RoomID).Request();
+                var result = await liveRoomAPI.SendBagGift(LiveInfo.RoomInfo.Uid, liveGiftItem.Id, liveGiftItem.Num, liveGiftItem.BagId, RoomID).Request();
                 if (result.status)
                 {
                     var data = await result.GetData<object>();
@@ -1377,7 +1377,7 @@ namespace BiliLite.Modules
             {
                 if (LotteryInfo != null)
                 {
-                    if (LotteryInfo.time <= 0)
+                    if (LotteryInfo.Time <= 0)
                     {
                         End = false;
                         timer.Stop();
@@ -1386,9 +1386,9 @@ namespace BiliLite.Modules
                         LotteryInfo = null;
                         return;
                     }
-                    var time = TimeSpan.FromSeconds(LotteryInfo.time);
+                    var time = TimeSpan.FromSeconds(LotteryInfo.Time);
                     DownTime = time.ToString(@"mm\:ss");
-                    LotteryInfo.time--;
+                    LotteryInfo.Time--;
                 }
             });
         }
@@ -1514,413 +1514,374 @@ namespace BiliLite.Modules
     {
         public class LiveTitleModel
         {
-            public string id { get; set; }
-            public string title { get; set; }
-            public string img { get; set; }
+            public string Id { get; set; }
+
+            public string Title { get; set; }
+
+            public string Img { get; set; }
         }
 
         public class LiveInfoModel
         {
-            public LiveRoomInfoModel room_info { get; set; }
-            public LiveRoomGuardInfoModel guard_info { get; set; }
-            public LiveAnchorInfoModel anchor_info { get; set; }
+            [JsonProperty("room_info")]
+            public LiveRoomInfoModel RoomInfo { get; set; }
+
+            [JsonProperty("guard_info")]
+            public LiveRoomGuardInfoModel GuardInfo { get; set; }
+
+            [JsonProperty("anchor_info")]
+            public LiveAnchorInfoModel AnchorInfo { get; set; }
         }
         public class LiveRoomGuardInfoModel
         {
-            public int count { get; set; }
-            public int achievement_level { get; set; }
+            public int Count { get; set; }
+
+            [JsonProperty("achievement_level")]
+            public int AchievementLevel { get; set; }
         }
         public class LiveRoomInfoPendantsFrameModel
         {
-            public string name { get; set; }
-            public int position { get; set; }
-            public string value { get; set; }
-            public string desc { get; set; }
+            public string Name { get; set; }
+
+            public int Position { get; set; }
+
+            public string Value { get; set; }
+
+            public string Desc { get; set; }
         }
 
         public class LiveRoomInfoPendantsModel
         {
-            public LiveRoomInfoPendantsFrameModel frame { get; set; }
-            public object badge { get; set; }
+            public LiveRoomInfoPendantsFrameModel Frame { get; set; }
+
+            public object Badge { get; set; }
         }
 
         public class LiveRoomInfoModel
         {
-            public long uid { get; set; }
-            public int room_id { get; set; }
-            public int short_id { get; set; }
-            public string title { get; set; }
-            public string cover { get; set; }
-            public string tags { get; set; }
-            public string background { get; set; }
-            public string description { get; set; }
-            public int online { get; set; }
-            public int live_status { get; set; }
-            public long live_start_time { get; set; }
-            public int live_screen_type { get; set; }
-            public int lock_status { get; set; }
-            public int lock_time { get; set; }
-            public int hidden_status { get; set; }
-            public int hidden_time { get; set; }
-            public int area_id { get; set; }
-            public string area_name { get; set; }
-            public int parent_area_id { get; set; }
-            public string parent_area_name { get; set; }
-            public string keyframe { get; set; }
-            public int special_type { get; set; }
-            public string up_session { get; set; }
-            public int pk_status { get; set; }
-            public LiveRoomInfoPendantsModel pendants { get; set; }
-            public int on_voice_join { get; set; }
-            public int tv_screen_on { get; set; }
+            public long Uid { get; set; }
+
+            [JsonProperty("room_id")]
+            public int RoomId { get; set; }
+
+            [JsonProperty("short_id")]
+            public int ShortId { get; set; }
+
+            public string Title { get; set; }
+
+            public string Cover { get; set; }
+
+            public string Tags { get; set; }
+
+            public string Background { get; set; }
+
+            public string Description { get; set; }
+
+            public int Online { get; set; }
+
+            [JsonProperty("live_status")]
+            public int LiveStatus { get; set; }
+
+            [JsonProperty("live_start_time")]
+            public long LiveStartTime { get; set; }
+
+            [JsonProperty("live_screen_type")]
+            public int LiveScreenType { get; set; }
+
+            [JsonProperty("lock_status")]
+            public int LockStatus { get; set; }
+
+            [JsonProperty("lock_time")]
+            public int LockTime { get; set; }
+
+            [JsonProperty("hidden_status")]
+            public int HiddenStatus { get; set; }
+
+            [JsonProperty("hidden_time")]
+            public int HiddenTime { get; set; }
+
+            [JsonProperty("area_id")]
+            public int AreaId { get; set; }
+
+            [JsonProperty("area_name")]
+            public string AreaName { get; set; }
+
+            [JsonProperty("parent_area_id")]
+            public int ParentAreaId { get; set; }
+
+            [JsonProperty("parent_area_name")]
+            public string ParentAreaName { get; set; }
+
+            public string Keyframe { get; set; }
+
+            [JsonProperty("special_type")]
+            public int SpecialType { get; set; }
+
+            [JsonProperty("up_session")]
+            public string UpSession { get; set; }
+
+            [JsonProperty("pk_status")]
+            public int PkStatus { get; set; }
+
+            public LiveRoomInfoPendantsModel Pendants { get; set; }
+
+            [JsonProperty("on_voice_join")]
+            public int OnVoiceJoin { get; set; }
+
+            [JsonProperty("tv_screen_on")]
+            public int TvScreenOn { get; set; }
         }
-
-
 
         public class LiveAnchorInfoOfficialInfoModel
         {
-            public int role { get; set; }
-            public string title { get; set; }
-            public string desc { get; set; }
+            public int Role { get; set; }
+
+            public string Title { get; set; }
+
+            public string Desc { get; set; }
         }
 
         public class LiveAnchorInfoBaseInfoModel
         {
-            public string uname { get; set; }
-            public string face { get; set; }
-            public string gender { get; set; }
-            public LiveAnchorInfoOfficialInfoModel official_info { get; set; }
+            public string Uname { get; set; }
+
+            public string Face { get; set; }
+
+            public string Gender { get; set; }
+
+            [JsonProperty("official_info")]
+            public LiveAnchorInfoOfficialInfoModel OfficialInfo { get; set; }
         }
 
         public class LiveAnchorInfoLiveInfoModel
         {
-            public int level { get; set; }
-            public int level_color { get; set; }
+            public int Level { get; set; }
+
+            [JsonProperty("level_color")]
+            public int LevelColor { get; set; }
         }
 
         public class LiveAnchorInfoRelationInfoModel
         {
-            public int attention { get; set; }
+            public int Attention { get; set; }
         }
 
         public class LiveAnchorInfoModel
         {
-            public LiveAnchorInfoBaseInfoModel base_info { get; set; }
-            public LiveAnchorInfoLiveInfoModel live_info { get; set; }
-            public LiveAnchorInfoRelationInfoModel relation_info { get; set; }
+            [JsonProperty("base_info")]
+            public LiveAnchorInfoBaseInfoModel BaseInfo { get; set; }
+
+            [JsonProperty("live_info")]
+            public LiveAnchorInfoLiveInfoModel LiveInfo { get; set; }
+
+            [JsonProperty("relation_info")]
+            public LiveAnchorInfoRelationInfoModel RelationInfo { get; set; }
         }
 
 
         [Serializable]
         public class LiveGiftItemCountMap
         {
-            public int num { get; set; }
-            public string text { get; set; }
+            public int Num { get; set; }
+
+            public string Text { get; set; }
         }
         [Serializable]
         public class LiveGiftItem
         {
-            public int id { get; set; }
-            public int bag_id { get; set; }
-            public string name { get; set; }
-            public int price { get; set; }
-            public int type { get; set; }
-            public string coin_type { get; set; }
-            public bool is_gold
-            {
-                get
-                {
-                    return coin_type == "gold";
-                }
-            }
-            public int bag_gift { get; set; }
-            public int effect { get; set; }
-            public string corner_mark { get; set; }
-            public bool show_corner_mark { get { return !string.IsNullOrEmpty(corner_mark); } }
-            public string corner_background { get; set; }
-            public int broadcast { get; set; }
-            public int draw { get; set; }
-            public int stay_time { get; set; }
-            public int animation_frame_num { get; set; }
-            public string desc { get; set; }
-            public string rule { get; set; }
-            public string rights { get; set; }
-            public int privilege_required { get; set; }
-            public List<LiveGiftItemCountMap> count_map { get; set; }
-            public string img_basic { get; set; }
-            public string img_dynamic { get; set; }
-            public string frame_animation { get; set; }
-            public string gif { get; set; }
-            public string webp { get; set; }
-            public string full_sc_web { get; set; }
-            public string full_sc_horizontal { get; set; }
-            public string full_sc_vertical { get; set; }
-            public string full_sc_horizontal_svga { get; set; }
-            public string full_sc_vertical_svga { get; set; }
-            public string bullet_head { get; set; }
-            public string bullet_tail { get; set; }
-            public int limit_interval { get; set; }
-            public long bind_ruid { get; set; }
-            public int bind_roomid { get; set; }
-            public int bag_coin_type { get; set; }
-            public int broadcast_id { get; set; }
-            public int draw_id { get; set; }
-            public int gift_type { get; set; }
-            public int weight { get; set; }
-            public int max_send_limit { get; set; }
-            public int gift_num { get; set; } = 0;
-            public int combo_resources_id { get; set; }
-            public int goods_id { get; set; }
+            public int Id { get; set; }
 
-            public int num { get; set; } = 1;
+            [JsonProperty("bag_id")]
+            public int BagId { get; set; }
+
+            public string Name { get; set; }
+
+            public int Price { get; set; }
+
+            public int Type { get; set; }
+
+            [JsonProperty("coin_type")]
+            public string CoinType { get; set; }
+
+            [JsonProperty("is_gold")]
+            public bool IsGold => CoinType == "gold";
+
+            [JsonProperty("bag_gift")]
+
+            public int BagGift { get; set; }
+
+            public int Effect { get; set; }
+
+            [JsonProperty("corner_mark")]
+            public string CornerMark { get; set; }
+
+            [JsonProperty("show_corner_mark")]
+            public bool ShowCornerMark => !string.IsNullOrEmpty(CornerMark);
+
+            [JsonProperty("corner_background")]
+            public string CornerBackground { get; set; }
+
+            public int Broadcast { get; set; }
+
+            public int Draw { get; set; }
+
+            [JsonProperty("stay_time")]
+            public int StayTime { get; set; }
+
+            [JsonProperty("animation_frame_num")]
+            public int AnimationFrameNum { get; set; }
+
+            public string Desc { get; set; }
+
+            public string Rule { get; set; }
+
+            public string Rights { get; set; }
+
+            [JsonProperty("privilege_required")]
+            public int PrivilegeRequired { get; set; }
+
+            [JsonProperty("count_map")]
+            public List<LiveGiftItemCountMap> CountMap { get; set; }
+
+            [JsonProperty("img_basic")]
+            public string ImgBasic { get; set; }
+
+            [JsonProperty("img_dynamic")]
+            public string ImgDynamic { get; set; }
+
+            [JsonProperty("frame_animation")]
+            public string FrameAnimation { get; set; }
+
+            public string Gif { get; set; }
+
+            public string Webp { get; set; }
+
+            [JsonProperty("full_sc_web")]
+            public string FullScWeb { get; set; }
+
+            [JsonProperty("full_sc_horizontal")]
+            public string FullScHorizontal { get; set; }
+
+            [JsonProperty("full_sc_vertical")]
+            public string FullScVertical { get; set; }
+
+            [JsonProperty("full_sc_horizontal_svga")]
+            public string FullScHorizontalSvga { get; set; }
+
+            [JsonProperty("full_sc_vertical_svga")]
+            public string FullScVerticalSvga { get; set; }
+
+            [JsonProperty("bullet_head")]
+            public string BulletHead { get; set; }
+
+            [JsonProperty("bullet_tail")]
+            public string BulletTail { get; set; }
+
+            [JsonProperty("limit_interval")]
+            public int LimitInterval { get; set; }
+
+            [JsonProperty("bind_ruid")]
+            public long BindRuid { get; set; }
+
+            [JsonProperty("bind_roomid")]
+            public int BindRoomid { get; set; }
+
+            [JsonProperty("bag_coin_type")]
+            public int BagCoinType { get; set; }
+
+            [JsonProperty("broadcast_id")]
+            public int BroadcastId { get; set; }
+
+            [JsonProperty("draw_id")]
+            public int DrawId { get; set; }
+
+            [JsonProperty("gift_type")]
+            public int GiftType { get; set; }
+
+            public int Weight { get; set; }
+
+            [JsonProperty("max_send_limit")]
+            public int MaxSendLimit { get; set; }
+
+            [JsonProperty("gift_num")]
+            public int GiftNum { get; set; } = 0;
+
+            [JsonProperty("combo_resources_id")]
+            public int ComboResourcesId { get; set; }
+
+            [JsonProperty("goods_id")]
+            public int GoodsId { get; set; }
+
+            public int Num { get; set; } = 1;
         }
         public class LiveBagGiftItem
         {
-            public int bag_id { get; set; }
-            public string gift_name { get; set; }
-            public int gift_id { get; set; }
-            public int gift_type { get; set; }
-            public int gift_num { get; set; }
-            public int type { get; set; }
-            public string card_gif { get; set; }
-            public string corner_mark { get; set; }
-            public long expire_at { get; set; }
-            public string img { get; set; }
+            [JsonProperty("bag_id")]
+            public int BagId { get; set; }
+
+            [JsonProperty("gift_name")]
+            public string GiftName { get; set; }
+
+            [JsonProperty("gift_id")]
+            public int GiftId { get; set; }
+
+            [JsonProperty("gift_type")]
+            public int GiftType { get; set; }
+
+            [JsonProperty("gift_num")]
+            public int GiftNum { get; set; }
+
+            public int Type { get; set; }
+
+            [JsonProperty("card_gif")]
+            public string CardGif { get; set; }
+
+            [JsonProperty("corner_mark")]
+            public string CornerMark { get; set; }
+
+            [JsonProperty("expire_at")]
+            public long ExpireAt { get; set; }
+
+            public string Img { get; set; }
         }
+        
         public class LiveRoomGiftItem
         {
-            public int position { get; set; }
-            public int gift_id { get; set; }
-            public int id { get; set; }
-            public int plan_id { get; set; }
+            public int Position { get; set; }
+
+            [JsonProperty("gift_id")]
+            public int GiftId { get; set; }
+
+            public int Id { get; set; }
+
+            [JsonProperty("plan_id")]
+            public int PlanId { get; set; }
         }
+
         public class LiveWalletInfo
         {
-            public int gold { get; set; }
-            public int silver { get; set; }
+            public int Gold { get; set; }
+
+            public int Silver { get; set; }
         }
 
         public class LiveAnchorProfileGloryInfo
         {
-            public string gid { get; set; }
-            public string name { get; set; }
-            public string activity_name { get; set; }
-            public string activity_date { get; set; }
-            public string pic_url { get; set; }
-            public string jump_url { get; set; }
-        }
+            public string Gid { get; set; }
 
-        public class LiveAnchorProfilePkInfo
-        {
-            public int season_id { get; set; }
-            public string season_name { get; set; }
-            public string season_date_start { get; set; }
-            public string season_date_end { get; set; }
-            public string pk_rank_name { get; set; }
-            public string first_pic_url { get; set; }
-            public int pk_rank_star { get; set; }
-            public string second_rank_icon { get; set; }
-            public string rank_info_url_app { get; set; }
-        }
+            public string Name { get; set; }
 
-        public class LiveAnchorProfile
-        {
-            public long uid { get; set; }
-            public string uname { get; set; }
-            public string face { get; set; }
-            public int verify_type { get; set; }
-            public string verify
-            {
-                get
-                {
-                    switch (verify_type)
-                    {
-                        case 0:
-                            return Constants.App.VERIFY_PERSONAL_IMAGE;
-                        case 1:
-                            return Constants.App.VERIFY_OGANIZATION_IMAGE;
-                        default:
-                            return Constants.App.TRANSPARENT_IMAGE;
-                    }
-                }
-            }
-            public string desc { get; set; }
-            public int level { get; set; }
-            public int level_color { get; set; }
-            public int main_vip { get; set; }
-            public int uname_color { get; set; }
-            public int room_id { get; set; }
-            public string area_name { get; set; }
-            public string pendant { get; set; }
-            public int pendant_from { get; set; }
-            public List<LiveAnchorProfileGloryInfo> glory_info { get; set; }
-            public List<LiveAnchorProfilePkInfo> pk_info { get; set; }
-            public string season_info_url { get; set; }
-            public int follow_num { get; set; }
-            public bool is_fans { get; set; }
-            public int relation_status { get; set; }
-        }
+            [JsonProperty("activity_name")]
+            public string ActivityName { get; set; }
 
-        public class LiveGuardRankItem
-        {
-            public string username { get; set; }
-            public long uid { get; set; }
-            public long ruid { get; set; }
-            public string face { get; set; }
-            public int guard_level { get; set; }
-            public string rank_img
-            {
-                get
-                {
-                    return "ms-appx:///Assets/Live/ic_live_guard_" + guard_level + ".png";
-                }
-            }
-        }
+            [JsonProperty("activity_date")]
+            public string ActivityDate { get; set; }
 
+            [JsonProperty("pic_url")]
+            public string PicUrl { get; set; }
 
-        public class LiveRoomRankItemModel
-        {
-            public int rank { get; set; }
-            public long uid { get; set; }
-            public string uname { get; set; }
-            public string face { get; set; }
-            public int score { get; set; }
-            public string icon { get; set; } = Constants.App.TRANSPARENT_IMAGE;
-            public bool show_right
-            {
-                get
-                {
-                    return score != 0;
-                }
-            }
-
-
-            public string medal_name { get; set; }
-            public string level { get; set; }
-            public string color { get; set; }
-
-            public bool show_medal
-            {
-                get
-                {
-                    return !string.IsNullOrEmpty(medal_name);
-                }
-            }
-        }
-
-
-        public class LiveRoomAnchorLotteryInfoModel
-        {
-            public string asset_icon { get; set; }
-            public string award_image { get; set; }
-            public string award_name { get; set; }
-            public int award_num { get; set; }
-            public int cur_gift_num { get; set; }
-            public long current_time { get; set; }
-            public string danmu { get; set; }
-            public int gift_id { get; set; }
-
-            public bool show_gift
-            {
-                get
-                {
-                    return gift_id != 0;
-                }
-            }
-
-            public string gift_name { get; set; }
-            public int gift_num { get; set; }
-            public int gift_price { get; set; }
-            public int goaway_time { get; set; }
-            public int id { get; set; }
-            public int join_type { get; set; }
-            public int lot_status { get; set; }
-            public int max_time { get; set; }
-            public string require_text { get; set; }
-            public int require_type { get; set; }
-            public int require_value { get; set; }
-            public int room_id { get; set; }
-            public int send_gift_ensure { get; set; }
-            public int show_panel { get; set; }
-            public int status { get; set; }
-            public int time { get; set; }
-            public string url { get; set; }
-            public string web_url { get; set; }
-        }
-
-        public class LiveRoomEndAnchorLotteryInfoModel
-        {
-            public int id { get; set; }
-            public int lot_status { get; set; }
-            public string award_image { get; set; }
-            public string award_name { get; set; }
-            public int award_num { get; set; }
-            public string url { get; set; }
-            public string web_url { get; set; }
-            public List<LiveRoomEndAnchorLotteryInfoUserModel> award_users { get; set; }
-        }
-        public class LiveRoomEndAnchorLotteryInfoUserModel
-        {
-            public long uid { get; set; }
-            public int level { get; set; }
-            public string uname { get; set; }
-            public string face { get; set; }
-
-        }
-
-
-        public class LiveRoomSuperChatUserInfoModel
-        {
-            public string uname { get; set; }
-            public string face { get; set; }
-            public string face_frame { get; set; }
-            public int guard_level { get; set; }
-            public int user_level { get; set; }
-            public int is_vip { get; set; }
-            public int is_svip { get; set; }
-            public int is_main_vip { get; set; }
-        }
-
-        public class LiveRoomSuperChatModel
-        {
-            public int id { get; set; }
-            public long uid { get; set; }
-            public string background_image { get; set; }
-            public string background_color { get; set; }
-            public string background_icon { get; set; }
-            public string background_bottom_color { get; set; }
-            public string background_price_color { get; set; }
-            public string font_color { get; set; }
-            public int price { get; set; }
-            public int rate { get; set; }
-            public int time { get; set; }
-            public int start_time { get; set; }
-            public int end_time { get; set; }
-            public string message { get; set; }
-            public int trans_mark { get; set; }
-            public string message_trans { get; set; }
-            public int ts { get; set; }
-            public string token { get; set; }
-            public LiveRoomSuperChatUserInfoModel user_info { get; set; }
-        }
-
-        public class LiveDanmukuInfoModel
-        {
-            public string token { get; set; }
-
-            public List<LiveDanmukuHostModel> host_list { get; set; }
-        }
-
-        public class LiveDanmukuHostModel
-        {
-            public string host { get; set; }
-        }
-
-        public class LiveBuvidModel
-        {
-            public string b_3 { get; set; }
-            public string b_4 { get; set; }
+            [JsonProperty("jump_url")]
+            public string JumpUrl { get; set; }
         }
     }
-
 }

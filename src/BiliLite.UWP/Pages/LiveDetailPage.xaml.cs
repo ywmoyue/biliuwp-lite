@@ -120,13 +120,13 @@ namespace BiliLite.Pages
         private void LiveRoomVM_LotteryEnd(object sender, LiveRoomEndAnchorLotteryInfoModel e)
         {
             var str = "";
-            foreach (var item in e.award_users)
+            foreach (var item in e.AwardUsers)
             {
-                str += item.uname + "、";
+                str += item.Uname + "、";
             }
             str = str.TrimEnd('、');
 
-            Notify.ShowMessageToast($"开奖信息:\r\n奖品:{e.award_name}\r\n中奖用户:{str}", new List<MyUICommand>() { }, 10);
+            Notify.ShowMessageToast($"开奖信息:\r\n奖品:{e.AwardName}\r\n中奖用户:{str}", new List<MyUICommand>() { }, 10);
 
         }
 
@@ -425,12 +425,12 @@ namespace BiliLite.Pages
                 LoadSetting();
                 roomid = e.Parameter.ToString();
                 await liveRoomVM.LoadLiveRoomDetail(roomid);
-                Title = liveRoomVM.LiveInfo.anchor_info.base_info.uname + "的直播间";
-                ChangeTitle(liveRoomVM.LiveInfo.anchor_info.base_info.uname + "的直播间");
+                Title = liveRoomVM.LiveInfo.AnchorInfo.BaseInfo.Uname + "的直播间";
+                ChangeTitle(liveRoomVM.LiveInfo.AnchorInfo.BaseInfo.Uname + "的直播间");
             }
             else
             {
-                Title = (liveRoomVM.LiveInfo?.anchor_info?.base_info?.uname ?? "") + "直播间";
+                Title = (liveRoomVM.LiveInfo?.AnchorInfo?.BaseInfo?.Uname ?? "") + "直播间";
                 MessageCenter.ChangeTitle(this, Title);
             }
         }
@@ -818,7 +818,7 @@ namespace BiliLite.Pages
                 icon = Symbol.Account,
                 title = "用户信息",
                 page = typeof(UserInfoPage),
-                parameters = liveRoomVM.LiveInfo.room_info.uid
+                parameters = liveRoomVM.LiveInfo.RoomInfo.Uid
             });
         }
 
@@ -841,7 +841,7 @@ namespace BiliLite.Pages
         {
             if (liveRoomVM.LiveInfo != null)
             {
-                var result = await new VideoDetailPageViewModel().AttentionUP(liveRoomVM.LiveInfo.room_info.uid.ToString(), 1);
+                var result = await new VideoDetailPageViewModel().AttentionUP(liveRoomVM.LiveInfo.RoomInfo.Uid.ToString(), 1);
                 if (result)
                 {
                     liveRoomVM.Attention = true;
@@ -854,7 +854,7 @@ namespace BiliLite.Pages
         {
             if (liveRoomVM.LiveInfo != null)
             {
-                var result = await new VideoDetailPageViewModel().AttentionUP(liveRoomVM.LiveInfo.room_info.uid.ToString(), 2);
+                var result = await new VideoDetailPageViewModel().AttentionUP(liveRoomVM.LiveInfo.RoomInfo.Uid.ToString(), 2);
                 if (result)
                 {
                     liveRoomVM.Attention = false;
@@ -876,9 +876,9 @@ namespace BiliLite.Pages
             MessageCenter.NavigateToPage(this, new NavigationInfo()
             {
                 icon = Symbol.Account,
-                title = item.username,
+                title = item.Username,
                 page = typeof(UserInfoPage),
-                parameters = item.uid
+                parameters = item.Uid
             });
         }
 
@@ -903,17 +903,17 @@ namespace BiliLite.Pages
             MessageCenter.NavigateToPage(this, new NavigationInfo()
             {
                 icon = Symbol.Account,
-                title = item.uname,
+                title = item.Uname,
                 page = typeof(UserInfoPage),
-                parameters = item.uid
+                parameters = item.Uid
             });
         }
 
         private async void BtnSendLotteryDanmu_Click(object sender, RoutedEventArgs e)
         {
-            if (liveRoomVM.anchorLotteryVM != null && liveRoomVM.anchorLotteryVM.LotteryInfo != null && !string.IsNullOrEmpty(liveRoomVM.anchorLotteryVM.LotteryInfo.danmu))
+            if (liveRoomVM.anchorLotteryVM != null && liveRoomVM.anchorLotteryVM.LotteryInfo != null && !string.IsNullOrEmpty(liveRoomVM.anchorLotteryVM.LotteryInfo.Danmu))
             {
-                var result = await liveRoomVM.SendDanmu(liveRoomVM.anchorLotteryVM.LotteryInfo.danmu);
+                var result = await liveRoomVM.SendDanmu(liveRoomVM.anchorLotteryVM.LotteryInfo.Danmu);
                 if (result)
                 {
                     Notify.ShowMessageToast("弹幕发送成功");
@@ -1145,7 +1145,7 @@ namespace BiliLite.Pages
         private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
         {
             DataRequest request = args.Request;
-            request.Data.Properties.Title = liveRoomVM.LiveInfo.room_info.title;
+            request.Data.Properties.Title = liveRoomVM.LiveInfo.RoomInfo.Title;
             request.Data.SetWebLink(new Uri("https://live.bilibili.com/" + liveRoomVM.RoomID));
         }
         private void btnShare_Click(object sender, RoutedEventArgs e)
@@ -1154,7 +1154,7 @@ namespace BiliLite.Pages
         }
         private void btnShareCopy_Click(object sender, RoutedEventArgs e)
         {
-            $"{liveRoomVM.LiveInfo.room_info.title} - {liveRoomVM.LiveInfo.anchor_info.base_info.uname}的直播间\r\nhttps://live.bilibili.com/{liveRoomVM.RoomID}".SetClipboard();
+            $"{liveRoomVM.LiveInfo.RoomInfo.Title} - {liveRoomVM.LiveInfo.AnchorInfo.BaseInfo.Uname}的直播间\r\nhttps://live.bilibili.com/{liveRoomVM.RoomID}".SetClipboard();
             Notify.ShowMessageToast("已复制内容到剪切板");
         }
 

@@ -642,11 +642,11 @@
                                             <TextBlock FontSize="20" >天选时刻</TextBlock>
                                             <TextBlock FontSize="20" HorizontalAlignment="Right" Text="{x:Bind Path=liveRoomVM.anchorLotteryVM.DownTime,Mode=OneWay}"></TextBlock>
                                         </Grid>
-                                        <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">奖品名称：</Run><Run Text="{x:Bind Path=liveRoomVM.anchorLotteryVM.LotteryInfo.award_name,Mode=OneWay}"/></TextBlock>
-                                        <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">中奖人数：</Run><Run Text="{x:Bind Path=liveRoomVM.anchorLotteryVM.LotteryInfo.award_num,Mode=OneWay}"/>人</TextBlock>
-                                        <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">弹幕口令：</Run><Run Text="{x:Bind Path=liveRoomVM.anchorLotteryVM.LotteryInfo.danmu,Mode=OneWay}"/></TextBlock>
-                                        <TextBlock Margin="0 4" TextWrapping="Wrap" Visibility="{x:Bind Path=liveRoomVM.anchorLotteryVM.LotteryInfo.show_gift,Mode=OneWay}"><Run Foreground="Gray">赠送礼物：</Run><Run Text="{x:Bind Path=liveRoomVM.anchorLotteryVM.LotteryInfo.gift_name,Mode=OneWay}"/>x<Run Text="{x:Bind Path=liveRoomVM.anchorLotteryVM.LotteryInfo.gift_num,Mode=OneWay}"/></TextBlock>
-                                        <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">限制条件：</Run><Run Text="{x:Bind Path=liveRoomVM.anchorLotteryVM.LotteryInfo.require_text,Mode=OneWay}"/></TextBlock>
+                                        <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">奖品名称：</Run><Run Text="{x:Bind Path=liveRoomVM.anchorLotteryVM.LotteryInfo.AwardName,Mode=OneWay}"/></TextBlock>
+                                        <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">中奖人数：</Run><Run Text="{x:Bind Path=liveRoomVM.anchorLotteryVM.LotteryInfo.AwardNum,Mode=OneWay}"/>人</TextBlock>
+                                        <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">弹幕口令：</Run><Run Text="{x:Bind Path=liveRoomVM.anchorLotteryVM.LotteryInfo.Danmu,Mode=OneWay}"/></TextBlock>
+                                        <TextBlock Margin="0 4" TextWrapping="Wrap" Visibility="{x:Bind Path=liveRoomVM.anchorLotteryVM.LotteryInfo.ShowGift,Mode=OneWay}"><Run Foreground="Gray">赠送礼物：</Run><Run Text="{x:Bind Path=liveRoomVM.anchorLotteryVM.LotteryInfo.GiftName,Mode=OneWay}"/>x<Run Text="{x:Bind Path=liveRoomVM.anchorLotteryVM.LotteryInfo.GiftNum,Mode=OneWay}"/></TextBlock>
+                                        <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">限制条件：</Run><Run Text="{x:Bind Path=liveRoomVM.anchorLotteryVM.LotteryInfo.RequireText,Mode=OneWay}"/></TextBlock>
                                         <Button x:Name="BtnSendLotteryDanmu" Click="BtnSendLotteryDanmu_Click" Margin="0 4 0 0" HorizontalAlignment="Stretch">一键发弹幕</Button>
                                     </StackPanel>
                                 </Flyout>
@@ -664,11 +664,11 @@
                         <StackPanel Margin="4" VerticalAlignment="Center" Visibility="{x:Bind Path=liveRoomVM.Logined,Mode=OneWay}">
                             <StackPanel Orientation="Horizontal">
                                 <Image Width="16" Source="ms-appx:///Assets/Icon/ic_live_center_silver_recharge.png"></Image>
-                                <TextBlock FontSize="12" Margin="8 0" VerticalAlignment="Center" Text="{x:Bind Path=liveRoomVM.WalletInfo.silver,Converter={StaticResource numberToStringConvert},Mode=OneWay}"></TextBlock>
+                                <TextBlock FontSize="12" Margin="8 0" VerticalAlignment="Center" Text="{x:Bind Path=liveRoomVM.WalletInfo.Silver,Converter={StaticResource numberToStringConvert},Mode=OneWay}"></TextBlock>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal"  Margin="0 8 0 0" >
                                 <Image Width="16" Source="ms-appx:///Assets/Icon/ic_live_center_gold_recharge.png"></Image>
-                                <TextBlock FontSize="12" Margin="8 0" VerticalAlignment="Center" Text="{x:Bind Path=liveRoomVM.WalletInfo.gold,Converter={StaticResource numberToStringConvert},Mode=OneWay}"></TextBlock>
+                                <TextBlock FontSize="12" Margin="8 0" VerticalAlignment="Center" Text="{x:Bind Path=liveRoomVM.WalletInfo.Gold,Converter={StaticResource numberToStringConvert},Mode=OneWay}"></TextBlock>
                             </StackPanel>
 
                         </StackPanel>
@@ -706,9 +706,9 @@
                                         <Button Background="Transparent"  Margin="4">
                                             <Grid>
                                                 <StackPanel>
-                                                    <Image Width="32" Height="32" Source="{x:Bind Path=img_basic,Converter={StaticResource imageConvert2},ConverterParameter='48h.png'}"></Image>
+                                                    <Image Width="32" Height="32" Source="{x:Bind Path=ImgBasic,Converter={StaticResource imageConvert2},ConverterParameter='48h.png'}"></Image>
 
-                                                    <TextBlock TextAlignment="Center" FontSize="12" Margin="0 4 0 0" Text="{x:Bind Path=name}"></TextBlock>
+                                                    <TextBlock TextAlignment="Center" FontSize="12" Margin="0 4 0 0" Text="{x:Bind Path=Name}"></TextBlock>
                                                 </StackPanel>
 
                                             </Grid>
@@ -716,22 +716,22 @@
                                                 <Flyout >
                                                     <StackPanel>
                                                         <StackPanel Orientation="Horizontal" >
-                                                            <Image Source="{x:Bind gif}" Width="56" Height="56"></Image>
+                                                            <Image Source="{x:Bind Gif}" Width="56" Height="56"></Image>
                                                             <StackPanel Margin="8 0 0 0" VerticalAlignment="Center">
                                                                 <StackPanel Orientation="Horizontal">
-                                                                    <TextBlock Text="{x:Bind name}" MaxWidth="200"></TextBlock>
-                                                                    <Image Width="16"  Margin="8 0 0 0" Visibility="{x:Bind Path=is_gold}" Source="ms-appx:///Assets/Icon/ic_live_center_gold_recharge.png"></Image>
-                                                                    <Image Width="16"  Margin="8 0 0 0" Visibility="{x:Bind Path=is_gold,Converter={StaticResource display}}" Source="ms-appx:///Assets/Icon/ic_live_center_silver_recharge.png"></Image>
-                                                                    <TextBlock Margin="4 0 0 0" Text="{x:Bind price}" Foreground="Gray"></TextBlock>
+                                                                    <TextBlock Text="{x:Bind Name}" MaxWidth="200"></TextBlock>
+                                                                    <Image Width="16"  Margin="8 0 0 0" Visibility="{x:Bind Path=IsGold}" Source="ms-appx:///Assets/Icon/ic_live_center_gold_recharge.png"></Image>
+                                                                    <Image Width="16"  Margin="8 0 0 0" Visibility="{x:Bind Path=IsGold,Converter={StaticResource display}}" Source="ms-appx:///Assets/Icon/ic_live_center_silver_recharge.png"></Image>
+                                                                    <TextBlock Margin="4 0 0 0" Text="{x:Bind Price}" Foreground="Gray"></TextBlock>
                                                                 </StackPanel>
 
-                                                                <TextBlock Text="{x:Bind desc}" FontSize="12" Margin="0 4 0 0" MaxWidth="200" TextWrapping="Wrap" Foreground="Gray"></TextBlock>
-                                                                <TextBlock Text="{x:Bind rights}" FontSize="12" Margin="0 4 0 0" MaxWidth="200" TextWrapping="Wrap" Foreground="Gray"></TextBlock>
+                                                                <TextBlock Text="{x:Bind Desc}" FontSize="12" Margin="0 4 0 0" MaxWidth="200" TextWrapping="Wrap" Foreground="Gray"></TextBlock>
+                                                                <TextBlock Text="{x:Bind Rights}" FontSize="12" Margin="0 4 0 0" MaxWidth="200" TextWrapping="Wrap" Foreground="Gray"></TextBlock>
                                                             </StackPanel>
 
                                                         </StackPanel>
                                                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0 8 0 0">
-                                                            <muxc:NumberBox   Value="{x:Bind Path=num,Mode=TwoWay}"  SpinButtonPlacementMode="Inline" Minimum="1" SmallChange="1" />
+                                                            <muxc:NumberBox   Value="{x:Bind Path=Num,Mode=TwoWay}"  SpinButtonPlacementMode="Inline" Minimum="1" SmallChange="1" />
                                                             <Button  Click="btnSendGift_Click" VerticalAlignment="Center" Margin="8 4 0 0">赠送</Button>
                                                         </StackPanel>
                                                     </StackPanel>
@@ -755,9 +755,9 @@
                                         <Button Background="Transparent"  Margin="4">
                                             <Grid>
                                                 <StackPanel>
-                                                    <Image Width="32" Height="32" Source="{x:Bind Path=img_basic,Converter={StaticResource imageConvert2},ConverterParameter='48h.png'}"></Image>
+                                                    <Image Width="32" Height="32" Source="{x:Bind Path=ImgBasic,Converter={StaticResource imageConvert2},ConverterParameter='48h.png'}"></Image>
 
-                                                    <TextBlock TextAlignment="Center" FontSize="12" Margin="0 4 0 0" ><Run Text="{x:Bind Path=name}"/>(<Run Text="{x:Bind Path=gift_num,Mode=OneWay}"/>)</TextBlock>
+                                                    <TextBlock TextAlignment="Center" FontSize="12" Margin="0 4 0 0" ><Run Text="{x:Bind Path=Name}"/>(<Run Text="{x:Bind Path=GiftNum,Mode=OneWay}"/>)</TextBlock>
                                                 </StackPanel>
 
                                             </Grid>
@@ -765,24 +765,24 @@
                                                 <Flyout >
                                                     <StackPanel>
                                                         <StackPanel Orientation="Horizontal" >
-                                                            <Image Source="{x:Bind gif}" Width="56" Height="56"></Image>
+                                                            <Image Source="{x:Bind Gif}" Width="56" Height="56"></Image>
                                                             <StackPanel Margin="8 0 0 0" VerticalAlignment="Center">
                                                                 <StackPanel Orientation="Horizontal">
-                                                                    <TextBlock Text="{x:Bind name}" MaxWidth="200"></TextBlock>
+                                                                    <TextBlock Text="{x:Bind Name}" MaxWidth="200"></TextBlock>
                                                                    
                                                                     <TextBlock Margin="4 0 0 0"  Foreground="Gray">
                                                                         拥有数量:
-                                                                        <Run Text="{x:Bind gift_num}"/>
+                                                                        <Run Text="{x:Bind GiftNum}"/>
                                                                     </TextBlock>
                                                                 </StackPanel>
 
-                                                                <TextBlock Text="{x:Bind desc}" FontSize="12" Margin="0 4 0 0" MaxWidth="200" TextWrapping="Wrap" Foreground="Gray"></TextBlock>
-                                                                <TextBlock Text="{x:Bind rights}" FontSize="12" Margin="0 4 0 0" MaxWidth="200" TextWrapping="Wrap" Foreground="Gray"></TextBlock>
+                                                                <TextBlock Text="{x:Bind Desc}" FontSize="12" Margin="0 4 0 0" MaxWidth="200" TextWrapping="Wrap" Foreground="Gray"></TextBlock>
+                                                                <TextBlock Text="{x:Bind Rights}" FontSize="12" Margin="0 4 0 0" MaxWidth="200" TextWrapping="Wrap" Foreground="Gray"></TextBlock>
                                                             </StackPanel>
 
                                                         </StackPanel>
                                                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0 8 0 0">
-                                                            <muxc:NumberBox   Value="{x:Bind Path=num,Mode=TwoWay}" Maximum="{x:Bind Path=gift_num}"  SpinButtonPlacementMode="Inline" Minimum="1" SmallChange="1" />
+                                                            <muxc:NumberBox   Value="{x:Bind Path=Num,Mode=TwoWay}" Maximum="{x:Bind Path=GiftNum}"  SpinButtonPlacementMode="Inline" Minimum="1" SmallChange="1" />
                                                             <Button  Click="btnSendBagGift_Click" VerticalAlignment="Center" Margin="8 4 0 0">赠送</Button>
                                                         </StackPanel>
                                                     </StackPanel>
@@ -813,13 +813,13 @@
                     <HyperlinkButton Padding="0" Click="BtnOpenUser_Click">
                         <Ellipse Width="48" Height="48" >
                             <Ellipse.Fill>
-                                <ImageBrush Stretch="UniformToFill" ImageSource="{x:Bind Path=liveRoomVM.LiveInfo.anchor_info.base_info.face,Converter={StaticResource imageConvert2},ConverterParameter='64h',Mode=OneWay}"/>
+                                <ImageBrush Stretch="UniformToFill" ImageSource="{x:Bind Path=liveRoomVM.LiveInfo.AnchorInfo.BaseInfo.Face,Converter={StaticResource imageConvert2},ConverterParameter='64h',Mode=OneWay}"/>
                             </Ellipse.Fill>
                         </Ellipse>
                     </HyperlinkButton>
                     <StackPanel Grid.Column="1" Margin="8 0" VerticalAlignment="Center">
-                        <TextBlock Text="{x:Bind Path=liveRoomVM.LiveInfo.anchor_info.base_info.uname,Mode=OneWay}"></TextBlock>
-                        <TextBlock Margin="0 4 0 0" Foreground="Gray" FontSize="12"> 人气:<Run Text="{x:Bind Path=liveRoomVM.Online,Converter={StaticResource numberToStringConvert},Mode=OneWay}"/> 粉丝:<Run Text="{x:Bind Path=liveRoomVM.LiveInfo.anchor_info.relation_info.attention,Converter={StaticResource numberToStringConvert},Mode=OneWay}"/></TextBlock>
+                        <TextBlock Text="{x:Bind Path=liveRoomVM.LiveInfo.AnchorInfo.BaseInfo.Uname,Mode=OneWay}"></TextBlock>
+                        <TextBlock Margin="0 4 0 0" Foreground="Gray" FontSize="12"> 人气:<Run Text="{x:Bind Path=liveRoomVM.Online,Converter={StaticResource numberToStringConvert},Mode=OneWay}"/> 粉丝:<Run Text="{x:Bind Path=liveRoomVM.LiveInfo.AnchorInfo.RelationInfo.Attention,Converter={StaticResource numberToStringConvert},Mode=OneWay}"/></TextBlock>
                     </StackPanel>
                     <Button x:Name="BtnAttention" Click="BtnAttention_Click" FontSize="12" Visibility="{x:Bind Path=liveRoomVM.Attention,Mode=OneWay,Converter={StaticResource display}}" Grid.Column="2" Background="{ThemeResource HighLightColor}" Foreground="White">关注</Button>
                     <Button x:Name="BtnCacnelAttention" Click="BtnCacnelAttention_Click" FontSize="12" Visibility="{x:Bind Path=liveRoomVM.Attention,Mode=OneWay}" Grid.Column="2">已关注</Button>
@@ -954,20 +954,20 @@
                                 <Grid HorizontalAlignment="Center">
                                     <Ellipse Width="56" Height="56" >
                                         <Ellipse.Fill>
-                                            <ImageBrush Stretch="UniformToFill" ImageSource="{x:Bind Path=liveRoomVM.Profile.face,Mode=OneWay,Converter={StaticResource imageConvert2},ConverterParameter='56h'}"/>
+                                            <ImageBrush Stretch="UniformToFill" ImageSource="{x:Bind Path=liveRoomVM.Profile.Face,Mode=OneWay,Converter={StaticResource imageConvert2},ConverterParameter='56h'}"/>
                                         </Ellipse.Fill>
                                     </Ellipse>
-                                    <Image Width="24" Height="24" HorizontalAlignment="Right" VerticalAlignment="Bottom" Source="{x:Bind Path=liveRoomVM.Profile.verify,Mode=OneWay}"></Image>
+                                    <Image Width="24" Height="24" HorizontalAlignment="Right" VerticalAlignment="Bottom" Source="{x:Bind Path=liveRoomVM.Profile.Verify,Mode=OneWay}"></Image>
                                 </Grid>
 
 
-                                <TextBlock TextAlignment="Center" Text="{x:Bind Path=liveRoomVM.Profile.uname,Mode=OneWay}"></TextBlock>
-                                <TextBlock TextAlignment="Center" FontSize="12" Foreground="Gray" Text="{x:Bind Path=liveRoomVM.Profile.desc,Mode=OneWay}"></TextBlock>
+                                <TextBlock TextAlignment="Center" Text="{x:Bind Path=liveRoomVM.Profile.Uname,Mode=OneWay}"></TextBlock>
+                                <TextBlock TextAlignment="Center" FontSize="12" Foreground="Gray" Text="{x:Bind Path=liveRoomVM.Profile.Desc,Mode=OneWay}"></TextBlock>
 
                                 <TextBlock Margin="4">分区</TextBlock>
-                                <TextBlock Margin="4" Foreground="Gray" Text="{x:Bind Path=liveRoomVM.Profile.area_name,Mode=OneWay}"></TextBlock>
+                                <TextBlock Margin="4" Foreground="Gray" Text="{x:Bind Path=liveRoomVM.Profile.AreaName,Mode=OneWay}"></TextBlock>
                                 <TextBlock Margin="4">荣誉</TextBlock>
-                                <GridView ItemsSource="{x:Bind Path=liveRoomVM.Profile.glory_info,Mode=OneWay}" HorizontalAlignment="Center" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden"  SelectionMode="None" IsItemClickEnabled="False">
+                                <GridView ItemsSource="{x:Bind Path=liveRoomVM.Profile.GloryInfo,Mode=OneWay}" HorizontalAlignment="Center" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden"  SelectionMode="None" IsItemClickEnabled="False">
                                     <GridView.ItemTemplate>
                                         <DataTemplate>
                                             <HyperlinkButton Padding="0" Margin="0" NavigateUri="{Binding jump_url}">
@@ -1010,31 +1010,31 @@
                                                 <DataTemplate x:DataType="model:LiveRoomRankItemModel">
                                                     <Grid >
                                                         <StackPanel Orientation="Horizontal">
-                                                            <TextBlock Width="20" TextAlignment="Center" FontWeight="Bold" Text="{x:Bind rank}" VerticalAlignment="Center"></TextBlock>
-                                                            <Border Margin="8 0 0 0" Visibility="{x:Bind show_medal}" VerticalAlignment="Center" BorderThickness="1" BorderBrush="{x:Bind Path=color,Converter={StaticResource colorConvert}}" CornerRadius="2">
+                                                            <TextBlock Width="20" TextAlignment="Center" FontWeight="Bold" Text="{x:Bind Rank}" VerticalAlignment="Center"></TextBlock>
+                                                            <Border Margin="8 0 0 0" Visibility="{x:Bind ShowMedal}" VerticalAlignment="Center" BorderThickness="1" BorderBrush="{x:Bind Path=Color,Converter={StaticResource colorConvert}}" CornerRadius="2">
                                                                 <Grid>
                                                                     <Grid.ColumnDefinitions>
                                                                         <ColumnDefinition/>
                                                                         <ColumnDefinition/>
                                                                     </Grid.ColumnDefinitions>
-                                                                    <Grid Background="{x:Bind Path=color,Converter={StaticResource colorConvert}}" Padding="2 0">
-                                                                        <TextBlock FontSize="12" Foreground="White" Text="{x:Bind medal_name}"></TextBlock>
+                                                                    <Grid Background="{x:Bind Path=Color,Converter={StaticResource colorConvert}}" Padding="2 0">
+                                                                        <TextBlock FontSize="12" Foreground="White" Text="{x:Bind MedalName}"></TextBlock>
                                                                     </Grid>
                                                                     <Grid Grid.Column="1" Background="White" Padding="4 0">
-                                                                        <TextBlock FontSize="12" Foreground="{x:Bind Path=color,Converter={StaticResource colorConvert}}" Text="{x:Bind level}"></TextBlock>
+                                                                        <TextBlock FontSize="12" Foreground="{x:Bind Path=Color,Converter={StaticResource colorConvert}}" Text="{x:Bind Level}"></TextBlock>
                                                                     </Grid>
                                                                 </Grid>
                                                             </Border>
                                                             <Ellipse  Margin="8 0 0 0" Width="24" Height="24" >
                                                                 <Ellipse.Fill>
-                                                                    <ImageBrush ImageSource="{x:Bind Path=face,Converter={StaticResource imageConvert2},ConverterParameter='48h'}"/>
+                                                                    <ImageBrush ImageSource="{x:Bind Path=Face,Converter={StaticResource imageConvert2},ConverterParameter='48h'}"/>
                                                                 </Ellipse.Fill>
                                                             </Ellipse>
-                                                            <TextBlock Margin="4 0 0 0" Text="{x:Bind uname}" VerticalAlignment="Center"></TextBlock>
+                                                            <TextBlock Margin="4 0 0 0" Text="{x:Bind Uname}" VerticalAlignment="Center"></TextBlock>
                                                         </StackPanel>
-                                                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Visibility="{x:Bind Path=show_right}">
-                                                            <Image Source="{x:Bind Path=icon}" Height="16"></Image>
-                                                            <TextBlock Margin="4 0 0 0" Text="{x:Bind score}" VerticalAlignment="Center"></TextBlock>
+                                                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Visibility="{x:Bind Path=ShowRight}">
+                                                            <Image Source="{x:Bind Path=Icon}" Height="16"></Image>
+                                                            <TextBlock Margin="4 0 0 0" Text="{x:Bind Score}" VerticalAlignment="Center"></TextBlock>
                                                         </StackPanel>
                                                     </Grid>
                                                 </DataTemplate>
@@ -1059,7 +1059,7 @@
                     </PivotItem>
                     <PivotItem Margin="0">
                         <PivotItem.Header>
-                            <TextBlock FontSize="16">大航海(<Run Text="{x:Bind Path=liveRoomVM.LiveInfo.guard_info.count,Mode=OneWay}"/>)</TextBlock>
+                            <TextBlock FontSize="16">大航海(<Run Text="{x:Bind Path=liveRoomVM.LiveInfo.GuardInfo.Count,Mode=OneWay}"/>)</TextBlock>
                         </PivotItem.Header>
                         <Grid>
                             <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8 0">
@@ -1068,8 +1068,8 @@
                                         <ListView.ItemTemplate>
                                             <DataTemplate x:DataType="model:LiveGuardRankItem">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <Image Width="24" Height="24" Source="{x:Bind rank_img}"></Image>
-                                                    <TextBlock Margin="8 0 0 0" VerticalAlignment="Center" Text="{x:Bind username}"></TextBlock>
+                                                    <Image Width="24" Height="24" Source="{x:Bind RankImg}"></Image>
+                                                    <TextBlock Margin="8 0 0 0" VerticalAlignment="Center" Text="{x:Bind Username}"></TextBlock>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </ListView.ItemTemplate>

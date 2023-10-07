@@ -522,7 +522,7 @@ namespace BiliLite.Modules.Live
         {
             get
             {
-                return LiveRoomVM.Titles.FirstOrDefault(x => x.id == UserTitleID)?.img;
+                return LiveRoomVM.Titles.FirstOrDefault(x => x.Id == UserTitleID)?.Img;
             }
         }
         /// <summary>
