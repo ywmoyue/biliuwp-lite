@@ -136,6 +136,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Models\Common\Live\LiveMessageHandleActionsMap.cs" />
     <Compile Include="Models\Common\UserDynamic\IUserDynamicContentDisplayInfo.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicCtrlItem.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicDisplayTypesMap.cs" />
@@ -164,6 +165,12 @@
     <Compile Include="Models\Common\Live\LiveGiftItem.cs" />
     <Compile Include="Models\Common\Live\LiveGiftItemCountMap.cs" />
     <Compile Include="Models\Common\Live\LiveInfoModel.cs" />
+    <Compile Include="Models\Common\Live\DanmuMsgModel.cs" />
+    <Compile Include="Models\Common\Live\GiftMsgModel.cs" />
+    <Compile Include="Models\Common\Live\GuardBuyMsgModel.cs" />
+    <Compile Include="Models\Common\Live\RoomChangeMsgModel.cs" />
+    <Compile Include="ViewModels\Live\SuperChatMsgViewModel.cs" />
+    <Compile Include="Models\Common\Live\WelcomeMsgModel.cs" />
     <Compile Include="ViewModels\Live\LiveRoomAnchorLotteryViewModel.cs" />
     <Compile Include="Models\Common\Live\LiveRoomGiftItem.cs" />
     <Compile Include="Models\Common\Live\LiveRoomGuardInfoModel.cs" />

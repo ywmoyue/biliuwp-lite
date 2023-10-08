@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Input;
-using Windows.UI.Xaml;
 using BiliLite.Extensions;
 using BiliLite.Models;
 using BiliLite.Models.Common;
@@ -33,10 +32,8 @@ namespace BiliLite.ViewModels.Live
         private System.Threading.CancellationTokenSource m_cancelSource;
         private Modules.Live.LiveMessage m_liveMessage;
         private readonly Timer m_timerBox;
-        private readonly Timer m_timerAutoHideGift;
-        private int m_hideGiftFlag = 1;
-        private List<LiveGiftItem> m_allGifts = new List<LiveGiftItem>();
         private readonly Timer m_timer;
+        private readonly LiveMessageHandleActionsMap m_messageHandleActionsMap;
 
         #endregion
 
@@ -55,13 +52,14 @@ namespace BiliLite.ViewModels.Live
             GiftMessage = new ObservableCollection<GiftMsgModel>();
             Guards = new ObservableCollection<LiveGuardRankItem>();
             BagGifts = new ObservableCollection<LiveGiftItem>();
-            SuperChats = new ObservableCollection<SuperChatMsgModel>();
+            SuperChats = new ObservableCollection<SuperChatMsgViewModel>();
             m_timer = new Timer(1000);
             m_timerBox = new Timer(1000);
-            m_timerAutoHideGift = new Timer(1000);
+            TimerAutoHideGift = new Timer(1000);
             m_timer.Elapsed += Timer_Elapsed;
             m_timerBox.Elapsed += Timer_box_Elapsed;
-            m_timerAutoHideGift.Elapsed += Timer_auto_hide_gift_Elapsed;
+            TimerAutoHideGift.Elapsed += Timer_auto_hide_gift_Elapsed;
+            m_messageHandleActionsMap = InitLiveMessageHandleActionMap();
 
             LoadMoreGuardCommand = new RelayCommand(LoadMoreGuardList);
             ShowBagCommand = new RelayCommand(SetShowBag);
@@ -77,6 +75,15 @@ namespace BiliLite.ViewModels.Live
         public ICommand ShowBagCommand { get; private set; }
 
         public ICommand RefreshBagCommand { get; private set; }
+
+        [DoNotNotify]
+        public int HideGiftFlag { get; set; } = 1;
+
+        [DoNotNotify]
+        public List<LiveGiftItem> AllGifts { get; set; } = new List<LiveGiftItem>();
+
+        [DoNotNotify]
+        public Timer TimerAutoHideGift { get; private set; }
 
         public LiveRoomAnchorLotteryViewModel AnchorLotteryViewModel { get; set; }
 
@@ -136,7 +143,7 @@ namespace BiliLite.ViewModels.Live
         public ObservableCollection<LiveGuardRankItem> Guards { get; set; }
 
         [DoNotNotify]
-        public ObservableCollection<SuperChatMsgModel> SuperChats { get; set; }
+        public ObservableCollection<SuperChatMsgViewModel> SuperChats { get; set; }
 
         [DoNotNotify]
         public LiveRoomWebUrlQualityDescriptionItemModel CurrentQn { get; set; }
@@ -196,127 +203,28 @@ namespace BiliLite.ViewModels.Live
 
         #region Private Methods
 
+        private LiveMessageHandleActionsMap InitLiveMessageHandleActionMap()
+        {
+            var actionMap = new LiveMessageHandleActionsMap();
+            actionMap.AddNewDanmu += (_, e) =>
+            {
+                AddNewDanmu?.Invoke(this, e);
+            }; 
+            actionMap.LotteryEnd += (_, e) =>
+            {
+                LotteryEnd?.Invoke(this, e);
+            };
+            return actionMap;
+        }
+
         private void LiveMessage_NewMessage(MessageType type, object message)
         {
             if (Messages == null) return;
-            switch (type)
-            {
-                case MessageType.ConnectSuccess:
-                    Messages.Add(new DanmuMsgModel()
-                    {
-                        UserName = message.ToString(),
-                    });
-                    break;
-                case MessageType.Online:
-                    Online = (int)message;
-                    break;
-                case MessageType.Danmu:
-                    {
-                        var m = message as DanmuMsgModel;
-                        m.ShowUserLevel = Visibility.Visible;
-                        if (Messages.Count >= CleanCount)
-                        {
-                            Messages.Clear();
-                        }
-                        Messages.Add(m);
-                        AddNewDanmu?.Invoke(this, m);
-                    }
-                    break;
-                case MessageType.Gift:
-                    {
-                        if (!ReceiveGiftMsg)
-                        {
-                            return;
-                        }
-                        if (GiftMessage.Count >= 2)
-                        {
-                            GiftMessage.RemoveAt(0);
-                        }
-                        ShowGiftMessage = true;
-                        m_hideGiftFlag = 1;
-                        var info = message as GiftMsgModel;
-                        info.Gif = m_allGifts.FirstOrDefault(x => x.Id == info.GiftId)?.Gif ?? Constants.App.TRANSPARENT_IMAGE;
-                        GiftMessage.Add(info);
-                        if (!m_timerAutoHideGift.Enabled)
-                        {
-                            m_timerAutoHideGift.Start();
-                        }
-                    }
 
-                    break;
-                case MessageType.Welcome:
-                    {
-                        var info = message as WelcomeMsgModel;
-                        if (ReceiveWelcomeMsg)
-                        {
-                            Messages.Add(new DanmuMsgModel()
-                            {
-                                UserName = info.UserName,
-                                UserNameColor = "#FFFF69B4",//Colors.HotPink
-                                Text = " 进入直播间"
-                            });
-                        }
-                    }
-                    break;
-                case MessageType.WelcomeGuard:
-                    {
-                        var info = message as WelcomeMsgModel;
-                        if (ReceiveWelcomeMsg)
-                        {
-                            Messages.Add(new DanmuMsgModel()
-                            {
-                                UserName = info.UserName,
-                                UserNameColor = "#FFFF69B4",//Colors.HotPink
-                                Text = " (舰长)进入直播间"
-                            });
-                        }
-                    }
-                    break;
-                case MessageType.SystemMsg:
-                    break;
-                case MessageType.SuperChat:
-                case MessageType.SuperChatJpn:
-                    SuperChats.Add(message as SuperChatMsgModel);
-                    break;
-                case MessageType.AnchorLotteryStart:
-                    if (ReceiveLotteryMsg)
-                    {
-                        var info = message.ToString();
-                        AnchorLotteryViewModel.SetLotteryInfo(JsonConvert.DeserializeObject<LiveRoomAnchorLotteryInfoModel>(info));
-                    }
-                    break;
-                case MessageType.AnchorLotteryEnd:
-                    break;
-                case MessageType.AnchorLotteryAward:
-                    if (ReceiveLotteryMsg)
-                    {
-                        var info = JsonConvert.DeserializeObject<LiveRoomEndAnchorLotteryInfoModel>(message.ToString());
-                        LotteryEnd?.Invoke(this, info);
-                    }
-                    break;
-
-                case MessageType.GuardBuy:
-                    {
-                        var info = message as GuardBuyMsgModel;
-                        Messages.Add(new DanmuMsgModel()
-                        {
-                            UserName = info.UserName,
-                            UserNameColor = "#FFFF69B4",//Colors.HotPink
-                            Text = $"成为了{info.GiftName}"
-                        });
-                        // 刷新舰队列表
-                        _ = GetGuardList();
-                    }
-                    break;
-                case MessageType.RoomChange:
-                    {
-                        var info = message as RoomChangeMsgModel;
-                        RoomTitle = info.Title;
-                    }
-                    break;
-                default:
-                    break;
-            }
+            var success = m_messageHandleActionsMap.Map.TryGetValue(type, out var handler);
+            if (!success) return;
+            
+            handler(this, message);
         }
 
         private async void Timer_auto_hide_gift_Elapsed(object sender, ElapsedEventArgs e)
@@ -324,14 +232,14 @@ namespace BiliLite.ViewModels.Live
             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 if (GiftMessage == null || GiftMessage.Count == 0) return;
-                if (m_hideGiftFlag >= 5)
+                if (HideGiftFlag >= 5)
                 {
                     ShowGiftMessage = false;
                     GiftMessage.Clear();
                 }
                 else
                 {
-                    m_hideGiftFlag++;
+                    HideGiftFlag++;
                 }
             });
         }
@@ -364,21 +272,21 @@ namespace BiliLite.ViewModels.Live
                     });
                     return;
                 }
-                var start_time = TimeExtensions.TimestampToDatetime(LiveInfo.RoomInfo.LiveStartTime);
-                var ts = DateTime.Now - start_time;
+                var startTime = TimeExtensions.TimestampToDatetime(LiveInfo.RoomInfo.LiveStartTime);
+                var ts = DateTime.Now - startTime;
 
                 await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                 {
-                    for (int i = 0; i < SuperChats.Count; i++)
+                    for (var i = 0; i < SuperChats.Count; i++)
                     {
                         var item = SuperChats[i];
-                        if (item.time <= 0)
+                        if (item.Time <= 0)
                         {
                             SuperChats.Remove(item);
                         }
                         else
                         {
-                            item.time -= 1;
+                            item.Time -= 1;
                         }
                     }
 
@@ -696,21 +604,21 @@ namespace BiliLite.ViewModels.Live
                     data.data["list"]?.ToString() ?? "[]");
                 foreach (var item in ls)
                 {
-                    SuperChats.Add(new SuperChatMsgModel()
+                    SuperChats.Add(new SuperChatMsgViewModel()
                     {
-                        background_bottom_color = item.BackgroundBottomColor,
-                        background_color = item.BackgroundColor,
-                        background_image = item.BackgroundImage,
-                        end_time = item.EndTime,
-                        face = item.UserInfo.Face,
-                        face_frame = item.UserInfo.FaceFrame,
-                        font_color = string.IsNullOrEmpty(item.FontColor) ? "#FFFFFF" : item.FontColor,
-                        max_time = item.EndTime - item.StartTime,
-                        message = item.Message,
-                        price = item.Price,
-                        start_time = item.StartTime,
-                        time = item.Time,
-                        username = item.UserInfo.Uname
+                        BackgroundBottomColor = item.BackgroundBottomColor,
+                        BackgroundColor = item.BackgroundColor,
+                        BackgroundImage = item.BackgroundImage,
+                        EndTime = item.EndTime,
+                        Face = item.UserInfo.Face,
+                        FaceFrame = item.UserInfo.FaceFrame,
+                        FontColor = string.IsNullOrEmpty(item.FontColor) ? "#FFFFFF" : item.FontColor,
+                        MaxTime = item.EndTime - item.StartTime,
+                        Message = item.Message,
+                        Price = item.Price,
+                        StartTime = item.StartTime,
+                        Time = item.Time,
+                        Username = item.UserInfo.Uname
                     });
                 }
             }
@@ -889,9 +797,9 @@ namespace BiliLite.ViewModels.Live
                 var data = await result.GetData<JObject>();
                 if (!data.success) return;
                 var list = JsonConvert.DeserializeObject<List<LiveGiftItem>>(data.data["list"].ToString());
-                if (m_allGifts == null || m_allGifts.Count == 0)
+                if (AllGifts == null || AllGifts.Count == 0)
                 {
-                    m_allGifts = list;
+                    AllGifts = list;
                 }
 
                 var resultRoom = await m_liveRoomApi
@@ -1152,7 +1060,7 @@ namespace BiliLite.ViewModels.Live
 
             m_timer?.Stop();
             m_timerBox?.Stop();
-            m_timerAutoHideGift?.Stop();
+            TimerAutoHideGift?.Stop();
             if (AnchorLotteryViewModel != null)
             {
                 AnchorLotteryViewModel.Timer.Stop();
