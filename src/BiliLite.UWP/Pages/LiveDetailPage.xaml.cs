@@ -19,6 +19,7 @@ using Windows.Graphics.Imaging;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.System.Display;
+using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -29,6 +30,10 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using BiliLite.Models.Common.Live;
+using BiliLite.Models.Common.Player;
+using BiliLite.Models.Exceptions;
+using BiliLite.Player;
+using BiliLite.Player.Controllers;
 using BiliLite.ViewModels.Live;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -42,17 +47,27 @@ namespace BiliLite.Pages
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
 
+        private readonly BasePlayerController m_playerController;
+        private readonly LivePlayer m_player;
+        private readonly RealPlayInfo m_realPlayInfo;
+
         DisplayRequest dispRequest;
         readonly MediaSourceConfig _config;
-        FFmpegInteropX.FFmpegMediaSource interopMSS;
         LiveRoomViewModel m_liveRoomViewModel;
         SettingVM settingVM;
-        readonly MediaPlayer mediaPlayer;
         DispatcherTimer timer_focus;
         DispatcherTimer controlTimer;
         public LiveDetailPage()
         {
             this.InitializeComponent();
+
+            m_playerController = PlayerControllerFactory.Create(PlayerType.Live);
+            m_player = new LivePlayer(playerElement, m_playerController);
+            m_realPlayInfo = new RealPlayInfo();
+            m_playerController.SetPlayer(m_player);
+            m_player.SetRealPlayInfo(m_realPlayInfo);
+            InitPlayerEvent();
+
             Title = "直播间";
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
             dispRequest = new DisplayRequest();
@@ -71,14 +86,6 @@ namespace BiliLite.Pages
             settingVM = new SettingVM();
 
             m_liveRoomViewModel = new LiveRoomViewModel();
-            mediaPlayer = new MediaPlayer();
-            mediaPlayer.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
-            mediaPlayer.PlaybackSession.BufferingStarted += PlaybackSession_BufferingStarted;
-            mediaPlayer.PlaybackSession.BufferingProgressChanged += PlaybackSession_BufferingProgressChanged;
-            mediaPlayer.PlaybackSession.BufferingEnded += PlaybackSession_BufferingEnded;
-            mediaPlayer.MediaOpened += MediaPlayer_MediaOpened;
-            mediaPlayer.MediaEnded += MediaPlayer_MediaEnded; ;
-            mediaPlayer.MediaFailed += MediaPlayer_MediaFailed;
             m_liveRoomViewModel.ChangedPlayUrl += LiveRoomViewModelChangedPlayUrl;
             m_liveRoomViewModel.AddNewDanmu += LiveRoomViewModelAddNewDanmu;
             m_liveRoomViewModel.LotteryEnd += LiveRoomViewModelLotteryEnd;
@@ -86,7 +93,36 @@ namespace BiliLite.Pages
             this.Unloaded += LiveDetailPage_Unloaded;
         }
 
+        private void InitPlayerEvent()
+        {
+            m_playerController.PlayStateChanged += PlayerController_PlayStateChanged;
+            m_player.ErrorOccurred += Player_ErrorOccurred; ;
+        }
 
+        private async void Player_ErrorOccurred(object sender, PlayerException e)
+        {
+            await MediaFailed(e);
+        }
+
+        private async void PlayerController_PlayStateChanged(object sender, Player.States.PlayStates.PlayStateChangedEventArgs e)
+        {
+            if (e.NewState.IsLoading)
+            {
+                await MediaLoading();
+            }
+            if (e.NewState.IsBuffering)
+            {
+                await MediaBuffering();
+            }
+            if (e.NewState.IsPlaying)
+            {
+                await MediaOpened();
+            }
+            if (e.NewState.IsStopped)
+            {
+                await MediaStopped();
+            }
+        }
 
         private void ControlTimer_Tick(object sender, object e)
         {
@@ -152,25 +188,7 @@ namespace BiliLite.Pages
 
         }
         #region 播放器事件
-        private async void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
-        {
-            await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                m_liveRoomViewModel.Liveing = false;
-                url = "";
-                player.SetMediaPlayer(null);
-            });
-        }
-
-        private async void PlaybackSession_BufferingEnded(MediaPlaybackSession sender, object args)
-        {
-            await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                PlayerLoading.Visibility = Visibility.Collapsed;
-            });
-
-        }
-
+        
         private async void PlaybackSession_BufferingProgressChanged(MediaPlaybackSession sender, object args)
         {
             await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
@@ -179,28 +197,46 @@ namespace BiliLite.Pages
             });
         }
 
-        private async void PlaybackSession_BufferingStarted(MediaPlaybackSession sender, object args)
+        private async Task MediaStopped()
         {
-            await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            {
+                m_liveRoomViewModel.Liveing = false;
+                url = "";
+            });
+        }
+
+        private async Task MediaFailed(PlayerException exception)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            {
+                logger.Log("直播加载失败", LogType.Error, new Exception(exception.Description));
+                await new MessageDialog($"啊，直播加载失败了\r\n错误信息:{exception.Description}\r\n请尝试在直播设置中打开/关闭硬解试试", "播放失败")
+                    .ShowAsync();
+            });
+        }
+
+        private async Task MediaLoading()
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                PlayerLoading.Visibility = Visibility.Visible;
+                PlayerLoadText.Text = "加载中";
+            });
+        }
+
+        private async Task MediaBuffering()
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 PlayerLoading.Visibility = Visibility.Visible;
                 PlayerLoadText.Text = "缓冲中";
             });
         }
 
-        private async void MediaPlayer_MediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
+        private async Task MediaOpened()
         {
-            await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
-             {
-                 logger.Log("直播加载失败", LogType.Error, new Exception(args.ErrorMessage));
-                 await new MessageDialog($"啊，直播加载失败了\r\n错误信息:{args.ErrorMessage}\r\n请尝试在直播设置中打开/关闭硬解试试", "播放失败").ShowAsync();
-             });
-
-        }
-
-        private async void MediaPlayer_MediaOpened(MediaPlayer sender, object args)
-        {
-            await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 //保持屏幕常亮
                 dispRequest.RequestActive();
@@ -208,27 +244,26 @@ namespace BiliLite.Pages
                 SetMediaInfo();
             });
         }
+
         private void SetMediaInfo()
         {
             try
             {
-                var str = $"Url: {url}\r\n";
-                str += $"Quality: {m_liveRoomViewModel.CurrentQn.Desc}({m_liveRoomViewModel.CurrentQn.Qn})\r\n";
-                str += $"Video Codec: {interopMSS.CurrentVideoStream.CodecName}\r\nAudio Codec:{interopMSS.AudioStreams[0].CodecName}\r\n";
-                str += $"Resolution: {interopMSS.CurrentVideoStream.PixelWidth} x {interopMSS.CurrentVideoStream.PixelHeight}\r\n";
-                str += $"Video Bitrate: {interopMSS.CurrentVideoStream.Bitrate / 1024} Kbps\r\n";
-                str += $"Audio Bitrate: {interopMSS.AudioStreams[0].Bitrate / 1024} Kbps\r\n";
-                str += $"Decoder Engine: {interopMSS.CurrentVideoStream.DecoderEngine.ToString()}";
-                txtInfo.Text = str;
+                //var str = $"Url: {url}\r\n";
+                //str += $"Quality: {m_liveRoomViewModel.CurrentQn.Desc}({m_liveRoomViewModel.CurrentQn.Qn})\r\n";
+                //str += $"Video Codec: {interopMSS.CurrentVideoStream.CodecName}\r\nAudio Codec:{interopMSS.AudioStreams[0].CodecName}\r\n";
+                //str += $"Resolution: {interopMSS.CurrentVideoStream.PixelWidth} x {interopMSS.CurrentVideoStream.PixelHeight}\r\n";
+                //str += $"Video Bitrate: {interopMSS.CurrentVideoStream.Bitrate / 1024} Kbps\r\n";
+                //str += $"Audio Bitrate: {interopMSS.AudioStreams[0].Bitrate / 1024} Kbps\r\n";
+                //str += $"Decoder Engine: {interopMSS.CurrentVideoStream.DecoderEngine.ToString()}";
+                //txtInfo.Text = str;
             }
             catch (Exception)
             {
                 txtInfo.Text = "Url";
             }
-
-
-
         }
+
         private async void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
         {
             await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
@@ -390,22 +425,13 @@ namespace BiliLite.Pages
         }
 
 
-        private void LiveDetailPage_ClosedPage(object sender, EventArgs e)
+        private async void LiveDetailPage_ClosedPage(object sender, EventArgs e)
         {
-            StopPlay();
+            await StopPlay();
         }
-        private void StopPlay()
+        private async Task StopPlay()
         {
-            if (mediaPlayer != null)
-            {
-                mediaPlayer.Pause();
-                mediaPlayer.Source = null;
-            }
-            if (interopMSS != null)
-            {
-                interopMSS.Dispose();
-                interopMSS = null;
-            }
+            await m_playerController.PlayState.Stop();
             m_liveRoomViewModel?.Dispose();
             //取消屏幕常亮
             if (dispRequest != null)
@@ -434,23 +460,23 @@ namespace BiliLite.Pages
                 MessageCenter.ChangeTitle(this, Title);
             }
         }
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        protected override async void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             if (e.NavigationMode == NavigationMode.Back)
-                StopPlay();
+                await StopPlay();
             base.OnNavigatingFrom(e);
         }
 
         private void LoadSetting()
         {
             //音量
-            mediaPlayer.Volume = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_VOLUME, 1.0);
-            SliderVolume.Value = mediaPlayer.Volume;
-            SliderVolume.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
-            {
-                mediaPlayer.Volume = SliderVolume.Value;
-                SettingService.SetValue<double>(SettingConstants.Player.PLAYER_VOLUME, SliderVolume.Value);
-            });
+            //mediaPlayer.Volume = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_VOLUME, 1.0);
+            //SliderVolume.Value = mediaPlayer.Volume;
+            //SliderVolume.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
+            //{
+            //    mediaPlayer.Volume = SliderVolume.Value;
+            //    SettingService.SetValue<double>(SettingConstants.Player.PLAYER_VOLUME, SliderVolume.Value);
+            //});
             //亮度
             _brightness = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_BRIGHTNESS, 0);
             BrightnessShield.Opacity = _brightness;
@@ -589,9 +615,7 @@ namespace BiliLite.Pages
                 m_liveRoomViewModel.ReceiveLotteryMsg = !LiveSettingDotReceiveLotteryMsg.IsOn;
                 SettingService.SetValue<bool>(SettingConstants.Live.HIDE_LOTTERY, LiveSettingDotReceiveLotteryMsg.IsOn);
             });
-
         }
-
 
         public void ChangeTitle(string title)
         {
@@ -614,20 +638,8 @@ namespace BiliLite.Pages
             {
                 PlayerLoading.Visibility = Visibility.Visible;
                 PlayerLoadText.Text = "加载中";
-                if (mediaPlayer != null)
-                {
-                    mediaPlayer.Pause();
-                    mediaPlayer.Source = null;
-                }
-                if (interopMSS != null)
-                {
-                    interopMSS.Dispose();
-                    interopMSS = null;
-                }
-                interopMSS = await FFmpegMediaSource.CreateFromUriAsync(url, _config);
-                mediaPlayer.AutoPlay = true;
-                mediaPlayer.Source = interopMSS.CreateMediaPlaybackItem();
-                player.SetMediaPlayer(mediaPlayer);
+                m_realPlayInfo.HlsUrl = url;
+                await m_playerController.PlayState.Load();
             }
             catch (Exception ex)
             {
@@ -659,12 +671,12 @@ namespace BiliLite.Pages
 
         private void BottomBtnPause_Click(object sender, RoutedEventArgs e)
         {
-            mediaPlayer.Pause();
+            //mediaPlayer.Pause();
         }
 
         private void BottomBtnPlay_Click(object sender, RoutedEventArgs e)
         {
-            mediaPlayer.Play();
+            //mediaPlayer.Play();
         }
 
         private void BottomBtnFullWindows_Click(object sender, RoutedEventArgs e)
@@ -741,8 +753,6 @@ namespace BiliLite.Pages
             }
         }
 
-
-
         private async void BottomBtnRefresh_Click(object sender, RoutedEventArgs e)
         {
             await m_liveRoomViewModel.LoadLiveRoomDetail(roomid);
@@ -767,7 +777,7 @@ namespace BiliLite.Pages
                 StorageFolder folder = await applicationFolder.CreateFolderAsync("哔哩哔哩截图", CreationCollisionOption.OpenIfExists);
                 StorageFile saveFile = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
                 RenderTargetBitmap bitmap = new RenderTargetBitmap();
-                await bitmap.RenderAsync(player);
+                await bitmap.RenderAsync(playerElement);
                 var pixelBuffer = await bitmap.GetPixelsAsync();
                 using (var fileStream = await saveFile.OpenAsync(FileAccessMode.ReadWrite))
                 {
@@ -1075,20 +1085,19 @@ namespace BiliLite.Pages
                 double dd = delta / (this.ActualHeight * 0.8);
 
                 //slider_V.Value -= d;
-                var volume = mediaPlayer.Volume - dd;
-                if (volume < 0) volume = 0;
-                SliderVolume.Value = volume;
+                //var volume = mediaPlayer.Volume - dd;
+                //if (volume < 0) volume = 0;
+                //SliderVolume.Value = volume;
 
             }
             else
             {
-                double dd = Math.Abs(delta) / (this.ActualHeight * 0.8);
-                var volume = mediaPlayer.Volume + dd;
-                if (volume > 1) volume = 1;
-                SliderVolume.Value = volume;
-                //slider_V.Value += d;
+                //double dd = Math.Abs(delta) / (this.ActualHeight * 0.8);
+                //var volume = mediaPlayer.Volume + dd;
+                //if (volume > 1) volume = 1;
+                //SliderVolume.Value = volume;
             }
-            TxtToolTip.Text = "音量:" + mediaPlayer.Volume.ToString("P");
+            //TxtToolTip.Text = "音量:" + mediaPlayer.Volume.ToString("P");
 
             //Notify.ShowMessageToast("音量:" +  mediaElement.MediaPlayer.Volume.ToString("P"), 3000);
         }

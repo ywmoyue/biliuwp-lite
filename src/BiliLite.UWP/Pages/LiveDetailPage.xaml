@@ -343,7 +343,7 @@
                    ManipulationCompleted="Grid_ManipulationCompleted"
                    ManipulationDelta="Grid_ManipulationDelta"
                    ManipulationStarted="Grid_ManipulationStarted">
-                    <MediaPlayerElement x:Name="player" ></MediaPlayerElement>
+                    <MediaPlayerElement x:Name="playerElement" ></MediaPlayerElement>
                    
                     <!--弹幕-->
                     <Grid Tapped="Grid_Tapped">
