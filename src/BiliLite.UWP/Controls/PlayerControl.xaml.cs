@@ -1614,10 +1614,7 @@ namespace BiliLite.Controls
                 return true;
             }
             var soundQualityId = soundQuality?.QualityID;
-            if (soundQualityId == null)
-            {
-                soundQualityId = 0;
-            }
+            soundQualityId ??= 0;
             var info = await playerHelper.GetPlayUrls(CurrentPlayItem, quality.QualityID, soundQualityId.Value);
             if (!info.Success)
             {
@@ -1629,7 +1626,6 @@ namespace BiliLite.Controls
                 ShowDialog("无法读取到播放地址，试试换个清晰度?", "播放失败");
                 return false;
             }
-            quality = info.CurrentQuality;
             return true;
         }
 
@@ -1669,11 +1665,11 @@ namespace BiliLite.Controls
             }
             else if (quality.PlayUrlType == BiliPlayUrlType.SingleFLV)
             {
-                result = await Player.PlaySingleFlvUseSYEngine(quality.FlvInfo.First().Url, quality.UserAgent, quality.Referer, positon: _postion, epId: CurrentPlayItem.ep_id);
-                if (!result.result)
-                {
-                    result = await Player.PlaySingleFlvUseFFmpegInterop(quality.FlvInfo.First().Url, quality.UserAgent, quality.Referer, positon: _postion);
-                }
+                // result = await Player.PlaySingleFlvUseSYEngine(quality.FlvInfo.First().Url, quality.UserAgent, quality.Referer, positon: _postion, epId: CurrentPlayItem.ep_id);
+                // if (!result.result)
+                // {
+                result = await Player.PlaySingleFlvUseFFmpegInterop(quality.FlvInfo.First().Url, quality.UserAgent, quality.Referer, positon: _postion);
+                // }
             }
             else if (quality.PlayUrlType == BiliPlayUrlType.MultiFLV)
             {
@@ -1699,6 +1695,12 @@ namespace BiliLite.Controls
             if (!await ChangeQualityGetPlayUrls(quality, soundQuality))
             {
                 return;
+            }
+            if (quality.PlayUrlType == BiliPlayUrlType.SingleFLV && !quality.HasPlayUrl)
+            {
+                // 解决flv在切换清晰度后无地址的问题
+                var info = await playerHelper.GetPlayUrls(CurrentPlayItem, quality.QualityID);
+                quality = info.CurrentQuality;
             }
             var result = await ChangeQualityPlayVideo(quality, soundQuality);
             if (result.result)
