@@ -479,10 +479,10 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Orientation="Horizontal">
-                                        <HyperlinkButton x:Name="BottomBtnPause" Click="BottomBtnPause_Click" Visibility="Collapsed" Foreground="White" Padding="8" Width="48" Height="48">
+                                        <HyperlinkButton x:Name="BottomBtnPause" Click="BottomBtnPause_Click" Visibility="{x:Bind m_viewModel.ShowPauseBtn, Mode=OneWay}" Foreground="White" Padding="8" Width="48" Height="48">
                                             <fa:FontAwesome Icon="Solid_Pause"  FontSize="20"></fa:FontAwesome>
                                         </HyperlinkButton>
-                                        <HyperlinkButton x:Name="BottomBtnPlay" Click="BottomBtnPlay_Click" Foreground="White" Padding="8" Width="48" Height="48">
+                                        <HyperlinkButton x:Name="BottomBtnPlay" Click="BottomBtnPlay_Click" Visibility="{x:Bind m_viewModel.ShowResumeBtn, Mode=OneWay}" Foreground="White" Padding="8" Width="48" Height="48">
                                             <fa:FontAwesome Icon="Solid_Play"  FontSize="20"></fa:FontAwesome>
                                         </HyperlinkButton>
                                         <HyperlinkButton x:Name="BottomBtnRefresh" Click="BottomBtnRefresh_Click" Foreground="White" Padding="8" Width="48" Height="48">

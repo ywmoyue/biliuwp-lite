@@ -18,12 +18,12 @@ namespace BiliLite.Player.States.PauseStates
 
         public virtual bool IsPaused => true;
 
-        public virtual async Task Resume(IBiliPlayer2 player)
+        public virtual async Task Resume()
         {
             _logger.Error($"暂停状态错误调用");
         }
 
-        public virtual async Task Pause(IBiliPlayer2 player)
+        public virtual async Task Pause()
         {
             _logger.Error($"暂停状态错误调用");
         }

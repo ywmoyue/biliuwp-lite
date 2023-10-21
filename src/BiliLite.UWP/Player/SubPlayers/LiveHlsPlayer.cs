@@ -137,5 +137,15 @@ namespace BiliLite.Player
         {
             await StopCore();
         }
+
+        public override async Task Pause()
+        {
+            m_mediaPlayer.Pause();
+        }
+
+        public override async Task Resume()
+        {
+            m_mediaPlayer.Play();
+        }
     }
 }

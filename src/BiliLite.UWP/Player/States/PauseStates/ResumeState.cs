@@ -11,7 +11,7 @@ namespace BiliLite.Player.States.PauseStates
 
         public override bool IsPaused => false;
 
-        public override async Task Resume(IBiliPlayer2 player)
+        public override async Task Pause()
         {
             m_stateHandler.ChangeToPaused();
             await m_playerController.Player.Pause();

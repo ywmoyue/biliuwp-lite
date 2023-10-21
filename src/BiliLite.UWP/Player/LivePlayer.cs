@@ -48,6 +48,10 @@ namespace BiliLite.Player
         private async void SubPlayer_MediaOpened(object sender, EventArgs e)
         {
             await m_playerController.PlayState.Buff();
+            if (m_realPlayInfo.IsAutoPlay)
+            {
+                await m_playerController.PauseState.Resume();
+            }
         }
 
         private async void SubPlayer_MediaEnded(object sender, EventArgs e)
@@ -87,12 +91,12 @@ namespace BiliLite.Player
 
         public async Task Pause()
         {
-
+            await m_subPlayer.Pause();
         }
 
         public async Task Resume()
         {
-
+            await m_subPlayer.Resume();
         }
     }
 }

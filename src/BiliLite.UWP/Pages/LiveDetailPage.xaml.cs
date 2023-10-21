@@ -18,7 +18,6 @@ using Windows.Graphics.Imaging;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.System.Display;
-using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -33,6 +32,7 @@ using BiliLite.Models.Common.Player;
 using BiliLite.Models.Exceptions;
 using BiliLite.Player;
 using BiliLite.Player.Controllers;
+using BiliLite.Player.States.PauseStates;
 using BiliLite.ViewModels.Live;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -49,6 +49,7 @@ namespace BiliLite.Pages
         private readonly BasePlayerController m_playerController;
         private readonly LivePlayer m_player;
         private readonly RealPlayInfo m_realPlayInfo;
+        private readonly LiveDetailPageViewModel m_viewModel;
 
         DisplayRequest dispRequest;
         readonly MediaSourceConfig _config;
@@ -58,11 +59,14 @@ namespace BiliLite.Pages
         DispatcherTimer controlTimer;
         public LiveDetailPage()
         {
+            m_viewModel = new LiveDetailPageViewModel();
+            DataContext = m_viewModel;
             this.InitializeComponent();
 
             m_playerController = PlayerControllerFactory.Create(PlayerType.Live);
             m_player = new LivePlayer(playerElement, m_playerController);
             m_realPlayInfo = new RealPlayInfo();
+            m_realPlayInfo.IsAutoPlay = true;
             m_playerController.SetPlayer(m_player);
             m_player.SetRealPlayInfo(m_realPlayInfo);
             InitPlayerEvent();
@@ -95,7 +99,16 @@ namespace BiliLite.Pages
         private void InitPlayerEvent()
         {
             m_playerController.PlayStateChanged += PlayerController_PlayStateChanged;
+            m_playerController.PauseStateChanged += PlayerController_PauseStateChanged;
             m_player.ErrorOccurred += Player_ErrorOccurred; ;
+        }
+
+        private async void PlayerController_PauseStateChanged(object sender, PauseStateChangedEventArgs e)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                m_viewModel.IsPaused = e.NewState.IsPaused;
+            });
         }
 
         private async void Player_ErrorOccurred(object sender, PlayerException e)
@@ -263,34 +276,6 @@ namespace BiliLite.Pages
             }
         }
 
-        private async void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
-        {
-            await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                switch (sender.PlaybackState)
-                {
-                    case MediaPlaybackState.None:
-                        break;
-                    case MediaPlaybackState.Opening:
-                        PlayerLoading.Visibility = Visibility.Visible;
-                        PlayerLoadText.Text = "加载中";
-                        break;
-                    case MediaPlaybackState.Buffering:
-                        PlayerLoading.Visibility = Visibility.Visible;
-                        break;
-                    case MediaPlaybackState.Playing:
-                        BottomBtnPlay.Visibility = Visibility.Collapsed;
-                        BottomBtnPause.Visibility = Visibility.Visible;
-                        break;
-                    case MediaPlaybackState.Paused:
-                        BottomBtnPlay.Visibility = Visibility.Visible;
-                        BottomBtnPause.Visibility = Visibility.Collapsed;
-                        break;
-                    default:
-                        break;
-                }
-            });
-        }
         #endregion
 
         string url = "";
@@ -335,16 +320,16 @@ namespace BiliLite.Pages
             args.Handled = true;
             switch (args.VirtualKey)
             {
-                //case Windows.System.VirtualKey.Space:
-                //    if (mediaPlayer.PlaybackSession.CanPause)
-                //    {
-                //        mediaPlayer.Pause();
-                //    }
-                //    else
-                //    {
-                //        mediaPlayer.Play();
-                //    }
-                //    break;
+                case Windows.System.VirtualKey.Space:
+                    if (m_playerController.PauseState.IsPaused)
+                    {
+                        await m_playerController.PauseState.Resume();
+                    }
+                    else
+                    {
+                        await m_playerController.PauseState.Pause();
+                    }
+                    break;
 
                 case Windows.System.VirtualKey.Up:
                     if (SliderVolume.Value + 0.1 > 1)
@@ -668,20 +653,18 @@ namespace BiliLite.Pages
             await SetPlayer(url);
         }
 
-        private void BottomBtnPause_Click(object sender, RoutedEventArgs e)
+        private async void BottomBtnPause_Click(object sender, RoutedEventArgs e)
         {
-            //mediaPlayer.Pause();
+            await m_playerController.PauseState.Pause();
         }
 
-        private void BottomBtnPlay_Click(object sender, RoutedEventArgs e)
+        private async void BottomBtnPlay_Click(object sender, RoutedEventArgs e)
         {
-            //mediaPlayer.Play();
+            await m_playerController.PauseState.Resume();
         }
 
         private void BottomBtnFullWindows_Click(object sender, RoutedEventArgs e)
         {
-
-
             SetFullWindow(true);
         }
 
