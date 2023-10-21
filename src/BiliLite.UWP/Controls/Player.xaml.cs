@@ -137,7 +137,7 @@ namespace BiliLite.Controls
         /// </summary>
         public double BufferCache
         {
-            get { return (double)GetValue(BufferCacheProperty); }
+            get { return Convert.ToDouble(GetValue(BufferCacheProperty)); }
             set { SetValue(BufferCacheProperty, value); }
         }
 
