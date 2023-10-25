@@ -8,6 +8,10 @@ namespace BiliLite.Player.SubPlayers
 {
     public abstract class ISubPlayer
     {
+        protected RealPlayInfo m_realPlayInfo;
+
+        public abstract double Volume { get; set; }
+
         public event EventHandler<PlayerException> PlayerErrorOccurred;
 
         public virtual event EventHandler MediaOpened;
@@ -22,7 +26,12 @@ namespace BiliLite.Player.SubPlayers
             PlayerErrorOccurred?.Invoke(this, error);
         }
 
-        public abstract Task Load(string url);
+        public void SetRealPlayInfo(RealPlayInfo realPlayInfo)
+        {
+            m_realPlayInfo = realPlayInfo;
+        }
+
+        public abstract Task Load();
 
         public abstract Task Buff();
 

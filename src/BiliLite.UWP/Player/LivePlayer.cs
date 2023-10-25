@@ -15,12 +15,20 @@ namespace BiliLite.Player
         private RealPlayInfo m_realPlayInfo;
         private ISubPlayer m_subPlayer;
         private BasePlayerController m_playerController;
+        private PlayerConfig m_playerConfig;
 
-        public LivePlayer(MediaPlayerElement playerElement, BasePlayerController playerController)
+        public LivePlayer(PlayerConfig playerConfig, MediaPlayerElement playerElement, BasePlayerController playerController)
         {
+            m_playerConfig = playerConfig;
             m_playerController = playerController;
-            m_subPlayer = new LiveHlsPlayer(playerElement);
+            m_subPlayer = new LiveHlsPlayer(playerConfig, playerElement);
             InitPlayerEvents(m_subPlayer);
+        }
+
+        public double Volume
+        {
+            get => m_subPlayer.Volume;
+            set => m_subPlayer.Volume = value;
         }
 
         public event EventHandler<PlayerException> ErrorOccurred;
@@ -44,7 +52,7 @@ namespace BiliLite.Player
             await m_playerController.PlayState.Fault();
             ErrorOccurred?.Invoke(this, e);
         }
-        
+
         private async void SubPlayer_MediaOpened(object sender, EventArgs e)
         {
             await m_playerController.PlayState.Buff();
@@ -62,11 +70,12 @@ namespace BiliLite.Player
         public void SetRealPlayInfo(RealPlayInfo realPlayInfo)
         {
             m_realPlayInfo = realPlayInfo;
+            m_subPlayer.SetRealPlayInfo(realPlayInfo);
         }
 
         public async Task Load()
         {
-            await m_subPlayer.Load(m_realPlayInfo.HlsUrl);
+            await m_subPlayer.Load();
         }
 
         public async Task Buff()
@@ -97,6 +106,22 @@ namespace BiliLite.Player
         public async Task Resume()
         {
             await m_subPlayer.Resume();
+        }
+
+        public async Task FullWindow()
+        {
+        }
+
+        public async Task CancelFullWindow()
+        {
+        }
+
+        public async Task Fullscreen()
+        {
+        }
+
+        public async Task CancelFullscreen()
+        {
         }
     }
 }

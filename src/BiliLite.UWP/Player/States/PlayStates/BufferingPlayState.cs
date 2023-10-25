@@ -9,7 +9,7 @@ namespace BiliLite.Player.States.PlayStates
         {
         }
 
-        public override bool IsLoading => true;
+        public override bool IsBuffering => true;
 
         public override async Task Play()
         {

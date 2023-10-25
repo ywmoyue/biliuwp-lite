@@ -1,15 +1,9 @@
 ﻿namespace BiliLite.Player.States.PauseStates
 {
-    public class PauseStateChangedEventArgs
+    public class PauseStateChangedEventArgs : BaseStateChangedEventArgs<IPauseState>
     {
-        public PauseStateChangedEventArgs(IPauseState newState, IPauseState oldState)
+        public PauseStateChangedEventArgs(IPauseState newState, IPauseState oldState) : base(newState, oldState)
         {
-            NewState = newState;
-            OldState = oldState;
         }
-
-        public IPauseState NewState { get; set; }
-
-        public IPauseState OldState { get; set; }
     }
 }

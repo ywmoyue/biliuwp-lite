@@ -14,6 +14,8 @@
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:live="using:BiliLite.Models.Common.Live"
     xmlns:live1="using:BiliLite.ViewModels.Live"
+    xmlns:Player="using:BiliLite.Models.Common.Player"
+    Margin="{x:Bind m_viewModel.Margin, Mode=OneWay}"
     Background="Transparent">
     <Page.Resources>
         <convert:DatetimeConvert x:Key="datetime" ></convert:DatetimeConvert>
@@ -322,12 +324,12 @@
         <Grid x:Name="detail" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="280" x:Name="RightInfo"/>
+                <ColumnDefinition Width="{x:Bind m_viewModel.RightInfoWidth, Mode=OneWay}" x:Name="RightInfo"/>
             </Grid.ColumnDefinitions>
             <Grid Background="{ThemeResource NavigationViewTopPaneBackground}"  DoubleTapped="Grid_DoubleTapped">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
-                    <RowDefinition Height="Auto" x:Name="BottomInfo"/>
+                    <RowDefinition Height="{x:Bind m_viewModel.BottomInfoHeight, Mode=OneWay}" x:Name="BottomInfo"/>
                 </Grid.RowDefinitions>
                 <Grid.ContextFlyout>
                     <Flyout>
@@ -352,10 +354,10 @@
                     </Grid>
                     <!--亮度-->
                     <Grid x:Name="BrightnessShield" Tapped="Grid_Tapped" Background="#99000000" Opacity="0"></Grid>
-                    <TextBlock Visibility="{x:Bind Path=m_liveRoomViewModel.Liveing,Mode=OneWay,Converter={StaticResource display}}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" Foreground="Gray">主播正在换女装</TextBlock>
-                    <StackPanel x:Name="PlayerLoading" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Visibility="{x:Bind Path=m_viewModel.Living,Mode=OneWay,Converter={StaticResource display}}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" Foreground="Gray">主播正在换女装</TextBlock>
+                    <StackPanel x:Name="PlayerLoading" Visibility="{x:Bind m_viewModel.ShowLoading, Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <ProgressRing IsActive="True" Width="56" Height="56"></ProgressRing>
-                        <TextBlock x:Name="PlayerLoadText" TextAlignment="Center" Margin="0 8" Foreground="Gray">加载中</TextBlock>
+                        <TextBlock x:Name="PlayerLoadText" TextAlignment="Center" Margin="0 8" Foreground="Gray" Text="{x:Bind m_viewModel.LoadText, Mode=OneWay}"></TextBlock>
                     </StackPanel>
                     <Border x:Name="ToolTip" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="8" Padding="16" Background="#CCFFFFFF">
                         <TextBlock x:Name="TxtToolTip" Foreground="Black" FontSize="20" Text=""></TextBlock>
@@ -414,6 +416,14 @@
                                                             <Slider x:Name="LiveSettingCount" Width="240" Minimum="50" Maximum="1000" StepFrequency="1"></Slider>
                                                             <ToggleSwitch x:Name="LiveSettingAutoOpenBox" Visibility="Collapsed" Margin="0 8 0 0" Header="自动开启宝箱"></ToggleSwitch>
                                                             <ToggleSwitch x:Name="LiveSettingHardwareDecode" Margin="0 8 0 0" Header="开启硬解"></ToggleSwitch>
+                                                            <TextBlock Margin="0 4">播放器默认模式</TextBlock>
+                                                            <ComboBox  x:Name="PlayerModeComboBox"  MinWidth="200"
+                                                                       ItemsSource="{x:Bind Player:DefaultPlayerModeOptions.DefaultLivePlayerModeOption}" 
+                                                                       SelectedValue="{x:Bind m_viewModel.LivePlayerMode, Mode=TwoWay}"
+                                                                       SelectionChanged="PlayerModeComboBox_OnSelectionChanged"
+                                                                       SelectedValuePath="Value"
+                                                                       DisplayMemberPath="Name">
+                                                            </ComboBox>
                                                         </StackPanel>
                                                     </PivotItem>
                                                     <PivotItem>
@@ -560,7 +570,7 @@
                                         </Button>
 
                                         <ComboBox x:Name="BottomCBQuality" 
-                                                  Visibility="{x:Bind Path=m_liveRoomViewModel.Liveing,Mode=OneWay}" 
+                                                  Visibility="{x:Bind Path=m_viewModel.Living,Mode=OneWay}" 
                                                   ItemsSource="{x:Bind Path=m_liveRoomViewModel.Qualites,Mode=OneWay}" 
                                                   SelectionChanged="BottomCBQuality_SelectionChanged" 
                                                   DisplayMemberPath="Desc" 
@@ -574,23 +584,23 @@
                                                   Background="Transparent">
 
                                         </ComboBox>
-                                        <ComboBox x:Name="BottomCBLine"  Visibility="{x:Bind Path=m_liveRoomViewModel.Liveing,Mode=OneWay}" Width="80" SelectionChanged="BottomCBLine_SelectionChanged" DisplayMemberPath="Name" ToolTipService.ToolTip="线路" HorizontalContentAlignment="Center" Style="{StaticResource PlayerComboBoxStyle}" Foreground="White" BorderThickness="0" FontSize="18" VerticalAlignment="Center" Background="Transparent">
+                                        <ComboBox x:Name="BottomCBLine"  Visibility="{x:Bind Path=m_viewModel.Living,Mode=OneWay}" Width="80" SelectionChanged="BottomCBLine_SelectionChanged" DisplayMemberPath="Name" ToolTipService.ToolTip="线路" HorizontalContentAlignment="Center" Style="{StaticResource PlayerComboBoxStyle}" Foreground="White" BorderThickness="0" FontSize="18" VerticalAlignment="Center" Background="Transparent">
 
                                         </ComboBox>
 
                                         <HyperlinkButton x:Name="BottomBtnMiniWindows" Click="BottomBtnMiniWindows_Click"  ToolTipService.ToolTip="小窗置顶" Foreground="White" Padding="8" Width="48" Height="48">
                                             <fa:FontAwesome Icon="Regular_WindowRestore"  FontSize="20"></fa:FontAwesome>
                                         </HyperlinkButton>
-                                        <HyperlinkButton x:Name="BottomBtnFullWindows" Click="BottomBtnFullWindows_Click" ToolTipService.ToolTip="铺满窗口" Foreground="White" Padding="8" Width="48" Height="48">
+                                        <HyperlinkButton x:Name="BottomBtnFullWindows" Click="BottomBtnFullWindows_Click" Visibility="{x:Bind m_viewModel.ShowFullWindowBtn, Mode=OneWay}" ToolTipService.ToolTip="铺满窗口" Foreground="White" Padding="8" Width="48" Height="48">
                                             <fa:FontAwesome Icon="Regular_WindowMaximize"  FontSize="20"></fa:FontAwesome>
                                         </HyperlinkButton>
-                                        <HyperlinkButton x:Name="BottomBtnExitFullWindows" Click="BottomBtnExitFullWindows_Click" Visibility="Collapsed" ToolTipService.ToolTip="取消铺满窗口" Foreground="White" Padding="8" Width="48" Height="48">
+                                        <HyperlinkButton x:Name="BottomBtnExitFullWindows" Click="BottomBtnExitFullWindows_Click" Visibility="{x:Bind m_viewModel.ShowExitFullWindowBtn, Mode=OneWay}" ToolTipService.ToolTip="取消铺满窗口" Foreground="White" Padding="8" Width="48" Height="48">
                                             <fa:FontAwesome Icon="Solid_Columns"  FontSize="20"></fa:FontAwesome>
                                         </HyperlinkButton>
-                                        <HyperlinkButton x:Name="BottomBtnFull" Click="BottomBtnFull_Click" ToolTipService.ToolTip="全屏" Foreground="White" Padding="8" Width="48" Height="48">
+                                        <HyperlinkButton x:Name="BottomBtnFull" Click="BottomBtnFull_Click" ToolTipService.ToolTip="全屏" Visibility="{x:Bind m_viewModel.ShowFullscreenBtn, Mode=OneWay}" Foreground="White" Padding="8" Width="48" Height="48">
                                             <fa:FontAwesome Icon="Solid_Expand"  FontSize="20"></fa:FontAwesome>
                                         </HyperlinkButton>
-                                        <HyperlinkButton x:Name="BottomBtnExitFull" Click="BottomBtnExitFull_Click" ToolTipService.ToolTip="退出全屏" Visibility="Collapsed" Foreground="White" Padding="8" Width="48" Height="48">
+                                        <HyperlinkButton x:Name="BottomBtnExitFull" Click="BottomBtnExitFull_Click" ToolTipService.ToolTip="退出全屏" Visibility="{x:Bind m_viewModel.ShowExitFullscreenBtn, Mode=OneWay}" Foreground="White" Padding="8" Width="48" Height="48">
                                             <fa:FontAwesome Icon="Solid_Compress"  FontSize="20"></fa:FontAwesome>
                                         </HyperlinkButton>
                                     </StackPanel>

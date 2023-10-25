@@ -4,6 +4,8 @@ namespace BiliLite.Player
 {
     public interface IBiliPlayer2
     {
+        public double Volume { get; set; }
+
         public Task Load();
 
         public Task Buff();
@@ -17,5 +19,13 @@ namespace BiliLite.Player
         public Task Pause();
 
         public Task Resume();
+
+        public Task FullWindow();
+
+        public Task CancelFullWindow();
+
+        public Task Fullscreen();
+
+        public Task CancelFullscreen();
     }
 }

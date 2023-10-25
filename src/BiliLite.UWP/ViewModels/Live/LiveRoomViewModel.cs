@@ -9,6 +9,7 @@ using BiliLite.Extensions;
 using BiliLite.Models;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Live;
+using BiliLite.Models.Common.Player;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Models.Requests.Api.Live;
@@ -19,6 +20,7 @@ using BiliLite.ViewModels.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
+using DateTime = System.DateTime;
 
 namespace BiliLite.ViewModels.Live
 {
@@ -155,7 +157,10 @@ namespace BiliLite.ViewModels.Live
         public List<LiveBagGiftItem> Bag { get; set; }
 
         [DoNotNotify]
-        public List<LiveRoomRealPlayUrlsModel> Urls { get; set; }
+        public List<BasePlayUrlInfo> HlsUrls { get; set; }
+
+        [DoNotNotify]
+        public List<BasePlayUrlInfo> FlvUrls { get; set; }
 
         public LiveWalletInfo WalletInfo { get; set; }
 
@@ -193,7 +198,7 @@ namespace BiliLite.ViewModels.Live
 
         #region Events
 
-        public event EventHandler<LiveRoomPlayUrlModel> ChangedPlayUrl;
+        public event EventHandler<BasePlayUrlInfo> ChangedPlayUrl;
 
         public event EventHandler<LiveRoomEndAnchorLotteryInfoModel> LotteryEnd;
 
@@ -380,6 +385,50 @@ namespace BiliLite.ViewModels.Live
             await LoadBag();
         }
 
+        private List<BasePlayUrlInfo> GetSpecialPlayUrls(LiveRoomPlayUrlModel liveRoomPlayUrlModel, string protocolName)
+        {
+            LiveRoomWebUrlStreamItemModel stream = null;
+            if (liveRoomPlayUrlModel.PlayUrlInfo.PlayUrl.Stream.Any(item => item.ProtocolName == protocolName))
+            {
+                stream = liveRoomPlayUrlModel.PlayUrlInfo.PlayUrl.Stream.FirstOrDefault(item => item.ProtocolName == protocolName);
+            }
+            else
+            {
+                return null;
+            }
+
+            var codecList = stream.Format[0].Codec;
+
+            var routeIndex = 1;
+            foreach (var item in codecList.SelectMany(codecItem => codecItem.UrlInfo))
+            {
+                item.Name = "线路" + routeIndex;
+                routeIndex++;
+            }
+
+            // 暂时不使用hevc流
+            var codec = codecList.FirstOrDefault(item => item.CodecName == "avc");
+
+            var acceptQnList = codec.AcceptQn;
+            Qualites ??= liveRoomPlayUrlModel.PlayUrlInfo.PlayUrl.GQnDesc.Where(item => acceptQnList.Contains(item.Qn)).ToList();
+            CurrentQn = liveRoomPlayUrlModel.PlayUrlInfo.PlayUrl.GQnDesc.FirstOrDefault(x => x.Qn == codec.CurrentQn);
+
+            var urlList = codec.UrlInfo.Select(urlInfo => new BasePlayUrlInfo
+                { Url = urlInfo.Host + codec.BaseUrl + urlInfo.Extra, Name = urlInfo.Name }).ToList();
+
+            return urlList;
+        }
+
+        private List<BasePlayUrlInfo> GetHlsPlayUrls(LiveRoomPlayUrlModel liveRoomPlayUrlModel)
+        {
+            return GetSpecialPlayUrls(liveRoomPlayUrlModel, "http_hls");
+        }
+
+        private List<BasePlayUrlInfo> GetFlvPlayUrls(LiveRoomPlayUrlModel liveRoomPlayUrlModel)
+        {
+            return GetSpecialPlayUrls(liveRoomPlayUrlModel, "http_stream");
+        }
+
         #endregion
 
         #region Public Methods
@@ -414,13 +463,7 @@ namespace BiliLite.ViewModels.Live
             }
         }
 
-        /// <summary>
-        /// 读取直播播放地址
-        /// </summary>
-        /// <param name="roomId"></param>
-        /// <param name="qn"></param>
-        /// <returns></returns>
-        public async Task GetPlayUrl(int roomId, int qn = 0)
+        public async Task GetPlayUrls(int roomId, int qn = 0)
         {
             try
             {
@@ -436,41 +479,10 @@ namespace BiliLite.ViewModels.Live
                 {
                     throw new CustomizedErrorException(data.message);
                 }
-                // 暂时不优先使用flv流
-                LiveRoomWebUrlStreamItemModel stream = null;
-                if (data.data.PlayUrlInfo.PlayUrl.Stream.Any(item => item.ProtocolName == "http_hls"))
-                {
-                    stream = data.data.PlayUrlInfo.PlayUrl.Stream.FirstOrDefault(item => item.ProtocolName == "http_hls");
-                }
-                else if (data.data.PlayUrlInfo.PlayUrl.Stream.Any(item => item.ProtocolName == "http_stream"))
-                {
-                    stream = data.data.PlayUrlInfo.PlayUrl.Stream.FirstOrDefault(item => item.ProtocolName == "http_stream");
-                }
-                else
-                {
-                    throw new CustomizedErrorException("找不到直播流地址");
-                }
-                var codecList = stream.Format[0].Codec;
 
-                var routeIndex = 1;
-                foreach (var item in codecList.SelectMany(codecItem => codecItem.UrlInfo))
-                {
-                    item.Name = "线路" + routeIndex;
-                    routeIndex++;
-                }
-
-                // 暂时不使用hevc流
-                var codec = codecList.FirstOrDefault(item => item.CodecName == "avc");
-
-                var acceptQnList = codec.AcceptQn;
-                Qualites ??= data.data.PlayUrlInfo.PlayUrl.GQnDesc.Where(item => acceptQnList.Contains(item.Qn)).ToList();
-                CurrentQn = data.data.PlayUrlInfo.PlayUrl.GQnDesc.FirstOrDefault(x => x.Qn == codec.CurrentQn);
-
-                var urlList = codec.UrlInfo.Select(urlInfo => new LiveRoomRealPlayUrlsModel { Url = urlInfo.Host + codec.BaseUrl + urlInfo.Extra, Name = urlInfo.Name }).ToList();
-
-                Urls = urlList;
-
-                ChangedPlayUrl?.Invoke(this, data.data);
+                HlsUrls = GetHlsPlayUrls(data.data);
+                FlvUrls = GetFlvPlayUrls(data.data);
+                ChangedPlayUrl?.Invoke(this, null);
             }
             catch (Exception ex)
             {
@@ -542,7 +554,7 @@ namespace BiliLite.ViewModels.Live
                 if (Liveing)
                 {
                     m_timer.Start();
-                    await GetPlayUrl(RoomID,
+                    await GetPlayUrls(RoomID,
                         SettingService.GetValue(SettingConstants.Live.DEFAULT_QUALITY, 10000));
                     //GetFreeSilverTime();  
                     await LoadSuperChat();

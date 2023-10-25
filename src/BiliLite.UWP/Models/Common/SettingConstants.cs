@@ -463,6 +463,11 @@ namespace BiliLite.Models.Common
             /// CDN服务器
             /// </summary>
             public const string CDN_SERVER = "PlayerCDNServer";
+
+            /// <summary>
+            /// 直播播放器默认模式
+            /// </summary>
+            public const string DEFAULT_LIVE_PLAYER_MODE = "DefaultLivePlayerMode";
         }
 
         public class Roaming

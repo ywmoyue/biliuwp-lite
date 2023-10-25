@@ -5,6 +5,7 @@
         public enum PlayerErrorCode
         {
             NetworkError,
+            PlayUrlError,
             UnknownError,  
         }
 
