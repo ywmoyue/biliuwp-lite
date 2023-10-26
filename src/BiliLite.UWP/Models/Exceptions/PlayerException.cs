@@ -17,7 +17,7 @@ namespace BiliLite.Models.Exceptions
 
         public string Description { get; set; }
 
-        RetryStrategy RetryStrategy { get; set; }
+        public RetryStrategy RetryStrategy { get; set; }
 
         public static PlayerException Create(PlayerErrorCode errorCode, string description, RetryStrategy retryStrategy = RetryStrategy.NoRetry)
         {

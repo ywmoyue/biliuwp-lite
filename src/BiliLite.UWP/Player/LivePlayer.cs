@@ -3,9 +3,11 @@ using BiliLite.Models.Common.Player;
 using System.Threading.Tasks;
 using Windows.Media.Playback;
 using Windows.UI.Xaml.Controls;
+using BiliLite.Extensions;
 using BiliLite.Models.Exceptions;
 using BiliLite.Player.Controllers;
 using BiliLite.Player.SubPlayers;
+using BiliLite.Services;
 using FFmpegInteropX;
 
 namespace BiliLite.Player
@@ -16,6 +18,7 @@ namespace BiliLite.Player
         private ISubPlayer m_subPlayer;
         private BasePlayerController m_playerController;
         private PlayerConfig m_playerConfig;
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
 
         public LivePlayer(PlayerConfig playerConfig, MediaPlayerElement playerElement, BasePlayerController playerController)
         {
@@ -49,7 +52,19 @@ namespace BiliLite.Player
 
         private async void SubPlayerOnPlayerErrorOccurred(object sender, PlayerException e)
         {
+            if (e.RetryStrategy == PlayerError.RetryStrategy.NoError)
+            {
+                await m_playerController.PlayState.Stop();
+                return;
+            }
             await m_playerController.PlayState.Fault();
+            Notify.ShowMessageToast($"播放失败: {e.Description}");
+            _logger.Error($"播放失败: {e.Description}");
+            if (e.RetryStrategy == PlayerError.RetryStrategy.Normal)
+            {
+                await m_playerController.PlayState.Stop();
+                await m_playerController.PlayState.Load();
+            }
             ErrorOccurred?.Invoke(this, e);
         }
 

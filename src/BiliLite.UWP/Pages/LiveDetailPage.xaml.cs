@@ -3,7 +3,6 @@ using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Modules;
 using BiliLite.Services;
-using FFmpegInteropX;
 using Microsoft.UI.Xaml.Controls;
 using NSDanmaku.Model;
 using System;
@@ -447,16 +446,20 @@ namespace BiliLite.Pages
         private void PreLoadSetting()
         {
             //硬解视频
-            LiveSettingHardwareDecode.IsOn = SettingService.GetValue<bool>(SettingConstants.Live.HARDWARE_DECODING, true);
+            LiveSettingHardwareDecode.IsOn =
+                SettingService.GetValue<bool>(SettingConstants.Live.HARDWARE_DECODING, true);
             m_playerConfig.EnableHw = LiveSettingHardwareDecode.IsOn;
-            LiveSettingHardwareDecode.Toggled += new RoutedEventHandler((e, args) =>
+            LiveSettingHardwareDecode.Toggled += async (e, args) =>
             {
-                SettingService.SetValue<bool>(SettingConstants.Live.HARDWARE_DECODING, LiveSettingHardwareDecode.IsOn);
+                SettingService.SetValue<bool>(SettingConstants.Live.HARDWARE_DECODING,
+                    LiveSettingHardwareDecode.IsOn);
                 m_playerConfig.EnableHw = LiveSettingHardwareDecode.IsOn;
-                Notify.ShowMessageToast("刷新后生效");
-            });
-            // 播放器模式
-            m_viewModel.LivePlayerMode = (LivePlayerMode)SettingService.GetValue<int>(SettingConstants.Player.DEFAULT_LIVE_PLAYER_MODE, 0);
+                await LoadPlayer();
+            };
+            // 播放器优先模式
+            m_viewModel.LivePlayerMode = (LivePlayerMode)SettingService.GetValue(
+                SettingConstants.Player.DEFAULT_LIVE_PLAYER_MODE,
+                (int)DefaultPlayerModeOptions.DEFAULT_LIVE_PLAYER_MODE);
             m_playerConfig.PlayMode = m_viewModel.LivePlayerMode;
         }
 
@@ -606,6 +609,7 @@ namespace BiliLite.Pages
         {
             try
             {
+                await m_playerController.PlayState.Stop();
                 await m_playerController.PlayState.Load();
             }
             catch (Exception ex)
@@ -1118,10 +1122,11 @@ namespace BiliLite.Pages
             DanmuControl.Clip = rectangle;
         }
 
-        private void PlayerModeComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void PlayerModeComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            SettingService.SetValue(SettingConstants.Player.DEFAULT_LIVE_PLAYER_MODE, m_viewModel.LivePlayerMode);
             m_playerConfig.PlayMode = m_viewModel.LivePlayerMode;
-            //TODO: Reload player
+            await LoadPlayer();
         }
     }
 }

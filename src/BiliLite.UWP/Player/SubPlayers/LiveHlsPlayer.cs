@@ -27,7 +27,6 @@ namespace BiliLite.Player
             m_config.FFmpegOptions.Add("rtsp_transport", "tcp");
             m_config.FFmpegOptions.Add("user_agent", "Mozilla/5.0 BiliDroid/1.12.0 (bbcallen@gmail.com)");
             m_config.FFmpegOptions.Add("referer", "https://live.bilibili.com/");
-            m_config.VideoDecoderMode = m_playerConfig.EnableHw ? VideoDecoderMode.ForceSystemDecoder : VideoDecoderMode.ForceFFmpegSoftwareDecoder;
         }
 
         public override double Volume
@@ -70,6 +69,11 @@ namespace BiliLite.Player
             //        throw new ArgumentOutOfRangeException();
             //}
             EmitError(PlayerError.PlayerErrorCode.UnknownError,"");
+        }
+
+        private void ReloadConfig()
+        {
+            m_config.VideoDecoderMode = m_playerConfig.EnableHw ? VideoDecoderMode.ForceSystemDecoder : VideoDecoderMode.ForceFFmpegSoftwareDecoder;
         }
 
         private void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
@@ -121,6 +125,7 @@ namespace BiliLite.Player
 
         public override async Task Load()
         {
+            ReloadConfig();
             var urls = m_realPlayInfo.PlayUrls;
             if (urls.HlsUrls == null && urls.FlvUrls == null)
             {
