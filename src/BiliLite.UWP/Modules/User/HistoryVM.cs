@@ -6,47 +6,36 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using BiliLite.Extensions;
+using BiliLite.Models.Common.User;
+using BiliLite.Models.Exceptions;
+using BiliLite.Services;
+using BiliLite.ViewModels.Common;
 
 namespace BiliLite.Modules.User
 {
-    public class HistoryVM : IModules
+    public class HistoryVM : BaseViewModel
     {
         AccountApi accountApi;
+        private HistoryCursor m_historyCursor;
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+
         public HistoryVM()
         {
             accountApi = new AccountApi();
             RefreshCommand = new RelayCommand(Refresh);
             LoadMoreCommand = new RelayCommand(LoadMore);
         }
-        public int Page { get; set; } = 1;
-        private bool _loading = false;
 
-        public bool Loading
-        {
-            get { return _loading; }
-            set { _loading = value; DoPropertyChanged("Loading"); }
-        }
+        public bool Loading { get; set; }
+
         public ICommand LoadMoreCommand { get; private set; }
         public ICommand RefreshCommand { get; private set; }
-        private bool _Nothing = false;
-        public bool Nothing
-        {
-            get { return _Nothing; }
-            set { _Nothing = value; DoPropertyChanged("Nothing"); }
-        }
 
-        private bool _ShowLoadMore = false;
-        public bool ShowLoadMore
-        {
-            get { return _ShowLoadMore; }
-            set { _ShowLoadMore = value; DoPropertyChanged("ShowLoadMore"); }
-        }
-        private ObservableCollection<HistoryItemModel> _videos;
-        public ObservableCollection<HistoryItemModel> Videos
-        {
-            get { return _videos; }
-            set { _videos = value; DoPropertyChanged("Videos"); }
-        }
+        public bool Nothing { get; set; }
+        
+        public bool ShowLoadMore { get; set; }
+        
+        public ObservableCollection<UserHistoryItem> Videos { get; set; }
 
         public async Task LoadHistory()
         {
@@ -55,52 +44,55 @@ namespace BiliLite.Modules.User
                 ShowLoadMore = false;
                 Loading = true;
                 Nothing = false;
-                var results = await accountApi.History(Page, 24).Request();
-                if (results.status)
+                var results = await accountApi.HistoryWbi(m_historyCursor).Request();
+                if (!results.status)
                 {
-                    var data = await results.GetJson<ApiDataModel<ObservableCollection<HistoryItemModel>>>();
-                    if (data.success)
-                    {
-                        if (Page == 1)
-                        {
-                            if (data.data == null || data.data.Count == 0)
-                            {
-                                Nothing = true;
-                                return;
-                            }
-                            Videos = data.data;
+                    throw new CustomizedErrorException(results.message);
+                }
 
-                        }
-                        else
-                        {
-                            if (data.data != null)
-                            {
-                                foreach (var item in data.data)
-                                {
-                                    Videos.Add(item);
-                                }
-                            }
-                        }
-                        if (data.data != null && data.data.Count != 0)
-                        {
-                            ShowLoadMore = true;
-                            Page++;
-                        }
-                    }
-                    else
+                var data = await results.GetJson<ApiDataModel<UserHistory>>();
+                if (!data.success)
+                {
+                    throw new CustomizedErrorException(data.message);
+                }
+
+                if (m_historyCursor == null)
+                {
+                    if (data.data == null || data.data.List.Count == 0)
                     {
-                        Notify.ShowMessageToast(data.message);
+                        Nothing = true;
+                        return;
                     }
+
+                    Videos = new ObservableCollection<UserHistoryItem>(data.data.List);
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    if (data.data != null)
+                    {
+                        foreach (var item in data.data.List)
+                        {
+                            Videos.Add(item);
+                        }
+                    }
                 }
+
+                if (data.data != null && data.data.List.Count != 0)
+                {
+                    ShowLoadMore = true;
+                    m_historyCursor = data.data.Cursor;
+                }
+            }
+            catch (CustomizedErrorException ex)
+            {
+                Notify.ShowMessageToast(ex.Message);
+                _logger.Error(ex.Message);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<HistoryVM>(ex);
                 Notify.ShowMessageToast(handel.message);
+                _logger.Error("加载历史记录失败", ex);
             }
             finally
             {
@@ -113,7 +105,8 @@ namespace BiliLite.Modules.User
             {
                 return;
             }
-            Page = 1;
+
+            m_historyCursor = null;
             Videos = null;
             await LoadHistory();
         }
@@ -129,11 +122,11 @@ namespace BiliLite.Modules.User
             }
             await LoadHistory();
         }
-        public async void Del(HistoryItemModel item)
+        public async void Del(UserHistoryItem item)
         {
             try
             {
-                var results = await accountApi.DelHistory(item.business + "_" + item.kid).Request();
+                var results = await accountApi.DelHistory(item.History.Business + "_" + item.Kid).Request();
                 if (results.status)
                 {
                     var data = await results.GetJson<ApiDataModel<JObject>>();
@@ -157,25 +150,5 @@ namespace BiliLite.Modules.User
                 Notify.ShowMessageToast(handel.message);
             }
         }
-    }
-    public class HistoryItemModel
-    {
-        public string aid { get; set; }
-        public string cover { get; set; }
-        public HistoryItemOwnerModel owner { get; set; }
-        public string name { get; set; }
-        public string pic { get; set; }
-        public string title { get; set; }
-        public long view_at { get; set; }
-        public string tname { get; set; }
-        public string kid { get; set; }
-        public string business { get; set; }
-    }
-
-    public class HistoryItemOwnerModel
-    {
-        public long mid { get; set; }
-        public string name { get; set; }
-        public string face { get; set; }
     }
 }

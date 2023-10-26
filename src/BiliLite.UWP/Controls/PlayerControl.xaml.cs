@@ -1635,7 +1635,7 @@ namespace BiliLite.Controls
 
         private async Task<PlayerOpenResult> ChangeQualityPlayVideo(BiliPlayUrlInfo quality, BiliDashAudioPlayUrlInfo audioQuality)
         {
-            PlayerOpenResult result = new PlayerOpenResult()
+            var result = new PlayerOpenResult()
             {
                 result = false
             };
@@ -1669,11 +1669,7 @@ namespace BiliLite.Controls
             }
             else if (quality.PlayUrlType == BiliPlayUrlType.SingleFLV)
             {
-                result = await Player.PlaySingleFlvUseSYEngine(quality.FlvInfo.First().Url, quality.UserAgent, quality.Referer, positon: _postion, epId: CurrentPlayItem.ep_id);
-                if (!result.result)
-                {
-                    result = await Player.PlaySingleFlvUseFFmpegInterop(quality.FlvInfo.First().Url, quality.UserAgent, quality.Referer, positon: _postion);
-                }
+                result = await Player.PlaySingleFlvUseFFmpegInterop(quality.FlvInfo.First().Url, quality.UserAgent, quality.Referer, positon: _postion);
             }
             else if (quality.PlayUrlType == BiliPlayUrlType.MultiFLV)
             {

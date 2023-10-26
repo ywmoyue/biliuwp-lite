@@ -2,6 +2,7 @@
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using System;
+using BiliLite.Models.Common.User;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite.Models.Requests.Api
@@ -285,6 +286,27 @@ namespace BiliLite.Models.Requests.Api
             api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
             return api;
         }
+
+        public ApiModel HistoryWbi(HistoryCursor cursor)
+        {
+            if (cursor == null)
+            {
+                cursor = new HistoryCursor()
+                {
+                    Max = 0,
+                    ViewAt = 0,
+                };
+            }
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Get,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/web-interface/history/cursor",
+                parameter = $"max={cursor.Max}&view_at={cursor.ViewAt}&business=",
+                need_cookie = true,
+            };
+            return api;
+        }
+
         public ApiModel DelHistory(string id)
         {
             ApiModel api = new ApiModel()

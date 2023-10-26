@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project ToolsVersion="15.0" DefaultTargets="Build"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"
+    Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -212,6 +214,10 @@
     <Compile Include="ViewModels\Live\LiveDetailPageViewModel.cs" />
     <Compile Include="ViewModels\Live\SuperChatMsgViewModel.cs" />
     <Compile Include="Models\Common\Live\WelcomeMsgModel.cs" />
+    <Compile Include="Models\Common\User\HistoryCursor.cs" />
+    <Compile Include="Models\Common\User\UserHistory.cs" />
+    <Compile Include="Models\Common\User\UserHistoryItem.cs" />
+    <Compile Include="Models\Common\User\UserHistoryItemHistory.cs" />
     <Compile Include="ViewModels\Live\LiveRoomAnchorLotteryViewModel.cs" />
     <Compile Include="Models\Common\Live\LiveRoomGiftItem.cs" />
     <Compile Include="Models\Common\Live\LiveRoomGuardInfoModel.cs" />
@@ -1246,10 +1252,12 @@
       <Name>Windows Desktop Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
-  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
+  <PropertyGroup
+    Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <Import
+    Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
