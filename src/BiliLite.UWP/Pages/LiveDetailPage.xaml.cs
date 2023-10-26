@@ -2,10 +2,7 @@
 using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Modules;
-using BiliLite.Modules.Live;
-using BiliLite.Modules.LiveRoomDetailModels;
 using BiliLite.Services;
-using FFmpegInteropX;
 using Microsoft.UI.Xaml.Controls;
 using NSDanmaku.Model;
 using System;
@@ -17,10 +14,8 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.Graphics.Imaging;
-using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.System.Display;
-using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -30,6 +25,16 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Models.Common.Live;
+using BiliLite.Models.Common.Player;
+using BiliLite.Models.Exceptions;
+using BiliLite.Player;
+using BiliLite.Player.Controllers;
+using BiliLite.Player.States.ContentStates;
+using BiliLite.Player.States.PauseStates;
+using BiliLite.Player.States.PlayStates;
+using BiliLite.Player.States.ScreenStates;
+using BiliLite.ViewModels.Live;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -42,26 +47,42 @@ namespace BiliLite.Pages
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
 
+        private readonly BasePlayerController m_playerController;
+        private readonly LivePlayer m_player;
+        private readonly RealPlayInfo m_realPlayInfo;
+        private readonly PlayerConfig m_playerConfig;
+        private readonly LiveDetailPageViewModel m_viewModel;
+
         DisplayRequest dispRequest;
-        readonly MediaSourceConfig _config;
-        FFmpegInteropX.FFmpegMediaSource interopMSS;
-        LiveRoomVM liveRoomVM;
+        LiveRoomViewModel m_liveRoomViewModel;
         SettingVM settingVM;
-        readonly MediaPlayer mediaPlayer;
         DispatcherTimer timer_focus;
         DispatcherTimer controlTimer;
+
+        private string url = "";
+        private bool changePlayUrlFlag = false;
+
         public LiveDetailPage()
         {
+            m_viewModel = new LiveDetailPageViewModel();
+            DataContext = m_viewModel;
             this.InitializeComponent();
+
+            m_playerConfig = new PlayerConfig();
+            PreLoadSetting();
+            m_playerController = PlayerControllerFactory.Create(PlayerType.Live);
+            m_player = new LivePlayer(m_playerConfig, playerElement, m_playerController);
+            m_realPlayInfo = new RealPlayInfo();
+            m_realPlayInfo.IsAutoPlay = true;
+            m_playerController.SetPlayer(m_player);
+            m_player.SetRealPlayInfo(m_realPlayInfo);
+            InitPlayerEvent();
+
             Title = "直播间";
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
             dispRequest = new DisplayRequest();
             DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
             dataTransferManager.DataRequested += DataTransferManager_DataRequested;
-            _config = new MediaSourceConfig();
-            _config.FFmpegOptions.Add("rtsp_transport", "tcp");
-            _config.FFmpegOptions.Add("user_agent", "Mozilla/5.0 BiliDroid/1.12.0 (bbcallen@gmail.com)");
-            _config.FFmpegOptions.Add("referer", "https://live.bilibili.com/");
             //每过2秒就设置焦点
             timer_focus = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(2) };
 
@@ -70,205 +91,68 @@ namespace BiliLite.Pages
             controlTimer.Tick += ControlTimer_Tick;
             settingVM = new SettingVM();
 
-            liveRoomVM = new LiveRoomVM();
-            mediaPlayer = new MediaPlayer();
-            mediaPlayer.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
-            mediaPlayer.PlaybackSession.BufferingStarted += PlaybackSession_BufferingStarted;
-            mediaPlayer.PlaybackSession.BufferingProgressChanged += PlaybackSession_BufferingProgressChanged;
-            mediaPlayer.PlaybackSession.BufferingEnded += PlaybackSession_BufferingEnded;
-            mediaPlayer.MediaOpened += MediaPlayer_MediaOpened;
-            mediaPlayer.MediaEnded += MediaPlayer_MediaEnded; ;
-            mediaPlayer.MediaFailed += MediaPlayer_MediaFailed;
-            liveRoomVM.ChangedPlayUrl += LiveRoomVM_ChangedPlayUrl;
-            liveRoomVM.AddNewDanmu += LiveRoomVM_AddNewDanmu;
-            liveRoomVM.LotteryEnd += LiveRoomVM_LotteryEnd;
+            m_liveRoomViewModel = new LiveRoomViewModel();
+            m_liveRoomViewModel.ChangedPlayUrl += LiveRoomViewModelChangedPlayUrl;
+            m_liveRoomViewModel.AddNewDanmu += LiveRoomViewModelAddNewDanmu;
+            m_liveRoomViewModel.LotteryEnd += LiveRoomViewModelLotteryEnd;
             this.Loaded += LiveDetailPage_Loaded;
             this.Unloaded += LiveDetailPage_Unloaded;
         }
 
-
-
         private void ControlTimer_Tick(object sender, object e)
         {
-            if (showControlsFlag != -1)
+            // 显示播放器控件，5秒后隐藏，如果正在输入则不隐藏
+            if (showControlsFlag == -1) return;
+            if (showControlsFlag >= 5)
             {
-                if (showControlsFlag >= 5)
-                {
-                    var elent = FocusManager.GetFocusedElement();
-                    if (!(elent is TextBox) && !(elent is AutoSuggestBox))
-                    {
-                        ShowControl(false);
-                        showControlsFlag = -1;
-                    }
-                }
-                else
-                {
-                    showControlsFlag++;
-                }
+                var element = FocusManager.GetFocusedElement();
+                if (element is TextBox || element is AutoSuggestBox) return;
+                ShowControl(false);
+                showControlsFlag = -1;
+            }
+            else
+            {
+                showControlsFlag++;
             }
         }
 
         private void Timer_focus_Tick(object sender, object e)
         {
-            var elent = FocusManager.GetFocusedElement();
-            if (elent is Button || elent is AppBarButton || elent is HyperlinkButton || elent is MenuFlyoutItem)
+            var element = FocusManager.GetFocusedElement();
+            if (element is Button || element is AppBarButton || element is HyperlinkButton || element is MenuFlyoutItem)
             {
                 BtnFoucs.Focus(FocusState.Programmatic);
             }
-
         }
-        private void LiveRoomVM_LotteryEnd(object sender, LiveRoomEndAnchorLotteryInfoModel e)
+
+        private void LiveRoomViewModelLotteryEnd(object sender, LiveRoomEndAnchorLotteryInfoModel e)
         {
-            var str = "";
-            foreach (var item in e.award_users)
-            {
-                str += item.uname + "、";
-            }
+            var str = e.AwardUsers.Aggregate("", (current, item) => current + (item.Uname + "、"));
             str = str.TrimEnd('、');
 
-            Notify.ShowMessageToast($"开奖信息:\r\n奖品:{e.award_name}\r\n中奖用户:{str}", new List<MyUICommand>() { }, 10);
-
+            Notify.ShowMessageToast($"开奖信息:\r\n奖品:{e.AwardName}\r\n中奖用户:{str}", new List<MyUICommand>() { }, 10);
         }
 
-        private void LiveRoomVM_AddNewDanmu(object sender, DanmuMsgModel e)
+        private void LiveRoomViewModelAddNewDanmu(object sender, DanmuMsgModel e)
         {
-            if (DanmuControl.Visibility == Visibility.Visible)
+            if (DanmuControl.Visibility != Visibility.Visible) return;
+            if (settingVM.LiveWords != null && settingVM.LiveWords.Count > 0)
             {
-                if (settingVM.LiveWords != null && settingVM.LiveWords.Count > 0)
-                {
-                    if (settingVM.LiveWords.FirstOrDefault(x => e.Text.Contains(x)) != null) return;
-                }
-                try
-                {
-                    DanmuControl.AddLiveDanmu(e.Text, false, e.DanmuColor.StrToColor());
-                }
-                catch (Exception ex)
-                {
-                    //记录错误，不弹出通知
-                    logger.Log(ex.Message, LogType.Error, ex);
-                }
-
+                if (settingVM.LiveWords.FirstOrDefault(x => e.Text.Contains(x)) != null) return;
             }
-
-        }
-        #region 播放器事件
-        private async void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
-        {
-            await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                liveRoomVM.Liveing = false;
-                url = "";
-                player.SetMediaPlayer(null);
-            });
-        }
-
-        private async void PlaybackSession_BufferingEnded(MediaPlaybackSession sender, object args)
-        {
-            await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                PlayerLoading.Visibility = Visibility.Collapsed;
-            });
-
-        }
-
-        private async void PlaybackSession_BufferingProgressChanged(MediaPlaybackSession sender, object args)
-        {
-            await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                PlayerLoadText.Text = sender.BufferingProgress.ToString("p");
-            });
-        }
-
-        private async void PlaybackSession_BufferingStarted(MediaPlaybackSession sender, object args)
-        {
-            await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                PlayerLoading.Visibility = Visibility.Visible;
-                PlayerLoadText.Text = "缓冲中";
-            });
-        }
-
-        private async void MediaPlayer_MediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
-        {
-            await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
-             {
-                 logger.Log("直播加载失败", LogType.Error, new Exception(args.ErrorMessage));
-                 await new MessageDialog($"啊，直播加载失败了\r\n错误信息:{args.ErrorMessage}\r\n请尝试在直播设置中打开/关闭硬解试试", "播放失败").ShowAsync();
-             });
-
-        }
-
-        private async void MediaPlayer_MediaOpened(MediaPlayer sender, object args)
-        {
-            await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                //保持屏幕常亮
-                dispRequest.RequestActive();
-                PlayerLoading.Visibility = Visibility.Collapsed;
-                SetMediaInfo();
-            });
-        }
-        private void SetMediaInfo()
-        {
             try
             {
-                var str = $"Url: {url}\r\n";
-                str += $"Quality: {liveRoomVM.current_qn.desc}({liveRoomVM.current_qn.qn})\r\n";
-                str += $"Video Codec: {interopMSS.CurrentVideoStream.CodecName}\r\nAudio Codec:{interopMSS.AudioStreams[0].CodecName}\r\n";
-                str += $"Resolution: {interopMSS.CurrentVideoStream.PixelWidth} x {interopMSS.CurrentVideoStream.PixelHeight}\r\n";
-                str += $"Video Bitrate: {interopMSS.CurrentVideoStream.Bitrate / 1024} Kbps\r\n";
-                str += $"Audio Bitrate: {interopMSS.AudioStreams[0].Bitrate / 1024} Kbps\r\n";
-                str += $"Decoder Engine: {interopMSS.CurrentVideoStream.DecoderEngine.ToString()}";
-                txtInfo.Text = str;
+                DanmuControl.AddLiveDanmu(e.Text, false, e.DanmuColor.StrToColor());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                txtInfo.Text = "Url";
+                //记录错误，不弹出通知
+                logger.Log(ex.Message, LogType.Error, ex);
             }
-
-
-
         }
-        private async void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
-        {
-            await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                switch (sender.PlaybackState)
-                {
-                    case MediaPlaybackState.None:
-                        break;
-                    case MediaPlaybackState.Opening:
-                        PlayerLoading.Visibility = Visibility.Visible;
-                        PlayerLoadText.Text = "加载中";
-                        break;
-                    case MediaPlaybackState.Buffering:
-                        PlayerLoading.Visibility = Visibility.Visible;
-                        break;
-                    case MediaPlaybackState.Playing:
-                        BottomBtnPlay.Visibility = Visibility.Collapsed;
-                        BottomBtnPause.Visibility = Visibility.Visible;
-                        break;
-                    case MediaPlaybackState.Paused:
-                        BottomBtnPlay.Visibility = Visibility.Visible;
-                        BottomBtnPause.Visibility = Visibility.Collapsed;
-                        break;
-                    default:
-                        break;
-                }
-            });
-        }
-        #endregion
 
-        string url = "";
-        bool flag = false;
-        private void LiveRoomVM_ChangedPlayUrl(object sender, LiveRoomPlayUrlModel e)
-        {
-            flag = true;
-            BottomCBLine.ItemsSource = liveRoomVM.urls;
-            BottomCBLine.SelectedIndex = 0;
-            BottomCBQuality.SelectedItem = liveRoomVM.current_qn;
-            flag = false;
-        }
+        #region 页面生命周期
+
         private void LiveDetailPage_Unloaded(object sender, RoutedEventArgs e)
         {
             Window.Current.CoreWindow.KeyDown -= CoreWindow_KeyDown;
@@ -281,13 +165,168 @@ namespace BiliLite.Pages
             Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
             BtnFoucs.Focus(FocusState.Programmatic);
             DanmuControl.ClearAll();
-            if (this.Parent is MyFrame)
+            if (this.Parent is MyFrame frame)
             {
-                (this.Parent as MyFrame).ClosedPage -= LiveDetailPage_ClosedPage;
-                (this.Parent as MyFrame).ClosedPage += LiveDetailPage_ClosedPage;
+                frame.ClosedPage -= LiveDetailPage_ClosedPage;
+                frame.ClosedPage += LiveDetailPage_ClosedPage;
             }
             timer_focus.Start();
             controlTimer.Start();
+        }
+
+        private async void LiveDetailPage_ClosedPage(object sender, EventArgs e)
+        {
+            await StopPlay();
+        }
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            if (e.NavigationMode == NavigationMode.New)
+            {
+                LoadSetting();
+                roomid = e.Parameter.ToString();
+                await m_liveRoomViewModel.LoadLiveRoomDetail(roomid);
+                Title = m_liveRoomViewModel.LiveInfo.AnchorInfo.BaseInfo.Uname + "的直播间";
+                ChangeTitle(m_liveRoomViewModel.LiveInfo.AnchorInfo.BaseInfo.Uname + "的直播间");
+            }
+            else
+            {
+                Title = (m_liveRoomViewModel.LiveInfo?.AnchorInfo?.BaseInfo?.Uname ?? "") + "直播间";
+                MessageCenter.ChangeTitle(this, Title);
+            }
+        }
+
+        protected override async void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            if (e.NavigationMode == NavigationMode.Back)
+                await StopPlay();
+            base.OnNavigatingFrom(e);
+        }
+
+        #endregion
+
+        #region 播放器事件
+
+        private void InitPlayerEvent()
+        {
+            m_playerController.PlayStateChanged += PlayerController_PlayStateChanged;
+            m_playerController.PauseStateChanged += PlayerController_PauseStateChanged;
+            m_playerController.ContentStateChanged += PlayerController_ContentStateChanged;
+            m_playerController.ScreenStateChanged += PlayerController_ScreenStateChanged;
+            m_player.ErrorOccurred += Player_ErrorOccurred;
+        }
+
+        private async void PlayerController_ScreenStateChanged(object sender, ScreenStateChangedEventArgs e)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                m_viewModel.ScreenState = e.NewState;
+                var view = ApplicationView.GetForCurrentView();
+                if (e.NewState.IsFullscreen && !view.IsFullScreenMode)
+                {
+                    view.TryEnterFullScreenMode();
+                }
+                else if (view.IsFullScreenMode)
+                {
+                    view.ExitFullScreenMode();
+                }
+            });
+        }
+
+        private async void PlayerController_ContentStateChanged(object sender, ContentStateChangedEventArgs e)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                m_viewModel.ContentState = e.NewState;
+            });
+        }
+
+        private async void PlayerController_PauseStateChanged(object sender, PauseStateChangedEventArgs e)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                m_viewModel.IsPaused = e.NewState.IsPaused;
+            });
+        }
+
+        private async void Player_ErrorOccurred(object sender, PlayerException e)
+        {
+            await MediaFailed(e);
+        }
+
+        private async void PlayerController_PlayStateChanged(object sender, PlayStateChangedEventArgs e)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                m_viewModel.PlayState = e.NewState;
+            });
+            if (e.NewState.IsPlaying)
+            {
+                await MediaOpened();
+            }
+            if (e.NewState.IsStopped)
+            {
+                MediaStopped();
+            }
+        }
+
+        private void MediaStopped()
+        {
+            url = "";
+        }
+
+        private async Task MediaFailed(PlayerException exception)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            {
+                logger.Log("直播加载失败", LogType.Error, new Exception(exception.Description));
+                await new MessageDialog($"啊，直播加载失败了\r\n错误信息:{exception.Description}\r\n请尝试在直播设置中打开/关闭硬解试试", "播放失败")
+                    .ShowAsync();
+            });
+        }
+
+        private async Task MediaOpened()
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                //保持屏幕常亮
+                dispRequest.RequestActive();
+                SetMediaInfo();
+            });
+        }
+
+        private void SetMediaInfo()
+        {
+            try
+            {
+                //var str = $"Url: {url}\r\n";
+                //str += $"Quality: {m_liveRoomViewModel.CurrentQn.Desc}({m_liveRoomViewModel.CurrentQn.Qn})\r\n";
+                //str += $"Video Codec: {interopMSS.CurrentVideoStream.CodecName}\r\nAudio Codec:{interopMSS.AudioStreams[0].CodecName}\r\n";
+                //str += $"Resolution: {interopMSS.CurrentVideoStream.PixelWidth} x {interopMSS.CurrentVideoStream.PixelHeight}\r\n";
+                //str += $"Video Bitrate: {interopMSS.CurrentVideoStream.Bitrate / 1024} Kbps\r\n";
+                //str += $"Audio Bitrate: {interopMSS.AudioStreams[0].Bitrate / 1024} Kbps\r\n";
+                //str += $"Decoder Engine: {interopMSS.CurrentVideoStream.DecoderEngine.ToString()}";
+                //txtInfo.Text = str;
+            }
+            catch (Exception)
+            {
+                txtInfo.Text = "Url";
+            }
+        }
+
+        #endregion
+
+        private void LiveRoomViewModelChangedPlayUrl(object sender, BasePlayUrlInfo e)
+        {
+            changePlayUrlFlag = true;
+
+            m_realPlayInfo.PlayUrls.HlsUrls = m_liveRoomViewModel.HlsUrls;
+            m_realPlayInfo.PlayUrls.FlvUrls = m_liveRoomViewModel.FlvUrls;
+            BottomCBLine.ItemsSource = m_liveRoomViewModel.HlsUrls;
+            BottomCBLine.SelectedIndex = 0;
+            BottomCBQuality.SelectedItem = m_liveRoomViewModel.CurrentQn;
+            changePlayUrlFlag = false;
         }
 
         private async void CoreWindow_KeyDown(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs args)
@@ -301,16 +340,16 @@ namespace BiliLite.Pages
             args.Handled = true;
             switch (args.VirtualKey)
             {
-                //case Windows.System.VirtualKey.Space:
-                //    if (mediaPlayer.PlaybackSession.CanPause)
-                //    {
-                //        mediaPlayer.Pause();
-                //    }
-                //    else
-                //    {
-                //        mediaPlayer.Play();
-                //    }
-                //    break;
+                case Windows.System.VirtualKey.Space:
+                    if (m_playerController.PauseState.IsPaused)
+                    {
+                        await m_playerController.PauseState.Resume();
+                    }
+                    else
+                    {
+                        await m_playerController.PauseState.Pause();
+                    }
+                    break;
 
                 case Windows.System.VirtualKey.Up:
                     if (SliderVolume.Value + 0.1 > 1)
@@ -362,12 +401,12 @@ namespace BiliLite.Pages
                     break;
                 case Windows.System.VirtualKey.F12:
                 case Windows.System.VirtualKey.W:
-                    SetFullWindow(BottomBtnFullWindows.Visibility == Visibility.Visible);
+                    SetFullWindow(!m_playerController.ContentState.IsFullWindow);
                     break;
                 case Windows.System.VirtualKey.F11:
                 case Windows.System.VirtualKey.F:
                 case Windows.System.VirtualKey.Enter:
-                    SetFullScreen(BottomBtnFull.Visibility == Visibility.Visible);
+                    SetFullScreen(!m_playerController.ScreenState.IsFullscreen);
                     break;
                 case Windows.System.VirtualKey.F10:
                     await CaptureVideo();
@@ -383,74 +422,57 @@ namespace BiliLite.Pages
                         DanmuControl.Visibility = Visibility.Visible;
                     }
                     break;
-
                 default:
                     break;
             }
         }
 
-
-        private void LiveDetailPage_ClosedPage(object sender, EventArgs e)
+        private async Task StopPlay()
         {
-            StopPlay();
-        }
-        private void StopPlay()
-        {
-            if (mediaPlayer != null)
-            {
-                mediaPlayer.Pause();
-                mediaPlayer.Source = null;
-            }
-            if (interopMSS != null)
-            {
-                interopMSS.Dispose();
-                interopMSS = null;
-            }
-            liveRoomVM?.Dispose();
+            await m_playerController.PlayState.Stop();
+            m_liveRoomViewModel?.Dispose();
             //取消屏幕常亮
             if (dispRequest != null)
             {
                 dispRequest = null;
             }
-            liveRoomVM = null;
+            m_liveRoomViewModel = null;
             SetFullScreen(false);
             MiniWidnows(false);
         }
+
         string roomid;
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+
+        private void PreLoadSetting()
         {
-            base.OnNavigatedTo(e);
-            if (e.NavigationMode == NavigationMode.New)
+            //硬解视频
+            LiveSettingHardwareDecode.IsOn =
+                SettingService.GetValue<bool>(SettingConstants.Live.HARDWARE_DECODING, true);
+            m_playerConfig.EnableHw = LiveSettingHardwareDecode.IsOn;
+            LiveSettingHardwareDecode.Toggled += async (e, args) =>
             {
-                LoadSetting();
-                roomid = e.Parameter.ToString();
-                await liveRoomVM.LoadLiveRoomDetail(roomid);
-                Title = liveRoomVM.LiveInfo.anchor_info.base_info.uname + "的直播间";
-                ChangeTitle(liveRoomVM.LiveInfo.anchor_info.base_info.uname + "的直播间");
-            }
-            else
-            {
-                Title = (liveRoomVM.LiveInfo?.anchor_info?.base_info?.uname ?? "") + "直播间";
-                MessageCenter.ChangeTitle(this, Title);
-            }
-        }
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
-        {
-            if (e.NavigationMode == NavigationMode.Back)
-                StopPlay();
-            base.OnNavigatingFrom(e);
+                SettingService.SetValue<bool>(SettingConstants.Live.HARDWARE_DECODING,
+                    LiveSettingHardwareDecode.IsOn);
+                m_playerConfig.EnableHw = LiveSettingHardwareDecode.IsOn;
+                await LoadPlayer();
+            };
+            // 播放器优先模式
+            m_viewModel.LivePlayerMode = (LivePlayerMode)SettingService.GetValue(
+                SettingConstants.Player.DEFAULT_LIVE_PLAYER_MODE,
+                (int)DefaultPlayerModeOptions.DEFAULT_LIVE_PLAYER_MODE);
+            m_playerConfig.PlayMode = m_viewModel.LivePlayerMode;
         }
 
         private void LoadSetting()
         {
             //音量
-            mediaPlayer.Volume = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_VOLUME, 1.0);
-            SliderVolume.Value = mediaPlayer.Volume;
-            SliderVolume.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
+            m_player.Volume = SettingService.GetValue(SettingConstants.Player.PLAYER_VOLUME, 1.0);
+            SliderVolume.Value = m_player.Volume;
+            SliderVolume.ValueChanged += (e, args) =>
             {
-                mediaPlayer.Volume = SliderVolume.Value;
-                SettingService.SetValue<double>(SettingConstants.Player.PLAYER_VOLUME, SliderVolume.Value);
-            });
+                m_player.Volume = SliderVolume.Value;
+                SettingService.SetValue(SettingConstants.Player.PLAYER_VOLUME, SliderVolume.Value);
+            };
             //亮度
             _brightness = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_BRIGHTNESS, 0);
             BrightnessShield.Opacity = _brightness;
@@ -520,86 +542,61 @@ namespace BiliLite.Pages
 
             //互动清理数量
             LiveSettingCount.Value = SettingService.GetValue<int>(SettingConstants.Live.DANMU_CLEAN_COUNT, 200);
-            liveRoomVM.CleanCount = LiveSettingCount.Value.ToInt32();
+            m_liveRoomViewModel.CleanCount = LiveSettingCount.Value.ToInt32();
             LiveSettingCount.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
             {
                 SettingService.SetValue(SettingConstants.Live.DANMU_CLEAN_COUNT, LiveSettingCount.Value);
-                liveRoomVM.CleanCount = LiveSettingCount.Value.ToInt32();
+                m_liveRoomViewModel.CleanCount = LiveSettingCount.Value.ToInt32();
             });
 
-            //硬解视频
-            LiveSettingHardwareDecode.IsOn = SettingService.GetValue<bool>(SettingConstants.Live.HARDWARE_DECODING, true);
-            if (LiveSettingHardwareDecode.IsOn)
-            {
-                _config.VideoDecoderMode = VideoDecoderMode.ForceSystemDecoder;
-            }
-            else
-            {
-                _config.VideoDecoderMode = VideoDecoderMode.ForceFFmpegSoftwareDecoder;
-            }
-            LiveSettingHardwareDecode.Toggled += new RoutedEventHandler((e, args) =>
-            {
-                SettingService.SetValue<bool>(SettingConstants.Live.HARDWARE_DECODING, LiveSettingHardwareDecode.IsOn);
-                if (LiveSettingHardwareDecode.IsOn)
-                {
-                    _config.VideoDecoderMode = VideoDecoderMode.ForceSystemDecoder;
-                }
-                else
-                {
-                    _config.VideoDecoderMode = VideoDecoderMode.ForceFFmpegSoftwareDecoder;
-                }
-                Notify.ShowMessageToast("刷新后生效");
-            });
             //自动打开宝箱
             LiveSettingAutoOpenBox.IsOn = SettingService.GetValue<bool>(SettingConstants.Live.AUTO_OPEN_BOX, true);
-            liveRoomVM.AutoReceiveFreeSilver = LiveSettingAutoOpenBox.IsOn;
+            m_liveRoomViewModel.AutoReceiveFreeSilver = LiveSettingAutoOpenBox.IsOn;
             LiveSettingAutoOpenBox.Toggled += new RoutedEventHandler((e, args) =>
             {
-                liveRoomVM.AutoReceiveFreeSilver = LiveSettingAutoOpenBox.IsOn;
+                m_liveRoomViewModel.AutoReceiveFreeSilver = LiveSettingAutoOpenBox.IsOn;
                 SettingService.SetValue<bool>(SettingConstants.Live.AUTO_OPEN_BOX, LiveSettingAutoOpenBox.IsOn);
             });
 
             //屏蔽礼物信息
             LiveSettingDotReceiveGiftMsg.IsOn = SettingService.GetValue<bool>(SettingConstants.Live.HIDE_GIFT, false);
-            liveRoomVM.ReceiveGiftMsg = !LiveSettingDotReceiveGiftMsg.IsOn;
+            m_liveRoomViewModel.ReceiveGiftMsg = !LiveSettingDotReceiveGiftMsg.IsOn;
             LiveSettingDotReceiveGiftMsg.Toggled += new RoutedEventHandler((e, args) =>
             {
-                liveRoomVM.ReceiveGiftMsg = !LiveSettingDotReceiveGiftMsg.IsOn;
+                m_liveRoomViewModel.ReceiveGiftMsg = !LiveSettingDotReceiveGiftMsg.IsOn;
                 if (LiveSettingAutoOpenBox.IsOn)
                 {
-                    liveRoomVM.ShowGiftMessage = false;
+                    m_liveRoomViewModel.ShowGiftMessage = false;
                 }
                 SettingService.SetValue<bool>(SettingConstants.Live.HIDE_GIFT, LiveSettingDotReceiveGiftMsg.IsOn);
             });
 
             //屏蔽进场信息
             LiveSettingDotReceiveWelcomeMsg.IsOn = SettingService.GetValue<bool>(SettingConstants.Live.HIDE_WELCOME, false);
-            liveRoomVM.ReceiveWelcomeMsg = !LiveSettingDotReceiveWelcomeMsg.IsOn;
+            m_liveRoomViewModel.ReceiveWelcomeMsg = !LiveSettingDotReceiveWelcomeMsg.IsOn;
             LiveSettingDotReceiveWelcomeMsg.Toggled += new RoutedEventHandler((e, args) =>
             {
-                liveRoomVM.ReceiveWelcomeMsg = !LiveSettingDotReceiveWelcomeMsg.IsOn;
+                m_liveRoomViewModel.ReceiveWelcomeMsg = !LiveSettingDotReceiveWelcomeMsg.IsOn;
                 SettingService.SetValue<bool>(SettingConstants.Live.HIDE_WELCOME, LiveSettingDotReceiveWelcomeMsg.IsOn);
             });
 
             //屏蔽抽奖信息
             LiveSettingDotReceiveLotteryMsg.IsOn = SettingService.GetValue<bool>(SettingConstants.Live.HIDE_LOTTERY, false);
-            liveRoomVM.ReceiveLotteryMsg = !LiveSettingDotReceiveLotteryMsg.IsOn;
+            m_liveRoomViewModel.ReceiveLotteryMsg = !LiveSettingDotReceiveLotteryMsg.IsOn;
             LiveSettingDotReceiveWelcomeMsg.Toggled += new RoutedEventHandler((e, args) =>
             {
-                liveRoomVM.ReceiveLotteryMsg = !LiveSettingDotReceiveLotteryMsg.IsOn;
+                m_liveRoomViewModel.ReceiveLotteryMsg = !LiveSettingDotReceiveLotteryMsg.IsOn;
                 SettingService.SetValue<bool>(SettingConstants.Live.HIDE_LOTTERY, LiveSettingDotReceiveLotteryMsg.IsOn);
             });
-
         }
-
 
         public void ChangeTitle(string title)
         {
-            if ((this.Parent as Frame).Parent is TabViewItem)
+            if (this.Parent is Frame frame)
             {
-                if (this.Parent != null)
+                if (frame.Parent is TabViewItem tabViewItem)
                 {
-                    ((this.Parent as Frame).Parent as TabViewItem).Header = title;
+                    tabViewItem.Header = title;
                 }
             }
             else
@@ -608,43 +605,28 @@ namespace BiliLite.Pages
             }
         }
 
-        private async Task SetPlayer(string url)
+        private async Task LoadPlayer()
         {
             try
             {
-                PlayerLoading.Visibility = Visibility.Visible;
-                PlayerLoadText.Text = "加载中";
-                if (mediaPlayer != null)
-                {
-                    mediaPlayer.Pause();
-                    mediaPlayer.Source = null;
-                }
-                if (interopMSS != null)
-                {
-                    interopMSS.Dispose();
-                    interopMSS = null;
-                }
-                interopMSS = await FFmpegMediaSource.CreateFromUriAsync(url, _config);
-                mediaPlayer.AutoPlay = true;
-                mediaPlayer.Source = interopMSS.CreateMediaPlaybackItem();
-                player.SetMediaPlayer(mediaPlayer);
+                await m_playerController.PlayState.Stop();
+                await m_playerController.PlayState.Load();
             }
             catch (Exception ex)
             {
                 Notify.ShowMessageToast("播放失败" + ex.Message);
             }
-
         }
 
         private async void BottomCBQuality_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (BottomCBQuality.SelectedItem == null || flag)
+            if (BottomCBQuality.SelectedItem == null || changePlayUrlFlag)
             {
                 return;
             }
             var item = BottomCBQuality.SelectedItem as LiveRoomWebUrlQualityDescriptionItemModel;
-            SettingService.SetValue(SettingConstants.Live.DEFAULT_QUALITY, item.qn);
-            await liveRoomVM.GetPlayUrl(liveRoomVM.RoomID, item.qn);
+            SettingService.SetValue(SettingConstants.Live.DEFAULT_QUALITY, item.Qn);
+            await m_liveRoomViewModel.GetPlayUrls(m_liveRoomViewModel.RoomID, item.Qn);
         }
 
         private async void BottomCBLine_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -653,111 +635,82 @@ namespace BiliLite.Pages
             {
                 return;
             }
-            url = liveRoomVM.urls[BottomCBLine.SelectedIndex].url;
-            await SetPlayer(url);
+
+            m_playerConfig.SelectedRouteLine = BottomCBLine.SelectedIndex;
+
+            await LoadPlayer();
         }
 
-        private void BottomBtnPause_Click(object sender, RoutedEventArgs e)
+        private async void BottomBtnPause_Click(object sender, RoutedEventArgs e)
         {
-            mediaPlayer.Pause();
+            await m_playerController.PauseState.Pause();
         }
 
-        private void BottomBtnPlay_Click(object sender, RoutedEventArgs e)
+        private async void BottomBtnPlay_Click(object sender, RoutedEventArgs e)
         {
-            mediaPlayer.Play();
+            await m_playerController.PauseState.Resume();
         }
 
         private void BottomBtnFullWindows_Click(object sender, RoutedEventArgs e)
         {
-
-
             SetFullWindow(true);
         }
 
         private void BottomBtnExitFullWindows_Click(object sender, RoutedEventArgs e)
         {
-
             SetFullWindow(false);
         }
 
         private void BottomBtnFull_Click(object sender, RoutedEventArgs e)
         {
-
             SetFullScreen(true);
         }
 
         private void BottomBtnExitFull_Click(object sender, RoutedEventArgs e)
         {
-
             SetFullScreen(false);
         }
 
-        private void SetFullWindow(bool e)
+        private async void SetFullWindow(bool e)
         {
-
             if (e)
             {
-                BottomBtnFullWindows.Visibility = Visibility.Collapsed;
-                BottomBtnExitFullWindows.Visibility = Visibility.Visible;
-                RightInfo.Width = new GridLength(0, GridUnitType.Pixel);
-                BottomInfo.Height = new GridLength(0, GridUnitType.Pixel);
+                await m_playerController.ContentState.FullWindow();
             }
             else
             {
-                BottomBtnFullWindows.Visibility = Visibility.Visible;
-                BottomBtnExitFullWindows.Visibility = Visibility.Collapsed;
-                RightInfo.Width = new GridLength(280, GridUnitType.Pixel);
-                BottomInfo.Height = GridLength.Auto;
+                await m_playerController.ContentState.CancelFullWindow();
             }
         }
-        private void SetFullScreen(bool e)
+
+        private async void SetFullScreen(bool e)
         {
-            ApplicationView view = ApplicationView.GetForCurrentView();
             if (e)
             {
-                BottomBtnFull.Visibility = Visibility.Collapsed;
-                BottomBtnExitFull.Visibility = Visibility.Visible;
-                this.Margin = new Thickness(0, SettingService.GetValue<int>(SettingConstants.UI.DISPLAY_MODE, 0) == 0 ? -48 : -48, 0, 0);
-                RightInfo.Width = new GridLength(0, GridUnitType.Pixel);
-                BottomInfo.Height = new GridLength(0, GridUnitType.Pixel);
-                //全屏
-                if (!view.IsFullScreenMode)
-                {
-                    view.TryEnterFullScreenMode();
-                }
+                await m_playerController.ScreenState.Fullscreen();
             }
             else
             {
-                BottomBtnFull.Visibility = Visibility.Visible;
-                BottomBtnExitFull.Visibility = Visibility.Collapsed;
-                this.Margin = new Thickness(0);
-                RightInfo.Width = new GridLength(280, GridUnitType.Pixel);
-                BottomInfo.Height = GridLength.Auto;
-                //退出全屏
-                if (view.IsFullScreenMode)
-                {
-                    view.ExitFullScreenMode();
-                }
+                await m_playerController.ScreenState.CancelFullscreen();
             }
         }
-
-
 
         private async void BottomBtnRefresh_Click(object sender, RoutedEventArgs e)
         {
-            await liveRoomVM.LoadLiveRoomDetail(roomid);
+            await m_liveRoomViewModel.LoadLiveRoomDetail(roomid);
         }
 
         private void btnSendGift_Click(object sender, RoutedEventArgs e)
         {
             var giftInfo = (sender as Button).DataContext as LiveGiftItem;
-            liveRoomVM.SendGift(giftInfo).RunWithoutAwait();
+            m_liveRoomViewModel.SendGift(giftInfo).RunWithoutAwait();
         }
 
         private async void TopBtnScreenshot_Click(object sender, RoutedEventArgs e)
         {
             await CaptureVideo();
         }
+
         private async Task CaptureVideo()
         {
             try
@@ -767,7 +720,7 @@ namespace BiliLite.Pages
                 StorageFolder folder = await applicationFolder.CreateFolderAsync("哔哩哔哩截图", CreationCollisionOption.OpenIfExists);
                 StorageFile saveFile = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
                 RenderTargetBitmap bitmap = new RenderTargetBitmap();
-                await bitmap.RenderAsync(player);
+                await bitmap.RenderAsync(playerElement);
                 var pixelBuffer = await bitmap.GetPixelsAsync();
                 using (var fileStream = await saveFile.OpenAsync(FileAccessMode.ReadWrite))
                 {
@@ -804,12 +757,12 @@ namespace BiliLite.Pages
 
         private async void BtnOpenBox_Click(object sender, RoutedEventArgs e)
         {
-            await liveRoomVM.GetFreeSilver();
+            await m_liveRoomViewModel.GetFreeSilver();
         }
 
         private void BtnOpenUser_Click(object sender, RoutedEventArgs e)
         {
-            if (liveRoomVM.LiveInfo == null)
+            if (m_liveRoomViewModel.LiveInfo == null)
             {
                 return;
             }
@@ -818,7 +771,7 @@ namespace BiliLite.Pages
                 icon = Symbol.Account,
                 title = "用户信息",
                 page = typeof(UserInfoPage),
-                parameters = liveRoomVM.LiveInfo.room_info.uid
+                parameters = m_liveRoomViewModel.LiveInfo.RoomInfo.Uid
             });
         }
 
@@ -829,7 +782,7 @@ namespace BiliLite.Pages
                 Notify.ShowMessageToast("弹幕内容不能为空");
                 return;
             }
-            var result = await liveRoomVM.SendDanmu(DanmuText.Text);
+            var result = await m_liveRoomViewModel.SendDanmu(DanmuText.Text);
             if (result)
             {
                 DanmuText.Text = "";
@@ -839,12 +792,12 @@ namespace BiliLite.Pages
 
         private async void BtnAttention_Click(object sender, RoutedEventArgs e)
         {
-            if (liveRoomVM.LiveInfo != null)
+            if (m_liveRoomViewModel.LiveInfo != null)
             {
-                var result = await new VideoDetailPageViewModel().AttentionUP(liveRoomVM.LiveInfo.room_info.uid.ToString(), 1);
+                var result = await new VideoDetailPageViewModel().AttentionUP(m_liveRoomViewModel.LiveInfo.RoomInfo.Uid.ToString(), 1);
                 if (result)
                 {
-                    liveRoomVM.Attention = true;
+                    m_liveRoomViewModel.Attention = true;
                 }
             }
 
@@ -852,21 +805,21 @@ namespace BiliLite.Pages
 
         private async void BtnCacnelAttention_Click(object sender, RoutedEventArgs e)
         {
-            if (liveRoomVM.LiveInfo != null)
+            if (m_liveRoomViewModel.LiveInfo != null)
             {
-                var result = await new VideoDetailPageViewModel().AttentionUP(liveRoomVM.LiveInfo.room_info.uid.ToString(), 2);
+                var result = await new VideoDetailPageViewModel().AttentionUP(m_liveRoomViewModel.LiveInfo.RoomInfo.Uid.ToString(), 2);
                 if (result)
                 {
-                    liveRoomVM.Attention = false;
+                    m_liveRoomViewModel.Attention = false;
                 }
             }
         }
 
         private async void pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (pivot.SelectedIndex == 3 && liveRoomVM.Guards.Count == 0)
+            if (pivot.SelectedIndex == 3 && m_liveRoomViewModel.Guards.Count == 0)
             {
-                await liveRoomVM.GetGuardList();
+                await m_liveRoomViewModel.GetGuardList();
             }
         }
 
@@ -876,9 +829,9 @@ namespace BiliLite.Pages
             MessageCenter.NavigateToPage(this, new NavigationInfo()
             {
                 icon = Symbol.Account,
-                title = item.username,
+                title = item.Username,
                 page = typeof(UserInfoPage),
-                parameters = item.uid
+                parameters = item.Uid
             });
         }
 
@@ -888,8 +841,8 @@ namespace BiliLite.Pages
             {
                 return;
             }
-            liveRoomVM.DoPropertyChanged("SelectRank");
-            var data = cb_Rank.SelectedItem as LiveRoomRankVM;
+            m_liveRoomViewModel.EmitSelectRankUpdate();
+            var data = cb_Rank.SelectedItem as LiveRoomRankViewModel;
             if (!data.Loading && data.Items.Count == 0)
             {
 
@@ -903,17 +856,17 @@ namespace BiliLite.Pages
             MessageCenter.NavigateToPage(this, new NavigationInfo()
             {
                 icon = Symbol.Account,
-                title = item.uname,
+                title = item.Uname,
                 page = typeof(UserInfoPage),
-                parameters = item.uid
+                parameters = item.Uid
             });
         }
 
         private async void BtnSendLotteryDanmu_Click(object sender, RoutedEventArgs e)
         {
-            if (liveRoomVM.anchorLotteryVM != null && liveRoomVM.anchorLotteryVM.LotteryInfo != null && !string.IsNullOrEmpty(liveRoomVM.anchorLotteryVM.LotteryInfo.danmu))
+            if (m_liveRoomViewModel.AnchorLotteryViewModel != null && m_liveRoomViewModel.AnchorLotteryViewModel.LotteryInfo != null && !string.IsNullOrEmpty(m_liveRoomViewModel.AnchorLotteryViewModel.LotteryInfo.Danmu))
             {
-                var result = await liveRoomVM.SendDanmu(liveRoomVM.anchorLotteryVM.LotteryInfo.danmu);
+                var result = await m_liveRoomViewModel.SendDanmu(m_liveRoomViewModel.AnchorLotteryViewModel.LotteryInfo.Danmu);
                 if (result)
                 {
                     Notify.ShowMessageToast("弹幕发送成功");
@@ -1027,7 +980,7 @@ namespace BiliLite.Pages
         }
         private void Grid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
-            if (BottomBtnFull.Visibility == Visibility.Visible)
+            if (!m_playerController.ScreenState.IsFullscreen)
             {
                 BottomBtnFull_Click(sender, null);
             }
@@ -1067,31 +1020,25 @@ namespace BiliLite.Pages
                 HandleSlideVolumeDelta(e.Delta.Translation.Y);
         }
 
-
         private void HandleSlideVolumeDelta(double delta)
         {
             if (delta > 0)
             {
-                double dd = delta / (this.ActualHeight * 0.8);
-
-                //slider_V.Value -= d;
-                var volume = mediaPlayer.Volume - dd;
+                var dd = delta / (this.ActualHeight * 0.8);
+                var volume = m_player.Volume - dd;
                 if (volume < 0) volume = 0;
                 SliderVolume.Value = volume;
-
             }
             else
             {
-                double dd = Math.Abs(delta) / (this.ActualHeight * 0.8);
-                var volume = mediaPlayer.Volume + dd;
+                var dd = Math.Abs(delta) / (this.ActualHeight * 0.8);
+                var volume = m_player.Volume + dd;
                 if (volume > 1) volume = 1;
                 SliderVolume.Value = volume;
-                //slider_V.Value += d;
             }
-            TxtToolTip.Text = "音量:" + mediaPlayer.Volume.ToString("P");
-
-            //Notify.ShowMessageToast("音量:" +  mediaElement.MediaPlayer.Volume.ToString("P"), 3000);
+            TxtToolTip.Text = "音量:" + m_player.Volume.ToString("P");
         }
+
         private void HandleSlideBrightnessDelta(double delta)
         {
             double dd = Math.Abs(delta) / (this.ActualHeight * 0.8);
@@ -1105,6 +1052,7 @@ namespace BiliLite.Pages
             }
             TxtToolTip.Text = "亮度:" + Math.Abs(Brightness - 1).ToString("P");
         }
+
         private void Grid_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
             e.Handled = true;
@@ -1140,27 +1088,30 @@ namespace BiliLite.Pages
         private async void btnSendBagGift_Click(object sender, RoutedEventArgs e)
         {
             var giftInfo = (sender as Button).DataContext as LiveGiftItem;
-            await Task.Run(() => liveRoomVM.SendBagGift(giftInfo)).ConfigureAwait(false);
+            await Task.Run(() => m_liveRoomViewModel.SendBagGift(giftInfo)).ConfigureAwait(false);
         }
+
         private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
         {
             DataRequest request = args.Request;
-            request.Data.Properties.Title = liveRoomVM.LiveInfo.room_info.title;
-            request.Data.SetWebLink(new Uri("https://live.bilibili.com/" + liveRoomVM.RoomID));
+            request.Data.Properties.Title = m_liveRoomViewModel.LiveInfo.RoomInfo.Title;
+            request.Data.SetWebLink(new Uri("https://live.bilibili.com/" + m_liveRoomViewModel.RoomID));
         }
+
         private void btnShare_Click(object sender, RoutedEventArgs e)
         {
             DataTransferManager.ShowShareUI();
         }
+
         private void btnShareCopy_Click(object sender, RoutedEventArgs e)
         {
-            $"{liveRoomVM.LiveInfo.room_info.title} - {liveRoomVM.LiveInfo.anchor_info.base_info.uname}的直播间\r\nhttps://live.bilibili.com/{liveRoomVM.RoomID}".SetClipboard();
+            $"{m_liveRoomViewModel.LiveInfo.RoomInfo.Title} - {m_liveRoomViewModel.LiveInfo.AnchorInfo.BaseInfo.Uname}的直播间\r\nhttps://live.bilibili.com/{m_liveRoomViewModel.RoomID}".SetClipboard();
             Notify.ShowMessageToast("已复制内容到剪切板");
         }
 
         private void btnShareCopyUrl_Click(object sender, RoutedEventArgs e)
         {
-            ("https://live.bilibili.com/" + liveRoomVM.RoomID).SetClipboard();
+            ("https://live.bilibili.com/" + m_liveRoomViewModel.RoomID).SetClipboard();
             Notify.ShowMessageToast("已复制链接到剪切板");
         }
 
@@ -1169,6 +1120,13 @@ namespace BiliLite.Pages
             var rectangle = new RectangleGeometry();
             rectangle.Rect = new Rect(0, 0, PlayerView.ActualWidth, PlayerView.ActualHeight);
             DanmuControl.Clip = rectangle;
+        }
+
+        private async void PlayerModeComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SettingService.SetValue(SettingConstants.Player.DEFAULT_LIVE_PLAYER_MODE, m_viewModel.LivePlayerMode);
+            m_playerConfig.PlayMode = m_viewModel.LivePlayerMode;
+            await LoadPlayer();
         }
     }
 }

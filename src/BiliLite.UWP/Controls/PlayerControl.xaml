@@ -609,7 +609,7 @@
                     </StackPanel>
                 </Grid>
                 <ItemsControl x:Name="InteractionChoices" 
-                              ItemsSource="{Binding Path=Info.edges.questions,Mode=OneWay}"
+                              ItemsSource="{x:Bind interactionVideoVM.Info.edges.questions}"
                               Visibility="Collapsed" VerticalAlignment="Bottom" Margin="0 0 0 80">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="player:InteractionEdgeInfoQuestionModel">

@@ -9,11 +9,12 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Windows.UI.Xaml;
-using System.ComponentModel;
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using BiliLite.Extensions;
 using System.IO.Compression;
+using BiliLite.Models.Common.Live;
+using BiliLite.ViewModels.Live;
 
 /*
 * 参考文档:
@@ -23,68 +24,6 @@ using System.IO.Compression;
 
 namespace BiliLite.Modules.Live
 {
-    /// <summary>
-    /// 消息类型
-    /// </summary>
-    public enum MessageType
-    {
-        /// <summary>
-        /// 连接成功
-        /// </summary>
-        ConnectSuccess,
-        /// <summary>
-        /// 在线人数
-        /// </summary>
-        Online,
-        /// <summary>
-        /// 弹幕
-        /// </summary>
-        Danmu,
-        /// <summary>
-        /// 赠送礼物
-        /// </summary>
-        Gift,
-        /// <summary>
-        /// 欢迎信息
-        /// </summary>
-        Welcome,
-        /// <summary>
-        /// 系统消息
-        /// </summary>
-        SystemMsg,
-        /// <summary>
-        /// 醒目留言
-        /// </summary>
-        SuperChat,
-        /// <summary>
-        /// 醒目留言（日文）
-        /// </summary>
-        SuperChatJpn,
-        /// <summary>
-        /// 抽奖开始
-        /// </summary>
-        AnchorLotteryStart,
-        /// <summary>
-        /// 抽奖结束
-        /// </summary>
-        AnchorLotteryEnd,
-        /// <summary>
-        /// 抽奖结果
-        /// </summary>
-        AnchorLotteryAward,
-        /// <summary>
-        /// 欢迎舰长
-        /// </summary>
-        WelcomeGuard,
-        /// <summary>
-        /// 上舰
-        /// </summary>
-        GuardBuy,
-        /// <summary>
-        /// 房间信息更新
-        /// </summary>
-        RoomChange,
-    }
     public class LiveMessage : IDisposable
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
@@ -330,23 +269,23 @@ namespace BiliLite.Modules.Live
                 }
                 if (cmd == "SUPER_CHAT_MESSAGE")
                 {
-                    SuperChatMsgModel msg = new SuperChatMsgModel();
+                    SuperChatMsgViewModel msgView = new SuperChatMsgViewModel();
                     if (obj["data"] != null)
                     {
-                        msg.background_bottom_color = obj["data"]["background_bottom_color"].ToString();
-                        msg.background_color = obj["data"]["background_color"].ToString();
-                        msg.background_image = obj["data"]["background_image"].ToString();
-                        msg.end_time = obj["data"]["end_time"].ToInt32();
-                        msg.start_time = obj["data"]["start_time"].ToInt32();
-                        msg.time = obj["data"]["time"].ToInt32();
-                        msg.max_time = msg.end_time - msg.start_time;
-                        msg.face = obj["data"]["user_info"]["face"].ToString();
-                        msg.face_frame = obj["data"]["user_info"]["face_frame"].ToString();
-                        msg.font_color = obj["data"]["message_font_color"].ToString();
-                        msg.message = obj["data"]["message"].ToString();
-                        msg.price = obj["data"]["price"].ToInt32();
-                        msg.username = obj["data"]["user_info"]["uname"].ToString();
-                        NewMessage?.Invoke(MessageType.SuperChat, msg);
+                        msgView.BackgroundBottomColor = obj["data"]["background_bottom_color"].ToString();
+                        msgView.BackgroundColor = obj["data"]["background_color"].ToString();
+                        msgView.BackgroundImage = obj["data"]["background_image"].ToString();
+                        msgView.EndTime = obj["data"]["end_time"].ToInt32();
+                        msgView.StartTime = obj["data"]["start_time"].ToInt32();
+                        msgView.Time = obj["data"]["time"].ToInt32();
+                        msgView.MaxTime = msgView.EndTime - msgView.StartTime;
+                        msgView.Face = obj["data"]["user_info"]["face"].ToString();
+                        msgView.FaceFrame = obj["data"]["user_info"]["face_frame"].ToString();
+                        msgView.FontColor = obj["data"]["message_font_color"].ToString();
+                        msgView.Message = obj["data"]["message"].ToString();
+                        msgView.Price = obj["data"]["price"].ToInt32();
+                        msgView.Username = obj["data"]["user_info"]["uname"].ToString();
+                        NewMessage?.Invoke(MessageType.SuperChat, msgView);
                     }
                     return;
                 }
@@ -482,216 +421,5 @@ namespace BiliLite.Modules.Live
             heartBeatTimer?.Dispose();
             ws.Dispose();
         }
-    }
-
-    public class DanmuMsgModel
-    {
-        /// <summary>
-        /// 内容文本
-        /// </summary>
-        public string Text { get; set; }
-        /// <summary>
-        /// 弹幕颜色，默认白色
-        /// </summary>
-        public string DanmuColor { get; set; } = "#FFFFFFFF";
-        /// <summary>
-        /// 用户名
-        /// </summary>
-        public string UserName { get; set; }
-        /// <summary>
-        /// 用户名颜色,默认灰色
-        /// </summary>
-        public string UserNameColor { get; set; } = "#FF808080";
-        /// <summary>
-        /// 等级
-        /// </summary>
-        public string UserLevel { get; set; }
-
-        /// <summary>
-        /// 等级颜色,默认灰色
-        /// </summary>
-        public string UserLevelColor { get; set; } = "#FF808080";
-        /// <summary>
-        /// 用户头衔id（对应的是CSS名）
-        /// </summary>
-        public string UserTitleID { get; set; }
-        /// <summary>
-        /// 用户头衔图片
-        /// </summary>
-        public string UserTitleImage
-        {
-            get
-            {
-                return LiveRoomVM.Titles.FirstOrDefault(x => x.id == UserTitleID)?.img;
-            }
-        }
-        /// <summary>
-        /// 用户角色
-        /// </summary>
-        public string Role { get; set; }
-        /// <summary>
-        /// 勋章名称
-        /// </summary>
-        public string MedalName { get; set; }
-        /// <summary>
-        /// 勋章等级
-        /// </summary>
-        public string MedalLevel { get; set; }
-        /// <summary>
-        /// 勋章颜色
-        /// </summary>
-        public string MedalColor { get; set; }
-
-        /// <summary>
-        /// 是否显示房管
-        /// </summary>
-        public Visibility ShowAdmin { get; set; } = Visibility.Collapsed;
-        /// <summary>
-        /// 是否显示勋章
-        /// </summary>
-        public Visibility ShowMedal { get; set; } = Visibility.Collapsed;
-        /// <summary>
-        /// 是否显示用户等级
-        /// </summary>
-        public Visibility ShowTitle { get; set; } = Visibility.Collapsed;
-        /// <summary>
-        /// 是否显示用户等级
-        /// </summary>
-        public Visibility ShowUserLevel { get; set; } = Visibility.Collapsed;
-
-    }
-    public class GiftMsgModel
-    {
-        /// <summary>
-        /// 用户名称
-        /// </summary>
-        public string UserName { get; set; }
-        /// <summary>
-        /// 礼物的名称
-        /// </summary>
-        public string GiftName { get; set; }
-        /// <summary>
-        /// 礼物操作
-        /// </summary>
-        public string Action { get; set; }
-        /// <summary>
-        /// 礼物数量
-        /// </summary>
-        public string Number { get; set; }
-        /// <summary>
-        /// 礼物ID
-        /// </summary>
-        public int GiftId { get; set; }
-        /// <summary>
-        /// 用户ID
-        /// </summary>
-        public string UserID { get; set; }
-        /// <summary>
-        /// GIF图片
-        /// </summary>
-        public string Gif { get; set; }
-    }
-    public class WelcomeMsgModel
-    {
-        public string UserName { get; set; }
-        public string IsAdmin { get; set; }
-        public string UserID { get; set; }
-    }
-    public class SuperChatMsgModel : INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void DoPropertyChanged(string name)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-        public string username { get; set; }
-        public string face { get; set; }
-        public string face_frame { get; set; }
-        public string message { get; set; }
-        public string message_jpn { get; set; }
-        public string background_image { get; set; }
-        public int start_time { get; set; }
-        public int end_time { get; set; }
-        private int _time;
-        public int time
-        {
-            get { return _time; }
-            set { _time = value; DoPropertyChanged("time"); }
-        }
-        public int max_time { get; set; }
-        public int price { get; set; }
-        public int price_gold
-        {
-            get
-            {
-                return price * 100;
-            }
-        }
-        public string background_color { get; set; }
-        public string background_bottom_color { get; set; }
-        public string font_color { get; set; }
-    }
-    public class RoomChangeMsgModel
-    {
-        /// <summary>
-        /// 房间标题
-        /// </summary>
-        public string Title { get; set; }
-        /// <summary>
-        /// 分区ID
-        /// </summary>
-        public int AreaID { get; set; }
-        /// <summary>
-        /// 父分区ID
-        /// </summary>
-        public int ParentAreaID { get; set; }
-        /// <summary>
-        /// 分区名称
-        /// </summary>
-        public string AreaName { get; set; }
-        /// <summary>
-        /// 父分区名称
-        /// </summary>
-        public string ParentAreaName { get; set; }
-        /// <summary>
-        /// 未知
-        /// </summary>
-        public string LiveKey { get; set; }
-        /// <summary>
-        /// 未知
-        /// </summary>
-        public string SubSessionKey { get; set; }
-
-    }
-    public class GuardBuyMsgModel
-    {
-        /// <summary>
-        /// 用户ID
-        /// </summary>
-        public string UserID { get; set; }
-        /// <summary>
-        /// 用户名
-        /// </summary>
-        public string UserName { get; set; }
-        /// <summary>
-        /// 大航海等级1: 总督 2: 提督 3:舰长
-        /// </summary>
-        public int GuardLevel { get; set; }
-        /// <summary>
-        /// 数量
-        /// </summary>
-        public int Num { get; set; }
-        /// <summary>
-        /// 价格
-        /// </summary>
-        public int Price { get; set; }
-        /// <summary>
-        /// 礼物ID
-        /// </summary>
-        public int GiftId { get; set; }
-        /// <summary>
-        /// 礼物名称
-        /// </summary>
-        public string GiftName { get; set; }
     }
 }
