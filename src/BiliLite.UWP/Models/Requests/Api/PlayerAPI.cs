@@ -83,7 +83,8 @@ namespace BiliLite.Models.Requests.Api
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"https://api.live.bilibili.com/xlive/web-room/v2/index/getRoomPlayInfo",
-                parameter = $"room_id={room_id}&qn={qn}&protocol=0,1&format=0,2&codec=0,1"  //"cid={cid}&qn={qn}&platform=web"
+                parameter = $"room_id={room_id}&qn={qn}&protocol=0,1&format=0,2&codec=0,1", //"cid={cid}&qn={qn}&platform=web"
+                need_cookie = true
             };
             //api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidVideoKey);
             return api;
