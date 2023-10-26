@@ -12,6 +12,7 @@
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:convert="using:BiliLite.Converters"
     xmlns:model="using:BiliLite.Modules.User"
+    xmlns:userModel="using:BiliLite.Models.Common.User"
     Background="Transparent">
     <Page.Resources>
         <SolidColorBrush x:Key="PivotHeaderBackground" Color="{ThemeResource TopPaneBackground}"></SolidColorBrush>
@@ -21,7 +22,7 @@
             <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
             <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
         </Style>
-        <DataTemplate x:Key="VideoDataTemplate" x:DataType="model:HistoryItemModel">
+        <DataTemplate x:Key="VideoDataTemplate" x:DataType="userModel:UserHistoryItem">
             <Grid Background="#00FFFFFF">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -33,12 +34,12 @@
                     </MenuFlyout>
                 </Grid.ContextFlyout>
                 <Border CornerRadius="{StaticResource ImageCornerRadius}">
-                    <toolkit:ImageEx IsCacheEnabled="True" Height="80" Width="120" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=pic,Converter={StaticResource imageConvert},ConverterParameter='160w'}"></toolkit:ImageEx>
+                    <toolkit:ImageEx IsCacheEnabled="True" Height="80" Width="120" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=Cover,Converter={StaticResource imageConvert},ConverterParameter='160w'}"></toolkit:ImageEx>
                 </Border>
                 <StackPanel Grid.Column="1" Margin="8 0 0 0">
-                    <TextBlock MaxLines="2" Margin="0 0 0 4" TextTrimming="CharacterEllipsis" Text="{x:Bind title}"></TextBlock>
-                    <TextBlock Margin="0 4" FontSize="14" Foreground="Gray" >UP:<Run Text="{x:Bind Path=owner.name}"/></TextBlock>
-                    <TextBlock Margin="0 4" FontSize="14" Foreground="Gray" Text="{x:Bind Path=view_at,Converter={StaticResource datetime},ConverterParameter='ts'}"></TextBlock>
+                    <TextBlock MaxLines="2" Margin="0 0 0 4" TextTrimming="CharacterEllipsis" Text="{x:Bind Title}"></TextBlock>
+                    <TextBlock Margin="0 4" FontSize="14" Foreground="Gray" >UP:<Run Text="{x:Bind Path=AuthorName}"/></TextBlock>
+                    <TextBlock Margin="0 4" FontSize="14" Foreground="Gray" Text="{x:Bind Path=ViewAt,Converter={StaticResource datetime},ConverterParameter='ts'}"></TextBlock>
                 </StackPanel>
             </Grid>
         </DataTemplate>

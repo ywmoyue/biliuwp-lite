@@ -1,20 +1,10 @@
 ﻿using BiliLite.Models.Common;
 using BiliLite.Modules.User;
 using BiliLite.Services;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Models.Common.User;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -32,29 +22,26 @@ namespace BiliLite.Pages.User
             Title = "历史记录";
             historyVM = new HistoryVM();
         }
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if (e.NavigationMode == NavigationMode.New && historyVM.Videos == null)
             {
-                historyVM.Page = 1;
                 await historyVM.LoadHistory();
             }
         }
 
-
-
         private void Video_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var data = e.ClickedItem as HistoryItemModel;
-            if(data.business== "pgc")
+            var data = e.ClickedItem as UserHistoryItem;
+            if(data.History.Business== "pgc")
             {
                 MessageCenter.NavigateToPage(this, new NavigationInfo()
                 {
                     icon = Symbol.Play,
                     page = typeof(SeasonDetailPage),
-                    title = data.title,
-                    parameters = data.kid
+                    title = data.Title,
+                    parameters = data.Kid
                 });
             }
             else
@@ -63,16 +50,15 @@ namespace BiliLite.Pages.User
                 {
                     icon = Symbol.Play,
                     page = typeof(VideoDetailPage),
-                    title = data.title,
-                    parameters = data.aid
+                    title = data.Title,
+                    parameters = data.History.Bvid
                 });
             }
-            
         }
 
         private void removeVideoHistory_Click(object sender, RoutedEventArgs e)
         {
-            var item = (sender as MenuFlyoutItem).DataContext as HistoryItemModel;
+            var item = (sender as MenuFlyoutItem).DataContext as UserHistoryItem;
             historyVM.Del(item);
         }
     }
