@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project ToolsVersion="15.0" DefaultTargets="Build"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"
+    Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -136,6 +138,13 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Models\Common\Live\LiveMessageHandleActionsMap.cs" />
+    <Compile Include="Models\Common\Player\DefaultPlayerModeOptions.cs" />
+    <Compile Include="Models\Common\Player\LivePlayerMode.cs" />
+    <Compile Include="Models\Common\Player\PlayerConfig.cs" />
+    <Compile Include="Models\Common\Player\PlayerError.cs" />
+    <Compile Include="Models\Common\Player\BasePlayUrlInfo.cs" />
+    <Compile Include="Models\Common\Player\RealPlayInfo.cs" />
     <Compile Include="Models\Common\UserDynamic\IUserDynamicContentDisplayInfo.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicCtrlItem.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicDisplayTypesMap.cs" />
@@ -164,6 +173,47 @@
     <Compile Include="Models\Common\Live\LiveGiftItem.cs" />
     <Compile Include="Models\Common\Live\LiveGiftItemCountMap.cs" />
     <Compile Include="Models\Common\Live\LiveInfoModel.cs" />
+    <Compile Include="Models\Common\Live\DanmuMsgModel.cs" />
+    <Compile Include="Models\Common\Live\GiftMsgModel.cs" />
+    <Compile Include="Models\Common\Live\GuardBuyMsgModel.cs" />
+    <Compile Include="Models\Common\Live\RoomChangeMsgModel.cs" />
+    <Compile Include="Models\Exceptions\PlayerException.cs" />
+    <Compile Include="Player\Controllers\BasePlayerController.cs" />
+    <Compile Include="Player\Controllers\LivePlayerController.cs" />
+    <Compile Include="Player\Controllers\PlayerControllerFactory.cs" />
+    <Compile Include="Player\Controllers\PlayerType.cs" />
+    <Compile Include="Player\IBiliPlayer2.cs" />
+    <Compile Include="Player\LivePlayer.cs" />
+    <Compile Include="Player\States\BaseStateChangedEventArgs.cs" />
+    <Compile Include="Player\States\ContentStates\ContentStateChangedEventArgs.cs" />
+    <Compile Include="Player\States\ContentStates\FullWindowContentState.cs" />
+    <Compile Include="Player\States\ContentStates\ContentStateHandler.cs" />
+    <Compile Include="Player\States\ContentStates\IContentState.cs" />
+    <Compile Include="Player\States\ContentStates\NormalWindowContentState.cs" />
+    <Compile Include="Player\States\PauseStates\PausedState.cs" />
+    <Compile Include="Player\States\PauseStates\PauseStateChangedEventArgs.cs" />
+    <Compile Include="Player\States\PauseStates\PauseStateHandler.cs" />
+    <Compile Include="Player\States\PauseStates\ResumeState.cs" />
+    <Compile Include="Player\States\PlayStates\BufferingPlayState.cs" />
+    <Compile Include="Player\States\PlayStates\PlayStateChangedEventArgs.cs" />
+    <Compile Include="Player\States\ScreenStates\ScreenStateChangedEventArgs.cs" />
+    <Compile Include="Player\States\ScreenStates\ScreenStateHandler.cs" />
+    <Compile Include="Player\States\ScreenStates\FullscreenState.cs" />
+    <Compile Include="Player\States\ScreenStates\IScreenState.cs" />
+    <Compile Include="Player\States\ScreenStates\NormalScreenState.cs" />
+    <Compile Include="Player\SubPlayers\ISubPlayer.cs" />
+    <Compile Include="Player\SubPlayers\LiveHlsPlayer.cs" />
+    <Compile Include="Player\States\PauseStates\IPauseState.cs" />
+    <Compile Include="Player\States\PlayStates\FaultPlayState.cs" />
+    <Compile Include="Player\States\PlayStates\LoadingPlayState.cs" />
+    <Compile Include="Player\States\PlayStates\IdlePlayState.cs" />
+    <Compile Include="Player\States\PlayStates\IPlayState.cs" />
+    <Compile Include="Player\States\PlayStates\PlayingPlayState.cs" />
+    <Compile Include="Player\States\PlayStates\PlayStateHandler.cs" />
+    <Compile Include="Player\States\PlayStates\StopPlayState.cs" />
+    <Compile Include="ViewModels\Live\LiveDetailPageViewModel.cs" />
+    <Compile Include="ViewModels\Live\SuperChatMsgViewModel.cs" />
+    <Compile Include="Models\Common\Live\WelcomeMsgModel.cs" />
     <Compile Include="Models\Common\User\HistoryCursor.cs" />
     <Compile Include="Models\Common\User\UserHistory.cs" />
     <Compile Include="Models\Common\User\UserHistoryItem.cs" />
@@ -1202,10 +1252,12 @@
       <Name>Windows Desktop Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
-  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
+  <PropertyGroup
+    Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <Import
+    Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
