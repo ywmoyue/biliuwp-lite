@@ -5,6 +5,7 @@
     xmlns:local="using:BiliLite.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
    
    
@@ -49,6 +50,7 @@
                 </AppBarButton>
             </StackPanel>
         </Grid>
-        <WebView Grid.Row="1" x:Name="webView" UnsupportedUriSchemeIdentified="webView_UnsupportedUriSchemeIdentified" NavigationStarting="webView_NavigationStarting" NewWindowRequested="webView_NewWindowRequested" NavigationCompleted="webView_NavigationCompleted"></WebView>
+        <controls:WebView2 Grid.Row="1" x:Name="webView" NavigationStarting="WebView_OnNavigationStarting" NavigationCompleted="WebView_OnNavigationCompleted">
+        </controls:WebView2>
     </Grid>
 </local:BasePage>
