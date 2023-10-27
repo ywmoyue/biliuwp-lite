@@ -88,7 +88,7 @@ namespace BiliLite.Dialogs
             m_viewModel.SelectedQualityIndex = 0;
 
             m_viewModel.AudioQualities = data.AudioQualites;
-            m_viewModel.SelectedAudioQuality = data.AudioQualites.FirstOrDefault();
+            m_viewModel.SelectedAudioQuality = data.AudioQualites?.FirstOrDefault();
         }
         private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
@@ -139,6 +139,9 @@ namespace BiliLite.Dialogs
                             });
                         }
                     }
+                    var soundQualityId = 0;
+                    if (m_viewModel.SelectedAudioQuality != null)
+                        soundQualityId = m_viewModel.SelectedAudioQuality.QualityID;
                     //读取视频地址
                     var playUrl = await playerVM.GetPlayUrls(new PlayInfo()
                     {
@@ -149,7 +152,7 @@ namespace BiliLite.Dialogs
                         season_id = downloadItem.SeasonID,
                         season_type = downloadItem.SeasonType,
                         area = downloadItem.Title.ParseArea(downloadItem.UpMid)
-                    }, qn: (cbQuality.SelectedItem as BiliPlayUrlInfo).QualityID, m_viewModel.SelectedAudioQuality.QualityID);
+                    }, qn: (cbQuality.SelectedItem as BiliPlayUrlInfo).QualityID, soundQualityId);
                     if (!playUrl.Success)
                     {
                         item.State = 99;

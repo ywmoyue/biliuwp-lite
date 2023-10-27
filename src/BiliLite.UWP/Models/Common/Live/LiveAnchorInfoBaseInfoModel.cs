@@ -8,7 +8,7 @@ namespace BiliLite.Models.Common.Live
 
         public string Face { get; set; }
 
-        public string Gender { get; set; }
+        public string Gender { get; set; } 
 
         [JsonProperty("official_info")]
         public LiveAnchorInfoOfficialInfoModel OfficialInfo { get; set; }
