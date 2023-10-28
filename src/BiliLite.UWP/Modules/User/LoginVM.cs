@@ -576,7 +576,7 @@ namespace BiliLite.Modules.User
         }
 
 
-        QRAuthInfoWeb qrAuthInfo;
+        QRAuthInfo qrAuthInfo;
         private async void GetQRAuthInfo()
         {
             try
@@ -587,7 +587,7 @@ namespace BiliLite.Modules.User
                     qrTimer.Stop();
                     qrTimer.Dispose();
                 }
-                var result = await account.GetQRAuthInfo();
+                var result = await account.GetQRAuthInfoTV(ApiHelper.iPadOSKey);
                 if (result.success)
                 {
                     qrAuthInfo = result.data;
@@ -636,7 +636,7 @@ namespace BiliLite.Modules.User
         {
             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
-                var result = await account.PollQRAuthInfo(qrAuthInfo.qrcode_key);
+                var result = await account.PollQRAuthInfoTV(qrAuthInfo.auth_code, ApiHelper.iPadOSKey);
                 if (result.status == LoginStatus.Success)
                 {
                     qrTimer.Stop();

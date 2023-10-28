@@ -324,15 +324,15 @@ namespace BiliLite.Models.Requests.Api
         /// </summary>
         /// <param name="mid"></param>
         /// <returns></returns>
-        public ApiModel QRLoginAuthCodeTV(string local_id)
+        public ApiModel QRLoginAuthCodeTV(string local_id, ApiKeyInfo appkey)
         {
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = "https://passport.bilibili.com/x/passport-tv-login/qrcode/auth_code",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidTVKey, false) + $"&local_id={local_id}",
+                body = ApiHelper.MustParameter(appkey, false) + $"&local_id={local_id}",
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidTVKey);
+            api.body += ApiHelper.GetSign(api.body, appkey);
             return api;
         }
 
@@ -341,15 +341,15 @@ namespace BiliLite.Models.Requests.Api
         /// </summary>
         /// <param name="auth_code"></param>
         /// <returns></returns>
-        public ApiModel QRLoginPollTV(string auth_code, string local_id)
+        public ApiModel QRLoginPollTV(string auth_code, string local_id, ApiKeyInfo appkey)
         {
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = "https://passport.bilibili.com/x/passport-tv-login/qrcode/poll",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidTVKey, false) + $"&auth_code={auth_code}&guid={Guid.NewGuid().ToString()}&local_id={local_id}",
+                body = ApiHelper.MustParameter(appkey, false) + $"&auth_code={auth_code}&guid={Guid.NewGuid().ToString()}&local_id={local_id}",
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidTVKey);
+            api.body += ApiHelper.GetSign(api.body, appkey);
             return api;
         }
 
