@@ -1614,7 +1614,10 @@ namespace BiliLite.Controls
                 return true;
             }
             var soundQualityId = soundQuality?.QualityID;
-            soundQualityId ??= 0;
+            if (soundQualityId == null)
+            {
+                soundQualityId = 0;
+            }
             var info = await playerHelper.GetPlayUrls(CurrentPlayItem, quality.QualityID, soundQualityId.Value);
             if (!info.Success)
             {
@@ -1626,6 +1629,7 @@ namespace BiliLite.Controls
                 ShowDialog("无法读取到播放地址，试试换个清晰度?", "播放失败");
                 return false;
             }
+            quality = info.CurrentQuality;
             return true;
         }
 
@@ -1691,12 +1695,6 @@ namespace BiliLite.Controls
             if (!await ChangeQualityGetPlayUrls(quality, soundQuality))
             {
                 return;
-            }
-            if (quality.PlayUrlType == BiliPlayUrlType.SingleFLV && !quality.HasPlayUrl)
-            {
-                // 解决flv在切换清晰度后无地址的问题
-                var info = await playerHelper.GetPlayUrls(CurrentPlayItem, quality.QualityID);
-                quality = info.CurrentQuality;
             }
             var result = await ChangeQualityPlayVideo(quality, soundQuality);
             if (result.result)
