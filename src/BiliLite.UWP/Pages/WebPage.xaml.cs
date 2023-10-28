@@ -3,11 +3,14 @@ using BiliLite.Extensions;
 using BiliLite.Services;
 using Microsoft.UI.Xaml.Controls;
 using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Models.Common;
+using Microsoft.Web.WebView2.Core;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -18,59 +21,90 @@ namespace BiliLite.Pages
     /// </summary>
     public sealed partial class WebPage : BasePage
     {
+        private readonly CookieService m_cookieService;
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+
         public WebPage()
         {
+            m_cookieService = App.ServiceProvider.GetRequiredService<CookieService>();
             this.InitializeComponent();
             Title = "网页浏览";
             this.Loaded += WebPage_Loaded;
         }
+
+        private async void CoreWebView2_NewWindowRequested(CoreWebView2 sender, CoreWebView2NewWindowRequestedEventArgs args)
+        {
+            args.Handled = true;
+            var handelUrlResult = await MessageCenter.HandelUrl(sender.Source);
+            if (handelUrlResult) return;
+            var md = new MessageDialog("是否使用外部浏览器打开此链接？");
+            md.Commands.Add(new UICommand("确定", new UICommandInvokedHandler(async (e) => { await Windows.System.Launcher.LaunchUriAsync(new Uri(args.Uri)); })));
+            md.Commands.Add(new UICommand("取消", new UICommandInvokedHandler((e) => { })));
+            await md.ShowAsync();
+        }
+
         private void WebPage_Loaded(object sender, RoutedEventArgs e)
         {
-            if (this.Parent is MyFrame)
-            {
-                (this.Parent as MyFrame).ClosedPage -= WebPage_ClosedPage;
-                (this.Parent as MyFrame).ClosedPage += WebPage_ClosedPage;
-            }
+            if (!(this.Parent is MyFrame frame)) return;
+            frame.ClosedPage -= WebPage_ClosedPage;
+            frame.ClosedPage += WebPage_ClosedPage;
         }
 
         private void WebPage_ClosedPage(object sender, EventArgs e)
         {
-            webView.NavigateToString("");
-            (this.Content as Grid).Children.Remove(webView);
-            webView = null;
-            GC.Collect();
+            CloseWebView();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        private void CloseWebView()
+        {
+            webView.Close();
+            //(this.Content as Grid).Children.Remove(webView);
+            webView = null;
+            //GC.Collect();
+        }
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.NavigationMode == NavigationMode.New)
+            await InitWebView2();
+            if (e.NavigationMode != NavigationMode.New) return;
+            var uri = e.Parameter.ToString();
+            if (uri.Contains("h5/vlog"))
             {
-                var uri = e.Parameter.ToString();
-                if (uri.Contains("h5/vlog"))
-                {
-                    webView.MaxWidth = 500;
-                }
-
-                if (uri.Contains("read/cv"))
-                {
-                    //如果是专栏，内容加载完成再显示
-                    webView.Visibility = Visibility.Collapsed;
-                }
-                webView.Navigate(new Uri(uri));
-
+                webView.MaxWidth = 500;
             }
 
+            if (uri.Contains("read/cv"))
+            {
+                //如果是专栏，内容加载完成再显示
+                webView.Visibility = Visibility.Collapsed;
+            }
+
+            var url = new Uri(uri);
+            if (url.Host.Contains(Constants.BILIBILI_HOST))
+            {
+                foreach (var cookie in m_cookieService.Cookies)
+                {
+                    var webCookie = webView.CoreWebView2.CookieManager.CreateCookie(cookie.Name, cookie.Value, Constants.BILIBILI_HOST, "/");
+                    webView.CoreWebView2.CookieManager.AddOrUpdateCookie(webCookie);
+                }
+            }
+            webView.Source=new Uri(uri);
+
         }
+
+        private async Task InitWebView2()
+        {
+            await webView.EnsureCoreWebView2Async();
+            webView.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
+        }
+
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             if (e.NavigationMode == NavigationMode.Back || e.SourcePageType == typeof(BlankPage))
             {
                 NavigationCacheMode = NavigationCacheMode.Disabled;
-                webView.NavigateToString("");
-                (this.Content as Grid).Children.Remove(webView);
-                webView = null;
-                GC.Collect();
+                CloseWebView();
             }
             base.OnNavigatingFrom(e);
         }
@@ -86,7 +120,7 @@ namespace BiliLite.Pages
 
         private void btnRefresh_Click(object sender, RoutedEventArgs e)
         {
-            webView.Refresh();
+            webView.Reload();
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
@@ -97,98 +131,14 @@ namespace BiliLite.Pages
             }
         }
 
-        private async void webView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
-        {
-            if (this.Parent != null)
-            {
-                if ((this.Parent as Frame).Parent is TabViewItem)
-                {
-                    if (!string.IsNullOrEmpty(webView.DocumentTitle))
-                    {
-                        ((this.Parent as Frame).Parent as TabViewItem).Header = webView.DocumentTitle;
-                    }
-                }
-                else
-                {
-                    MessageCenter.ChangeTitle(this, webView.DocumentTitle);
-                }
-            }
-            try
-            {
-
-                //专栏阅读设置
-                if (args.Uri != null && args.Uri.AbsoluteUri.Contains("read/cv"))
-                {
-                    await webView?.InvokeScriptAsync("eval", new List<string>() {
-                    @"$('#internationalHeader').hide();
-$('.unlogin-popover').hide();
-$('.up-info-holder').hide();
-$('.nav-tab-bar').hide();
-$('.international-footer').hide();
-$('.page-container').css('padding-right','0');
-$('.no-login').hide();
-$('.author-container').show();
-$('.author-container').css('margin','12px 0px -12px 0px');"
-                });
-                    //将专栏图片替换成jpg
-                    await webView?.InvokeScriptAsync("eval", new List<string>() {
-                        @"document.getElementsByClassName('img-box').forEach(element => {
-                element.getElementsByTagName('img').forEach(image => {
-                    image.src=image.getAttribute('data-src')+'@progressive.jpg';
-               });
-            });"
-                    });
-                }
-
-
-
-                await webView?.InvokeScriptAsync("eval", new List<string>() {
-                    "$('.h5-download-bar').hide()"
-                });
-
-
-
-            }
-            catch (Exception)
-            {
-
-            }
-            finally
-            {
-                if (webView != null) webView.Visibility = Visibility.Visible;
-            }
-        }
-
         private void btnShare_Click(object sender, RoutedEventArgs e)
         {
             webView.Source.ToString().SetClipboard();
         }
 
-        private async void webView_NewWindowRequested(WebView sender, WebViewNewWindowRequestedEventArgs args)
-        {
-            args.Handled = true;
-            var re = await MessageCenter.HandelUrl(args.Uri.AbsoluteUri);
-            if (!re)
-            {
-                var md = new MessageDialog("是否使用外部浏览器打开此链接？");
-                md.Commands.Add(new UICommand("确定", new UICommandInvokedHandler(async (e) => { await Windows.System.Launcher.LaunchUriAsync(args.Uri); })));
-                md.Commands.Add(new UICommand("取消", new UICommandInvokedHandler((e) => { })));
-                await md.ShowAsync();
-            }
-        }
-
         private async void btnOpenBrowser_Click(object sender, RoutedEventArgs e)
         {
             await Windows.System.Launcher.LaunchUriAsync(webView.Source);
-        }
-
-        private void webView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
-        {
-            if (args.Uri != null && args.Uri.AbsoluteUri.Contains("read/cv"))
-            {
-                // args.Cancel = true;
-                // return;
-            }
         }
 
         private async void webView_UnsupportedUriSchemeIdentified(WebView sender, WebViewUnsupportedUriSchemeIdentifiedEventArgs args)
@@ -207,12 +157,70 @@ $('.author-container').css('margin','12px 0px -12px 0px');"
                     Notify.ShowMessageToast("不支持打开的链接" + args.Uri.AbsoluteUri);
                 }
             }
-
         }
 
         private void btnInfo_Click(object sender, RoutedEventArgs e)
         {
             Notify.ShowMessageToast("虽然看起来像个浏览器，但这完全这不是个浏览器啊！ ╰（‵□′）╯");
+        }
+
+        private void WebView_OnNavigationStarting(WebView2 sender, CoreWebView2NavigationStartingEventArgs args)
+        {
+        }
+
+        private async void WebView_OnNavigationCompleted(WebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
+        {
+            if (Parent is Frame frame)
+            {
+                if (frame.Parent is TabViewItem tabViewItem &&
+                    !string.IsNullOrEmpty(webView.CoreWebView2.DocumentTitle))
+                {
+                    tabViewItem.Header = webView.CoreWebView2.DocumentTitle;
+                }
+                else if (!(frame.Parent is TabViewItem))
+                {
+                    MessageCenter.ChangeTitle(this, webView.CoreWebView2.DocumentTitle);
+                }
+            }
+
+            try
+            {
+                //专栏阅读设置
+                if (sender.Source != null && sender.Source.AbsoluteUri.Contains("read/cv"))
+                {
+                    await webView?.CoreWebView2?.ExecuteScriptAsync(
+                        @"$('#internationalHeader').hide();
+$('.unlogin-popover').hide();
+$('.up-info-holder').hide();
+$('.nav-tab-bar').hide();
+$('.international-footer').hide();
+$('.page-container').css('padding-right','0');
+$('.no-login').hide();
+$('.author-container').show();
+$('.author-container').css('margin','12px 0px -12px 0px');"
+                    );
+                    //将专栏图片替换成jpg
+                    await webView?.CoreWebView2?.ExecuteScriptAsync(
+                        @"document.getElementsByClassName('img-box').forEach(element => {
+                element.getElementsByTagName('img').forEach(image => {
+                    image.src=image.getAttribute('data-src')+'@progressive.jpg';
+               });
+            });"
+                    );
+                }
+
+                await webView?.CoreWebView2?.ExecuteScriptAsync(
+                    "$('.h5-download-bar').hide()"
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex.Message, ex);
+            }
+            finally
+            {
+                if (webView != null) webView.Visibility = Visibility.Visible;
+            }
         }
     }
 }
