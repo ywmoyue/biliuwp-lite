@@ -13,6 +13,11 @@
         public const string BILIBILI_DOMAIN = "https://www.bilibili.com";
 
         /// <summary>
+        /// b站Host
+        /// </summary>
+        public const string BILIBILI_HOST = ".bilibili.com";
+
+        /// <summary>
         /// 评论中匹配特殊文本正则表达式
         /// </summary>
         public const string COMMENT_SPECIAL_TEXT_REGULAR = @"\[(.*?)\]|https?:\/\/\S+|http?:\/\/\S+|\p{Cs}";
