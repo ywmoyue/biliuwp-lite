@@ -329,14 +329,14 @@ namespace BiliLite.Modules
         }
 
         /// <summary>
-        /// 获取二维码登录信息
+        /// 获取tv版二维码登录信息
         /// </summary>
         /// <returns></returns>
-        public async Task<ReturnModel<QRAuthInfo>> GetQRAuthInfoTV()
+        public async Task<ReturnModel<QRAuthInfo>> GetQRAuthInfoTV(ApiKeyInfo appkey)
         {
             try
             {
-                var result = await accountApi.QRLoginAuthCodeTV(guid).Request();
+                var result = await accountApi.QRLoginAuthCodeTV(guid, appkey).Request();
                 if (result.status)
                 {
                     var data = await result.GetData<QRAuthInfo>();
@@ -377,14 +377,14 @@ namespace BiliLite.Modules
             }
         }
         /// <summary>
-        /// 轮询二维码扫描信息
+        /// 轮询tv版二维码扫描信息
         /// </summary>
         /// <returns></returns>
-        public async Task<LoginCallbackModel> PollQRAuthInfoTV(string auth_code)
+        public async Task<LoginCallbackModel> PollQRAuthInfoTV(string auth_code, ApiKeyInfo appkey)
         {
             try
             {
-                var result = await accountApi.QRLoginPollTV(auth_code, guid).Request();
+                var result = await accountApi.QRLoginPollTV(auth_code, guid, appkey).Request();
                 if (result.status)
                 {
                     var data = await result.GetData<LoginDataV3Model>();
