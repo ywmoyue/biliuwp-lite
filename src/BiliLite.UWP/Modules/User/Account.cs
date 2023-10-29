@@ -66,28 +66,24 @@ namespace BiliLite.Modules
         /// <summary>
         /// 安全验证后保存状态
         /// </summary>
-        /// <param name="access_key"></param>
-        /// <param name="refresh_token"></param>
-        /// <param name="expires"></param>
-        /// <param name="userid"></param>
         /// <returns></returns>
-        public async Task<bool> SaveLogin(string access_key, string refresh_token, int expires, long userid, List<string> sso, LoginCookieInfo cookie)
+        public async Task<bool> SaveLogin(string accessKey, string refreshToken, int expires, long userid, List<string> sso, LoginCookieInfo cookie, ApiKeyInfo appKey)
         {
             try
             {
                 //设置登录状态
-
-                SettingService.SetValue(SettingConstants.Account.ACCESS_KEY, access_key);
+                SettingService.SetValue(SettingConstants.Account.ACCESS_KEY, accessKey);
                 SettingService.SetValue(SettingConstants.Account.USER_ID, userid);
                 SettingService.SetValue(SettingConstants.Account.ACCESS_KEY_EXPIRE_DATE, DateTime.Now.AddSeconds(expires));
-                SettingService.SetValue(SettingConstants.Account.REFRESH_KEY, refresh_token);
+                SettingService.SetValue(SettingConstants.Account.REFRESH_KEY, refreshToken);
+                SettingService.Account.SetLoginAppKeySecret(appKey);
                 var data = new LoginTokenInfo()
                 {
-                    access_token = access_key,
+                    access_token = accessKey,
                     expires_datetime = DateTime.Now.AddSeconds(expires),
                     expires_in = expires,
                     mid = userid,
-                    refresh_token = refresh_token
+                    refresh_token = refreshToken
                 };
                 // 好像没啥用...
                 if (sso == null)
@@ -238,15 +234,22 @@ namespace BiliLite.Modules
             }
         }
 
-        public async void LoginByCookie(List<HttpCookieItem> cookies, string refresh_token)
+        public async void LoginByCookie(List<HttpCookieItem> cookies, string refreshToken)
         {
             m_cookieService.Cookies = cookies;
-            var cookieToAccessKeyConfirmUrl = await GetCookieToAccessKeyConfirmUrl();
+            var appKey = SettingConstants.Account.DefaultLoginAppKeySecret;
+            var cookieToAccessKeyConfirmUrl = await GetCookieToAccessKeyConfirmUrl(appKey);
             var accessKey = await GetAccessKey(cookieToAccessKeyConfirmUrl);
             // var expires = result.cookies[0].Expires;
-            var userId = cookies.FirstOrDefault(x => x.Name == "DedeUserID").Value;
+            var userId = cookies.FirstOrDefault(x => x.Name == "DedeUserID")?.Value;
+            if (userId == null)
+            {
+                Notify.ShowMessageToast("登录失败，获取用户Id失败");
+                _logger.Error("登录失败，获取用户Id失败");
+                return;
+            }
             SettingService.SetValue(SettingConstants.Account.IS_WEB_LOGIN, true);
-            await SaveLogin(accessKey, refresh_token, 3600 * 240, long.Parse(userId), null, null);
+            await SaveLogin(accessKey, refreshToken, 3600 * 240, long.Parse(userId), null, null, appKey);
         }
 
         /// <summary>
@@ -292,11 +295,11 @@ namespace BiliLite.Modules
             }
         }
 
-        public async Task<string> GetCookieToAccessKeyConfirmUrl()
+        public async Task<string> GetCookieToAccessKeyConfirmUrl(ApiKeyInfo appKey)
         {
             try
             {
-                var result = await accountApi.GetCookieToAccessKey().Request();
+                var result = await accountApi.GetCookieToAccessKey(appKey).Request();
                 if (result.status)
                 {
                     var data = await result.GetData<LoginAppThirdResponse>();
@@ -380,18 +383,20 @@ namespace BiliLite.Modules
         /// 轮询tv版二维码扫描信息
         /// </summary>
         /// <returns></returns>
-        public async Task<LoginCallbackModel> PollQRAuthInfoTV(string auth_code, ApiKeyInfo appkey)
+        public async Task<LoginCallbackModel> PollQRAuthInfoTV(string auth_code, ApiKeyInfo appKey)
         {
             try
             {
-                var result = await accountApi.QRLoginPollTV(auth_code, guid, appkey).Request();
+                var result = await accountApi.QRLoginPollTV(auth_code, guid, appKey).Request();
                 if (result.status)
                 {
                     var data = await result.GetData<LoginDataV3Model>();
                     if (data.success)
                     {
                         SettingService.SetValue(SettingConstants.Account.IS_WEB_LOGIN, false);
-                        await SaveLogin(data.data.token_info.access_token, data.data.token_info.refresh_token, data.data.token_info.expires_in, data.data.token_info.mid, data.data.sso, data.data.cookie_info);
+                        await SaveLogin(data.data.token_info.access_token, data.data.token_info.refresh_token,
+                            data.data.token_info.expires_in, data.data.token_info.mid, data.data.sso,
+                            data.data.cookie_info, appKey);
                         return new LoginCallbackModel()
                         {
                             status = LoginStatus.Success,
@@ -462,7 +467,8 @@ namespace BiliLite.Modules
         {
             try
             {
-                var req = await accountApi.RefreshToken().Request();
+                var appKey = SettingService.Account.GetLoginAppKeySecret();
+                var req = await accountApi.RefreshToken(appKey).Request();
 
                 if (req.status)
                 {
@@ -470,7 +476,7 @@ namespace BiliLite.Modules
                     if (obj["code"].ToInt32() == 0)
                     {
                         var data = JsonConvert.DeserializeObject<LoginTokenInfo>(obj["data"].ToString());
-                        await SaveLogin(data.access_token, data.refresh_token, data.expires_in, data.mid, null, null);
+                        await SaveLogin(data.access_token, data.refresh_token, data.expires_in, data.mid, null, null, appKey);
                         return true;
                     }
                     else

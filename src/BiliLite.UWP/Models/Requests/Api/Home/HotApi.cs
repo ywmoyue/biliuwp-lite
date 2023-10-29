@@ -2,17 +2,17 @@
 
 namespace BiliLite.Models.Requests.Api.Home
 {
-    public class HotAPI
+    public class HotAPI : BaseApi
     {
         public ApiModel Popular(string idx = "0", string last_param = "")
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"https://app.bilibili.com/x/v2/show/popular/index",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&idx={idx}&last_param={last_param}"
+                parameter = ApiHelper.MustParameter(AppKey, true) + $"&idx={idx}&last_param={last_param}"
             };
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
 

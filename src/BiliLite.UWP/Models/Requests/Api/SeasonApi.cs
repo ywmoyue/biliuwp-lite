@@ -1,29 +1,28 @@
-﻿using BiliLite.Models.Common;
-using BiliLite.Services;
+﻿using BiliLite.Services;
 using System;
 
 namespace BiliLite.Models.Requests.Api
 {
-    public class SeasonApi
+    public class SeasonApi : BaseApi
     {
 
         public ApiModel Detail(string season_id, bool proxy = false)
         {
             var baseUrl = ApiHelper.API_BASE_URL;
 
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{baseUrl}/pgc/view/app/season",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&season_id={season_id}"
+                parameter = ApiHelper.MustParameter(AppKey, true) + $"&season_id={season_id}"
             };
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
 
         public ApiModel DetailWeb(string season_id)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"https://bangumi.bilibili.com/view/web_api/season",
@@ -39,7 +38,7 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel ShortReview(int media_id, string next = "", int sort = 0)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/pgc/review/short/list",
@@ -58,13 +57,13 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel LikeReview(int media_id, int review_id, ReviewType review_type = ReviewType.Short)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"https://bangumi.bilibili.com/review/api/like",
-                body = $"{ApiHelper.MustParameter(ApiHelper.AndroidKey, true)}&media_id={media_id}&review_id={review_id}&review_type={(int)review_type}"
+                body = $"{ApiHelper.MustParameter(AppKey, true)}&media_id={media_id}&review_id={review_id}&review_type={(int)review_type}"
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
         }
         /// <summary>
@@ -74,13 +73,13 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel DislikeReview(int media_id, int review_id, ReviewType review_type = ReviewType.Short)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"https://bangumi.bilibili.com/review/api/dislike",
-                body = $"{ApiHelper.MustParameter(ApiHelper.AndroidKey, true)}&media_id={media_id}&review_id={review_id}&review_type={(int)review_type}"
+                body = $"{ApiHelper.MustParameter(AppKey, true)}&media_id={media_id}&review_id={review_id}&review_type={(int)review_type}"
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
         }
         /// <summary>
@@ -93,13 +92,13 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel SendShortReview(int media_id, string content, bool share_feed, int score)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"https://bangumi.bilibili.com/review/api/short/post",
-                body = $"{ApiHelper.MustParameter(ApiHelper.AndroidKey, true)}&media_id={media_id}&content={Uri.EscapeDataString(content)}&share_feed={(share_feed ? 1 : 0)}&score={score}"
+                body = $"{ApiHelper.MustParameter(AppKey, true)}&media_id={media_id}&content={Uri.EscapeDataString(content)}&share_feed={(share_feed ? 1 : 0)}&score={score}"
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
         }
     }
@@ -108,6 +107,5 @@ namespace BiliLite.Models.Requests.Api
     {
         Long = 1,
         Short = 2,
-
     }
 }

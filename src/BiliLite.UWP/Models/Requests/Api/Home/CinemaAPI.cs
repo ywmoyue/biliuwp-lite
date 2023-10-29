@@ -8,7 +8,7 @@ namespace BiliLite.Models.Requests.Api.Home
         public ApiModel CinemaHome()
         {
             var baseUrl = SettingService.GetValue(SettingConstants.Other.BILI_LITE_WEB_API_BASE_URL, ApiConstants.BILI_LITE_WEB_API_DEFAULT_BASE_URL);
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{baseUrl}api/cinema/home"
@@ -18,7 +18,7 @@ namespace BiliLite.Models.Requests.Api.Home
         public ApiModel CinemaFallMore(int wid, long cursor = 0)
         {
             var baseUrl = SettingService.GetValue(SettingConstants.Other.BILI_LITE_WEB_API_BASE_URL, ApiConstants.BILI_LITE_WEB_API_DEFAULT_BASE_URL);
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{baseUrl}api/cinema/falls",

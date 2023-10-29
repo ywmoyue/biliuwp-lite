@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace BiliLite.Models.Requests.Api
 {
-    public class SearchAPI
+    public class SearchAPI : BaseApi
     {
         /// <summary>
         /// 综合搜索
@@ -19,11 +19,11 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel Search(string keyword, string order = "", int duration = 0, int rid = 0, int pn = 1, int ps = 20)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"https://app.bilibili.com/x/v2/search",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + "&fnval=16&fnver=0&force_host=0&fourk=1&from_source=app_search&highlight=0&is_org_query=0&qn=112&recommend=1"
+                parameter = ApiHelper.MustParameter(AppKey, true) + "&fnval=16&fnver=0&force_host=0&fourk=1&from_source=app_search&highlight=0&is_org_query=0&qn=112&recommend=1"
             };
             api.parameter += $"&keyword={Uri.EscapeDataString(keyword)}&local_time={TimeExtensions.GetTimestampS()}&pn={pn}&ps={ps}";
             if (string.IsNullOrEmpty(order))
@@ -38,7 +38,7 @@ namespace BiliLite.Models.Requests.Api
             {
                 api.parameter += $"&rid={rid}";
             }
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
 
@@ -49,7 +49,7 @@ namespace BiliLite.Models.Requests.Api
             {
                 baseUrl = area.ChooseProxyServer();
             }
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 need_cookie = true,
@@ -70,7 +70,7 @@ namespace BiliLite.Models.Requests.Api
             {
                 baseUrl = area.ChooseProxyServer();
             }
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 need_cookie = true,
@@ -91,7 +91,7 @@ namespace BiliLite.Models.Requests.Api
             {
                 baseUrl = area.ChooseProxyServer();
             }
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 need_cookie = true,
@@ -112,7 +112,7 @@ namespace BiliLite.Models.Requests.Api
             {
                 baseUrl = area.ChooseProxyServer();
             }
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 need_cookie = true,
@@ -133,7 +133,7 @@ namespace BiliLite.Models.Requests.Api
             {
                 baseUrl = area.ChooseProxyServer();
             }
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 need_cookie = true,
@@ -154,7 +154,7 @@ namespace BiliLite.Models.Requests.Api
             {
                 baseUrl = area.ChooseProxyServer();
             }
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 need_cookie = true,
@@ -175,7 +175,7 @@ namespace BiliLite.Models.Requests.Api
             {
                 baseUrl = area.ChooseProxyServer();
             }
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 need_cookie = true,

@@ -2,7 +2,7 @@
 
 namespace BiliLite.Models.Requests.Api
 {
-    public class SeasonIndexAPI
+    public class SeasonIndexAPI : BaseApi
     {
         /// <summary>
         /// 筛选条件
@@ -11,13 +11,13 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel Condition(int season_type)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/pgc/season/index/condition",//$"https://bangumi.bilibili.com/media/api/search/v2/condition",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, false) + $"&season_type={season_type}&type=0"
+                parameter = ApiHelper.MustParameter(AppKey, false) + $"&season_type={season_type}&type=0"
             };
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
 
@@ -31,13 +31,13 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel Result(int page, int season_type, string condition, int pagesize = 24)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/pgc/season/index/result",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, false) + condition + $"&page={page}&pagesize={pagesize}&season_type={season_type}&type=0"
+                parameter = ApiHelper.MustParameter(AppKey, false) + condition + $"&page={page}&pagesize={pagesize}&season_type={season_type}&type=0"
             };
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
 
