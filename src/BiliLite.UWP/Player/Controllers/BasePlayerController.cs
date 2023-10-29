@@ -1,5 +1,6 @@
 ﻿using BiliLite.Player.States.PlayStates;
 using System;
+using BiliLite.Player.MediaInfos;
 using BiliLite.Player.States.ContentStates;
 using BiliLite.Player.States.PauseStates;
 using BiliLite.Player.States.ScreenStates;
@@ -12,6 +13,7 @@ namespace BiliLite.Player.Controllers
         private readonly PauseStateHandler m_pauseStateHandler;
         private readonly ContentStateHandler m_contentStateHandler;
         private readonly ScreenStateHandler m_screenStateHandler;
+        private readonly MediaInfosCollector m_mediaInfosCollector;
 
         public BasePlayerController()
         {
@@ -19,6 +21,7 @@ namespace BiliLite.Player.Controllers
             m_pauseStateHandler = new PauseStateHandler(this);
             m_contentStateHandler = new ContentStateHandler(this);
             m_screenStateHandler = new ScreenStateHandler(this);
+            m_mediaInfosCollector = new MediaInfosCollector(this);
             InitEvent();
         }
 
@@ -29,6 +32,8 @@ namespace BiliLite.Player.Controllers
         public event EventHandler<ContentStateChangedEventArgs> ContentStateChanged;
 
         public event EventHandler<ScreenStateChangedEventArgs> ScreenStateChanged;
+
+        public event EventHandler<MediaInfo> MediaInfosUpdated;
 
         public IBiliPlayer2 Player { get; set; }
 
@@ -58,6 +63,12 @@ namespace BiliLite.Player.Controllers
             {
                 ScreenStateChanged?.Invoke(this, e);
             };
+            m_mediaInfosCollector.MediaInfosUpdated += MediaInfosCollector_MediaInfosUpdated;
+        }
+
+        private void MediaInfosCollector_MediaInfosUpdated(object sender, MediaInfo e)
+        {
+            MediaInfosUpdated?.Invoke(this, e);
         }
 
         public void SetPlayer(IBiliPlayer2 player)
