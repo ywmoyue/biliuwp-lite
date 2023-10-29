@@ -1,7 +1,6 @@
 ﻿using System;
 using BiliLite.Models.Common.Player;
 using System.Threading.Tasks;
-using Windows.Media.Playback;
 using Windows.UI.Xaml.Controls;
 using BiliLite.Extensions;
 using BiliLite.Models.Exceptions;
@@ -9,6 +8,7 @@ using BiliLite.Player.Controllers;
 using BiliLite.Player.SubPlayers;
 using BiliLite.Services;
 using FFmpegInteropX;
+using BiliLite.Player.MediaInfos;
 
 namespace BiliLite.Player
 {
@@ -86,6 +86,11 @@ namespace BiliLite.Player
         {
             m_realPlayInfo = realPlayInfo;
             m_subPlayer.SetRealPlayInfo(realPlayInfo);
+        }
+
+        public CollectInfo GetCollectInfo()
+        {
+            return m_subPlayer.GetCollectInfo();
         }
 
         public async Task Load()

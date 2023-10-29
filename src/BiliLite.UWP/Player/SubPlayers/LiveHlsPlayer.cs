@@ -6,6 +6,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using BiliLite.Models.Common.Player;
 using BiliLite.Player.SubPlayers;
+using BiliLite.Player.MediaInfos;
 
 namespace BiliLite.Player
 {
@@ -16,6 +17,7 @@ namespace BiliLite.Player
         private readonly MediaSourceConfig m_config;
         private PlayerConfig m_playerConfig;
         private MediaPlayerElement m_playerElement;
+        private string m_url;
 
         public LiveHlsPlayer(PlayerConfig playerConfig, MediaPlayerElement playerElement)
         {
@@ -123,6 +125,17 @@ namespace BiliLite.Player
             });
         }
 
+        public override CollectInfo GetCollectInfo()
+        {
+            return new CollectInfo()
+            {
+                Data = m_fFmpegMediaSource,
+                RealPlayInfo = m_realPlayInfo,
+                Type = "LiveHls",
+                Url = m_url,
+            };
+        }
+
         public override async Task Load()
         {
             ReloadConfig();
@@ -144,6 +157,8 @@ namespace BiliLite.Player
             {
                 url = urls.FlvUrls != null ? urls.FlvUrls[selectRouteLine].Url : urls.HlsUrls[selectRouteLine].Url;
             }
+
+            m_url = url;
 
             m_fFmpegMediaSource = await FFmpegMediaSource.CreateFromUriAsync(url, m_config);
             m_mediaPlayer.AutoPlay = true;

@@ -198,7 +198,7 @@ namespace BiliLite.ViewModels.Live
 
         #region Events
 
-        public event EventHandler<BasePlayUrlInfo> ChangedPlayUrl;
+        public event EventHandler ChangedPlayUrl;
 
         public event EventHandler<LiveRoomEndAnchorLotteryInfoModel> LotteryEnd;
 
