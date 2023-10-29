@@ -26,7 +26,7 @@
     <AppxBundle>Never</AppxBundle>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <PackageCertificateThumbprint>32750103AFAB838C7F3755E5FD635CA4F0B72649</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>C4FA34A878A0528F84922932FEC6746BCBCA5CEA</PackageCertificateThumbprint>
     <PackageCertificateKeyFile />
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
   </PropertyGroup>
