@@ -1,7 +1,7 @@
 {
-    "version": "4.6.17",
-    "version_num": 40617,
-    "version_desc": "### 公告\r\n\r\n* 4.6.17版本已发布，具体更新内容请到下载详情中查看\r\n\r\n* 由于B站接口变动，扫码登录和密码登录已无法使用，可以使用短信登录\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+    "version": "4.6.18",
+    "version_num": 40618,
+    "version_desc": "更新内容:\r\n\r\n* 恢复直播的视频流媒体信息显示\r\n\r\n* 修复打开部分Web页面需要登录\r\n\r\n* 修复二维码登录\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
     "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
     "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
