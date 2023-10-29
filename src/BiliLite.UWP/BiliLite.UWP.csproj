@@ -183,6 +183,12 @@
     <Compile Include="Player\Controllers\PlayerType.cs" />
     <Compile Include="Player\IBiliPlayer2.cs" />
     <Compile Include="Player\LivePlayer.cs" />
+    <Compile Include="Player\MediaInfos\BaseCollectInfoHandler.cs" />
+    <Compile Include="Player\MediaInfos\CollectInfo.cs" />
+    <Compile Include="Player\MediaInfos\FFMpegInteropMssCollectInfoHandler.cs" />
+    <Compile Include="Player\MediaInfos\MediaInfo.cs" />
+    <Compile Include="Player\MediaInfos\MediaInfoDoNotToStringAttribute.cs" />
+    <Compile Include="Player\MediaInfos\MediaInfosCollector.cs" />
     <Compile Include="Player\States\BaseStateChangedEventArgs.cs" />
     <Compile Include="Player\States\ContentStates\ContentStateChangedEventArgs.cs" />
     <Compile Include="Player\States\ContentStates\FullWindowContentState.cs" />

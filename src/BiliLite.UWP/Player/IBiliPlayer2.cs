@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using BiliLite.Player.MediaInfos;
 
 namespace BiliLite.Player
 {
@@ -27,5 +28,7 @@ namespace BiliLite.Player
         public Task Fullscreen();
 
         public Task CancelFullscreen();
+
+        public CollectInfo GetCollectInfo();
     }
 }
