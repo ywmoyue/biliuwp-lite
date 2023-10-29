@@ -30,7 +30,6 @@ namespace BiliLite.Player.MediaInfos
 
         public override void InternalStop()
         {
-            throw new System.NotImplementedException();
         }
     }
 }
