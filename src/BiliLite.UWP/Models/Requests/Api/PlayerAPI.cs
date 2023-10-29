@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BiliLite.Models.Requests.Api
 {
-    public class PlayerAPI
+    public class PlayerAPI : BaseApi
     {
         public ApiModel VideoPlayUrl(string aid, string cid, int qn, bool dash, bool proxy = false, string area = "")
         {
@@ -16,7 +16,7 @@ namespace BiliLite.Models.Requests.Api
             {
                 baseUrl = area.ChooseProxyServer();
             }
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{baseUrl}/x/player/playurl",
@@ -39,11 +39,11 @@ namespace BiliLite.Models.Requests.Api
             {
                 baseUrl = area.ChooseProxyServer();
             }
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{baseUrl}/pgc/player/web/playurl",
-                parameter = $"appkey={ApiHelper.AndroidKey.Appkey}&cid={cid}&ep_id={ep_id}&qn={qn}&type=&otype=json&module=bangumi&season_type={season_type}"
+                parameter = $"appkey={AppKey.Appkey}&cid={cid}&ep_id={ep_id}&qn={qn}&type=&otype=json&module=bangumi&season_type={season_type}"
             };
             if (SettingService.Account.Logined)
             {
@@ -51,7 +51,7 @@ namespace BiliLite.Models.Requests.Api
             }
             api.parameter += "&fourk=1&fnver=0&fnval=4048";
             
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             if (proxy)
             {
                 api.parameter += $"&area={area}";
@@ -61,11 +61,11 @@ namespace BiliLite.Models.Requests.Api
 
         public ApiModel SeasonAndroidPlayUrl(string aid, string cid, int qn, int season_type, bool dash)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/pgc/player/web/playurl",
-                parameter = $"appkey={ApiHelper.AndroidKey.Appkey}&cid={cid}&qn={qn}&type=&otype=json&module=bangumi&season_type={season_type}"
+                parameter = $"appkey={AppKey.Appkey}&cid={cid}&qn={qn}&type=&otype=json&module=bangumi&season_type={season_type}"
             };
             if (SettingService.Account.Logined)
             {
@@ -79,7 +79,7 @@ namespace BiliLite.Models.Requests.Api
 
         public ApiModel LivePlayUrl(string room_id, int qn = 0)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"https://api.live.bilibili.com/xlive/web-room/v2/index/getRoomPlayInfo",
@@ -99,13 +99,13 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel InteractionEdgeInfo(string aid, int graph_version, int edge_id = 0)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/stein/edgeinfo_v2",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&aid={aid}&graph_version={graph_version}&edge_id={edge_id}"
+                parameter = ApiHelper.MustParameter(AppKey, true) + $"&aid={aid}&graph_version={graph_version}&edge_id={edge_id}"
             };
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
 
@@ -121,13 +121,13 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel SeasonHistoryReport(string aid, string cid, int progress, int sid = 0, string epid = "0", int type = 3)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/history/report",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&aid={aid}&cid={cid}&epid={epid}&sid={sid}&progress={progress}&realtime={progress}&sub_type=1&type={type}"
+                body = ApiHelper.MustParameter(AppKey, true) + $"&aid={aid}&cid={cid}&epid={epid}&sid={sid}&progress={progress}&realtime={progress}&sub_type=1&type={type}"
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
         }
 
@@ -144,14 +144,14 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel SendDanmu(string aid, string cid, string color, string msg, int position, int mode = 1, int plat = 2)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/dm/post",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&aid={aid}",
+                parameter = ApiHelper.MustParameter(AppKey, true) + $"&aid={aid}",
                 body = $"msg={Uri.EscapeDataString(msg)}&mode={mode}&screen_state=1&color={color}&pool=0&progress={Convert.ToInt32(position * 1000)}&fontsize=25&rnd={TimeExtensions.GetTimestampS()}&from=7&oid={cid}&plat={plat}&type=1"
             };
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
 
@@ -163,7 +163,7 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public async Task<ApiModel> GetPlayerInfo(string aid, string cid, string bvid)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/player/wbi/v2",
@@ -182,7 +182,7 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel GetPlayerOnline(string aid, string cid, string bvid)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/player/online/total",
@@ -197,13 +197,13 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel GetDanmuFilterWords()
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/dm/filter/user",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, true)
+                parameter = ApiHelper.MustParameter(AppKey, true)
             };
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
 
@@ -215,13 +215,13 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel AddDanmuFilterWord(string word, int type)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/dm/filter/user/add",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&filter={Uri.EscapeDataString(word)}&type={type}"
+                body = ApiHelper.MustParameter(AppKey, true) + $"&filter={Uri.EscapeDataString(word)}&type={type}"
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
         }
 
@@ -233,13 +233,13 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel SegDanmaku(string oid, int segment_index)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"http://api.bilibili.com/x/v2/dm/list/seg.so",
-                parameter = $"type=1&oid={oid}&segment_index={segment_index}&{ApiHelper.MustParameter(ApiHelper.AndroidKey, true)}",
+                parameter = $"type=1&oid={oid}&segment_index={segment_index}&{ApiHelper.MustParameter(AppKey, true)}",
             };
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
 

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace BiliLite.Models.Requests.Api.User
 {
-    public class UserDetailAPI
+    public class UserDetailAPI : BaseApi
     {
         /// <summary>
         /// 用户信息
@@ -12,11 +12,11 @@ namespace BiliLite.Models.Requests.Api.User
         /// <returns></returns>
         public async Task<ApiModel> UserInfo(string mid)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/space/wbi/acc/info",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, needAccesskey: true) + $"&mid={mid}",
+                parameter = ApiHelper.MustParameter(AppKey, needAccesskey: true) + $"&mid={mid}",
             };
             api.parameter = await ApiHelper.GetWbiSign(api.parameter);
             return api;
@@ -28,13 +28,13 @@ namespace BiliLite.Models.Requests.Api.User
         /// <returns></returns>
         public ApiModel Space(string mid)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = "https://app.bilibili.com/x/v2/space",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, needAccesskey: true) + $"&vmid={mid}",
+                parameter = ApiHelper.MustParameter(AppKey, needAccesskey: true) + $"&vmid={mid}",
             };
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
         /// <summary>
@@ -44,7 +44,7 @@ namespace BiliLite.Models.Requests.Api.User
         /// <returns></returns>
         public ApiModel UserStat(string mid)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/relation/stat",
@@ -63,7 +63,7 @@ namespace BiliLite.Models.Requests.Api.User
         /// <returns></returns>
         public async Task<ApiModel> SubmitVideos(string mid, int page = 1, int pagesize = 30, string keyword = "", int tid = 0, SubmitVideoOrder order = SubmitVideoOrder.pubdate)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/space/wbi/arc/search",
@@ -81,9 +81,9 @@ namespace BiliLite.Models.Requests.Api.User
                 method = RestSharp.Method.Get,
                 baseUrl = $"https://app.bilibili.com/x/v2/space/archive/cursor",
                 parameter =
-                    $"{ApiHelper.MustParameter(ApiHelper.AndroidKey, true)}&vmid={mid}&ps={pagesize}&order={order.ToString()}&aid={cursor}",
+                    $"{ApiHelper.MustParameter(AppKey, true)}&vmid={mid}&ps={pagesize}&order={order.ToString()}&aid={cursor}",
             };
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
 
@@ -96,7 +96,7 @@ namespace BiliLite.Models.Requests.Api.User
         /// <returns></returns>
         public ApiModel SubmitArticles(string mid, int page = 1, int pagesize = 30, SubmitArticleOrder order = SubmitArticleOrder.publish_time)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/space/article",
@@ -110,13 +110,13 @@ namespace BiliLite.Models.Requests.Api.User
         /// <returns></returns>
         public ApiModel FollowingsTag()
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/relation/tags",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, true)
+                parameter = ApiHelper.MustParameter(AppKey, true)
             };
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
         /// <summary>
@@ -158,7 +158,7 @@ namespace BiliLite.Models.Requests.Api.User
         /// <returns></returns>
         public ApiModel Followers(string mid, int page = 1, int pagesize = 30)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/relation/followers",
@@ -175,7 +175,7 @@ namespace BiliLite.Models.Requests.Api.User
         /// <returns></returns>
         public ApiModel Favlist(string mid)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/created/list-all",

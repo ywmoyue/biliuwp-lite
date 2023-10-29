@@ -2,22 +2,23 @@
 
 namespace BiliLite.Models.Requests.Api.Home
 {
-    public class LiveAPI
+    public class LiveAPI : BaseApi
     {
         public ApiModel LiveHome()
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = "https://api.live.bilibili.com/xlive/app-interface/v2/index/getAllList",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + "&device=android&rec_page=1&relation_page=1&scale=xxhdpi",
+                parameter = ApiHelper.MustParameter(AppKey, true) + "&device=android&rec_page=1&relation_page=1&scale=xxhdpi",
             };
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
+
         public ApiModel LiveHomeItems()
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = "https://api.live.bilibili.com/xlive/web-interface/v1/index/getList",
@@ -25,7 +26,5 @@ namespace BiliLite.Models.Requests.Api.Home
             };
             return api;
         }
-
-
     }
 }

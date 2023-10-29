@@ -6,7 +6,7 @@ namespace BiliLite.Models.Requests.Api
     {
         //public ApiModel RankRegion()
         //{
-        //    ApiModel api = new ApiModel()
+        //    var api = new ApiModel()
         //    {
         //        method = RestSharp.Method.Get,
         //        baseUrl = $"{ApiHelper.baseUrl}/api/rank/RankRegion"
@@ -21,7 +21,7 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel Rank(int rid, string type)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/web-interface/ranking/v2",
@@ -30,7 +30,6 @@ namespace BiliLite.Models.Requests.Api
             return api;
         }
 
-
         /// <summary>
         /// 排行榜
         /// </summary>
@@ -38,7 +37,7 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel SeasonRank(int type)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/pgc/season/rank/list",
@@ -46,7 +45,5 @@ namespace BiliLite.Models.Requests.Api
             };
             return api;
         }
-
-
     }
 }

@@ -30,27 +30,27 @@ namespace BiliLite.Player.States.PlayStates
 
         public virtual async Task Load()
         {
-            _logger.Error($"播放状态错误调用");
+            _logger.Error($"播放状态错误调用,{GetType().Name}");
         }
 
         public virtual async Task Buff()
         {
-            _logger.Error($"播放状态错误调用");
+            _logger.Error($"播放状态错误调用,{GetType().Name}");
         }
 
         public virtual async Task Play()
         {
-            _logger.Error("播放状态错误调用");
+            _logger.Error($"播放状态错误调用,{GetType().Name}");
         }
 
         public virtual async Task Stop()
         {
-            _logger.Error("播放状态错误调用");
+            _logger.Error($"播放状态错误调用,{GetType().Name}");
         }
 
         public virtual async Task Fault()
         {
-            _logger.Error("播放状态错误调用");
+            _logger.Error($"播放状态错误调用,{GetType().Name}");
         }
     }
 }

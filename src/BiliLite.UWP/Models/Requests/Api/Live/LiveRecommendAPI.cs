@@ -2,7 +2,7 @@
 
 namespace BiliLite.Models.Requests.Api.Live
 {
-    public class LiveRecommendAPI
+    public class LiveRecommendAPI : BaseApi
     {
         /// <summary>
         /// 直播列表
@@ -12,13 +12,13 @@ namespace BiliLite.Models.Requests.Api.Live
         /// <returns></returns>
         public ApiModel LiveRoomList(int page = 1, string sort_type = "online")
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"https://api.live.bilibili.com/room/v3/Area/getRoomList",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&actionKey=appkey&area_id=0&cate_id=0&parent_area_id=0&page={page}&page_size=36&sort_type={sort_type}"
+                parameter = ApiHelper.MustParameter(AppKey, true) + $"&actionKey=appkey&area_id=0&cate_id=0&parent_area_id=0&page={page}&page_size=36&sort_type={sort_type}"
             };
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
     }

@@ -136,7 +136,14 @@ namespace BiliLite.Modules.User
             {
                 if (jObject["access_token"] != null)
                 {
-                    var m = await account.SaveLogin(jObject["access_token"].ToString(), jObject["refresh_token"].ToString(), jObject["expires_in"].ToInt32(), Convert.ToInt64(jObject["mid"].ToString()), null, null);
+                    var appKey = SettingConstants.Account.DefaultLoginAppKeySecret;
+                    var m = await account.SaveLogin(
+                        jObject["access_token"].ToString(), 
+                        jObject["refresh_token"].ToString(), 
+                        jObject["expires_in"].ToInt32(), 
+                        Convert.ToInt64(jObject["mid"].ToString()), 
+                        null, null,
+                        appKey);
 
                     if (m)
                     {
@@ -149,7 +156,7 @@ namespace BiliLite.Modules.User
                         SetWebViewVisibility?.Invoke(this, false);
                         Notify.ShowMessageToast("登录失败,请重试");
                     }
-                    //await UserManage.LoginSucess(jObject["access_token"].ToString());
+                    // await UserManage.LoginSucess(jObject["access_token"].ToString());
                 }
                 else
                 {
@@ -275,8 +282,9 @@ namespace BiliLite.Modules.User
 
             try
             {
+                var appKey = SettingConstants.Account.DefaultLoginAppKeySecret;
                 sessionId = Guid.NewGuid().ToString().Replace("-", "");
-                var results = await accountApi.SendSMS(CurrentCountry.country_code, Phone, sessionId).Request();
+                var results = await accountApi.SendSMS(CurrentCountry.country_code, Phone, sessionId, appKey).Request();
                 if (results.status)
                 {
                     var data = await results.GetJson<ApiDataModel<SMSResultModel>>();
@@ -306,7 +314,6 @@ namespace BiliLite.Modules.User
                 {
                     Notify.ShowMessageToast(results.message);
                 }
-
             }
             catch (Exception ex)
             {
@@ -319,7 +326,8 @@ namespace BiliLite.Modules.User
 
             try
             {
-                var results = await accountApi.SendSMSWithCaptcha(CurrentCountry.country_code, Phone, sessionId, seccode, validate, challenge, recaptcha_token).Request();
+                var appKey = SettingConstants.Account.DefaultLoginAppKeySecret;
+                var results = await accountApi.SendSMSWithCaptcha(CurrentCountry.country_code, Phone, sessionId, seccode, validate, challenge, recaptcha_token, appKey).Request();
                 if (results.status)
                 {
                     var data = await results.GetJson<ApiDataModel<SMSResultModel>>();
@@ -378,13 +386,13 @@ namespace BiliLite.Modules.User
             }
             try
             {
-
-                var results = await accountApi.SMSLogin(CurrentCountry.country_code, Phone, Code, sessionId, captchaKey).Request();
+                var appKey = SettingConstants.Account.DefaultLoginAppKeySecret;
+                var results = await accountApi.SMSLogin(CurrentCountry.country_code, Phone, Code, sessionId, captchaKey, appKey).Request();
                 if (results.status)
                 {
                     SettingService.SetValue(SettingConstants.Account.IS_WEB_LOGIN, false);
                     var data = await results.GetData<LoginResultModel>();
-                    var result = await HandelLoginResult(data.code, data.message, data.data);
+                    var result = await HandelLoginResult(data.code, data.message, data.data, appKey);
                     HnadelResult(result);
                 }
                 else
@@ -436,13 +444,14 @@ namespace BiliLite.Modules.User
 
             try
             {
+                var appKey = SettingConstants.Account.DefaultLoginAppKeySecret;
                 var pwd = await account.EncryptedPassword(Password);
-                var results = await accountApi.LoginV3(UserName, pwd).Request();
+                var results = await accountApi.LoginV3(UserName, pwd, appKey).Request();
                 if (results.status)
                 {
                     SettingService.SetValue(SettingConstants.Account.IS_WEB_LOGIN, false);
                     var data = await results.GetData<LoginResultModel>();
-                    var result = await HandelLoginResult(data.code, data.message, data.data);
+                    var result = await HandelLoginResult(data.code, data.message, data.data, appKey);
 
                     HnadelResult(result);
                 }
@@ -576,7 +585,7 @@ namespace BiliLite.Modules.User
         }
 
 
-        QRAuthInfoWeb qrAuthInfo;
+        QRAuthInfo qrAuthInfo;
         private async void GetQRAuthInfo()
         {
             try
@@ -587,7 +596,7 @@ namespace BiliLite.Modules.User
                     qrTimer.Stop();
                     qrTimer.Dispose();
                 }
-                var result = await account.GetQRAuthInfo();
+                var result = await account.GetQRAuthInfoTV(ApiHelper.IPadOsKey);
                 if (result.success)
                 {
                     qrAuthInfo = result.data;
@@ -636,7 +645,7 @@ namespace BiliLite.Modules.User
         {
             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
-                var result = await account.PollQRAuthInfo(qrAuthInfo.qrcode_key);
+                var result = await account.PollQRAuthInfoTV(qrAuthInfo.auth_code, ApiHelper.IPadOsKey);
                 if (result.status == LoginStatus.Success)
                 {
                     qrTimer.Stop();
@@ -749,13 +758,13 @@ namespace BiliLite.Modules.User
             }
         }
 
-        private async Task<LoginCallbackModel> HandelLoginResult(int code, string message, LoginResultModel result)
+        private async Task<LoginCallbackModel> HandelLoginResult(int code, string message, LoginResultModel result, ApiKeyInfo appkey)
         {
             if (code == 0)
             {
                 if (result.status == 0)
                 {
-                    await account.SaveLogin(result.token_info.access_token, result.token_info.refresh_token, result.token_info.expires_in, result.token_info.mid, result.sso, result.cookie_info);
+                    await account.SaveLogin(result.token_info.access_token, result.token_info.refresh_token, result.token_info.expires_in, result.token_info.mid, result.sso, result.cookie_info, appkey);
                     return new LoginCallbackModel()
                     {
                         status = LoginStatus.Success,
