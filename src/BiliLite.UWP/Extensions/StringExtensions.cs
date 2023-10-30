@@ -307,6 +307,16 @@ namespace BiliLite.Extensions
             return color;
         }
 
+        /// <summary>
+        /// 是否为正确格式的url
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public static bool IsUrl(this string url)
+        {
+            return Uri.TryCreate(url, UriKind.Absolute, out Uri _);
+        }
+
         #region Private methods
 
         /// <summary>
