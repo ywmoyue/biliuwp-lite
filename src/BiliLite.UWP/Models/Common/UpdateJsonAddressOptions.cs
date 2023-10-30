@@ -12,8 +12,8 @@ namespace BiliLite.Models.Common
             new UpdateJsonAddressOption() { Name = "[镜像]kgithub", Value = ApiHelper.KGITHUB_GIT_RAW_URL },
         };
 
-        // 优先使用更稳定的ghproxy
-        public const string DEFAULT_UPDATE_JSON_ADDRESS = ApiHelper.GHPROXY_GIT_RAW_URL;
+        // 优先使用服务器在香港腾讯云的kgithub
+        public const string DEFAULT_UPDATE_JSON_ADDRESS = ApiHelper.KGITHUB_GIT_RAW_URL;
 
         public static UpdateJsonAddressOption GetOption(string type)
         {
