@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using BiliLite.Services;
+using Newtonsoft.Json;
+using System;
 
 namespace BiliLite.Models.Common.Live
 {
@@ -17,7 +19,22 @@ namespace BiliLite.Models.Common.Live
         [JsonProperty("pic_url")]
         public string PicUrl { get; set; }
 
+        private string jumpUrl;
         [JsonProperty("jump_url")]
-        public string JumpUrl { get; set; }
+        public string JumpUrl
+        {
+            get => jumpUrl;
+            set
+            {
+                if (Uri.TryCreate(value, UriKind.Absolute, out Uri _))
+                {
+                    jumpUrl = value;
+                }
+                else
+                {
+                    jumpUrl = ApiHelper.NOT_FOUND_URL;
+                }
+            }
+        }
     }
 }
