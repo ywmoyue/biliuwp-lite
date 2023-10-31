@@ -26,7 +26,7 @@
         
         public const string IOS_USER_AGENT = "bili-universal/75200100 CFNetwork/1.0 Darwin/23.0.0 os/ios model/iPad Air 3G mobi_app/iphone build/75200100 osVer/17.0.3 network/2 channel/AppStore";
 
-        public const string ANDROID_USER_AGENT = "";
+        public const string ANDROID_USER_AGENT = CHROME_USER_AGENT;
 
         public const string IOS_MOBI_APP = "iphone";
 
