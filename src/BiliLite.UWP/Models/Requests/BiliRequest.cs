@@ -39,8 +39,12 @@ namespace BiliLite.Models.Requests
             }
 
             m_needRedirect = needRedirect;
-            m_request.WithHeader("user-agent",
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36");
+
+            if (headers == null || !headers.ContainsKey("user-agent"))
+            {
+                m_request.WithHeader("user-agent",
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36");
+            }
         }
 
         private static string StatusCodeToMessage(int code)
@@ -123,7 +127,7 @@ namespace BiliLite.Models.Requests
             var results = await response.GetStringAsync();
             var httpResults = new HttpResults()
             {
-                code = (int) response.StatusCode,
+                code = (int)response.StatusCode,
                 status = responseMsg.StatusCode == HttpStatusCode.OK,
                 results = results,
                 message = "",

@@ -65,7 +65,24 @@ namespace BiliLite.Services
                 }
 
                 var keySecret = keySecretPair.Split(':');
-                var appKey = new ApiKeyInfo(keySecret[0], keySecret[1]);
+
+                var key = keySecret[0];
+                var secret = keySecret[1];
+                var userAgent = "";
+                var mobiApp = "";
+                switch (key)
+                {
+                    case Constants.IOS_APP_KEY:
+                        mobiApp = Constants.IOS_MOBI_APP;
+                        userAgent = Constants.IOS_USER_AGENT;
+                        break;
+                    case Constants.ANDROID_APP_KEY:
+                        mobiApp = Constants.ANDROID_MOBI_APP;
+                        userAgent = Constants.ANDROID_USER_AGENT;
+                        break;
+                }
+
+                var appKey = new ApiKeyInfo(keySecret[0], keySecret[1], mobiApp, userAgent);
                 _loginAppKey = appKey;
                 return appKey;
             }

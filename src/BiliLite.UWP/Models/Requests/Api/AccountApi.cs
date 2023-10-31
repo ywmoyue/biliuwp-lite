@@ -56,7 +56,8 @@ namespace BiliLite.Models.Requests.Api
             {
                 method = RestSharp.Method.Post,
                 baseUrl = "https://passport.bilibili.com/x/passport-login/oauth2/login",
-                body = $"actionKey=appkey&channel=bili&device=phone&permission=ALL&subid=1&username={Uri.EscapeDataString(username)}&password={Uri.EscapeDataString(password)}&" + ApiHelper.MustParameter(appKey)
+                body = $"actionKey=appkey&channel=bili&device=phone&permission=ALL&subid=1&username={Uri.EscapeDataString(username)}&password={Uri.EscapeDataString(password)}&" + ApiHelper.MustParameter(appKey),
+                headers = ApiHelper.MustHeader(appKey),
             };
             api.body += ApiHelper.GetSign(api.body, appKey);
             return api;
@@ -84,7 +85,8 @@ namespace BiliLite.Models.Requests.Api
             {
                 method = RestSharp.Method.Post,
                 baseUrl = "https://passport.bilibili.com/x/passport-login/sms/send",
-                body = $"actionKey=appkey&cid={cid}&tel={phone}&login_session_id={sessionId}&" + ApiHelper.MustParameter(appKey)
+                body = $"actionKey=appkey&cid={cid}&tel={phone}&login_session_id={sessionId}&" + ApiHelper.MustParameter(appKey),
+                headers = ApiHelper.MustHeader(appKey),
             };
             api.body += ApiHelper.GetSign(api.body, appKey);
             return api;
@@ -97,7 +99,8 @@ namespace BiliLite.Models.Requests.Api
             {
                 method = RestSharp.Method.Post,
                 baseUrl = "https://passport.bilibili.com/x/passport-login/sms/send",
-                body = $"buvid={buvid}&actionKey=appkey&cid={cid}&tel={phone}&login_session_id={session_id}&gee_seccode={seccode}&gee_validate={validate}&gee_challenge={challenge}&recaptcha_token={recaptchaToken}&" + ApiHelper.MustParameter(appKey)
+                body = $"buvid={buvid}&actionKey=appkey&cid={cid}&tel={phone}&login_session_id={session_id}&gee_seccode={seccode}&gee_validate={validate}&gee_challenge={challenge}&recaptcha_token={recaptchaToken}&" + ApiHelper.MustParameter(appKey),
+                headers = ApiHelper.MustHeader(appKey),
             };
             api.body += ApiHelper.GetSign(api.body, appKey);
             return api;
@@ -109,7 +112,8 @@ namespace BiliLite.Models.Requests.Api
             {
                 method = RestSharp.Method.Post,
                 baseUrl = "https://passport.bilibili.com/x/passport-login/login/sms",
-                body = $"actionKey=appkey&cid={cid}&tel={phone}&login_session_id={sessionId}&captcha_key={captchaKey}&code={code}&" + ApiHelper.MustParameter(appKey)
+                body = $"actionKey=appkey&cid={cid}&tel={phone}&login_session_id={sessionId}&captcha_key={captchaKey}&code={code}&" + ApiHelper.MustParameter(appKey),
+                headers = ApiHelper.MustHeader(appKey),
             };
             api.body += ApiHelper.GetSign(api.body, appKey);
             return api;
@@ -327,7 +331,8 @@ namespace BiliLite.Models.Requests.Api
             {
                 method = RestSharp.Method.Post,
                 baseUrl = "https://passport.bilibili.com/x/passport-tv-login/qrcode/auth_code",
-                body = ApiHelper.MustParameter(appkey, false) + $"&local_id={local_id}",
+                body = $"appkey={appkey.Appkey}&local_id={local_id}&ts={TimeExtensions.GetTimestampS()}&mobi_app=ios",
+                headers = ApiHelper.MustHeader(appkey),
             };
             api.body += ApiHelper.GetSign(api.body, appkey);
             return api;
@@ -344,7 +349,8 @@ namespace BiliLite.Models.Requests.Api
             {
                 method = RestSharp.Method.Post,
                 baseUrl = "https://passport.bilibili.com/x/passport-tv-login/qrcode/poll",
-                body = ApiHelper.MustParameter(appkey, false) + $"&auth_code={auth_code}&guid={Guid.NewGuid().ToString()}&local_id={local_id}",
+                body = $"appkey={appkey.Appkey}&auth_code={auth_code}&local_id={local_id}&ts={TimeExtensions.GetTimestampS()}&mobi_app=ios",
+                headers = ApiHelper.MustHeader(appkey),
             };
             api.body += ApiHelper.GetSign(api.body, appkey);
             return api;
