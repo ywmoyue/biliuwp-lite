@@ -27,6 +27,9 @@ namespace BiliLite.Services
         // 哔哩哔哩API
         public const string API_BASE_URL = "https://api.bilibili.com";
 
+        // 哔哩哔哩404页面
+        public const string NOT_FOUND_URL = "https://www.bilibili.com/404";
+
         //漫游默认的服务器
         public const string ROMAING_PROXY_URL = "https://b.chuchai.vip";
 
