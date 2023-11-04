@@ -62,17 +62,19 @@ namespace BiliLite.Pages
             dataTransferManager.DataRequested += DataTransferManager_DataRequested;
             m_viewModel.DefaultRightInfoWidth = new GridLength(SettingService.GetValue<double>(SettingConstants.UI.RIGHT_DETAIL_WIDTH, 320), GridUnitType.Pixel);
             this.RightInfoGridSplitter.IsEnabled = SettingService.GetValue<bool>(SettingConstants.UI.RIGHT_WIDTH_CHANGEABLE, false);
+            Unloaded += VideoDetailPage_Unloaded;
+        }
+
+        private void VideoDetailPage_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Bindings.StopTracking();
         }
 
         private void VideoDetailPage_Loaded(object sender, RoutedEventArgs e)
         {
-
-            if (this.Parent is MyFrame)
-            {
-                (this.Parent as MyFrame).ClosedPage -= VideoDetailPage_ClosedPage;
-                (this.Parent as MyFrame).ClosedPage += VideoDetailPage_ClosedPage;
-            }
-
+            if (!(this.Parent is MyFrame frame)) return;
+            frame.ClosedPage -= VideoDetailPage_ClosedPage;
+            frame.ClosedPage += VideoDetailPage_ClosedPage;
         }
 
         private void VideoDetailPage_ClosedPage(object sender, EventArgs e)
@@ -91,6 +93,8 @@ namespace BiliLite.Pages
             player?.FullScreen(false);
             player?.MiniWidnows(false);
             player?.Dispose();
+            if (!(this.Parent is MyFrame frame)) return;
+            frame.ClosedPage -= VideoDetailPage_ClosedPage;
         }
         private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
         {
@@ -191,7 +195,7 @@ namespace BiliLite.Pages
                 }
             }
             InitPlayInfo();
-            
+
             comment.LoadComment(new LoadCommentInfo()
             {
                 CommentMode = (int)CommentApi.CommentType.Video,
