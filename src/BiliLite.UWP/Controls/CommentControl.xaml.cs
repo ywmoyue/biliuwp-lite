@@ -54,6 +54,7 @@ namespace BiliLite.Controls
             this.InitializeComponent();
             m_commentApi = new CommentApi();
             emoteVM = new EmoteVM();
+            Unloaded += CommentControl_Unloaded;
         }
 
         #endregion
@@ -65,6 +66,11 @@ namespace BiliLite.Controls
         #endregion
 
         #region Private Methods
+
+        private void CommentControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Bindings.StopTracking();
+        }
 
         private void BtnUser_Click(object sender, RoutedEventArgs e)
         {
