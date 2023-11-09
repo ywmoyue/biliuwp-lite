@@ -64,7 +64,7 @@ namespace BiliLite.Modules
                         var items = JsonConvert.DeserializeObject<ObservableCollection<HotDataItemModel>>(data["data"].ToString());
                         for (int i = items.Count - 1; i >= 0; i--)
                         {
-                            if (items[i].card_goto != "av")
+                            if (items[i].CardGoto != "av")
                                 items.Remove(items[i]);
                         }
                         if (HotItems == null)
@@ -122,29 +122,72 @@ namespace BiliLite.Modules
                 return;
             }
             var last = HotItems.LastOrDefault();
-            await GetPopular(last.idx, last.param);
+            await GetPopular(last.Idx, last.Param);
         }
     }
     public class HotTopItemModel
     {
-        public int entrance_id { get; set; }
-        public string icon { get; set; }
-        public string module_id { get; set; }
-        public string uri { get; set; }
-        public string title { get; set; }
+        [JsonProperty("entrance_id")]
+        public int EntranceId { get; set; }
+
+        public string Icon { get; set; }
+
+        [JsonProperty("module_id")]
+        public string ModuleId { get; set; }
+
+        public string Uri { get; set; }
+
+        public string Title { get; set; }
     }
+
     public class HotDataItemModel
     {
-        public string card_type { get; set; }
-        public string card_goto { get; set; }
-        public string param { get; set; }
-        public string cover { get; set; }
-        public string title { get; set; }
-        public string idx { get; set; }
-        public string uri { get; set; }
-        public string cover_right_text_1 { get; set; }
-        public string right_desc_1 { get; set; }
-        public string right_desc_2 { get; set; }
-        public RecommendRcmdReasonStyleModel rcmd_reason_style { get; set; }
+        [JsonProperty("card_type")]
+        public string CardType { get; set; }
+
+        [JsonProperty("card_goto")]
+        public string CardGoto { get; set; }
+
+        public string Param { get; set; }
+
+        public string Cover { get; set; }
+
+        public string Title { get; set; }
+
+        public string Idx { get; set; }
+
+        public string Uri { get; set; }
+
+        [JsonProperty("cover_right_text_1")]
+        public string CoverRightText1 { get; set; }
+
+        [JsonProperty("right_desc_1")]
+        public string RightDesc1 { get; set; }
+
+        [JsonProperty("right_desc_2")]
+        public string RightDesc2 { get; set; }
+
+        [JsonProperty("cover_left_text_1")]
+        public string CoverLeftText1 { get; set; }
+
+        [JsonProperty("cover_left_text_2")]
+        public string CoverLeftText2 { get; set; }
+
+        [JsonProperty("cover_left_text_3")]
+        public string CoverLeftText3 { get; set; }
+
+        public string TextInfo1 => string.IsNullOrEmpty(CoverRightText1) ? CoverLeftText1 : CoverRightText1;
+
+        public string TextInfo2 => string.IsNullOrEmpty(RightDesc1) ? CoverLeftText2 : RightDesc1;
+
+        public string TextInfo3 => string.IsNullOrEmpty(RightDesc2) ? CoverLeftText3 : RightDesc2;
+
+        [JsonProperty("rcmd_reason_style")]
+        public RecommendRcmdReasonStyleModel RcmdReasonStyle { get; set; }
+
+        [JsonProperty("top_rcmd_reason_style")]
+        public RecommendRcmdReasonStyleModel TopRcmdReasonStyle { get; set; }
+
+        public RecommendRcmdReasonStyleModel RcmdReason => RcmdReasonStyle ?? TopRcmdReasonStyle;
     }
 }
