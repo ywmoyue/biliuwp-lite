@@ -93,6 +93,9 @@ namespace BiliLite.Extensions
                     input = input.Replace(">", "&gt;");
                     input = input.Replace("\r\n", "<LineBreak/>");
                     input = input.Replace("\n", "<LineBreak/>");
+                    //处理其他控制字符
+                    input = Regex.Replace(input, @"\p{C}+", string.Empty);
+
                     //处理链接
                     input = HandelUrl(input);
 
