@@ -86,7 +86,6 @@ namespace BiliLite.Extensions
             {
                 if (txt != null)
                 {
-
                     //处理特殊字符
                     input = input.Replace("&", "&amp;");
                     input = input.Replace("<", "&lt;");
@@ -358,7 +357,8 @@ namespace BiliLite.Extensions
             if (!Regex.IsMatch(input, @"/[aAbBcC][vV]([a-zA-Z0-9]+)"))
             {
                 //处理AV号
-                MatchCollection av = Regex.Matches(input, @"[aA][vV](\d+)");
+                MatchCollection av = Regex.Matches(input, @"[aA][vV](\d+)"); 
+                var offset = 0;
                 foreach (Match item in av)
                 {
                     if (keyword.Contains(item.Groups[0].Value))
@@ -372,11 +372,14 @@ namespace BiliLite.Extensions
                         string.Format(
                             @" CommandParameter=""{1}"" ><TextBlock>{0}</TextBlock></HyperlinkButton></InlineUIContainer>",
                             item.Groups[0].Value, "bilibili://video/" + item.Groups[0].Value);
-                    input = input.Replace(item.Groups[0].Value, data);
+                    input = input.Remove(item.Index + offset, item.Length);
+                    input = input.Insert(item.Index + offset, data);
+                    offset += data.Length - item.Length;
                 }
 
                 //处理AV号
                 MatchCollection bv = Regex.Matches(input, @"[bB][vV]([a-zA-Z0-9]{8,})");
+                offset = 0;
                 foreach (Match item in bv)
                 {
                     if (keyword.Contains(item.Groups[0].Value))
@@ -390,12 +393,15 @@ namespace BiliLite.Extensions
                         string.Format(
                             @" CommandParameter=""{1}"" ><TextBlock>{0}</TextBlock></HyperlinkButton></InlineUIContainer>",
                             item.Groups[0].Value, "bilibili://video/" + item.Groups[0].Value);
-                    input = input.Replace(item.Groups[0].Value, data);
+                    input = input.Remove(item.Index + offset, item.Length);
+                    input = input.Insert(item.Index + offset, data);
+                    offset += data.Length - item.Length;
                 }
 
                 //处理CV号
 
                 MatchCollection cv = Regex.Matches(input, @"[cC][vV](\d+)");
+                offset = 0;
                 foreach (Match item in cv)
                 {
                     if (keyword.Contains(item.Groups[0].Value))
@@ -409,7 +415,9 @@ namespace BiliLite.Extensions
                         string.Format(
                             @" CommandParameter=""{1}"" ><TextBlock>{0}</TextBlock></HyperlinkButton></InlineUIContainer>",
                             item.Groups[0].Value, "bilibili://article/" + item.Groups[1].Value);
-                    input = input.Replace(item.Groups[0].Value, data);
+                    input = input.Remove(item.Index + offset, item.Length);
+                    input = input.Insert(item.Index + offset, data);
+                    offset += data.Length - item.Length;
                 }
             }
 
