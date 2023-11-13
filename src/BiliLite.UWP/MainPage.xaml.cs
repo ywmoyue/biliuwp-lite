@@ -198,7 +198,6 @@ namespace BiliLite
                 page = typeof(NewPage),
                 title = "新建页面"
             });
-
         }
 
         private void TabView_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
@@ -215,7 +214,7 @@ namespace BiliLite
             // frame.BackStack.Clear();
             tabItem.Content = null;
             tabView.TabItems.Remove(tabItem);
-            //GC.Collect();
+            GC.Collect();
         }
         private void tabView_Loaded(object sender, RoutedEventArgs e)
         {
