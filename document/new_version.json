@@ -1,7 +1,7 @@
 {
-    "version": "4.6.20",
-    "version_num": 40620,
-    "version_desc": "更新内容:\r\n\r\n* 更换检查更新源为更稳定的ghproxy\r\n\r\n* 修复点击直播中右侧主播按钮导致整个应用崩溃的问题\r\n\r\n* 修复部分用户无法使用二维码登录\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+    "version": "4.6.21",
+    "version_num": 40621,
+    "version_desc": "更新内容:\r\n\r\n* 更换了ghproxy的最新地址\r\n\r\n* 修复加载部分视频的评论区导致应用崩溃闪退\r\n\r\n* 修复热门页面视频数据不显示\r\n\r\n* 修复直播间标题不显示\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
     "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
     "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
