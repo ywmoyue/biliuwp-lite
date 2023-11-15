@@ -26,15 +26,15 @@ namespace BiliLite.Models.Common.Live
         /// </summary>
         public string UserNameColor { get; set; } = "#FF808080";
 
-        /// <summary>
-        /// 等级
-        /// </summary>
-        public string UserLevel { get; set; }
+        ///// <summary>
+        ///// 等级
+        ///// </summary>
+        //public string UserLevel { get; set; }
 
-        /// <summary>
-        /// 等级颜色,默认灰色
-        /// </summary>
-        public string UserLevelColor { get; set; } = "#FF808080";
+        ///// <summary>
+        ///// 等级颜色,默认灰色
+        ///// </summary>
+        //public string UserLevelColor { get; set; } = "#FF808080";
 
         /// <summary>
         /// 用户头衔id（对应的是CSS名）
@@ -65,12 +65,40 @@ namespace BiliLite.Models.Common.Live
         /// 勋章颜色
         /// </summary>
         public string MedalColor { get; set; }
+        
+        /// <summary>
+        /// 用户上舰名称
+        /// </summary>
+        public string UserCaptain {  get; set; }
 
+        public string UserCaptainImage
+        {
+            get
+            {
+                if (UserCaptain == null)
+                {
+                    return null;
+                }
+
+                return UserCaptain switch
+                {
+                    "舰长" => "/Assets/Live/ic_live_guard_3.png",
+                    "提督" => "/Assets/Live/ic_live_guard_2.png",
+                    "总督" => "/Assets/Live/ic_live_guard_1.png",
+                    _ => null,
+                };
+            }
+        }
 
         /// <summary>
         /// 是否显示房管
         /// </summary>
         public Visibility ShowAdmin { get; set; } = Visibility.Collapsed;
+
+        /// <summary>
+        /// 是否显示舰长
+        /// </summary>
+        public Visibility ShowCaptain { get; set; } = Visibility.Collapsed;
 
         /// <summary>
         /// 是否显示勋章

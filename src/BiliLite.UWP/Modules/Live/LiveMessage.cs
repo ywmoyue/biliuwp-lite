@@ -164,14 +164,19 @@ namespace BiliLite.Modules.Live
                 {
                     var msg = new DanmuMsgModel();
                     if (obj["info"] != null && obj["info"].ToArray().Length != 0)
-                    {
+                    {   
+                        // 弹幕内容
+                        // TODO 支持表情
                         msg.Text = obj["info"][1].ToString();
+
+                        // 弹幕颜色
                         var color = obj["info"][0][3].ToInt32();
                         if (color != 0)
                         {
                             msg.DanmuColor = color.ToString();
                         }
 
+                        // 是否为房管
                         if (obj["info"][2] != null && obj["info"][2].ToArray().Length != 0)
                         {
                             msg.UserName = obj["info"][2][1].ToString() + ":";
@@ -181,6 +186,25 @@ namespace BiliLite.Modules.Live
                                 msg.ShowAdmin = Visibility.Visible;
                             }
                         }
+
+                        // 是否为舰长
+                        if (obj["info"][3][10] != null && Convert.ToInt32(obj["info"][3][10].ToString()) != 0)
+                        {
+                            switch (Convert.ToInt32(obj["info"][3][10].ToString())){
+                                case 3:
+                                    msg.UserCaptain = "舰长";
+                                    break;
+                                case 2:
+                                    msg.UserCaptain = "提督";
+                                    break;
+                                case 1:
+                                    msg.UserCaptain = "总督";
+                                    break;
+                            }
+                            msg.ShowCaptain = Visibility.Visible;
+                        }
+
+                        // 粉丝牌
                         if (obj["info"][3] != null && obj["info"][3].ToArray().Length != 0)
                         {
                             msg.MedalName = obj["info"][3][1].ToString();
@@ -188,11 +212,15 @@ namespace BiliLite.Modules.Live
                             msg.MedalColor = obj["info"][3][4].ToString();
                             msg.ShowMedal = Visibility.Visible;
                         }
-                        if (obj["info"][4] != null && obj["info"][4].ToArray().Length != 0)
-                        {
-                            msg.UserLevel = "UL" + obj["info"][4][0].ToString();
-                            msg.UserLevelColor = obj["info"][4][2].ToString();
-                        }
+
+                        // 用户直播等级(已经被b站弃用)
+                        //if (obj["info"][4] != null && obj["info"][4].ToArray().Length != 0)
+                        //{
+                        //    msg.UserLevel = "UL" + obj["info"][4][0].ToString();
+                        //    msg.UserLevelColor = obj["info"][4][2].ToString();
+                        //}
+
+                        // 用户头衔
                         if (obj["info"][5] != null && obj["info"][5].ToArray().Length != 0)
                         {
                             msg.UserTitleID = obj["info"][5][0].ToString();

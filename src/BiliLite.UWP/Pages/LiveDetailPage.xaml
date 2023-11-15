@@ -306,14 +306,19 @@
                                     </Grid>
                                 </Grid>
                             </Border>
+                            <!--<Border Visibility="{x:Bind ShowCaptain}" BorderThickness="1" BorderBrush="DodgerBlue" Background="DodgerBlue" Margin="0 0 4 0" CornerRadius="2" Padding="2">
+                                <TextBlock FontSize="12" Foreground="White" Text="{x:Bind UserCaptain}"></TextBlock>
+                            </Border>-->
+                            <Image Visibility="{x:Bind ShowCaptain}" Height="24" VerticalAlignment="Center" Margin="0 0 4 0" Source="{Binding UserCaptainImage}"></Image>
                             <Image Visibility="{x:Bind ShowTitle}" Height="20" VerticalAlignment="Center" Margin="0 0 4 0" Source="{Binding UserTitleImage}"></Image>
-                            <Border  Visibility="{x:Bind ShowUserLevel}" BorderThickness="1" VerticalAlignment="Center" BorderBrush="{x:Bind Path=UserLevelColor,Converter={StaticResource colorConvert}}" Margin="0 0 4 0" CornerRadius="2" Padding="2 0">
+                            <!--<Border  Visibility="{x:Bind ShowUserLevel}" BorderThickness="1" VerticalAlignment="Center" BorderBrush="{x:Bind Path=UserLevelColor,Converter={StaticResource colorConvert}}" Margin="0 0 4 0" CornerRadius="2" Padding="2 0">
                                 <TextBlock FontSize="12" Foreground="{x:Bind Path=UserLevelColor,Converter={StaticResource colorConvert}}" Text="{x:Bind UserLevel}"></TextBlock>
-                            </Border>
+                            </Border>-->
                             <!--<TextBlock TextWrapping="WrapWholeWords"><Run  Foreground="Gray"  Text="{Binding username}"></Run></TextBlock>-->
                         </StackPanel>
                     </InlineUIContainer>
                     <Run Foreground="{x:Bind Path=UserNameColor,Converter={StaticResource colorConvert}}" Text="{x:Bind UserName}"></Run>
+                    <Run Text=" "></Run>
                     <Run Text="{x:Bind Text}"></Run>
                 </Paragraph>
             </RichTextBlock>
@@ -922,8 +927,8 @@
                                             </Button>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
-                                    
-                                    
+
+
                                 </ItemsControl>
                             </ScrollViewer>
 
@@ -942,8 +947,8 @@
                                     </Style>
                                 </ListView.ItemContainerStyle>
                             </ListView>
-                            
-                            
+
+
                             <ListView ItemsSource="{x:Bind Path=m_liveRoomViewModel.GiftMessage,Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="False" Visibility="{x:Bind Path=m_liveRoomViewModel.ShowGiftMessage,Mode=OneWay}" Grid.Row="2" >
                                 <ListView.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -1116,7 +1121,26 @@
                     </PivotItem>
                 </Pivot>
             </Grid>
-
+            <toolkit:GridSplitter
+                IsEnabled="True"
+                x:Name="RightInfoGridSplitter"
+                GripperCursor="Default"
+                HorizontalAlignment="Left"
+                Grid.Column="1"
+                ResizeDirection="Auto"
+                ResizeBehavior="BasedOnAlignment"
+                CursorBehavior="ChangeOnSplitterHover"
+                Width="16">     
+                <toolkit:GridSplitter.Background>
+                    <SolidColorBrush Opacity="0"></SolidColorBrush>
+                </toolkit:GridSplitter.Background>
+                <toolkit:GridSplitter.GripperForeground>
+                    <SolidColorBrush Opacity="0"></SolidColorBrush>
+                </toolkit:GridSplitter.GripperForeground>
+                <toolkit:GridSplitter.RenderTransform>
+                    <TranslateTransform X="-8" />
+                </toolkit:GridSplitter.RenderTransform>
+            </toolkit:GridSplitter>
         </Grid>
         <ProgressRing IsActive="True"  HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{x:Bind Path=m_liveRoomViewModel.Loading,Mode=OneWay}"></ProgressRing>
     </Grid>
