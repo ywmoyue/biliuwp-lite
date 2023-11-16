@@ -93,7 +93,7 @@ namespace BiliLite.Extensions
                     input = input.Replace("\r\n", "<LineBreak/>");
                     input = input.Replace("\n", "<LineBreak/>");
                     //处理其他控制字符
-                    input = Regex.Replace(input, @"\p{C}+", string.Empty);
+                    input = Regex.Replace(input, @"[\p{Cc}\p{Cf}]", string.Empty);
 
                     //处理链接
                     if (!IsLive) { input = HandelUrl(input); }
@@ -105,7 +105,7 @@ namespace BiliLite.Extensions
                     if (!IsLive) { input = HandelVideoID(input); }
 
                     //生成xaml
-                    var xaml = string.Format(@" <RichTextBlock HorizontalAlignment=""Stretch"" TextWrapping=""Wrap""  xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+                    var xaml = string.Format(@"<RichTextBlock HorizontalAlignment=""Stretch"" TextWrapping=""Wrap""  xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
                                                xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"" xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
                                                xmlns:mc = ""http://schemas.openxmlformats.org/markup-compatibility/2006"" LineHeight=""{1}"">
                                                <Paragraph>{0}</Paragraph>

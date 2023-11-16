@@ -289,7 +289,7 @@
                 <RichTextBlock TextWrapping="Wrap" Margin="4 0" LineHeight="24">
                     <Paragraph>
                         <InlineUIContainer>
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Padding="0 0 0 -4">
+                            <StackPanel  Orientation="Horizontal" VerticalAlignment="Center" Padding="0 0 0 -4">
                                 <Border Visibility="{x:Bind ShowAdmin}" BorderThickness="1" BorderBrush="DarkOrange" Background="DarkOrange" Margin="0 0 4 0" CornerRadius="2" Padding="2">
                                     <TextBlock FontSize="12" Foreground="White">房管</TextBlock>
                                 </Border>
@@ -308,13 +308,13 @@
                                     </Grid>
                                 </Border>
                                 <!--<Border Visibility="{x:Bind ShowCaptain}" BorderThickness="1" BorderBrush="DodgerBlue" Background="DodgerBlue" Margin="0 0 4 0" CornerRadius="2" Padding="2">
-                                <TextBlock FontSize="12" Foreground="White" Text="{x:Bind UserCaptain}"></TextBlock>
-                            </Border>-->
+                                    <TextBlock FontSize="12" Foreground="White" Text="{x:Bind UserCaptain}"></TextBlock>
+                                </Border>-->
                                 <Image Visibility="{x:Bind ShowCaptain}" Height="24" VerticalAlignment="Center" Margin="0 0 4 0" Source="{Binding UserCaptainImage}"></Image>
                                 <!--<Image Visibility="{x:Bind ShowTitle}" Height="20" VerticalAlignment="Center" Margin="0 0 2 0" Source="{Binding UserTitleImage}"></Image>-->
                                 <!--<Border  Visibility="{x:Bind ShowUserLevel}" BorderThickness="1" VerticalAlignment="Center" BorderBrush="{x:Bind Path=UserLevelColor,Converter={StaticResource colorConvert}}" Margin="0 0 4 0" CornerRadius="2" Padding="2 0">
-                                <TextBlock FontSize="12" Foreground="{x:Bind Path=UserLevelColor,Converter={StaticResource colorConvert}}" Text="{x:Bind UserLevel}"></TextBlock>
-                            </Border>-->
+                                    <TextBlock FontSize="12" Foreground="{x:Bind Path=UserLevelColor,Converter={StaticResource colorConvert}}" Text="{x:Bind UserLevel}"></TextBlock>
+                                </Border>-->
                                 <!--<TextBlock TextWrapping="WrapWholeWords"><Run  Foreground="Gray"  Text="{Binding username}"></Run></TextBlock>-->
                                 <TextBlock Margin="0 2 -4 0" Foreground="{x:Bind Path=UserNameColor,Converter={StaticResource colorConvert}}" Text="{x:Bind UserName}"></TextBlock>
                             </StackPanel>
