@@ -87,11 +87,15 @@ namespace BiliLite.Modules
                     var data = await results.GetJson<ApiDataModel<JObject>>();
                     if (data.success)
                     {
-                        if (data.data["banner"].Count() > 0)
+                        if (data.data["banner"].Any())
                         {
                             Banners = await data.data["banner"][0]["list"].ToString().DeserializeJson<ObservableCollection<LiveHomeBannerModel>>();
                         }
-                        Areas = await data.data["area_entrance_v2"][0]["list"].ToString().DeserializeJson<ObservableCollection<LiveHomeAreaModel>>();
+
+                        if (data.data["area_entrance_v2"].Any())
+                        {
+                            Areas = await data.data["area_entrance_v2"][0]["list"].ToString().DeserializeJson<ObservableCollection<LiveHomeAreaModel>>();
+                        }
                         await GetLiveHomeItems();
                     }
                     else
