@@ -2,7 +2,7 @@
 
 namespace BiliLite.Models.Common.Anime
 {
-    public class AnimeRankModel
+    public class AnimeRankModel : ISeasonItem
     {
         public string Display { get; set; }
 

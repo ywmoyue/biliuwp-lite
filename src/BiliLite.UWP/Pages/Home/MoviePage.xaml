@@ -23,7 +23,7 @@
                 </Grid.RowDefinitions>
                 <Border CornerRadius="{StaticResource ImageCornerRadius}">
                     <Grid>
-                        <toolkit:ImageEx IsCacheEnabled="True" MaxHeight="240" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=cover,Converter={StaticResource imageConvert},ConverterParameter='200w'}"></toolkit:ImageEx>
+                        <toolkit:ImageEx IsCacheEnabled="True" MaxHeight="240" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=Cover,Converter={StaticResource imageConvert},ConverterParameter='200w'}"></toolkit:ImageEx>
                         <Grid VerticalAlignment="Bottom" Padding="8">
                             <Grid.Background>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -32,16 +32,16 @@
                                 </LinearGradientBrush>
                             </Grid.Background>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=stat.follow_view}"></TextBlock>
+                                <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=Stat.follow_view}"></TextBlock>
                             </StackPanel>
                         </Grid>
-                        <Border Visibility="{Binding Path=show_badge}" VerticalAlignment="Top" Background="#FFFB9E60" HorizontalAlignment="Right" Margin="4" Padding="8 4" CornerRadius="2">
-                            <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#FFFFFFFF" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=badge}"></TextBlock>
+                        <Border Visibility="{Binding Path=ShowBadge}" VerticalAlignment="Top" Background="#FFFB9E60" HorizontalAlignment="Right" Margin="4" Padding="8 4" CornerRadius="2">
+                            <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#FFFFFFFF" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=Badge}"></TextBlock>
                         </Border>
                     </Grid>
                 </Border>
-                <TextBlock Grid.Row="1" Margin="4 4 4 0" MaxLines="1" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=title}"></TextBlock>
-                <TextBlock Grid.Row="2" Margin="4 0 4 4" TextWrapping="Wrap" FontSize="12" Foreground="Gray" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=desc}"></TextBlock>
+                <TextBlock Grid.Row="1" Margin="4 4 4 0" MaxLines="1" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=Title}"></TextBlock>
+                <TextBlock Grid.Row="2" Margin="4 0 4 4" TextWrapping="Wrap" FontSize="12" Foreground="Gray" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=Desc}"></TextBlock>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="HotAnimeItemWide" x:DataType="model:CinemaHomeHotItem">
@@ -53,7 +53,7 @@
                 </Grid.RowDefinitions>
                 <Border CornerRadius="{StaticResource ImageCornerRadius}">
                     <Grid>
-                        <toolkit:ImageEx IsCacheEnabled="True" MinHeight="132" Width="200"  PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=cover,Converter={StaticResource imageConvert},ConverterParameter='200w'}"></toolkit:ImageEx>
+                        <toolkit:ImageEx IsCacheEnabled="True" MinHeight="132" Width="200"  PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=Cover,Converter={StaticResource imageConvert},ConverterParameter='200w'}"></toolkit:ImageEx>
                         <Grid VerticalAlignment="Bottom" Padding="8">
                             <Grid.Background>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -62,16 +62,16 @@
                                 </LinearGradientBrush>
                             </Grid.Background>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=stat.follow_view}"></TextBlock>
+                                <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=Stat.follow_view}"></TextBlock>
                             </StackPanel>
                         </Grid>
-                        <Border Visibility="{Binding Path=show_badge}" VerticalAlignment="Top" Background="#FFFB9E60" HorizontalAlignment="Right" Margin="4" Padding="8 4" CornerRadius="2">
-                            <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#FFFFFFFF" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=badge}"></TextBlock>
+                        <Border Visibility="{Binding Path=ShowBadge}" VerticalAlignment="Top" Background="#FFFB9E60" HorizontalAlignment="Right" Margin="4" Padding="8 4" CornerRadius="2">
+                            <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#FFFFFFFF" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=Badge}"></TextBlock>
                         </Border>
                     </Grid>
                 </Border>
-                <TextBlock Grid.Row="1" Margin="4 4 4 0" MaxLines="1" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=title}"></TextBlock>
-                <TextBlock Grid.Row="2" Margin="4 0 4 4" TextWrapping="Wrap" FontSize="12" Foreground="Gray" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=desc}"></TextBlock>
+                <TextBlock Grid.Row="1" Margin="4 4 4 0" MaxLines="1" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=Title}"></TextBlock>
+                <TextBlock Grid.Row="2" Margin="4 0 4 4" TextWrapping="Wrap" FontSize="12" Foreground="Gray" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=Desc}"></TextBlock>
             </Grid>
         </DataTemplate>
         <Style x:Key="HotWideStyle" TargetType="GridViewItem">
@@ -153,7 +153,7 @@
                                         </Grid.RowDefinitions>
                                         <Border CornerRadius="{StaticResource ImageCornerRadius}">
                                             <Grid>
-                                                <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" MinHeight="132" Width="200" Stretch="UniformToFill" Source="{x:Bind Path=new_ep.cover,Converter={StaticResource imageConvert},ConverterParameter='320w_200h_1c'}"></toolkit:ImageEx>
+                                                <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" MinHeight="132" Width="200" Stretch="UniformToFill" Source="{x:Bind Path=NewEp.cover,Converter={StaticResource imageConvert},ConverterParameter='320w_200h_1c'}"></toolkit:ImageEx>
                                                 <Grid VerticalAlignment="Bottom" Padding="8">
                                                     <Grid.Background>
                                                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -162,16 +162,16 @@
                                                         </LinearGradientBrush>
                                                     </Grid.Background>
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=new_ep.index_show}"></TextBlock>
+                                                        <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=NewEp.index_show}"></TextBlock>
                                                     </StackPanel>
                                                 </Grid>
-                                                <Border VerticalAlignment="Top" Visibility="{x:Bind show_badge}" Background="#FFFB9E60" HorizontalAlignment="Right" Margin="4" Padding="8 4" CornerRadius="2">
-                                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#FFFFFFFF" TextTrimming="CharacterEllipsis" Text="{x:Bind badge}"></TextBlock>
+                                                <Border VerticalAlignment="Top" Visibility="{x:Bind ShowBadge}" Background="#FFFB9E60" HorizontalAlignment="Right" Margin="4" Padding="8 4" CornerRadius="2">
+                                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#FFFFFFFF" TextTrimming="CharacterEllipsis" Text="{x:Bind Badge}"></TextBlock>
                                                 </Border>
                                             </Grid>
                                         </Border>
-                                        <TextBlock Grid.Row="1" Margin="4 4 4 0" MaxLines="1" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=title}"></TextBlock>
-                                        <TextBlock Grid.Row="2" Margin="4 0 4 4" TextWrapping="Wrap" FontSize="12" Foreground="Gray" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=progress_text}"></TextBlock>
+                                        <TextBlock Grid.Row="1" Margin="4 4 4 0" MaxLines="1" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=Title}"></TextBlock>
+                                        <TextBlock Grid.Row="2" Margin="4 0 4 4" TextWrapping="Wrap" FontSize="12" Foreground="Gray" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=ProgressText}"></TextBlock>
                                     </Grid>
                                 </DataTemplate>
                             </GridView.ItemTemplate>
@@ -209,7 +209,7 @@
                                         </Grid.RowDefinitions>
                                         <Border CornerRadius="{StaticResource ImageCornerRadius}">
                                             <Grid>
-                                                <toolkit:ImageEx IsCacheEnabled="True" MaxHeight="240" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=cover,Converter={StaticResource imageConvert},ConverterParameter='200w'}"></toolkit:ImageEx>
+                                                <toolkit:ImageEx IsCacheEnabled="True" MaxHeight="240" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=Cover,Converter={StaticResource imageConvert},ConverterParameter='200w'}"></toolkit:ImageEx>
                                                 <Grid VerticalAlignment="Bottom" Padding="8">
                                                     <Grid.Background>
                                                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -218,16 +218,16 @@
                                                         </LinearGradientBrush>
                                                     </Grid.Background>
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=stat.follow_view}"></TextBlock>
+                                                        <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=Stat.follow_view}"></TextBlock>
                                                     </StackPanel>
                                                 </Grid>
-                                                <Border Visibility="{Binding Path=show_badge}" VerticalAlignment="Top" Background="#FFFB9E60" HorizontalAlignment="Right" Margin="4" Padding="8 4" CornerRadius="2">
-                                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#FFFFFFFF" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=badge}"></TextBlock>
+                                                <Border Visibility="{Binding Path=ShowBadge}" VerticalAlignment="Top" Background="#FFFB9E60" HorizontalAlignment="Right" Margin="4" Padding="8 4" CornerRadius="2">
+                                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#FFFFFFFF" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=Badge}"></TextBlock>
                                                 </Border>
                                             </Grid>
                                         </Border>
-                                        <TextBlock Grid.Row="1" Margin="4 4 4 0" MaxLines="1" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=title}"></TextBlock>
-                                        <TextBlock Grid.Row="2" Margin="4 0 4 4" TextWrapping="Wrap" FontSize="12" Foreground="Gray" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=hat}"></TextBlock>
+                                        <TextBlock Grid.Row="1" Margin="4 4 4 0" MaxLines="1" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=Title}"></TextBlock>
+                                        <TextBlock Grid.Row="2" Margin="4 0 4 4" TextWrapping="Wrap" FontSize="12" Foreground="Gray" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=Hat}"></TextBlock>
                                     </Grid>
                                 </DataTemplate>
                             </GridView.ItemTemplate>

@@ -138,8 +138,8 @@ namespace BiliLite.ViewModels.Home
 
         public void SeasonItemClick(object sender, ItemClickEventArgs e)
         {
-            var seasonId = e.ClickedItem.GetType().GetProperty("season_id").GetValue(e.ClickedItem, null);
-            var title = e.ClickedItem.GetType().GetProperty("title").GetValue(e.ClickedItem, null) ?? "";
+            var seasonId = e.ClickedItem.GetType().GetProperty(nameof(ISeasonItem.SeasonId)).GetValue(e.ClickedItem, null);
+            var title = e.ClickedItem.GetType().GetProperty(nameof(ISeasonItem.Title))?.GetValue(e.ClickedItem, null) ?? "";
             SeasonItemOpen(sender, seasonId, title.ToString());
         }
 
@@ -147,8 +147,8 @@ namespace BiliLite.ViewModels.Home
         {
             if (!e.IsMiddleButtonNewTap(sender)) return;
             var element = e.OriginalSource as FrameworkElement;
-            var seasonId = element.DataContext.GetType()?.GetProperty("season_id")?.GetValue(element.DataContext, null);
-            var title = element.DataContext.GetType()?.GetProperty("title")?.GetValue(element.DataContext, null) ?? "";
+            var seasonId = element.DataContext.GetType()?.GetProperty(nameof(ISeasonItem.SeasonId))?.GetValue(element.DataContext, null);
+            var title = element.DataContext.GetType()?.GetProperty(nameof(ISeasonItem.Title))?.GetValue(element.DataContext, null) ?? "";
             SeasonItemOpen(sender, seasonId, title?.ToString(), true);
         }
 

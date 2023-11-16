@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using BiliLite.Models;
 using BiliLite.Extensions;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Anime;
 using BiliLite.Models.Requests.Api.Home;
+using Newtonsoft.Json;
 
 namespace BiliLite.Modules
 {
@@ -126,13 +128,22 @@ namespace BiliLite.Modules
         public bool is_today { get; set; }
         public List<AnimeTimelineItemModel> seasons { get; set; }
     }
-    public class AnimeTimelineItemModel
+    public class AnimeTimelineItemModel : ISeasonItem
     {
-        public int season_id { get; set; }
-        public string cover { get; set; }
-        public string square_cover { get; set; }
-        public string pub_index { get; set; }
-        public string pub_time { get; set; }
-        public string title { get; set; }
+        [JsonProperty("season_id")]
+        public int SeasonId { get; set; }
+
+        public string Cover { get; set; }
+
+        [JsonProperty("square_cover")]
+        public string SquareCover { get; set; }
+
+        [JsonProperty("pub_index")]
+        public string PubIndex { get; set; }
+
+        [JsonProperty("pub_time")]
+        public string PubTime { get; set; }
+
+        public string Title { get; set; }
     }
 }
