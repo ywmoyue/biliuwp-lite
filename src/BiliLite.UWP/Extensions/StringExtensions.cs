@@ -79,7 +79,7 @@ namespace BiliLite.Extensions
         /// <param name="txt"></param>
         /// <param name="emote"></param>
         /// <returns></returns>
-        public static RichTextBlock ToRichTextBlock(this string txt, JObject emote)
+        public static RichTextBlock ToRichTextBlock(this string txt, JObject emote, bool IsLive = false)
         {
             var input = txt;
             try
@@ -96,22 +96,20 @@ namespace BiliLite.Extensions
                     input = Regex.Replace(input, @"\p{C}+", string.Empty);
 
                     //处理链接
-                    input = HandelUrl(input);
-
+                    if (!IsLive) { input = HandelUrl(input); }
+                    
                     //处理表情
-                    input = HandelEmoji(input, emote);
+                    input = !IsLive ? HandelEmoji(input, emote) : HandleLiveEmoji(input, emote);
 
-                    //处理av号
-                    input = HandelVideoID(input);
-
-
+                    //处理av号/bv号
+                    if (!IsLive) { input = HandelVideoID(input); }
 
                     //生成xaml
-                    var xaml = string.Format(@"<RichTextBlock HorizontalAlignment=""Stretch"" TextWrapping=""Wrap""  xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
-                                            xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"" xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
-    xmlns:mc = ""http://schemas.openxmlformats.org/markup-compatibility/2006"" LineHeight=""20"">
-                                          <Paragraph>{0}</Paragraph>
-                                      </RichTextBlock>", input);
+                    var xaml = string.Format(@" <RichTextBlock HorizontalAlignment=""Stretch"" TextWrapping=""Wrap""  xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+                                               xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"" xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
+                                               xmlns:mc = ""http://schemas.openxmlformats.org/markup-compatibility/2006"" LineHeight=""{1}"">
+                                               <Paragraph>{0}</Paragraph>
+                                               </RichTextBlock>", input, IsLive ? 22 : 20);
                     var p = (RichTextBlock)XamlReader.Load(xaml);
                     return p;
                 }
@@ -344,6 +342,27 @@ namespace BiliLite.Extensions
             return input;
         }
 
+        private static string HandleLiveEmoji(string input, JObject emotes)
+        {
+            if (emotes == null) return input;
+            foreach (Match match in Regex.Matches(input, @"\[.*?\]"))
+            {
+                string emojiCode = match.Value;
+
+                if (emotes.ContainsKey(emojiCode))
+                {
+                    var emoticon = emotes[emojiCode];
+                    string replacement = string.Format(
+                        @"<InlineUIContainer><Border  Margin=""2 -4 2 -4""><Image Source=""{0}"" Width=""{1}"" Height=""{1}"" /></Border></InlineUIContainer>",
+                        emoticon["url"], emoticon["width"], emoticon["height"]);
+
+                    input = input.Replace(emojiCode, replacement);
+                }
+            }
+
+            return input;
+        }
+
         /// <summary>
         /// 处理视频AVID,BVID,CVID
         /// </summary>
@@ -377,7 +396,7 @@ namespace BiliLite.Extensions
                     offset += data.Length - item.Length;
                 }
 
-                //处理AV号
+                //处理BV号
                 MatchCollection bv = Regex.Matches(input, @"[bB][vV]([a-zA-Z0-9]{8,})");
                 offset = 0;
                 foreach (Match item in bv)
@@ -399,7 +418,6 @@ namespace BiliLite.Extensions
                 }
 
                 //处理CV号
-
                 MatchCollection cv = Regex.Matches(input, @"[cC][vV](\d+)");
                 offset = 0;
                 foreach (Match item in cv)

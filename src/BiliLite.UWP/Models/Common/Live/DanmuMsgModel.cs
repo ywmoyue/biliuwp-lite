@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using Windows.UI.Xaml;
 using BiliLite.ViewModels.Live;
+using Newtonsoft.Json.Linq;
+using Windows.UI.Xaml.Controls;
 
 namespace BiliLite.Models.Common.Live
 {
@@ -10,6 +12,11 @@ namespace BiliLite.Models.Common.Live
         /// 内容文本
         /// </summary>
         public string Text { get; set; }
+
+        /// <summary>
+        /// 将Text经过处理后的富文本
+        /// </summary>
+        public RichTextBlock RichText { get; set; }
 
         /// <summary>
         /// 弹幕颜色，默认白色
@@ -67,26 +74,45 @@ namespace BiliLite.Models.Common.Live
         public string MedalColor { get; set; }
         
         /// <summary>
-        /// 用户上舰名称
+        /// 用户上的舰的名称
         /// </summary>
         public string UserCaptain {  get; set; }
 
-        public string UserCaptainImage
-        {
-            get
-            {
-                if (UserCaptain == null)
-                {
-                    return null;
-                }
+        /// <summary>
+        /// 用户上的舰的图片
+        /// </summary>
+        public string UserCaptainImage {  get; set; }
 
-                return UserCaptain switch
-                {
-                    "舰长" => "/Assets/Live/ic_live_guard_3.png",
-                    "提督" => "/Assets/Live/ic_live_guard_2.png",
-                    "总督" => "/Assets/Live/ic_live_guard_1.png",
-                    _ => null,
-                };
+        /// <summary>
+        /// 黄豆表情
+        /// </summary>
+        public JContainer Emoji {  get; set; }
+
+        /// <summary>
+        /// 各类大表情
+        /// </summary>
+        public BigStickerInfo BigSticker {  get; set; }
+
+        public class BigStickerInfo
+        {
+            public string Url { get; set; }
+            public int Height { get; set; }
+            public int Width { get; set; }
+        }
+
+        /// <summary>
+        /// 是否显示富文本(用于用户发出大表情时)
+        /// </summary>
+        public Visibility ShowRichText { get; set; } = Visibility.Visible;
+
+        /// <summary>
+        /// 是否显示大表情
+        /// </summary>
+        
+        public Visibility ShowBigSticker
+        {
+            get {
+                return (ShowRichText == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
             }
         }
 
