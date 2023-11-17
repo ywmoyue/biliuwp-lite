@@ -65,6 +65,15 @@ namespace BiliLite.Modules.User
                     }
 
                     Videos = new ObservableCollection<UserHistoryItem>(data.data.List);
+
+                    // 默认封面如果缺失, 用其他封面替换
+                    foreach (var item in Videos)
+                    {
+                        if (item.Cover.Length == 0 && item.Covers != null)
+                        {
+                            item.Cover = (string)((JArray)item.Covers)[0];
+                        }
+                    }
                 }
                 else
                 {
