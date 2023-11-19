@@ -79,7 +79,7 @@ namespace BiliLite.Extensions
         /// <param name="txt"></param>
         /// <param name="emote"></param>
         /// <returns></returns>
-        public static RichTextBlock ToRichTextBlock(this string txt, JObject emote, bool IsLive = false)
+        public static RichTextBlock ToRichTextBlock(this string txt, JObject emote, bool isLive = false)
         {
             var input = txt;
             try
@@ -96,20 +96,20 @@ namespace BiliLite.Extensions
                     input = Regex.Replace(input, @"[\p{Cc}\p{Cf}]", string.Empty);
 
                     //处理链接
-                    if (!IsLive) { input = HandelUrl(input); }
+                    if (!isLive) { input = HandelUrl(input); }
                     
                     //处理表情
-                    input = !IsLive ? HandelEmoji(input, emote) : HandleLiveEmoji(input, emote);
+                    input = !isLive ? HandelEmoji(input, emote) : HandleLiveEmoji(input, emote);
 
                     //处理av号/bv号
-                    if (!IsLive) { input = HandelVideoID(input); }
+                    if (!isLive) { input = HandelVideoID(input); }
 
                     //生成xaml
                     var xaml = string.Format(@"<RichTextBlock HorizontalAlignment=""Stretch"" TextWrapping=""Wrap""  xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
                                                xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"" xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
                                                xmlns:mc = ""http://schemas.openxmlformats.org/markup-compatibility/2006"" LineHeight=""{1}"">
                                                <Paragraph>{0}</Paragraph>
-                                               </RichTextBlock>", input, IsLive ? 22 : 20);
+                                               </RichTextBlock>", input, isLive ? 22 : 20);
                     var p = (RichTextBlock)XamlReader.Load(xaml);
                     return p;
                 }
@@ -326,17 +326,15 @@ namespace BiliLite.Extensions
         {
             if (emote == null) return input;
             //替换表情
-            MatchCollection mc = Regex.Matches(input, @"\[.*?\]");
+            var mc = Regex.Matches(input, @"\[.*?\]");
             foreach (Match item in mc)
             {
-                if (emote != null && emote.ContainsKey(item.Groups[0].Value))
-                {
-                    var emoji = emote[item.Groups[0].Value];
-                    input = input.Replace(item.Groups[0].Value,
-                        string.Format(
-                            @"<InlineUIContainer><Border  Margin=""0 -4 4 -4""><Image Source=""{0}"" Width=""{1}"" Height=""{1}"" /></Border></InlineUIContainer>",
-                            emoji["url"].ToString(), emoji["meta"]["size"].ToInt32() == 1 ? "20" : "36"));
-                }
+                if (emote == null || !emote.ContainsKey(item.Groups[0].Value)) continue;
+                var emoji = emote[item.Groups[0].Value];
+                input = input.Replace(item.Groups[0].Value,
+                    string.Format(
+                        @"<InlineUIContainer><Border  Margin=""0 -4 4 -4""><Image Source=""{0}"" Width=""{1}"" Height=""{1}"" /></Border></InlineUIContainer>",
+                        emoji["url"].ToString(), emoji["meta"]["size"].ToInt32() == 1 ? "20" : "36"));
             }
 
             return input;
@@ -347,17 +345,14 @@ namespace BiliLite.Extensions
             if (emotes == null) return input;
             foreach (Match match in Regex.Matches(input, @"\[.*?\]"))
             {
-                string emojiCode = match.Value;
+                var emojiCode = match.Value;
 
-                if (emotes.ContainsKey(emojiCode))
-                {
-                    var emoticon = emotes[emojiCode];
-                    string replacement = string.Format(
-                        @"<InlineUIContainer><Border  Margin=""2 -4 2 -4""><Image Source=""{0}"" Width=""{1}"" Height=""{1}"" /></Border></InlineUIContainer>",
-                        emoticon["url"], emoticon["width"], emoticon["height"]);
+                if (!emotes.TryGetValue(emojiCode, out var emote)) continue;
+                var replacement = string.Format(
+                    @"<InlineUIContainer><Border  Margin=""2 -4 2 -4""><Image Source=""{0}"" Width=""{1}"" Height=""{1}"" /></Border></InlineUIContainer>",
+                    emote["url"], emote["width"], emote["height"]);
 
-                    input = input.Replace(emojiCode, replacement);
-                }
+                input = input.Replace(emojiCode, replacement);
             }
 
             return input;

@@ -109,12 +109,7 @@ namespace BiliLite.Models.Common.Live
         /// 是否显示大表情
         /// </summary>
         
-        public Visibility ShowBigSticker
-        {
-            get {
-                return (ShowRichText == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
-            }
-        }
+        public Visibility ShowBigSticker => (ShowRichText == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
 
         /// <summary>
         /// 是否显示房管
