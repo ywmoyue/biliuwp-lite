@@ -165,13 +165,44 @@ namespace BiliLite.Modules.Live
                     var msg = new DanmuMsgModel();
                     if (obj["info"] != null && obj["info"].ToArray().Length != 0)
                     {
+                        // 弹幕内黄豆表情详情
+                        if (obj["info"][0][15]["extra"] != null)// && obj["info"][0][15]["extra"].ToArray().Length != 0)
+                        {
+                            var extra = JObject.Parse(obj["info"][0][15]["extra"].ToString());
+                            if (extra["emots"].ToArray().Length != 0)
+                            {
+                                msg.Emoji = (JContainer)extra["emots"];
+                            }
+                        }
+
+                        // 弹幕内大表情详情
+                        if (obj["info"][0][13] != null && obj["info"][0][13].ToArray().Length != 0)
+                        {
+                            // 如果有大表情, 直接不需要显示任何文字
+                            msg.ShowRichText = Visibility.Collapsed;
+                            msg.BigSticker = new DanmuMsgModel.BigStickerInfo
+                            {
+                                Url = (string)obj["info"][0][13]["url"],
+                                Height = (int)obj["info"][0][13]["height"], 
+                                Width = (int)obj["info"][0][13]["width"], 
+                            };
+                            //有的表情特别大 :(
+                            msg.BigSticker.Height = (msg.BigSticker.Height * 60 / msg.BigSticker.Width).ToInt32(); 
+                            msg.BigSticker.Width = 60;
+                        }
+
+                        // 弹幕内容
                         msg.Text = obj["info"][1].ToString();
+                        msg.RichText = StringExtensions.ToRichTextBlock(msg.Text, (JObject)msg.Emoji, true);
+
+                        // 弹幕颜色
                         var color = obj["info"][0][3].ToInt32();
                         if (color != 0)
                         {
                             msg.DanmuColor = color.ToString();
                         }
 
+                        // 是否为房管
                         if (obj["info"][2] != null && obj["info"][2].ToArray().Length != 0)
                         {
                             msg.UserName = obj["info"][2][1].ToString() + ":";
@@ -181,6 +212,28 @@ namespace BiliLite.Modules.Live
                                 msg.ShowAdmin = Visibility.Visible;
                             }
                         }
+
+                        // 是否为舰长
+                        if (obj["info"][3][10] != null && Convert.ToInt32(obj["info"][3][10].ToString()) != 0)
+                        {
+                            switch (Convert.ToInt32(obj["info"][3][10].ToString())){
+                                case 3:
+                                    msg.UserCaptain = "舰长";
+                                    msg.UserCaptainImage = "/Assets/Live/ic_live_guard_3.png";
+                                    break;
+                                case 2:
+                                    msg.UserCaptain = "提督";
+                                    msg.UserCaptainImage = "/Assets/Live/ic_live_guard_2.png";
+                                    break;
+                                case 1:
+                                    msg.UserCaptain = "总督";
+                                    msg.UserCaptainImage = "/Assets/Live/ic_live_guard_1.png";
+                                    break;
+                            }
+                            msg.ShowCaptain = Visibility.Visible;
+                        }
+
+                        // 粉丝牌
                         if (obj["info"][3] != null && obj["info"][3].ToArray().Length != 0)
                         {
                             msg.MedalName = obj["info"][3][1].ToString();
@@ -188,16 +241,20 @@ namespace BiliLite.Modules.Live
                             msg.MedalColor = obj["info"][3][4].ToString();
                             msg.ShowMedal = Visibility.Visible;
                         }
-                        if (obj["info"][4] != null && obj["info"][4].ToArray().Length != 0)
-                        {
-                            msg.UserLevel = "UL" + obj["info"][4][0].ToString();
-                            msg.UserLevelColor = obj["info"][4][2].ToString();
-                        }
-                        if (obj["info"][5] != null && obj["info"][5].ToArray().Length != 0)
-                        {
-                            msg.UserTitleID = obj["info"][5][0].ToString();
-                            msg.ShowTitle = Visibility.Visible;
-                        }
+
+                        // 用户直播等级(已经被b站弃用)
+                        //if (obj["info"][4] != null && obj["info"][4].ToArray().Length != 0)
+                        //{
+                        //    msg.UserLevel = "UL" + obj["info"][4][0].ToString();
+                        //    msg.UserLevelColor = obj["info"][4][2].ToString();
+                        //}
+
+                        // 用户头衔(基本没用)
+                        //if (obj["info"][5] != null && obj["info"][5].ToArray().Length != 0)
+                        //{
+                        //    msg.UserTitleID = obj["info"][5][0].ToString();
+                        //    msg.ShowTitle = Visibility.Visible;
+                        //}
 
                         NewMessage?.Invoke(MessageType.Danmu, msg);
                         return;
