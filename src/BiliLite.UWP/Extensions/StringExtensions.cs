@@ -79,7 +79,7 @@ namespace BiliLite.Extensions
         /// <param name="txt"></param>
         /// <param name="emote"></param>
         /// <returns></returns>
-        public static RichTextBlock ToRichTextBlock(this string txt, JObject emote)
+        public static RichTextBlock ToRichTextBlock(this string txt, JObject emote, bool isLive = false)
         {
             var input = txt;
             try
@@ -93,25 +93,23 @@ namespace BiliLite.Extensions
                     input = input.Replace("\r\n", "<LineBreak/>");
                     input = input.Replace("\n", "<LineBreak/>");
                     //处理其他控制字符
-                    input = Regex.Replace(input, @"\p{C}+", string.Empty);
+                    input = Regex.Replace(input, @"[\p{Cc}\p{Cf}]", string.Empty);
 
                     //处理链接
-                    input = HandelUrl(input);
-
+                    if (!isLive) { input = HandelUrl(input); }
+                    
                     //处理表情
-                    input = HandelEmoji(input, emote);
+                    input = !isLive ? HandelEmoji(input, emote) : HandleLiveEmoji(input, emote);
 
-                    //处理av号
-                    input = HandelVideoID(input);
-
-
+                    //处理av号/bv号
+                    if (!isLive) { input = HandelVideoID(input); }
 
                     //生成xaml
                     var xaml = string.Format(@"<RichTextBlock HorizontalAlignment=""Stretch"" TextWrapping=""Wrap""  xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
-                                            xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"" xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
-    xmlns:mc = ""http://schemas.openxmlformats.org/markup-compatibility/2006"" LineHeight=""20"">
-                                          <Paragraph>{0}</Paragraph>
-                                      </RichTextBlock>", input);
+                                               xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"" xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
+                                               xmlns:mc = ""http://schemas.openxmlformats.org/markup-compatibility/2006"" LineHeight=""{1}"">
+                                               <Paragraph>{0}</Paragraph>
+                                               </RichTextBlock>", input, isLive ? 22 : 20);
                     var p = (RichTextBlock)XamlReader.Load(xaml);
                     return p;
                 }
@@ -328,17 +326,33 @@ namespace BiliLite.Extensions
         {
             if (emote == null) return input;
             //替换表情
-            MatchCollection mc = Regex.Matches(input, @"\[.*?\]");
+            var mc = Regex.Matches(input, @"\[.*?\]");
             foreach (Match item in mc)
             {
-                if (emote != null && emote.ContainsKey(item.Groups[0].Value))
-                {
-                    var emoji = emote[item.Groups[0].Value];
-                    input = input.Replace(item.Groups[0].Value,
-                        string.Format(
-                            @"<InlineUIContainer><Border  Margin=""0 -4 4 -4""><Image Source=""{0}"" Width=""{1}"" Height=""{1}"" /></Border></InlineUIContainer>",
-                            emoji["url"].ToString(), emoji["meta"]["size"].ToInt32() == 1 ? "20" : "36"));
-                }
+                if (emote == null || !emote.ContainsKey(item.Groups[0].Value)) continue;
+                var emoji = emote[item.Groups[0].Value];
+                input = input.Replace(item.Groups[0].Value,
+                    string.Format(
+                        @"<InlineUIContainer><Border  Margin=""0 -4 4 -4""><Image Source=""{0}"" Width=""{1}"" Height=""{1}"" /></Border></InlineUIContainer>",
+                        emoji["url"].ToString(), emoji["meta"]["size"].ToInt32() == 1 ? "20" : "36"));
+            }
+
+            return input;
+        }
+
+        private static string HandleLiveEmoji(string input, JObject emotes)
+        {
+            if (emotes == null) return input;
+            foreach (Match match in Regex.Matches(input, @"\[.*?\]"))
+            {
+                var emojiCode = match.Value;
+
+                if (!emotes.TryGetValue(emojiCode, out var emote)) continue;
+                var replacement = string.Format(
+                    @"<InlineUIContainer><Border  Margin=""2 -4 2 -4""><Image Source=""{0}"" Width=""{1}"" Height=""{1}"" /></Border></InlineUIContainer>",
+                    emote["url"], emote["width"], emote["height"]);
+
+                input = input.Replace(emojiCode, replacement);
             }
 
             return input;
@@ -377,7 +391,7 @@ namespace BiliLite.Extensions
                     offset += data.Length - item.Length;
                 }
 
-                //处理AV号
+                //处理BV号
                 MatchCollection bv = Regex.Matches(input, @"[bB][vV]([a-zA-Z0-9]{8,})");
                 offset = 0;
                 foreach (Match item in bv)
@@ -399,7 +413,6 @@ namespace BiliLite.Extensions
                 }
 
                 //处理CV号
-
                 MatchCollection cv = Regex.Matches(input, @"[cC][vV](\d+)");
                 offset = 0;
                 foreach (Match item in cv)
