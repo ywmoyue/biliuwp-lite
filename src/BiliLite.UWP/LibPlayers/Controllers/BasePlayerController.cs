@@ -1,5 +1,6 @@
 ﻿using BiliLite.Player.States.PlayStates;
 using System;
+using BiliLite.LibPlayers.MediaInfos;
 using BiliLite.Player.MediaInfos;
 using BiliLite.Player.States.ContentStates;
 using BiliLite.Player.States.PauseStates;

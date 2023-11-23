@@ -28,7 +28,8 @@ using BiliLite.Models.Common.Player;
 namespace BiliLite.Controls
 {
     //TODO 写得太复杂了，需要重写
-    public sealed partial class Player : UserControl, IDisposable, INotifyPropertyChanged
+
+    public sealed partial class Player : UserControl, IDisposable, INotifyPropertyChanged, IPlayer
     {
         #region Fields
 

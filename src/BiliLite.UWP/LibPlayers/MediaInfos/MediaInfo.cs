@@ -1,7 +1,8 @@
-﻿using System.Text;
-using System;
+﻿using System;
+using System.Text;
+using BiliLite.Player.MediaInfos;
 
-namespace BiliLite.Player.MediaInfos
+namespace BiliLite.LibPlayers.MediaInfos
 {
     public class MediaInfo
     {

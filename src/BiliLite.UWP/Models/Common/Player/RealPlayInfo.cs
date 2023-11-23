@@ -14,5 +14,11 @@ namespace BiliLite.Models.Common.Player
         public List<BasePlayUrlInfo> HlsUrls { get; set; }
 
         public List<BasePlayUrlInfo> FlvUrls { get; set; }
+
+        public string DashVideoUrl { get; set; }
+
+        public string DashAudioUrl { get; set; }
+
+        public List<VideoFlvUrlInfo> VideoFlvUrls { get; set; }
     }
 }

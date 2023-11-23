@@ -110,7 +110,7 @@ namespace BiliLite.Controls
         DisplayRequest dispRequest;
         SystemMediaTransportControls _systemMediaTransportControls;
         DispatcherTimer timer_focus;
-        public Player PlayerInstance { get { return Player; } }
+        public Player2 PlayerInstance { get { return Player; } }
         /// <summary>
         /// 当前选中的字幕名称
         /// </summary>
@@ -1645,7 +1645,7 @@ namespace BiliLite.Controls
                 var video = quality.DashInfo.Video;
 
                 result = await Player.PlayerDashUseNative(quality.DashInfo, quality.UserAgent, quality.Referer, positon: _postion);
-
+                return result;
                 if (!result.result)
                 {
                     var mpd_url = new PlayerAPI().GenerateMPD(new Models.GenerateMPDModel()

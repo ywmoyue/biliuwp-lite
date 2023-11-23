@@ -136,6 +136,11 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Controls\IPlayer.cs" />
+    <Compile Include="Controls\Player2.xaml.cs">
+      <DependentUpon>Player2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Extensions\PlayerExtensions.cs" />
     <Compile Include="Models\Common\Live\LiveMessageHandleActionsMap.cs" />
     <Compile Include="Models\Common\Player\DefaultPlayerModeOptions.cs" />
     <Compile Include="Models\Common\Player\LivePlayerMode.cs" />
@@ -143,6 +148,7 @@
     <Compile Include="Models\Common\Player\PlayerError.cs" />
     <Compile Include="Models\Common\Player\BasePlayUrlInfo.cs" />
     <Compile Include="Models\Common\Player\RealPlayInfo.cs" />
+    <Compile Include="Models\Common\Player\VideoFlvUrlInfo.cs" />
     <Compile Include="Models\Common\UserDynamic\IUserDynamicContentDisplayInfo.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicCtrlItem.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicDisplayTypesMap.cs" />
@@ -176,45 +182,49 @@
     <Compile Include="Models\Common\Live\GuardBuyMsgModel.cs" />
     <Compile Include="Models\Common\Live\RoomChangeMsgModel.cs" />
     <Compile Include="Models\Exceptions\PlayerException.cs" />
-    <Compile Include="Player\Controllers\BasePlayerController.cs" />
-    <Compile Include="Player\Controllers\LivePlayerController.cs" />
-    <Compile Include="Player\Controllers\PlayerControllerFactory.cs" />
-    <Compile Include="Player\Controllers\PlayerType.cs" />
-    <Compile Include="Player\IBiliPlayer2.cs" />
-    <Compile Include="Player\LivePlayer.cs" />
-    <Compile Include="Player\MediaInfos\BaseCollectInfoHandler.cs" />
-    <Compile Include="Player\MediaInfos\CollectInfo.cs" />
-    <Compile Include="Player\MediaInfos\FFMpegInteropMssCollectInfoHandler.cs" />
-    <Compile Include="Player\MediaInfos\MediaInfo.cs" />
-    <Compile Include="Player\MediaInfos\MediaInfoDoNotToStringAttribute.cs" />
-    <Compile Include="Player\MediaInfos\MediaInfosCollector.cs" />
-    <Compile Include="Player\States\BaseStateChangedEventArgs.cs" />
-    <Compile Include="Player\States\ContentStates\ContentStateChangedEventArgs.cs" />
-    <Compile Include="Player\States\ContentStates\FullWindowContentState.cs" />
-    <Compile Include="Player\States\ContentStates\ContentStateHandler.cs" />
-    <Compile Include="Player\States\ContentStates\IContentState.cs" />
-    <Compile Include="Player\States\ContentStates\NormalWindowContentState.cs" />
-    <Compile Include="Player\States\PauseStates\PausedState.cs" />
-    <Compile Include="Player\States\PauseStates\PauseStateChangedEventArgs.cs" />
-    <Compile Include="Player\States\PauseStates\PauseStateHandler.cs" />
-    <Compile Include="Player\States\PauseStates\ResumeState.cs" />
-    <Compile Include="Player\States\PlayStates\BufferingPlayState.cs" />
-    <Compile Include="Player\States\PlayStates\PlayStateChangedEventArgs.cs" />
-    <Compile Include="Player\States\ScreenStates\ScreenStateChangedEventArgs.cs" />
-    <Compile Include="Player\States\ScreenStates\ScreenStateHandler.cs" />
-    <Compile Include="Player\States\ScreenStates\FullscreenState.cs" />
-    <Compile Include="Player\States\ScreenStates\IScreenState.cs" />
-    <Compile Include="Player\States\ScreenStates\NormalScreenState.cs" />
-    <Compile Include="Player\SubPlayers\ISubPlayer.cs" />
-    <Compile Include="Player\SubPlayers\LiveHlsPlayer.cs" />
-    <Compile Include="Player\States\PauseStates\IPauseState.cs" />
-    <Compile Include="Player\States\PlayStates\FaultPlayState.cs" />
-    <Compile Include="Player\States\PlayStates\LoadingPlayState.cs" />
-    <Compile Include="Player\States\PlayStates\IdlePlayState.cs" />
-    <Compile Include="Player\States\PlayStates\IPlayState.cs" />
-    <Compile Include="Player\States\PlayStates\PlayingPlayState.cs" />
-    <Compile Include="Player\States\PlayStates\PlayStateHandler.cs" />
-    <Compile Include="Player\States\PlayStates\StopPlayState.cs" />
+    <Compile Include="LibPlayers\BiliVideoPlayer.cs" />
+    <Compile Include="LibPlayers\Controllers\BasePlayerController.cs" />
+    <Compile Include="LibPlayers\Controllers\LivePlayerController.cs" />
+    <Compile Include="LibPlayers\Controllers\PlayerControllerFactory.cs" />
+    <Compile Include="LibPlayers\Controllers\PlayerType.cs" />
+    <Compile Include="LibPlayers\Controllers\VideoPlayerController.cs" />
+    <Compile Include="LibPlayers\IBiliPlayer2.cs" />
+    <Compile Include="LibPlayers\LivePlayer.cs" />
+    <Compile Include="LibPlayers\MediaInfos\BaseCollectInfoHandler.cs" />
+    <Compile Include="LibPlayers\MediaInfos\CollectInfo.cs" />
+    <Compile Include="LibPlayers\MediaInfos\FFMpegInteropMssCollectInfoHandler.cs" />
+    <Compile Include="LibPlayers\MediaInfos\MediaInfo.cs" />
+    <Compile Include="LibPlayers\MediaInfos\MediaInfoDoNotToStringAttribute.cs" />
+    <Compile Include="LibPlayers\MediaInfos\MediaInfosCollector.cs" />
+    <Compile Include="LibPlayers\States\BaseStateChangedEventArgs.cs" />
+    <Compile Include="LibPlayers\States\ContentStates\ContentStateChangedEventArgs.cs" />
+    <Compile Include="LibPlayers\States\ContentStates\FullWindowContentState.cs" />
+    <Compile Include="LibPlayers\States\ContentStates\ContentStateHandler.cs" />
+    <Compile Include="LibPlayers\States\ContentStates\IContentState.cs" />
+    <Compile Include="LibPlayers\States\ContentStates\NormalWindowContentState.cs" />
+    <Compile Include="LibPlayers\States\PauseStates\PausedState.cs" />
+    <Compile Include="LibPlayers\States\PauseStates\PauseStateChangedEventArgs.cs" />
+    <Compile Include="LibPlayers\States\PauseStates\PauseStateHandler.cs" />
+    <Compile Include="LibPlayers\States\PauseStates\ResumeState.cs" />
+    <Compile Include="LibPlayers\States\PlayStates\BufferingPlayState.cs" />
+    <Compile Include="LibPlayers\States\PlayStates\PlayStateChangedEventArgs.cs" />
+    <Compile Include="LibPlayers\States\ScreenStates\ScreenStateChangedEventArgs.cs" />
+    <Compile Include="LibPlayers\States\ScreenStates\ScreenStateHandler.cs" />
+    <Compile Include="LibPlayers\States\ScreenStates\FullscreenState.cs" />
+    <Compile Include="LibPlayers\States\ScreenStates\IScreenState.cs" />
+    <Compile Include="LibPlayers\States\ScreenStates\NormalScreenState.cs" />
+    <Compile Include="LibPlayers\SubPlayers\DashFFmpegPlayer.cs" />
+    <Compile Include="LibPlayers\SubPlayers\FlvSyEnginePlayer.cs" />
+    <Compile Include="LibPlayers\SubPlayers\ISubPlayer.cs" />
+    <Compile Include="LibPlayers\SubPlayers\LiveHlsPlayer.cs" />
+    <Compile Include="LibPlayers\States\PauseStates\IPauseState.cs" />
+    <Compile Include="LibPlayers\States\PlayStates\FaultPlayState.cs" />
+    <Compile Include="LibPlayers\States\PlayStates\LoadingPlayState.cs" />
+    <Compile Include="LibPlayers\States\PlayStates\IdlePlayState.cs" />
+    <Compile Include="LibPlayers\States\PlayStates\IPlayState.cs" />
+    <Compile Include="LibPlayers\States\PlayStates\PlayingPlayState.cs" />
+    <Compile Include="LibPlayers\States\PlayStates\PlayStateHandler.cs" />
+    <Compile Include="LibPlayers\States\PlayStates\StopPlayState.cs" />
     <Compile Include="ViewModels\Live\LiveDetailPageViewModel.cs" />
     <Compile Include="ViewModels\Live\SuperChatMsgViewModel.cs" />
     <Compile Include="Models\Common\Live\WelcomeMsgModel.cs" />
@@ -724,8 +734,8 @@
     <Compile Include="Pages\WebPage.xaml.cs">
       <DependentUpon>WebPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Player\BiliPlayer.cs" />
-    <Compile Include="Player\IBiliPlayer.cs" />
+    <Compile Include="LibPlayers\BiliPlayer.cs" />
+    <Compile Include="LibPlayers\IBiliPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\Requests\ApiModel.cs" />
     <Compile Include="Models\Common\ApiKeyInfo.cs" />
@@ -871,6 +881,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\CommentControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Player2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

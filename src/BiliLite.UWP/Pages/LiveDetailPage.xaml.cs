@@ -25,6 +25,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.LibPlayers.MediaInfos;
 using BiliLite.Models.Common.Live;
 using BiliLite.Models.Common.Player;
 using BiliLite.Models.Exceptions;
@@ -218,7 +219,7 @@ namespace BiliLite.Pages
             m_playerController.MediaInfosUpdated += PlayerController_MediaInfosUpdated; ;
         }
 
-        private async void PlayerController_MediaInfosUpdated(object sender, Player.MediaInfos.MediaInfo e)
+        private async void PlayerController_MediaInfosUpdated(object sender, MediaInfo e)
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
                 () => { txtInfo.Text = e.ToString(); });
