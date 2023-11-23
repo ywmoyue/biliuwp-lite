@@ -41,14 +41,14 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel Comment(string oid, CommentSort sort, int pn, int type, int ps = 30)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply",
                 parameter = $"oid={oid}&plat=2&pn={pn}&ps={ps}&sort={(int)sort}&type={type}",
                 need_cookie = true,
             };
-            //api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            //api.parameter += ApiHelper.GetSign(api.parameter, appKey);
             return api;
         }
 
@@ -71,82 +71,82 @@ namespace BiliLite.Models.Requests.Api
             };
             var paginationStr = JsonConvert.SerializeObject(pagination);
 
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply/main",
                 parameter = $"oid={oid}&ps={ps}&mode={mode}&type={type}&csrf={csrf}&pagination_str={paginationStr}",
                 need_cookie = true,
             };
-            //api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            //api.parameter += ApiHelper.GetSign(api.parameter, appKey);
             return api;
         }
 
         public ApiModel Reply(string oid, string root, int pn, int type, int ps = 30)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply/reply",
                 parameter = $"oid={oid}&plat=2&pn={pn}&ps={ps}&root={root}&type={type}",
                 need_cookie = true,
             };
-            //api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            //api.parameter += ApiHelper.GetSign(api.parameter, appKey);
             return api;
         }
 
         public ApiModel Like(string oid, string root, int action, int type)
         {
             var csrf = m_cookieService.GetCSRFToken();
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply/action",
                 body = $"&oid={oid}&rpid={root}&action={action}&type={type}&csrf={csrf}",
                 need_cookie = true,
             };
-            //api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            //api.body += ApiHelper.GetSign(api.body, appKey);
             return api;
         }
 
         public ApiModel ReplyComment(string oid, string root, string parent, string message, int type)
         {
             var csrf = m_cookieService.GetCSRFToken();
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply/add",
                 body = $"&oid={oid}&root={root}&parent={parent}&type={type}&message={message}&csrf={csrf}",
                 need_cookie = true,
             };
-            // api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            // api.body += ApiHelper.GetSign(api.body, appKey);
             return api;
         }
 
         public ApiModel DeleteComment(string oid, string rpid, int type)
         {
             var csrf = m_cookieService.GetCSRFToken();
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply/del",
                 body = $"&oid={oid}&rpid={rpid}&type={type}&csrf={csrf}",
                 need_cookie = true,
             };
-            // api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            // api.body += ApiHelper.GetSign(api.body, appKey);
             return api;
         }
         public ApiModel AddComment(string oid, CommentType type, string message)
         {
             var csrf = m_cookieService.GetCSRFToken();
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply/add",
                 body = $"&oid={oid}&type={(int)type}&message={Uri.EscapeDataString(message)}&csrf={csrf}",
                 need_cookie = true,
             };
-            //api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            //api.body += ApiHelper.GetSign(api.body, appKey);
             return api;
         }
     }

@@ -3,23 +3,23 @@ using System;
 
 namespace BiliLite.Models.Requests.Api
 {
-    public class VideoAPI
+    public class VideoAPI : BaseApi
     {
         public ApiModel Detail(string id, bool isbvid)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"https://app.bilibili.com/x/v2/view",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&{(isbvid ? "bvid=" : "aid=")}{id}&plat=0"
+                parameter = ApiHelper.MustParameter(AppKey, true) + $"&{(isbvid ? "bvid=" : "aid=")}{id}&plat=0"
             };
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
 
         public ApiModel DetailWebInterface(string id, bool isBvId)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"https://api.bilibili.com/x/web-interface/view",
@@ -31,7 +31,7 @@ namespace BiliLite.Models.Requests.Api
 
         public ApiModel RelatesWebInterface(string id, bool isBvId)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"https://api.bilibili.com/x/web-interface/archive/related",
@@ -42,13 +42,13 @@ namespace BiliLite.Models.Requests.Api
 
         public ApiModel DetailProxy(string id, bool isbvid)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"https://app.bilibili.com/x/v2/view",
-                parameter = ApiHelper.GetAccessParameter(ApiHelper.AndroidKey) + $"&{(isbvid ? "bvid=" : "aid=")}{id}&plat=0"
+                parameter = ApiHelper.GetAccessParameter(AppKey) + $"&{(isbvid ? "bvid=" : "aid=")}{id}&plat=0"
             };
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             var apiUrl = Uri.EscapeDataString(api.url);
             api.baseUrl = "https://biliproxy.iill.moe/app.php";
             api.parameter = "url=" + apiUrl;
@@ -62,13 +62,13 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel Like(string aid, int dislike, int like)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"https://app.bilibili.com/x/v2/view/like",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&aid={aid}&dislike={dislike}&from=7&like={like}"
+                body = ApiHelper.MustParameter(AppKey, true) + $"&aid={aid}&dislike={dislike}&from=7&like={like}"
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
         }
         /// <summary>
@@ -79,13 +79,13 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel Dislike(string aid, int dislike, int like)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"https://app.biliapi.net/x/v2/view/dislike",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&aid={aid}&dislike={dislike}&from=7&like={like}"
+                body = ApiHelper.MustParameter(AppKey, true) + $"&aid={aid}&dislike={dislike}&from=7&like={like}"
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
         }
 
@@ -95,25 +95,25 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel Triple(string aid)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"https://app.bilibili.com/x/v2/view/like/triple",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&aid={aid}"
+                body = ApiHelper.MustParameter(AppKey, true) + $"&aid={aid}"
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
         }
 
         public ApiModel Coin(string aid, int num)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"https://app.biliapi.net/x/v2/view/coin/add",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&aid={aid}&multiply={num}&platform=android&select_like=0"
+                body = ApiHelper.MustParameter(AppKey, true) + $"&aid={aid}&multiply={num}&platform=android&select_like=0"
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
         }
         /// <summary>
@@ -124,13 +124,13 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel Attention(string mid, string mode)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/relation/modify",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&act={mode}&fid={mid}&re_src=32"
+                body = ApiHelper.MustParameter(AppKey, true) + $"&act={mode}&fid={mid}&re_src=32"
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
         }
 

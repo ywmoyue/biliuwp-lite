@@ -216,7 +216,7 @@ namespace BiliLite.Pages
             m_playerController.ContentStateChanged += PlayerController_ContentStateChanged;
             m_playerController.ScreenStateChanged += PlayerController_ScreenStateChanged;
             m_player.ErrorOccurred += Player_ErrorOccurred;
-            m_playerController.MediaInfosUpdated += PlayerController_MediaInfosUpdated; ;
+            m_playerController.MediaInfosUpdated += PlayerController_MediaInfosUpdated;
         }
 
         private async void PlayerController_MediaInfosUpdated(object sender, MediaInfo e)

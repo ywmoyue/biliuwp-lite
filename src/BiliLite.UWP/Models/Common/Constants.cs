@@ -13,9 +13,28 @@
         public const string BILIBILI_DOMAIN = "https://www.bilibili.com";
 
         /// <summary>
+        /// b站Host
+        /// </summary>
+        public const string BILIBILI_HOST = ".bilibili.com";
+
+        /// <summary>
         /// 评论中匹配特殊文本正则表达式
         /// </summary>
         public const string COMMENT_SPECIAL_TEXT_REGULAR = @"\[(.*?)\]|https?:\/\/\S+|http?:\/\/\S+|\p{Cs}";
+
+        public const string CHROME_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36";
+        
+        public const string IOS_USER_AGENT = "bili-universal/75200100 CFNetwork/1.0 Darwin/23.0.0 os/ios model/iPad Air 3G mobi_app/iphone build/75200100 osVer/17.0.3 network/2 channel/AppStore";
+
+        public const string ANDROID_USER_AGENT = CHROME_USER_AGENT;
+
+        public const string IOS_MOBI_APP = "iphone";
+
+        public const string ANDROID_MOBI_APP = "android";
+
+        public const string IOS_APP_KEY = "27eb53fc9058f8c3";
+
+        public const string ANDROID_APP_KEY = "1d8b6e7d45233436";
 
         public static class App
         {

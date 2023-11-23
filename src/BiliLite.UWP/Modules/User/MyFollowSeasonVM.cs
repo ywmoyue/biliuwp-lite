@@ -2,15 +2,13 @@
 using BiliLite.Models.Requests.Api.User;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using BiliLite.Extensions;
-using BiliLite.Models.Common;
+using BiliLite.Models.Common.Anime;
 using BiliLite.Services;
+using Newtonsoft.Json;
 
 namespace BiliLite.Modules
 {
@@ -120,7 +118,7 @@ namespace BiliLite.Modules
                         {
                             foreach (var item in ls)
                             {
-                                item.status = Status;
+                                item.Status = Status;
                                 item.CancelFollowCommand = CancelFollowCommand;
                                 item.SetWantWatchCommand = SetWantWatchCommand;
                                 item.SetWatchedCommand = SetWatchedCommand;
@@ -206,7 +204,7 @@ namespace BiliLite.Modules
             var item = par as FollowSeasonModel;
             try
             {
-                var api = followAPI.CancelFollowSeason(item.season_id.ToString());
+                var api = followAPI.CancelFollowSeason(item.SeasonId.ToString());
                 var results = await api.Request();
                 if (results.status)
                 {
@@ -270,7 +268,7 @@ namespace BiliLite.Modules
             }
             try
             {
-                var api = followAPI.SetSeasonStatus(item.season_id.ToString(), status);
+                var api = followAPI.SetSeasonStatus(item.SeasonId.ToString(), status);
                 var results = await api.Request();
                 if (results.status)
                 {
@@ -302,65 +300,47 @@ namespace BiliLite.Modules
         }
 
     }
-    public class FollowSeasonModel
+
+    public class FollowSeasonModel : ISeasonItem
     {
         public ICommand CancelFollowCommand { get; set; }
+
         public ICommand SetWantWatchCommand { get; set; }
+
         public ICommand SetWatchedCommand { get; set; }
+
         public ICommand SetWatchingCommand { get; set; }
 
-        public int status { get; set; }
-        public bool show_watched
-        {
-            get
-            {
-                return status != 3;
-            }
-        }
-        public bool show_watching
-        {
-            get
-            {
-                return status != 2;
-            }
-        }
-        public bool show_want_watch
-        {
-            get
-            {
-                return status != 1;
-            }
-        }
-        public bool show_badge
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(badge);
-            }
-        }
-        public string badge { get; set; }
-        public string square_cover { get; set; }
-        public string cover { get; set; }
-        public string title { get; set; }
-        public int season_id { get; set; }
-        public string url { get; set; }
-        public string progress_text
-        {
-            get
-            {
-                if (progress != null)
-                {
-                    return progress.index_show;
-                }
-                else
-                {
-                    return "尚未观看";
-                }
-            }
-        }
+        public int Status { get; set; }
 
-        public FollowSeasonNewEpModel new_ep { get; set; }
-        public FollowSeasonProgressModel progress { get; set; }
+        public bool ShowWatched => Status != 3;
+
+        public bool ShowWatching => Status != 2;
+
+        public bool ShowWantWatch => Status != 1;
+
+        public bool ShowBadge => !string.IsNullOrEmpty(Badge);
+
+        public string Badge { get; set; }
+
+        [JsonProperty("square_cover")]
+        public string SquareCover { get; set; }
+
+        public string Cover { get; set; }
+
+        public string Title { get; set; }
+
+        [JsonProperty("season_id")]
+        public int SeasonId { get; set; }
+
+        public string Url { get; set; }
+
+        public string ProgressText => Progress != null ? Progress.index_show : "尚未观看";
+
+        [JsonProperty("new_ep")]
+        public FollowSeasonNewEpModel NewEp { get; set; }
+
+        public FollowSeasonProgressModel Progress { get; set; }
     }
     public class FollowSeasonNewEpModel
     {

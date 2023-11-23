@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using BiliLite.Services;
 
 namespace BiliLite.Models.Common
 {
@@ -140,6 +141,16 @@ namespace BiliLite.Models.Common
             /// Cookies
             /// </summary>
             public const string BILIBILI_COOKIES = "BiliBiliCookies";
+
+            /// <summary>
+            /// 登录用AppKey
+            /// </summary>
+            public const string LOGIN_APP_KEY_SECRET = "LoginAppKeySecret";
+
+            /// <summary>
+            /// 默认登录用AppKey
+            /// </summary>
+            public static ApiKeyInfo DefaultLoginAppKeySecret = ApiHelper.AndroidKey;
         }
 
         public class VideoDanmaku

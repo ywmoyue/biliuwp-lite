@@ -14,21 +14,20 @@ namespace BiliLite.Models.Requests.Api
         dynamic
     }
 
-    public class EmoteApi
+    public class EmoteApi : BaseApi
     {
-
         public ApiModel UserEmote(EmoteBusiness business)
         {
             var type = business.ToString();
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/emote/user/panel/web",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey) + $"&business={type}",
+                parameter = ApiHelper.MustParameter(AppKey) + $"&business={type}",
                 headers = ApiHelper.GetAuroraHeaders(),
                 need_cookie = true,
             };
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
     }

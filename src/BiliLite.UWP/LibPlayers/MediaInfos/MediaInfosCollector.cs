@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using BiliLite.LibPlayers.MediaInfos;
 using BiliLite.Player.Controllers;
-using BiliLite.Services;
 
 namespace BiliLite.Player.MediaInfos
 {
     public class MediaInfosCollector
     {
-        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly BasePlayerController m_playerController;
         private readonly Dictionary<string, BaseCollectInfoHandler> m_collectInfoHandlerMap;
         private BaseCollectInfoHandler m_currentCollectInfoHandler;
@@ -54,7 +51,7 @@ namespace BiliLite.Player.MediaInfos
             var success = m_collectInfoHandlerMap.TryGetValue(collectInfo.Type, out var handler);
             if (!success)
             {
-                _logger.Warn($"unknown collect info type: {collectInfo.Type}");
+                throw new Exception($"unknown collect info type: {collectInfo.Type}");
             }
 
             m_currentCollectInfoHandler = handler;

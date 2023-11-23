@@ -57,8 +57,8 @@ namespace BiliLite.Pages.Bangumi
             {
                 icon = Symbol.Play,
                 page = typeof(SeasonDetailPage),
-                title = item.title,
-                parameters = item.season_id,
+                title = item.Title,
+                parameters = item.SeasonId,
                 dontGoTo = dontGoTo
             });
         }

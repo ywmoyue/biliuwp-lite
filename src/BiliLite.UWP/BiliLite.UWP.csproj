@@ -26,7 +26,7 @@
     <AppxBundle>Never</AppxBundle>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <PackageCertificateThumbprint>32750103AFAB838C7F3755E5FD635CA4F0B72649</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>C4FA34A878A0528F84922932FEC6746BCBCA5CEA</PackageCertificateThumbprint>
     <PackageCertificateKeyFile />
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
   </PropertyGroup>
@@ -136,6 +136,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Models\Common\Anime\ISeasonItem.cs" />
     <Compile Include="Controls\IPlayer.cs" />
     <Compile Include="Controls\Player2.xaml.cs">
       <DependentUpon>Player2.xaml</DependentUpon>
@@ -182,6 +183,7 @@
     <Compile Include="Models\Common\Live\GuardBuyMsgModel.cs" />
     <Compile Include="Models\Common\Live\RoomChangeMsgModel.cs" />
     <Compile Include="Models\Exceptions\PlayerException.cs" />
+    <Compile Include="Models\Requests\Api\BaseApi.cs" />
     <Compile Include="LibPlayers\BiliVideoPlayer.cs" />
     <Compile Include="LibPlayers\Controllers\BasePlayerController.cs" />
     <Compile Include="LibPlayers\Controllers\LivePlayerController.cs" />

@@ -2,7 +2,7 @@
 
 namespace BiliLite.Models.Requests.Api.User
 {
-    public class FollowAPI
+    public class FollowAPI : BaseApi
     {
         /// <summary>
         /// 我的追番
@@ -13,14 +13,14 @@ namespace BiliLite.Models.Requests.Api.User
         /// <returns></returns>
         public ApiModel MyFollowBangumi(int page = 1, int status = 0, int pagesize = 20)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/pgc/app/follow/v2/bangumi",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&pn={page}&ps={pagesize}&status={status}",
+                parameter = ApiHelper.MustParameter(AppKey, true) + $"&pn={page}&ps={pagesize}&status={status}",
                 headers = ApiHelper.GetAuroraHeaders()
             };
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
         /// <summary>
@@ -32,13 +32,13 @@ namespace BiliLite.Models.Requests.Api.User
         /// <returns></returns>
         public ApiModel MyFollowCinema(int page = 1, int status = 0, int pagesize = 20)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/pgc/app/follow/v2/cinema",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&pn={page}&ps={pagesize}&status={status}",
+                parameter = ApiHelper.MustParameter(AppKey, true) + $"&pn={page}&ps={pagesize}&status={status}",
             };
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
         /// <summary>
@@ -47,13 +47,13 @@ namespace BiliLite.Models.Requests.Api.User
         /// <returns></returns>
         public ApiModel FollowSeason(string season_id)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/pgc/app/follow/add",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&season_id={season_id}"
+                body = ApiHelper.MustParameter(AppKey, true) + $"&season_id={season_id}"
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
         }
         /// <summary>
@@ -62,13 +62,13 @@ namespace BiliLite.Models.Requests.Api.User
         /// <returns></returns>
         public ApiModel CancelFollowSeason(string season_id)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/pgc/app/follow/del",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&season_id={season_id}"
+                body = ApiHelper.MustParameter(AppKey, true) + $"&season_id={season_id}"
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
         }
 
@@ -78,13 +78,13 @@ namespace BiliLite.Models.Requests.Api.User
         /// <returns></returns>
         public ApiModel SetSeasonStatus(string season_id, int status)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/pgc/app/follow/status/update",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&season_id={season_id}&status={status}"
+                body = ApiHelper.MustParameter(AppKey, true) + $"&season_id={season_id}&status={status}"
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
         }
 
@@ -97,13 +97,13 @@ namespace BiliLite.Models.Requests.Api.User
         /// <returns></returns>
         public ApiModel Attention(string mid, string mode)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/relation/modify",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&act={mode}&fid={mid}&re_src=32"
+                body = ApiHelper.MustParameter(AppKey, true) + $"&act={mode}&fid={mid}&re_src=32"
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
         }
 
@@ -114,7 +114,7 @@ namespace BiliLite.Models.Requests.Api.User
         /// <returns></returns>
         public ApiModel GetAttention(string mid)
         {
-            ApiModel api = new ApiModel()
+            var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/relation",

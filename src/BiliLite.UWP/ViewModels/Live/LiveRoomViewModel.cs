@@ -103,7 +103,6 @@ namespace BiliLite.ViewModels.Live
         /// <summary>
         /// 房间标题
         /// </summary>
-        [DoNotNotify]
         public string RoomTitle { get; set; }
 
         [DoNotNotify]

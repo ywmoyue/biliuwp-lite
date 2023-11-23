@@ -21,22 +21,35 @@ namespace BiliLite.Services
         public const string GIT_RAW_URL = "https://raw.githubusercontent.com/ywmoyue/biliuwp-lite/master";
 
         // 镜像 GIT RAW路径
-        public const string GHPROXY_GIT_RAW_URL = "https://ghproxy.com/https://raw.githubusercontent.com/ywmoyue/biliuwp-lite/master";
+        public const string GHPROXY_GIT_RAW_URL = "https://gh-proxy.com/https://raw.githubusercontent.com/ywmoyue/biliuwp-lite/master";
         public const string KGITHUB_GIT_RAW_URL = "https://raw.kkgithub.com/ywmoyue/biliuwp-lite/master";
 
         // 哔哩哔哩API
         public const string API_BASE_URL = "https://api.bilibili.com";
 
+        // 哔哩哔哩404页面
+        public const string NOT_FOUND_URL = "https://www.bilibili.com/404";
+
         //漫游默认的服务器
         public const string ROMAING_PROXY_URL = "https://b.chuchai.vip";
 
-        public static ApiKeyInfo AndroidKey = new ApiKeyInfo("1d8b6e7d45233436", "560c52ccd288fed045859ed18bffd973");
-        public static ApiKeyInfo AndroidVideoKey = new ApiKeyInfo("iVGUTjsxvpLeuDCf", "aHRmhWMLkdeMuILqORnYZocwMBpMEOdt");
-        public static ApiKeyInfo WebVideoKey = new ApiKeyInfo("84956560bc028eb7", "94aba54af9065f71de72f5508f1cd42e");
-        public static ApiKeyInfo AndroidTVKey = new ApiKeyInfo("4409e2ce8ffd12b8", "59b43e04ad6965f34319062b478f83dd");
-        public static ApiKeyInfo LoginKey = new ApiKeyInfo("783bbb7264451d82", "2653583c8873dea268ab9386918b1d65");
+        // 抓取ipad端appkey
+        public static ApiKeyInfo IPadOsKey = new ApiKeyInfo(Constants.IOS_APP_KEY, "c2ed53a74eeefe3cf99fbd01d8c9c375", Constants.IOS_MOBI_APP, Constants.IOS_USER_AGENT);
+
+        public static ApiKeyInfo AndroidVideoKey =
+            new ApiKeyInfo("iVGUTjsxvpLeuDCf", "aHRmhWMLkdeMuILqORnYZocwMBpMEOdt", null, null);
+
+        public static ApiKeyInfo WebVideoKey = new ApiKeyInfo("84956560bc028eb7", "94aba54af9065f71de72f5508f1cd42e",
+            null, Constants.CHROME_USER_AGENT);
+
+        public static ApiKeyInfo AndroidTVKey = new ApiKeyInfo("4409e2ce8ffd12b8", "59b43e04ad6965f34319062b478f83dd",
+            null, Constants.CHROME_USER_AGENT);
+        public static ApiKeyInfo LoginKey = new ApiKeyInfo("783bbb7264451d82", "2653583c8873dea268ab9386918b1d65", null, null);
+
+        public static ApiKeyInfo AndroidKey = new ApiKeyInfo(Constants.ANDROID_APP_KEY, "560c52ccd288fed045859ed18bffd973",
+            Constants.ANDROID_MOBI_APP, Constants.ANDROID_USER_AGENT);
+        
         private const string build = "6235200";
-        private const string _mobi_app = "android";
         private const string _platform = "android";
         public static string deviceId = "";
         private static int[] mixinKeyEncTab = new int[] {
@@ -132,7 +145,15 @@ namespace BiliLite.Services
                 url = $"access_key={SettingService.Account.AccessKey}&";
             }
             
-            return url + $"appkey={apikey.Appkey}&build={build}&mobi_app={_mobi_app}&platform={_platform}&ts={TimeExtensions.GetTimestampS()}";
+            return url + $"appkey={apikey.Appkey}&build={build}&mobi_app={apikey.MobiApp}&platform={_platform}&ts={TimeExtensions.GetTimestampS()}";
+        }
+
+        public static Dictionary<string,string> MustHeader(ApiKeyInfo apiKey)
+        {
+            return new Dictionary<string, string>()
+            {
+                { "user-agent", apiKey.UserAgent },
+            };
         }
 
         /// <summary>

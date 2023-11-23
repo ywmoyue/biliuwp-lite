@@ -3,29 +3,27 @@
     x:Class="BiliLite.Pages.User.HistoryPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BiliLite.Pages.User"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    xmlns:fa="using:FontAwesome5"
     xmlns:controls="using:BiliLite.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:convert="using:BiliLite.Converters"
     xmlns:model="using:BiliLite.Modules.User"
-    xmlns:userModel="using:BiliLite.Models.Common.User"
+    xmlns:userModel="using:BiliLite.Models.Common.User" d:DataContext="{d:DesignInstance Type=model:HistoryVM}"
     Background="Transparent">
     <Page.Resources>
         <SolidColorBrush x:Key="PivotHeaderBackground" Color="{ThemeResource TopPaneBackground}"></SolidColorBrush>
         <convert:DatetimeConvert x:Key="datetime"/>
         <Style x:Key="ItemStyle" TargetType="GridViewItem">
-            <Setter Property="Margin" Value="8"></Setter>
+            <Setter Property="Margin" Value="4"></Setter>
             <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
             <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
         </Style>
         <DataTemplate x:Key="VideoDataTemplate" x:DataType="userModel:UserHistoryItem">
             <Grid Background="#00FFFFFF">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="180"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Grid.ContextFlyout>
@@ -33,19 +31,36 @@
                         <MenuFlyoutItem Text="移除" Click="removeVideoHistory_Click"></MenuFlyoutItem>
                     </MenuFlyout>
                 </Grid.ContextFlyout>
-                <Border CornerRadius="{StaticResource ImageCornerRadius}">
-                    <toolkit:ImageEx IsCacheEnabled="True" Height="80" Width="120" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=Cover,Converter={StaticResource imageConvert},ConverterParameter='160w'}"></toolkit:ImageEx>
+                <Border Grid.Column="0" CornerRadius="{StaticResource ImageCornerRadius}">
+                    <StackPanel>
+                        <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="/Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=Cover,Converter={StaticResource imageConvert},ConverterParameter='180w_100h_1c'}"></toolkit:ImageEx>
+                    </StackPanel>
                 </Border>
-                <StackPanel Grid.Column="1" Margin="8 0 0 0">
-                    <TextBlock MaxLines="2" Margin="0 0 0 4" TextTrimming="CharacterEllipsis" Text="{x:Bind Title}"></TextBlock>
-                    <TextBlock Margin="0 4" FontSize="14" Foreground="Gray" >UP:<Run Text="{x:Bind Path=AuthorName}"/></TextBlock>
-                    <TextBlock Margin="0 4" FontSize="14" Foreground="Gray" Text="{x:Bind Path=ViewAt,Converter={StaticResource datetime},ConverterParameter='ts'}"></TextBlock>
-                </StackPanel>
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Margin="8 0 0 0" VerticalAlignment="Top">
+                        <TextBlock MaxLines="2" Margin="0 0 0 0" TextTrimming="CharacterEllipsis" Text="{x:Bind Title}" TextWrapping="Wrap"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Margin="8 0 0 0" VerticalAlignment="Bottom">
+                        <TextBlock VerticalAlignment="Bottom" Margin="0 3 0 0" FontSize="13" Foreground="Gray" Text="{x:Bind Path=AuthorName}"></TextBlock>
+                        <TextBlock VerticalAlignment="Bottom" Margin="0 3 0 0" FontSize="13" Foreground="Gray" Visibility="{x:Bind ShowTag}"><Run Text="{x:Bind Path=TagName}"></Run></TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Margin="8 0 0 0" VerticalAlignment="Bottom">
+                        <TextBlock Margin="0 3 0 0" FontSize="13" Foreground="Gray">
+                             <Run Text="{x:Bind Path=ViewAt,Converter={StaticResource datetime},ConverterParameter='ts'}"></Run>
+                             <Run Text="{x:Bind Path=Badge}"></Run>         
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
             </Grid>
         </DataTemplate>
     </Page.Resources>
     <Grid>
-        <Pivot >
+        <Pivot>
             <!--<Pivot.RightHeader>
                 <Grid Background="{ThemeResource TopPaneBackground}">
                     <Button Margin="8 0">清空记录</Button>
@@ -56,15 +71,18 @@
                     <TextBlock FontSize="15">视频</TextBlock>
                 </PivotItem.Header>
                 <Grid>
-                    <toolkit:AdaptiveGridView SelectionMode="None" 
-                                          IsItemClickEnabled="True"
-                                          DesiredWidth="600"
-                                          ItemClick="Video_ItemClick"
-                                          StretchContentForSingleRow="False"
-                                          ItemContainerStyle="{StaticResource ItemStyle}"
-                                          ItemTemplate="{StaticResource VideoDataTemplate}"
-                                          ItemsSource="{x:Bind Path=historyVM.Videos,Mode=OneWay}"
-                                          ItemHeight="80" Grid.ColumnSpan="2">
+                    <toolkit:AdaptiveGridView 
+                        SelectionMode="None"
+                        Padding="12 8"
+                        IsItemClickEnabled="True"
+                        DesiredWidth="600"
+                        ItemClick="Video_ItemClick"
+                        StretchContentForSingleRow="False"
+                        ItemContainerStyle="{StaticResource ItemStyle}"
+                        ItemTemplate="{StaticResource VideoDataTemplate}"
+                        ItemsSource="{x:Bind Path=historyVM.Videos,Mode=OneWay}"
+                        ItemHeight="100" 
+                        Grid.ColumnSpan="2">
 
                         <toolkit:AdaptiveGridView.Footer>
                             <StackPanel>

@@ -210,6 +210,7 @@ namespace BiliLite.Modules
         {
             try
             {
+                if (id.Length == 0) { throw new ArgumentException(nameof(id)); } 
                 Loaded = false;
                 Loading = true;
                 ShowError = false;
