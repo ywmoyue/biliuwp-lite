@@ -13,6 +13,8 @@ using Windows.UI.Xaml.Controls;
 using BiliLite.Extensions;
 using BiliLite.Services;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Anime;
+using Newtonsoft.Json;
 
 namespace BiliLite.Modules
 {
@@ -139,8 +141,8 @@ namespace BiliLite.Modules
         public List<PageEntranceModel> Entrances { get; set; }
         public async void SeasonItemClick(object sender, ItemClickEventArgs e)
         {
-            var seasonId = e.ClickedItem.GetType().GetProperty("season_id").GetValue(e.ClickedItem, null);
-            var title = e.ClickedItem.GetType().GetProperty("title").GetValue(e.ClickedItem, null) ?? "";
+            var seasonId = e.ClickedItem.GetType().GetProperty(nameof(ISeasonItem.SeasonId)).GetValue(e.ClickedItem, null);
+            var title = e.ClickedItem.GetType().GetProperty(nameof(ISeasonItem.SeasonId))?.GetValue(e.ClickedItem, null) ?? "";
             if (seasonId != null && seasonId.ToInt32() != 0)
             {
                 MessageCenter.NavigateToPage(sender, new NavigationInfo()
@@ -330,27 +332,43 @@ namespace BiliLite.Modules
         public string img { get; set; }
         public string url { get; set; }
     }
-    public class CinemaHomeHotItem
+
+    public class CinemaHomeHotItem : ISeasonItem
     {
-        public string hat { get; set; }
-        public string cover { get; set; }
-        public string badge { get; set; }
-        public int badge_type { get; set; }
-        public bool show_badge
+        public string Hat { get; set; }
+
+        public string Cover { get; set; }
+
+        public string Badge { get; set; }
+
+        [JsonProperty("badge_type")]
+        public int BadgeType { get; set; }
+
+        public bool ShowBadge
         {
             get
             {
-                return !string.IsNullOrEmpty(badge);
+                return !string.IsNullOrEmpty(Badge);
             }
         }
-        public string desc { get; set; }
-        public string title { get; set; }
-        public string link { get; set; }
-        public int season_id { get; set; }
-        public int season_type { get; set; }
-        public string type { get; set; }
-        public int wid { get; set; }
-        public CinemaHomeStatModel stat { get; set; }
+
+        public string Desc { get; set; }
+
+        public string Title { get; set; }
+
+        public string Link { get; set; }
+
+        [JsonProperty("season_id")]
+        public int SeasonId { get; set; }
+
+        [JsonProperty("season_type")]
+        public int SeasonType { get; set; }
+
+        public string Type { get; set; }
+
+        public int Wid { get; set; }
+
+        public CinemaHomeStatModel Stat { get; set; }
     }
     public class CinemaHomeStatModel
     {

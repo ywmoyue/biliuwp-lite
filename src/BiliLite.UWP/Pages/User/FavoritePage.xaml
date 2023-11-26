@@ -32,28 +32,28 @@
                     <MenuFlyout>
                         <MenuFlyoutItem
                             Command="{x:Bind SetWatchedCommand}" CommandParameter="{x:Bind}"
-                            Visibility="{x:Bind show_watched}">标为看过</MenuFlyoutItem>
+                            Visibility="{x:Bind ShowWatched}">标为看过</MenuFlyoutItem>
                         <MenuFlyoutItem
                             Command="{x:Bind SetWatchingCommand}" CommandParameter="{x:Bind}"
-                            Visibility="{x:Bind show_watching}">标为在看</MenuFlyoutItem>
+                            Visibility="{x:Bind ShowWatching}">标为在看</MenuFlyoutItem>
                         <MenuFlyoutItem
                             Command="{x:Bind SetWantWatchCommand}" CommandParameter="{x:Bind}"
-                            Visibility="{x:Bind show_want_watch}">标为想看</MenuFlyoutItem>
+                            Visibility="{x:Bind ShowWantWatch}">标为想看</MenuFlyoutItem>
                         <MenuFlyoutItem Command="{x:Bind CancelFollowCommand}" CommandParameter="{x:Bind}">取消收藏</MenuFlyoutItem>
                     </MenuFlyout>
                 </Grid.ContextFlyout>
                 <Border CornerRadius="{StaticResource ImageCornerRadius}">
                     <Grid>
-                        <toolkit:ImageEx IsCacheEnabled="True" Height="140" Width="105" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=cover,Converter={StaticResource imageConvert},ConverterParameter='160w'}"></toolkit:ImageEx>
-                        <Border Visibility="{x:Bind show_badge}" VerticalAlignment="Top" Background="#FFFB9E60" HorizontalAlignment="Right" Margin="4" Padding="8 4" CornerRadius="2">
+                        <toolkit:ImageEx IsCacheEnabled="True" Height="140" Width="105" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=Cover,Converter={StaticResource imageConvert},ConverterParameter='160w'}"></toolkit:ImageEx>
+                        <Border Visibility="{x:Bind ShowBadge}" VerticalAlignment="Top" Background="#FFFB9E60" HorizontalAlignment="Right" Margin="4" Padding="8 4" CornerRadius="2">
                             <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#FFFFFFFF" TextTrimming="CharacterEllipsis" Text="会员专享"></TextBlock>
                         </Border>
                     </Grid>
                 </Border>
                 <StackPanel Grid.Column="1" Margin="8 0 0 0">
-                    <TextBlock MaxLines="2" Margin="0 4" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind title}"></TextBlock>
-                    <TextBlock Margin="0 4" FontSize="14" Foreground="Gray" Text="{x:Bind Path=new_ep.index_show}"></TextBlock>
-                    <TextBlock Margin="0 4" FontSize="14" Foreground="Gray" Text="{x:Bind Path=progress_text}"></TextBlock>
+                    <TextBlock MaxLines="2" Margin="0 4" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Title}"></TextBlock>
+                    <TextBlock Margin="0 4" FontSize="14" Foreground="Gray" Text="{x:Bind Path=NewEp.index_show}"></TextBlock>
+                    <TextBlock Margin="0 4" FontSize="14" Foreground="Gray" Text="{x:Bind Path=ProgressText}"></TextBlock>
                 </StackPanel>
             </Grid>
         </DataTemplate>

@@ -70,6 +70,8 @@ namespace BiliLite.Models.Common.User
         [JsonProperty("tag_name")]
         public string TagName { get; set; }
 
+        public bool ShowTag => TagName.Length > 0;
+
         [JsonProperty("live_status")]
         public long LiveStatus { get; set; }
     }
