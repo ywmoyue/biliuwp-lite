@@ -8,7 +8,20 @@ namespace BiliLite.Models.Common.Live
 
         public long Uid { get; set; }
 
-        public string Uname { get; set; }
+        private string _name { get; set; }
+
+        public string Uname
+        {
+            get => _name;
+            set => _name = value;
+        }
+
+        [JsonProperty("name")]
+        public string Name
+        {
+            get => _name;
+            set => _name = value;
+        }
 
         public string Face { get; set; }
 

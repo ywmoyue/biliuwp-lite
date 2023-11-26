@@ -35,6 +35,7 @@ using BiliLite.Player.States.PauseStates;
 using BiliLite.Player.States.PlayStates;
 using BiliLite.Player.States.ScreenStates;
 using BiliLite.ViewModels.Live;
+using Windows.UI.Xaml.Documents;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -94,7 +95,10 @@ namespace BiliLite.Pages
             m_liveRoomViewModel = new LiveRoomViewModel();
             m_liveRoomViewModel.ChangedPlayUrl += LiveRoomViewModelChangedPlayUrl;
             m_liveRoomViewModel.AddNewDanmu += LiveRoomViewModelAddNewDanmu;
-            m_liveRoomViewModel.LotteryEnd += LiveRoomViewModelLotteryEnd;
+            m_liveRoomViewModel.AnchorLotteryEnd += LiveRoomViewModelAnchorLotteryEnd;
+            m_liveRoomViewModel.RedPocketLotteryEnd += LiveRoomViewModelRedPocketLotteryEnd;
+            m_liveRoomViewModel.ChatScrollToEnd += LiveRoomViewModelChatScrollToEnd;
+            m_liveRoomViewModel.LotteryViewModel.AnchorLotteryStart += LiveRoomViewModelAnchorLotteryStart;
             this.Loaded += LiveDetailPage_Loaded;
             this.Unloaded += LiveDetailPage_Unloaded;
         }
@@ -125,12 +129,46 @@ namespace BiliLite.Pages
             }
         }
 
-        private void LiveRoomViewModelLotteryEnd(object sender, LiveRoomEndAnchorLotteryInfoModel e)
+        private void LiveRoomViewModelAnchorLotteryStart(object sender, LiveRoomAnchorLotteryInfoModel e)
+        {
+            AnchorLotteryWinnerList.Content = e.WinnerList;
+            if (e.WinnerList.Children.Count != 0)
+            {
+                m_liveRoomViewModel.ShowAnchorLotteryWinnerList = true;
+            }
+        }
+
+        private void LiveRoomViewModelAnchorLotteryEnd(object sender, LiveRoomEndAnchorLotteryInfoModel e)
         {
             var str = e.AwardUsers.Aggregate("", (current, item) => current + (item.Uname + "、"));
             str = str.TrimEnd('、');
+            var msg = $"天选时刻 开奖信息:\r\n奖品: {e.AwardName} \r\n中奖用户:{str}";
+            foreach(var item in e.AwardUsers)
+            {
+                if (item.Uid == SettingService.Account.UserID)
+                {
+                    msg += $"\r\n你已抽中奖品: {e.AwardName}, 恭喜欧皇~";
+                }
+            }
+            Notify.ShowMessageToast(msg, new List<MyUICommand>(), 10);
+            AnchorLotteryWinnerList.Content = e.WinnerList;
+            m_liveRoomViewModel.ShowAnchorLotteryWinnerList = true;
+            m_liveRoomViewModel.LoadBag().RunWithoutAwait();
+        }
 
-            Notify.ShowMessageToast($"开奖信息:\r\n奖品:{e.AwardName}\r\n中奖用户:{str}", new List<MyUICommand>() { }, 10);
+        private void LiveRoomViewModelRedPocketLotteryEnd(object sender, LiveRoomEndRedPocketLotteryInfoModel e)
+        {
+            var winners = e.Winners;
+            var awards = e.Awards;
+            redPocketWinnerList.Content = e.WinnersList;
+            m_liveRoomViewModel.ShowRedPocketLotteryWinnerList = true;
+            foreach (var item in winners)
+            {
+                if (item[0] == (SettingService.Account.UserID).ToString()) {
+                    Notify.ShowMessageToast($"你已在人气红包抽中 {awards[item[3]].AwardName} , 赶快查看吧~");
+                }
+            }
+            m_liveRoomViewModel.LoadBag().RunWithoutAwait();
         }
 
         private void LiveRoomViewModelAddNewDanmu(object sender, DanmuMsgModel e)
@@ -149,6 +187,11 @@ namespace BiliLite.Pages
                 //记录错误，不弹出通知
                 logger.Log(ex.Message, LogType.Error, ex);
             }
+        }
+
+        private void LiveRoomViewModelChatScrollToEnd(object sender, EventArgs e)
+        {
+            list_chat.ScrollIntoView(list_chat.Items[list_chat.Items.Count - 1]);
         }
 
         #region 页面生命周期
@@ -465,8 +508,8 @@ namespace BiliLite.Pages
             };
             // 播放器优先模式
             m_viewModel.LivePlayerMode = (LivePlayerMode)SettingService.GetValue(
-                SettingConstants.Player.DEFAULT_LIVE_PLAYER_MODE,
-                (int)DefaultPlayerModeOptions.DEFAULT_LIVE_PLAYER_MODE);
+                        SettingConstants.Player.DEFAULT_LIVE_PLAYER_MODE,
+                        (int)DefaultPlayerModeOptions.DEFAULT_LIVE_PLAYER_MODE);
             m_playerConfig.PlayMode = m_viewModel.LivePlayerMode;
         }
 
@@ -713,6 +756,12 @@ namespace BiliLite.Pages
             m_liveRoomViewModel.SendGift(giftInfo).RunWithoutAwait();
         }
 
+        private void btnSendBagGift_Click(object sender, RoutedEventArgs e)
+        {
+            var giftInfo = (sender as Button).DataContext as LiveGiftItem;
+            m_liveRoomViewModel.SendBagGift(giftInfo).RunWithoutAwait();
+        }
+
         private async void TopBtnScreenshot_Click(object sender, RoutedEventArgs e)
         {
             await CaptureVideo();
@@ -871,15 +920,40 @@ namespace BiliLite.Pages
 
         private async void BtnSendLotteryDanmu_Click(object sender, RoutedEventArgs e)
         {
-            if (m_liveRoomViewModel.AnchorLotteryViewModel != null && m_liveRoomViewModel.AnchorLotteryViewModel.LotteryInfo != null && !string.IsNullOrEmpty(m_liveRoomViewModel.AnchorLotteryViewModel.LotteryInfo.Danmu))
+            if (m_liveRoomViewModel.LotteryViewModel != null &&
+                m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo != null &&
+                !string.IsNullOrEmpty(m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.Danmu))
             {
-                var result = await m_liveRoomViewModel.SendDanmu(m_liveRoomViewModel.AnchorLotteryViewModel.LotteryInfo.Danmu);
+                var result = await m_liveRoomViewModel.SendDanmu(m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.Danmu);
                 if (result)
                 {
                     Notify.ShowMessageToast("弹幕发送成功");
                     FlyoutLottery.Hide();
                 }
+            }
+        }
 
+        private async void BtnSendRedPocketLotteryDanmu_Click(object sender, RoutedEventArgs e)
+        {
+            if (m_liveRoomViewModel.LotteryViewModel != null &&
+                m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryInfo != null &&
+                !string.IsNullOrEmpty(m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryInfo.Danmu))
+            {
+                var msg = "";
+                var result = await m_liveRoomViewModel.SendDanmu(m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryInfo.Danmu);
+                if (result)
+                {
+                    FlyoutRedPocketLottery.Hide();
+                    msg += "弹幕发送成功";
+                }
+
+                if (!m_liveRoomViewModel.Attention)
+                {
+                    BtnAttention_Click(sender, e);
+                    msg += ", 关注主播成功";
+                }
+
+                Notify.ShowMessageToast(msg, 4);
             }
         }
 
@@ -1091,12 +1165,6 @@ namespace BiliLite.Pages
             ToolTip.Visibility = Visibility.Collapsed;
         }
         #endregion
-
-        private async void btnSendBagGift_Click(object sender, RoutedEventArgs e)
-        {
-            var giftInfo = (sender as Button).DataContext as LiveGiftItem;
-            await Task.Run(() => m_liveRoomViewModel.SendBagGift(giftInfo)).ConfigureAwait(false);
-        }
 
         private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
         {

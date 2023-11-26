@@ -46,7 +46,7 @@ namespace BiliLite.ViewModels.Live
             m_liveRoomApi = new LiveRoomAPI();
             m_playerApi = new PlayerAPI();
             //liveMessage = new Live.LiveMessage();
-            AnchorLotteryViewModel = new LiveRoomAnchorLotteryViewModel();
+            LotteryViewModel = new LiveRoomLotteryViewModel();
             MessageCenter.LoginedEvent += MessageCenter_LoginedEvent;
             MessageCenter.LogoutedEvent += MessageCenter_LogoutedEvent;
             Logined = SettingService.Account.Logined;
@@ -87,7 +87,7 @@ namespace BiliLite.ViewModels.Live
         [DoNotNotify]
         public Timer TimerAutoHideGift { get; private set; }
 
-        public LiveRoomAnchorLotteryViewModel AnchorLotteryViewModel { get; set; }
+        public LiveRoomLotteryViewModel LotteryViewModel { get; set; }
 
         [DoNotNotify]
         public static List<LiveTitleModel> Titles { get; set; }
@@ -126,9 +126,9 @@ namespace BiliLite.ViewModels.Live
         public bool ShowGiftMessage { get; set; }
 
         /// <summary>
-        /// 人气值
+        /// 看过的人数(替代人气值)
         /// </summary>
-        public int Online { get; set; }
+        public string WatchedNum { get; set; }
 
         public bool Loading { get; set; } = true;
 
@@ -193,15 +193,27 @@ namespace BiliLite.ViewModels.Live
         [DoNotNotify]
         public bool AutoReceiveFreeSilver { get; set; }
 
+        public bool ShowRedPocketLotteryWinnerList { get; set; } = false;
+
+        public bool ShowAnchorLotteryWinnerList { get; set; } = false;
+
+        public string RedPocketSendDanmuBtnText { get; set; } = "一键关注并发送弹幕";
+
         #endregion
 
         #region Events
 
         public event EventHandler ChangedPlayUrl;
 
-        public event EventHandler<LiveRoomEndAnchorLotteryInfoModel> LotteryEnd;
+        public event EventHandler<LiveRoomEndAnchorLotteryInfoModel> AnchorLotteryEnd;
 
         public event EventHandler<DanmuMsgModel> AddNewDanmu;
+
+        public event EventHandler ChatScrollToEnd;
+
+        public event EventHandler<LiveRoomEndRedPocketLotteryInfoModel> RedPocketLotteryEnd;
+
+        public event EventHandler<LiveAnchorInfoLiveInfoModel> AnchorLotteryStart;
 
         #endregion
 
@@ -214,9 +226,13 @@ namespace BiliLite.ViewModels.Live
             {
                 AddNewDanmu?.Invoke(this, e);
             }; 
-            actionMap.LotteryEnd += (_, e) =>
+            actionMap.AnchorLotteryEnd += (_, e) =>
             {
-                LotteryEnd?.Invoke(this, e);
+                AnchorLotteryEnd?.Invoke(this, e);
+            };
+            actionMap.RedPocketLotteryEnd += (_, e) =>
+            {
+                RedPocketLotteryEnd?.Invoke(this, e);
             };
             return actionMap;
         }
@@ -227,7 +243,7 @@ namespace BiliLite.ViewModels.Live
 
             var success = m_messageHandleActionsMap.Map.TryGetValue(type, out var handler);
             if (!success) return;
-            
+
             handler(this, message);
         }
 
@@ -244,6 +260,7 @@ namespace BiliLite.ViewModels.Live
                 else
                 {
                     HideGiftFlag++;
+                    ChatScrollToEnd?.Invoke(null, null);
                 }
             });
         }
@@ -318,10 +335,10 @@ namespace BiliLite.ViewModels.Live
                 var buvidData = await buvidResults.GetJson<ApiDataModel<LiveBuvidModel>>();
                 var buvid = buvidData.data.B3;
 
-                var danmukuResults = await m_liveRoomApi.GetDanmukuInfo(roomId).Request();
-                var danmukuData = await danmukuResults.GetJson<ApiDataModel<LiveDanmukuInfoModel>>();
-                var token = danmukuData.data.Token;
-                var host = danmukuData.data.HostList[0].Host;
+                var danmuResults = await m_liveRoomApi.GetDanmuInfo(roomId).Request();
+                var danmuData = await danmuResults.GetJson<ApiDataModel<LiveDanmukuInfoModel>>();
+                var token = danmuData.data.Token;
+                var host = danmuData.data.HostList[0].Host;
 
                 await m_liveMessage.Connect(roomId, uid, token, buvid, host, m_cancelSource.Token);
             }
@@ -533,16 +550,17 @@ namespace BiliLite.ViewModels.Live
 
                 RoomID = data.data.RoomInfo.RoomId;
                 RoomTitle = data.data.RoomInfo.Title;
-                Online = data.data.RoomInfo.Online;
+                //WatchedNum = data.data.RoomInfo.Online;
                 Liveing = data.data.RoomInfo.LiveStatus == 1;
                 LiveInfo = data.data;
                 if (Ranks == null)
                 {
                     Ranks = new List<LiveRoomRankViewModel>()
                     {
-                        new LiveRoomRankViewModel(RoomID, data.data.RoomInfo.Uid, "金瓜子榜", "gold-rank"),
-                        new LiveRoomRankViewModel(RoomID, data.data.RoomInfo.Uid, "今日礼物榜", "today-rank"),
-                        new LiveRoomRankViewModel(RoomID, data.data.RoomInfo.Uid, "七日礼物榜", "seven-rank"),
+                        //new LiveRoomRankViewModel(RoomID, data.data.RoomInfo.Uid, "金瓜子榜", "gold-rank"),
+                        //new LiveRoomRankViewModel(RoomID, data.data.RoomInfo.Uid, "今日礼物榜", "today-rank"),
+                        //new LiveRoomRankViewModel(RoomID, data.data.RoomInfo.Uid, "七日礼物榜", "seven-rank"),
+                        new LiveRoomRankViewModel(RoomID, data.data.RoomInfo.Uid, "高能用户贡献榜", "contribution-rank"),
                         new LiveRoomRankViewModel(RoomID, data.data.RoomInfo.Uid, "粉丝榜", "fans"),
                     };
                     SelectRank = Ranks[0];
@@ -559,7 +577,9 @@ namespace BiliLite.ViewModels.Live
                     await LoadSuperChat();
                     if (ReceiveLotteryMsg)
                     {
-                        AnchorLotteryViewModel.LoadLotteryInfo(RoomID).RunWithoutAwait();
+                        // 抽奖
+                        LotteryViewModel.LoadLotteryInfo(RoomID).RunWithoutAwait();
+                        RedPocketSendDanmuBtnText = Attention ? "一键发送弹幕" : "一键关注并发送弹幕";
                     }
                 }
 
@@ -849,8 +869,11 @@ namespace BiliLite.ViewModels.Live
                 if (!result.status) return;
                 var data = await result.GetData<JObject>();
                 if (!data.success) return;
+                var guard_num = data.data["info"]["num"].ToInt32();
+                LiveInfo.GuardInfo.Count = guard_num; // 更新显示数字(似乎不生效...)
+
                 var top3 = JsonConvert.DeserializeObject<List<LiveGuardRankItem>>(data.data["top3"].ToString());
-                if (Guards.Count == 0 && top3 != null && top3.Count != 0)
+                if (Guards.Count == 0 && top3 != null && top3.Count != 0 && Guards.Count < guard_num)
                 {
                     foreach (var item in top3)
                     {
@@ -859,7 +882,7 @@ namespace BiliLite.ViewModels.Live
                 }
 
                 var list = JsonConvert.DeserializeObject<List<LiveGuardRankItem>>(data.data["list"].ToString());
-                if (list != null && list.Count != 0)
+                if (list != null && list.Count != 0 && Guards.Count < guard_num)
                 {
                     foreach (var item in list)
                     {
@@ -965,18 +988,19 @@ namespace BiliLite.ViewModels.Live
             }
             try
             {
-                var result = await m_liveRoomApi.SendGift(LiveInfo.RoomInfo.Uid, liveGiftItem.Id, liveGiftItem.Num, RoomID, liveGiftItem.CoinType, liveGiftItem.Price).Request();
+                var result = await m_liveRoomApi.SendGift(LiveInfo.RoomInfo.Uid, liveGiftItem.Id, liveGiftItem.CoinType, liveGiftItem.Num, RoomID, liveGiftItem.Price).Request();
                 if (!result.status)
                 {
                     throw new CustomizedErrorException(result.message);
                 }
 
-                var data = await result.GetData<object>();
+                var data = await result.GetData<JObject>();
                 if (!data.success)
                 {
                     throw new CustomizedErrorException(data.message);
                 }
 
+                Notify.ShowMessageToast(data.data?["send_tips"].ToString().Length > 0 ? data.data?["send_tips"].ToString() : "赠送成功"); // 鬼知道怎么有时候有返回提示有时候没有
                 await LoadWalletInfo();
             }
             catch (CustomizedErrorException ex)
@@ -1002,22 +1026,23 @@ namespace BiliLite.ViewModels.Live
             try
             {
                 var result = await m_liveRoomApi.SendBagGift(LiveInfo.RoomInfo.Uid, liveGiftItem.Id, liveGiftItem.Num, liveGiftItem.BagId, RoomID).Request();
-                if (result.status)
+                if (!result.status)
                 {
-                    var data = await result.GetData<object>();
-                    if (data.success)
-                    {
-                        await LoadBag();
-                    }
-                    else
-                    {
-                        Notify.ShowMessageToast(data.message);
-                    }
+                    throw new CustomizedErrorException(result.message);
                 }
-                else
+
+                var data = await result.GetData<JObject>();
+                if (!data.success)
                 {
-                    Notify.ShowMessageToast(result.message);
+                    throw new CustomizedErrorException(data.message);
                 }
+                Notify.ShowMessageToast(data.data?["send_tips"].ToString().Length > 0 ? data.data?["send_tips"].ToString() : "赠送成功");
+                await LoadBag();
+            }
+            catch (CustomizedErrorException ex)
+            {
+                Notify.ShowMessageToast(ex.Message);
+                _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
@@ -1072,10 +1097,11 @@ namespace BiliLite.ViewModels.Live
             m_timer?.Stop();
             m_timerBox?.Stop();
             TimerAutoHideGift?.Stop();
-            if (AnchorLotteryViewModel != null)
+            if (LotteryViewModel != null)
             {
-                AnchorLotteryViewModel.Timer.Stop();
-                AnchorLotteryViewModel = null;
+                LotteryViewModel.AnchorLotteryTimer.Stop();
+                LotteryViewModel.RedPocketLotteryTimer.Stop();
+                LotteryViewModel = null;
             }
 
             Messages?.Clear();

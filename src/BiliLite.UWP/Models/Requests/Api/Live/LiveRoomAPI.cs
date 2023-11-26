@@ -142,11 +142,12 @@ namespace BiliLite.Models.Requests.Api.Live
             var api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
-                baseUrl = $"https://api.live.bilibili.com/gift/v2/live/bag_send",
-                parameter = ApiHelper.MustParameter(AppKey, true) + $"&actionKey=appkey",
-                body = $"uid={SettingService.Account.UserID}&ruid={ruid}&send_ruid=0&gift_id={gift_id}&gift_num={num}&bag_id={bag_id}&biz_id={roomId}&rnd={new Random().Next(1000, 999999).ToString("000000")}&biz_code=live&data_behavior_id=&data_source_id="
+                baseUrl = $"https://api.live.bilibili.com/xlive/revenue/v1/gift/sendBag",
+                body = ApiHelper.MustParameter(AppKey, true) + $"&actionKey=appkey",
+                need_cookie = true,
             };
-            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
+            api.body += $"&biz_code=live&biz_id={roomId}&gift_id={gift_id}&gift_num={num}&price=0&bag_id={bag_id}&rnd={TimeExtensions.GetTimestampMS()}&ruid={ruid}&uid={SettingService.Account.UserID}";
+            api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
         }
 
@@ -154,16 +155,18 @@ namespace BiliLite.Models.Requests.Api.Live
         /// 赠送礼物
         /// </summary>
         /// <returns></returns>
-        public ApiModel SendGift(long ruid, int gift_id, int num, int roomId, string coin_type, int price)
+        public ApiModel SendGift(long ruid, int gift_id, string coin_type, int num, int roomId, int price)
         {
             var api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
-                baseUrl = $"https://api.live.bilibili.com/gift/v2/live/send",
+                baseUrl = $"https://api.live.bilibili.com/xlive/revenue/v1/gift/send{char.ToUpper(coin_type[0]) + coin_type.Substring(1)}",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&actionKey=appkey",
+                need_cookie = true,
             };
-            api.body += $"&biz_code=live&biz_id={roomId}&coin_type={coin_type}&gift_id={gift_id}&gift_num={num}&mobi_app=android&platform=android&price={price}&rnd={TimeExtensions.GetTimestampMS()}&ruid={ruid}&uid={SettingService.Account.UserID}";
+            api.body += $"&biz_code=live&biz_id={roomId}&gift_id={gift_id}&gift_num={num}&price={price}&rnd={TimeExtensions.GetTimestampMS()}&ruid={ruid}&uid={SettingService.Account.UserID}";
             api.body += ApiHelper.GetSign(api.body, AppKey);
+
             return api;
         }
 
@@ -245,16 +248,16 @@ namespace BiliLite.Models.Requests.Api.Live
         /// </summary>
         /// <param name="ruid">主播ID</param>
         /// <param name="roomId">房间号</param>
-        /// <param name="rank_type"></param>
-        /// <param name="next_offset">gold-rank=金瓜子排行，today-rank=今日礼物排行，seven-rank=7日礼物排行</param>
+        /// <param name="rank_type">目前仅发现为online_rank</param>
+        /// <param name="switch_type">目前仅发现为contribution_rank</param>
         /// <returns></returns>
-        public ApiModel RoomRankList(long ruid, int roomId, string rank_type, int next_offset = 0)
+        public ApiModel RoomRankList(long ruid, int roomId, string rank_type, string switch_type)
         {
             var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
-                baseUrl = $"https://api.live.bilibili.com/rankdb/v1/RoomRank/tabRanks",
-                parameter = ApiHelper.MustParameter(AppKey, true) + $"&actionKey=appkey&next_offset={next_offset}&room_id={roomId}&ruid={ruid}&rank_type={rank_type}",
+                baseUrl = $"https://api.live.bilibili.com/xlive/general-interface/v1/rank/queryContributionRank",
+                parameter = ApiHelper.MustParameter(AppKey, true) + $"&actionKey=appkey&room_id={roomId}&ruid={ruid}&type={rank_type}&switch={switch_type}",
             };
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
@@ -272,13 +275,14 @@ namespace BiliLite.Models.Requests.Api.Live
                 method = RestSharp.Method.Get,
                 baseUrl = $"https://api.live.bilibili.com/xlive/lottery-interface/v1/lottery/getLotteryInfo",
                 parameter = ApiHelper.MustParameter(AppKey, true) + $"&actionKey=appkey&roomid={roomId}",
+                need_cookie = true,
             };
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
 
         /// <summary>
-        /// 直播间抽奖信息
+        /// 直播间超级留言(SuperChat)信息
         /// </summary>
         /// <param name="roomId"></param>
         /// <returns></returns>
@@ -310,7 +314,7 @@ namespace BiliLite.Models.Requests.Api.Live
             return api;
         }
 
-        public ApiModel GetDanmukuInfo(int roomId)
+        public ApiModel GetDanmuInfo(int roomId)
         {
             var api = new ApiModel()
             {
