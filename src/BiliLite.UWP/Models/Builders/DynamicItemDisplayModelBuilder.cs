@@ -134,10 +134,10 @@ namespace BiliLite.Models.Builders
 
                 // TODO: 完全展示转发内容
                 case UserDynamicDisplayType.Text when (extendJson != null && extendJson.ContainsKey("")):
-                    var ugc_id = (string)extendJson[""]?["ugc"]?["ugc_id"];
-                    if (ugc_id != null && ugc_id.Length > 0)
+                    var ugcId = (string)extendJson[""]?["ugc"]?["ugc_id"];
+                    if (!string.IsNullOrEmpty(ugcId))
                     {
-                        card["item"]["content"] += ("\nav" + ugc_id);
+                        card["item"]["content"] += ("\nav" + ugcId);
                     }
                     break;
             }
