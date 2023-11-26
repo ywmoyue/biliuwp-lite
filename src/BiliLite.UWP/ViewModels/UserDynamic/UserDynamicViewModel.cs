@@ -350,7 +350,7 @@ namespace BiliLite.ViewModels.UserDynamic
                         DetailCommand = DetailCommand,
                         WatchLaterCommand = m_watchLaterVm.AddCommand,
                     })
-                    .SwitchType(m_mapper, card)
+                    .SwitchType(m_mapper, card, extendJson)
                     .SetCommentCount(card)
                     .SetContent(card, extendJson)
                     .SetSeasonInfo(card)
