@@ -1002,7 +1002,7 @@ namespace BiliLite.Pages
                 case ApiHelper.GHPROXY_GIT_RAW_URL:
                     {
                         mirrorDonateText.Visibility = Visibility.Visible;
-                        mirrorDonateUrl.NavigateUri = new Uri("https://gh-proxy.com");
+                        mirrorDonateUrl.NavigateUri = new Uri("https://mirror.ghproxy.com/donate");
                         break;
                     }
                 case ApiHelper.KGITHUB_GIT_RAW_URL:
