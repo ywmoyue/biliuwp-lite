@@ -49,7 +49,7 @@ namespace BiliLite.Models.Builders
             return this;
         }
 
-        public DynamicItemDisplayModelBuilder SwitchType(IMapper mapper, JObject card)
+        public DynamicItemDisplayModelBuilder SwitchType(IMapper mapper, JObject card, JObject extendJson)
         {
             switch (m_displayViewModel.Type)
             {
@@ -106,7 +106,7 @@ namespace BiliLite.Models.Builders
                             originDisplayView = new DynamicItemDisplayModelBuilder()
                                 .Init(mapper, model, cardOrigin)
                                 .SetCommands(m_displayViewModel.UserDynamicItemDisplayCommands)
-                                .SwitchType(mapper, cardOrigin)
+                                .SwitchType(mapper, cardOrigin, extendJsonOrigin)
                                 .SetCommentCount(cardOrigin)
                                 .SetContent(cardOrigin, extendJsonOrigin)
                                 .SetSeasonInfo(cardOrigin)
@@ -130,6 +130,15 @@ namespace BiliLite.Models.Builders
                                 Type= UserDynamicDisplayType.Miss
                             }
                         };
+                    break;
+
+                // TODO: 完全展示转发内容
+                case UserDynamicDisplayType.Text when (extendJson != null && extendJson.ContainsKey("")):
+                    var ugcId = (string)extendJson[""]?["ugc"]?["ugc_id"];
+                    if (!string.IsNullOrEmpty(ugcId))
+                    {
+                        card["item"]["content"] += ("\nav" + ugcId);
+                    }
                     break;
             }
 
