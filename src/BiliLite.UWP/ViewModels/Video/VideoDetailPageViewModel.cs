@@ -216,6 +216,7 @@ namespace BiliLite.Modules
                 ShowError = false;
                 var needGetUserReq = false;
                 // 正常app获取视频详情
+                // 暂停使用, 因为二维码登录下会拿不到分集
                 var results = await videoAPI.Detail(id, isbvid).Request();
                 if (!results.status)
                 {
@@ -224,6 +225,7 @@ namespace BiliLite.Modules
 
                 var data = await results.GetJson<ApiDataModel<VideoDetailModel>>();
 
+                // 通过web获取, 作为后备使用
                 if (!data.success)
                 {
                     // 通过web获取视频详情
@@ -250,6 +252,21 @@ namespace BiliLite.Modules
                 if (!data.success)
                 {
                     throw new CustomizedErrorException(data.message);
+                }
+
+                var webResults = await videoAPI.DetailWebInterface(id, isbvid).Request();
+                if (!webResults.status)
+                {
+                    throw new CustomizedErrorException(webResults.message);
+                }
+                var webData = await webResults.GetJson<ApiDataModel<VideoDetailModel>>();
+                if (!webData.success)
+                {
+                    throw new CustomizedErrorException(webData.message);
+                }
+                if (data.data.UgcSeason == null && webData.data.UgcSeason != null)
+                {
+                    data.data.UgcSeason = webData.data.UgcSeason;
                 }
 
                 var videoInfoViewModel = m_mapper.Map<VideoDetailViewModel>(data.data);

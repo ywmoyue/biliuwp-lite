@@ -38,11 +38,9 @@
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Border CornerRadius="2">
-                                    <Image Width="100" Source="{Binding Cover}"></Image>
-                                </Border>
+                                <Image Grid.Column="0" HorizontalAlignment="Left" Width="140" Source="{Binding Cover,Converter={StaticResource imageConvert},ConverterParameter='140w'}"></Image>
 
                                 <StackPanel Grid.Column="1" Margin="8 0 0 0">
                                     <TextBlock TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{Binding Title}"></TextBlock>
@@ -53,8 +51,7 @@
                     </ListView.ItemTemplate>
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
-                            <Setter Property="Padding" Value="4"></Setter>
-                            <Setter Property="Margin" Value="8 4"></Setter>
+                            <Setter Property="Margin" Value="0 4 0 0"></Setter>
                         </Style>
                     </ListView.ItemContainerStyle>
                   

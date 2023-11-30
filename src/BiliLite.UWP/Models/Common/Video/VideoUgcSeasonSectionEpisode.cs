@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using BiliLite.Models.Common.Video.Detail;
+using Newtonsoft.Json;
 
 namespace BiliLite.Models.Common.Video
 {
@@ -12,7 +13,12 @@ namespace BiliLite.Models.Common.Video
 
         public string Title { get; set; }
 
-        public string Cover { get; set; }
+        private string _cover;
+        public string Cover
+        {
+            get => _cover ?? Arc.Pic;
+            set => _cover = value;
+        }
 
         [JsonProperty("cover_right_text")]
         public string CovverRightText { get; set; }
@@ -34,5 +40,8 @@ namespace BiliLite.Models.Common.Video
 
         [JsonProperty("first_frame")]
         public string FirstFrame { get; set; }
+
+        [JsonProperty("arc")]
+        public VideoDetailModel Arc { get; set; } // 简单复用一下
     }
 }
