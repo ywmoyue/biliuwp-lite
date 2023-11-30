@@ -216,7 +216,6 @@ namespace BiliLite.Modules
                 ShowError = false;
                 var needGetUserReq = false;
                 // 正常app获取视频详情
-                // 暂停使用, 因为二维码登录下会拿不到分集
                 var results = await videoAPI.Detail(id, isbvid).Request();
                 if (!results.status)
                 {
