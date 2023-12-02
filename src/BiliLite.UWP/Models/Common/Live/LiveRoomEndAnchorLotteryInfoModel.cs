@@ -34,54 +34,48 @@ namespace BiliLite.Models.Common.Live
         [JsonProperty("award_users")]
         public ObservableCollection<LiveRoomEndAnchorLotteryInfoUserModel> AwardUsers { get; set; }
         
-        public StackPanel WinnerList
-        {
-            get => AwardUsers == null ? new StackPanel() : GenerateWinnerList(AwardUsers);
-        }
+        public StackPanel WinnerList => AwardUsers == null ? new StackPanel() : GenerateWinnerList(AwardUsers);
 
-        public StackPanel GenerateWinnerList(ObservableCollection<LiveRoomEndAnchorLotteryInfoUserModel> AwardUsers)
+        public StackPanel GenerateWinnerList(ObservableCollection<LiveRoomEndAnchorLotteryInfoUserModel> awardUsers)
         {
             var result = new StackPanel()
             {
                 // <StackPanel Grid.Column="1" Margin="0 4" Orientation="Vertical" HorizontalAlignment="Center">
                 Orientation = Orientation.Vertical,
             };
-            if (AwardUsers != null && AwardUsers.ToArray().Length > 0)
+            if (awardUsers == null || awardUsers.ToArray().Length <= 0) return result;
+            foreach (var awardUser in awardUsers)
             {
-                var award_users = AwardUsers;
-                foreach (var item in award_users)
+                var awardUserItemPanel = new StackPanel()
                 {
-                    var sp = new StackPanel()
+                    // <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 4">
+                    Orientation = Orientation.Horizontal,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    Margin = new Thickness(0, 4, 0, 4),
+                };
+                var userFaceImage = new Ellipse()
+                {
+                    Width = 30,
+                    Height = 30,
+                    Fill = new ImageBrush()
                     {
-                        // <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 4">
-                        Orientation = Orientation.Horizontal,
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                        Margin = new Thickness(0, 4, 0, 4),
-                    };
-                    var e = new Ellipse()
-                    {
-                        Width = 30,
-                        Height = 30,
-                        Fill = new ImageBrush()
-                        {
-                            // <ImageBrush ImageSource="whatever" Stretch="UniformToFill"/>
-                            ImageSource = new BitmapImage(new Uri(item.Face + "@30h")),
-                            Stretch = Stretch.UniformToFill,
-                        }
-                    };
-                    var t = new TextBlock()
-                    {
-                        // <TextBlock Margin="4 0" TextWrapping="Wrap" Text="TestUser测试文字" VerticalAlignment="Center">
-                        Margin = new Thickness(4, 0, 4, 0),
-                        TextWrapping = TextWrapping.Wrap,
-                        Text = item.Uname,
-                        VerticalAlignment = VerticalAlignment.Center,
-                    };
+                        // <ImageBrush ImageSource="whatever" Stretch="UniformToFill"/>
+                        ImageSource = new BitmapImage(new Uri(awardUser.Face + "@30h")),
+                        Stretch = Stretch.UniformToFill,
+                    }
+                };
+                var userNameText = new TextBlock()
+                {
+                    // <TextBlock Margin="4 0" TextWrapping="Wrap" Text="TestUser测试文字" VerticalAlignment="Center">
+                    Margin = new Thickness(4, 0, 4, 0),
+                    TextWrapping = TextWrapping.Wrap,
+                    Text = awardUser.Uname,
+                    VerticalAlignment = VerticalAlignment.Center,
+                };
 
-                    sp.Children.Add(e);
-                    sp.Children.Add(t);
-                    result.Children.Add(sp);
-                }
+                awardUserItemPanel.Children.Add(userFaceImage);
+                awardUserItemPanel.Children.Add(userNameText);
+                result.Children.Add(awardUserItemPanel);
             }
             return result;
         }

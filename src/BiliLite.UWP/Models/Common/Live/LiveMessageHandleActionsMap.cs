@@ -42,7 +42,7 @@ namespace BiliLite.Models.Common.Live
 
         public event EventHandler<LiveRoomEndAnchorLotteryInfoModel> AnchorLotteryEnd;
 
-        public event EventHandler<LiveRoomEndRedPocketLotteryInfoModel > RedPocketLotteryEnd;
+        public event EventHandler<LiveRoomEndRedPocketLotteryInfoModel> RedPocketLotteryEnd;
 
         public event EventHandler<LiveAnchorInfoLiveInfoModel> AnchorInfoLiveInfo;
 

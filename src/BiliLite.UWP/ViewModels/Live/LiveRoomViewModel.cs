@@ -869,11 +869,11 @@ namespace BiliLite.ViewModels.Live
                 if (!result.status) return;
                 var data = await result.GetData<JObject>();
                 if (!data.success) return;
-                var guard_num = data.data["info"]["num"].ToInt32();
-                LiveInfo.GuardInfo.Count = guard_num; // 更新显示数字(似乎不生效...)
+                var guardNum = data.data["info"]["num"].ToInt32();
+                LiveInfo.GuardInfo.Count = guardNum; // 更新显示数字(似乎不生效...)
 
                 var top3 = JsonConvert.DeserializeObject<List<LiveGuardRankItem>>(data.data["top3"].ToString());
-                if (Guards.Count == 0 && top3 != null && top3.Count != 0 && Guards.Count < guard_num)
+                if (Guards.Count == 0 && top3 != null && top3.Count != 0 && Guards.Count < guardNum)
                 {
                     foreach (var item in top3)
                     {
@@ -882,7 +882,7 @@ namespace BiliLite.ViewModels.Live
                 }
 
                 var list = JsonConvert.DeserializeObject<List<LiveGuardRankItem>>(data.data["list"].ToString());
-                if (list != null && list.Count != 0 && Guards.Count < guard_num)
+                if (list != null && list.Count != 0 && Guards.Count < guardNum)
                 {
                     foreach (var item in list)
                     {

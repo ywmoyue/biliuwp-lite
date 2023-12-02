@@ -77,20 +77,11 @@ namespace BiliLite.ViewModels.Live
                     Items.Add(item);
                 }
             }
-
-            //{
-            //    Next = data["data"]["next_offset"].ToInt32();
-            //    CanLoadMore = Next != 0;
-            //}
-            if (RankType == "fans")
-            {
-                var total = data["data"]["total_page"].ToInt32();
-                if (Page < total)
-                {
-                    CanLoadMore = true;
-                    Page++;
-                }
-            }
+            if (RankType != "fans") return;
+            var total = data["data"]["total_page"].ToInt32();
+            if (Page >= total) return;
+            CanLoadMore = true;
+            Page++;
         }
 
         #endregion

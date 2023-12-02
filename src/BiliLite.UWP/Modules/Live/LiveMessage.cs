@@ -67,7 +67,7 @@ namespace BiliLite.Modules.Live
                     var receivedData = new byte[ms.Length];
                     ms.Read(receivedData, 0, receivedData.Length);
 
-                    ParseData(receivedData);
+                    await ParseData(receivedData);
                 }
                 catch (Exception ex)
                 {
@@ -121,7 +121,7 @@ namespace BiliLite.Modules.Live
         /// 解析内容
         /// </summary>
         /// <param name="data"></param>
-        private async void ParseData(byte[] data)
+        private async Task ParseData(byte[] data)
         {
             //协议版本。
             //0为JSON，可以直接解析；
@@ -248,67 +248,6 @@ namespace BiliLite.Modules.Live
                             msg.MedalColor = obj["info"][3][4].ToString();
                             msg.ShowMedal = Visibility.Visible;
                         }
-# if DEBUG
-                        // 手动触发测试
-                        if (msg.Text == "test123")
-                        {
-                            //NewMessage?.Invoke(MessageType.RoomBlock, new RoomBlockMsgModel()
-                            //{
-                            //    UserID = "123",
-                            //    UserName = "TestName",
-                            //});
-
-                            //NewMessage?.Invoke(MessageType.GuardBuy, new GuardBuyMsgModel()
-                            //{
-                            //    GiftName = "总督",
-                            //    UserName = "TestName",
-                            //    UserID = "123",
-                            //    GuardLevel = 30,
-                            //});
-
-                            //NewMessage?.Invoke(MessageType.WaringOrCutOff, new WarningOrCutOffMsgModel()
-                            //{
-                            //    Message = "图片内容不适宜，请立即调整",
-                            //    Command = "WARNING",
-                            //});
-
-                            //NewMessage?.Invoke(MessageType.WaringOrCutOff, new WarningOrCutOffMsgModel()
-                            //{
-                            //    Message = "违反直播言论规范，请立即调整",
-                            //    Command = "CUT_OFF",
-                            //});
-
-                            //NewMessage?.Invoke(MessageType.RoomChange, new RoomChangeMsgModel()
-                            //{
-                            //    Title = "TestLiveRoomName",
-                            //});
-
-                            //NewMessage?.Invoke(MessageType.StartLive, "6");
-
-                            //var nowTime = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
-                            //var test = "\r\n  {\r\n    \"lot_id\": 15759014,\r\n    \"sender_uid\": 1485563917,\r\n    \"sender_name\": \"fan_wyy\",\r\n    \"sender_face\": \"https://i1.hdslb.com/bfs/face/a46db0a66f1fc2e1756a578beeef05db004694d1.jpg\",\r\n    \"join_requirement\": 1,\r\n    \"danmu\": \"老板大气！点点红包抽礼物\",\r\n    \"awards\": [\r\n      {\r\n        \"gift_id\": 31212,\r\n        \"num\": 2,\r\n        \"gift_name\": \"打call\",\r\n        \"gift_pic\": \"https://s1.hdslb.com/bfs/live/461be640f60788c1d159ec8d6c5d5cf1ef3d1830.png\"\r\n      },\r\n      {\r\n        \"gift_id\": 31214,\r\n        \"num\": 3,\r\n        \"gift_name\": \"牛哇\",\r\n        \"gift_pic\": \"https://s1.hdslb.com/bfs/live/91ac8e35dd93a7196325f1e2052356e71d135afb.png\"\r\n      },\r\n      {\r\n        \"gift_id\": 31216,\r\n        \"num\": 3,\r\n        \"gift_name\": \"小花花\",\r\n        \"gift_pic\": \"https://s1.hdslb.com/bfs/live/5126973892625f3a43a8290be6b625b5e54261a5.png\"\r\n      }\r\n    ],\r\n    \"start_time\": 1700742404,\r\n    \"end_time\": 1700742584,\r\n    \"last_time\": 180,\r\n    \"remove_time\": 1700742599,\r\n    \"replace_time\": 1700742594,\r\n    \"current_time\": 1700742591,\r\n    \"lot_status\": 2,\r\n    \"h5_url\": \"https://live.bilibili.com/p/html/live-app-red-envelope/popularity.html?is_live_half_webview=1&hybrid_half_ui=1,5,100p,100p,000000,0,50,0,0,1;2,5,100p,100p,000000,0,50,0,0,1;3,5,100p,100p,000000,0,50,0,0,1;4,5,100p,100p,000000,0,50,0,0,1;5,5,100p,100p,000000,0,50,0,0,1;6,5,100p,100p,000000,0,50,0,0,1;7,5,100p,100p,000000,0,50,0,0,1;8,5,100p,100p,000000,0,50,0,0,1&hybrid_rotate_d=1&hybrid_biz=popularityRedPacket&lotteryId=15759014\",\r\n    \"user_status\": 2,\r\n    \"lot_config_id\": 3,\r\n    \"total_price\": 1600,\r\n    \"wait_num\": 12\r\n  }\r\n";
-                            //var CurrentTime = nowTime;
-                            //var StartTime = nowTime - 1;
-                            //var EndTime = nowTime + 10;
-                            //var RemoveTime = EndTime + 10;
-                            //test = test.Replace("1700742591", nowTime.ToString());
-                            //test = test.Replace("1700742404", StartTime.ToString());
-                            //test = test.Replace(("1700742404".ToInt32() + 180).ToString(), EndTime.ToString());
-                            //test = test.Replace(("1700742404".ToInt32() + 180 + 15).ToString(), RemoveTime.ToString());
-                            //NewMessage?.Invoke(MessageType.RedPocketLotteryStart, test);
-
-                            //var test = "{\r\n            \"id\": 5395495,\r\n            \"room_id\": 30760185,\r\n            \"status\": 1,\r\n            \"asset_icon\": \"https://i0.hdslb.com/bfs/live/627ee2d9e71c682810e7dc4400d5ae2713442c02.png\",\r\n            \"award_name\": \"情书\",\r\n            \"award_num\": 1,\r\n            \"award_image\": \"\",\r\n            \"danmu\": \"测\",\r\n            \"time\": 233,\r\n            \"current_time\": 1700804967,\r\n            \"join_type\": 0,\r\n            \"require_type\": 1,\r\n            \"require_value\": 0,\r\n            \"require_text\": \"关注主播\",\r\n            \"gift_id\": 0,\r\n            \"gift_name\": \"\",\r\n            \"gift_num\": 0,\r\n            \"gift_price\": 0,\r\n            \"cur_gift_num\": 0,\r\n            \"goaway_time\": 171,\r\n            \"award_users\": [\r\n                {\r\n                    \"uid\": 1277993759,\r\n                    \"uname\": \"皎皎梦丶\",\r\n                    \"face\": \"https://i2.hdslb.com/bfs/face/db9e3407a60e83850d9824cc8f1189c491639a3c.jpg\",\r\n                    \"level\": 27,\r\n                    \"color\": 5805790,\r\n                    \"bag_id\": 7671636,\r\n                    \"gift_id\": 31250,\r\n                    \"num\": 1\r\n                }\r\n            ],\r\n            \"show_panel\": 1,\r\n            \"url\": \"https://live.bilibili.com/p/html/live-lottery/anchor-join.html?is_live_half_webview=1\\u0026hybrid_biz=live-lottery-anchor\\u0026hybrid_half_ui=1,5,100p,100p,000000,0,30,0,0,1;2,5,100p,100p,000000,0,30,0,0,1;3,5,100p,100p,000000,0,30,0,0,1;4,5,100p,100p,000000,0,30,0,0,1;5,5,100p,100p,000000,0,30,0,0,1;6,5,100p,100p,000000,0,30,0,0,1;7,5,100p,100p,000000,0,30,0,0,1;8,5,100p,100p,000000,0,30,0,0,1\",\r\n            \"lot_status\": 2,\r\n            \"web_url\": \"https://live.bilibili.com/p/html/live-lottery/anchor-join.html\",\r\n            \"send_gift_ensure\": 0,\r\n            \"goods_id\": -99998,\r\n            \"award_type\": 1,\r\n            \"award_price_text\": \"价值52电池\",\r\n            \"ruid\": 3493144066788118,\r\n            \"asset_icon_webp\": \"\",\r\n            \"danmu_type\": 0,\r\n            \"danmu_new\": [\r\n                {\r\n                    \"danmu\": \"我就是天选之人！\",\r\n                    \"danmu_view\": \"\",\r\n                    \"reject\": false\r\n                }\r\n            ]\r\n        }";
-                            //test = test.Replace("233", "10");
-                            //test = test.Replace("171", "10");
-                            //NewMessage?.Invoke(MessageType.AnchorLotteryStart, test);
-                        }
-                        //if (msg.Text == "test321")
-                        //{
-                        //    var test = "{\r\n\t\t'award_dont_popup': 1,\r\n\t\t'award_image': '',\r\n\t\t'award_name': '艺术头像绘制',\r\n\t\t'award_num': 1,\r\n\t\t'award_users': [{\r\n\t\t\t'uid': 8318700,\r\n\t\t\t'uname': '桥下念喬',\r\n\t\t\t'face': 'http://i0.hdslb.com/bfs/face/dfde2ffc6286c2c5189592cc84fd70bcf977b143.jpg',\r\n\t\t\t'level': 21,\r\n\t\t\t'color': 5805790\r\n\t\t}],\r\n\t\t'id': 2553648,\r\n\t\t'lot_status': 2,\r\n\t\t'url': 'https://live.bilibili.com/p/html/live-lottery/anchor-join.html?is_live_half_webview=1&hybrid_biz=live-lottery-anchor&hybrid_half_ui=1,5,100p,100p,000000,0,30,0,0,1;2,5,100p,100p,000000,0,30,0,0,1;3,5,100p,100p,000000,0,30,0,0,1;4,5,100p,100p,000000,0,30,0,0,1;5,5,100p,100p,000000,0,30,0,0,1;6,5,100p,100p,000000,0,30,0,0,1;7,5,100p,100p,000000,0,30,0,0,1;8,5,100p,100p,000000,0,30,0,0,1',\r\n\t\t'web_url': 'https://live.bilibili.com/p/html/live-lottery/anchor-join.html'\r\n\t}";
-                        //    test = test.Replace('\'', '\"');
-                        //    NewMessage?.Invoke(MessageType.AnchorLotteryAward, test);
-                        //}
-#endif
                         // 用户直播等级(已经被b站弃用)
                         //if (obj["info"][4] != null && obj["info"][4].ToArray().Length != 0)
                         //{
@@ -418,24 +357,22 @@ namespace BiliLite.Modules.Live
                 }
                 else if (cmd == "SUPER_CHAT_MESSAGE")
                 {
-                    SuperChatMsgViewModel msgView = new SuperChatMsgViewModel();
-                    if (obj["data"] != null)
-                    {
-                        msgView.BackgroundBottomColor = obj["data"]["background_bottom_color"].ToString();
-                        msgView.BackgroundColor = obj["data"]["background_color"].ToString();
-                        msgView.BackgroundImage = obj["data"]["background_image"].ToString();
-                        msgView.EndTime = obj["data"]["end_time"].ToInt32();
-                        msgView.StartTime = obj["data"]["start_time"].ToInt32();
-                        msgView.Time = obj["data"]["time"].ToInt32();
-                        msgView.MaxTime = msgView.EndTime - msgView.StartTime;
-                        msgView.Face = obj["data"]["user_info"]["face"].ToString();
-                        msgView.FaceFrame = obj["data"]["user_info"]["face_frame"].ToString();
-                        msgView.FontColor = obj["data"]["message_font_color"].ToString();
-                        msgView.Message = obj["data"]["message"].ToString();
-                        msgView.Price = obj["data"]["price"].ToInt32();
-                        msgView.Username = obj["data"]["user_info"]["uname"].ToString();
-                        NewMessage?.Invoke(MessageType.SuperChat, msgView);
-                    }
+                    var msgView = new SuperChatMsgViewModel();
+                    if (obj["data"] == null) return;
+                    msgView.BackgroundBottomColor = obj["data"]["background_bottom_color"].ToString();
+                    msgView.BackgroundColor = obj["data"]["background_color"].ToString();
+                    msgView.BackgroundImage = obj["data"]["background_image"].ToString();
+                    msgView.EndTime = obj["data"]["end_time"].ToInt32();
+                    msgView.StartTime = obj["data"]["start_time"].ToInt32();
+                    msgView.Time = obj["data"]["time"].ToInt32();
+                    msgView.MaxTime = msgView.EndTime - msgView.StartTime;
+                    msgView.Face = obj["data"]["user_info"]["face"].ToString();
+                    msgView.FaceFrame = obj["data"]["user_info"]["face_frame"].ToString();
+                    msgView.FontColor = obj["data"]["message_font_color"].ToString();
+                    msgView.Message = obj["data"]["message"].ToString();
+                    msgView.Price = obj["data"]["price"].ToInt32();
+                    msgView.Username = obj["data"]["user_info"]["uname"].ToString();
+                    NewMessage?.Invoke(MessageType.SuperChat, msgView);
                     return;
                 }
                 else if (cmd == "ROOM_CHANGE")
@@ -514,7 +451,6 @@ namespace BiliLite.Modules.Live
                     logger.Error("直播解析JSON包出错", ex);
                 }
             }
-
         }
 
         /// <summary>

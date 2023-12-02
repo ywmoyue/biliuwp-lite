@@ -54,7 +54,7 @@ namespace BiliLite.Models.Common.Live
         [JsonProperty("awards")]
         public ObservableCollection<LiveRoomRedPocketLotteryAwardInfoModel> Awards { get; set; }
 
-        public RichTextBlock AwardsList { get => AwardsToRichTextBlock(); }
+        public RichTextBlock AwardsList => AwardsToRichTextBlock();
 
         /// <summary>
         /// 红包开始时间

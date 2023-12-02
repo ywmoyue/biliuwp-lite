@@ -137,7 +137,7 @@ namespace BiliLite.Models.Requests.Api.Live
         /// 赠送背包礼物
         /// </summary>
         /// <returns></returns>
-        public ApiModel SendBagGift(long ruid, int gift_id, int num, int bag_id, int roomId)
+        public ApiModel SendBagGift(long ruid, int giftId, int num, int bagId, int roomId)
         {
             var api = new ApiModel()
             {
@@ -146,7 +146,7 @@ namespace BiliLite.Models.Requests.Api.Live
                 body = ApiHelper.MustParameter(AppKey, true) + $"&actionKey=appkey",
                 need_cookie = true,
             };
-            api.body += $"&biz_code=live&biz_id={roomId}&gift_id={gift_id}&gift_num={num}&price=0&bag_id={bag_id}&rnd={TimeExtensions.GetTimestampMS()}&ruid={ruid}&uid={SettingService.Account.UserID}";
+            api.body += $"&biz_code=live&biz_id={roomId}&gift_id={giftId}&gift_num={num}&price=0&bag_id={bagId}&rnd={TimeExtensions.GetTimestampMS()}&ruid={ruid}&uid={SettingService.Account.UserID}";
             api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
         }
@@ -155,16 +155,16 @@ namespace BiliLite.Models.Requests.Api.Live
         /// 赠送礼物
         /// </summary>
         /// <returns></returns>
-        public ApiModel SendGift(long ruid, int gift_id, string coin_type, int num, int roomId, int price)
+        public ApiModel SendGift(long ruid, int giftId, string coinType, int num, int roomId, int price)
         {
             var api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
-                baseUrl = $"https://api.live.bilibili.com/xlive/revenue/v1/gift/send{char.ToUpper(coin_type[0]) + coin_type.Substring(1)}",
+                baseUrl = $"https://api.live.bilibili.com/xlive/revenue/v1/gift/send{char.ToUpper(coinType[0]) + coinType.Substring(1)}",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&actionKey=appkey",
                 need_cookie = true,
             };
-            api.body += $"&biz_code=live&biz_id={roomId}&gift_id={gift_id}&gift_num={num}&price={price}&rnd={TimeExtensions.GetTimestampMS()}&ruid={ruid}&uid={SettingService.Account.UserID}";
+            api.body += $"&biz_code=live&biz_id={roomId}&gift_id={giftId}&gift_num={num}&price={price}&rnd={TimeExtensions.GetTimestampMS()}&ruid={ruid}&uid={SettingService.Account.UserID}";
             api.body += ApiHelper.GetSign(api.body, AppKey);
 
             return api;

@@ -143,9 +143,9 @@ namespace BiliLite.Pages
             var str = e.AwardUsers.Aggregate("", (current, item) => current + (item.Uname + "、"));
             str = str.TrimEnd('、');
             var msg = $"天选时刻 开奖信息:\r\n奖品: {e.AwardName} \r\n中奖用户:{str}";
-            foreach(var item in e.AwardUsers)
+            foreach(var awardUser in e.AwardUsers)
             {
-                if (item.Uid == SettingService.Account.UserID)
+                if (awardUser.Uid == SettingService.Account.UserID)
                 {
                     msg += $"\r\n你已抽中奖品: {e.AwardName}, 恭喜欧皇~";
                 }
@@ -162,10 +162,10 @@ namespace BiliLite.Pages
             var awards = e.Awards;
             redPocketWinnerList.Content = e.WinnersList;
             m_liveRoomViewModel.ShowRedPocketLotteryWinnerList = true;
-            foreach (var item in winners)
+            foreach (var winner in winners)
             {
-                if (item[0] == (SettingService.Account.UserID).ToString()) {
-                    Notify.ShowMessageToast($"你已在人气红包抽中 {awards[item[3]].AwardName} , 赶快查看吧~");
+                if (winner[0] == (SettingService.Account.UserID).ToString()) {
+                    Notify.ShowMessageToast($"你已在人气红包抽中 {awards[winner[3]].AwardName} , 赶快查看吧~");
                 }
             }
             m_liveRoomViewModel.LoadBag().RunWithoutAwait();
@@ -750,16 +750,20 @@ namespace BiliLite.Pages
             await m_liveRoomViewModel.LoadLiveRoomDetail(roomid);
         }
 
-        private void btnSendGift_Click(object sender, RoutedEventArgs e)
+        private async void btnSendGift_Click(object sender, RoutedEventArgs e)
         {
-            var giftInfo = (sender as Button).DataContext as LiveGiftItem;
-            m_liveRoomViewModel.SendGift(giftInfo).RunWithoutAwait();
+            if (sender is Button { DataContext: LiveGiftItem giftInfo })
+            {
+                await m_liveRoomViewModel.SendGift(giftInfo);
+            }
         }
 
-        private void btnSendBagGift_Click(object sender, RoutedEventArgs e)
+        private async void btnSendBagGift_Click(object sender, RoutedEventArgs e)
         {
-            var giftInfo = (sender as Button).DataContext as LiveGiftItem;
-            m_liveRoomViewModel.SendBagGift(giftInfo).RunWithoutAwait();
+            if (sender is Button { DataContext: LiveGiftItem giftInfo })
+            {
+                await m_liveRoomViewModel.SendBagGift(giftInfo);
+            }
         }
 
         private async void TopBtnScreenshot_Click(object sender, RoutedEventArgs e)
@@ -935,26 +939,24 @@ namespace BiliLite.Pages
 
         private async void BtnSendRedPocketLotteryDanmu_Click(object sender, RoutedEventArgs e)
         {
-            if (m_liveRoomViewModel.LotteryViewModel != null &&
-                m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryInfo != null &&
-                !string.IsNullOrEmpty(m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryInfo.Danmu))
+            if (m_liveRoomViewModel.LotteryViewModel == null ||
+                m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryInfo == null ||
+                string.IsNullOrEmpty(m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryInfo.Danmu)) return;
+            var msg = "";
+            var result = await m_liveRoomViewModel.SendDanmu(m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryInfo.Danmu);
+            if (result)
             {
-                var msg = "";
-                var result = await m_liveRoomViewModel.SendDanmu(m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryInfo.Danmu);
-                if (result)
-                {
-                    FlyoutRedPocketLottery.Hide();
-                    msg += "弹幕发送成功";
-                }
-
-                if (!m_liveRoomViewModel.Attention)
-                {
-                    BtnAttention_Click(sender, e);
-                    msg += ", 关注主播成功";
-                }
-
-                Notify.ShowMessageToast(msg, 4);
+                FlyoutRedPocketLottery.Hide();
+                msg += "弹幕发送成功";
             }
+
+            if (!m_liveRoomViewModel.Attention)
+            {
+                BtnAttention_Click(sender, e);
+                msg += ", 关注主播成功";
+            }
+
+            Notify.ShowMessageToast(msg, 4);
         }
 
         private void BottomBtnMiniWindows_Click(object sender, RoutedEventArgs e)

@@ -33,10 +33,7 @@ namespace BiliLite.Models.Common.Live
         [JsonProperty("award_users")]
         public ObservableCollection<LiveRoomEndAnchorLotteryInfoUserModel> AwardUsers { get; set; }
 
-        public StackPanel WinnerList 
-        {
-            get => AwardUsers == null ? new StackPanel() : new LiveRoomEndAnchorLotteryInfoModel().GenerateWinnerList(AwardUsers);
-        }
+        public StackPanel WinnerList => AwardUsers == null ? new StackPanel() : new LiveRoomEndAnchorLotteryInfoModel().GenerateWinnerList(AwardUsers);
 
         /// <summary>
         /// 未知...

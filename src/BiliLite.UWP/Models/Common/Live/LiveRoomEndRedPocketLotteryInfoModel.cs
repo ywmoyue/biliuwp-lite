@@ -31,7 +31,7 @@ namespace BiliLite.Models.Common.Live
         [JsonProperty("winner_info")]
         public ObservableCollection<ObservableCollection<string>> Winners { get; set; }
 
-        public RichTextBlock WinnersList { get => WinnerToRichTextBlock(); }
+        public RichTextBlock WinnersList => WinnerToRichTextBlock();
 
         /// <summary>
         /// 中奖的礼物信息
@@ -53,45 +53,37 @@ namespace BiliLite.Models.Common.Live
             {
                 //var result = (RichTextBlock)XamlReader.Load("<RichTextBlock Margin=\"0 4\" HorizontalAlignment=\"Center\" LineHeight=\"28\"></RichTextBlock>");
                 var result = new RichTextBlock() { LineHeight = 28 };
-                if (Winners != null)
+                if (Winners == null) throw new CustomizedErrorException("红包中奖名单为空");
+                foreach (var winner in Winners)
                 {
-                    foreach (var item in Winners)
-                    {
-                        var name = item[1];
-                        var gift_id = item[3];
-                        var p = string.Format(
-                        @"<Paragraph xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+                    var name = winner[1];
+                    var giftId = winner[3];
+                    var p = $@"<Paragraph xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
                                      xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"" 
                                      xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
                                      xmlns:mc = ""http://schemas.openxmlformats.org/markup-compatibility/2006"">
-                            {0} 获得
+                            {winner[1]} 获得
                             <InlineUIContainer>
-                                <Image Source=""{1}"" Margin=""0 2 -2 -6"" Width=""24"" Height=""24""/>
+                                <Image Source=""{Awards[giftId].AwardPic}"" Margin=""0 2 -2 -6"" Width=""24"" Height=""24""/>
                             </InlineUIContainer>
-                            {2}
-                        </Paragraph>",
-                        item[1], Awards[gift_id].AwardPic, Awards[gift_id].AwardName);
+                            {Awards[giftId].AwardName}
+                        </Paragraph>";
 
-                        var paragraph = (Paragraph)XamlReader.Load(p);
-                        result.Blocks.Add(paragraph);
-                    }
-                    return result;
+                    var paragraph = (Paragraph)XamlReader.Load(p);
+                    result.Blocks.Add(paragraph);
                 }
-                else
-                {
-                    throw new CustomizedErrorException("红包中奖名单为空");
-                }
+                return result;
             }
             catch (Exception ex)
             {
                 Notify.ShowMessageToast("红包中奖名单富文本转换失败");
                 _logger.Error("红包中奖名单富文本转换失败", ex);
-                var tx = new RichTextBlock();
-                Paragraph paragraph = new Paragraph();
-                Run run = new Run();
+                var text = new RichTextBlock();
+                var paragraph = new Paragraph();
+                var run = new Run();
                 paragraph.Inlines.Add(run);
-                tx.Blocks.Add(paragraph);
-                return tx;
+                text.Blocks.Add(paragraph);
+                return text;
             }
         }
     }
