@@ -5,6 +5,8 @@ namespace BiliLite.Models.Common.Video
 {
     public class VideoUgcSeasonSectionEpisode
     {
+        private string m_cover;
+
         public long Id { get; set; }
 
         public string Aid { get; set; }
@@ -13,11 +15,10 @@ namespace BiliLite.Models.Common.Video
 
         public string Title { get; set; }
 
-        private string _cover;
         public string Cover
         {
-            get => _cover ?? Arc.Pic;
-            set => _cover = value;
+            get => m_cover ?? Arc.Pic;
+            set => m_cover = value;
         }
 
         [JsonProperty("cover_right_text")]
