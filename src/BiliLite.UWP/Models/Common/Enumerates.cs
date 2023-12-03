@@ -306,10 +306,10 @@
         /// </summary>
         ConnectSuccess,
 
-        /// <summary>
-        /// 在线人数
-        /// </summary>
-        Online,
+        ///// <summary>
+        ///// 在线人数(即人气值, 已弃用)
+        ///// </summary>
+        //Online,
 
         /// <summary>
         /// 弹幕
@@ -324,12 +324,12 @@
         /// <summary>
         /// 欢迎信息
         /// </summary>
-        Welcome,
+        InteractWord,
 
         /// <summary>
-        /// 系统消息
+        /// 系统消息 (未做实现), 先注释
         /// </summary>
-        SystemMsg,
+        //SystemMsg,
 
         /// <summary>
         /// 醒目留言
@@ -346,12 +346,7 @@
         /// </summary>
         AnchorLotteryStart,
 
-        /// <summary>
-        /// 抽奖结束
-        /// </summary>
-        AnchorLotteryEnd,
 
-        /// <summary>
         /// 抽奖结果
         /// </summary>
         AnchorLotteryAward,
@@ -370,5 +365,35 @@
         /// 房间信息更新
         /// </summary>
         RoomChange,
+
+        /// <summary>
+        /// 指定观众禁言
+        /// </summary>
+        RoomBlock,
+
+        /// <summary>
+        /// 超管警告或切断
+        /// </summary>
+        WaringOrCutOff,
+
+        /// <summary>
+        /// 开始直播
+        /// </summary>
+        StartLive,
+
+        /// <summary>
+        /// 看过直播的人数变化(代替人气值)
+        /// </summary>
+        WatchedChange,
+
+        /// <summary>
+        /// 红包抽奖开始
+        /// </summary>
+        RedPocketLotteryStart,
+
+        /// <summary>
+        /// 红包抽奖赢家
+        /// </summary>
+        RedPocketLotteryWinner,
     }
 }

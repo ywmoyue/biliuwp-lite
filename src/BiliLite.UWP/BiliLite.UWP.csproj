@@ -137,7 +137,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Models\Common\Anime\ISeasonItem.cs" />
+    <Compile Include="Models\Common\Live\InteractWordModel.cs" />
     <Compile Include="Models\Common\Live\LiveMessageHandleActionsMap.cs" />
+    <Compile Include="Models\Common\Live\LiveRoomEndRedPocketLotteryInfoModel.cs" />
+    <Compile Include="Models\Common\Live\LiveRoomRedPocketLotteryInfoModel.cs" />
+    <Compile Include="Models\Common\Live\RoomBlockMsgModel.cs" />
+    <Compile Include="Models\Common\Live\WarningOrCutOffMsgModel.cs" />
     <Compile Include="Models\Common\Player\DefaultPlayerModeOptions.cs" />
     <Compile Include="Models\Common\Player\LivePlayerMode.cs" />
     <Compile Include="Models\Common\Player\PlayerConfig.cs" />
@@ -220,13 +225,12 @@
     <Compile Include="Player\States\PlayStates\StopPlayState.cs" />
     <Compile Include="Services\WbiKeyService.cs" />
     <Compile Include="ViewModels\Live\LiveDetailPageViewModel.cs" />
+    <Compile Include="ViewModels\Live\LiveRoomLotteryViewModel.cs" />
     <Compile Include="ViewModels\Live\SuperChatMsgViewModel.cs" />
-    <Compile Include="Models\Common\Live\WelcomeMsgModel.cs" />
     <Compile Include="Models\Common\User\HistoryCursor.cs" />
     <Compile Include="Models\Common\User\UserHistory.cs" />
     <Compile Include="Models\Common\User\UserHistoryItem.cs" />
     <Compile Include="Models\Common\User\UserHistoryItemHistory.cs" />
-    <Compile Include="ViewModels\Live\LiveRoomAnchorLotteryViewModel.cs" />
     <Compile Include="Models\Common\Live\LiveRoomGiftItem.cs" />
     <Compile Include="Models\Common\Live\LiveRoomGuardInfoModel.cs" />
     <Compile Include="Models\Common\Live\LiveRoomInfoModel.cs" />

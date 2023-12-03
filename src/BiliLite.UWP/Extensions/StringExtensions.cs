@@ -79,7 +79,7 @@ namespace BiliLite.Extensions
         /// <param name="txt"></param>
         /// <param name="emote"></param>
         /// <returns></returns>
-        public static RichTextBlock ToRichTextBlock(this string txt, JObject emote, bool isLive = false)
+        public static RichTextBlock ToRichTextBlock(this string txt, JObject emote, bool isLive = false, string color = null, string fontWeight = "Normal")
         {
             var input = txt;
             try
@@ -105,11 +105,14 @@ namespace BiliLite.Extensions
                     if (!isLive) { input = HandelVideoID(input); }
 
                     //生成xaml
-                    var xaml = string.Format(@"<RichTextBlock HorizontalAlignment=""Stretch"" TextWrapping=""Wrap""  xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+                    var xaml = string.Format(@"<RichTextBlock HorizontalAlignment=""Stretch"" xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
                                                xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"" xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
-                                               xmlns:mc = ""http://schemas.openxmlformats.org/markup-compatibility/2006"" LineHeight=""{1}"">
+                                               xmlns:mc = ""http://schemas.openxmlformats.org/markup-compatibility/2006"" LineHeight=""{1}"" {2} {3}>
                                                <Paragraph>{0}</Paragraph>
-                                               </RichTextBlock>", input, isLive ? 22 : 20);
+                                               </RichTextBlock>", input, 
+                                                                  isLive ? 22 : 20,
+                                                                  color == null ? "" : $"Foreground=\"{color}\"",
+                                                                  $"FontWeight=\"{fontWeight}\"");
                     var p = (RichTextBlock)XamlReader.Load(xaml);
                     return p;
                 }
@@ -340,6 +343,9 @@ namespace BiliLite.Extensions
             return input;
         }
 
+        /// <summary>
+        /// 处理直播黄豆表情
+        /// </summary>
         private static string HandleLiveEmoji(string input, JObject emotes)
         {
             if (emotes == null) return input;
@@ -349,7 +355,7 @@ namespace BiliLite.Extensions
 
                 if (!emotes.TryGetValue(emojiCode, out var emote)) continue;
                 var replacement = string.Format(
-                    @"<InlineUIContainer><Border  Margin=""2 -4 2 -4""><Image Source=""{0}"" Width=""{1}"" Height=""{1}"" /></Border></InlineUIContainer>",
+                    @"<InlineUIContainer><Border  Margin=""2 0 2 -4""><Image Source=""{0}"" Width=""{1}"" Height=""{1}"" /></Border></InlineUIContainer>",
                     emote["url"], emote["width"], emote["height"]);
 
                 input = input.Replace(emojiCode, replacement);

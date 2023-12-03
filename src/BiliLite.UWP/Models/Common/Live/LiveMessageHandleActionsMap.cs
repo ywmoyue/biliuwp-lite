@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BiliLite.Modules.Live;
 using Windows.UI.Xaml;
 using BiliLite.ViewModels.Live;
 using Newtonsoft.Json;
+using BiliLite.Extensions;
+using BiliLite.Services;
 
 namespace BiliLite.Models.Common.Live
 {
@@ -15,19 +16,23 @@ namespace BiliLite.Models.Common.Live
             Map = new Dictionary<MessageType, Action<LiveRoomViewModel, object>>
                 {
                     { MessageType.ConnectSuccess, ConnectSuccess },
-                    { MessageType.Online, Online },
+                    //{ MessageType.Online, Online },
                     { MessageType.Danmu, Danmu },
                     { MessageType.Gift, Gift },
-                    { MessageType.Welcome, Welcome },
-                    { MessageType.WelcomeGuard, WelcomeGuard },
-                    { MessageType.SystemMsg, SystemMsg },
+                    { MessageType.InteractWord, InteractWord },
+                    //{ MessageType.SystemMsg, SystemMsg },
                     { MessageType.SuperChat, SuperChat },
                     { MessageType.SuperChatJpn, SuperChat },
                     { MessageType.AnchorLotteryStart, AnchorLotteryStart },
-                    { MessageType.AnchorLotteryEnd, AnchorLotteryEnd },
                     { MessageType.AnchorLotteryAward, AnchorLotteryAward },
                     { MessageType.GuardBuy, GuardBuy },
                     { MessageType.RoomChange, RoomChange },
+                    { MessageType.RoomBlock, RoomBlock },
+                    { MessageType.WaringOrCutOff, WaringOrCutOff },
+                    { MessageType.StartLive, StartLive },
+                    { MessageType.WatchedChange, WatchedChange },
+                    { MessageType.RedPocketLotteryStart, RedPocketLotteryStart},
+                    { MessageType.RedPocketLotteryWinner, RedPocketLotteryWinner},
                 };
         }
 
@@ -35,7 +40,11 @@ namespace BiliLite.Models.Common.Live
 
         public event EventHandler<DanmuMsgModel> AddNewDanmu;
 
-        public event EventHandler<LiveRoomEndAnchorLotteryInfoModel> LotteryEnd;
+        public event EventHandler<LiveRoomEndAnchorLotteryInfoModel> AnchorLotteryEnd;
+
+        public event EventHandler<LiveRoomEndRedPocketLotteryInfoModel> RedPocketLotteryEnd;
+
+        public event EventHandler<LiveAnchorInfoLiveInfoModel> AnchorInfoLiveInfo;
 
         private void ConnectSuccess(LiveRoomViewModel viewModel, object message)
         {
@@ -45,18 +54,17 @@ namespace BiliLite.Models.Common.Live
             });
         }
 
-        private void Online(LiveRoomViewModel viewModel, object message)
+        private void WatchedChange(LiveRoomViewModel viewModel, object message)
         {
-            viewModel.Online = (int)message;
+            viewModel.WatchedNum = (string)message;
         }
 
         private void Danmu(LiveRoomViewModel viewModel, object message)
         {
             var m = message as DanmuMsgModel;
-            m.ShowUserLevel = Visibility.Visible;
             if (viewModel.Messages.Count >= viewModel.CleanCount)
             {
-                viewModel.Messages.Clear();
+                viewModel.Messages.RemoveAt(0);
             }
             viewModel.Messages.Add(m);
             AddNewDanmu?.Invoke(null, m);
@@ -83,33 +91,44 @@ namespace BiliLite.Models.Common.Live
             }
         }
 
-        private void Welcome(LiveRoomViewModel viewModel, object message)
+        private void InteractWord(LiveRoomViewModel viewModel, object message)
         {
-            var info = message as WelcomeMsgModel;
+            var info = message as InteractWordModel;
             if (!viewModel.ReceiveWelcomeMsg) return;
-            viewModel.Messages.Add(new DanmuMsgModel()
+            var msg = new DanmuMsgModel()
             {
                 UserName = info.UserName,
-                UserNameColor = "#FFFF69B4",//Colors.HotPink
-                Text = " 进入直播间"
-            });
-        }
+                // UserNameColor = "#FFFF69B4",//Colors.HotPink
+                RichText = info.MsgType == 1 ? "进入直播间".ToRichTextBlock(null, color: "Gray") : "关注了主播".ToRichTextBlock(null, color: "Gray")
+            };
 
-        private void WelcomeGuard(LiveRoomViewModel viewModel, object message)
-        {
-            var info = message as WelcomeMsgModel;
-            if (!viewModel.ReceiveWelcomeMsg) return;
-            viewModel.Messages.Add(new DanmuMsgModel()
+            if (info.ShowMedal == Visibility.Visible)
             {
-                UserName = info.UserName,
-                UserNameColor = "#FFFF69B4",//Colors.HotPink
-                Text = " (舰长)进入直播间"
-            });
+                msg.MedalColor = info.MedalColor;
+                msg.MedalName = info.MedalName;
+                msg.MedalLevel = info.MedalLevel;
+                msg.ShowMedal = info.ShowMedal;
+            }
+
+            viewModel.Messages.Add(msg);
         }
 
-        private void SystemMsg(LiveRoomViewModel viewModel, object message)
-        {
-        }
+        // 已被b站弃用
+        //private void WelcomeGuard(LiveRoomViewModel viewModel, object message)
+        //{
+        //    var info = message as InteractWordModel;
+        //    if (!viewModel.ReceiveWelcomeMsg) return;
+        //    viewModel.Messages.Add(new DanmuMsgModel()
+        //    {
+        //        UserName = info.UserName,
+        //        UserNameColor = "#FFFF69B4",//Colors.HotPink
+        //        RichText = " (舰长)进入直播间".ToRichTextBlock(null)
+        //    });
+        //}
+
+        //private void SystemMsg(LiveRoomViewModel viewModel, object message)
+        //{
+        //}
 
         private void SuperChat(LiveRoomViewModel viewModel, object message)
         {
@@ -120,29 +139,48 @@ namespace BiliLite.Models.Common.Live
         {
             if (!viewModel.ReceiveLotteryMsg) return;
             var info = message.ToString();
-            viewModel.AnchorLotteryViewModel.SetLotteryInfo(JsonConvert.DeserializeObject<LiveRoomAnchorLotteryInfoModel>(info));
+            viewModel.LotteryViewModel.SetAnchorLotteryInfo(JsonConvert.DeserializeObject<LiveRoomAnchorLotteryInfoModel>(info));
+            
         }
 
-        private void AnchorLotteryEnd(LiveRoomViewModel viewModel, object message)
+        private void RedPocketLotteryStart(LiveRoomViewModel viewModel, object message) 
         {
+            if (!viewModel.ReceiveLotteryMsg) return;
+            var info = message.ToString();
+            viewModel.LotteryViewModel.SetRedPocketLotteryInfo(JsonConvert.DeserializeObject<LiveRoomRedPocketLotteryInfoModel>(info));
+
+            viewModel.ShowRedPocketLotteryWinnerList = false;
+            viewModel.RedPocketSendDanmuBtnText = viewModel.Attention ? "一键发送弹幕" : "一键关注并发送弹幕";
+        }
+
+        private void RedPocketLotteryWinner(LiveRoomViewModel viewModel, object message)
+        {
+            if (!viewModel.ReceiveLotteryMsg) return;
+            var info = JsonConvert.DeserializeObject<LiveRoomEndRedPocketLotteryInfoModel>(message.ToString());
+            RedPocketLotteryEnd?.Invoke(this, info);
         }
 
         private void AnchorLotteryAward(LiveRoomViewModel viewModel, object message)
         {
             if (!viewModel.ReceiveLotteryMsg) return;
             var info = JsonConvert.DeserializeObject<LiveRoomEndAnchorLotteryInfoModel>(message.ToString());
-            LotteryEnd?.Invoke(this, info);
+            AnchorLotteryEnd?.Invoke(this, info);
         }
 
         private void GuardBuy(LiveRoomViewModel viewModel, object message)
         {
             var info = message as GuardBuyMsgModel;
-            viewModel.Messages.Add(new DanmuMsgModel()
+            var msg = new DanmuMsgModel
             {
                 UserName = info.UserName,
                 UserNameColor = "#FFFF69B4",//Colors.HotPink
-                Text = $"成为了{info.GiftName}"
-            });
+                RichText = $"成为了主播的{info.GiftName}🎉".ToRichTextBlock(null, fontWeight: "Medium"),
+                UserCaptain = info.GiftName,
+                ShowCaptain = Visibility.Visible,
+                UserNameFontWeight = "SemiBold", // 字重调大, 防止与进场弹幕混淆
+            };
+
+            viewModel.Messages.Add(msg);
             // 刷新舰队列表
             _ = viewModel.GetGuardList();
         }
@@ -151,6 +189,48 @@ namespace BiliLite.Models.Common.Live
         {
             var info = message as RoomChangeMsgModel;
             viewModel.RoomTitle = info.Title;
+        }
+
+        private void RoomBlock(LiveRoomViewModel viewModel, object message)
+        {
+            var info = message as RoomBlockMsgModel;
+            var msg = new DanmuMsgModel()
+            {
+                UserName = info.UserName,
+                RichText = "被直播间禁言🚫".ToRichTextBlock(null, fontWeight: "Medium"), // 字重调大, 防止与进场弹幕混淆)
+                UserNameFontWeight = "SemiBold",
+            };
+
+            viewModel.Messages.Add(msg);
+        }
+
+        private void WaringOrCutOff(LiveRoomViewModel viewModel, object message)
+        {
+            var info = message as WarningOrCutOffMsgModel;
+            var msg = new DanmuMsgModel()
+            {
+                UserName = info.Command switch
+                {
+                    "WARNING" => "⛔直播间警告",
+                    "CUT_OFF" => "⛔直播间切断",
+                    _ => null,
+                },
+                UserNameColor = "FFFF0000",
+                RichText = info.Message.ToRichTextBlock(null, color: "Red", fontWeight: "Medium"), // 字重调大, 防止与进场弹幕混淆
+                UserNameFontWeight = "SemiBold",
+            };
+
+            viewModel.Messages.Add(msg);
+        }
+
+        private async void StartLive(LiveRoomViewModel viewModel, object room_Id)
+        {
+            await System.Threading.Tasks.Task.Delay(TimeSpan.FromSeconds(3)); // 挂起三秒再获取, 否则很大可能一直卡加载而不缓冲
+            viewModel.GetPlayUrls(room_Id.ToInt32(), SettingService.GetValue(SettingConstants.Live.DEFAULT_QUALITY, 10000)).RunWithoutAwait();
+            viewModel.Messages.Add(new DanmuMsgModel()
+            {
+                UserName = $"{room_Id} 直播间开始直播",
+            });
         }
     }
 }

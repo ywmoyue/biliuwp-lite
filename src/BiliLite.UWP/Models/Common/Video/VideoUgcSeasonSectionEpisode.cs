@@ -1,9 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using BiliLite.Models.Common.Video.Detail;
+using Newtonsoft.Json;
 
 namespace BiliLite.Models.Common.Video
 {
     public class VideoUgcSeasonSectionEpisode
     {
+        private string m_cover;
+
         public long Id { get; set; }
 
         public string Aid { get; set; }
@@ -12,7 +15,11 @@ namespace BiliLite.Models.Common.Video
 
         public string Title { get; set; }
 
-        public string Cover { get; set; }
+        public string Cover
+        {
+            get => m_cover ?? Arc.Pic;
+            set => m_cover = value;
+        }
 
         [JsonProperty("cover_right_text")]
         public string CovverRightText { get; set; }
@@ -34,5 +41,8 @@ namespace BiliLite.Models.Common.Video
 
         [JsonProperty("first_frame")]
         public string FirstFrame { get; set; }
+
+        [JsonProperty("arc")]
+        public VideoDetailModel Arc { get; set; } // 简单复用一下
     }
 }
