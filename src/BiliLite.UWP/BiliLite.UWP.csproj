@@ -176,6 +176,7 @@
     <Compile Include="Models\Common\Live\GiftMsgModel.cs" />
     <Compile Include="Models\Common\Live\GuardBuyMsgModel.cs" />
     <Compile Include="Models\Common\Live\RoomChangeMsgModel.cs" />
+    <Compile Include="Models\Common\WbiKey.cs" />
     <Compile Include="Models\Exceptions\PlayerException.cs" />
     <Compile Include="Models\Requests\Api\BaseApi.cs" />
     <Compile Include="Player\Controllers\BasePlayerController.cs" />
@@ -217,6 +218,7 @@
     <Compile Include="Player\States\PlayStates\PlayingPlayState.cs" />
     <Compile Include="Player\States\PlayStates\PlayStateHandler.cs" />
     <Compile Include="Player\States\PlayStates\StopPlayState.cs" />
+    <Compile Include="Services\WbiKeyService.cs" />
     <Compile Include="ViewModels\Live\LiveDetailPageViewModel.cs" />
     <Compile Include="ViewModels\Live\SuperChatMsgViewModel.cs" />
     <Compile Include="Models\Common\Live\WelcomeMsgModel.cs" />

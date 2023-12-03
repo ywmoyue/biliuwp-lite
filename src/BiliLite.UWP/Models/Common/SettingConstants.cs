@@ -151,6 +151,26 @@ namespace BiliLite.Models.Common
             /// 默认登录用AppKey
             /// </summary>
             public static ApiKeyInfo DefaultLoginAppKeySecret = ApiHelper.AndroidKey;
+
+            /// <summary>
+            /// Wbi令牌ImgKey参数
+            /// </summary>
+            public const string WBI_IMG_KEY = "WbiImgKey";
+
+            /// <summary>
+            /// Wbi令牌SubKey参数
+            /// </summary>
+            public const string WBI_SUB_KEY = "WbiSubKey";
+
+            /// <summary>
+            /// Wbi令牌参数获取时间（unix时间戳）
+            /// </summary>
+            public const string WBI_KEY_TIME = "WbiKeyTime";
+
+            /// <summary>
+            /// Wbi令牌参数刷新时间（单位分钟，暂定2小时）
+            /// </summary>
+            public const int WBI_KEY_REFRESH_TIME = 120;
         }
 
         public class VideoDanmaku
