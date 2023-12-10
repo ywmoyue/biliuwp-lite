@@ -13,6 +13,8 @@ using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Services;
+using BiliLite.Services.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite.Modules.User
 {
@@ -600,15 +602,10 @@ namespace BiliLite.Modules.User
                 if (result.success)
                 {
                     qrAuthInfo = result.data;
-                    ZXing.BarcodeWriter barcodeWriter = new ZXing.BarcodeWriter();
-                    barcodeWriter.Format = ZXing.BarcodeFormat.QR_CODE;
-                    barcodeWriter.Options = new ZXing.Common.EncodingOptions()
-                    {
-                        Margin = 1,
-                        Height = 200,
-                        Width = 200
-                    };
-                    var img = barcodeWriter.Write(qrAuthInfo.url);
+
+                    var qrCodeService = App.ServiceProvider.GetRequiredService<IQrCodeService>();
+                    var img = await qrCodeService.GenerateQrCode(qrAuthInfo.url);
+
                     QRImageSource = img;
                     qrTimer = new Timer();
                     qrTimer.Interval = 3000;

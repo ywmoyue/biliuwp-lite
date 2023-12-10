@@ -22,6 +22,8 @@ using BiliLite.Models.Common.Video;
 using BiliLite.Models.Common.Video.Detail;
 using BiliLite.Models.Download;
 using BiliLite.ViewModels.Video;
+using BiliLite.Services.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -182,7 +184,7 @@ namespace BiliLite.Pages
 
             contentDesc.Content = desc;
             ChangeTitle(m_viewModel.VideoInfo.Title);
-            CreateQR();
+            await CreateQR();
             if (!string.IsNullOrEmpty(m_viewModel.VideoInfo.RedirectUrl))
             {
                 var result = await MessageCenter.HandelSeasonID(m_viewModel.VideoInfo.RedirectUrl);
@@ -275,27 +277,19 @@ namespace BiliLite.Pages
             pivot.Items.Insert(0, element);
         }
 
-        private void CreateQR()
+        private async Task CreateQR()
         {
             try
             {
-                ZXing.BarcodeWriter barcodeWriter = new ZXing.BarcodeWriter();
-                barcodeWriter.Format = ZXing.BarcodeFormat.QR_CODE;
-                barcodeWriter.Options = new ZXing.Common.EncodingOptions()
-                {
-                    Margin = 1,
-                    Height = 200,
-                    Width = 200
-                };
-                var data = barcodeWriter.Write(m_viewModel.VideoInfo.ShortLink);
-                imgQR.Source = data;
+                var qrCodeService = App.ServiceProvider.GetRequiredService<IQrCodeService>();
+                var img = await qrCodeService.GenerateQrCode(m_viewModel.VideoInfo.ShortLink);
+                imgQR.Source = img;
             }
             catch (Exception ex)
             {
                 logger.Log("创建二维码失败avid" + avid, LogType.Error, ex);
                 Notify.ShowMessageToast("创建二维码失败");
             }
-
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)

@@ -68,8 +68,8 @@ namespace BiliLite.ViewModels.Live
 
         private void LoadDataCore(JObject data)
         {
-            var list = JsonConvert.DeserializeObject<List<LiveRoomRankItemModel>>(data["data"]["list"]
-                .ToString());
+            var position = RankType == "fans" ? data["data"]["list"] : data["data"]["item"];
+            var list = JsonConvert.DeserializeObject<List<LiveRoomRankItemModel>>(position.ToString());
             if (list != null)
             {
                 foreach (var item in list)
@@ -77,21 +77,11 @@ namespace BiliLite.ViewModels.Live
                     Items.Add(item);
                 }
             }
-
-            if (RankType != "fans")
-            {
-                Next = data["data"]["next_offset"].ToInt32();
-                CanLoadMore = Next != 0;
-            }
-            else
-            {
-                var total = data["data"]["total_page"].ToInt32();
-                if (Page < total)
-                {
-                    CanLoadMore = true;
-                    Page++;
-                }
-            }
+            if (RankType != "fans") return;
+            var total = data["data"]["total_page"].ToInt32();
+            if (Page >= total) return;
+            CanLoadMore = true;
+            Page++;
         }
 
         #endregion
@@ -113,11 +103,9 @@ namespace BiliLite.ViewModels.Live
             {
                 Loading = true;
                 CanLoadMore = false;
-                var api = m_liveRoomApi.FansList(Uid, RoomID, Page);
-                if (RankType != "fans")
-                {
-                    api = m_liveRoomApi.RoomRankList(Uid, RoomID, RankType, Next);
-                }
+                var api = RankType == "fans" ? 
+                    m_liveRoomApi.FansList(Uid, RoomID, Page) :
+                    m_liveRoomApi.RoomRankList(Uid, RoomID, "online_rank", "contribution_rank");
 
                 var result = await api.Request();
                 if (!result.status)

@@ -29,9 +29,14 @@ namespace BiliLite.Models.Common.Live
         public string UserName { get; set; }
 
         /// <summary>
-        /// 用户名颜色,默认灰色
+        /// 用户名颜色, 默认灰色
         /// </summary>
         public string UserNameColor { get; set; } = "#FF808080";
+
+        /// <summary>
+        /// 用户名字重, 默认Normal
+        /// </summary>
+        public string UserNameFontWeight { get; set; } = "Normal";
 
         ///// <summary>
         ///// 等级
@@ -81,12 +86,21 @@ namespace BiliLite.Models.Common.Live
         /// <summary>
         /// 用户上的舰的图片
         /// </summary>
-        public string UserCaptainImage {  get; set; }
+        public string UserCaptainImage 
+        {
+             get => UserCaptain switch
+                    {
+                        "舰长" => "/Assets/Live/ic_live_guard_3.png",
+                        "提督" => "/Assets/Live/ic_live_guard_2.png",
+                        "总督" => "/Assets/Live/ic_live_guard_1.png",
+                        _ => null,
+                    };
+        }
 
         /// <summary>
         /// 黄豆表情
         /// </summary>
-        public JContainer Emoji {  get; set; }
+        public JObject Emoji {  get; set; }
 
         /// <summary>
         /// 各类大表情

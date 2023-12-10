@@ -13,6 +13,7 @@ namespace BiliLite
             services.AddViewModels();
 
             services.AddSingleton<CookieService>();
+            services.AddQrCodeService();
             
             services.AddSingleton<GrpcService>();
         }

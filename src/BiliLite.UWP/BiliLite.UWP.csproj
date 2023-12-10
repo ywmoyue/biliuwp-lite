@@ -33,7 +33,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;X86</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -58,7 +58,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\ARM\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;ARM</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>ARM</PlatformTarget>
@@ -83,7 +83,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\ARM64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;ARM64</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>ARM64</PlatformTarget>
@@ -109,7 +109,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;X64</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -136,8 +136,14 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Extensions\QrCodeExtensions.cs" />
     <Compile Include="Models\Common\Anime\ISeasonItem.cs" />
+    <Compile Include="Models\Common\Live\InteractWordModel.cs" />
     <Compile Include="Models\Common\Live\LiveMessageHandleActionsMap.cs" />
+    <Compile Include="Models\Common\Live\LiveRoomEndRedPocketLotteryInfoModel.cs" />
+    <Compile Include="Models\Common\Live\LiveRoomRedPocketLotteryInfoModel.cs" />
+    <Compile Include="Models\Common\Live\RoomBlockMsgModel.cs" />
+    <Compile Include="Models\Common\Live\WarningOrCutOffMsgModel.cs" />
     <Compile Include="Models\Common\Player\DefaultPlayerModeOptions.cs" />
     <Compile Include="Models\Common\Player\LivePlayerMode.cs" />
     <Compile Include="Models\Common\Player\PlayerConfig.cs" />
@@ -176,6 +182,7 @@
     <Compile Include="Models\Common\Live\GiftMsgModel.cs" />
     <Compile Include="Models\Common\Live\GuardBuyMsgModel.cs" />
     <Compile Include="Models\Common\Live\RoomChangeMsgModel.cs" />
+    <Compile Include="Models\Common\WbiKey.cs" />
     <Compile Include="Models\Exceptions\PlayerException.cs" />
     <Compile Include="Models\Requests\Api\BaseApi.cs" />
     <Compile Include="Player\Controllers\BasePlayerController.cs" />
@@ -217,14 +224,17 @@
     <Compile Include="Player\States\PlayStates\PlayingPlayState.cs" />
     <Compile Include="Player\States\PlayStates\PlayStateHandler.cs" />
     <Compile Include="Player\States\PlayStates\StopPlayState.cs" />
+    <Compile Include="Services\Interfaces\IQrCodeService.cs" />
+    <Compile Include="Services\QrCoderQrCodeService.cs" />
+    <Compile Include="Services\WbiKeyService.cs" />
+    <Compile Include="Services\ZXingQrCodeService.cs" />
     <Compile Include="ViewModels\Live\LiveDetailPageViewModel.cs" />
+    <Compile Include="ViewModels\Live\LiveRoomLotteryViewModel.cs" />
     <Compile Include="ViewModels\Live\SuperChatMsgViewModel.cs" />
-    <Compile Include="Models\Common\Live\WelcomeMsgModel.cs" />
     <Compile Include="Models\Common\User\HistoryCursor.cs" />
     <Compile Include="Models\Common\User\UserHistory.cs" />
     <Compile Include="Models\Common\User\UserHistoryItem.cs" />
     <Compile Include="Models\Common\User\UserHistoryItemHistory.cs" />
-    <Compile Include="ViewModels\Live\LiveRoomAnchorLotteryViewModel.cs" />
     <Compile Include="Models\Common\Live\LiveRoomGiftItem.cs" />
     <Compile Include="Models\Common\Live\LiveRoomGuardInfoModel.cs" />
     <Compile Include="Models\Common\Live\LiveRoomInfoModel.cs" />
@@ -1221,6 +1231,9 @@
     </PackageReference>
     <PackageReference Include="PropertyChanged.Fody">
       <Version>4.1.0</Version>
+    </PackageReference>
+    <PackageReference Include="QRCoder">
+      <Version>1.4.3</Version>
     </PackageReference>
     <PackageReference Include="RestSharp">
       <Version>107.3.0</Version>

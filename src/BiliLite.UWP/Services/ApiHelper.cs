@@ -59,18 +59,6 @@ namespace BiliLite.Services
             36, 20, 34, 44, 52
         };
 
-        private static async Task<(string, string)> GetWbiKeys()
-        {
-            // 获取最新的 img_key 和 sub_key
-            var response = await new AccountApi().Nav().Request();
-            var result = await response.GetData<WebInterfaceNav>();
-            var imgUrl = result.data.WbiImg.ImgUrl;
-            var subUrl = result.data.WbiImg.SubUrl;
-            var imgKey = imgUrl.Substring(imgUrl.LastIndexOf('/') + 1).Split('.')[0];
-            var subKey = subUrl.Substring(subUrl.LastIndexOf('/') + 1).Split('.')[0];
-            return (imgKey, subKey);
-        }
-
         private static string GetMixinKey(string origin)
         {
             // 对 imgKey 和 subKey 进行字符顺序打乱编码
@@ -79,7 +67,9 @@ namespace BiliLite.Services
 
         public static async Task<string> GetWbiSign(string url)
         {
-            var (imgKey, subKey) = await GetWbiKeys();
+            var wbiKeys = await new WbiKeyService().GetWbiKeys();
+            var imgKey = wbiKeys.ImgKey;
+            var subKey = wbiKeys.SubKey;
 
             // 为请求参数进行 wbi 签名
             var mixinKey = GetMixinKey(imgKey + subKey);
