@@ -1,7 +1,7 @@
 {
-    "version": "4.6.22",
-    "version_num": 40622,
-    "version_desc": "更新内容:\r\n\r\n- 更换ghproxy地址\r\n\r\n- 历史记录现在有对应的类型和tag显示\r\n\r\n- 更改了历史记录页面的元素显示\r\n\r\n- 直播右侧弹幕栏显示元素变更\r\n\r\n- 修复首页番剧页番剧推荐及热门番剧点击无效\r\n\r\n- 修复修复直播页数据获取失败\r\n\r\n- 修复部分转发视频动态只有文字的问题\r\n\r\n- 修复部分动态评论区无法 加载的问题\r\n\r\n- 修复评论富文本转换\r\n\r\n- 修复历史记录页面打不开除了普通视频外的内容\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+    "version": "4.6.23",
+    "version_num": 40623,
+    "version_desc": "更新内容:\r\n\r\n- 变更及新增直播间部分功能 \r\n\r\n- 缓存Wbi令牌避免被风控\r\n\r\n- 修复ARM版本二维码扫码无反应\r\n\r\n- 修复直播间部分功能 \r\n\r\n- 修复二维码登录下无播放列表的问题\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
     "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
     "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
