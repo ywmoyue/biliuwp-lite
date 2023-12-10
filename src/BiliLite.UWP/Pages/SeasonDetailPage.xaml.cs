@@ -22,6 +22,8 @@ using BiliLite.Models.Common.Season;
 using BiliLite.Models.Common.Video;
 using BiliLite.Models.Download;
 using BiliLite.ViewModels.Season;
+using BiliLite.Services.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -134,7 +136,7 @@ namespace BiliLite.Pages
                 seasonReviewVM.MediaID = m_viewModel.Detail.MediaId;
 
                 InitializePlayInfo();
-                CreateQR();
+                await CreateQR();
 
             }
         }
@@ -298,7 +300,8 @@ namespace BiliLite.Pages
             }
         }
         bool changedFlag = false;
-        private void PlayerControl_ChangeEpisodeEvent(object sender, int e)
+
+        private async void PlayerControl_ChangeEpisodeEvent(object sender, int e)
         {
             changedFlag = true;
             var aid = "";
@@ -315,7 +318,7 @@ namespace BiliLite.Pages
                 aid = m_viewModel.Episodes[e].Aid;
             }
 
-            CreateQR();
+            await CreateQR();
             comment.LoadComment(new LoadCommentInfo()
             {
                 CommentMode = (int)CommentApi.CommentType.Video,
@@ -325,7 +328,7 @@ namespace BiliLite.Pages
             changedFlag = false;
         }
 
-        private void listEpisode_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void listEpisode_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (changedFlag || listEpisode.SelectedIndex == -1)
             {
@@ -345,9 +348,10 @@ namespace BiliLite.Pages
                 CommentSort = CommentApi.CommentSort.Hot,
                 Oid = m_viewModel.Episodes[listEpisode.SelectedIndex].Aid
             });
-            CreateQR();
+            await CreateQR();
         }
-        private void listPreview_SelectionChanged(object sender, SelectionChangedEventArgs e)
+
+        private async void listPreview_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (changedFlag || listPreview.SelectedIndex == -1)
             {
@@ -367,24 +371,16 @@ namespace BiliLite.Pages
                 CommentSort = CommentApi.CommentSort.Hot,
                 Oid = m_viewModel.Episodes[listPreview.SelectedIndex].Aid
             });
-            CreateQR();
+            await CreateQR();
         }
 
-
-        private void CreateQR()
+        private async Task CreateQR()
         {
             try
             {
-                ZXing.BarcodeWriter barcodeWriter = new ZXing.BarcodeWriter();
-                barcodeWriter.Format = ZXing.BarcodeFormat.QR_CODE;
-                barcodeWriter.Options = new ZXing.Common.EncodingOptions()
-                {
-                    Margin = 1,
-                    Height = 200,
-                    Width = 200
-                };
-                var data = barcodeWriter.Write("https://b23.tv/ep" + ep_id);
-                imgQR.Source = data;
+                var qrCodeService = App.ServiceProvider.GetRequiredService<IQrCodeService>();
+                var img = await qrCodeService.GenerateQrCode("https://b23.tv/ep" + ep_id);
+                imgQR.Source = img;
             }
             catch (Exception ex)
             {
