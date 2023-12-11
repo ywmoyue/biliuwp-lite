@@ -140,7 +140,6 @@ namespace BiliLite.Models.Common.Live
             if (!viewModel.ReceiveLotteryMsg) return;
             var info = message.ToString();
             viewModel.LotteryViewModel.SetAnchorLotteryInfo(JsonConvert.DeserializeObject<LiveRoomAnchorLotteryInfoModel>(info));
-            
         }
 
         private void RedPocketLotteryStart(LiveRoomViewModel viewModel, object message) 
@@ -225,7 +224,7 @@ namespace BiliLite.Models.Common.Live
 
         private async void StartLive(LiveRoomViewModel viewModel, object room_Id)
         {
-            await System.Threading.Tasks.Task.Delay(TimeSpan.FromSeconds(3)); // 挂起三秒再获取, 否则很大可能一直卡加载而不缓冲
+            await System.Threading.Tasks.Task.Delay(TimeSpan.FromSeconds(5)); // 挂起五秒再获取, 否则很大可能一直卡加载而不缓冲
             viewModel.GetPlayUrls(room_Id.ToInt32(), SettingService.GetValue(SettingConstants.Live.DEFAULT_QUALITY, 10000)).RunWithoutAwait();
             viewModel.Messages.Add(new DanmuMsgModel()
             {

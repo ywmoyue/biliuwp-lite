@@ -83,6 +83,7 @@ namespace BiliLite.ViewModels.Live
                     AnchorLotteryTimer.Stop();
                     AnchorLotteryShow = false;
                     AnchorLotteryInfo = null;
+                    AnchorLotteryDownTime = "--:--";
                     return;
                 }
                 
@@ -116,6 +117,7 @@ namespace BiliLite.ViewModels.Live
                     RedPocketLotteryInfo = null;
                     RedPocketLotteryTimer.Stop();
                     RedPocketLotteryShow = false;
+                    RedPocketLotteryDownTime = "--:--";
                     return;
                 }
 
@@ -175,6 +177,7 @@ namespace BiliLite.ViewModels.Live
         public void SetAnchorLotteryInfo(LiveRoomAnchorLotteryInfoModel info)
         {
             AnchorLotteryInfo = info;
+            AnchorLotteryStart?.Invoke(this, AnchorLotteryInfo);
             AnchorLotteryShow = true;
             AnchorLotteryTimer.Start();
         }
