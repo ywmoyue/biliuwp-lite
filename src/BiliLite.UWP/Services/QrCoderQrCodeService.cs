@@ -10,8 +10,12 @@ namespace BiliLite.Services
 {
     public class QrCoderQrCodeService : IQrCodeService
     {
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+
         public async Task<ImageSource> GenerateQrCode(string content, int size = 200)
         {
+            size /= 10;
+            _logger.Info($"[QrCoder]生成二维码：{content}");
             var qrGenerator = new QRCodeGenerator();
             var qrCodeData = qrGenerator.CreateQrCode(content, QRCodeGenerator.ECCLevel.Q);
 
