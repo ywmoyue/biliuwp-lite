@@ -39,6 +39,7 @@ namespace BiliLite.Pages
         readonly UserDynamicViewModel m_userDynamicViewModel;
         UserDetailVM userDetailVM;
         UserSubmitVideoViewModel m_userSubmitVideoViewModel;
+        UserSubmitCollectionViewModel m_userSubmitCollectionViewModel;
         UserSubmitArticleVM userSubmitArticleVM;
         UserFavlistVM userFavlistVM;
         UserFollowVM fansVM;
@@ -51,6 +52,7 @@ namespace BiliLite.Pages
             Title = "用户中心";
             userDetailVM = new Modules.User.UserDetailVM();
             m_userSubmitVideoViewModel = App.ServiceProvider.GetService<UserSubmitVideoViewModel>();
+            m_userSubmitCollectionViewModel = new UserSubmitCollectionViewModel();
             userSubmitArticleVM = new UserSubmitArticleVM();
             userFavlistVM = new UserFavlistVM();
             m_userDynamicViewModel = new UserDynamicViewModel();
@@ -133,6 +135,7 @@ namespace BiliLite.Pages
                 }
                 userDetailVM.mid = mid;
                 m_userSubmitVideoViewModel.Mid = mid;
+                m_userSubmitCollectionViewModel.Mid = mid;
                 userSubmitArticleVM.mid = mid;
                 userFavlistVM.mid = mid;
                 fansVM.mid = mid;
@@ -293,11 +296,15 @@ namespace BiliLite.Pages
             {
                 await userSubmitArticleVM.GetSubmitArticle();
             }
-            if (pivot.SelectedIndex == 3 && userFavlistVM.Items == null)
+            if (pivot.SelectedIndex == 3 && m_userSubmitCollectionViewModel.SubmitCollectionItems == null)
+            {
+                await m_userSubmitCollectionViewModel.GetSubmitCollection();
+            }
+            if (pivot.SelectedIndex == 4 && userFavlistVM.Items == null)
             {
                 await userFavlistVM.Get();
             }
-            if (pivot.SelectedIndex == 4 && followVM.Items == null)
+            if (pivot.SelectedIndex == 5 && followVM.Items == null)
             {
                 if (isSelf)
                 {
@@ -306,7 +313,7 @@ namespace BiliLite.Pages
 
                 await followVM.Get();
             }
-            if (pivot.SelectedIndex == 5 && fansVM.Items == null)
+            if (pivot.SelectedIndex == 6 && fansVM.Items == null)
             {
                 await fansVM.Get();
             }
@@ -322,6 +329,12 @@ namespace BiliLite.Pages
                 title = data.title,
                 parameters = "https://www.bilibili.com/read/cv" + data.id
             });
+        }
+
+        private async void SubmitCollection_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var data = e.ClickedItem as SubmitCollectionItemModel;
+            await MessageCenter.HandelUrl(data.Uri);
         }
 
         private void comArticleOrder_SelectionChanged(object sender, SelectionChangedEventArgs e)

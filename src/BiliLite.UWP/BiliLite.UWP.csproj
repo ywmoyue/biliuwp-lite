@@ -26,7 +26,7 @@
     <AppxBundle>Never</AppxBundle>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <PackageCertificateThumbprint>C4FA34A878A0528F84922932FEC6746BCBCA5CEA</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>1390A579B0B0B21AE8AAEFB9D5A141141F9A1D16</PackageCertificateThumbprint>
     <PackageCertificateKeyFile />
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
   </PropertyGroup>
@@ -183,6 +183,7 @@
     <Compile Include="Models\Common\Live\GiftMsgModel.cs" />
     <Compile Include="Models\Common\Live\GuardBuyMsgModel.cs" />
     <Compile Include="Models\Common\Live\RoomChangeMsgModel.cs" />
+    <Compile Include="Models\Common\User\SubmitCollectionItemModel.cs" />
     <Compile Include="Models\Common\WbiKey.cs" />
     <Compile Include="Models\Exceptions\PlayerException.cs" />
     <Compile Include="Models\Requests\Api\BaseApi.cs" />
@@ -353,6 +354,7 @@
     <Compile Include="ViewModels\Season\SeasonDetailUserStatusViewModel.cs" />
     <Compile Include="ViewModels\Comment\CommentContentViewModel.cs" />
     <Compile Include="ViewModels\Season\SeasonDetailViewModel.cs" />
+    <Compile Include="ViewModels\User\UserSubmitCollectionViewModel.cs" />
     <Compile Include="ViewModels\Video\DanmakuViewModel.cs" />
     <Compile Include="ViewModels\Video\VideoDetailReqUserViewModel.cs" />
     <Compile Include="ViewModels\Video\VideoDetailRelatesViewModel.cs" />
