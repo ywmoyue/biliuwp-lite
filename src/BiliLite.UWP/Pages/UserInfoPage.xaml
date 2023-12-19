@@ -430,11 +430,6 @@
                                                         </Border>
                                                     </Grid>
                                                 </Border>
-                                                <!--<StackPanel Grid.Column="1" Margin="4 0 0 0" VerticalAlignment="Stretch" >
-                                                    <TextBlock MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Title}"></TextBlock>
-
-                                                    <TextBlock VerticalAlignment="Bottom" Foreground="Gray" Margin="0 4 0 0">最后更新: <Run Text="{x:Bind Path=LatestUpdateTime,Converter={StaticResource time},ConverterParameter='ts'}"/></TextBlock>
-                                                </StackPanel>-->
                                                 <Grid Grid.Column="1">
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition Height="Auto"/>
