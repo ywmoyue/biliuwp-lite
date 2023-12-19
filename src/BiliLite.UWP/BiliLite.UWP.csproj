@@ -138,6 +138,7 @@
   <ItemGroup>
     <Compile Include="Extensions\QrCodeExtensions.cs" />
     <Compile Include="Models\Common\Anime\ISeasonItem.cs" />
+    <Compile Include="Models\Common\Live\DefaultPlayUrlSourceOptions.cs" />
     <Compile Include="Models\Common\Live\InteractWordModel.cs" />
     <Compile Include="Models\Common\Live\LiveMessageHandleActionsMap.cs" />
     <Compile Include="Models\Common\Live\LiveRoomEndRedPocketLotteryInfoModel.cs" />
@@ -801,6 +802,7 @@
     <Content Include="Assets\Live\ic_live_guard_2.png" />
     <Content Include="Assets\Live\ic_live_guard_3.png" />
     <Content Include="Assets\Live\lottery.png" />
+    <Content Include="Assets\Live\RedPocket.png" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\Login\ic_22.png" />
     <Content Include="Assets\Login\ic_22_hide.png" />

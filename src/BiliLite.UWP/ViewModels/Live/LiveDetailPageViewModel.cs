@@ -78,5 +78,7 @@ namespace BiliLite.ViewModels.Live
                 : new Thickness(0);
 
         public LivePlayerMode LivePlayerMode { get; set; }
+
+        public string LivePlayUrlSource { get; set; }
     }
 }

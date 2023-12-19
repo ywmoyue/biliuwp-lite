@@ -433,14 +433,28 @@
                                                             <Slider x:Name="LiveSettingCount" Width="240" Minimum="50" Maximum="1000" StepFrequency="1"></Slider>
                                                             <ToggleSwitch x:Name="LiveSettingAutoOpenBox" Visibility="Collapsed" Margin="0 8 0 0" Header="自动开启宝箱"></ToggleSwitch>
                                                             <ToggleSwitch x:Name="LiveSettingHardwareDecode" Margin="0 8 0 0" Header="开启硬解"></ToggleSwitch>
-                                                            <TextBlock Margin="0 4">播放器默认模式</TextBlock>
-                                                            <ComboBox  x:Name="PlayerModeComboBox"  MinWidth="200"
-                                                                       ItemsSource="{x:Bind Player:DefaultPlayerModeOptions.DefaultLivePlayerModeOption}" 
-                                                                       SelectedValue="{x:Bind m_viewModel.LivePlayerMode, Mode=TwoWay}"
-                                                                       SelectionChanged="PlayerModeComboBox_OnSelectionChanged"
-                                                                       SelectedValuePath="Value"
-                                                                       DisplayMemberPath="Name">
-                                                            </ComboBox>
+                                                            <StackPanel Margin="0 8 0 0">
+                                                                <TextBlock Margin="0 4 0 0">播放器默认模式</TextBlock>
+                                                                <ComboBox  x:Name="PlayerModeComboBox"  MinWidth="200"
+                                                                    ItemsSource="{x:Bind Player:DefaultPlayerModeOptions.DefaultLivePlayerModeOption}" 
+                                                                    SelectedValue="{x:Bind m_viewModel.LivePlayerMode, Mode=TwoWay}"
+                                                                    SelectionChanged="PlayerModeComboBox_OnSelectionChanged"
+                                                                    SelectedValuePath="Value"
+                                                                    DisplayMemberPath="Name"
+                                                                    Margin="0 4 0 0">                
+                                                                </ComboBox>
+                                                            </StackPanel>
+                                                            <StackPanel Margin="0 8 0 0">
+                                                                <TextBlock Margin="0 4 0 0">直播流默认来源</TextBlock>
+                                                                <ComboBox x:Name="PlayUrlSourceComboBox" MinWidth="200" 
+                                                                    ItemsSource="{x:Bind live:DefaultPlayUrlSourceOptions.DefaultLivePlayUrlSourceOption}"      
+                                                                    SelectedValue="{x:Bind m_viewModel.LivePlayUrlSource, Mode=TwoWay}"
+                                                                    SelectionChanged="PlayUrlSourceComboBox_OnSelectionChanged"
+                                                                    SelectedValuePath="Value"
+                                                                    DisplayMemberPath="Name"      
+                                                                    Margin="0 4 0 0">
+                                                                </ComboBox>
+                                                            </StackPanel>
                                                         </StackPanel>
                                                     </PivotItem>
                                                     <PivotItem>
@@ -750,7 +764,7 @@
                                         <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">弹幕口令：</Run><Run Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.Danmu,Mode=OneWay}"/></TextBlock>
                                         <TextBlock Margin="0 4" TextWrapping="Wrap" Visibility="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.ShowGift,Mode=OneWay}"><Run Foreground="Gray">赠送礼物：</Run><Run Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.GiftName,Mode=OneWay}"/>x<Run Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.GiftNum,Mode=OneWay}"/></TextBlock>
                                         <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">限制条件：</Run><Run Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.RequireText,Mode=OneWay}"/></TextBlock>-->
-                                        <Button x:Name="BtnSendLotteryDanmu" Click="BtnSendLotteryDanmu_Click" Margin="0 4 0 0" HorizontalAlignment="Stretch">一键发弹幕</Button>
+                                        <Button x:Name="BtnSendLotteryDanmu" Visibility="{x:Bind Path=m_liveRoomViewModel.ShowAnchorLotteryWinnerList,Mode=OneWay,Converter={StaticResource display}}" Click="BtnSendLotteryDanmu_Click" Margin="0 4 0 0" HorizontalAlignment="Stretch">一键发弹幕</Button>
                                     </StackPanel>
                                 </Flyout>
                             </Button.Flyout>
@@ -848,7 +862,7 @@
                             </Button.Flyout>
                         </Button>
                     </StackPanel>
-                    <Grid  HorizontalAlignment="Right" Grid.Column="1">
+                    <Grid  HorizontalAlignment="Right" Grid.Column="1" Margin="10 0 0 0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                            
@@ -856,7 +870,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <StackPanel Margin="4" VerticalAlignment="Center" Visibility="{x:Bind Path=m_liveRoomViewModel.Logined,Mode=OneWay}">
+                        <StackPanel Grid.Column="0" Margin="4" VerticalAlignment="Center" Visibility="{x:Bind Path=m_liveRoomViewModel.Logined,Mode=OneWay}">
                             <StackPanel Orientation="Horizontal">
                                 <Image Width="16" Source="ms-appx:///Assets/Icon/ic_live_center_silver_recharge.png"></Image>
                                 <TextBlock FontSize="12" Margin="8 0" VerticalAlignment="Center" Text="{x:Bind Path=m_liveRoomViewModel.WalletInfo.Silver,Converter={StaticResource numberToStringConvert},Mode=OneWay}"></TextBlock>
