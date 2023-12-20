@@ -39,7 +39,12 @@
                         <GridView.ItemTemplate>
                             <DataTemplate x:DataType="model:LiveHomeAreaModel">
                                 <StackPanel>
-                                    <Image Width="48" Margin="0 8" Height="48" Source="{x:Bind pic}"></Image>
+                                    <toolkit:ImageEx Width="48" Margin="0 4" Height="48"
+                                                     IsCacheEnabled="True" 
+                                                     CornerRadius="{StaticResource ImageCornerRadius}"
+                                                     PlaceholderStretch="UniformToFill" 
+                                                     PlaceholderSource="/assets/Thumbnails/Placeholde1x1.png" 
+                                                     Source="{x:Bind Path=pic,Converter={StaticResource imageConvert},ConverterParameter='96w'}"/>
                                     <TextBlock Margin="0 0 0 8" TextAlignment="Center" Text="{x:Bind title}"></TextBlock>
                                 </StackPanel>
                             </DataTemplate>
