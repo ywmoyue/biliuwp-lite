@@ -22,9 +22,10 @@ namespace BiliLite.Pages
         SubmitVideo = 0,
         Dynamic = 1,
         Article = 2,
-        Favorite = 3,
-        Attention = 4,
-        Fans = 5,
+        Collection = 3,
+        Favorite = 4,
+        Attention = 5,
+        Fans = 6,
     }
     public class UserInfoParameter
     {
@@ -52,7 +53,7 @@ namespace BiliLite.Pages
             Title = "用户中心";
             userDetailVM = new Modules.User.UserDetailVM();
             m_userSubmitVideoViewModel = App.ServiceProvider.GetService<UserSubmitVideoViewModel>();
-            m_userSubmitCollectionViewModel = new UserSubmitCollectionViewModel();
+            m_userSubmitCollectionViewModel = App.ServiceProvider.GetService<UserSubmitCollectionViewModel>();
             userSubmitArticleVM = new UserSubmitArticleVM();
             userFavlistVM = new UserFavlistVM();
             m_userDynamicViewModel = new UserDynamicViewModel();
@@ -333,7 +334,7 @@ namespace BiliLite.Pages
 
         private async void SubmitCollection_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var data = e.ClickedItem as SubmitCollectionItemModel;
+            if (!(e.ClickedItem is SubmitCollectionItemModel data)) return;
             await MessageCenter.HandelUrl(data.Uri);
         }
 

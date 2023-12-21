@@ -105,13 +105,13 @@ namespace BiliLite.Models.Requests.Api.User
             return api;
         }
 
-        public ApiModel SubmitCollections(string mid, int page_num)
+        public ApiModel SubmitCollections(string mid, int pageNum)
         {
             var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"https://app.bilibili.com/x/polymer/space/seasons_series_list_mobile",
-                parameter = $"{ApiHelper.MustParameter(AppKey, true)}&mid={mid}&page_num={page_num}&page_size=20",
+                parameter = $"{ApiHelper.MustParameter(AppKey, true)}&mid={mid}&page_num={pageNum}&page_size=20",
             };
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;

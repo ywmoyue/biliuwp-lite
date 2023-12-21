@@ -40,6 +40,7 @@ namespace BiliLite.ViewModels.User
         #endregion
 
         #region Properties
+
         public ICommand RefreshSubmitCollectionCommand { get; private set; }
 
         public ICommand LoadMoreSubmitCollectionCommand { get; private set; }
@@ -66,7 +67,6 @@ namespace BiliLite.ViewModels.User
             SubmitCollectionPage = data["data"]["page"]["page_num"].ToInt32();
             var count = data["data"]["page"]["total"].ToInt32();
             AttachSubmitCollectionItems(items, count);
-            
         }
 
         private void AttachSubmitCollectionItems(List<SubmitCollectionItemModel> submitCollectionItems, int count)
@@ -117,6 +117,7 @@ namespace BiliLite.ViewModels.User
                 {
                     throw new CustomizedErrorException(results.message);
                 }
+
                 var data = results.GetJObject();
                 if (data["code"].ToInt32() != 0)
                 {
@@ -125,18 +126,15 @@ namespace BiliLite.ViewModels.User
 
                 GetSubmitCollectionCore(data);
             }
+            catch (CustomizedErrorException ex)
+            {
+                Notify.ShowMessageToast(ex.Message);
+                _logger.Error("获取用户合集失败", ex);
+            }
             catch (Exception ex)
             {
-                if (ex is CustomizedErrorException)
-                {
-                    Notify.ShowMessageToast(ex.Message);
-                }
-                else
-                {
-                    var handel = HandelError<UserSubmitCollectionViewModel>(ex);
-                    Notify.ShowMessageToast(handel.message);
-                }
-
+                var handel = HandelError<UserSubmitCollectionViewModel>(ex);
+                Notify.ShowMessageToast(handel.message);
                 _logger.Error("获取用户合集失败", ex);
             }
             finally
