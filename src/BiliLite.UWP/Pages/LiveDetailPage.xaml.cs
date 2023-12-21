@@ -682,6 +682,7 @@ namespace BiliLite.Pages
             }
             catch (Exception ex)
             {
+                logger.Log("播放失败", LogType.Error, ex);
                 Notify.ShowMessageToast("播放失败" + ex.Message);
             }
         }
