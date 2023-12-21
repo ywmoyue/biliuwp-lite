@@ -235,7 +235,7 @@ namespace BiliLite.Models.Common.Live
 
         private void OnlineRankChange(LiveRoomViewModel viewModel, object message)
         {
-            viewModel.Ranks.Where(rank => rank.Title == "高能用户贡献榜").ToList()?[0]?.ReloadData().RunWithoutAwait();
+            viewModel.Ranks.Where(rank => rank.RankType == "contribution-rank").ToList()?[0]?.ReloadData().RunWithoutAwait();
         }
     }
 }
