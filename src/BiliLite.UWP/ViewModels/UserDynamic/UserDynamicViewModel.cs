@@ -9,7 +9,6 @@ using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 using AutoMapper;
 using Bilibili.App.Dynamic.V2;
-using BiliLite.Controls.Dynamic;
 using BiliLite.Dialogs;
 using BiliLite.Extensions;
 using BiliLite.Models;
@@ -27,9 +26,9 @@ using BiliLite.Pages.User;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml.Controls;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using static BiliLite.Models.Requests.Api.User.DynamicAPI;
 using DynamicItemDataTemplateSelector = BiliLite.Controls.DataTemplateSelectors.DynamicItemDataTemplateSelector;
 using DynamicType = BiliLite.Models.Common.DynamicType;
 
@@ -45,6 +44,7 @@ namespace BiliLite.ViewModels.UserDynamic
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly IMapper m_mapper;
         private readonly GrpcService m_grpcService;
+        private readonly CookieService m_cookieService;
 
         #endregion
 
@@ -54,6 +54,7 @@ namespace BiliLite.ViewModels.UserDynamic
         {
             m_mapper = App.ServiceProvider.GetRequiredService<IMapper>();
             m_grpcService = App.ServiceProvider.GetService<GrpcService>();
+            m_cookieService = App.ServiceProvider.GetRequiredService<CookieService>();
             m_dynamicApi = new DynamicAPI();
             m_watchLaterVm = new WatchLaterVM();
             m_dynamicItemDataTemplateSelector = new DynamicItemDataTemplateSelector();
@@ -181,16 +182,28 @@ namespace BiliLite.ViewModels.UserDynamic
                 Title = "抽奖",
                 PrimaryButtonText = "关闭"
             };
-            contentDialog.PrimaryButtonClick += new TypedEventHandler<ContentDialog, ContentDialogButtonClickEventArgs>((sender, e) =>
-            {
-                contentDialog.Hide();
-            });
-            contentDialog.Content = new WebView()
+            contentDialog.PrimaryButtonClick +=
+                (sender, e) =>
+                {
+                    contentDialog.Hide();
+                };
+            var webView = new WebView2()
             {
                 Width = 500,
                 Height = 500,
-                Source = new Uri($"https://t.bilibili.com/lottery/h5/index/#/result?business_id={id.ToString()}&business_type=1&isWeb=1"),
+                Source = new Uri(
+                    $"https://t.bilibili.com/lottery/h5/index/#/result?business_id={id.ToString()}&business_type=1&isWeb=1"),
             };
+            await webView.EnsureCoreWebView2Async();
+            foreach (var cookie in m_cookieService.Cookies)
+            {
+                var webCookie =
+                    webView.CoreWebView2.CookieManager.CreateCookie(cookie.Name, cookie.Value, Constants.BILIBILI_HOST,
+                        "/");
+                webView.CoreWebView2.CookieManager.AddOrUpdateCookie(webCookie);
+            }
+
+            contentDialog.Content = webView;
             await contentDialog.ShowAsync();
         }
 

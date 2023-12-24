@@ -33,6 +33,7 @@ namespace BiliLite.Models.Common.Live
                     { MessageType.WatchedChange, WatchedChange },
                     { MessageType.RedPocketLotteryStart, RedPocketLotteryStart},
                     { MessageType.RedPocketLotteryWinner, RedPocketLotteryWinner},
+                    { MessageType.OnlineRankChange, OnlineRankChange},
                 };
         }
 
@@ -140,7 +141,6 @@ namespace BiliLite.Models.Common.Live
             if (!viewModel.ReceiveLotteryMsg) return;
             var info = message.ToString();
             viewModel.LotteryViewModel.SetAnchorLotteryInfo(JsonConvert.DeserializeObject<LiveRoomAnchorLotteryInfoModel>(info));
-            
         }
 
         private void RedPocketLotteryStart(LiveRoomViewModel viewModel, object message) 
@@ -211,7 +211,7 @@ namespace BiliLite.Models.Common.Live
             {
                 UserName = info.Command switch
                 {
-                    "WARNING" => "⛔直播间警告",
+                    "WARNING" => "⚠️直播间警告",
                     "CUT_OFF" => "⛔直播间切断",
                     _ => null,
                 },
@@ -225,12 +225,17 @@ namespace BiliLite.Models.Common.Live
 
         private async void StartLive(LiveRoomViewModel viewModel, object room_Id)
         {
-            await System.Threading.Tasks.Task.Delay(TimeSpan.FromSeconds(3)); // 挂起三秒再获取, 否则很大可能一直卡加载而不缓冲
+            await System.Threading.Tasks.Task.Delay(TimeSpan.FromSeconds(5)); // 挂起五秒再获取, 否则很大可能一直卡加载而不缓冲
             viewModel.GetPlayUrls(room_Id.ToInt32(), SettingService.GetValue(SettingConstants.Live.DEFAULT_QUALITY, 10000)).RunWithoutAwait();
             viewModel.Messages.Add(new DanmuMsgModel()
             {
                 UserName = $"{room_Id} 直播间开始直播",
             });
+        }
+
+        private void OnlineRankChange(LiveRoomViewModel viewModel, object message)
+        {
+            viewModel.Ranks.Where(rank => rank.RankType == "contribution-rank").ToList()?[0]?.ReloadData().RunWithoutAwait();
         }
     }
 }

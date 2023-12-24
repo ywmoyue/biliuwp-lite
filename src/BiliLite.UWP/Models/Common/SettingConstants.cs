@@ -343,6 +343,11 @@ namespace BiliLite.Models.Common
             /// 隐藏抽奖
             /// </summary>
             public const string HIDE_LOTTERY = "LiveHideLottery";
+
+            /// <summary>
+            /// 直播流默认源
+            /// </summary>
+            public const string DEFAULT_LIVE_PLAY_URL_SOURCE = "DefaultLivePlayUrlSource";
         }
 
         public class Player

@@ -21,7 +21,7 @@ namespace BiliLite.Converters
                 return value;
             }
             if (parameter == null) return value;
-            return value.ToString() + "@" + parameter.ToString() + ".jpg";
+            return value.ToString() + "@" + parameter.ToString() + ".png";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

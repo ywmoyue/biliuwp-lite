@@ -15,12 +15,13 @@ using BiliLite.Models.Requests.Api;
 using BiliLite.Services;
 using BiliLite.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using BiliLite.Models.Exceptions;
 
 namespace BiliLite.Modules.User
 {
     public class LoginVM : IModules
     {
-        private static readonly ILogger logger = GlobalLogger.FromCurrentType();
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
 
         public Account account;
         Timer smsTimer;
@@ -170,7 +171,7 @@ namespace BiliLite.Modules.User
             }
             catch (Exception ex)
             {
-                logger.Log("登录二次验证失败", LogType.Error, ex);
+                _logger.Log("登录二次验证失败", LogType.Error, ex);
             }
         }
 
@@ -237,21 +238,26 @@ namespace BiliLite.Modules.User
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        throw new CustomizedErrorWithDataException(data.message, data);
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    throw new CustomizedErrorWithDataException(results.message, results);
                 }
+            }
+            catch (CustomizedErrorWithDataException ex)
+            {
+                _logger.Error($"{ex.Message}|{ex.DataText}", ex);
+                Notify.ShowMessageToast(ex.Message);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<LoginVM>(ex);
                 Notify.ShowMessageToast(handel.message);
             }
-
         }
+
         private async void SmsTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
@@ -287,83 +293,91 @@ namespace BiliLite.Modules.User
                 var appKey = SettingConstants.Account.DefaultLoginAppKeySecret;
                 sessionId = Guid.NewGuid().ToString().Replace("-", "");
                 var results = await accountApi.SendSMS(CurrentCountry.country_code, Phone, sessionId, appKey).Request();
-                if (results.status)
+                if (!results.status)
                 {
-                    var data = await results.GetJson<ApiDataModel<SMSResultModel>>();
-                    if (data.success)
-                    {
-                        if (data.data.recaptcha_url != null && data.data.recaptcha_url.Length > 0)
-                        {
-                            var uri = new Uri(data.data.recaptcha_url);
-                            SetWebViewVisibility?.Invoke(this, true);
-                            OpenWebView?.Invoke(this, new Uri("ms-appx-web:///Assets/GeeTest/bili_gt.html" + uri.Query + "&app=uwp"));
-                        }
-                        else
-                        {
-                            captchaKey = data.data.captcha_key;
-                            EnableSendSMS = false;
-                            //验证码发送成功，倒计时
-                            SMSCountDown = 60;
-                            smsTimer.Start();
-                        }
-                    }
-                    else
-                    {
-                        Notify.ShowMessageToast(data.message);
-                    }
+                    throw new CustomizedErrorWithDataException(results.message, results);
+                }
+
+                var data = await results.GetJson<ApiDataModel<SMSResultModel>>();
+                if (!data.success)
+                {
+                    throw new CustomizedErrorWithDataException(data.message, data);
+                }
+
+                if (!string.IsNullOrEmpty(data.data.recaptcha_url))
+                {
+                    var uri = new Uri(data.data.recaptcha_url);
+                    SetWebViewVisibility?.Invoke(this, true);
+                    OpenWebView?.Invoke(this,
+                        new Uri("ms-appx-web:///Assets/GeeTest/bili_gt.html" + uri.Query + "&app=uwp"));
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    captchaKey = data.data.captcha_key;
+                    EnableSendSMS = false;
+                    //验证码发送成功，倒计时
+                    SMSCountDown = 60;
+                    smsTimer.Start();
                 }
+            }
+            catch (CustomizedErrorWithDataException ex)
+            {
+                _logger.Error($"{ex.Message}|{ex.DataText}", ex);
+                Notify.ShowMessageToast(ex.Message);
+                EnableSendSMS = true;
             }
             catch (Exception ex)
             {
+                _logger.Error($"{ex.Message}", ex);
                 Notify.ShowMessageToast(ex.Message);
                 EnableSendSMS = true;
             }
         }
+
         public async void SendSMSCodeWithCaptcha(string seccode = "", string validate = "", string challenge = "", string recaptcha_token = "")
         {
 
             try
             {
                 var appKey = SettingConstants.Account.DefaultLoginAppKeySecret;
-                var results = await accountApi.SendSMSWithCaptcha(CurrentCountry.country_code, Phone, sessionId, seccode, validate, challenge, recaptcha_token, appKey).Request();
-                if (results.status)
+                var results = await accountApi.SendSMSWithCaptcha(CurrentCountry.country_code, Phone, sessionId,
+                    seccode, validate, challenge, recaptcha_token, appKey).Request();
+                if (!results.status)
                 {
-                    var data = await results.GetJson<ApiDataModel<SMSResultModel>>();
-                    if (data.success)
-                    {
-                        if (data.data.recaptcha_url != null && data.data.recaptcha_url.Length > 0)
-                        {
-                            var uri = new Uri(data.data.recaptcha_url);
-                            SetWebViewVisibility?.Invoke(this, true);
-                            OpenWebView?.Invoke(this, new Uri("ms-appx-web:///Assets/GeeTest/bili_gt.html" + uri.Query + "&app=uwp"));
+                    throw new CustomizedErrorWithDataException(results.message, results);
+                }
 
-                        }
-                        else
-                        {
-                            captchaKey = data.data.captcha_key;
-                            //验证码发送成功，倒计时
-                            EnableSendSMS = false;
-                            SMSCountDown = 60;
-                            smsTimer.Start();
-                        }
-                    }
-                    else
-                    {
-                        Notify.ShowMessageToast(data.message);
-                    }
+                var data = await results.GetJson<ApiDataModel<SMSResultModel>>();
+                if (!data.success)
+                {
+                    throw new CustomizedErrorWithDataException(data.message, data);
+                }
+
+                if (!string.IsNullOrEmpty(data.data.recaptcha_url))
+                {
+                    var uri = new Uri(data.data.recaptcha_url);
+                    SetWebViewVisibility?.Invoke(this, true);
+                    OpenWebView?.Invoke(this,
+                        new Uri("ms-appx-web:///Assets/GeeTest/bili_gt.html" + uri.Query + "&app=uwp"));
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    captchaKey = data.data.captcha_key;
+                    //验证码发送成功，倒计时
+                    EnableSendSMS = false;
+                    SMSCountDown = 60;
+                    smsTimer.Start();
                 }
-
+            }
+            catch (CustomizedErrorWithDataException ex)
+            {
+                _logger.Error($"SMS登录错误：{ex.Message}|{ex.DataText}", ex);
+                Notify.ShowMessageToast(ex.Message);
+                EnableSendSMS = true;
             }
             catch (Exception ex)
             {
+                _logger.Error($"SMS登录错误：{ex.Message}", ex);
                 Notify.ShowMessageToast(ex.Message);
                 EnableSendSMS = true;
             }
@@ -399,12 +413,19 @@ namespace BiliLite.Modules.User
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    throw new CustomizedErrorWithDataException(results.message, results);
                 }
 
             }
+            catch (CustomizedErrorWithDataException ex)
+            {
+                _logger.Error($"SMS登录错误：{ex.Message}|{ex.DataText}", ex);
+                Notify.ShowMessageToast(ex.Message);
+                EnableSendSMS = true;
+            }
             catch (Exception ex)
             {
+                _logger.Error($"SMS登录错误：{ex.Message}", ex);
                 Notify.ShowMessageToast(ex.Message);
                 EnableSendSMS = true;
             }
@@ -459,13 +480,18 @@ namespace BiliLite.Modules.User
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    throw new CustomizedErrorWithDataException(results.message, results);
                 }
+            }
+            catch (CustomizedErrorWithDataException ex)
+            {
+                _logger.Error($"密码登录错误：{ex.Message}|{ex.DataText}", ex);
+                Notify.ShowMessageToast(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.Error($"密码登录错误：{ex.Message}", ex);
                 Notify.ShowMessageToast(ex.Message);
-
             }
             finally
             {
@@ -484,30 +510,30 @@ namespace BiliLite.Modules.User
             try
             {
                 var req = await accountApi.SubmitPwdLoginSMSCheck(Code, gee_tmp_token, gee_request_id, captchaKey).Request();
-                if (req.status)
+                if (!req.status)
                 {
-                    var obj = req.GetJObject();
-                    if (obj["code"].ToInt32() == 0)
-                    {
-                        var code = obj["data"]["code"].ToString();
-                        var result = await PasswordLoginFetchCookie(code);
-                        HnadelResult(result);
-                    }
-                    else
-                    {
-                        Notify.ShowMessageToast(obj["message"].ToString());
-                        return;
-                    }
+                    throw new CustomizedErrorWithDataException(req.message, req);
                 }
-                else
+
+                var obj = req.GetJObject();
+                if (obj["code"].ToInt32() != 0)
                 {
-                    Notify.ShowMessageToast(req.message);
+                    throw new CustomizedErrorWithDataException(obj["message"].ToString(), req);
                 }
+
+                var code = obj["data"]["code"].ToString();
+                var result = await PasswordLoginFetchCookie(code);
+                HnadelResult(result);
+            }
+            catch (CustomizedErrorWithDataException ex)
+            {
+                _logger.Error($"{ex.Message}|{ex.DataText}", ex);
+                Notify.ShowMessageToast(ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.Error($"{ex.Message}", ex);
                 Notify.ShowMessageToast(ex.Message);
-
             }
             finally
             {
@@ -620,7 +646,7 @@ namespace BiliLite.Modules.User
             }
             catch (Exception ex)
             {
-                logger.Log("读取和加载登录二维码失败", LogType.Error, ex);
+                _logger.Log("读取和加载登录二维码失败", LogType.Error, ex);
                 Notify.ShowMessageToast("加载二维码失败");
             }
             finally
@@ -718,7 +744,7 @@ namespace BiliLite.Modules.User
             }
             catch (Exception ex)
             {
-                logger.Log("获取验证手机号失败", LogType.Error, ex);
+                _logger.Log("获取验证手机号失败", LogType.Error, ex);
             }
         }
 
@@ -751,7 +777,7 @@ namespace BiliLite.Modules.User
             }
             catch (Exception ex)
             {
-                logger.Log("发送短信验证码失败", LogType.Error, ex);
+                _logger.Log("发送短信验证码失败", LogType.Error, ex);
             }
         }
 
@@ -852,7 +878,7 @@ namespace BiliLite.Modules.User
             }
             catch (Exception ex)
             {
-                logger.Log("读取极验验证码失败", LogType.Error, ex);
+                _logger.Log("读取极验验证码失败", LogType.Error, ex);
                 return null;
             }
         }

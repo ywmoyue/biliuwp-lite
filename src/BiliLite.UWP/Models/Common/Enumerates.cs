@@ -395,5 +395,10 @@
         /// 红包抽奖赢家
         /// </summary>
         RedPocketLotteryWinner,
+
+        /// <summary>
+        /// 高能榜变动
+        /// </summary>
+        OnlineRankChange,
     }
 }

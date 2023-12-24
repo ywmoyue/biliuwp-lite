@@ -138,6 +138,7 @@
   <ItemGroup>
     <Compile Include="Extensions\QrCodeExtensions.cs" />
     <Compile Include="Models\Common\Anime\ISeasonItem.cs" />
+    <Compile Include="Models\Common\Live\DefaultPlayUrlSourceOptions.cs" />
     <Compile Include="Models\Common\Live\InteractWordModel.cs" />
     <Compile Include="Models\Common\Live\LiveMessageHandleActionsMap.cs" />
     <Compile Include="Models\Common\Live\LiveRoomEndRedPocketLotteryInfoModel.cs" />
@@ -182,7 +183,9 @@
     <Compile Include="Models\Common\Live\GiftMsgModel.cs" />
     <Compile Include="Models\Common\Live\GuardBuyMsgModel.cs" />
     <Compile Include="Models\Common\Live\RoomChangeMsgModel.cs" />
+    <Compile Include="Models\Common\User\SubmitCollectionItemModel.cs" />
     <Compile Include="Models\Common\WbiKey.cs" />
+    <Compile Include="Models\Exceptions\CustomizedErrorWithDataException.cs" />
     <Compile Include="Models\Exceptions\PlayerException.cs" />
     <Compile Include="Models\Requests\Api\BaseApi.cs" />
     <Compile Include="Player\Controllers\BasePlayerController.cs" />
@@ -352,6 +355,7 @@
     <Compile Include="ViewModels\Season\SeasonDetailUserStatusViewModel.cs" />
     <Compile Include="ViewModels\Comment\CommentContentViewModel.cs" />
     <Compile Include="ViewModels\Season\SeasonDetailViewModel.cs" />
+    <Compile Include="ViewModels\User\UserSubmitCollectionViewModel.cs" />
     <Compile Include="ViewModels\Video\DanmakuViewModel.cs" />
     <Compile Include="ViewModels\Video\VideoDetailReqUserViewModel.cs" />
     <Compile Include="ViewModels\Video\VideoDetailRelatesViewModel.cs" />
@@ -801,6 +805,7 @@
     <Content Include="Assets\Live\ic_live_guard_2.png" />
     <Content Include="Assets\Live\ic_live_guard_3.png" />
     <Content Include="Assets\Live\lottery.png" />
+    <Content Include="Assets\Live\RedPocket.png" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\Login\ic_22.png" />
     <Content Include="Assets\Login\ic_22_hide.png" />

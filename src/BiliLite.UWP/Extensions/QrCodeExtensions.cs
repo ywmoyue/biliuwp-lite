@@ -8,11 +8,7 @@ namespace BiliLite.Extensions
     {
         public static IServiceCollection AddQrCodeService(this IServiceCollection services)
         {
-#if ARM64
             services.AddTransient<IQrCodeService, QrCoderQrCodeService>();
-#else
-            services.AddTransient<IQrCodeService, ZXingQrCodeService>();
-#endif
             return services;
         }
     }

@@ -132,10 +132,7 @@ namespace BiliLite.Pages
         private void LiveRoomViewModelAnchorLotteryStart(object sender, LiveRoomAnchorLotteryInfoModel e)
         {
             AnchorLotteryWinnerList.Content = e.WinnerList;
-            if (e.WinnerList.Children.Count != 0)
-            {
-                m_liveRoomViewModel.ShowAnchorLotteryWinnerList = true;
-            }
+            m_liveRoomViewModel.ShowAnchorLotteryWinnerList = e.AwardUsers != null && e.AwardUsers.Count > 0;
         }
 
         private void LiveRoomViewModelAnchorLotteryEnd(object sender, LiveRoomEndAnchorLotteryInfoModel e)
@@ -373,8 +370,24 @@ namespace BiliLite.Pages
 
             m_realPlayInfo.PlayUrls.HlsUrls = m_liveRoomViewModel.HlsUrls;
             m_realPlayInfo.PlayUrls.FlvUrls = m_liveRoomViewModel.FlvUrls;
-            BottomCBLine.ItemsSource = m_liveRoomViewModel.HlsUrls ?? m_liveRoomViewModel.FlvUrls;
-            BottomCBLine.SelectedIndex = 0;
+            var urls = m_liveRoomViewModel.HlsUrls ?? m_liveRoomViewModel.FlvUrls;
+            BottomCBLine.ItemsSource = urls;
+
+            var flag = false;
+            for (var i = 0; i < urls.Count; i++)
+            {
+                var domain = new Uri(urls[i].Url).Host;
+
+                if (domain.Contains(m_viewModel.LivePlayUrlSource) && !flag) {
+                    BottomCBLine.SelectedIndex = i;
+                    flag = true;
+                }
+            }
+            if (!flag)
+            {
+                BottomCBLine.SelectedIndex = 0;
+            }
+
             BottomCBQuality.SelectedItem = m_liveRoomViewModel.CurrentQn;
             changePlayUrlFlag = false;
         }
@@ -511,6 +524,11 @@ namespace BiliLite.Pages
                         SettingConstants.Player.DEFAULT_LIVE_PLAYER_MODE,
                         (int)DefaultPlayerModeOptions.DEFAULT_LIVE_PLAYER_MODE);
             m_playerConfig.PlayMode = m_viewModel.LivePlayerMode;
+
+            // 直播流默认源
+            m_viewModel.LivePlayUrlSource = SettingService.GetValue(
+                SettingConstants.Live.DEFAULT_LIVE_PLAY_URL_SOURCE,
+                DefaultPlayUrlSourceOptions.DEFAULT_PLAY_URL_SOURCE);
         }
 
         private void LoadSetting()
@@ -664,6 +682,7 @@ namespace BiliLite.Pages
             }
             catch (Exception ex)
             {
+                logger.Log("播放失败", LogType.Error, ex);
                 Notify.ShowMessageToast("播放失败" + ex.Message);
             }
         }
@@ -1203,6 +1222,13 @@ namespace BiliLite.Pages
         {
             SettingService.SetValue(SettingConstants.Player.DEFAULT_LIVE_PLAYER_MODE, m_viewModel.LivePlayerMode);
             m_playerConfig.PlayMode = m_viewModel.LivePlayerMode;
+            await LoadPlayer();
+        }
+
+        private async void PlayUrlSourceComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SettingService.SetValue(SettingConstants.Live.DEFAULT_LIVE_PLAY_URL_SOURCE, m_viewModel.LivePlayUrlSource);
+            LiveRoomViewModelChangedPlayUrl(null, null);
             await LoadPlayer();
         }
     }
