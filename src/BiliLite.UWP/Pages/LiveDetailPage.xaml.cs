@@ -132,7 +132,7 @@ namespace BiliLite.Pages
         private void LiveRoomViewModelAnchorLotteryStart(object sender, LiveRoomAnchorLotteryInfoModel e)
         {
             AnchorLotteryWinnerList.Content = e.WinnerList;
-            m_liveRoomViewModel.ShowAnchorLotteryWinnerList = e.AwardUsers.Count > 0;
+            m_liveRoomViewModel.ShowAnchorLotteryWinnerList = e.AwardUsers != null && e.AwardUsers.Count > 0;
         }
 
         private void LiveRoomViewModelAnchorLotteryEnd(object sender, LiveRoomEndAnchorLotteryInfoModel e)
