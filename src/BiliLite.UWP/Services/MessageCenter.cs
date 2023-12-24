@@ -113,6 +113,7 @@ namespace BiliLite.Services
              * bilibili://?av=4284663
              * https://m.bilibili.com/playlist/pl733016988?avid=68818070
              * bilibili://story/722919541
+             * bilibili://music/playlist/playpage/2484684
              */
 
             var video = "";
@@ -167,6 +168,21 @@ namespace BiliLite.Services
                     page = typeof(VideoDetailPage),
                     title = "视频加载中...",
                     parameters = video,
+                    dontGoTo = dontGoTo,
+                });
+                return true;
+            }
+
+            // 目前无法将此类型播放列表的所有视频正确加载进视频页面
+            video = StringExtensions.RegexMatch(url, @"bilibili://music/playlist/playpage/(\d+)");
+            if (video != "")
+            {
+                NavigateToPage(null, new NavigationInfo()
+                {
+                    icon = Symbol.Play,
+                    page = typeof(WebPage),
+                    title = "视频加载中...",
+                    parameters = $"https://www.bilibili.com/list/1?sid={video}",
                     dontGoTo = dontGoTo,
                 });
                 return true;

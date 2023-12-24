@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:BiliLite.Pages.Live"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:modules="using:BiliLite.Modules.Live"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:modules="using:BiliLite.Modules.Live" xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     Background="Transparent">
     <Page.Resources>
@@ -36,9 +36,14 @@
                         </Style>
                     </GridView.ItemContainerStyle>
                     <GridView.ItemTemplate>
-                            <DataTemplate x:DataType="modules:LiveAreaItemModel">
+                        <DataTemplate x:DataType="modules:LiveAreaItemModel">
                             <StackPanel>
-                                <Image Width="48" Margin="0 8" Height="48" Source="{x:Bind Path=pic}"></Image>
+                                <controls:ImageEx Width="60" Margin="0 4" Height="60" 
+                                    IsCacheEnabled="True" 
+                                    CornerRadius="{StaticResource ImageCornerRadius}" 
+                                    PlaceholderStretch="UniformToFill" 
+                                    PlaceholderSource="/assets/Thumbnails/Placeholde1x1.png" 
+                                    Source="{x:Bind Path=pic,Converter={StaticResource imageConvert},ConverterParameter='120w'}"/>
                                 <TextBlock Margin="0 0 0 8" TextAlignment="Center" Text="{x:Bind name}"></TextBlock>
                             </StackPanel>
                         </DataTemplate>
