@@ -210,7 +210,6 @@
                                                 <ComboBox x:Name="comVideoOrder" SelectionChanged="comVideoOrder_SelectionChanged" Margin="8 0"  SelectedIndex="{x:Bind Path=m_userSubmitVideoViewModel.SelectOrder,Mode=TwoWay}">
                                                     <ComboBoxItem>最新发布</ComboBoxItem>
                                                     <ComboBoxItem>最多播放</ComboBoxItem>
-                                                    <ComboBoxItem>最多收藏</ComboBoxItem>
                                                 </ComboBox>
                                             </StackPanel>
                                             <AutoSuggestBox Text="{x:Bind Path=m_userSubmitVideoViewModel.Keyword,Mode=TwoWay}" x:Name="searchVideo" QuerySubmitted="searchVideo_QuerySubmitted" QueryIcon="Find" PlaceholderText="搜索视频" Width="160" HorizontalAlignment="Right"></AutoSuggestBox>
