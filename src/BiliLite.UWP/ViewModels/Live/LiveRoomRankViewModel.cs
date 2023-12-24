@@ -60,7 +60,7 @@ namespace BiliLite.ViewModels.Live
 
         public bool CanLoadMore { get; set; }
 
-        public int Next { get; set; } = 0;
+        public int ReloadFlag { get; set; } = 0;
 
         #endregion
 
@@ -136,6 +136,20 @@ namespace BiliLite.ViewModels.Live
                 Loading = false;
             }
         }
+
+        public async Task ReloadData()
+        {
+            if (ReloadFlag > 5) // 大约三分钟刷新一次
+            {
+                Items.Clear();
+                Page = 1;
+                await LoadData();
+                ReloadFlag = 0;
+            } else
+            {
+                ReloadFlag++;
+            }
+        } 
 
         #endregion
     }
