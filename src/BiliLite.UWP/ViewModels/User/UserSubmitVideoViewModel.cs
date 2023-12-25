@@ -174,9 +174,8 @@ namespace BiliLite.ViewModels.User
                 {
                     var handel = HandelError<UserSubmitVideoViewModel>(ex);
                     Notify.ShowMessageToast(handel.message);
+                    _logger.Error("获取用户投稿失败", ex);
                 }
-
-                _logger.Error("获取用户投稿失败", ex);
             }
             finally
             {
