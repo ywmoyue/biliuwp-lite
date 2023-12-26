@@ -16,21 +16,11 @@ namespace BiliLite.Models.Requests.Api
                 baseUrl = $"{baseUrl}/pgc/view/app/season",
                 parameter = ApiHelper.MustParameter(AppKey, true) + $"&season_id={season_id}"
             };
+            api.parameter = api.parameter.Replace("build=6235200", "build=75900200"); //使用这个build可以直接获取番剧播放信息
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
 
-        public ApiModel DetailWeb(string season_id)
-        {
-            var api = new ApiModel()
-            {
-                method = RestSharp.Method.Get,
-                baseUrl = $"https://bangumi.bilibili.com/view/web_api/season",
-                parameter = $"season_id={season_id}"
-            };
-
-            return api;
-        }
         /// <summary>
         /// 短评
         /// </summary>
