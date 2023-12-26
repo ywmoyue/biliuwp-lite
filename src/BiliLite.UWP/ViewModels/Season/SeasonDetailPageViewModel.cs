@@ -157,7 +157,13 @@ namespace BiliLite.ViewModels.Season
                 }
 
                 //通过代理访问番剧详情
-                var data = await results.GetJson<ApiResultModel<SeasonDetailModel>>();
+                var apiData = await results.GetJson<ApiDataModel<SeasonDetailModel>>();
+                var data = new ApiResultModel<SeasonDetailModel>();
+                data.code=apiData.code;
+                data.message = apiData.message;
+                data.result = apiData.data;
+                
+                //var data = await results.GetJson<ApiResultModel<SeasonDetailModel>>();
                 //代理访问失败，使用Web的Api访问
                 if (!data.success)
                 {

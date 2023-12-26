@@ -13,7 +13,7 @@ namespace BiliLite.Models.Requests.Api
             var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
-                baseUrl = $"{baseUrl}/pgc/view/app/season",
+                baseUrl = $"{baseUrl}/pgc/view/v2/app/season",
                 parameter = ApiHelper.MustParameter(AppKey, true) + $"&season_id={season_id}"
             };
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
