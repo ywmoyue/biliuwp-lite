@@ -33,6 +33,7 @@ namespace BiliLite.Models.Common.Live
                     { MessageType.WatchedChange, WatchedChange },
                     { MessageType.RedPocketLotteryStart, RedPocketLotteryStart},
                     { MessageType.RedPocketLotteryWinner, RedPocketLotteryWinner},
+                    { MessageType.OnlineRankChange, OnlineRankChange},
                 };
         }
 
@@ -210,7 +211,7 @@ namespace BiliLite.Models.Common.Live
             {
                 UserName = info.Command switch
                 {
-                    "WARNING" => "⛔直播间警告",
+                    "WARNING" => "⚠️直播间警告",
                     "CUT_OFF" => "⛔直播间切断",
                     _ => null,
                 },
@@ -230,6 +231,11 @@ namespace BiliLite.Models.Common.Live
             {
                 UserName = $"{room_Id} 直播间开始直播",
             });
+        }
+
+        private void OnlineRankChange(LiveRoomViewModel viewModel, object message)
+        {
+            viewModel.Ranks.Where(rank => rank.RankType == "contribution-rank").ToList()?[0]?.ReloadData().RunWithoutAwait();
         }
     }
 }

@@ -444,12 +444,19 @@ namespace BiliLite.Modules.Live
                         NewMessage?.Invoke(MessageType.WatchedChange, obj["data"]["text_large"].ToString());
                     }
                 }
+                else if (cmd == "ONLINE_RANK_V2")
+                {
+                    if (obj["data"] != null)
+                    {
+                        NewMessage?.Invoke(MessageType.OnlineRankChange, obj["data"]["list"].ToString());
+                    }
+                }
             }
             catch (Exception ex)
             {
                 if (ex is JsonReaderException)
                 {
-                    logger.Error("直播解析JSON包出错", ex);
+                    logger.Log("直播解析JSON包出错", LogType.Error ,ex);
                 }
             }
         }

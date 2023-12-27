@@ -151,11 +151,11 @@ namespace BiliLite.Player
 
             if (defaultPlayerMode == LivePlayerMode.Hls)
             {
-                url = urls.HlsUrls != null ? urls.HlsUrls[selectRouteLine].Url : urls.FlvUrls[selectRouteLine].Url;
+                url = (urls.HlsUrls != null && selectRouteLine < urls.HlsUrls.Count) ? urls.HlsUrls[selectRouteLine].Url : urls.FlvUrls[selectRouteLine].Url;
             }
             else
             {
-                url = urls.FlvUrls != null ? urls.FlvUrls[selectRouteLine].Url : urls.HlsUrls[selectRouteLine].Url;
+                url = (urls.FlvUrls != null && selectRouteLine < urls.FlvUrls.Count) ? urls.FlvUrls[selectRouteLine].Url : urls.HlsUrls[selectRouteLine].Url;
             }
 
             m_url = url;
