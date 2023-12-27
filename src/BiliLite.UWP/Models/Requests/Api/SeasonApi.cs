@@ -20,17 +20,6 @@ namespace BiliLite.Models.Requests.Api
             return api;
         }
 
-        public ApiModel DetailWeb(string season_id)
-        {
-            var api = new ApiModel()
-            {
-                method = RestSharp.Method.Get,
-                baseUrl = $"https://bangumi.bilibili.com/view/web_api/season",
-                parameter = $"season_id={season_id}"
-            };
-
-            return api;
-        }
         /// <summary>
         /// 短评
         /// </summary>
