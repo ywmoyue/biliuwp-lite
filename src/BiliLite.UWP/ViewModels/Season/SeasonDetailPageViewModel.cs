@@ -29,6 +29,7 @@ namespace BiliLite.ViewModels.Season
         private readonly PlayerAPI m_playerApi;
         private readonly FollowAPI m_followApi;
         private readonly IMapper m_mapper;
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
 
         #endregion
 
@@ -167,16 +168,25 @@ namespace BiliLite.ViewModels.Season
                 try
                 {
                     //build 75900200
-                    data.data.Episodes = JsonConvert.DeserializeObject<List<SeasonDetailEpisodeModel>>(data.data.Modules.FirstOrDefault(x => x["style"].ToString() == "positive")?["data"]?["episodes"]?.ToString() ?? "[]");
-                    data.data.Seasons = JsonConvert.DeserializeObject<List<SeasonDetailSeasonItemModel>>(data.data.Modules.FirstOrDefault(x => x["style"].ToString() == "season")?["data"]?["seasons"]?.ToString() ?? "[]");
-                    var pv = JsonConvert.DeserializeObject<List<SeasonDetailEpisodeModel>>(data.data.Modules.FirstOrDefault(x => x["style"].ToString() == "section")?["data"]?["episodes"]?.ToString() ?? "[]");
+                    data.data.Episodes = JsonConvert.DeserializeObject<List<SeasonDetailEpisodeModel>>(
+                        data.data.Modules.FirstOrDefault(x => x["style"].ToString() == "positive")?["data"]?["episodes"]
+                            ?.ToString() ?? "[]");
+                    data.data.Seasons = JsonConvert.DeserializeObject<List<SeasonDetailSeasonItemModel>>(
+                        data.data.Modules.FirstOrDefault(x => x["style"].ToString() == "season")?["data"]?["seasons"]
+                            ?.ToString() ?? "[]");
+                    var pv = JsonConvert.DeserializeObject<List<SeasonDetailEpisodeModel>>(
+                        data.data.Modules.FirstOrDefault(x => x["style"].ToString() == "section")?["data"]?["episodes"]
+                            ?.ToString() ?? "[]");
                     foreach (var item in pv)
                     {
                         item.SectionType = 1;
                         data.data.Episodes.Add(item);
                     }
                 }
-                catch (Exception) { }
+                catch (Exception ex)
+                {
+                    _logger.Warn("解析番剧相关数据失败", ex);
+                }
 
                 if (data.data.Section != null)
                 {

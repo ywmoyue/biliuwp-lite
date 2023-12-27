@@ -13,10 +13,9 @@ namespace BiliLite.Models.Requests.Api
             var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
-                baseUrl = $"{baseUrl}/pgc/view/app/season",
+                baseUrl = $"{baseUrl}/pgc/view/v2/app/season",
                 parameter = ApiHelper.MustParameter(AppKey, true) + $"&season_id={season_id}"
             };
-            api.parameter = api.parameter.Replace("build=6235200", "build=75900200"); //使用这个build可以直接获取番剧播放信息
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
