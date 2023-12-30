@@ -854,6 +854,22 @@ namespace BiliLite.Pages
             });
         }
 
+        private void BtnOpenDanmuSpace_Click(object sender, RoutedEventArgs e)
+        {
+            var uid = ((sender as HyperlinkButton).DataContext as DanmuMsgModel).Uid;
+            if (uid == null || uid.Length == 0)
+            {
+                return;
+            }
+            MessageCenter.NavigateToPage(this, new NavigationInfo()
+            {
+                icon = Symbol.Account,
+                title = "用户信息",
+                page = typeof(UserInfoPage),
+                parameters = uid
+            });
+        }
+
         private async void DanmuText_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             if (string.IsNullOrEmpty(DanmuText.Text))

@@ -148,12 +148,10 @@ namespace BiliLite.Modules.Live
                 //可能有多条数据，做个分割
                 var textLines = Regex.Split(text, "[\x00-\x1f]+").Where(x => x.Length > 2 && x[0] == '{').ToArray();
 
-                var delay = textLines.Length > 30 ? 0.1 : 0.05; // 大概3秒来一波
-                delay = textLines.Length > 60 ? 0.2 : delay;
                 foreach (var item in textLines)
                 {
                     ParseMessage(item);
-                    await Task.Delay(TimeSpan.FromSeconds(delay));
+                    await Task.Delay(TimeSpan.FromSeconds(0.05));
                 }
             }
         }
@@ -169,6 +167,16 @@ namespace BiliLite.Modules.Live
                     var msg = new DanmuMsgModel();
                     if (obj["info"] != null && obj["info"].ToArray().Length != 0)
                     {
+                        // 获取头像
+                        if (obj["info"][0][15]["user"] != null)
+                        {
+                            var user = obj["info"][0][15]["user"];
+                            var uid = user["uid"].ToString();
+                            var face = user["base"]["face"].ToString();
+                            msg.Uid = uid;
+                            msg.Face = face;
+                        }
+
                         // 弹幕内黄豆表情详情
                         if (obj["info"][0][15]["extra"] != null)// && obj["info"][0][15]["extra"].ToArray().Length != 0)
                         {
@@ -199,6 +207,7 @@ namespace BiliLite.Modules.Live
                         msg.Text = obj["info"][1].ToString();
                         // 字重调大, 防止与进场弹幕混淆
                         msg.UserNameFontWeight = "SemiBold";
+                        // 将弹幕普通文本转为富文本
                         msg.RichText = msg.Text.ToRichTextBlock(msg.Emoji, true, fontWeight: "Medium");
 
                         // 弹幕颜色
@@ -211,7 +220,7 @@ namespace BiliLite.Modules.Live
                         // 是否为房管
                         if (obj["info"][2] != null && obj["info"][2].ToArray().Length != 0)
                         {
-                            msg.UserName = obj["info"][2][1].ToString() + ":";
+                            msg.UserName = obj["info"][2][1].ToString();
                             if (obj["info"][2][2] != null && Convert.ToInt32(obj["info"][2][2].ToString()) == 1)
                             {
                                 msg.Role = "房管";

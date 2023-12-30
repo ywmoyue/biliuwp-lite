@@ -38,6 +38,16 @@ namespace BiliLite.Models.Common.Live
         /// </summary>
         public string UserNameFontWeight { get; set; } = "Normal";
 
+        /// <summary>
+        /// 用户uid
+        /// </summary>
+        public string Uid { get; set; }
+
+        /// <summary>
+        /// 头像
+        /// </summary>
+        public string Face { get; set; }
+
         ///// <summary>
         ///// 等级
         ///// </summary>
