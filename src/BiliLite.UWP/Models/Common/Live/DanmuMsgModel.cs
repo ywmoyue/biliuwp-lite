@@ -3,6 +3,8 @@ using Windows.UI.Xaml;
 using BiliLite.ViewModels.Live;
 using Newtonsoft.Json.Linq;
 using Windows.UI.Xaml.Controls;
+using Windows.UI;
+using Windows.UI.Xaml.Media;
 
 namespace BiliLite.Models.Common.Live
 {
@@ -100,9 +102,9 @@ namespace BiliLite.Models.Common.Live
         {
              get => UserCaptain switch
                     {
-                        "舰长" => "/Assets/Live/ic_live_guard_3.png",
-                        "提督" => "/Assets/Live/ic_live_guard_2.png",
-                        "总督" => "/Assets/Live/ic_live_guard_1.png",
+                        "舰长" => "ms-appx:///Assets/Live/ic_live_guard_3.png",
+                        "提督" => "ms-appx:///Assets/Live/ic_live_guard_2.png",
+                        "总督" => "ms-appx:///Assets/Live/ic_live_guard_1.png",
                         _ => null,
                     };
         }
@@ -125,6 +127,31 @@ namespace BiliLite.Models.Common.Live
         }
 
         /// <summary>
+        /// 弹幕富文本卡片背景颜色
+        /// </summary>
+        public SolidColorBrush CardColor { get; set; } = new SolidColorBrush((Color)Application.Current.Resources["CardColor"]);
+
+        /// <summary>
+        /// 弹幕富文本卡片Padding
+        /// </summary>
+        public Thickness CardPadding { get; set; } = new Thickness(10, 8, 10, 8);
+
+        /// <summary>
+        /// 弹幕富文本卡片水平对齐方式
+        /// </summary>
+        public HorizontalAlignment CardHorizontalAlignment { get; set; } = HorizontalAlignment.Left;
+
+        /// <summary>
+        /// 是否显示用户头像
+        /// </summary>
+        public Visibility ShowUserFace { get; set; } = Visibility.Visible;
+
+        /// <summary>
+        /// 是否显示用户名
+        /// </summary>
+        public Visibility ShowUserName { get; set; } = Visibility.Visible;
+
+        /// <summary>
         /// 是否显示富文本(用于用户发出大表情时)
         /// </summary>
         public Visibility ShowRichText { get; set; } = Visibility.Visible;
@@ -133,7 +160,7 @@ namespace BiliLite.Models.Common.Live
         /// 是否显示大表情
         /// </summary>
         
-        public Visibility ShowBigSticker => (ShowRichText == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
+        public Visibility ShowBigSticker { get; set; } = Visibility.Collapsed;
 
         /// <summary>
         /// 是否显示房管

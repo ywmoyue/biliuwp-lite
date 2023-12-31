@@ -400,5 +400,10 @@
         /// 高能榜变动
         /// </summary>
         OnlineRankChange,
+
+        /// <summary>
+        /// 停止直播
+        /// </summary>
+        StopLive,
     }
 }
