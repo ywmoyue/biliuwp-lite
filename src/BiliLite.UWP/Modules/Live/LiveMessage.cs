@@ -270,59 +270,6 @@ namespace BiliLite.Modules.Live
                         //    msg.UserTitleID = obj["info"][5][0].ToString();
                         //    msg.ShowTitle = Visibility.Visible;
                         //}
-                        if (msg.Text == "test123")
-                        {
-                            NewMessage?.Invoke(MessageType.GuardBuy, new GuardBuyMsgModel()
-                            {
-                                GiftName = "总督",
-                                UserName = "TestName",
-                                UserID = "123",
-                                GuardLevel = 1,
-                            });
-
-                            NewMessage?.Invoke(MessageType.GuardBuy, new GuardBuyMsgModel()
-                            {
-                                GiftName = "提督",
-                                UserName = "TestName",
-                                UserID = "123",
-                                GuardLevel = 2,
-                            });
-
-                            NewMessage?.Invoke(MessageType.GuardBuy, new GuardBuyMsgModel()
-                            {
-                                GiftName = "舰长",
-                                UserName = "TestName",
-                                UserID = "123",
-                                GuardLevel = 3,
-                            });
-
-                            NewMessage?.Invoke(MessageType.RoomChange, new RoomChangeMsgModel()
-                            {
-                                Title = "TestName",
-                            });
-
-                            NewMessage?.Invoke(MessageType.RoomBlock, new RoomBlockMsgModel()
-                            {
-                                UserID = "123",
-                                UserName = "TestName",
-                            });
-
-                            NewMessage?.Invoke(MessageType.WaringOrCutOff, new WarningOrCutOffMsgModel()
-                            {
-                                Message = "图片内容不适宜，请立即调整",
-                                Command = "WARNING",
-                            });
-
-                            NewMessage?.Invoke(MessageType.WaringOrCutOff, new WarningOrCutOffMsgModel()
-                            {
-                                Message = "违反直播言论规范，请立即调整",
-                                Command = "CUT_OFF",
-                            });
-
-                            NewMessage?.Invoke(MessageType.StartLive, "6");
-
-                            NewMessage?.Invoke(MessageType.StopLive, null);
-                        }
 
                         NewMessage?.Invoke(MessageType.Danmu, msg);
                         return;
