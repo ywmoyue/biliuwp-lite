@@ -170,6 +170,10 @@ namespace BiliLite.ViewModels.User
                 {
                     Notify.ShowMessageToast(ex.Message);
                 }
+                else if (ex is NotFoundException)
+                {
+                    Notify.ShowMessageToast("(っ °Д °;)っ 没有找到相应的视频~");
+                }
                 else
                 {
                     var handel = HandelError<UserSubmitVideoViewModel>(ex);

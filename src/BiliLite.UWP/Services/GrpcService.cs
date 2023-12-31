@@ -29,7 +29,7 @@ namespace BiliLite.Services
             // 用户搜索一个不存在的关键字导致的
             else if (result.code == -102 && result.message == "请求失败,没有数据返回")
             {
-                throw new CustomizedErrorException("(っ °Д °;)っ 没有找到相应的视频~");
+                throw new NotFoundException(result.message);
             }
             else
             {
