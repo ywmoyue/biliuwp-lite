@@ -18,7 +18,7 @@
         <convert:DatetimeConvert x:Key="datetime" ></convert:DatetimeConvert>
         <convert:ColorSelecteConvert x:Key="colorSelct" ></convert:ColorSelecteConvert>
         <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource HighLightColor}" />
-        <SolidColorBrush x:Key="GridViewItemForegroundSelected" Color="{ThemeResource HighLightColor}" />
+        <SolidColorBrush x:Key="GridViewItemForegroundSelected" Color="{ThemeResource HighLightTextColor}" />
         <SolidColorBrush x:Key="RatingControlSelectedForeground" Color="Orange" />
     </Page.Resources>
     <Grid>
@@ -192,7 +192,7 @@
                                     </StackPanel>
                                 </Grid>
                                 <Button Margin="0 16 0 0" Visibility="{x:Bind Path=m_viewModel.Detail.ShowPayment,Mode=OneWay}" BorderBrush="#FFFB9E60" Background="Transparent" HorizontalAlignment="Stretch" Foreground="#FFFB9E60">
-                                    <TextBlock Text="{x:Bind Path=m_viewModel.Detail.Payment.Dialog.Title,Mode=OneWay}"></TextBlock>
+                                    <TextBlock Text="{x:Bind Path=m_viewModel.Detail.Payment.Dialog.Title,Mode=OneWay}" Foreground="{ThemeResource TextColor}"></TextBlock>
                                 </Button>
                                 <toolkit:AdaptiveGridView x:Name="listEpisode" 
                                                       DesiredWidth="120" ItemHeight="36" 
@@ -217,7 +217,7 @@
                                             <Grid ToolTipService.ToolTip="{x:Bind Path=LongTitle}">
                                                 <TextBlock VerticalAlignment="Center" TextAlignment="Center" TextTrimming="CharacterEllipsis"><Run Text="{x:Bind Path=Title}"/></TextBlock>
                                                 <Border Visibility="{x:Bind Path=ShowBadge}" VerticalAlignment="Top" Padding="4 2" CornerRadius="0 0 0 4" Background="{ThemeResource HighLightColor}" HorizontalAlignment="Right">
-                                                    <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=Badge}"></TextBlock>
+                                                    <TextBlock FontSize="12" Foreground="{ThemeResource HighLightTextColor}" Text="{x:Bind Path=Badge}"></TextBlock>
                                                 </Border>
                                             </Grid>
                                         </DataTemplate>

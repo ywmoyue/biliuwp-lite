@@ -29,6 +29,7 @@ namespace BiliLite.ViewModels.Season
         private readonly PlayerAPI m_playerApi;
         private readonly FollowAPI m_followApi;
         private readonly IMapper m_mapper;
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
 
         #endregion
 
@@ -156,69 +157,56 @@ namespace BiliLite.ViewModels.Season
                     throw new CustomizedErrorException(results.message);
                 }
 
-                //通过代理访问番剧详情
-                var data = await results.GetJson<ApiResultModel<SeasonDetailModel>>();
-                //代理访问失败，使用Web的Api访问
-                if (!data.success)
-                {
-                    data = await GetWebSeasonDetail(seasonId);
-                }
+                //访问番剧详情
+                var data = await results.GetJson<ApiDataModel<SeasonDetailModel>>();
 
                 if (!data.success)
                 {
                     throw new CustomizedErrorException(data.message);
                 }
 
-                if (data.result.Limit != null)
+                try
                 {
-                    var reulstsWeb = await m_seasonApi.DetailWeb(seasonId).Request();
-                    if (reulstsWeb.status)
+                    //build 75900200
+                    data.data.Episodes = JsonConvert.DeserializeObject<List<SeasonDetailEpisodeModel>>(
+                        data.data.Modules.FirstOrDefault(x => x["style"].ToString() == "positive")?["data"]?["episodes"]
+                            ?.ToString() ?? "[]");
+                    data.data.Seasons = JsonConvert.DeserializeObject<List<SeasonDetailSeasonItemModel>>(
+                        data.data.Modules.FirstOrDefault(x => x["style"].ToString() == "season")?["data"]?["seasons"]
+                            ?.ToString() ?? "[]");
+                    var pv = JsonConvert.DeserializeObject<List<SeasonDetailEpisodeModel>>(
+                        data.data.Modules.FirstOrDefault(x => x["style"].ToString() == "section")?["data"]?["episodes"]
+                            ?.ToString() ?? "[]");
+                    foreach (var item in pv)
                     {
-                        var data_2 = reulstsWeb.GetJObject();
-                        if (data_2["code"].ToInt32() == 0)
-                        {
-                            data.result.Episodes = await data_2["result"]["episodes"].ToString().DeserializeJson<List<SeasonDetailEpisodeModel>>();
-                        }
+                        item.SectionType = 1;
+                        data.data.Episodes.Add(item);
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    try
-                    {
-                        //build 6235200
-                        data.result.Episodes = JsonConvert.DeserializeObject<List<SeasonDetailEpisodeModel>>(data.result.Modules.FirstOrDefault(x => x["style"].ToString() == "positive")?["data"]?["episodes"]?.ToString() ?? "[]");
-                        data.result.Seasons = JsonConvert.DeserializeObject<List<SeasonDetailSeasonItemModel>>(data.result.Modules.FirstOrDefault(x => x["style"].ToString() == "season")?["data"]?["seasons"]?.ToString() ?? "[]");
-                        var pv = JsonConvert.DeserializeObject<List<SeasonDetailEpisodeModel>>(data.result.Modules.FirstOrDefault(x => x["style"].ToString() == "section")?["data"]?["episodes"]?.ToString() ?? "[]");
-                        foreach (var item in pv)
-                        {
-                            item.SectionType = 1;
-                            data.result.Episodes.Add(item);
-                        }
-                    }
-                    catch (Exception)
-                    {
-                    }
+                    _logger.Warn("解析番剧相关数据失败", ex);
                 }
 
-                if (data.result.Section != null)
+                if (data.data.Section != null)
                 {
-                    foreach (var item in data.result.Section)
+                    foreach (var item in data.data.Section)
                     {
                         foreach (var item2 in item.Episodes)
                         {
                             item2.SectionType = 1;
                         }
-                        data.result.Episodes.InsertRange(0, item.Episodes);
-                        //data.result.episodes= data.result.episodes.Concat(item.episodes).ToList();
+                        data.data.Episodes.InsertRange(0, item.Episodes);
+                        //data.data.episodes= data.data.episodes.Concat(item.episodes).ToList();
                     }
                 }
 
-                var seasonDetail = m_mapper.Map<SeasonDetailViewModel>(data.result);
+                var seasonDetail = m_mapper.Map<SeasonDetailViewModel>(data.data);
                 Detail = seasonDetail;
 
-                Episodes = data.result.Episodes.Where(x => !x.IsPreview).ToList();
+                Episodes = data.data.Episodes.Where(x => !x.IsPreview).ToList();
                 ShowEpisodes = Episodes.Count > 0;
-                Previews = data.result.Episodes.Where(x => x.IsPreview).ToList();
+                Previews = data.data.Episodes.Where(x => x.IsPreview).ToList();
                 ShowPreview = Previews.Count > 0;
                 NothingPlay = !ShowEpisodes && !ShowPreview;
                 Loaded = true;
@@ -234,35 +222,6 @@ namespace BiliLite.ViewModels.Season
             {
                 Loading = false;
             }
-        }
-
-        public async Task<ApiResultModel<SeasonDetailModel>> GetWebSeasonDetail(string seasonId)
-        {
-            var reulsts_web = await m_seasonApi.DetailWeb(seasonId).Request();
-            if (!reulsts_web.status)
-                return new ApiResultModel<SeasonDetailModel>()
-                {
-                    code = -101,
-                    message = "无法读取内容"
-                };
-            var data = reulsts_web.GetJObject();
-            if (data["code"].ToInt32() != 0)
-                return new ApiResultModel<SeasonDetailModel>()
-                {
-                    code = -101,
-                    message = "无法读取内容"
-                };
-            var objText = data["result"].ToString();
-            //处理下会出错的字段
-            objText = objText.Replace("\"staff\"", "staff1");
-            var model = JsonConvert.DeserializeObject<SeasonDetailModel>(objText);
-            model.Episodes = await data["result"]["episodes"].ToString().DeserializeJson<List<SeasonDetailEpisodeModel>>();
-            model.UserStatus = new SeasonDetailUserStatusModel()
-            {
-                FollowStatus = 0,
-                Follow = 0
-            };
-            return new ApiResultModel<SeasonDetailModel>() { code = 0, message = "", result = model, };
         }
 
         public async void DoFollow()
