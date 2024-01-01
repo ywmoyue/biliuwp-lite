@@ -230,9 +230,6 @@ namespace BiliLite.Modules
         public string link { get; set; }
     }
 
-
-
-
     public class LivePendentItemModel
     {
         public string bg_pic { get; set; }

@@ -1,7 +1,7 @@
 {
-    "version": "4.6.23",
-    "version_num": 40623,
-    "version_desc": "更新内容:\r\n\r\n- 变更及新增直播间部分功能 \r\n\r\n- 缓存Wbi令牌避免被风控\r\n\r\n- 修复ARM版本二维码扫码无反应\r\n\r\n- 修复直播间部分功能 \r\n\r\n- 修复二维码登录下无播放列表的问题\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+    "version": "4.6.24",
+    "version_num": 40624,
+    "version_desc": "更新内容:\r\n\r\n- 个人主页添加合集Tab页 \r\n\r\n- 移除已失效的个人页投稿的最多收藏选项\r\n\r\n- 修复打开动态的互动抽奖按钮后显示需要重新登录\r\n\r\n- 修复直播分区不显示及娱乐分区闪退 \r\n\r\n- 直播间bug修复 \r\n\r\n- 评论区bug修复\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
     "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
     "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }

@@ -90,7 +90,6 @@ namespace BiliLite.Pages
                 }
             }
             webView.Source=new Uri(uri);
-
         }
 
         private async Task InitWebView2()
@@ -141,7 +140,8 @@ namespace BiliLite.Pages
             await Windows.System.Launcher.LaunchUriAsync(webView.Source);
         }
 
-        private async void webView_UnsupportedUriSchemeIdentified(WebView sender, WebViewUnsupportedUriSchemeIdentifiedEventArgs args)
+        // webview2中没找到代替的api，暂时不用
+        private async void webView_UnsupportedUriSchemeIdentified(object sender, WebViewUnsupportedUriSchemeIdentifiedEventArgs args)
         {
             if (args.Uri.AbsoluteUri.Contains("article"))
             {

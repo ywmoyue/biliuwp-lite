@@ -13,24 +13,13 @@ namespace BiliLite.Models.Requests.Api
             var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
-                baseUrl = $"{baseUrl}/pgc/view/app/season",
+                baseUrl = $"{baseUrl}/pgc/view/v2/app/season",
                 parameter = ApiHelper.MustParameter(AppKey, true) + $"&season_id={season_id}"
             };
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
 
-        public ApiModel DetailWeb(string season_id)
-        {
-            var api = new ApiModel()
-            {
-                method = RestSharp.Method.Get,
-                baseUrl = $"https://bangumi.bilibili.com/view/web_api/season",
-                parameter = $"season_id={season_id}"
-            };
-
-            return api;
-        }
         /// <summary>
         /// 短评
         /// </summary>
