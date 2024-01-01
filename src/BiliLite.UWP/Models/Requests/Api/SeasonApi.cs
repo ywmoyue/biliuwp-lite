@@ -16,6 +16,7 @@ namespace BiliLite.Models.Requests.Api
                 baseUrl = $"{baseUrl}/pgc/view/v2/app/season",
                 parameter = ApiHelper.MustParameter(AppKey, true) + $"&season_id={season_id}"
             };
+            api.parameter = api.parameter.Replace("build=6235200", "build=75900200");
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
