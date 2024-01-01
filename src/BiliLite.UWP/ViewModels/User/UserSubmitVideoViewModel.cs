@@ -141,13 +141,15 @@ namespace BiliLite.ViewModels.User
                 LoadingSubmitVideo = true;
                 if (string.IsNullOrEmpty(Keyword))
                 {
-                    var api = m_userDetailApi.SubmitVideosCursor(Mid, order: (SubmitVideoOrder)SelectOrder, cursor: m_lastAid);
+                    var api = m_userDetailApi.SubmitVideosCursor(Mid, order: (SubmitVideoOrder)SelectOrder,
+                        cursor: m_lastAid);
                     CurrentTid = SelectTid.Tid;
                     var results = await api.Request();
                     if (!results.status)
                     {
                         throw new CustomizedErrorException(results.message);
                     }
+
                     var data = results.GetJObject();
                     if (data["code"].ToInt32() != 0)
                     {
@@ -164,22 +166,20 @@ namespace BiliLite.ViewModels.User
                     AttachSubmitVideoItems(submitVideoItems, (int)searchArchive.Total);
                 }
             }
+            catch (CustomizedErrorException ex)
+            {
+                Notify.ShowMessageToast(ex.Message);
+                _logger.Error("获取用户投稿失败", ex);
+            }
+            catch (NotFoundException ex)
+            {
+                Notify.ShowMessageToast("(っ °Д °;)っ 没有找到相应的视频~");
+            }
             catch (Exception ex)
             {
-                if (ex is CustomizedErrorException)
-                {
-                    Notify.ShowMessageToast(ex.Message);
-                }
-                else if (ex is NotFoundException)
-                {
-                    Notify.ShowMessageToast("(っ °Д °;)っ 没有找到相应的视频~");
-                }
-                else
-                {
-                    var handel = HandelError<UserSubmitVideoViewModel>(ex);
-                    Notify.ShowMessageToast(handel.message);
-                    _logger.Error("获取用户投稿失败", ex);
-                }
+                var handel = HandelError<UserSubmitVideoViewModel>(ex);
+                Notify.ShowMessageToast(handel.message);
+                _logger.Error("获取用户投稿失败", ex);
             }
             finally
             {
