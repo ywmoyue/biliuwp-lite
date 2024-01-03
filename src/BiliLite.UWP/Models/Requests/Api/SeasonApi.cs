@@ -33,6 +33,7 @@ namespace BiliLite.Models.Requests.Api
                 api.parameter += $"&ep_id={id}";
             }
 
+            api.parameter = api.parameter.Replace("build=6235200", "build=75900200");
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
