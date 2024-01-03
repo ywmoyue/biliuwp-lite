@@ -1,5 +1,7 @@
 ﻿using BiliLite.Services;
 using System;
+using BiliLite.Models.Common;
+using Bilibili.App.View.V1;
 
 namespace BiliLite.Models.Requests.Api
 {
@@ -8,11 +10,11 @@ namespace BiliLite.Models.Requests.Api
         /// <summary>
         /// 用season_id / ep_id 取番剧信息
         /// </summary>
-        /// <param name="season_id"> 与ep_id 任选其一</param>
-        /// <param name="ep_id">与 season_id 任选其一</param>
+        /// <param name="id"> seasonId / epId</param>
+        /// <param name="type">id类型</param>
         /// <param name="proxy"></param>
         /// <returns></returns>
-        public ApiModel Detail(string season_id, string ep_id = "", bool proxy = false)
+        public ApiModel Detail(string id, SeasonIdType type = SeasonIdType.SeasonId, bool proxy = false)
         {
             var baseUrl = ApiHelper.API_BASE_URL;
 
@@ -20,8 +22,17 @@ namespace BiliLite.Models.Requests.Api
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{baseUrl}/pgc/view/v2/app/season",
-                parameter = ApiHelper.MustParameter(AppKey, true) + $"&season_id={season_id}" + $"&ep_id={ep_id}",
+                parameter = ApiHelper.MustParameter(AppKey, true),
             };
+            if (type == SeasonIdType.SeasonId)
+            {
+                api.parameter += $"&season_id={id}";
+            }
+            else
+            {
+                api.parameter += $"&ep_id={id}";
+            }
+
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }

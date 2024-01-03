@@ -401,4 +401,10 @@
         /// </summary>
         OnlineRankChange,
     }
+
+    public enum SeasonIdType
+    {
+        SeasonId,
+        EpId,
+    }
 }

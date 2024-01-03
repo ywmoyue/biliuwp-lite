@@ -31,7 +31,7 @@ namespace BiliLite.Extensions
         {
             try
             {
-                var results = await new SeasonApi().Detail(season_id: "", ep_id: epid).Request();
+                var results = await new SeasonApi().Detail(epid, SeasonIdType.EpId).Request();
                 if (!results.status)
                 {
                     throw new CustomizedErrorException(results.message);
