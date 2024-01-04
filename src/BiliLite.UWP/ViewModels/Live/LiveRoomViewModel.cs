@@ -926,6 +926,17 @@ namespace BiliLite.ViewModels.Live
             await GetGuardList();
         }
 
+        /// <summary>
+        /// 重新加载舰队信息
+        /// </summary>
+        public async Task ReloadGuardList()
+        {
+            if (LoadingGuard) { return; }
+            Guards?.Clear();
+            GuardPage = 1;
+            await GetGuardList();
+        }
+
         public async Task GetFreeSilverTime()
         {
             try

@@ -1320,7 +1320,11 @@
                                         <ListView.ItemTemplate>
                                             <DataTemplate x:DataType="live:LiveGuardRankItem">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <Image Width="24" Height="24" Source="{x:Bind RankImg}" Margin="4 0"></Image>
+                                                    <Image Width="24" Height="24" Margin="4 0">
+                                                        <Image.Source>
+                                                            <BitmapImage UriSource="{x:Bind RankImg}" DecodePixelWidth="24" DecodePixelHeight="24"/>
+                                                        </Image.Source>
+                                                    </Image>
                                                     <Ellipse Width="30" Height="30" Margin="4 0">
                                                         <Ellipse.Fill>
                                                             <ImageBrush ImageSource="{x:Bind Face,Converter={StaticResource imageConvert2},ConverterParameter='30h',Mode=OneWay}" Stretch="UniformToFill"/>

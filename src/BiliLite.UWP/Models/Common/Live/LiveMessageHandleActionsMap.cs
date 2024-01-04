@@ -189,7 +189,7 @@ namespace BiliLite.Models.Common.Live
             };
             viewModel.Messages.Add(msg);
             // 刷新舰队列表
-            viewModel.GetGuardList().RunWithoutAwait();
+            viewModel.ReloadGuardList().RunWithoutAwait();
         }
 
         private void RoomChange(LiveRoomViewModel viewModel, object message)
