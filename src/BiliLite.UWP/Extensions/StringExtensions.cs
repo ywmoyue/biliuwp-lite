@@ -80,7 +80,7 @@ namespace BiliLite.Extensions
         /// <param name="txt"></param>
         /// <param name="emote"></param>
         /// <returns></returns>
-        public static RichTextBlock ToRichTextBlock(this string txt, JObject emote, bool isLive = false, string color = null, string fontWeight = "Normal")
+        public static RichTextBlock ToRichTextBlock(this string txt, JObject emote, bool isLive = false, string fontColor = null, string fontWeight = "Normal")
         {
             var input = txt;
             try
@@ -112,7 +112,7 @@ namespace BiliLite.Extensions
                                             <Paragraph>{0}</Paragraph>
                                             </RichTextBlock>", input, 
                                                                 isLive ? 22 : 20,
-                                                                color == null ? "" : $"Foreground=\"{color}\"",
+                                                                fontColor == null ? "" : $"Foreground=\"{fontColor}\"",
                                                                 $"FontWeight=\"{fontWeight}\"");
                     var p = (RichTextBlock)XamlReader.Load(xaml);
                     return p;

@@ -150,13 +150,28 @@ namespace BiliLite.Modules.Live
 
                 foreach (var item in textLines)
                 {
-                    ParseMessage(item);
-                    await Task.Delay(TimeSpan.FromSeconds(0.05));
+                    // 每波弹幕大约2.5秒, 使用2.3秒避免弹幕延迟
+                    var delay = ParseMessage(item) switch
+                    {
+                        MessageDelayType.DanmuMessage => 2.3 / textLines.Length, // 常规弹幕类型, 加延迟
+                        MessageDelayType.GiftMessage => 0.1 / textLines.Length, // 礼物消息类型, 加一点延迟
+                        MessageDelayType.SystemMessage => 0.0, // 其他系统消息类型, 无需加延迟
+                        _ => 0.0
+                    };
+
+                    if (delay > 0.0)
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(delay));
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
             }
         }
 
-        private void ParseMessage(string jsonMessage)
+        private MessageDelayType ParseMessage(string jsonMessage)
         {
             try
             {
@@ -319,13 +334,17 @@ namespace BiliLite.Modules.Live
                                 Command = "CUT_OFF",
                             });
 
+                            NewMessage?.Invoke(MessageType.RoomSlient, 233);
+
+                            NewMessage?.Invoke(MessageType.RoomSlient, 0);
+
                             NewMessage?.Invoke(MessageType.StartLive, "6");
 
                             NewMessage?.Invoke(MessageType.StopLive, null);
                         }
 
                         NewMessage?.Invoke(MessageType.Danmu, msg);
-                        return;
+                        return MessageDelayType.DanmuMessage;
                     }
                 }
                 else if (cmd == "SEND_GIFT" || cmd == "POPULARITY_RED_POCKET_NEW")
@@ -341,7 +360,7 @@ namespace BiliLite.Modules.Live
                         msg.UserID = obj["data"]["uid"].ToString();
                         NewMessage?.Invoke(MessageType.Gift, msg);
                     }
-                    return;
+                    return MessageDelayType.GiftMessage;
                 }
                 else if (cmd == "COMBO_SEND")
                 {
@@ -356,7 +375,7 @@ namespace BiliLite.Modules.Live
                         msg.UserID = obj["data"]["uid"].ToString();
                         NewMessage?.Invoke(MessageType.Gift, msg);
                     }
-                    return;
+                    return MessageDelayType.GiftMessage;
                 }
                 else if (cmd == "INTERACT_WORD")
                 {
@@ -377,7 +396,7 @@ namespace BiliLite.Modules.Live
 
                         NewMessage?.Invoke(MessageType.InteractWord, w);
                     }
-                    return;
+                    return MessageDelayType.SystemMessage;
                 }
                 // 没写相关实现, 先注释掉
                 //if (cmd == "SYS_MSG")
@@ -391,7 +410,7 @@ namespace BiliLite.Modules.Live
                     {
                         NewMessage?.Invoke(MessageType.AnchorLotteryStart, obj["data"].ToString());
                     }
-                    return;
+                    return MessageDelayType.SystemMessage;
                 }
                 else if (cmd == "ANCHOR_LOT_AWARD")
                 {
@@ -399,7 +418,7 @@ namespace BiliLite.Modules.Live
                     {
                         NewMessage?.Invoke(MessageType.AnchorLotteryAward, obj["data"].ToString());
                     }
-                    return;
+                    return MessageDelayType.SystemMessage;
                 }
                 else if (cmd == "POPULARITY_RED_POCKET_START")
                 {
@@ -407,7 +426,7 @@ namespace BiliLite.Modules.Live
                     {
                         NewMessage?.Invoke(MessageType.RedPocketLotteryStart, obj["data"].ToString());
                     }
-                    return;
+                    return MessageDelayType.SystemMessage;
                 }
                 else if (cmd == "POPULARITY_RED_POCKET_WINNER_LIST")
                 {
@@ -415,12 +434,12 @@ namespace BiliLite.Modules.Live
                     {
                         NewMessage?.Invoke(MessageType.RedPocketLotteryWinner, obj["data"].ToString());
                     }
-                    return;
+                    return MessageDelayType.SystemMessage;
                 }
                 else if (cmd == "SUPER_CHAT_MESSAGE")
                 {
                     var msgView = new SuperChatMsgViewModel();
-                    if (obj["data"] == null) return;
+                    if (obj["data"] == null) return MessageDelayType.SystemMessage;
                     msgView.BackgroundBottomColor = obj["data"]["background_bottom_color"].ToString();
                     msgView.BackgroundColor = obj["data"]["background_color"].ToString();
                     msgView.BackgroundImage = obj["data"]["background_image"].ToString();
@@ -435,7 +454,7 @@ namespace BiliLite.Modules.Live
                     msgView.Price = obj["data"]["price"].ToInt32();
                     msgView.Username = obj["data"]["user_info"]["uname"].ToString();
                     NewMessage?.Invoke(MessageType.SuperChat, msgView);
-                    return;
+                    return MessageDelayType.SystemMessage;
                 }
                 else if (cmd == "ROOM_CHANGE")
                 {
@@ -450,7 +469,7 @@ namespace BiliLite.Modules.Live
                             ParentAreaID = obj["data"]["parent_area_id"].ToInt32(),
                         });
                     }
-                    return;
+                    return MessageDelayType.SystemMessage;
                 }
                 else if (cmd == "GUARD_BUY")
                 {
@@ -467,7 +486,7 @@ namespace BiliLite.Modules.Live
                             GuardLevel = obj["data"]["guard_level"].ToInt32(),
                         });
                     }
-                    return;
+                    return MessageDelayType.SystemMessage;
                 }
                 else if (cmd == "ROOM_BLOCK_MSG")
                 {
@@ -479,6 +498,7 @@ namespace BiliLite.Modules.Live
                             UserName = obj["data"]["uname"].ToString(),
                         });
                     }
+                    return MessageDelayType.SystemMessage;
                 }
                 else if (cmd == "WARNING" || cmd == "CUT_OFF")
                 {
@@ -490,6 +510,7 @@ namespace BiliLite.Modules.Live
                             Command = cmd,
                         });
                     }
+                    return MessageDelayType.SystemMessage;
                 }
                 else if (cmd == "LIVE" || cmd == "REENTER_LIVE_ROOM")
                 {
@@ -497,6 +518,7 @@ namespace BiliLite.Modules.Live
                     {
                         NewMessage?.Invoke(MessageType.StartLive, obj["roomid"].ToString());
                     }
+                    return MessageDelayType.SystemMessage;
                 }
                 else if (cmd == "WATCHED_CHANGE")
                 {
@@ -504,6 +526,7 @@ namespace BiliLite.Modules.Live
                     {
                         NewMessage?.Invoke(MessageType.WatchedChange, obj["data"]["text_large"].ToString());
                     }
+                    return MessageDelayType.SystemMessage;
                 }
                 else if (cmd == "ONLINE_RANK_V2")
                 {
@@ -511,14 +534,25 @@ namespace BiliLite.Modules.Live
                     {
                         NewMessage?.Invoke(MessageType.OnlineRankChange, obj["data"]["list"].ToString());
                     }
+                    return MessageDelayType.SystemMessage;
                 }
-                else if (cmd == "PREPARING") //直播准备中, 即已停止直播
+                else if (cmd == "PREPARING") //直播准备中, 即已停止直播(并没有测试到实际信息...)
                 {
                     if (obj["data"] != null)
                     {
                         NewMessage?.Invoke(MessageType.StopLive, null);
                     }
+                    return MessageDelayType.SystemMessage;
                 }
+                else if (cmd == "ROOM_SILENT_ON" || cmd == "ROOM_SILENT_OFF")
+                {
+                    if (obj["data"] != null)
+                    {
+                        NewMessage?.Invoke(MessageType.RoomSlient, obj["data"]["level"].ToInt32());
+                    }
+                    return MessageDelayType.SystemMessage;
+                }
+                return MessageDelayType.SystemMessage;
             }
             catch (Exception ex)
             {
@@ -526,6 +560,7 @@ namespace BiliLite.Modules.Live
                 {
                     logger.Log("直播解析JSON包出错", LogType.Error ,ex);
                 }
+                return MessageDelayType.SystemMessage;
             }
         }
 

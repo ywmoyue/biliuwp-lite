@@ -33,10 +33,11 @@ namespace BiliLite.Models.Common.Live
                     { MessageType.WaringOrCutOff, WaringOrCutOff },
                     { MessageType.StartLive, StartLive },
                     { MessageType.WatchedChange, WatchedChange },
-                    { MessageType.RedPocketLotteryStart, RedPocketLotteryStart},
-                    { MessageType.RedPocketLotteryWinner, RedPocketLotteryWinner},
-                    { MessageType.OnlineRankChange, OnlineRankChange},
-                    { MessageType.StopLive, StopLive},
+                    { MessageType.RedPocketLotteryStart, RedPocketLotteryStart },
+                    { MessageType.RedPocketLotteryWinner, RedPocketLotteryWinner },
+                    { MessageType.OnlineRankChange, OnlineRankChange },
+                    { MessageType.StopLive, StopLive },
+                    { MessageType.RoomSlient, RoomSlient },
                 };
         }
 
@@ -182,7 +183,7 @@ namespace BiliLite.Models.Common.Live
             {
                 ShowUserName = Visibility.Collapsed,
                 ShowUserFace = Visibility.Collapsed,
-                RichText = (info.UserName + $" 成为了主播的{info.GiftName}🎉").ToRichTextBlock(null, fontWeight: "SemiBold", color: info.FontColor),
+                RichText = (info.UserName + $" 成为了主播的{info.GiftName}🎉").ToRichTextBlock(null, fontWeight: "SemiBold", fontColor: info.FontColor),
                 CardColor = new SolidColorBrush(info.CardColor),
                 CardHorizontalAlignment = HorizontalAlignment.Center,
             };
@@ -198,7 +199,7 @@ namespace BiliLite.Models.Common.Live
             {
                 ShowUserFace = Visibility.Collapsed,
                 ShowUserName = Visibility.Collapsed,
-                RichText = ($"直播间标题已修改:\n{viewModel.RoomTitle} ➡️ {info.Title}").ToRichTextBlock(null, fontWeight: "SemiBold", color: "#ff1e653a"), //一种绿色
+                RichText = ($"直播间标题已修改:\n{viewModel.RoomTitle} ➡️ {info.Title}").ToRichTextBlock(null, fontWeight: "SemiBold", fontColor: "#ff1e653a"), //一种绿色
                 CardColor = new SolidColorBrush(Color.FromArgb(255, 228, 255, 233)),
                 CardHorizontalAlignment = HorizontalAlignment.Center,
             };
@@ -213,7 +214,7 @@ namespace BiliLite.Models.Common.Live
             {
                 ShowUserFace = Visibility.Collapsed,
                 ShowUserName = Visibility.Collapsed,
-                RichText = (info.UserName + " 被直播间禁言🚫").ToRichTextBlock(null, fontWeight: "SemiBold", color: "White"), // 白色
+                RichText = (info.UserName + " 被直播间禁言🚫").ToRichTextBlock(null, fontWeight: "SemiBold", fontColor: "White"), // 白色
                 CardColor = new SolidColorBrush(Color.FromArgb(255, 235, 45, 80)), // 一种红色
                 CardHorizontalAlignment = HorizontalAlignment.Center,
             };
@@ -240,7 +241,7 @@ namespace BiliLite.Models.Common.Live
             {
                 ShowUserFace = Visibility.Collapsed,
                 ShowUserName = Visibility.Collapsed,
-                RichText = (text + "\n" + info.Message).ToRichTextBlock(null, color: "White", fontWeight: "SemiBold"), 
+                RichText = (text + "\n" + info.Message).ToRichTextBlock(null, fontColor: "White", fontWeight: "SemiBold"), 
                 CardColor = cardColor,
                 CardHorizontalAlignment = HorizontalAlignment.Center,
             };
@@ -248,9 +249,8 @@ namespace BiliLite.Models.Common.Live
             viewModel.Messages.Add(msg);
         }
 
-        private async void StartLive(LiveRoomViewModel viewModel, object room_Id)
+        private void StartLive(LiveRoomViewModel viewModel, object room_Id)
         {
-            await System.Threading.Tasks.Task.Delay(TimeSpan.FromSeconds(5)); // 挂起五秒再获取, 否则很大可能一直卡加载而不缓冲
             viewModel.GetPlayUrls(room_Id.ToInt32(), SettingService.GetValue(SettingConstants.Live.DEFAULT_QUALITY, 10000)).RunWithoutAwait();
             viewModel.Messages.Add(new DanmuMsgModel()
             {
@@ -267,7 +267,7 @@ namespace BiliLite.Models.Common.Live
             viewModel.Ranks.Where(rank => rank.RankType == "contribution-rank").ToList()?[0]?.ReloadData().RunWithoutAwait();
         }
 
-        private void StopLive(LiveRoomViewModel viewModel, object whatever)
+        private void StopLive(LiveRoomViewModel viewModel, object message)
         {
             //viewModel.GetPlayUrls(viewModel.RoomID.ToInt32(), SettingService.GetValue(SettingConstants.Live.DEFAULT_QUALITY, 10000)).RunWithoutAwait();
             viewModel.Messages.Add(new DanmuMsgModel()
@@ -277,6 +277,18 @@ namespace BiliLite.Models.Common.Live
                 RichText = $"直播间 {viewModel.RoomID} 停止直播".ToRichTextBlock(null, fontWeight: "Medium"),
                 CardHorizontalAlignment = HorizontalAlignment.Center,
                 CardPadding = new Thickness(6, 4, 6, 4),
+            });
+        }
+        
+        private void RoomSlient(LiveRoomViewModel viewModel, object level)
+        {
+            viewModel.Messages.Add(new DanmuMsgModel()
+            {
+                ShowUserFace = Visibility.Collapsed,
+                ShowUserName = Visibility.Collapsed,
+                RichText = ((int)level > 0 ? $"直播间开启了等级{level}禁言🤐" : "直播间关闭了等级禁言🗣️").ToRichTextBlock(null, fontWeight: "SemiBold", fontColor: "White"),
+                CardHorizontalAlignment = HorizontalAlignment.Center,
+                CardColor = new SolidColorBrush(Color.FromArgb(255, 235, 45, 80)), // 一种红色
             });
         }
     }

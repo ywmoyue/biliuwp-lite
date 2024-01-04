@@ -157,24 +157,28 @@
                             </Button.Flyout>
                         </Button>
                         <StackPanel x:Name="appBar" HorizontalAlignment="Right" Orientation="Horizontal"  VerticalAlignment="Center">
+                            
                             <AppBarButton Label="关注" Command="{x:Bind Path=userDetailVM.AttentionCommand,Mode=OneWay}" Visibility="{x:Bind Path=userDetailVM.UserInfo.is_followed,Mode=OneWay,Converter={StaticResource display}}">
                                 <AppBarButton.Icon>
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE006;" />
                                 </AppBarButton.Icon>
                             </AppBarButton>
+                            
                             <AppBarButton Label="取消关注" Command="{x:Bind Path=userDetailVM.AttentionCommand,Mode=OneWay}" Visibility="{x:Bind Path=userDetailVM.UserInfo.is_followed,Mode=OneWay}">
                                 <AppBarButton.Icon>
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE00B;" />
                                 </AppBarButton.Icon>
                             </AppBarButton>
+                            
                             <AppBarButton x:Name="btnChat" Click="btnChat_Click" Label="私信" Icon="Message">
-
                             </AppBarButton>
-                            <AppBarButton Visibility="{x:Bind Path=userDetailVM.UserInfo.live_room.liveStatus,Mode=OneWay,Converter={StaticResource display},ConverterParameter=1}" x:Name="btnLiveRoom" Click="btnLiveRoom_Click" Label="直播间" >
+                            
+                            <AppBarButton x:Name="btnLiveRoom" Click="btnLiveRoom_Click" Label="直播间" >
                                 <AppBarButton.Icon>
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE960;" />
                                 </AppBarButton.Icon>
                             </AppBarButton>
+                            
                         </StackPanel>
                     </Grid>
                     <Pivot Grid.Row="1" x:Name="pivot" SelectionChanged="pivot_SelectionChanged">
