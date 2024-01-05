@@ -24,6 +24,10 @@ namespace BiliLite.Player
         /// 保持4：3
         /// </summary>
         S4_3,
+        /// <summary>
+        /// 兼容
+        /// </summary>
+        Compatible
     }
     public enum PlayerState
     {
