@@ -446,9 +446,14 @@ namespace BiliLite.Modules.Live
                 }
                 else if (cmd == "ONLINE_RANK_V2")
                 {
-                    if (obj["data"] != null)
+                    if (obj["data"] != null && obj["data"]["list"] != null)
                     {
                         NewMessage?.Invoke(MessageType.OnlineRankChange, obj["data"]["list"].ToString());
+                    }
+
+                    if (obj["data"] != null && obj["data"]["online_list"] != null)
+                    {
+                        NewMessage?.Invoke(MessageType.OnlineRankChange, obj["data"]["online_list"].ToString());
                     }
                 }
             }
