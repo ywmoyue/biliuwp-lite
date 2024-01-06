@@ -7,6 +7,7 @@ using Windows.UI.Xaml.Controls;
 using BiliLite.Models.Common.Player;
 using BiliLite.Player.SubPlayers;
 using BiliLite.Player.MediaInfos;
+using System.Linq;
 
 namespace BiliLite.Player
 {
@@ -29,7 +30,11 @@ namespace BiliLite.Player
             m_config.FFmpegOptions.Add("rtsp_transport", "tcp");
             m_config.FFmpegOptions.Add("user_agent", "Mozilla/5.0 BiliDroid/1.12.0 (bbcallen@gmail.com)");
             m_config.FFmpegOptions.Add("referer", "https://live.bilibili.com/");
-        }
+
+            m_config.FFmpegOptions.Add("reconnect_streamed", 1);
+            m_config.FFmpegOptions.Add("reconnect_on_http_error", "404"); //刚开播时会404, 但一会就好了
+            m_config.FFmpegOptions.Add("reconnect_delay_max", 10);
+    }
 
         public override double Volume
         {
@@ -157,6 +162,7 @@ namespace BiliLite.Player
             {
                 url = (urls.FlvUrls != null && selectRouteLine < urls.FlvUrls.Count) ? urls.FlvUrls[selectRouteLine].Url : urls.HlsUrls[selectRouteLine].Url;
             }
+            url ??= urls.FlvUrls.FirstOrDefault(x => x.Url != null).Url; // 不论如何是有flv流的
 
             m_url = url;
 

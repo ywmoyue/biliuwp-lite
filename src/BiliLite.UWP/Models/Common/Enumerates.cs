@@ -400,6 +400,34 @@
         /// 高能榜变动
         /// </summary>
         OnlineRankChange,
+
+        /// <summary>
+        /// 停止直播
+        /// </summary>
+        StopLive,
+
+        /// <summary>
+        /// 直播间等级禁言
+        /// </summary>
+        RoomSlient,
+    }
+
+    public enum MessageDelayType {
+
+        /// <summary>
+        /// 常规弹幕消息
+        /// </summary>
+        DanmuMessage,
+
+        /// <summary>
+        /// 礼物消息
+        /// </summary>
+        GiftMessage,
+
+        /// <summary>
+        /// 其他系统消息
+        /// </summary>
+        SystemMessage,
     }
 
     public enum SeasonIdType

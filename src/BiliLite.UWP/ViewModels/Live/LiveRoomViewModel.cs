@@ -130,6 +130,11 @@ namespace BiliLite.ViewModels.Live
         /// </summary>
         public string WatchedNum { get; set; }
 
+        /// <summary>
+        /// 舰长数
+        /// </summary>
+        public int GuardNum { get; set; }
+
         public bool Loading { get; set; } = true;
 
         public bool Attention { get; set; }
@@ -550,16 +555,14 @@ namespace BiliLite.ViewModels.Live
 
                 RoomID = data.data.RoomInfo.RoomId;
                 RoomTitle = data.data.RoomInfo.Title;
-                //WatchedNum = data.data.RoomInfo.Online;
                 Liveing = data.data.RoomInfo.LiveStatus == 1;
+                GuardNum = data.data.GuardInfo.Count;
                 LiveInfo = data.data;
+
                 if (Ranks == null)
                 {
                     Ranks = new List<LiveRoomRankViewModel>()
                     {
-                        //new LiveRoomRankViewModel(RoomID, data.data.RoomInfo.Uid, "金瓜子榜", "gold-rank"),
-                        //new LiveRoomRankViewModel(RoomID, data.data.RoomInfo.Uid, "今日礼物榜", "today-rank"),
-                        //new LiveRoomRankViewModel(RoomID, data.data.RoomInfo.Uid, "七日礼物榜", "seven-rank"),
                         new LiveRoomRankViewModel(RoomID, data.data.RoomInfo.Uid, "高能用户贡献榜", "contribution-rank"),
                         new LiveRoomRankViewModel(RoomID, data.data.RoomInfo.Uid, "粉丝榜", "fans"),
                     };
@@ -870,10 +873,10 @@ namespace BiliLite.ViewModels.Live
                 var data = await result.GetData<JObject>();
                 if (!data.success) return;
                 var guardNum = data.data["info"]["num"].ToInt32();
-                LiveInfo.GuardInfo.Count = guardNum; // 更新显示数字(似乎不生效...)
+                GuardNum = guardNum; // 更新显示数字
 
                 var top3 = JsonConvert.DeserializeObject<List<LiveGuardRankItem>>(data.data["top3"].ToString());
-                if (Guards.Count == 0 && top3 != null && top3.Count != 0 && Guards.Count < guardNum)
+                if (Guards.Count == 0 && top3 != null && top3.Count != 0 && Guards.Count < GuardNum)
                 {
                     foreach (var item in top3)
                     {
@@ -882,7 +885,7 @@ namespace BiliLite.ViewModels.Live
                 }
 
                 var list = JsonConvert.DeserializeObject<List<LiveGuardRankItem>>(data.data["list"].ToString());
-                if (list != null && list.Count != 0 && Guards.Count < guardNum)
+                if (list != null && list.Count != 0 && Guards.Count < GuardNum)
                 {
                     foreach (var item in list)
                     {
@@ -920,6 +923,17 @@ namespace BiliLite.ViewModels.Live
             {
                 return;
             }
+            await GetGuardList();
+        }
+
+        /// <summary>
+        /// 重新加载舰队信息
+        /// </summary>
+        public async Task ReloadGuardList()
+        {
+            if (LoadingGuard) { return; }
+            Guards?.Clear();
+            GuardPage = 1;
             await GetGuardList();
         }
 

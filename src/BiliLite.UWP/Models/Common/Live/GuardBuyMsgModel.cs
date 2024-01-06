@@ -1,4 +1,7 @@
-﻿namespace BiliLite.Models.Common.Live
+﻿using Windows.UI;
+using Windows.UI.Xaml;
+
+namespace BiliLite.Models.Common.Live
 {
     public class GuardBuyMsgModel
     {
@@ -16,6 +19,34 @@
         /// 大航海等级1: 总督 2: 提督 3:舰长
         /// </summary>
         public int GuardLevel { get; set; }
+
+        /// <summary>
+        /// 字体颜色
+        /// </summary>
+        public string FontColor
+        {
+            get => GuardLevel switch
+            {
+                3 => "#FF23709E",
+                2 => "#FF7B166F",
+                1 => "#FFC01039",
+                _ => null
+            };
+        }
+
+        /// <summary>
+        /// 卡片颜色
+        /// </summary>
+        public Color CardColor
+        {
+            get => GuardLevel switch
+            {
+                3 => Color.FromArgb(255, 192, 216, 255),
+                2 => Color.FromArgb(255, 250, 187, 255),
+                1 => Color.FromArgb(255, 255, 185, 187),
+                _ => (Color)Application.Current.Resources["CardColor"],
+            };
+        }
 
         /// <summary>
         /// 数量
