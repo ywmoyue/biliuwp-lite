@@ -429,4 +429,10 @@
         /// </summary>
         SystemMessage,
     }
+
+    public enum SeasonIdType
+    {
+        SeasonId,
+        EpId,
+    }
 }
