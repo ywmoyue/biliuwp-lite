@@ -12,6 +12,7 @@ namespace BiliLite.Models.Requests.Api.Home
                 baseUrl = $"https://app.bilibili.com/x/v2/show/popular/index",
                 parameter = ApiHelper.MustParameter(AppKey, true) + $"&idx={idx}&last_param={last_param}"
             };
+            api.parameter = api.parameter.Replace("mobi_app=iphone", "mobi_app=android");
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
