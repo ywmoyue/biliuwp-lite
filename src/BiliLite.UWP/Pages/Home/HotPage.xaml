@@ -47,7 +47,7 @@
                             <ColumnDefinition Width="160"/>
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <Border Margin="4" CornerRadius="{StaticResource ImageCornerRadius}">
+                        <Border Margin="2" CornerRadius="{StaticResource ImageCornerRadius}">
                             <Grid >
                                 <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=Cover,Converter={StaticResource imageConvert},ConverterParameter='120h'}"></toolkit:ImageEx>
                                 <Border CornerRadius="4" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="4" Padding="4 2" Background="#99000000">
@@ -55,14 +55,20 @@
                                 </Border>
                             </Grid>
                         </Border>
-                        <StackPanel Grid.Column="1" Margin="4 0 0 0" >
-                            <TextBlock MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Title}"></TextBlock>
-                            <Border Margin="0 2 0 0" BorderThickness="1" BorderBrush="{x:Bind Path=RcmdReason.BorderColor,Converter={StaticResource colorConvert}}"  Background="{x:Bind Path=RcmdReason.BgColor,Converter={StaticResource colorConvert}}" HorizontalAlignment="Left" Padding="4 0" CornerRadius="2">
+                        <Grid Grid.Column="1" Margin="4 0 0 0" VerticalAlignment="Stretch">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" VerticalAlignment="Top" MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Title}"></TextBlock>
+                            <Border Grid.Row="1" Margin="0 0 0 3" VerticalAlignment="Bottom" BorderThickness="1" BorderBrush="{x:Bind Path=RcmdReason.BorderColor,Converter={StaticResource colorConvert}}"  Background="{x:Bind Path=RcmdReason.BgColor,Converter={StaticResource colorConvert}}" HorizontalAlignment="Left" Padding="4 0" CornerRadius="2">
                                 <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{x:Bind Path=RcmdReason.TextColor,Converter={StaticResource colorConvert}}" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=RcmdReason.Text}"></TextBlock>
                             </Border>
-                            <TextBlock Margin="0 2 0 0" TextTrimming="CharacterEllipsis" Foreground="Gray" Text="{x:Bind TextInfo2}"></TextBlock>
-                            <TextBlock Margin="0 2 0 0" TextTrimming="CharacterEllipsis" Foreground="Gray" Text="{x:Bind TextInfo3}"></TextBlock>
-                        </StackPanel>
+                            <TextBlock Grid.Row="2" FontSize="13" Margin="0 0 0 0" VerticalAlignment="Bottom" TextTrimming="CharacterEllipsis" Foreground="Gray" Text="{x:Bind TextInfo2}"></TextBlock>
+                            <TextBlock Grid.Row="3" FontSize="13" Margin="0 0 0 0" VerticalAlignment="Bottom" TextTrimming="CharacterEllipsis" Foreground="Gray" Text="{x:Bind TextInfo3}"></TextBlock>
+                        </Grid>
                         <!--<TextBlock  Grid.Row="2" Margin="4 0 4 4" FontSize="12" Foreground="Gray" MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding desc}"></TextBlock>-->
                     </Grid>
                 </DataTemplate>
