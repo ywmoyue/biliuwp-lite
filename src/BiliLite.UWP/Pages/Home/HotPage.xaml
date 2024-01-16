@@ -44,7 +44,7 @@
                             </MenuFlyout>
                         </Grid.ContextFlyout>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="160"/>
+                            <ColumnDefinition Width="180"/>
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Border Margin="4" CornerRadius="{StaticResource ImageCornerRadius}">
