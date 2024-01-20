@@ -117,7 +117,7 @@ namespace BiliLite.Models.Requests.Api.User
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/add",
-                body = ApiHelper.MustParameter(AppKey, true) + $"privacy={(isOpen ? 0 : 1)}&title={Uri.EscapeDataString(title)}&intro={Uri.EscapeDataString(intro)}"
+                body = ApiHelper.MustParameter(AppKey, true) + $"&privacy={(isOpen ? 0 : 1)}&title={Uri.EscapeDataString(title)}&intro={Uri.EscapeDataString(intro)}"
             };
             api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
@@ -136,7 +136,7 @@ namespace BiliLite.Models.Requests.Api.User
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/edit",
-                body = ApiHelper.MustParameter(AppKey, true) + $"privacy={(isOpen ? 0 : 1)}&title={Uri.EscapeDataString(title)}&intro={Uri.EscapeDataString(intro)}&media_id={media_id}"
+                body = ApiHelper.MustParameter(AppKey, true) + $"&privacy={(isOpen ? 0 : 1)}&title={Uri.EscapeDataString(title)}&intro={Uri.EscapeDataString(intro)}&media_id={media_id}"
             };
             api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
