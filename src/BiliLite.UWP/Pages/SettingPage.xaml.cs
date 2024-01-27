@@ -760,6 +760,9 @@ namespace BiliLite.Pages
                 SettingService.SetValue(SettingConstants.Other.FIRST_GRPC_REQUEST_DYNAMIC, swFirstGrpcRequestDynamic.IsOn);
             });
 
+            RequestBuildTextBox.Text = SettingService.GetValue(SettingConstants.Other.REQUEST_BUILD,
+                SettingConstants.Other.DEFAULT_REQUEST_BUILD);
+
             // BiliLiteWebApi
             BiliLiteWebApiTextBox.Text = SettingService.GetValue(SettingConstants.Other.BILI_LITE_WEB_API_BASE_URL, ApiConstants.BILI_LITE_WEB_API_DEFAULT_BASE_URL);
             BiliLiteWebApiTextBox.Loaded += (sender, e) =>
@@ -1020,6 +1023,27 @@ namespace BiliLite.Pages
                         mirrorDonateText.Visibility = Visibility.Collapsed; break;
                     }
             }
+        }
+
+        private void RequestBuildSaveBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            var build = RequestBuildTextBox.Text;
+            if (string.IsNullOrWhiteSpace(build))
+            {
+                Notify.ShowMessageToast("请输入正确的build值");
+                return;
+            }
+
+            SettingService.SetValue(SettingConstants.Other.REQUEST_BUILD, build);
+            Notify.ShowMessageToast("已保存");
+        }
+
+        private void RequestBuildDefaultBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            var build = SettingConstants.Other.DEFAULT_REQUEST_BUILD;
+            SettingService.SetValue(SettingConstants.Other.REQUEST_BUILD, build);
+            RequestBuildTextBox.Text = build;
+            Notify.ShowMessageToast("已恢复默认");
         }
     }
 }
