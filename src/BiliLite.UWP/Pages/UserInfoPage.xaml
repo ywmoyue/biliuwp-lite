@@ -157,24 +157,28 @@
                             </Button.Flyout>
                         </Button>
                         <StackPanel x:Name="appBar" HorizontalAlignment="Right" Orientation="Horizontal"  VerticalAlignment="Center">
+                            
                             <AppBarButton Label="关注" Command="{x:Bind Path=userDetailVM.AttentionCommand,Mode=OneWay}" Visibility="{x:Bind Path=userDetailVM.UserInfo.is_followed,Mode=OneWay,Converter={StaticResource display}}">
                                 <AppBarButton.Icon>
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE006;" />
                                 </AppBarButton.Icon>
                             </AppBarButton>
+                            
                             <AppBarButton Label="取消关注" Command="{x:Bind Path=userDetailVM.AttentionCommand,Mode=OneWay}" Visibility="{x:Bind Path=userDetailVM.UserInfo.is_followed,Mode=OneWay}">
                                 <AppBarButton.Icon>
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE00B;" />
                                 </AppBarButton.Icon>
                             </AppBarButton>
+                            
                             <AppBarButton x:Name="btnChat" Click="btnChat_Click" Label="私信" Icon="Message">
-
                             </AppBarButton>
-                            <AppBarButton Visibility="{x:Bind Path=userDetailVM.UserInfo.live_room.liveStatus,Mode=OneWay,Converter={StaticResource display},ConverterParameter=1}" x:Name="btnLiveRoom" Click="btnLiveRoom_Click" Label="直播间" >
+                            
+                            <AppBarButton x:Name="btnLiveRoom" Click="btnLiveRoom_Click" Label="直播间" >
                                 <AppBarButton.Icon>
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE960;" />
                                 </AppBarButton.Icon>
                             </AppBarButton>
+                            
                         </StackPanel>
                     </Grid>
                     <Pivot Grid.Row="1" x:Name="pivot" SelectionChanged="pivot_SelectionChanged">
@@ -210,7 +214,6 @@
                                                 <ComboBox x:Name="comVideoOrder" SelectionChanged="comVideoOrder_SelectionChanged" Margin="8 0"  SelectedIndex="{x:Bind Path=m_userSubmitVideoViewModel.SelectOrder,Mode=TwoWay}">
                                                     <ComboBoxItem>最新发布</ComboBoxItem>
                                                     <ComboBoxItem>最多播放</ComboBoxItem>
-                                                    <ComboBoxItem>最多收藏</ComboBoxItem>
                                                 </ComboBox>
                                             </StackPanel>
                                             <AutoSuggestBox Text="{x:Bind Path=m_userSubmitVideoViewModel.Keyword,Mode=TwoWay}" x:Name="searchVideo" QuerySubmitted="searchVideo_QuerySubmitted" QueryIcon="Find" PlaceholderText="搜索视频" Width="160" HorizontalAlignment="Right"></AutoSuggestBox>
@@ -230,12 +233,12 @@
                                                     </MenuFlyout>
                                                 </Grid.ContextFlyout>
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="160"/>
+                                                    <ColumnDefinition Width="180"/>
                                                     <ColumnDefinition />
                                                 </Grid.ColumnDefinitions>
                                                 <Border Margin="4" CornerRadius="{StaticResource ImageCornerRadius}">
                                                     <Grid>
-                                                        <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=Pic,Converter={StaticResource imageConvert},ConverterParameter='120h'}"></toolkit:ImageEx>
+                                                        <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=Pic,Converter={StaticResource imageConvert},ConverterParameter='360w_200h_1c'}"></toolkit:ImageEx>
                                                         <Border CornerRadius="4" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="4" Padding="4 2" Background="#99000000">
                                                             <TextBlock Foreground="White" FontSize="12" Text="{x:Bind Length}"></TextBlock>
                                                         </Border>
@@ -389,11 +392,88 @@
                                 </control:RoundButton>
                             </Grid>
                         </PivotItem>
-                        <!--<PivotItem Margin="0">
+                        <PivotItem Margin="0">
                             <PivotItem.Header>
-                                <TextBlock FontSize="15">频道</TextBlock>
+                                <TextBlock FontSize="15">合集<Run Foreground="Gray" FontSize="12" Text="{x:Bind Path=userDetailVM.UserInfo.stat.Collection,Mode=OneWay}"/></TextBlock>
                             </PivotItem.Header>
-                        </PivotItem>-->
+                            <Grid>
+                                <control:MyAdaptiveGridView
+                                    Padding="12 8" 
+                                    ItemHeight="100" 
+                                    DesiredWidth="600" 
+                                    StretchContentForSingleRow="False" 
+                                    SelectionMode="None" 
+                                    IsItemClickEnabled="True" 
+                                    CanLoadMore="{x:Bind Path=m_userSubmitCollectionViewModel.SubmitCollectionCanLoadMore,Mode=OneWay}"
+                                    LoadMoreBottomOffset="0"
+                                    LoadMoreCommand="{x:Bind Path=m_userSubmitCollectionViewModel.LoadMoreSubmitCollectionCommand}"
+                                    ItemsSource="{x:Bind Path=m_userSubmitCollectionViewModel.SubmitCollectionItems,Mode=OneWay}"
+                                    ItemClick="SubmitCollection_ItemClick"
+                                    OneRowModeEnabled="False">      
+                                    <toolkit:AdaptiveGridView.ItemContainerStyle>
+                                        <Style TargetType="GridViewItem">
+                                            <Setter Property="Margin" Value="4"></Setter>
+                                        </Style>
+                                    </toolkit:AdaptiveGridView.ItemContainerStyle>
+                                    <toolkit:AdaptiveGridView.ItemTemplate>
+                                        <DataTemplate x:DataType="user:SubmitCollectionItemModel">
+                                            <Grid Background="#00FFFFFF">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="180"/>
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Border Grid.Column="0" CornerRadius="{StaticResource ImageCornerRadius}">
+                                                    <Grid>
+                                                        <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="/Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=Cover,Converter={StaticResource imageConvert},ConverterParameter='360w_200h_1c'}"></toolkit:ImageEx>
+                                                        <Border CornerRadius="4" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="4" Padding="4 2" Background="#99000000">
+                                                            <TextBlock Foreground="White" FontSize="12">
+                                                                <Run>🎞️</Run>
+                                                                <Run Text="{x:Bind Count}"></Run>
+                                                            </TextBlock>
+                                                        </Border>
+                                                    </Grid>
+                                                </Border>
+                                                <Grid Grid.Column="1">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="*"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                    </Grid.RowDefinitions>
+                                                    <StackPanel Grid.Row="0" Margin="8 0 0 0" VerticalAlignment="Top">
+                                                        <TextBlock MaxLines="2" Margin="0 0 0 0" TextTrimming="CharacterEllipsis" Text="{x:Bind Title}" TextWrapping="Wrap"></TextBlock>
+                                                    </StackPanel>
+                                                    <StackPanel Grid.Row="1" Margin="8 0 0 0" VerticalAlignment="Bottom">
+                                                        <TextBlock VerticalAlignment="Bottom" Margin="0 3 0 0" FontSize="13" Foreground="Gray">
+                                                            <!--<Run>类型: </Run>-->
+                                                            <Run  Text="{x:Bind Path=Type}"></Run>
+                                                        </TextBlock>
+                                                    </StackPanel>
+                                                    <StackPanel Grid.Row="2" Margin="8 0 0 0" VerticalAlignment="Bottom">
+                                                        <TextBlock Margin="0 3 0 0" FontSize="14" Foreground="Gray">
+                                                             <Run>最后更新: </Run>
+                                                             <Run Text="{x:Bind Path=LatestUpdateTime,Converter={StaticResource time},ConverterParameter='ts'}"></Run>
+                                                        </TextBlock>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </toolkit:AdaptiveGridView.ItemTemplate>
+                                    <toolkit:AdaptiveGridView.Footer>
+                                        <StackPanel>
+                                            <HyperlinkButton  Command="{x:Bind Path=m_userSubmitCollectionViewModel.LoadMoreSubmitCollectionCommand}" Visibility="{x:Bind Path=m_userSubmitCollectionViewModel.SubmitCollectionCanLoadMore,Mode=OneWay}" Foreground="Gray" HorizontalAlignment="Center">
+                                                <TextBlock>加载更多</TextBlock>
+                                            </HyperlinkButton>
+                                            <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_userSubmitCollectionViewModel.LoadingSubmitCollection,Mode=OneWay}"></ProgressRing>
+                                        </StackPanel>
+                                    </toolkit:AdaptiveGridView.Footer>
+                                </control:MyAdaptiveGridView>
+                                <TextBlock Visibility="{x:Bind Path=m_userSubmitCollectionViewModel.Nothing,Mode=OneWay}" Text="这里什么都没有呢..." Foreground="Gray" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                                <control:RoundButton Command="{x:Bind Path=m_userSubmitCollectionViewModel.RefreshSubmitCollectionCommand}"  VerticalAlignment="Bottom" Padding="12" Margin="12" HorizontalAlignment="Right">
+                                    <SymbolIcon Symbol="Refresh" Foreground="White"></SymbolIcon>
+                                </control:RoundButton>
+                            </Grid>
+
+                        </PivotItem>
                         <PivotItem Margin="0">
                             <PivotItem.Header>
                                 <TextBlock FontSize="15">收藏<Run Foreground="Gray" FontSize="12" Text="{x:Bind Path=userDetailVM.UserInfo.stat.favourite,Mode=OneWay}"/></TextBlock>

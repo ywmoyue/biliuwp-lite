@@ -21,7 +21,7 @@ namespace BiliLite.Services
         public const string GIT_RAW_URL = "https://raw.githubusercontent.com/ywmoyue/biliuwp-lite/master";
 
         // 镜像 GIT RAW路径
-        public const string GHPROXY_GIT_RAW_URL = "https://gh-proxy.com/https://raw.githubusercontent.com/ywmoyue/biliuwp-lite/master";
+        public const string GHPROXY_GIT_RAW_URL = "https://mirror.ghproxy.com/https://raw.githubusercontent.com/ywmoyue/biliuwp-lite/master";
         public const string KGITHUB_GIT_RAW_URL = "https://raw.kkgithub.com/ywmoyue/biliuwp-lite/master";
 
         // 哔哩哔哩API
@@ -49,7 +49,6 @@ namespace BiliLite.Services
         public static ApiKeyInfo AndroidKey = new ApiKeyInfo(Constants.ANDROID_APP_KEY, "560c52ccd288fed045859ed18bffd973",
             Constants.ANDROID_MOBI_APP, Constants.ANDROID_USER_AGENT);
         
-        private const string build = "6235200";
         private const string _platform = "android";
         public static string deviceId = "";
         private static int[] mixinKeyEncTab = new int[] {
@@ -59,18 +58,6 @@ namespace BiliLite.Services
             36, 20, 34, 44, 52
         };
 
-        private static async Task<(string, string)> GetWbiKeys()
-        {
-            // 获取最新的 img_key 和 sub_key
-            var response = await new AccountApi().Nav().Request();
-            var result = await response.GetData<WebInterfaceNav>();
-            var imgUrl = result.data.WbiImg.ImgUrl;
-            var subUrl = result.data.WbiImg.SubUrl;
-            var imgKey = imgUrl.Substring(imgUrl.LastIndexOf('/') + 1).Split('.')[0];
-            var subKey = subUrl.Substring(subUrl.LastIndexOf('/') + 1).Split('.')[0];
-            return (imgKey, subKey);
-        }
-
         private static string GetMixinKey(string origin)
         {
             // 对 imgKey 和 subKey 进行字符顺序打乱编码
@@ -79,7 +66,9 @@ namespace BiliLite.Services
 
         public static async Task<string> GetWbiSign(string url)
         {
-            var (imgKey, subKey) = await GetWbiKeys();
+            var wbiKeys = await new WbiKeyService().GetWbiKeys();
+            var imgKey = wbiKeys.ImgKey;
+            var subKey = wbiKeys.SubKey;
 
             // 为请求参数进行 wbi 签名
             var mixinKey = GetMixinKey(imgKey + subKey);
@@ -144,6 +133,9 @@ namespace BiliLite.Services
             {
                 url = $"access_key={SettingService.Account.AccessKey}&";
             }
+
+            var build = SettingService.GetValue(SettingConstants.Other.REQUEST_BUILD,
+                SettingConstants.Other.DEFAULT_REQUEST_BUILD);
             
             return url + $"appkey={apikey.Appkey}&build={build}&mobi_app={apikey.MobiApp}&platform={_platform}&ts={TimeExtensions.GetTimestampS()}";
         }

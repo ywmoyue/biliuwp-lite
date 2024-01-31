@@ -2329,6 +2329,8 @@ namespace BiliLite.Controls
                     BottomBtnLoading.Visibility = Visibility.Visible;
                     BottomBtnPlay.Visibility = Visibility.Collapsed;
                     BottomBtnPause.Visibility = Visibility.Collapsed;
+                    // 更新画面比例
+                    Player.SetRatioMode(PlayerSettingRatio.SelectedIndex);
                     break;
                 case PlayState.Playing:
                     KeepScreenOn(true);

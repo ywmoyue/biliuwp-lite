@@ -561,7 +561,7 @@
             </PivotItem>
             <PivotItem Margin="0">
                 <PivotItem.Header>
-                    <TextBlock FontSize="15">其他</TextBlock>
+                    <TextBlock FontSize="15">开发者选项</TextBlock>
                 </PivotItem.Header>
                 <ScrollViewer Padding="12 0" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
@@ -584,6 +584,12 @@
                         </ComboBox>
                         <TextBlock  Margin="0 8 0 0"  FontSize="16">优先使用Grpc请求动态</TextBlock>
                         <ToggleSwitch x:Name="swFirstGrpcRequestDynamic"></ToggleSwitch>
+                        <TextBlock  Margin="0 8 0 8" FontSize="16">发起请求时使用的build值</TextBlock>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox x:Name="RequestBuildTextBox" PlaceholderText="请输入要使用的build值" Width="200"></TextBox>
+                            <Button x:Name="RequestBuildSaveBtn" Click="RequestBuildSaveBtn_OnClick" Margin="4 0">保存</Button>
+                            <Button x:Name="RequestBuildDefaultBtn" Click="RequestBuildDefaultBtn_OnClick"  Margin="4 0">恢复默认</Button>
+                        </StackPanel>
                         <TextBlock  Margin="0 8 0 0"  FontSize="16">BiliLite-WebApi（用于处理UWP无法完成的事项）</TextBlock>
                         <StackPanel Orientation="Horizontal">
                             <AutoSuggestBox Margin="0 8" x:Name="BiliLiteWebApiTextBox" QueryIcon="Accept" HorizontalAlignment="Left" PlaceholderText="https://example.com/"></AutoSuggestBox>

@@ -118,6 +118,6 @@ namespace BiliLite.ViewModels.Season
         public SeasonDetailPaymentModel Payment { get; set; }
 
         [JsonProperty("show_payment")]
-        public bool ShowPayment => Payment is { Dialog: { } };
+        public bool ShowPayment => Payment?.Dialog?.Title != null;
     }
 }

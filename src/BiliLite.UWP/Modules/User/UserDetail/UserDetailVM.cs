@@ -120,6 +120,7 @@ namespace BiliLite.Modules.User
                         stat.favourite_count = (data.data["favourite2"]?["count"] ?? 0).ToInt32();
                         stat.follower = data.data["card"]["fans"].ToInt32();
                         stat.following = data.data["card"]["attention"].ToInt32();
+                        stat.CollectionCount = (data.data?["ugc_season"]?["count"] ?? 0).ToInt32() + (data.data?["series"]?["item"].ToArray().Length ?? 0);
                         return stat;
                     }
                     else
@@ -304,6 +305,8 @@ namespace BiliLite.Modules.User
             }
         }
 
+        public int CollectionCount { get; set; }
+        public string Collection { get => CollectionCount > 0 ? " " + CollectionCount.ToCountString() : ""; }
     }
     public class UserCenterInfoModel : IModules
     {

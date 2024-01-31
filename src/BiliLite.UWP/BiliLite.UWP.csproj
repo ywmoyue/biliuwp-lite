@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project ToolsVersion="15.0" DefaultTargets="Build"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"
+    Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -33,7 +35,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;X86</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -58,7 +60,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\ARM\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;ARM</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>ARM</PlatformTarget>
@@ -83,7 +85,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\ARM64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;ARM64</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>ARM64</PlatformTarget>
@@ -109,7 +111,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;X64</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -136,13 +138,29 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Extensions\QrCodeExtensions.cs" />
     <Compile Include="Models\Common\Anime\ISeasonItem.cs" />
+    <
+    <
+    <
+    <
+    <
+    <
+    < HEAD
     <Compile Include="Controls\IPlayer.cs" />
     <Compile Include="Controls\Player2.xaml.cs">
       <DependentUpon>Player2.xaml</DependentUpon>
     </Compile>
     <Compile Include="Extensions\PlayerExtensions.cs" />
+    =======
+    <Compile Include="Models\Common\Live\DefaultPlayUrlSourceOptions.cs" />
+    <Compile Include="Models\Common\Live\InteractWordModel.cs" />
+    >>>>>>> dev
     <Compile Include="Models\Common\Live\LiveMessageHandleActionsMap.cs" />
+    <Compile Include="Models\Common\Live\LiveRoomEndRedPocketLotteryInfoModel.cs" />
+    <Compile Include="Models\Common\Live\LiveRoomRedPocketLotteryInfoModel.cs" />
+    <Compile Include="Models\Common\Live\RoomBlockMsgModel.cs" />
+    <Compile Include="Models\Common\Live\WarningOrCutOffMsgModel.cs" />
     <Compile Include="Models\Common\Player\DefaultPlayerModeOptions.cs" />
     <Compile Include="Models\Common\Player\LivePlayerMode.cs" />
     <Compile Include="Models\Common\Player\PlayerConfig.cs" />
@@ -182,6 +200,10 @@
     <Compile Include="Models\Common\Live\GiftMsgModel.cs" />
     <Compile Include="Models\Common\Live\GuardBuyMsgModel.cs" />
     <Compile Include="Models\Common\Live\RoomChangeMsgModel.cs" />
+    <Compile Include="Models\Common\User\SubmitCollectionItemModel.cs" />
+    <Compile Include="Models\Common\WbiKey.cs" />
+    <Compile Include="Models\Exceptions\NotFoundException.cs" />
+    <Compile Include="Models\Exceptions\CustomizedErrorWithDataException.cs" />
     <Compile Include="Models\Exceptions\PlayerException.cs" />
     <Compile Include="Models\Requests\Api\BaseApi.cs" />
     <Compile Include="LibPlayers\BiliVideoPlayer.cs" />
@@ -227,14 +249,17 @@
     <Compile Include="LibPlayers\States\PlayStates\PlayingPlayState.cs" />
     <Compile Include="LibPlayers\States\PlayStates\PlayStateHandler.cs" />
     <Compile Include="LibPlayers\States\PlayStates\StopPlayState.cs" />
+    <Compile Include="Services\Interfaces\IQrCodeService.cs" />
+    <Compile Include="Services\QrCoderQrCodeService.cs" />
+    <Compile Include="Services\WbiKeyService.cs" />
+    <Compile Include="Services\ZXingQrCodeService.cs" />
     <Compile Include="ViewModels\Live\LiveDetailPageViewModel.cs" />
+    <Compile Include="ViewModels\Live\LiveRoomLotteryViewModel.cs" />
     <Compile Include="ViewModels\Live\SuperChatMsgViewModel.cs" />
-    <Compile Include="Models\Common\Live\WelcomeMsgModel.cs" />
     <Compile Include="Models\Common\User\HistoryCursor.cs" />
     <Compile Include="Models\Common\User\UserHistory.cs" />
     <Compile Include="Models\Common\User\UserHistoryItem.cs" />
     <Compile Include="Models\Common\User\UserHistoryItemHistory.cs" />
-    <Compile Include="ViewModels\Live\LiveRoomAnchorLotteryViewModel.cs" />
     <Compile Include="Models\Common\Live\LiveRoomGiftItem.cs" />
     <Compile Include="Models\Common\Live\LiveRoomGuardInfoModel.cs" />
     <Compile Include="Models\Common\Live\LiveRoomInfoModel.cs" />
@@ -352,6 +377,7 @@
     <Compile Include="ViewModels\Season\SeasonDetailUserStatusViewModel.cs" />
     <Compile Include="ViewModels\Comment\CommentContentViewModel.cs" />
     <Compile Include="ViewModels\Season\SeasonDetailViewModel.cs" />
+    <Compile Include="ViewModels\User\UserSubmitCollectionViewModel.cs" />
     <Compile Include="ViewModels\Video\DanmakuViewModel.cs" />
     <Compile Include="ViewModels\Video\VideoDetailReqUserViewModel.cs" />
     <Compile Include="ViewModels\Video\VideoDetailRelatesViewModel.cs" />
@@ -801,6 +827,7 @@
     <Content Include="Assets\Live\ic_live_guard_2.png" />
     <Content Include="Assets\Live\ic_live_guard_3.png" />
     <Content Include="Assets\Live\lottery.png" />
+    <Content Include="Assets\Live\RedPocket.png" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\Login\ic_22.png" />
     <Content Include="Assets\Login\ic_22_hide.png" />
@@ -1236,6 +1263,9 @@
     <PackageReference Include="PropertyChanged.Fody">
       <Version>4.1.0</Version>
     </PackageReference>
+    <PackageReference Include="QRCoder">
+      <Version>1.4.3</Version>
+    </PackageReference>
     <PackageReference Include="RestSharp">
       <Version>107.3.0</Version>
     </PackageReference>
@@ -1272,10 +1302,12 @@
       <Name>Windows Desktop Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
-  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
+  <PropertyGroup
+    Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <Import
+    Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

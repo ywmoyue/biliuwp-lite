@@ -1,7 +1,7 @@
 {
-    "version": "4.6.21",
-    "version_num": 40621,
-    "version_desc": "更新内容:\r\n\r\n* 更换了ghproxy的最新地址\r\n\r\n* 修复加载部分视频的评论区导致应用崩溃闪退\r\n\r\n* 修复热门页面视频数据不显示\r\n\r\n* 修复直播间标题不显示\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+    "version": "4.6.25",
+    "version_num": 40625,
+    "version_desc": "更新内容:\r\n\r\n- 修复无法播放港澳台番剧 \r\n\r\n- 修复个人主页搜索视频为空时的报错反馈 \r\n\r\n- 修复番剧详情页样式错误\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
     "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
     "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }

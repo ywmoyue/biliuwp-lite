@@ -79,6 +79,10 @@ namespace BiliLite.Extensions
                 //处理换行
                 input = input.Replace("\r\n", "<LineBreak/>");
                 input = input.Replace("\n", "<LineBreak/>");
+
+                //处理其他控制字符
+                input = Regex.Replace(input, @"[\p{Cc}\p{Cf}]", string.Empty);
+
                 //处理@
                 input = HandelAtAndVote(input, txt, extend_json);
                 //处理网页🔗

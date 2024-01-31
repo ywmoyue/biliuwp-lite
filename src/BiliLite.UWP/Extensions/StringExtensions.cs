@@ -15,6 +15,7 @@ using Windows.Security.Cryptography.Core;
 using Windows.Security.Cryptography;
 using Windows.Storage.Streams;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace BiliLite.Extensions
 {
@@ -79,7 +80,7 @@ namespace BiliLite.Extensions
         /// <param name="txt"></param>
         /// <param name="emote"></param>
         /// <returns></returns>
-        public static RichTextBlock ToRichTextBlock(this string txt, JObject emote, bool isLive = false)
+        public static RichTextBlock ToRichTextBlock(this string txt, JObject emote, bool isLive = false, string fontColor = null, string fontWeight = "Normal")
         {
             var input = txt;
             try
@@ -105,11 +106,14 @@ namespace BiliLite.Extensions
                     if (!isLive) { input = HandelVideoID(input); }
 
                     //生成xaml
-                    var xaml = string.Format(@"<RichTextBlock HorizontalAlignment=""Stretch"" TextWrapping=""Wrap""  xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
-                                               xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"" xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
-                                               xmlns:mc = ""http://schemas.openxmlformats.org/markup-compatibility/2006"" LineHeight=""{1}"">
-                                               <Paragraph>{0}</Paragraph>
-                                               </RichTextBlock>", input, isLive ? 22 : 20);
+                    var xaml = string.Format(@"<RichTextBlock HorizontalAlignment=""Stretch"" xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+                                            xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"" xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
+                                            xmlns:mc = ""http://schemas.openxmlformats.org/markup-compatibility/2006"" LineHeight=""{1}"" {2} {3}>
+                                            <Paragraph>{0}</Paragraph>
+                                            </RichTextBlock>", input, 
+                                                                isLive ? 22 : 20,
+                                                                fontColor == null ? "" : $"Foreground=\"{fontColor}\"",
+                                                                $"FontWeight=\"{fontWeight}\"");
                     var p = (RichTextBlock)XamlReader.Load(xaml);
                     return p;
                 }
@@ -125,14 +129,13 @@ namespace BiliLite.Extensions
             }
             catch (Exception ex)
             {
-                _logger.Error("富文本转换失败", ex);
+                _logger.Error($"富文本转换失败: {txt}", ex);
                 var tx = new RichTextBlock();
                 Paragraph paragraph = new Paragraph();
                 Run run = new Run() { Text = txt };
                 paragraph.Inlines.Add(run);
                 tx.Blocks.Add(paragraph);
                 return tx;
-
             }
         }
 
@@ -333,13 +336,16 @@ namespace BiliLite.Extensions
                 var emoji = emote[item.Groups[0].Value];
                 input = input.Replace(item.Groups[0].Value,
                     string.Format(
-                        @"<InlineUIContainer><Border  Margin=""0 -4 4 -4""><Image Source=""{0}"" Width=""{1}"" Height=""{1}"" /></Border></InlineUIContainer>",
+                        @"<InlineUIContainer><Border Margin=""2 0 2 -4""><Image Source=""{0}"" Width=""{1}"" Height=""{1}"" /></Border></InlineUIContainer>",
                         emoji["url"].ToString(), emoji["meta"]["size"].ToInt32() == 1 ? "20" : "36"));
             }
 
             return input;
         }
 
+        /// <summary>
+        /// 处理直播黄豆表情
+        /// </summary>
         private static string HandleLiveEmoji(string input, JObject emotes)
         {
             if (emotes == null) return input;
@@ -349,7 +355,7 @@ namespace BiliLite.Extensions
 
                 if (!emotes.TryGetValue(emojiCode, out var emote)) continue;
                 var replacement = string.Format(
-                    @"<InlineUIContainer><Border  Margin=""2 -4 2 -4""><Image Source=""{0}"" Width=""{1}"" Height=""{1}"" /></Border></InlineUIContainer>",
+                    @"<InlineUIContainer><Border  Margin=""2 0 2 -4""><Image Source=""{0}"" Width=""{1}"" Height=""{1}"" /></Border></InlineUIContainer>",
                     emote["url"], emote["width"], emote["height"]);
 
                 input = input.Replace(emojiCode, replacement);
@@ -367,48 +373,52 @@ namespace BiliLite.Extensions
         {
             //处理AV号
             List<string> keyword = new List<string>();
+            List<List<int>> haveHandledOffset = new List<List<int>>();
             //如果是链接就不处理了
             if (!Regex.IsMatch(input, @"/[aAbBcC][vV]([a-zA-Z0-9]+)"))
             {
-                //处理AV号
-                MatchCollection av = Regex.Matches(input, @"[aA][vV](\d+)"); 
                 var offset = 0;
-                foreach (Match item in av)
-                {
-                    if (keyword.Contains(item.Groups[0].Value))
-                    {
-                        continue;
-                    }
-
-                    keyword.Add(item.Groups[0].Value);
-                    var data =
-                        @"<InlineUIContainer><HyperlinkButton Command=""{Binding LaunchUrlCommand}""  IsEnabled=""True"" Margin=""0 -4 0 -4"" Padding=""0"" " +
-                        string.Format(
-                            @" CommandParameter=""{1}"" ><TextBlock>{0}</TextBlock></HyperlinkButton></InlineUIContainer>",
-                            item.Groups[0].Value, "bilibili://video/" + item.Groups[0].Value);
-                    input = input.Remove(item.Index + offset, item.Length);
-                    input = input.Insert(item.Index + offset, data);
-                    offset += data.Length - item.Length;
-                }
 
                 //处理BV号
                 MatchCollection bv = Regex.Matches(input, @"[bB][vV]([a-zA-Z0-9]{8,})");
                 offset = 0;
                 foreach (Match item in bv)
                 {
-                    if (keyword.Contains(item.Groups[0].Value))
+                    if (keyword.Contains(item.Groups[0].Value) || haveHandledOffset.Where(index => (item.Index > index[0] && item.Index < index[1])).ToList().Count > 0)
                     {
                         continue;
                     }
 
                     keyword.Add(item.Groups[0].Value);
                     var data =
-                        @"<InlineUIContainer><HyperlinkButton Command=""{Binding LaunchUrlCommand}""  IsEnabled=""True"" Margin=""0 -4 0 -4"" Padding=""0"" " +
+                        @"<InlineUIContainer><HyperlinkButton Command=""{Binding LaunchUrlCommand}""  IsEnabled=""True"" Margin=""2 -3 2 -5"" Padding=""0 2 0 0"" " +
                         string.Format(
-                            @" CommandParameter=""{1}"" ><TextBlock>{0}</TextBlock></HyperlinkButton></InlineUIContainer>",
+                            @" CommandParameter=""{1}"" ><TextBlock>🎞️{0}</TextBlock></HyperlinkButton></InlineUIContainer>",
                             item.Groups[0].Value, "bilibili://video/" + item.Groups[0].Value);
                     input = input.Remove(item.Index + offset, item.Length);
                     input = input.Insert(item.Index + offset, data);
+                    haveHandledOffset.Add(new List<int> { item.Index + offset, item.Index + offset + data.Length });
+                    offset += data.Length - item.Length;
+                }
+
+                //处理AV号
+                MatchCollection av = Regex.Matches(input, @"[aA][vV](\d+)"); 
+                foreach (Match item in av)
+                {
+                    if (keyword.Contains(item.Groups[0].Value) || haveHandledOffset.Where(index => (item.Index > index[0] && item.Index < index[1])).ToList().Count > 0)
+                    {
+                        continue;
+                    }
+
+                    keyword.Add(item.Groups[0].Value);
+                    var data =
+                        @"<InlineUIContainer><HyperlinkButton Command=""{Binding LaunchUrlCommand}""  IsEnabled=""True"" Margin=""2 -3 2 -5"" Padding=""0 2 0 0"" " +
+                        string.Format(
+                            @" CommandParameter=""{1}"" ><TextBlock>🎞️{0}</TextBlock></HyperlinkButton></InlineUIContainer>",
+                            item.Groups[0].Value, "bilibili://video/" + item.Groups[0].Value);
+                    input = input.Remove(item.Index + offset, item.Length);
+                    input = input.Insert(item.Index + offset, data);
+                    haveHandledOffset.Add(new List<int> { item.Index + offset, item.Index + offset + data.Length });
                     offset += data.Length - item.Length;
                 }
 
@@ -417,19 +427,20 @@ namespace BiliLite.Extensions
                 offset = 0;
                 foreach (Match item in cv)
                 {
-                    if (keyword.Contains(item.Groups[0].Value))
+                    if (keyword.Contains(item.Groups[0].Value) || haveHandledOffset.Where(index => (item.Index > index[0] && item.Index < index[1])).ToList().Count > 0)
                     {
                         continue;
                     }
 
                     keyword.Add(item.Groups[0].Value);
                     var data =
-                        @"<InlineUIContainer><HyperlinkButton Command=""{Binding LaunchUrlCommand}""  IsEnabled=""True"" Margin=""0 -4 0 -4"" Padding=""0"" " +
+                        @"<InlineUIContainer><HyperlinkButton Command=""{Binding LaunchUrlCommand}""  IsEnabled=""True"" Margin=""2 -3 2 -5"" Padding=""0 2 0 0"" " +
                         string.Format(
-                            @" CommandParameter=""{1}"" ><TextBlock>{0}</TextBlock></HyperlinkButton></InlineUIContainer>",
+                            @" CommandParameter=""{1}"" ><TextBlock>📝{0}</TextBlock></HyperlinkButton></InlineUIContainer>",
                             item.Groups[0].Value, "bilibili://article/" + item.Groups[1].Value);
                     input = input.Remove(item.Index + offset, item.Length);
                     input = input.Insert(item.Index + offset, data);
+                    haveHandledOffset.Add(new List<int> { item.Index + offset, item.Index + offset + data.Length });
                     offset += data.Length - item.Length;
                 }
             }
@@ -446,7 +457,6 @@ namespace BiliLite.Extensions
         /// <returns></returns>
         private static string HandelUrl(string input)
         {
-            //处理AV号
             List<string> keyword = new List<string>();
             MatchCollection url = Regex.Matches(input,
                 @"(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]");
@@ -459,25 +469,14 @@ namespace BiliLite.Extensions
 
                 keyword.Add(item.Groups[0].Value);
                 var data =
-                    @"<InlineUIContainer><HyperlinkButton x:Name=""btn"" Command=""{Binding LaunchUrlCommand}""  IsEnabled=""True"" Margin=""0 -4 0 -4"" Padding=""0"" " +
+                    @"<InlineUIContainer><HyperlinkButton x:Name=""btn"" Command=""{Binding LaunchUrlCommand}""  IsEnabled=""True"" Margin=""2 -3 2 -5"" Padding=""0 2 0 0"" " +
                     string.Format(
-                        @" CommandParameter=""{0}"" ><TextBlock>🔗网页链接</TextBlock></HyperlinkButton></InlineUIContainer>",
-                        item.Groups[0].Value);
+                        @"CommandParameter=""{0}"" ><TextBlock>🔗网页链接</TextBlock></HyperlinkButton></InlineUIContainer>",
+                        item.Groups[0].Value.IsUrl() ? item.Groups[0].Value : ApiHelper.NOT_FOUND_URL);
                 input = input.Replace(item.Groups[0].Value, data);
             }
 
-
             return input;
-
-            //MatchCollection url = Regex.Matches(input, @"(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]");
-            //foreach (Match item in url)
-            //{
-            //    var data = @"<InlineUIContainer><HyperlinkButton x:Name=""btn"" Command=""{Binding LaunchUrlCommand}""  IsEnabled=""True"" Margin=""0 -4 0 -4"" Padding=""0"" " + string.Format(@" Tag=""{0}""  CommandParameter=""{0}"" >{0}</HyperlinkButton></InlineUIContainer>", item.Groups[0].Value);
-            //    input = input.Replace(item.Groups[0].Value, data);
-            //}
-
-
-            //return input;
         }
 
         #endregion

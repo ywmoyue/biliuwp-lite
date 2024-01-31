@@ -285,15 +285,47 @@
             </Setter>
         </Style>
         <DataTemplate x:Key="chat" x:Name="chat" x:DataType="live:DanmuMsgModel">
-            <toolkit:WrapPanel Orientation="Horizontal">
-                <RichTextBlock TextWrapping="Wrap" Margin="4 0" LineHeight="24">
-                    <Paragraph>
-                        <InlineUIContainer>
-                            <StackPanel  Orientation="Horizontal" VerticalAlignment="Center" Padding="0 0 0 -4">
-                                <Border Visibility="{x:Bind ShowAdmin}" BorderThickness="1" BorderBrush="DarkOrange" Background="DarkOrange" Margin="0 0 4 0" CornerRadius="2" Padding="2">
-                                    <TextBlock FontSize="12" Foreground="White">房管</TextBlock>
-                                </Border>
-                                <Border Visibility="{x:Bind ShowMedal}" VerticalAlignment="Center" BorderThickness="1" BorderBrush="{x:Bind Path=MedalColor,Converter={StaticResource colorConvert}}" CornerRadius="2" Margin="0 0 4 0">
+            <toolkit:WrapPanel Orientation="Horizontal" HorizontalAlignment="{x:Bind CardHorizontalAlignment}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Column="0" Visibility="{x:Bind ShowUserFace}" VerticalAlignment="Top" HorizontalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <!--头像-->
+                        <HyperlinkButton Grid.Row="0" Click="BtnOpenDanmuSpace_Click" Padding="0" Margin="4 10 4 2">
+                            <Ellipse Width="32" Height="32" StrokeThickness="1" Stroke="{ThemeResource TextColor}">
+                                <Ellipse.Fill>
+                                    <ImageBrush Stretch="UniformToFill" ImageSource="{x:Bind Path=Face,Converter={StaticResource imageConvert2},ConverterParameter='64h',Mode=OneWay}"/>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                        </HyperlinkButton>
+                        <!--房管图标-->
+                        <Border Grid.Row="1" HorizontalAlignment="Center" Visibility="{x:Bind ShowAdmin}" BorderThickness="1" BorderBrush="DarkOrange" Background="DarkOrange" CornerRadius="2" Padding="2 0">
+                            <TextBlock HorizontalAlignment="Center" FontSize="10" Foreground="White">房管</TextBlock>
+                        </Border>
+                    </Grid>
+
+                    <Grid Grid.Column="1" Margin="0 0 4 0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Visibility="{x:Bind ShowUserName}" Height="28">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <!--粉丝牌-->
+                            <Grid Grid.Column="0">
+                                <Border Grid.Column="0" Visibility="{x:Bind ShowMedal}" VerticalAlignment="Center" BorderThickness="1" BorderBrush="{x:Bind Path=MedalColor,Converter={StaticResource colorConvert}}" CornerRadius="2" Margin="1 0 4 0">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition/>
@@ -307,32 +339,36 @@
                                         </Grid>
                                     </Grid>
                                 </Border>
-                                <!--<Border Visibility="{x:Bind ShowCaptain}" BorderThickness="1" BorderBrush="DodgerBlue" Background="DodgerBlue" Margin="0 0 4 0" CornerRadius="2" Padding="2">
-                                    <TextBlock FontSize="12" Foreground="White" Text="{x:Bind UserCaptain}"></TextBlock>
-                                </Border>-->
-                                <Image Visibility="{x:Bind ShowCaptain}" Height="24" VerticalAlignment="Center" Margin="0 0 4 0" Source="{Binding UserCaptainImage}"></Image>
-                                <!--<Image Visibility="{x:Bind ShowTitle}" Height="20" VerticalAlignment="Center" Margin="0 0 2 0" Source="{Binding UserTitleImage}"></Image>-->
-                                <!--<Border  Visibility="{x:Bind ShowUserLevel}" BorderThickness="1" VerticalAlignment="Center" BorderBrush="{x:Bind Path=UserLevelColor,Converter={StaticResource colorConvert}}" Margin="0 0 4 0" CornerRadius="2" Padding="2 0">
-                                    <TextBlock FontSize="12" Foreground="{x:Bind Path=UserLevelColor,Converter={StaticResource colorConvert}}" Text="{x:Bind UserLevel}"></TextBlock>
-                                </Border>-->
-                                <!--<TextBlock TextWrapping="WrapWholeWords"><Run  Foreground="Gray"  Text="{Binding username}"></Run></TextBlock>-->
-                                <TextBlock Margin="0 2 -4 0" Foreground="{x:Bind Path=UserNameColor,Converter={StaticResource colorConvert}}" Text="{x:Bind UserName}"></TextBlock>
-                            </StackPanel>
-                        </InlineUIContainer>
-                        <!--<Run Text=" "></Run>
-                        <Run Text="{x:Bind Text}"></Run>-->
-                    </Paragraph>
-                </RichTextBlock>
-                <RichTextBlock TextWrapping="Wrap" Margin="4 2 4 0">
-                    <Paragraph>
-                        <InlineUIContainer>
-                            <StackPanel>
-                                <ContentControl Content="{Binding Path=RichText,Mode=OneWay}" Visibility="{x:Bind ShowRichText}"></ContentControl>
-                                <Image Visibility="{x:Bind ShowBigSticker}" Source="{Binding BigSticker.Url}" Height="{x:Bind BigSticker.Height}" Width="{x:Bind BigSticker.Width}"></Image>
-                            </StackPanel>
-                        </InlineUIContainer>
-                    </Paragraph>
-                </RichTextBlock>
+                            </Grid>
+
+                            <!--用户名-->
+                            <Grid Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock IsTextSelectionEnabled="True" Margin="2 0 0 0" FontWeight="{x:Bind Path=UserNameFontWeight}" Foreground="{x:Bind Path=UserNameColor,Converter={StaticResource colorConvert}}" Text="{x:Bind UserName}"/>
+                            </Grid>
+
+                            <!--舰长图标-->
+                            <Image Grid.Column="2" Visibility="{x:Bind ShowCaptain}" Height="24" VerticalAlignment="Center" Margin="4 0 0 0">
+                                <Image.Source>
+                                    <BitmapImage UriSource="{Binding UserCaptainImage}" DecodePixelWidth="24" DecodePixelHeight="24"/>
+                                </Image.Source>
+                            </Image>
+                        </Grid>
+
+                        <!--富文本-->
+                        <Border Grid.Row="1" Visibility="{x:Bind ShowRichText}" CornerRadius="4" Padding="{x:Bind CardPadding}" BorderThickness="1" Background="{x:Bind CardColor}" HorizontalAlignment="Left">
+                            <Grid>
+                                <StackPanel Orientation="Vertical">
+                                    <ContentControl Content="{Binding Path=RichText,Mode=OneWay}" Visibility="{x:Bind ShowBigSticker, Converter={StaticResource display}}"></ContentControl>
+                                    <Image Visibility="{x:Bind ShowBigSticker}" Height="{x:Bind BigSticker.Height}" Width="{x:Bind BigSticker.Width}">
+                                        <Image.Source>
+                                            <BitmapImage UriSource="{x:Bind BigSticker.Url}" DecodePixelWidth="{x:Bind BigSticker.Width}" DecodePixelHeight="{x:Bind BigSticker.Height}"/>
+                                        </Image.Source>
+                                    </Image>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Grid>
             </toolkit:WrapPanel>
         </DataTemplate>
     </Page.Resources>
@@ -433,14 +469,28 @@
                                                             <Slider x:Name="LiveSettingCount" Width="240" Minimum="50" Maximum="1000" StepFrequency="1"></Slider>
                                                             <ToggleSwitch x:Name="LiveSettingAutoOpenBox" Visibility="Collapsed" Margin="0 8 0 0" Header="自动开启宝箱"></ToggleSwitch>
                                                             <ToggleSwitch x:Name="LiveSettingHardwareDecode" Margin="0 8 0 0" Header="开启硬解"></ToggleSwitch>
-                                                            <TextBlock Margin="0 4">播放器默认模式</TextBlock>
-                                                            <ComboBox  x:Name="PlayerModeComboBox"  MinWidth="200"
-                                                                       ItemsSource="{x:Bind Player:DefaultPlayerModeOptions.DefaultLivePlayerModeOption}" 
-                                                                       SelectedValue="{x:Bind m_viewModel.LivePlayerMode, Mode=TwoWay}"
-                                                                       SelectionChanged="PlayerModeComboBox_OnSelectionChanged"
-                                                                       SelectedValuePath="Value"
-                                                                       DisplayMemberPath="Name">
-                                                            </ComboBox>
+                                                            <StackPanel Margin="0 8 0 0">
+                                                                <TextBlock Margin="0 4 0 0">播放器默认模式</TextBlock>
+                                                                <ComboBox  x:Name="PlayerModeComboBox"  MinWidth="200"
+                                                                    ItemsSource="{x:Bind Player:DefaultPlayerModeOptions.DefaultLivePlayerModeOption}" 
+                                                                    SelectedValue="{x:Bind m_viewModel.LivePlayerMode, Mode=TwoWay}"
+                                                                    SelectionChanged="PlayerModeComboBox_OnSelectionChanged"
+                                                                    SelectedValuePath="Value"
+                                                                    DisplayMemberPath="Name"
+                                                                    Margin="0 4 0 0">                
+                                                                </ComboBox>
+                                                            </StackPanel>
+                                                            <StackPanel Margin="0 8 0 0">
+                                                                <TextBlock Margin="0 4 0 0">直播流默认来源</TextBlock>
+                                                                <ComboBox x:Name="PlayUrlSourceComboBox" MinWidth="200" 
+                                                                    ItemsSource="{x:Bind live:DefaultPlayUrlSourceOptions.DefaultLivePlayUrlSourceOption}"      
+                                                                    SelectedValue="{x:Bind m_viewModel.LivePlayUrlSource, Mode=TwoWay}"
+                                                                    SelectionChanged="PlayUrlSourceComboBox_OnSelectionChanged"
+                                                                    SelectedValuePath="Value"
+                                                                    DisplayMemberPath="Name"      
+                                                                    Margin="0 4 0 0">
+                                                                </ComboBox>
+                                                            </StackPanel>
                                                         </StackPanel>
                                                     </PivotItem>
                                                     <PivotItem>
@@ -670,30 +720,185 @@
                                 <TextBlock TextAlignment="Center" FontSize="12" Margin="0 4 0 0">可领取</TextBlock>
                             </StackPanel>
                         </Button>
-                        <Button Click="BtnOpenBox_Click" Visibility="{x:Bind Path=m_liveRoomViewModel.AnchorLotteryViewModel.Show,Mode=OneWay}" Background="Transparent"  Margin="4" >
+                        <Button Click="BtnOpenBox_Click" Visibility="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryShow,Mode=OneWay}" Background="Transparent"  Margin="4">
                             <StackPanel>
                                 <Image Width="32" Height="32" Source="ms-appx:///Assets/Live/lottery.png"></Image>
-                                <TextBlock TextAlignment="Center" FontSize="12" Margin="0 4 0 0" Text="{x:Bind Path=m_liveRoomViewModel.AnchorLotteryViewModel.DownTime,Mode=OneWay}"></TextBlock>
+                                <TextBlock TextAlignment="Center" FontSize="12" Margin="0 4 0 0" Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryDownTime,Mode=OneWay}"></TextBlock>
                             </StackPanel>
                             <Button.Flyout>
                                 <Flyout x:Name="FlyoutLottery">
-                                    <StackPanel Width="240">
-                                        <Grid  Margin="0 0 0 4">
-                                            <TextBlock FontSize="20" >天选时刻</TextBlock>
-                                            <TextBlock FontSize="20" HorizontalAlignment="Right" Text="{x:Bind Path=m_liveRoomViewModel.AnchorLotteryViewModel.DownTime,Mode=OneWay}"></TextBlock>
+                                    <StackPanel Width="Auto" MinWidth="180">
+                                        <Grid  Margin="0 0 0 8">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Margin="2 -2 2 0" Width="32" Height="32" Source="ms-appx:///Assets/Live/lottery.png"></Image>
+                                                <TextBlock FontSize="20">天选时刻</TextBlock>
+                                            </StackPanel>
+                                            <TextBlock FontSize="20" HorizontalAlignment="Right" Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryDownTime,Mode=OneWay}"></TextBlock>
                                         </Grid>
-                                        <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">奖品名称：</Run><Run Text="{x:Bind Path=m_liveRoomViewModel.AnchorLotteryViewModel.LotteryInfo.AwardName,Mode=OneWay}"/></TextBlock>
-                                        <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">中奖人数：</Run><Run Text="{x:Bind Path=m_liveRoomViewModel.AnchorLotteryViewModel.LotteryInfo.AwardNum,Mode=OneWay}"/>人</TextBlock>
-                                        <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">弹幕口令：</Run><Run Text="{x:Bind Path=m_liveRoomViewModel.AnchorLotteryViewModel.LotteryInfo.Danmu,Mode=OneWay}"/></TextBlock>
-                                        <TextBlock Margin="0 4" TextWrapping="Wrap" Visibility="{x:Bind Path=m_liveRoomViewModel.AnchorLotteryViewModel.LotteryInfo.ShowGift,Mode=OneWay}"><Run Foreground="Gray">赠送礼物：</Run><Run Text="{x:Bind Path=m_liveRoomViewModel.AnchorLotteryViewModel.LotteryInfo.GiftName,Mode=OneWay}"/>x<Run Text="{x:Bind Path=m_liveRoomViewModel.AnchorLotteryViewModel.LotteryInfo.GiftNum,Mode=OneWay}"/></TextBlock>
-                                        <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">限制条件：</Run><Run Text="{x:Bind Path=m_liveRoomViewModel.AnchorLotteryViewModel.LotteryInfo.RequireText,Mode=OneWay}"/></TextBlock>
-                                        <Button x:Name="BtnSendLotteryDanmu" Click="BtnSendLotteryDanmu_Click" Margin="0 4 0 0" HorizontalAlignment="Stretch">一键发弹幕</Button>
+
+                                        <Grid Margin="0 0 0 4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Margin="0 4" TextWrapping="Wrap" Foreground="Gray" Text="奖品信息："/>
+                                            <RichTextBlock Grid.Column="1" Margin="0 4" HorizontalAlignment="Center">
+                                                <Paragraph>
+                                                    <!--<InlineUIContainer>
+                                                        <Image Source="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.AwardImage,Mode=OneWay}" Margin="2 2 2 -6" Width="24" Height="24"/>
+                                                    </InlineUIContainer>-->
+                                                    <Run Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.AwardName,Mode=OneWay}"/>
+                                                    <Run Text="×"/>
+                                                    <Run Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.AwardNum,Mode=OneWay}"/>
+                                                </Paragraph>
+                                            </RichTextBlock>
+                                        </Grid>
+
+                                        <Grid Margin="0 0 0 4" Visibility="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.ShowGift,Mode=OneWay}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Margin="0 4" TextWrapping="Wrap" Foreground="Gray" Text="附加礼物："/>
+                                            <TextBlock Grid.Column="1" Margin="0 4" TextWrapping="Wrap" HorizontalAlignment="Center">
+                                                <Run Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.GiftName,Mode=OneWay}"/>
+                                                <Run Text="×"/>
+                                                <Run Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.GiftNum,Mode=OneWay}"/>
+                                            </TextBlock>
+                                        </Grid>
+
+                                        <Grid Margin="0 0 0 4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Margin="0 4" TextWrapping="Wrap" Foreground="Gray" Text="弹幕口令："/>
+                                            <TextBlock Grid.Column="1" Margin="0 4" TextWrapping="Wrap" HorizontalAlignment="Center" Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.Danmu,Mode=OneWay}"/>
+                                        </Grid>
+
+                                        <Grid Margin="0 0 0 4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Margin="0 4" TextWrapping="Wrap" Foreground="Gray" Text="限制条件："/>
+                                            <TextBlock Grid.Column="1" Margin="0 4" TextWrapping="Wrap" HorizontalAlignment="Center" Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.RequireText,Mode=OneWay}"/>
+                                        </Grid>
+
+                                        <Grid Margin="0 0 0 4" Visibility="{x:Bind Path=m_liveRoomViewModel.ShowAnchorLotteryWinnerList,Mode=OneWay}">
+                                            <!--<Grid Margin="0 0 0 4" Visibility="Visible">-->
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Margin="0 4" TextWrapping="Wrap" Foreground="Gray" Text="中奖名单："/>
+                                            <ContentControl Grid.Column="1" Margin="0 4" HorizontalAlignment="Center" x:Name="AnchorLotteryWinnerList"/>
+                                        </Grid>
+                                        
+                                        <!--<TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">奖品名称：</Run><Run Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.AwardName,Mode=OneWay}"/></TextBlock>
+                                        <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">中奖人数：</Run><Run Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.AwardNum,Mode=OneWay}"/>人</TextBlock>
+                                        <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">弹幕口令：</Run><Run Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.Danmu,Mode=OneWay}"/></TextBlock>
+                                        <TextBlock Margin="0 4" TextWrapping="Wrap" Visibility="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.ShowGift,Mode=OneWay}"><Run Foreground="Gray">赠送礼物：</Run><Run Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.GiftName,Mode=OneWay}"/>x<Run Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.GiftNum,Mode=OneWay}"/></TextBlock>
+                                        <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">限制条件：</Run><Run Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.RequireText,Mode=OneWay}"/></TextBlock>-->
+                                        <Button x:Name="BtnSendLotteryDanmu" Visibility="{x:Bind Path=m_liveRoomViewModel.ShowAnchorLotteryWinnerList,Mode=OneWay,Converter={StaticResource display}}" Click="BtnSendLotteryDanmu_Click" Margin="0 4 0 0" HorizontalAlignment="Stretch">一键发弹幕</Button>
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                        
+                        <Button Click="BtnOpenBox_Click" Visibility="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryShow,Mode=OneWay}" Background="Transparent" Margin="4">
+                                <StackPanel>
+                                <Image Width="32" Height="32" Source="ms-appx:///Assets/Live/RedPocket.png"></Image>
+                                <TextBlock TextAlignment="Center" FontSize="12" Margin="0 4 0 0" Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryDownTime,Mode=OneWay}"></TextBlock>
+                            </StackPanel>
+                            <Button.Flyout>
+                                <Flyout x:Name="FlyoutRedPocketLottery">
+                                    <StackPanel Width="Auto" MinWidth="180">
+                                        <Grid Margin="0 0 0 8">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Margin="2 -2 2 0" Width="32" Height="32" Source="ms-appx:///Assets/Live/RedPocket.png"/>
+                                                <TextBlock FontSize="20">人气红包</TextBlock>
+                                            </StackPanel>
+                                            <TextBlock FontSize="20" HorizontalAlignment="Right" Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryDownTime,Mode=OneWay}"></TextBlock>
+                                        </Grid>
+
+                                        <Grid Margin="0 0 0 4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Margin="0 4" TextWrapping="Wrap" Foreground="Gray" Text="发送来源："/>
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <Ellipse Width="36" Height="36">
+                                                    <Ellipse.Fill>
+                                                        <ImageBrush ImageSource="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryInfo.SenderFace,Converter={StaticResource imageConvert2},ConverterParameter='36h',Mode=OneWay}" Stretch="UniformToFill"/>
+                                                    </Ellipse.Fill>
+                                                </Ellipse>
+                                                <TextBlock Margin="4 0" TextWrapping="Wrap" Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryInfo.SenderName,Mode=OneWay}" VerticalAlignment="Center"></TextBlock>
+                                            </StackPanel>
+                                        </Grid>
+
+                                        <Grid Margin="0 2 0 4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Margin="0 4" TextWrapping="Wrap" Foreground="Gray" Text="奖品列表："/>
+                                            <ContentControl Grid.Column="1" Margin="0 4" HorizontalAlignment="Center" Content="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryInfo.AwardsList,Mode=OneWay}"></ContentControl>
+                                        </Grid>
+
+                                        <!--<Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Margin="0 4" TextWrapping="Wrap" Foreground="Gray" Text="总价值："></TextBlock>
+                                            <RichTextBlock Grid.Column="1" Margin="0 4" HorizontalAlignment="Center">
+                                                <Paragraph>
+                                                    <InlineUIContainer>
+                                                        <Image Width="16" Margin="2 2 2 -2" Source="ms-appx:///Assets/Icon/ic_live_center_gold_recharge.png"></Image>
+                                                    </InlineUIContainer>
+                                                    <Run Text="8888"></Run>
+                                                </Paragraph>
+                                            </RichTextBlock>
+                                        </Grid>-->
+
+                                        <Grid Margin="0 0 0 4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Margin="0 4" TextWrapping="Wrap" Foreground="Gray" Text="弹幕口令："/>
+                                            <TextBlock Grid.Column="1" Margin="0 4" TextWrapping="Wrap" Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryInfo.Danmu,Mode=OneWay}" HorizontalAlignment="Center"></TextBlock>
+                                        </Grid>
+
+                                        <Grid Margin="0 0 0 4" Visibility="{x:Bind Path=m_liveRoomViewModel.Attention,Mode=OneWay,Converter={StaticResource display}}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Margin="0 4" TextWrapping="Wrap" Foreground="Gray" Text="限制条件："/>
+                                            <TextBlock Grid.Column="1" Margin="0 4" TextWrapping="Wrap" Text="关注主播" HorizontalAlignment="Center"></TextBlock>
+                                        </Grid>
+
+                                        <Grid Margin="0 0 0 4" Visibility="{x:Bind Path=m_liveRoomViewModel.ShowRedPocketLotteryWinnerList,Mode=OneWay}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Margin="0 4" TextWrapping="Wrap" Foreground="Gray" Text="中奖名单："/>
+                                            <ContentControl Grid.Column="1" Margin="0 4" HorizontalAlignment="Center" x:Name="redPocketWinnerList"/>
+                                        </Grid>
+
+                                        <Button Click="BtnSendRedPocketLotteryDanmu_Click" Visibility="{x:Bind Path=m_liveRoomViewModel.ShowRedPocketLotteryWinnerList,Mode=OneWay,Converter={StaticResource display}}" Margin="0 0 0 4" HorizontalAlignment="Stretch">
+                                            <TextBlock Text="{x:Bind Path=m_liveRoomViewModel.RedPocketSendDanmuBtnText,Mode=OneWay}"/>
+                                        </Button>
                                     </StackPanel>
                                 </Flyout>
                             </Button.Flyout>
                         </Button>
                     </StackPanel>
-                    <Grid  HorizontalAlignment="Right" Grid.Column="1">
+                    <Grid  HorizontalAlignment="Right" Grid.Column="1" Margin="10 0 0 0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                            
@@ -701,7 +906,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <StackPanel Margin="4" VerticalAlignment="Center" Visibility="{x:Bind Path=m_liveRoomViewModel.Logined,Mode=OneWay}">
+                        <StackPanel Grid.Column="0" Margin="4" VerticalAlignment="Center" Visibility="{x:Bind Path=m_liveRoomViewModel.Logined,Mode=OneWay}">
                             <StackPanel Orientation="Horizontal">
                                 <Image Width="16" Source="ms-appx:///Assets/Icon/ic_live_center_silver_recharge.png"></Image>
                                 <TextBlock FontSize="12" Margin="8 0" VerticalAlignment="Center" Text="{x:Bind Path=m_liveRoomViewModel.WalletInfo.Silver,Converter={StaticResource numberToStringConvert},Mode=OneWay}"></TextBlock>
@@ -859,7 +1064,7 @@
                     </HyperlinkButton>
                     <StackPanel Grid.Column="1" Margin="8 0" VerticalAlignment="Center">
                         <TextBlock Text="{x:Bind Path=m_liveRoomViewModel.LiveInfo.AnchorInfo.BaseInfo.Uname,Mode=OneWay}"></TextBlock>
-                        <TextBlock Margin="0 4 0 0" Foreground="Gray" FontSize="12"> 人气:<Run Text="{x:Bind Path=m_liveRoomViewModel.Online,Converter={StaticResource numberToStringConvert},Mode=OneWay}"/> 粉丝:<Run Text="{x:Bind Path=m_liveRoomViewModel.LiveInfo.AnchorInfo.RelationInfo.Attention,Converter={StaticResource numberToStringConvert},Mode=OneWay}"/></TextBlock>
+                        <TextBlock Margin="0 4 0 0" Foreground="Gray" FontSize="12"><Run Text="{x:Bind Path=m_liveRoomViewModel.WatchedNum,Mode=OneWay}"/> 粉丝:<Run Text="{x:Bind Path=m_liveRoomViewModel.LiveInfo.AnchorInfo.RelationInfo.Attention,Converter={StaticResource numberToStringConvert},Mode=OneWay}"/></TextBlock>
                     </StackPanel>
                     <Button x:Name="BtnAttention" Click="BtnAttention_Click" FontSize="12" Visibility="{x:Bind Path=m_liveRoomViewModel.Attention,Mode=OneWay,Converter={StaticResource display}}" Grid.Column="2" Background="{ThemeResource HighLightColor}" Foreground="White">关注</Button>
                     <Button x:Name="BtnCacnelAttention" Click="BtnCacnelAttention_Click" FontSize="12" Visibility="{x:Bind Path=m_liveRoomViewModel.Attention,Mode=OneWay}" Grid.Column="2">已关注</Button>
@@ -885,7 +1090,7 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate x:DataType="live1:SuperChatMsgViewModel">
-                                            <Button Margin="8 0 0 0" Background="Transparent" Padding="0">
+                                            <Button Margin="8 0 0 0" Background="Transparent" Padding="0" BorderThickness="0">
 
                                                 <Border Background="{x:Bind Path=BackgroundColor,Mode=OneWay,Converter={StaticResource colorConvert}}" BorderThickness="0" CornerRadius="18" Height="36" >
                                                     <Grid>
@@ -907,7 +1112,7 @@
                                                     </Grid>
                                                 </Border>
                                                 <Button.Flyout>
-                                                    <Flyout >
+                                                    <Flyout>
                                                         <StackPanel Margin="-12" Width="280">
                                                             <Grid  Height="56" Background="{x:Bind Path=BackgroundColor,Mode=OneWay,Converter={StaticResource colorConvert}}">
                                                                 <Grid.ColumnDefinitions>
@@ -1041,7 +1246,14 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <ComboBox x:Name="cb_Rank" SelectionChanged="cb_Rank_SelectionChanged"  ItemsSource="{x:Bind Path=m_liveRoomViewModel.Ranks,Mode=OneWay}" SelectedItem="{x:Bind Path=m_liveRoomViewModel.SelectRank,Mode=TwoWay}" HorizontalAlignment="Stretch" Margin="8 4" DisplayMemberPath="Title"></ComboBox>
+                            <ComboBox x:Name="cb_Rank" 
+                                      SelectionChanged="cb_Rank_SelectionChanged"  
+                                      ItemsSource="{x:Bind Path=m_liveRoomViewModel.Ranks,Mode=OneWay}" 
+                                      SelectedItem="{x:Bind Path=m_liveRoomViewModel.SelectRank,Mode=TwoWay}" 
+                                      HorizontalAlignment="Stretch" 
+                                      Margin="8 4" 
+                                      DisplayMemberPath="Title">
+                            </ComboBox>
                             <Grid Grid.Row="1">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8 0">
                                     <StackPanel>
@@ -1065,7 +1277,7 @@
                                                                     </Grid>
                                                                 </Grid>
                                                             </Border>
-                                                            <Ellipse  Margin="8 0 0 0" Width="24" Height="24" >
+                                                            <Ellipse  Margin="8 0 0 0" Width="30" Height="30" >
                                                                 <Ellipse.Fill>
                                                                     <ImageBrush ImageSource="{x:Bind Path=Face,Converter={StaticResource imageConvert2},ConverterParameter='48h'}"/>
                                                                 </Ellipse.Fill>
@@ -1099,7 +1311,7 @@
                     </PivotItem>
                     <PivotItem Margin="0">
                         <PivotItem.Header>
-                            <TextBlock FontSize="16">大航海(<Run Text="{x:Bind Path=m_liveRoomViewModel.LiveInfo.GuardInfo.Count,Mode=OneWay}"/>)</TextBlock>
+                            <TextBlock FontSize="16">大航海(<Run Text="{x:Bind Path=m_liveRoomViewModel.GuardNum,Mode=OneWay}"/>)</TextBlock>
                         </PivotItem.Header>
                         <Grid>
                             <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8 0">
@@ -1108,8 +1320,17 @@
                                         <ListView.ItemTemplate>
                                             <DataTemplate x:DataType="live:LiveGuardRankItem">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <Image Width="24" Height="24" Source="{x:Bind RankImg}"></Image>
-                                                    <TextBlock Margin="8 0 0 0" VerticalAlignment="Center" Text="{x:Bind Username}"></TextBlock>
+                                                    <Image Width="24" Height="24" Margin="4 0">
+                                                        <Image.Source>
+                                                            <BitmapImage UriSource="{x:Bind RankImg}" DecodePixelWidth="24" DecodePixelHeight="24"/>
+                                                        </Image.Source>
+                                                    </Image>
+                                                    <Ellipse Width="30" Height="30" Margin="4 0">
+                                                        <Ellipse.Fill>
+                                                            <ImageBrush ImageSource="{x:Bind Face,Converter={StaticResource imageConvert2},ConverterParameter='30h',Mode=OneWay}" Stretch="UniformToFill"/>
+                                                        </Ellipse.Fill>
+                                                    </Ellipse>
+                                                    <TextBlock Margin="4 0" VerticalAlignment="Center" Text="{x:Bind Username}"></TextBlock>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </ListView.ItemTemplate>

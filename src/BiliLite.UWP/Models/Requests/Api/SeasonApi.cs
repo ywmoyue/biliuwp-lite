@@ -1,36 +1,43 @@
 ﻿using BiliLite.Services;
 using System;
+using BiliLite.Models.Common;
+using Bilibili.App.View.V1;
 
 namespace BiliLite.Models.Requests.Api
 {
     public class SeasonApi : BaseApi
     {
-
-        public ApiModel Detail(string season_id, bool proxy = false)
+        /// <summary>
+        /// 用season_id / ep_id 取番剧信息
+        /// </summary>
+        /// <param name="id"> seasonId / epId</param>
+        /// <param name="type">id类型</param>
+        /// <param name="proxy"></param>
+        /// <returns></returns>
+        public ApiModel Detail(string id, SeasonIdType type = SeasonIdType.SeasonId, bool proxy = false)
         {
             var baseUrl = ApiHelper.API_BASE_URL;
 
             var api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
-                baseUrl = $"{baseUrl}/pgc/view/app/season",
-                parameter = ApiHelper.MustParameter(AppKey, true) + $"&season_id={season_id}"
+                baseUrl = $"{baseUrl}/pgc/view/v2/app/season",
+                parameter = ApiHelper.MustParameter(AppKey, true),
             };
+            if (type == SeasonIdType.SeasonId)
+            {
+                api.parameter += $"&season_id={id}";
+            }
+            else
+            {
+                api.parameter += $"&ep_id={id}";
+            }
+
+            api.parameter = api.parameter.Replace("build=6235200", "build=75900200");
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
 
-        public ApiModel DetailWeb(string season_id)
-        {
-            var api = new ApiModel()
-            {
-                method = RestSharp.Method.Get,
-                baseUrl = $"https://bangumi.bilibili.com/view/web_api/season",
-                parameter = $"season_id={season_id}"
-            };
-
-            return api;
-        }
         /// <summary>
         /// 短评
         /// </summary>

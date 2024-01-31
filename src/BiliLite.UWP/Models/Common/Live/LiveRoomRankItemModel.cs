@@ -4,11 +4,24 @@ namespace BiliLite.Models.Common.Live
 {
     public class LiveRoomRankItemModel
     {
+        private string m_name;
+
         public int Rank { get; set; }
 
         public long Uid { get; set; }
 
-        public string Uname { get; set; }
+        public string Uname
+        {
+            get => m_name;
+            set => m_name = value;
+        }
+
+        [JsonProperty("name")]
+        public string Name
+        {
+            get => m_name;
+            set => m_name = value;
+        }
 
         public string Face { get; set; }
 

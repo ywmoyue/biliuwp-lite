@@ -1087,6 +1087,30 @@ namespace BiliLite.Controls
                     mediaPlayerVideo.Height = this.ActualHeight;
                     mediaPlayerVideo.Width = this.ActualHeight * 4 / 3;
                     break;
+                case 4:
+                    if (m_dashInfo != null)
+                    {
+                        if (((double)this.ActualWidth / (double)this.ActualHeight) <= ((double)m_dashInfo.Video.Width / (double)m_dashInfo.Video.Height))
+                        {
+                            /// 原视频长宽比大于等于窗口长宽比
+                            mediaPlayerVideo.Stretch = Stretch.Fill;
+                            mediaPlayerVideo.Width = this.ActualWidth;
+                            mediaPlayerVideo.Height = this.ActualWidth * (double)m_dashInfo.Video.Height / (double)m_dashInfo.Video.Width;
+                        }
+                        else {
+                            /// 原视频长宽比小于窗口长宽比
+                            mediaPlayerVideo.Stretch = Stretch.Fill;
+                            mediaPlayerVideo.Width = this.ActualHeight * (double)m_dashInfo.Video.Width / (double)m_dashInfo.Video.Height;
+                            mediaPlayerVideo.Height = this.ActualHeight;
+                        }
+                    }
+                    else {
+                        /// 未获取到DASH视频信息则不缩放
+                        mediaPlayerVideo.Stretch = Stretch.None;
+                        mediaPlayerVideo.Width = double.NaN;
+                        mediaPlayerVideo.Height = double.NaN;
+                    }
+                    break;
                 default:
                     break;
             }
@@ -1309,6 +1333,7 @@ namespace BiliLite.Controls
                     if (m_dashInfo != null && m_dashInfo.Audio != null)
                     {
                         info += $"Resolution: {m_dashInfo.Video.Width} x {m_dashInfo.Video.Height}\r\n";
+                        info += $"View Resolution: {(int)mediaPlayerVideo.Width} x {(int)mediaPlayerVideo.Height}\r\n";
                         info += $"Video Codec: {m_dashInfo.Video.Codecs}\r\n";
                         info += $"Video DataRate: {(m_dashInfo.Video.BandWidth / 1024).ToString("0.0")}Kbps\r\n";
                         info += $"Average Frame: {m_dashInfo.Video.FrameRate}\r\n";

@@ -67,7 +67,7 @@ namespace BiliLite.Modules.Live
                     var receivedData = new byte[ms.Length];
                     ms.Read(receivedData, 0, receivedData.Length);
 
-                    ParseData(receivedData);
+                    await ParseData(receivedData);
                 }
                 catch (Exception ex)
                 {
@@ -121,7 +121,7 @@ namespace BiliLite.Modules.Live
         /// 解析内容
         /// </summary>
         /// <param name="data"></param>
-        private void ParseData(byte[] data)
+        private async Task ParseData(byte[] data)
         {
             //协议版本。
             //0为JSON，可以直接解析；
@@ -147,53 +147,82 @@ namespace BiliLite.Modules.Live
                 var text = Encoding.UTF8.GetString(body);
                 //可能有多条数据，做个分割
                 var textLines = Regex.Split(text, "[\x00-\x1f]+").Where(x => x.Length > 2 && x[0] == '{').ToArray();
+
                 foreach (var item in textLines)
                 {
-                    ParseMessage(item);
+                    // 每波弹幕大约2.5秒, 使用2.3秒避免弹幕延迟
+                    var delay = ParseMessage(item) switch
+                    {
+                        MessageDelayType.DanmuMessage => 2.3 / textLines.Length, // 常规弹幕类型, 加延迟
+                        MessageDelayType.GiftMessage => 0.1 / textLines.Length, // 礼物消息类型, 加一点延迟
+                        MessageDelayType.SystemMessage => 0.0, // 其他系统消息类型, 无需加延迟
+                        _ => 0.0
+                    };
+
+                    if (delay > 0.0)
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(delay));
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
             }
         }
 
-        private void ParseMessage(string jsonMessage)
+        private MessageDelayType ParseMessage(string jsonMessage)
         {
             try
             {
                 var obj = JObject.Parse(jsonMessage);
                 var cmd = obj["cmd"].ToString();
-                if (cmd.Contains("DANMU_MSG"))
+                if (cmd == ("DANMU_MSG"))
                 {
                     var msg = new DanmuMsgModel();
                     if (obj["info"] != null && obj["info"].ToArray().Length != 0)
                     {
+                        // 获取头像
+                        if (obj["info"][0][15]["user"] != null)
+                        {
+                            var user = obj["info"][0][15]["user"];
+                            var uid = user["uid"].ToString();
+                            var face = user["base"]["face"].ToString();
+                            msg.Uid = uid;
+                            msg.Face = face;
+                        }
+
                         // 弹幕内黄豆表情详情
                         if (obj["info"][0][15]["extra"] != null)// && obj["info"][0][15]["extra"].ToArray().Length != 0)
                         {
                             var extra = JObject.Parse(obj["info"][0][15]["extra"].ToString());
                             if (extra["emots"].ToArray().Length != 0)
                             {
-                                msg.Emoji = (JContainer)extra["emots"];
+                                msg.Emoji = (JObject)extra["emots"];
                             }
                         }
 
                         // 弹幕内大表情详情
                         if (obj["info"][0][13] != null && obj["info"][0][13].ToArray().Length != 0)
-                        {
-                            // 如果有大表情, 直接不需要显示任何文字
-                            msg.ShowRichText = Visibility.Collapsed;
+                        {                            
+                            msg.ShowBigSticker = Visibility.Visible;
                             msg.BigSticker = new DanmuMsgModel.BigStickerInfo
                             {
                                 Url = (string)obj["info"][0][13]["url"],
-                                Height = (int)obj["info"][0][13]["height"], 
-                                Width = (int)obj["info"][0][13]["width"], 
+                                Height = (int)obj["info"][0][13]["height"],
+                                Width = (int)obj["info"][0][13]["width"],
                             };
                             //有的表情特别大 :(
-                            msg.BigSticker.Height = (msg.BigSticker.Height * 60 / msg.BigSticker.Width).ToInt32(); 
+                            msg.BigSticker.Height = (msg.BigSticker.Height * 60 / msg.BigSticker.Width).ToInt32();
                             msg.BigSticker.Width = 60;
                         }
 
                         // 弹幕内容
                         msg.Text = obj["info"][1].ToString();
-                        msg.RichText = StringExtensions.ToRichTextBlock(msg.Text, (JObject)msg.Emoji, true);
+                        // 字重调大, 防止与进场弹幕混淆
+                        msg.UserNameFontWeight = "SemiBold";
+                        // 将弹幕普通文本转为富文本
+                        msg.RichText = msg.Text.ToRichTextBlock(msg.Emoji, true, fontWeight: "Medium");
 
                         // 弹幕颜色
                         var color = obj["info"][0][3].ToInt32();
@@ -205,7 +234,7 @@ namespace BiliLite.Modules.Live
                         // 是否为房管
                         if (obj["info"][2] != null && obj["info"][2].ToArray().Length != 0)
                         {
-                            msg.UserName = obj["info"][2][1].ToString() + ":";
+                            msg.UserName = obj["info"][2][1].ToString();
                             if (obj["info"][2][2] != null && Convert.ToInt32(obj["info"][2][2].ToString()) == 1)
                             {
                                 msg.Role = "房管";
@@ -214,20 +243,22 @@ namespace BiliLite.Modules.Live
                         }
 
                         // 是否为舰长
-                        if (obj["info"][3][10] != null && Convert.ToInt32(obj["info"][3][10].ToString()) != 0)
+                        if (obj["info"][3] != null && obj["info"][3].ToArray().Length != 0 &&
+                            obj["info"][3][10] != null && Convert.ToInt32(obj["info"][3][10].ToString()) != 0)
                         {
-                            switch (Convert.ToInt32(obj["info"][3][10].ToString())){
+                            switch (Convert.ToInt32(obj["info"][3][10].ToString()))
+                            {
                                 case 3:
                                     msg.UserCaptain = "舰长";
-                                    msg.UserCaptainImage = "/Assets/Live/ic_live_guard_3.png";
+                                    msg.UserNameColor = "#FF23709E";
                                     break;
                                 case 2:
                                     msg.UserCaptain = "提督";
-                                    msg.UserCaptainImage = "/Assets/Live/ic_live_guard_2.png";
+                                    msg.UserNameColor = "#FF7B166F";
                                     break;
                                 case 1:
                                     msg.UserCaptain = "总督";
-                                    msg.UserCaptainImage = "/Assets/Live/ic_live_guard_1.png";
+                                    msg.UserNameColor = "#FFC01039";
                                     break;
                             }
                             msg.ShowCaptain = Visibility.Visible;
@@ -241,7 +272,6 @@ namespace BiliLite.Modules.Live
                             msg.MedalColor = obj["info"][3][4].ToString();
                             msg.ShowMedal = Visibility.Visible;
                         }
-
                         // 用户直播等级(已经被b站弃用)
                         //if (obj["info"][4] != null && obj["info"][4].ToArray().Length != 0)
                         //{
@@ -257,10 +287,10 @@ namespace BiliLite.Modules.Live
                         //}
 
                         NewMessage?.Invoke(MessageType.Danmu, msg);
-                        return;
+                        return MessageDelayType.DanmuMessage;
                     }
                 }
-                if (cmd == "SEND_GIFT")
+                else if (cmd == "SEND_GIFT" || cmd == "POPULARITY_RED_POCKET_NEW")
                 {
                     var msg = new GiftMsgModel();
                     if (obj["data"] != null)
@@ -273,9 +303,9 @@ namespace BiliLite.Modules.Live
                         msg.UserID = obj["data"]["uid"].ToString();
                         NewMessage?.Invoke(MessageType.Gift, msg);
                     }
-                    return;
+                    return MessageDelayType.GiftMessage;
                 }
-                if (cmd == "COMBO_SEND")
+                else if (cmd == "COMBO_SEND")
                 {
                     var msg = new GiftMsgModel();
                     if (obj["data"] != null)
@@ -288,65 +318,88 @@ namespace BiliLite.Modules.Live
                         msg.UserID = obj["data"]["uid"].ToString();
                         NewMessage?.Invoke(MessageType.Gift, msg);
                     }
-                    return;
+                    return MessageDelayType.GiftMessage;
                 }
-                if (cmd == "WELCOME")
+                else if (cmd == "INTERACT_WORD")
                 {
-                    var w = new WelcomeMsgModel();
+                    var w = new InteractWordModel();
                     if (obj["data"] != null)
                     {
                         w.UserName = obj["data"]["uname"].ToString();
                         w.UserID = obj["data"]["uid"].ToString();
+                        w.MsgType = obj["data"]["msg_type"].ToInt32();
 
-                        NewMessage?.Invoke(MessageType.Welcome, w);
+                        if (obj["data"]["fans_medal"]["medal_level"].ToInt32() != 0)
+                        {
+                            w.MedalName = obj["data"]["fans_medal"]["medal_name"].ToString();
+                            w.MedalLevel = obj["data"]["fans_medal"]["medal_level"].ToString();
+                            w.MedalColor = obj["data"]["fans_medal"]["medal_color"].ToString();
+                            w.ShowMedal = Visibility.Visible;
+                        }
+
+                        NewMessage?.Invoke(MessageType.InteractWord, w);
                     }
-
-                    return;
+                    return MessageDelayType.SystemMessage;
                 }
-                if (cmd == "SYS_MSG")
-                {
-                    NewMessage?.Invoke(MessageType.SystemMsg, obj["msg"].ToString());
-                    return;
-                }
-                if (cmd == "ANCHOR_LOT_START")
+                // 没写相关实现, 先注释掉
+                //if (cmd == "SYS_MSG")
+                //{
+                //    NewMessage?.Invoke(MessageType.SystemMsg, obj["msg"].ToString());
+                //    return;
+                //}
+                else if (cmd == "ANCHOR_LOT_START")
                 {
                     if (obj["data"] != null)
                     {
                         NewMessage?.Invoke(MessageType.AnchorLotteryStart, obj["data"].ToString());
                     }
-                    return;
+                    return MessageDelayType.SystemMessage;
                 }
-                if (cmd == "ANCHOR_LOT_AWARD")
+                else if (cmd == "ANCHOR_LOT_AWARD")
                 {
                     if (obj["data"] != null)
                     {
                         NewMessage?.Invoke(MessageType.AnchorLotteryAward, obj["data"].ToString());
                     }
-                    return;
+                    return MessageDelayType.SystemMessage;
                 }
-                if (cmd == "SUPER_CHAT_MESSAGE")
+                else if (cmd == "POPULARITY_RED_POCKET_START")
                 {
-                    SuperChatMsgViewModel msgView = new SuperChatMsgViewModel();
                     if (obj["data"] != null)
                     {
-                        msgView.BackgroundBottomColor = obj["data"]["background_bottom_color"].ToString();
-                        msgView.BackgroundColor = obj["data"]["background_color"].ToString();
-                        msgView.BackgroundImage = obj["data"]["background_image"].ToString();
-                        msgView.EndTime = obj["data"]["end_time"].ToInt32();
-                        msgView.StartTime = obj["data"]["start_time"].ToInt32();
-                        msgView.Time = obj["data"]["time"].ToInt32();
-                        msgView.MaxTime = msgView.EndTime - msgView.StartTime;
-                        msgView.Face = obj["data"]["user_info"]["face"].ToString();
-                        msgView.FaceFrame = obj["data"]["user_info"]["face_frame"].ToString();
-                        msgView.FontColor = obj["data"]["message_font_color"].ToString();
-                        msgView.Message = obj["data"]["message"].ToString();
-                        msgView.Price = obj["data"]["price"].ToInt32();
-                        msgView.Username = obj["data"]["user_info"]["uname"].ToString();
-                        NewMessage?.Invoke(MessageType.SuperChat, msgView);
+                        NewMessage?.Invoke(MessageType.RedPocketLotteryStart, obj["data"].ToString());
                     }
-                    return;
+                    return MessageDelayType.SystemMessage;
                 }
-                if (cmd == "ROOM_CHANGE")
+                else if (cmd == "POPULARITY_RED_POCKET_WINNER_LIST")
+                {
+                    if (obj["data"] != null)
+                    {
+                        NewMessage?.Invoke(MessageType.RedPocketLotteryWinner, obj["data"].ToString());
+                    }
+                    return MessageDelayType.SystemMessage;
+                }
+                else if (cmd == "SUPER_CHAT_MESSAGE")
+                {
+                    var msgView = new SuperChatMsgViewModel();
+                    if (obj["data"] == null) return MessageDelayType.SystemMessage;
+                    msgView.BackgroundBottomColor = obj["data"]["background_bottom_color"].ToString();
+                    msgView.BackgroundColor = obj["data"]["background_color"].ToString();
+                    msgView.BackgroundImage = obj["data"]["background_image"].ToString();
+                    msgView.EndTime = obj["data"]["end_time"].ToInt32();
+                    msgView.StartTime = obj["data"]["start_time"].ToInt32();
+                    msgView.Time = obj["data"]["time"].ToInt32();
+                    msgView.MaxTime = msgView.EndTime - msgView.StartTime;
+                    msgView.Face = obj["data"]["user_info"]["face"].ToString();
+                    msgView.FaceFrame = obj["data"]["user_info"]["face_frame"].ToString();
+                    msgView.FontColor = obj["data"]["message_font_color"].ToString();
+                    msgView.Message = obj["data"]["message"].ToString();
+                    msgView.Price = obj["data"]["price"].ToInt32();
+                    msgView.Username = obj["data"]["user_info"]["uname"].ToString();
+                    NewMessage?.Invoke(MessageType.SuperChat, msgView);
+                    return MessageDelayType.SystemMessage;
+                }
+                else if (cmd == "ROOM_CHANGE")
                 {
                     if (obj["data"] != null)
                     {
@@ -359,9 +412,9 @@ namespace BiliLite.Modules.Live
                             ParentAreaID = obj["data"]["parent_area_id"].ToInt32(),
                         });
                     }
-                    return;
+                    return MessageDelayType.SystemMessage;
                 }
-                if (cmd == "GUARD_BUY")
+                else if (cmd == "GUARD_BUY")
                 {
                     if (obj["data"] != null)
                     {
@@ -376,17 +429,86 @@ namespace BiliLite.Modules.Live
                             GuardLevel = obj["data"]["guard_level"].ToInt32(),
                         });
                     }
-                    return;
+                    return MessageDelayType.SystemMessage;
                 }
+                else if (cmd == "ROOM_BLOCK_MSG")
+                {
+                    if (obj["data"] != null)
+                    {
+                        NewMessage?.Invoke(MessageType.RoomBlock, new RoomBlockMsgModel()
+                        {
+                            UserID = obj["data"]["uid"].ToString(),
+                            UserName = obj["data"]["uname"].ToString(),
+                        });
+                    }
+                    return MessageDelayType.SystemMessage;
+                }
+                else if (cmd == "WARNING" || cmd == "CUT_OFF")
+                {
+                    if (obj["msg"] != null)
+                    {
+                        NewMessage?.Invoke(MessageType.WaringOrCutOff, new WarningOrCutOffMsgModel()
+                        {
+                            Message = obj["msg"].ToString(),
+                            Command = cmd,
+                        });
+                    }
+                    return MessageDelayType.SystemMessage;
+                }
+                else if (cmd == "LIVE" || cmd == "REENTER_LIVE_ROOM")
+                {
+                    if (obj["roomid"] != null)
+                    {
+                        NewMessage?.Invoke(MessageType.StartLive, obj["roomid"].ToString());
+                    }
+                    return MessageDelayType.SystemMessage;
+                }
+                else if (cmd == "WATCHED_CHANGE")
+                {
+                    if (obj["data"] != null)
+                    {
+                        NewMessage?.Invoke(MessageType.WatchedChange, obj["data"]["text_large"].ToString());
+                    }
+                    return MessageDelayType.SystemMessage;
+                }
+                else if (cmd == "ONLINE_RANK_V2")
+                {
+                    if (obj["data"] != null && obj["data"]["list"] != null)
+                    {
+                        NewMessage?.Invoke(MessageType.OnlineRankChange, obj["data"]["list"].ToString());
+                    }
+                    if (obj["data"] != null && obj["data"]["online_list"] != null)
+                    {
+                        NewMessage?.Invoke(MessageType.OnlineRankChange, obj["data"]["online_list"].ToString());
+                    }
+                    return MessageDelayType.SystemMessage;
+                }
+                else if (cmd == "PREPARING") //直播准备中, 即已停止直播(并没有测试到实际信息...)
+                {
+                    if (obj["data"] != null)
+                    {
+                        NewMessage?.Invoke(MessageType.StopLive, null);
+                    }
+                    return MessageDelayType.SystemMessage;
+                }
+                else if (cmd == "ROOM_SILENT_ON" || cmd == "ROOM_SILENT_OFF")
+                {
+                    if (obj["data"] != null)
+                    {
+                        NewMessage?.Invoke(MessageType.RoomSlient, obj["data"]["level"].ToInt32());
+                    }
+                    return MessageDelayType.SystemMessage;
+                }
+                return MessageDelayType.SystemMessage;
             }
             catch (Exception ex)
             {
                 if (ex is JsonReaderException)
                 {
-                    logger.Error("直播解析JSON包出错", ex);
+                    logger.Log("直播解析JSON包出错", LogType.Error ,ex);
                 }
+                return MessageDelayType.SystemMessage;
             }
-
         }
 
         /// <summary>
