@@ -1132,6 +1132,11 @@ namespace BiliLite.Controls
 
         }
 
+        public Task Load(BasePlayInfo basePlayInfo)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// 暂停
         /// </summary>

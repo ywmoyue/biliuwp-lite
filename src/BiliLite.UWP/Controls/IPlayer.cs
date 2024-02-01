@@ -149,6 +149,8 @@ namespace BiliLite.Controls
         /// </summary>
         void SetPosition(double position);
 
+        Task Load(BasePlayInfo basePlayInfo);
+
         /// <summary>
         /// 暂停
         /// </summary>

@@ -37,6 +37,8 @@ using BiliLite.Player.States.PlayStates;
 using BiliLite.Player.States.ScreenStates;
 using BiliLite.ViewModels.Live;
 using Windows.UI.Xaml.Documents;
+using BiliLite.Player.MediaInfos;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -66,7 +68,7 @@ namespace BiliLite.Pages
 
         public LiveDetailPage()
         {
-            m_viewModel = new LiveDetailPageViewModel();
+            m_viewModel = App.ServiceProvider.GetRequiredService<LiveDetailPageViewModel>();
             DataContext = m_viewModel;
             this.InitializeComponent();
 

@@ -43,6 +43,7 @@ namespace BiliLite.Player
         private async void SubPlayer_BufferingEnded(object sender, EventArgs e)
         {
             await m_playerController.PlayState.Play();
+            await m_playerController.PauseState.Pause();
         }
 
         private async void SubPlayerOnPlayerErrorOccurred(object sender, PlayerException e)

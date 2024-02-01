@@ -1,8 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build"
-  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"
-    Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -140,27 +138,19 @@
   <ItemGroup>
     <Compile Include="Extensions\QrCodeExtensions.cs" />
     <Compile Include="Models\Common\Anime\ISeasonItem.cs" />
-    <
-    <
-    <
-    <
-    <
-    <
-    < HEAD
     <Compile Include="Controls\IPlayer.cs" />
     <Compile Include="Controls\Player2.xaml.cs">
       <DependentUpon>Player2.xaml</DependentUpon>
     </Compile>
     <Compile Include="Extensions\PlayerExtensions.cs" />
-    =======
     <Compile Include="Models\Common\Live\DefaultPlayUrlSourceOptions.cs" />
     <Compile Include="Models\Common\Live\InteractWordModel.cs" />
-    >>>>>>> dev
     <Compile Include="Models\Common\Live\LiveMessageHandleActionsMap.cs" />
     <Compile Include="Models\Common\Live\LiveRoomEndRedPocketLotteryInfoModel.cs" />
     <Compile Include="Models\Common\Live\LiveRoomRedPocketLotteryInfoModel.cs" />
     <Compile Include="Models\Common\Live\RoomBlockMsgModel.cs" />
     <Compile Include="Models\Common\Live\WarningOrCutOffMsgModel.cs" />
+    <Compile Include="Models\Common\Player\BasePlayInfo.cs" />
     <Compile Include="Models\Common\Player\DefaultPlayerModeOptions.cs" />
     <Compile Include="Models\Common\Player\LivePlayerMode.cs" />
     <Compile Include="Models\Common\Player\PlayerConfig.cs" />
@@ -168,6 +158,7 @@
     <Compile Include="Models\Common\Player\BasePlayUrlInfo.cs" />
     <Compile Include="Models\Common\Player\RealPlayInfo.cs" />
     <Compile Include="Models\Common\Player\VideoFlvUrlInfo.cs" />
+    <Compile Include="Models\Common\Player\BiliVideoPlayMode.cs" />
     <Compile Include="Models\Common\UserDynamic\IUserDynamicContentDisplayInfo.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicCtrlItem.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicDisplayTypesMap.cs" />
@@ -277,6 +268,7 @@
     <Compile Include="Models\Common\Live\LiveRoomWebUrlUrlinfoItemModel.cs" />
     <Compile Include="Models\Common\Live\LiveTitleModel.cs" />
     <Compile Include="Models\Common\Live\LiveWalletInfo.cs" />
+    <Compile Include="ViewModels\Player\PlayerViewModel.cs" />
     <Compile Include="ViewModels\UserDynamic\UserDynamicItemDisplayViewModel.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicItemDisplayOneRowInfo.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicItemDisplayImageInfo.cs" />
@@ -1302,12 +1294,10 @@
       <Name>Windows Desktop Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
-  <PropertyGroup
-    Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
-  <Import
-    Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

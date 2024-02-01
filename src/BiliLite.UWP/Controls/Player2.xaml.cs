@@ -15,6 +15,8 @@ using BiliLite.Player.States.PauseStates;
 using BiliLite.Player.States.PlayStates;
 using BiliLite.Player.States.ScreenStates;
 using BiliLite.Services;
+using BiliLite.ViewModels.Player;
+using Microsoft.Extensions.DependencyInjection;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -27,9 +29,11 @@ namespace BiliLite.Controls
         private readonly BasePlayerController m_playerController;
         private readonly BiliVideoPlayer m_player;
         private readonly RealPlayInfo m_realPlayInfo;
+        private readonly PlayerViewModel m_viewModel;
 
         public Player2()
         {
+            m_viewModel = App.ServiceProvider.GetRequiredService<PlayerViewModel>();
             this.InitializeComponent();
 
             m_playerConfig = new PlayerConfig();
@@ -102,8 +106,32 @@ namespace BiliLite.Controls
         {
         }
 
+        private void MediaStopped()
+        {
+        }
+
+        private async Task MediaFailed(PlayerException exception)
+        {
+        }
+
+        private async Task MediaOpened()
+        {
+        }
+
         private async void PlayerController_PlayStateChanged(object sender, PlayStateChangedEventArgs e)
         {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                m_viewModel.PlayState = e.NewState;
+            });
+            if (e.NewState.IsPlaying)
+            {
+                await MediaOpened();
+            }
+            if (e.NewState.IsStopped)
+            {
+                MediaStopped();
+            }
         }
 
         public async Task<PlayerOpenResult> PlayerDashUseNative(BiliDashPlayUrlInfo dashInfo, string userAgent, string referer, double positon = 0)
@@ -160,6 +188,21 @@ namespace BiliLite.Controls
 
         public void SetPosition(double position)
         {
+        }
+
+        public async Task Load(BasePlayInfo basePlayInfo)
+        {
+            switch (basePlayInfo.PlayMode)
+            {
+                case BiliVideoPlayMode.Dash:
+                    var playInfo = basePlayInfo as BaseDashPlayInfo;
+                    m_realPlayInfo.PlayUrls.DashVideoUrl = playInfo.DashInfo.Video.Url;
+                    m_realPlayInfo.PlayUrls.DashAudioUrl = playInfo.DashInfo.Audio.Url;
+                    m_playerConfig.UserAgent = playInfo.UserAgent;
+                    m_playerConfig.Referer = playInfo.Referer;
+                    await m_playerController.PlayState.Load();
+                    break;
+            }
         }
 
         public void Pause()

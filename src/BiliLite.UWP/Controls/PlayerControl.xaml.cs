@@ -1639,42 +1639,59 @@ namespace BiliLite.Controls
             {
                 result = false
             };
+            BasePlayInfo playInfo = null;
+
             if (quality.PlayUrlType == BiliPlayUrlType.DASH)
             {
-                var audio = audioQuality == null ? quality.DashInfo.Audio : audioQuality.Audio;
-                var video = quality.DashInfo.Video;
-
-                result = await Player.PlayerDashUseNative(quality.DashInfo, quality.UserAgent, quality.Referer, positon: _postion);
-                return result;
-                if (!result.result)
+                playInfo = new BaseDashPlayInfo()
                 {
-                    var mpd_url = new PlayerAPI().GenerateMPD(new Models.GenerateMPDModel()
-                    {
-                        AudioBandwidth = audio.BandWidth.ToString(),
-                        AudioCodec = audio.Codecs,
-                        AudioID = audio.ID.ToString(),
-                        AudioUrl = audio.Url,
-                        Duration = quality.DashInfo.Duration,
-                        DurationMS = quality.Timelength,
-                        VideoBandwidth = video.BandWidth.ToString(),
-                        VideoCodec = video.Codecs,
-                        VideoID = video.ID.ToString(),
-                        VideoFrameRate = video.FrameRate.ToString(),
-                        VideoHeight = video.Height,
-                        VideoWidth = video.Width,
-                        VideoUrl = video.Url,
-                    });
-                    result = await Player.PlayDashUrlUseFFmpegInterop(mpd_url, quality.UserAgent, quality.Referer, positon: _postion);
-                }
+                    DashInfo = quality.DashInfo,
+                    Positon = _postion,
+                    Referer = quality.Referer,
+                    UserAgent = quality.UserAgent,
+                };
             }
-            else if (quality.PlayUrlType == BiliPlayUrlType.SingleFLV)
-            {
-                result = await Player.PlaySingleFlvUseFFmpegInterop(quality.FlvInfo.First().Url, quality.UserAgent, quality.Referer, positon: _postion);
-            }
-            else if (quality.PlayUrlType == BiliPlayUrlType.MultiFLV)
-            {
-                result = await Player.PlayVideoUseSYEngine(quality.FlvInfo, quality.UserAgent, quality.Referer, positon: _postion, epId: CurrentPlayItem.ep_id);
-            }
+
+            await Player.Load(playInfo);
+
+            result.result = true;
+
+            //if (quality.PlayUrlType == BiliPlayUrlType.DASH)
+            //{
+            //    var audio = audioQuality == null ? quality.DashInfo.Audio : audioQuality.Audio;
+            //    var video = quality.DashInfo.Video;
+
+            //    result = await Player.PlayerDashUseNative(quality.DashInfo, quality.UserAgent, quality.Referer, positon: _postion);
+            //    return result;
+            //    if (!result.result)
+            //    {
+            //        var mpd_url = new PlayerAPI().GenerateMPD(new Models.GenerateMPDModel()
+            //        {
+            //            AudioBandwidth = audio.BandWidth.ToString(),
+            //            AudioCodec = audio.Codecs,
+            //            AudioID = audio.ID.ToString(),
+            //            AudioUrl = audio.Url,
+            //            Duration = quality.DashInfo.Duration,
+            //            DurationMS = quality.Timelength,
+            //            VideoBandwidth = video.BandWidth.ToString(),
+            //            VideoCodec = video.Codecs,
+            //            VideoID = video.ID.ToString(),
+            //            VideoFrameRate = video.FrameRate.ToString(),
+            //            VideoHeight = video.Height,
+            //            VideoWidth = video.Width,
+            //            VideoUrl = video.Url,
+            //        });
+            //        result = await Player.PlayDashUrlUseFFmpegInterop(mpd_url, quality.UserAgent, quality.Referer, positon: _postion);
+            //    }
+            //}
+            //else if (quality.PlayUrlType == BiliPlayUrlType.SingleFLV)
+            //{
+            //    result = await Player.PlaySingleFlvUseFFmpegInterop(quality.FlvInfo.First().Url, quality.UserAgent, quality.Referer, positon: _postion);
+            //}
+            //else if (quality.PlayUrlType == BiliPlayUrlType.MultiFLV)
+            //{
+            //    result = await Player.PlayVideoUseSYEngine(quality.FlvInfo, quality.UserAgent, quality.Referer, positon: _postion, epId: CurrentPlayItem.ep_id);
+            //}
             return result;
         }
 
