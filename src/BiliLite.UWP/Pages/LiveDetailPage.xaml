@@ -571,13 +571,13 @@
                                         <TextBlock x:Name="BottomTextPostion" VerticalAlignment="Center" Foreground="White" Margin="8 0" FontSize="18" Text="{x:Bind Path=m_liveRoomViewModel.LiveTime,Mode=OneWay}"></TextBlock>
 
 
-                                        <Button x:Name="TopBtnOpenDanmaku" Click="TopBtnOpenDanmaku_Click" Visibility="{x:Bind Path=DanmuControl.Visibility,Mode=OneWay,Converter={StaticResource display}}" Background="Transparent" Padding="0" Width="48" Height="48">
+                                        <Button x:Name="TopBtnOpenDanmaku" BorderThickness="0" Click="TopBtnOpenDanmaku_Click" Visibility="{x:Bind Path=DanmuControl.Visibility,Mode=OneWay,Converter={StaticResource display}}" Background="Transparent" Padding="0" Width="48" Height="48">
                                             <Image Width="28" Height="28" Source="/Assets/Icon/icon_danmaku_open.png" ></Image>
                                         </Button>
-                                        <Button x:Name="TopBtnCloseDanmaku"  Click="TopBtnCloseDanmaku_Click" Visibility="{x:Bind Path=DanmuControl.Visibility,Mode=OneWay}" Background="Transparent" Padding="0" Width="48" Height="48">
+                                        <Button x:Name="TopBtnCloseDanmaku" BorderThickness="0" Click="TopBtnCloseDanmaku_Click" Visibility="{x:Bind Path=DanmuControl.Visibility,Mode=OneWay}" Background="Transparent" Padding="0" Width="48" Height="48">
                                             <Image Width="28" Height="28" Source="/Assets/Icon/icon_danmaku_close.png" ></Image>
                                         </Button>
-                                        <Button x:Name="TopBtnSettingDanmaku"  Background="Transparent" Padding="0" Width="48" Height="48">
+                                        <Button x:Name="TopBtnSettingDanmaku" BorderThickness="0" Background="Transparent" Padding="0" Width="48" Height="48">
                                             <Image Width="28" Height="28" Source="/Assets/Icon/icon_danmaku_setting.png" ></Image>
                                             <Button.Flyout>
                                                 <Flyout>
@@ -624,7 +624,11 @@
 
 
                                     <StackPanel Orientation="Horizontal" Grid.Column="2">
-                                        <Button x:Name="BottomBtnVolume" Background="Transparent" Foreground="White" Padding="8" Width="48" Height="48">
+                                        <HyperlinkButton x:Name="BottomBtnGiftRow" Margin="0 0 10 0" Click="BottomBtnSwitchGiftBar_Click" ToolTipService.ToolTip="开关礼物栏" Foreground="White" Padding="8" Width="48" Height="48">
+                                            <fa:FontAwesome Icon="Solid_Gift" FontSize="22"></fa:FontAwesome>
+                                        </HyperlinkButton>
+
+                                        <Button x:Name="BottomBtnVolume" BorderThickness="0" Background="Transparent" Foreground="White" Padding="8" Width="48" Height="48">
                                             <fa:FontAwesome x:Name="BottomBtnVolumeIcon" Icon="Solid_VolumeUp"  FontSize="20"></fa:FontAwesome>
                                             <Button.Flyout>
                                                 <Flyout>
@@ -702,7 +706,7 @@
                         </Grid>
                     </Grid>
                 </Grid>
-                <Grid Grid.Row="1">
+                <Grid Grid.Row="1" x:Name="BottomGiftBar">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*"/>
