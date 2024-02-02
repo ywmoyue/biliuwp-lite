@@ -33,6 +33,8 @@ namespace BiliLite.Player.SubPlayers
         public override event EventHandler BufferingEnded;
 
         public override double Volume { get; set; }
+        public override double Position { get; set; }
+        public override double Duration { get; }
 
         private void InitPlayerEvent()
         {

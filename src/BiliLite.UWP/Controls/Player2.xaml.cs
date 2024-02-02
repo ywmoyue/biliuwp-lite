@@ -29,11 +29,10 @@ namespace BiliLite.Controls
         private readonly BasePlayerController m_playerController;
         private readonly BiliVideoPlayer m_player;
         private readonly RealPlayInfo m_realPlayInfo;
-        private readonly PlayerViewModel m_viewModel;
 
         public Player2()
         {
-            m_viewModel = App.ServiceProvider.GetRequiredService<PlayerViewModel>();
+            ViewModel = App.ServiceProvider.GetRequiredService<PlayerViewModel>();
             this.InitializeComponent();
 
             m_playerConfig = new PlayerConfig();
@@ -47,15 +46,31 @@ namespace BiliLite.Controls
             InitPlayerEvent();
         }
 
+        public PlayerViewModel ViewModel { get; private set; }
+
         public PlayState PlayState { get; set; }
 
         public PlayMediaType PlayMediaType { get; set; }
 
         public VideoPlayHistoryHelper.ABPlayHistoryEntry ABPlay { get; set; }
 
-        public double Position { get; set; }
+        public double Position
+        {
+            get => m_player.Position;
+            set
+            {
 
-        public double Duration { get; set; }
+            }
+        }
+
+        public double Duration
+        {
+            get => m_player.Duration;
+            set
+            {
+
+            }
+        }
 
         public double Volume { get; set; }
 
@@ -83,7 +98,13 @@ namespace BiliLite.Controls
             m_playerController.ContentStateChanged += PlayerController_ContentStateChanged;
             m_playerController.ScreenStateChanged += PlayerController_ScreenStateChanged;
             m_player.ErrorOccurred += Player_ErrorOccurred;
-            m_playerController.MediaInfosUpdated += PlayerController_MediaInfosUpdated; 
+            m_playerController.MediaInfosUpdated += PlayerController_MediaInfosUpdated;
+            m_player.PositionChanged += Player_PositionChanged;
+        }
+
+        private void Player_PositionChanged(object sender, double e)
+        {
+            ViewModel.Position = e;
         }
 
         private async void PlayerController_MediaInfosUpdated(object sender, MediaInfo e)
@@ -100,21 +121,14 @@ namespace BiliLite.Controls
 
         private async void PlayerController_PauseStateChanged(object sender, PauseStateChangedEventArgs e)
         {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                PlayState = e.NewState.IsPaused ? PlayState.Pause : PlayState.Playing;
+                PlayStateChanged?.Invoke(this, PlayState);
+            });
         }
 
         private async void Player_ErrorOccurred(object sender, PlayerException e)
-        {
-        }
-
-        private void MediaStopped()
-        {
-        }
-
-        private async Task MediaFailed(PlayerException exception)
-        {
-        }
-
-        private async Task MediaOpened()
         {
         }
 
@@ -122,17 +136,21 @@ namespace BiliLite.Controls
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                m_viewModel.PlayState = e.NewState;
+                if (e.NewState.IsPlaying)
+                {
+                    ViewModel.Duration = Duration;
+                    PlayState = PlayState.Playing;
+                    PlayStateChanged?.Invoke(this, PlayState);
+                }
+                if (e.NewState.IsStopped)
+                {
+                    PlayState = PlayState.End;
+                    PlayStateChanged?.Invoke(this, PlayState);
+                }
             });
-            if (e.NewState.IsPlaying)
-            {
-                await MediaOpened();
-            }
-            if (e.NewState.IsStopped)
-            {
-                MediaStopped();
-            }
         }
+
+        #region 弃用
 
         public async Task<PlayerOpenResult> PlayerDashUseNative(BiliDashPlayUrlInfo dashInfo, string userAgent, string referer, double positon = 0)
         {
@@ -182,6 +200,8 @@ namespace BiliLite.Controls
             throw new NotImplementedException();
         }
 
+        #endregion
+
         public void SetRatioMode(int mode)
         {
         }
@@ -205,20 +225,23 @@ namespace BiliLite.Controls
             }
         }
 
-        public void Pause()
+        public async Task Pause()
         {
+            await m_playerController.PauseState.Pause();
         }
 
-        public void Play()
+        public async Task Play()
         {
+            await m_playerController.PauseState.Resume();
         }
 
         public void SetRate(double value)
         {
         }
 
-        public void ClosePlay()
+        public async Task ClosePlay()
         {
+            await m_playerController.PlayState.Stop();
         }
 
         public void SetVolume(double volume)
@@ -232,6 +255,7 @@ namespace BiliLite.Controls
 
         public void Dispose()
         {
+            ClosePlay();
         }
     }
 }

@@ -29,8 +29,13 @@ namespace BiliLite.Player
 
         public event EventHandler<PlayerException> ErrorOccurred;
         public event EventHandler BufferingEnded;
+        public event EventHandler<double> PositionChanged;
 
         public double Volume { get; set; }
+
+        public double Position => m_subPlayer.Position;
+
+        public double Duration => m_subPlayer.Duration;
 
         private void InitPlayerEvents(ISubPlayer subPlayer)
         {
@@ -38,6 +43,12 @@ namespace BiliLite.Player
             subPlayer.MediaOpened += SubPlayer_MediaOpened;
             subPlayer.MediaEnded += SubPlayer_MediaEnded;
             subPlayer.BufferingEnded += SubPlayer_BufferingEnded;
+            subPlayer.PositionChanged += SubPlayer_PositionChanged;
+        }
+
+        private void SubPlayer_PositionChanged(object sender, double e)
+        {
+            PositionChanged?.Invoke(this, e);
         }
 
         private async void SubPlayer_BufferingEnded(object sender, EventArgs e)

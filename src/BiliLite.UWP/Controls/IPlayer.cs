@@ -154,12 +154,12 @@ namespace BiliLite.Controls
         /// <summary>
         /// 暂停
         /// </summary>
-        void Pause();
+        Task Pause();
 
         /// <summary>
         /// 播放
         /// </summary>
-        void Play();
+        Task Play();
 
         /// <summary>
         /// 设置播放速度
@@ -170,7 +170,7 @@ namespace BiliLite.Controls
         /// <summary>
         /// 停止播放
         /// </summary>
-        void ClosePlay();
+        Task ClosePlay();
 
         /// <summary>
         /// 设置音量

@@ -20,6 +20,7 @@ namespace BiliLite.Player.SubPlayers
         private PlayerConfig m_playerConfig;
         private MediaPlayerElement m_videoPlayerElement;
         private MediaPlayerElement m_audioPlayerElement;
+        private double m_duration;
 
         public DashFFmpegPlayer(PlayerConfig playerConfig, MediaPlayerElement videoPlayerElement,
             MediaPlayerElement audioPlayerElement)
@@ -36,8 +37,25 @@ namespace BiliLite.Player.SubPlayers
         public override event EventHandler MediaOpened;
         public override event EventHandler MediaEnded;
         public override event EventHandler BufferingEnded;
+        public override event EventHandler<double> PositionChanged;
 
-        public override double Volume { get; set; }
+        public override double Volume
+        {
+            get => m_audioMediaPlayer.Volume;
+            set => m_audioMediaPlayer.Volume = value;
+        }
+
+        public override double Position
+        {
+            get => m_audioMediaPlayer.Position.TotalSeconds;
+            set
+            {
+                m_audioMediaPlayer.Position = TimeSpan.FromSeconds(value);
+                m_videoMediaPlayer.Position = TimeSpan.FromSeconds(value);
+            }
+        }
+
+        public override double Duration => m_duration;
 
         private void InitPlayerEvent()
         {
@@ -48,6 +66,15 @@ namespace BiliLite.Player.SubPlayers
             m_videoMediaPlayer.MediaOpened += MediaPlayer_MediaOpened;
             m_videoMediaPlayer.MediaEnded += MediaPlayer_MediaEnded; ;
             m_videoMediaPlayer.MediaFailed += MediaPlayer_MediaFailed;
+            m_videoMediaPlayer.PlaybackSession.PositionChanged += PlaybackSession_PositionChanged;
+        }
+
+        private async void PlaybackSession_PositionChanged(MediaPlaybackSession sender, object args)
+        {
+            await m_videoPlayerElement.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                PositionChanged?.Invoke(this, Position);
+            });
         }
 
         private void MediaPlayer_MediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
@@ -162,6 +189,17 @@ namespace BiliLite.Player.SubPlayers
 
         public override async Task Buff()
         {
+            await m_videoPlayerElement.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (m_videoMediaPlayer != null)
+                {
+                    m_duration = m_videoMediaSource.Duration.TotalSeconds;
+                }
+                if (m_audioMediaPlayer != null)
+                {
+                    m_duration = m_audioMediaSource.Duration.TotalSeconds;
+                }
+            });
         }
 
         public override async Task Play()

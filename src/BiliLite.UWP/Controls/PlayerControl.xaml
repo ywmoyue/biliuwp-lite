@@ -698,8 +698,8 @@
                             </Grid.RowDefinitions>
                             <Slider Margin="8 0" 
                                 x:Name="BottomProgress" 
-                                Value="{Binding ElementName=Player,Path=Position,Mode=TwoWay}"
-                                Maximum="{Binding ElementName=Player,Path=Duration,Mode=OneWay}"
+                                Value="{Binding ElementName=Player,Path=ViewModel.Position,Mode=TwoWay}"
+                                Maximum="{Binding ElementName=Player,Path=ViewModel.Duration,Mode=OneWay}"
                                 Foreground="{ThemeResource HighLightColor}"
                                 ThumbToolTipValueConverter="{StaticResource progress}" ></Slider>
                             <Grid Grid.Row="1" Padding="4 8">
@@ -719,7 +719,7 @@
                                     <HyperlinkButton x:Name="BottomBtnNext" Click="BottomBtnNext_Click" Visibility="Collapsed" Foreground="White" Padding="8" Width="48" Height="48">
                                         <fa:FontAwesome Icon="Solid_StepForward" FontSize="18"></fa:FontAwesome>
                                     </HyperlinkButton>
-                                    <TextBlock x:Name="BottomTextPostion" VerticalAlignment="Center" Foreground="White" Margin="8 0" FontSize="18"><Run Text="{Binding ElementName=Player,Path=Position,Mode=OneWay,Converter={StaticResource progress}}"/> / <Run Text="{Binding ElementName=Player,Path=Duration,Mode=OneWay,Converter={StaticResource progress}}"/></TextBlock>
+                                    <TextBlock x:Name="BottomTextPostion" VerticalAlignment="Center" Foreground="White" Margin="8 0" FontSize="18"><Run Text="{Binding ElementName=Player,Path=ViewModel.Position,Mode=OneWay,Converter={StaticResource progress}}"/> / <Run Text="{Binding ElementName=Player,Path=ViewModel.Duration,Mode=OneWay,Converter={StaticResource progress}}"/></TextBlock>
                                     <Button x:Name="BottomBtnSelctSubtitle" Visibility="Collapsed" Foreground="White" Background="Transparent" Padding="8" Width="48" Height="48">
                                         <fa:FontAwesome Icon="Solid_ClosedCaptioning" FontSize="20"></fa:FontAwesome>
                                     </Button>

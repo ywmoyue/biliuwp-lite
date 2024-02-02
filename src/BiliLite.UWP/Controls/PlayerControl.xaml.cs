@@ -2288,15 +2288,16 @@ namespace BiliLite.Controls
             Pause();
         }
 
-        private void BottomBtnPlay_Click(object sender, RoutedEventArgs e)
+        private async void BottomBtnPlay_Click(object sender, RoutedEventArgs e)
         {
             if (Player.Opening)
             {
                 return;
             }
+
             if (Player.PlayState == PlayState.Pause || Player.PlayState == PlayState.End)
             {
-                Player.Play();
+                await Player.Play();
                 m_danmakuController.Resume();
             }
         }

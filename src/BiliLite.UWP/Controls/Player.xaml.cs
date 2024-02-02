@@ -1140,7 +1140,7 @@ namespace BiliLite.Controls
         /// <summary>
         /// 暂停
         /// </summary>
-        public void Pause()
+        public async Task Pause()
         {
             try
             {
@@ -1172,7 +1172,7 @@ namespace BiliLite.Controls
         /// <summary>
         /// 播放
         /// </summary>
-        public void Play()
+        public async Task Play()
         {
             if (Position == 0 && Duration == 0) return;
             if (m_mediaTimelineController != null)
@@ -1222,7 +1222,7 @@ namespace BiliLite.Controls
         /// <summary>
         /// 停止播放
         /// </summary>
-        public void ClosePlay()
+        public async Task ClosePlay()
         {
             //全部设置为NULL
             if (mediaPlayerVideo.MediaPlayer != null)

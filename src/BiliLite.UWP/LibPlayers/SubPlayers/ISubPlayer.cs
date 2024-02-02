@@ -13,6 +13,10 @@ namespace BiliLite.Player.SubPlayers
 
         public abstract double Volume { get; set; }
 
+        public abstract double Position { get; set; }
+
+        public abstract double Duration { get; }
+
         public event EventHandler<PlayerException> PlayerErrorOccurred;
 
         public virtual event EventHandler MediaOpened;
@@ -20,6 +24,8 @@ namespace BiliLite.Player.SubPlayers
         public virtual event EventHandler MediaEnded;
 
         public virtual event EventHandler BufferingEnded;
+
+        public virtual event EventHandler<double> PositionChanged;
 
         protected void EmitError(PlayerErrorCode errorCode, string description, RetryStrategy retryStrategy = RetryStrategy.NoRetry)
         {

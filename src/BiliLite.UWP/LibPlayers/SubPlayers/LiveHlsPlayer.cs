@@ -34,13 +34,16 @@ namespace BiliLite.Player
             m_config.FFmpegOptions.Add("reconnect_streamed", 1);
             m_config.FFmpegOptions.Add("reconnect_on_http_error", "404"); //刚开播时会404, 但一会就好了
             m_config.FFmpegOptions.Add("reconnect_delay_max", 10);
-    }
+        }
 
         public override double Volume
         {
             get => m_mediaPlayer.Volume;
             set => m_mediaPlayer.Volume = value;
         }
+
+        public override double Position { get; set; }
+        public override double Duration { get; }
 
         public override event EventHandler MediaOpened;
         public override event EventHandler MediaEnded;
@@ -75,7 +78,7 @@ namespace BiliLite.Player
             //    default:
             //        throw new ArgumentOutOfRangeException();
             //}
-            EmitError(PlayerError.PlayerErrorCode.UnknownError,"");
+            EmitError(PlayerError.PlayerErrorCode.UnknownError, "");
         }
 
         private void ReloadConfig()
@@ -147,7 +150,7 @@ namespace BiliLite.Player
             var urls = m_realPlayInfo.PlayUrls;
             if (urls.HlsUrls == null && urls.FlvUrls == null)
             {
-                EmitError(PlayerError.PlayerErrorCode.PlayUrlError,"获取播放地址失败", PlayerError.RetryStrategy.NoRetry);
+                EmitError(PlayerError.PlayerErrorCode.PlayUrlError, "获取播放地址失败", PlayerError.RetryStrategy.NoRetry);
             }
 
             var defaultPlayerMode = m_playerConfig.PlayMode;
