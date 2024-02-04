@@ -6,11 +6,14 @@ using BiliLite.Models.Common;
 using BiliLite.Models.Common.Player;
 using BiliLite.Models.Common.Video.PlayUrlInfos;
 using BiliLite.Services;
+using BiliLite.ViewModels.Player;
 
 namespace BiliLite.Controls
 {
     public interface IPlayer
     {
+        public PlayerViewModel ViewModel { get; }
+
         PlayState PlayState { get; set; }
         PlayMediaType PlayMediaType { get; set; }
         VideoPlayHistoryHelper.ABPlayHistoryEntry ABPlay { get; set; }

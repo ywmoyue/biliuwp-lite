@@ -22,6 +22,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.Web.Http;
 using BiliLite.Models.Common.Player;
+using BiliLite.ViewModels.Player;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -69,6 +70,8 @@ namespace BiliLite.Controls
         #endregion
 
         #region Properties
+
+        public PlayerViewModel ViewModel { get; private set; }
 
         public PlayState PlayState { get; set; }
         public PlayMediaType PlayMediaType { get; set; }

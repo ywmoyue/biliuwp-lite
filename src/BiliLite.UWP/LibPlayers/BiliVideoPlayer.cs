@@ -18,6 +18,8 @@ namespace BiliLite.Player
         private RealPlayInfo m_realPlayInfo;
         private BasePlayerController m_playerController;
         private PlayerConfig m_playerConfig;
+        private bool m_firstBuffed = true;
+        private Task m_loadTask;
 
         public BiliVideoPlayer(PlayerConfig playerConfig, MediaPlayerElement videoElement, MediaPlayerElement audioElement, BasePlayerController playerController)
         {
@@ -33,7 +35,11 @@ namespace BiliLite.Player
 
         public double Volume { get; set; }
 
-        public double Position => m_subPlayer.Position;
+        public double Position
+        {
+            get => m_subPlayer.Position;
+            set => m_subPlayer.Position = value;
+        }
 
         public double Duration => m_subPlayer.Duration;
 
@@ -54,7 +60,11 @@ namespace BiliLite.Player
         private async void SubPlayer_BufferingEnded(object sender, EventArgs e)
         {
             await m_playerController.PlayState.Play();
-            await m_playerController.PauseState.Pause();
+            if (m_firstBuffed)
+            {
+                await m_playerController.PauseState.Pause();
+            }
+            m_firstBuffed = false;
         }
 
         private async void SubPlayerOnPlayerErrorOccurred(object sender, PlayerException e)
@@ -77,11 +87,8 @@ namespace BiliLite.Player
 
         private async void SubPlayer_MediaOpened(object sender, EventArgs e)
         {
+            await m_loadTask;
             await m_playerController.PlayState.Buff();
-            if (m_realPlayInfo.IsAutoPlay)
-            {
-                await m_playerController.PauseState.Resume();
-            }
         }
 
         private async void SubPlayer_MediaEnded(object sender, EventArgs e)
@@ -97,7 +104,8 @@ namespace BiliLite.Player
 
         public async Task Load()
         {
-            await m_subPlayer.Load();
+            m_loadTask = m_subPlayer.Load();
+            await m_loadTask;
         }
 
         public async Task Buff()

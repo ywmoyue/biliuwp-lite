@@ -289,13 +289,13 @@ namespace BiliLite.Controls
                     {
                         if (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.Pause)
                         {
-                            var _position = Player.Position - 3;
+                            var _position = Player.ViewModel.Position - 3;
                             if (_position < 0)
                             {
                                 _position = 0;
                             }
-                            Player.Position = _position;
-                            TxtToolTip.Text = "进度:" + TimeSpan.FromSeconds(Player.Position).ToString(@"hh\:mm\:ss");
+                            Player.SetPosition(_position);
+                            TxtToolTip.Text = "进度:" + TimeSpan.FromSeconds(Player.ViewModel.Position).ToString(@"hh\:mm\:ss");
                             ToolTip.Visibility = Visibility.Visible;
                             await Task.Delay(2000);
                             ToolTip.Visibility = Visibility.Collapsed;
@@ -311,13 +311,13 @@ namespace BiliLite.Controls
                         }
                         if (m_playerKeyRightAction == PlayerKeyRightAction.ControlProgress && (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.Pause))
                         {
-                            var _position = Player.Position + 3;
-                            if (_position > Player.Duration)
+                            var _position = Player.ViewModel.Position + 3;
+                            if (_position > Player.ViewModel.Duration)
                             {
-                                _position = Player.Duration;
+                                _position = Player.ViewModel.Duration;
                             }
-                            Player.Position = _position;
-                            TxtToolTip.Text = "进度:" + TimeSpan.FromSeconds(Player.Position).ToString(@"hh\:mm\:ss");
+                            Player.SetPosition(_position);
+                            TxtToolTip.Text = "进度:" + TimeSpan.FromSeconds(Player.ViewModel.Position).ToString(@"hh\:mm\:ss");
                             ToolTip.Visibility = Visibility.Visible;
                             await Task.Delay(2000);
                             ToolTip.Visibility = Visibility.Collapsed;
@@ -371,12 +371,12 @@ namespace BiliLite.Controls
                     {
                         if (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.Pause)
                         {
-                            var _position = Player.Position + 90;
-                            if (_position > Player.Duration)
+                            var _position = Player.ViewModel.Position + 90;
+                            if (_position > Player.ViewModel.Duration)
                             {
-                                _position = Player.Duration;
+                                _position = Player.ViewModel.Duration;
                             }
-                            Player.Position = _position;
+                            Player.SetPosition(_position);
                             TxtToolTip.Text = "跳过OP(快进90秒)";
                             ToolTip.Visibility = Visibility.Visible;
                             await Task.Delay(2000);
@@ -566,7 +566,7 @@ namespace BiliLite.Controls
                 m_danmakuController.SetDensity((int)DanmuSettingMaxNum.Value);
                 if (!m_useNsDanmaku)
                 {
-                    var segIndex = Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                    var segIndex = Convert.ToInt32(Math.Ceiling(Player.ViewModel.Position / (60 * 6d)));
                     if (segIndex <= 0) segIndex = 1;
                     await LoadDanmaku(segIndex);
                 }
@@ -579,7 +579,7 @@ namespace BiliLite.Controls
                 SettingService.SetValue<int>(SettingConstants.VideoDanmaku.SHIELD_LEVEL, Convert.ToInt32(DanmuSettingShieldLevel.Value));
                 if (!m_useNsDanmaku)
                 {
-                    var segIndex = Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                    var segIndex = Convert.ToInt32(Math.Ceiling(Player.ViewModel.Position / (60 * 6d)));
                     if (segIndex <= 0) segIndex = 1;
                     await LoadDanmaku(segIndex);
                 }
@@ -608,7 +608,7 @@ namespace BiliLite.Controls
                 SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.MERGE, DanmuSettingMerge.IsOn);
                 if (!m_useNsDanmaku)
                 {
-                    var segIndex = Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                    var segIndex = Convert.ToInt32(Math.Ceiling(Player.ViewModel.Position / (60 * 6d)));
                     if (segIndex <= 0) segIndex = 1;
                     await LoadDanmaku(segIndex);
                 }
@@ -904,8 +904,8 @@ namespace BiliLite.Controls
                     showControlsFlag++;
                 }
             }
-            var position = Convert.ToInt32(Player.Position);
-            var segIndex = Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+            var position = Convert.ToInt32(Player.ViewModel.Position);
+            var segIndex = Convert.ToInt32(Math.Ceiling(Player.ViewModel.Position / (60 * 6d)));
             if (segIndex <= 0) segIndex = 1;
             if (danmakuLoadedSegment != null && !danmakuLoadedSegment.Contains(segIndex))
             {
@@ -1114,7 +1114,7 @@ namespace BiliLite.Controls
             {
                 return;
             }
-            var time = Player.Position;
+            var time = Player.ViewModel.Position;
             if (subtitles.body == null) return;
             var first = subtitles.body.FirstOrDefault(x => x.from <= time && x.to >= time);
             if (first != null)
@@ -1324,7 +1324,7 @@ namespace BiliLite.Controls
                 }
                 else
                 {
-                    var segIndex = Math.Ceiling(Player.Position / (60 * 6d));
+                    var segIndex = Math.Ceiling(Player.ViewModel.Position / (60 * 6d));
                     if (update)
                     {
                         await LoadDanmaku(segIndex.ToInt32());
@@ -1601,7 +1601,7 @@ namespace BiliLite.Controls
 
         public async Task ReportHistory()
         {
-            await playerHelper.ReportHistory(CurrentPlayItem, Player.Position);
+            await playerHelper.ReportHistory(CurrentPlayItem, Player.ViewModel.Position);
         }
 
         BiliPlayUrlInfo current_quality_info = null;
@@ -2044,7 +2044,7 @@ namespace BiliLite.Controls
             DirectionY = false;
             if (ssValue != 0)
             {
-                Player.Position = Player.Position + ssValue;
+                Player.SetPosition(Player.ViewModel.Position + ssValue);
             }
             ToolTip.Visibility = Visibility.Collapsed;
         }
@@ -2173,13 +2173,13 @@ namespace BiliLite.Controls
                 ssValue -= d;
                 //slider.Value -= d;
             }
-            var pos = Player.Position;
+            var pos = Player.ViewModel.Position;
             pos += ssValue;
 
             if (pos < 0)
                 pos = 0;
-            else if (pos > Player.Duration)
-                pos = Player.Duration;
+            else if (pos > Player.ViewModel.Duration)
+                pos = Player.ViewModel.Duration;
             //txt_Post.Text = ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00") + ":" + ts.Seconds.ToString("00") + "/" + mediaElement.MediaPlayer.PlaybackSession.NaturalDuration.TimeSpan.Hours.ToString("00") + ":" + mediaElement.MediaPlayer.PlaybackSession.NaturalDuration.TimeSpan.Minutes.ToString("00") + ":" + mediaElement.MediaPlayer.PlaybackSession.NaturalDuration.TimeSpan.Seconds.ToString("00");
 
             TxtToolTip.Text = TimeSpan.FromSeconds(pos).ToString(@"hh\:mm\:ss");
@@ -2258,7 +2258,7 @@ namespace BiliLite.Controls
                 return;
             }
 
-            _postion = Player.Position;
+            _postion = Player.ViewModel.Position;
             var data = BottomSoundQuality.SelectedItem as BiliDashAudioPlayUrlInfo;
             SettingService.SetValue<int>(SettingConstants.Player.DEFAULT_SOUND_QUALITY, data.QualityID);
             _autoPlay = Player.PlayState == PlayState.Playing;
@@ -2272,7 +2272,7 @@ namespace BiliLite.Controls
                 return;
             }
 
-            _postion = Player.Position;
+            _postion = Player.ViewModel.Position;
             var data = BottomCBQuality.SelectedItem as BiliPlayUrlInfo;
             SettingService.SetValue<int>(SettingConstants.Player.DEFAULT_QUALITY, data.QualityID);
             _autoPlay = Player.PlayState == PlayState.Playing;
@@ -2437,7 +2437,7 @@ namespace BiliLite.Controls
             }
             _logger.Debug("视频结束，上报进度");
 
-            playerHelper.ReportHistory(CurrentPlayItem, Player.Duration).RunWithoutAwait();
+            playerHelper.ReportHistory(CurrentPlayItem, Player.ViewModel.Duration).RunWithoutAwait();
             //列表顺序播放
             if (PlayerSettingPlayMode.SelectedIndex == 0)
             {
@@ -2600,7 +2600,7 @@ namespace BiliLite.Controls
         private async void BottomBtnSendDanmakuWide_Click(object sender, RoutedEventArgs e)
         {
             Pause();
-            SendDanmakuDialog sendDanmakuDialog = new SendDanmakuDialog(CurrentPlayItem.avid, CurrentPlayItem.cid, Player.Position);
+            SendDanmakuDialog sendDanmakuDialog = new SendDanmakuDialog(CurrentPlayItem.avid, CurrentPlayItem.cid, Player.ViewModel.Position);
             sendDanmakuDialog.DanmakuSended += new EventHandler<SendDanmakuModel>((obj, arg) =>
             {
                 m_danmakuController.Add(new DanmakuModel()
@@ -2609,7 +2609,7 @@ namespace BiliLite.Controls
                     text = arg.text,
                     location = (DanmakuLocation)arg.location,
                     size = 25,
-                    time = Player.Position
+                    time = Player.ViewModel.Position
                 }, true);
             });
             await sendDanmakuDialog.ShowAsync();
@@ -2643,10 +2643,10 @@ namespace BiliLite.Controls
             _logger.Trace("Dispose PlayerControl");
             if (CurrentPlayItem != null)
             {
-                SettingService.SetValue<double>(CurrentPlayItem.season_id != 0 ? "ep" + CurrentPlayItem.ep_id : CurrentPlayItem.cid, Player.Position);
+                SettingService.SetValue<double>(CurrentPlayItem.season_id != 0 ? "ep" + CurrentPlayItem.ep_id : CurrentPlayItem.cid, Player.ViewModel.Position);
                 //当视频播放结束的话，Position为0
                 if (Player.PlayState != PlayState.End)
-                    await playerHelper.ReportHistory(CurrentPlayItem, Player.Position);
+                    await playerHelper.ReportHistory(CurrentPlayItem, Player.ViewModel.Position);
             }
 
             Player.PlayStateChanged -= Player_PlayStateChanged;
@@ -2707,7 +2707,7 @@ namespace BiliLite.Controls
                 color = Convert.ToInt32((SendDanmakuColorBorder.Background as SolidColorBrush).Color.ToString().Replace("#FF", ""), 16).ToString();
             }
 
-            var result = await playerHelper.SendDanmaku(CurrentPlayItem.avid, CurrentPlayItem.cid, SendDanmakuTextBox.Text, Convert.ToInt32(Player.Position), modeInt, color);
+            var result = await playerHelper.SendDanmaku(CurrentPlayItem.avid, CurrentPlayItem.cid, SendDanmakuTextBox.Text, Convert.ToInt32(Player.ViewModel.Position), modeInt, color);
             if (result)
             {
                 m_danmakuController.Add(new DanmakuModel()
@@ -2716,7 +2716,7 @@ namespace BiliLite.Controls
                     text = SendDanmakuTextBox.Text,
                     location = location,
                     size = 25,
-                    time = Player.Position
+                    time = Player.ViewModel.Position
                 }, true);
                 SendDanmakuTextBox.Text = "";
             }
@@ -2805,7 +2805,7 @@ namespace BiliLite.Controls
             {
                 Player.ABPlay = new VideoPlayHistoryHelper.ABPlayHistoryEntry()
                 {
-                    PointA = Player.Position
+                    PointA = Player.ViewModel.Position
                 };
                 PlayerSettingABPlaySetPointA.Content = "A: " + TimeSpan.FromSeconds(Player.ABPlay.PointA).ToString(@"hh\:mm\:ss\.fff");
                 PlayerSettingABPlaySetPointB.Visibility = Visibility.Visible;
@@ -2825,13 +2825,13 @@ namespace BiliLite.Controls
             }
             else
             {
-                if (Player.Position <= Player.ABPlay.PointA)
+                if (Player.ViewModel.Position <= Player.ABPlay.PointA)
                 {
                     Notify.ShowMessageToast("B点必须在A点之后");
                 }
                 else
                 {
-                    Player.ABPlay.PointB = Player.Position;
+                    Player.ABPlay.PointB = Player.ViewModel.Position;
                     VideoPlayHistoryHelper.SetABPlayHistory(CurrentPlayItem, Player.ABPlay);
                     PlayerSettingABPlaySetPointB.Content = "B: " + TimeSpan.FromSeconds(Player.ABPlay.PointB).ToString(@"hh\:mm\:ss\.fff");
 

@@ -33,6 +33,7 @@ namespace BiliLite.Controls
         public Player2()
         {
             ViewModel = App.ServiceProvider.GetRequiredService<PlayerViewModel>();
+            ViewModel.SetPlayer(this);
             this.InitializeComponent();
 
             m_playerConfig = new PlayerConfig();
@@ -40,7 +41,7 @@ namespace BiliLite.Controls
             m_playerController = PlayerControllerFactory.Create(PlayerType.Live);
             m_player = new BiliVideoPlayer(m_playerConfig, mediaPlayerVideo, mediaPlayerAudio, m_playerController);
             m_realPlayInfo = new RealPlayInfo();
-            m_realPlayInfo.IsAutoPlay = true;
+            m_realPlayInfo.IsAutoPlay = SettingService.GetValue(SettingConstants.Player.AUTO_PLAY, false);
             m_playerController.SetPlayer(m_player);
             m_player.SetRealPlayInfo(m_realPlayInfo);
             InitPlayerEvent();
@@ -54,23 +55,11 @@ namespace BiliLite.Controls
 
         public VideoPlayHistoryHelper.ABPlayHistoryEntry ABPlay { get; set; }
 
-        public double Position
-        {
-            get => m_player.Position;
-            set
-            {
+        [Obsolete]
+        public double Position { get; set; }
 
-            }
-        }
-
-        public double Duration
-        {
-            get => m_player.Duration;
-            set
-            {
-
-            }
-        }
+        [Obsolete]
+        public double Duration { get; set; }
 
         public double Volume { get; set; }
 
@@ -104,7 +93,7 @@ namespace BiliLite.Controls
 
         private void Player_PositionChanged(object sender, double e)
         {
-            ViewModel.Position = e;
+            ViewModel.SourcePosition = e;
         }
 
         private async void PlayerController_MediaInfosUpdated(object sender, MediaInfo e)
@@ -138,7 +127,7 @@ namespace BiliLite.Controls
             {
                 if (e.NewState.IsPlaying)
                 {
-                    ViewModel.Duration = Duration;
+                    ViewModel.Duration = m_player.Duration;
                     PlayState = PlayState.Playing;
                     PlayStateChanged?.Invoke(this, PlayState);
                 }
@@ -208,6 +197,7 @@ namespace BiliLite.Controls
 
         public void SetPosition(double position)
         {
+            m_player.Position = position;
         }
 
         public async Task Load(BasePlayInfo basePlayInfo)

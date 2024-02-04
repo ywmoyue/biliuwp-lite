@@ -7,6 +7,8 @@ using BiliLite.Player.MediaInfos;
 using BiliLite.Extensions;
 using FFmpegInteropX;
 using Windows.UI.Core;
+using BiliLite.Services;
+using Windows.Media;
 
 namespace BiliLite.Player.SubPlayers
 {
@@ -21,6 +23,8 @@ namespace BiliLite.Player.SubPlayers
         private MediaPlayerElement m_videoPlayerElement;
         private MediaPlayerElement m_audioPlayerElement;
         private double m_duration;
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+        private MediaTimelineController m_mediaTimelineController;
 
         public DashFFmpegPlayer(PlayerConfig playerConfig, MediaPlayerElement videoPlayerElement,
             MediaPlayerElement audioPlayerElement)
@@ -30,6 +34,11 @@ namespace BiliLite.Player.SubPlayers
             m_audioPlayerElement = audioPlayerElement;
             m_videoMediaPlayer = new MediaPlayer();
             m_audioMediaPlayer = new MediaPlayer();
+            m_mediaTimelineController = new MediaTimelineController();
+            m_videoMediaPlayer.AutoPlay = true;
+            m_audioMediaPlayer.AutoPlay = true;
+            m_videoMediaPlayer.TimelineController = m_mediaTimelineController;
+            m_audioMediaPlayer.TimelineController = m_mediaTimelineController;
             InitPlayerEvent();
             m_config = new MediaSourceConfig();
         }
@@ -47,12 +56,8 @@ namespace BiliLite.Player.SubPlayers
 
         public override double Position
         {
-            get => m_audioMediaPlayer.Position.TotalSeconds;
-            set
-            {
-                m_audioMediaPlayer.Position = TimeSpan.FromSeconds(value);
-                m_videoMediaPlayer.Position = TimeSpan.FromSeconds(value);
-            }
+            get => m_mediaTimelineController.Position.TotalSeconds;
+            set => m_mediaTimelineController.Position = TimeSpan.FromSeconds(value);
         }
 
         public override double Duration => m_duration;
@@ -64,7 +69,7 @@ namespace BiliLite.Player.SubPlayers
             m_videoMediaPlayer.PlaybackSession.BufferingProgressChanged += PlaybackSession_BufferingProgressChanged;
             m_videoMediaPlayer.PlaybackSession.BufferingEnded += PlaybackSession_BufferingEnded;
             m_videoMediaPlayer.MediaOpened += MediaPlayer_MediaOpened;
-            m_videoMediaPlayer.MediaEnded += MediaPlayer_MediaEnded; ;
+            m_videoMediaPlayer.MediaEnded += MediaPlayer_MediaEnded; 
             m_videoMediaPlayer.MediaFailed += MediaPlayer_MediaFailed;
             m_videoMediaPlayer.PlaybackSession.PositionChanged += PlaybackSession_PositionChanged;
         }
@@ -125,6 +130,7 @@ namespace BiliLite.Player.SubPlayers
 
         private void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
         {
+            _logger.Debug($"PlaybackStateChanged {sender.PlaybackState}");
         }
 
         private async Task StopCore()
@@ -181,9 +187,16 @@ namespace BiliLite.Player.SubPlayers
             }
             if (!string.IsNullOrEmpty(m_realPlayInfo.PlayUrls.DashAudioUrl))
             {
-                m_audioMediaSource = await FFmpegMediaSource.CreateFromUriAsync(m_realPlayInfo.PlayUrls.DashAudioUrl, m_config);
-                var mediaSource = m_audioMediaSource.CreateMediaPlaybackItem();
-                m_audioMediaPlayer.Source = mediaSource;
+                try
+                {
+                    m_audioMediaSource = await FFmpegMediaSource.CreateFromUriAsync(m_realPlayInfo.PlayUrls.DashAudioUrl, m_config);
+                    var mediaSource = m_audioMediaSource.CreateMediaPlaybackItem();
+                    m_audioMediaPlayer.Source = mediaSource;
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message, ex);
+                }
             }
         }
 
@@ -191,14 +204,7 @@ namespace BiliLite.Player.SubPlayers
         {
             await m_videoPlayerElement.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                if (m_videoMediaPlayer != null)
-                {
-                    m_duration = m_videoMediaSource.Duration.TotalSeconds;
-                }
-                if (m_audioMediaPlayer != null)
-                {
-                    m_duration = m_audioMediaSource.Duration.TotalSeconds;
-                }
+                m_duration = m_mediaTimelineController.Duration?.TotalSeconds ?? 0;
             });
         }
 
@@ -229,14 +235,12 @@ namespace BiliLite.Player.SubPlayers
 
         public override async Task Pause()
         {
-            m_videoMediaPlayer.Pause();
-            m_audioMediaPlayer.Pause();
+            m_mediaTimelineController.Pause();
         }
 
         public override async Task Resume()
         {
-            m_videoMediaPlayer.Play();
-            m_audioMediaPlayer.Play();
+            m_mediaTimelineController.Resume();
         }
     }
 }

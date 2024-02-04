@@ -16,7 +16,7 @@ namespace BiliLite.Player.States.PauseStates
             m_playerController = playerController;
             m_pausedState = new PausedState(m_playerController, this);
             m_resumeState = new ResumeState(m_playerController, this);
-            m_playerController.PauseState = m_pausedState;
+            m_playerController.PauseState = m_resumeState;
         }
 
         public event EventHandler<PauseStateChangedEventArgs> PauseStateChanged;
