@@ -1251,7 +1251,7 @@ namespace BiliLite.Pages
 
         private void BottomBtnSwitchGiftBar_Click(object sender, RoutedEventArgs e)
         {
-            BottomGiftBar.Visibility = (BottomGiftBar.Visibility == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
+            m_viewModel.ShowBottomGiftBar = !m_viewModel.ShowBottomGiftBar;
         }
     }
 }

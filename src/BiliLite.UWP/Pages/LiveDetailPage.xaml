@@ -706,7 +706,7 @@
                         </Grid>
                     </Grid>
                 </Grid>
-                <Grid Grid.Row="1" x:Name="BottomGiftBar">
+                <Grid Grid.Row="1" x:Name="BottomGiftBar" Visibility="{x:Bind m_viewModel.ShowBottomGiftBar, Mode=OneWay}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*"/>
