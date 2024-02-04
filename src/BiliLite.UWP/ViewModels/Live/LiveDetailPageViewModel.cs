@@ -80,5 +80,7 @@ namespace BiliLite.ViewModels.Live
         public LivePlayerMode LivePlayerMode { get; set; }
 
         public string LivePlayUrlSource { get; set; }
+
+        public bool ShowBottomGiftBar { get; set; } = true;
     }
 }

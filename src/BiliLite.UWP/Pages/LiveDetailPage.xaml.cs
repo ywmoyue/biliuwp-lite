@@ -1248,5 +1248,10 @@ namespace BiliLite.Pages
             LiveRoomViewModelChangedPlayUrl(null, null);
             await LoadPlayer();
         }
+
+        private void BottomBtnSwitchGiftBar_Click(object sender, RoutedEventArgs e)
+        {
+            m_viewModel.ShowBottomGiftBar = !m_viewModel.ShowBottomGiftBar;
+        }
     }
 }
