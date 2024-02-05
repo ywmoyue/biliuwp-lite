@@ -165,5 +165,10 @@ namespace BiliLite.Player.SubPlayers
         {
             m_videoMediaPlayer.Play();
         }
+
+        public override Task SetRate(double value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

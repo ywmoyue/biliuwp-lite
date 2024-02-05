@@ -33,7 +33,11 @@ namespace BiliLite.Player
         public event EventHandler BufferingEnded;
         public event EventHandler<double> PositionChanged;
 
-        public double Volume { get; set; }
+        public double Volume
+        {
+            get => m_subPlayer.Volume;
+            set => m_subPlayer.Volume = value;
+        }
 
         public double Position
         {
@@ -136,6 +140,11 @@ namespace BiliLite.Player
         public async Task Resume()
         {
             await m_subPlayer.Resume();
+        }
+
+        public async Task SetRate(double value)
+        {
+            await m_subPlayer.SetRate(value);
         }
 
         public async Task FullWindow()

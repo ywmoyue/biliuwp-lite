@@ -9,6 +9,7 @@ using FFmpegInteropX;
 using Windows.UI.Core;
 using BiliLite.Services;
 using Windows.Media;
+using Google.Type;
 
 namespace BiliLite.Player.SubPlayers
 {
@@ -35,10 +36,11 @@ namespace BiliLite.Player.SubPlayers
             m_videoMediaPlayer = new MediaPlayer();
             m_audioMediaPlayer = new MediaPlayer();
             m_mediaTimelineController = new MediaTimelineController();
-            m_videoMediaPlayer.AutoPlay = true;
-            m_audioMediaPlayer.AutoPlay = true;
+            //m_videoMediaPlayer.AutoPlay = true;
+            //m_audioMediaPlayer.AutoPlay = true;
             m_videoMediaPlayer.TimelineController = m_mediaTimelineController;
             m_audioMediaPlayer.TimelineController = m_mediaTimelineController;
+            m_mediaTimelineController.Start();
             InitPlayerEvent();
             m_config = new MediaSourceConfig();
         }
@@ -204,7 +206,14 @@ namespace BiliLite.Player.SubPlayers
         {
             await m_videoPlayerElement.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                m_duration = m_mediaTimelineController.Duration?.TotalSeconds ?? 0;
+                if (m_videoMediaPlayer != null && m_duration==0)
+                {
+                    m_duration = m_videoMediaPlayer.PlaybackSession.NaturalDuration.TotalSeconds;
+                }
+                if (m_audioMediaPlayer != null && m_duration == 0)
+                {
+                    m_duration = m_audioMediaPlayer.PlaybackSession.NaturalDuration.TotalSeconds;
+                }
             });
         }
 
@@ -241,6 +250,11 @@ namespace BiliLite.Player.SubPlayers
         public override async Task Resume()
         {
             m_mediaTimelineController.Resume();
+        }
+
+        public override async Task SetRate(double value)
+        {
+            m_mediaTimelineController.ClockRate = value;
         }
     }
 }

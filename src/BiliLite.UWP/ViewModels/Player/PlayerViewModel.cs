@@ -27,6 +27,26 @@ namespace BiliLite.ViewModels.Player
 
         public double Duration { get; set; }
 
+        public double SourceVolume { get; set; }
+
+        [DependsOn(nameof(SourceVolume))]
+        public double Volume
+        {
+            get => SourceVolume;
+            set
+            {
+                if (value > 1)
+                {
+                    value = 1;
+                }
+                if (value < 0)
+                {
+                    value = 0;
+                }
+                m_player.SetVolume(value);
+            }
+        }
+
         public void SetPlayer(IPlayer player)
         {
             m_player = player;

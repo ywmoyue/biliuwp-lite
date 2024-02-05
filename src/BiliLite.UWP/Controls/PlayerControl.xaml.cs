@@ -325,22 +325,22 @@ namespace BiliLite.Controls
                     }
                     break;
                 case Windows.System.VirtualKey.Up:
-                    Player.Volume += 0.1;
-                    TxtToolTip.Text = "音量:" + Player.Volume.ToString("P");
+                    Player.ViewModel.Volume += 0.1;
+                    TxtToolTip.Text = "音量:" + Player.ViewModel.Volume.ToString("P");
                     ToolTip.Visibility = Visibility.Visible;
                     await Task.Delay(2000);
                     ToolTip.Visibility = Visibility.Collapsed;
                     break;
 
                 case Windows.System.VirtualKey.Down:
-                    Player.Volume -= 0.1;
-                    if (Player.Volume == 0)
+                    Player.ViewModel.Volume -= 0.1;
+                    if (Player.ViewModel.Volume == 0)
                     {
                         TxtToolTip.Text = "静音";
                     }
                     else
                     {
-                        TxtToolTip.Text = "音量:" + Player.Volume.ToString("P");
+                        TxtToolTip.Text = "音量:" + Player.ViewModel.Volume.ToString("P");
                     }
                     ToolTip.Visibility = Visibility.Visible;
                     await Task.Delay(2000);
@@ -444,13 +444,13 @@ namespace BiliLite.Controls
                 case Windows.System.VirtualKey.F3:
                 case Windows.System.VirtualKey.V:
                     //静音
-                    if (Player.Volume >= 0)
+                    if (Player.ViewModel.Volume >= 0)
                     {
-                        Player.Volume = 0;
+                        Player.ViewModel.Volume = 0;
                     }
                     else
                     {
-                        Player.Volume = 1;
+                        Player.ViewModel.Volume = 1;
                     }
                     break;
                 default:
@@ -635,7 +635,7 @@ namespace BiliLite.Controls
         {
 
             //音量
-            Player.Volume = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_VOLUME, 1.0);
+            Player.ViewModel.Volume = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_VOLUME, 1.0);
             SliderVolume.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
             {
                 SettingService.SetValue<double>(SettingConstants.Player.PLAYER_VOLUME, SliderVolume.Value);
@@ -2193,18 +2193,18 @@ namespace BiliLite.Controls
                 double dd = delta / (this.ActualHeight * 0.8);
 
                 //slider_V.Value -= d;
-                var volume = Player.Volume - dd;
-                Player.Volume = volume;
+                var volume = Player.ViewModel.Volume - dd;
+                Player.ViewModel.Volume = volume;
 
             }
             else
             {
                 double dd = Math.Abs(delta) / (this.ActualHeight * 0.8);
-                var volume = Player.Volume + dd;
-                Player.Volume = volume;
+                var volume = Player.ViewModel.Volume + dd;
+                Player.ViewModel.Volume = volume;
                 //slider_V.Value += d;
             }
-            TxtToolTip.Text = "音量:" + Player.Volume.ToString("P");
+            TxtToolTip.Text = "音量:" + Player.ViewModel.Volume.ToString("P");
             //Notify.ShowMessageToast("音量:" +  mediaElement.MediaPlayer.Volume.ToString("P"), 3000);
         }
         private void HandleSlideBrightnessDelta(double delta)

@@ -53,5 +53,7 @@ namespace BiliLite.Player.SubPlayers
         public abstract Task Pause();
 
         public abstract Task Resume();
+
+        public abstract Task SetRate(double value);
     }
 }

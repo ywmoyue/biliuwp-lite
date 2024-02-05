@@ -205,5 +205,10 @@ namespace BiliLite.Player
         {
             m_mediaPlayer.Play();
         }
+
+        public override Task SetRate(double value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

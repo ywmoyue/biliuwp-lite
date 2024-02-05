@@ -225,8 +225,9 @@ namespace BiliLite.Controls
             await m_playerController.PauseState.Resume();
         }
 
-        public void SetRate(double value)
+        public async Task SetRate(double value)
         {
+            await m_player.SetRate(value);
         }
 
         public async Task ClosePlay()
@@ -236,6 +237,8 @@ namespace BiliLite.Controls
 
         public void SetVolume(double volume)
         {
+            m_player.Volume = volume;
+            ViewModel.SourceVolume = volume;
         }
 
         public string GetMediaInfo()

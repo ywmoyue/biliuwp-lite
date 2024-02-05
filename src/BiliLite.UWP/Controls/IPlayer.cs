@@ -168,7 +168,7 @@ namespace BiliLite.Controls
         /// 设置播放速度
         /// </summary>
         /// <param name="value"></param>
-        void SetRate(double value);
+        Task SetRate(double value);
 
         /// <summary>
         /// 停止播放
