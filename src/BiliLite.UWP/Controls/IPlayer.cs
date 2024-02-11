@@ -145,7 +145,7 @@ namespace BiliLite.Controls
         /// <returns></returns>
         Task<PlayerOpenResult> PlayVideoUseSYEngine(List<BiliFlvPlayUrlInfo> urls, string userAgent, string referer, double positon = 0, bool needConfig = true, string epId = "", bool isLocal = false);
 
-        void SetRatioMode(int mode);
+        void SetRatioMode(PlayerRatioMode mode);
 
         /// <summary>
         /// 设置进度

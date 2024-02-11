@@ -17,6 +17,8 @@ using BiliLite.Player.States.ScreenStates;
 using BiliLite.Services;
 using BiliLite.ViewModels.Player;
 using Microsoft.Extensions.DependencyInjection;
+using Windows.UI.Xaml.Media;
+using BiliLite.Extensions;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -191,8 +193,9 @@ namespace BiliLite.Controls
 
         #endregion
 
-        public void SetRatioMode(int mode)
+        public void SetRatioMode(PlayerRatioMode mode)
         {
+            this.SetRatioModeCore(mode, mediaPlayerVideo, m_realPlayInfo);
         }
 
         public void SetPosition(double position)

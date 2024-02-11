@@ -9,6 +9,7 @@ using FFmpegInteropX;
 using Windows.UI.Core;
 using BiliLite.Services;
 using Windows.Media;
+using Windows.UI.Xaml.Media;
 using Google.Type;
 
 namespace BiliLite.Player.SubPlayers

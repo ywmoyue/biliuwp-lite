@@ -676,13 +676,15 @@ namespace BiliLite.Controls
                 SettingService.SetValue<bool>(SettingConstants.Player.AUTO_NEXT, PlayerSettingAutoNext.IsOn);
             });
             //播放比例
-            PlayerSettingRatio.SelectedIndex = SettingService.GetValue<int>(SettingConstants.Player.RATIO, 0);
-            Player.SetRatioMode(PlayerSettingRatio.SelectedIndex);
-            PlayerSettingRatio.SelectionChanged += new SelectionChangedEventHandler((e, args) =>
+            var selectedRatio = (PlayerRatioMode)SettingService.GetValue(SettingConstants.Player.RATIO, (int)PlayerRatioModeOptions.DEFAULT_PLAYER_RATIO_MODE);
+            PlayerSettingRatio.SelectedItem = PlayerRatioModeOptions.GetOption(selectedRatio);
+            Player.SetRatioMode(selectedRatio);
+            PlayerSettingRatio.SelectionChanged += (e, args) =>
             {
-                SettingService.SetValue<int>(SettingConstants.Player.RATIO, PlayerSettingRatio.SelectedIndex);
-                Player.SetRatioMode(PlayerSettingRatio.SelectedIndex);
-            });
+                var selectedRatio = (PlayerRatioMode)PlayerSettingRatio.SelectedValue;
+                SettingService.SetValue<int>(SettingConstants.Player.RATIO, (int)selectedRatio);
+                Player.SetRatioMode(selectedRatio);
+            };
             // 播放倍数
             BottomCBSpeed.SelectedIndex = SettingConstants.Player.VideoSpeed.IndexOf(SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d));
             Player.SetRate(SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d));
@@ -2348,7 +2350,7 @@ namespace BiliLite.Controls
                     BottomBtnPlay.Visibility = Visibility.Collapsed;
                     BottomBtnPause.Visibility = Visibility.Collapsed;
                     // 更新画面比例
-                    Player.SetRatioMode(PlayerSettingRatio.SelectedIndex);
+                    Player.SetRatioMode((PlayerRatioMode)PlayerSettingRatio.SelectedValue);
                     break;
                 case PlayState.Playing:
                     KeepScreenOn(true);
@@ -2845,7 +2847,7 @@ namespace BiliLite.Controls
             // 更新弹幕
             m_danmakuController.UpdateSize(SplitView.ActualWidth, SplitView.ActualHeight);
             // 更新画面比例
-            Player.SetRatioMode(PlayerSettingRatio.SelectedIndex);
+            Player.SetRatioMode((PlayerRatioMode)PlayerSettingRatio.SelectedValue);
         }
     }
 }

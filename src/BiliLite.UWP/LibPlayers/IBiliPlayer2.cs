@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using BiliLite.Models.Common.Player;
 using BiliLite.Player.MediaInfos;
 
 namespace BiliLite.Player

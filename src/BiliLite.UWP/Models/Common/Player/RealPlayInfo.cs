@@ -7,6 +7,10 @@ namespace BiliLite.Models.Common.Player
         public RealPlayUrls PlayUrls { get; set; } = new RealPlayUrls();
 
         public bool IsAutoPlay { get; set; }
+
+        public int Width { get; set; }
+
+        public int Height { get; set; }
     }
 
     public class RealPlayUrls

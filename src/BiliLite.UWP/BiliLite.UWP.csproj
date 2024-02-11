@@ -156,6 +156,7 @@
     <Compile Include="Models\Common\Player\PlayerConfig.cs" />
     <Compile Include="Models\Common\Player\PlayerError.cs" />
     <Compile Include="Models\Common\Player\BasePlayUrlInfo.cs" />
+    <Compile Include="Models\Common\Player\PlayerRatioMode.cs" />
     <Compile Include="Models\Common\Player\RealPlayInfo.cs" />
     <Compile Include="Models\Common\Player\VideoFlvUrlInfo.cs" />
     <Compile Include="Models\Common\Player\BiliVideoPlayMode.cs" />

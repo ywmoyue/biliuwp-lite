@@ -1066,8 +1066,9 @@ namespace BiliLite.Controls
             }
         }
 
-        public void SetRatioMode(int mode)
+        public void SetRatioMode(PlayerRatioMode ratioMode)
         {
+            var mode = (int)ratioMode;
             switch (mode)
             {
                 case 0:

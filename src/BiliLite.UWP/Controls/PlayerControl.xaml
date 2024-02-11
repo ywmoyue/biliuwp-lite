@@ -12,6 +12,7 @@
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     xmlns:fa="using:FontAwesome5" xmlns:player="using:BiliLite.Modules.Player"
     xmlns:common="using:BiliLite.Models.Common"
+    xmlns:playerModel="using:BiliLite.Models.Common.Player"
     d:DesignHeight="800"
     d:DesignWidth="1000">
     <UserControl.Resources>
@@ -488,15 +489,11 @@
                                         </ComboBox.Items>
                                     </ComboBox>
                                     <TextBlock Margin="0 8" >画面尺寸</TextBlock>
-                                    <ComboBox x:Name="PlayerSettingRatio">
-                                        <ComboBox.Items>
-                                            <ComboBoxItem>默认</ComboBoxItem>
-                                            <ComboBoxItem>填充</ComboBoxItem>
-                                            <ComboBoxItem>16:9</ComboBoxItem>
-                                            <ComboBoxItem>4:3</ComboBoxItem>
-                                            <ComboBoxItem>兼容</ComboBoxItem>
-                                        </ComboBox.Items>
-                                    </ComboBox>
+
+                                    <ComboBox x:Name="PlayerSettingRatio" 
+                                              ItemsSource="{x:Bind playerModel:PlayerRatioModeOptions.Options}" 
+                                              SelectedValuePath="Value"
+                                              DisplayMemberPath="Name"></ComboBox>
                                     <ToggleSwitch x:Name="PlayerSettingABPlayMode" Margin="0 8"  Foreground="White" >
                                         <ToggleSwitch.Header>
                                             <TextBlock  Foreground="White">A-B 循环播放</TextBlock>
