@@ -69,6 +69,7 @@ namespace BiliLite.Controls
 
         public double BufferCache { get; set; }
 
+        [Obsolete]
         public double Rate { get; set; }
 
         public string MediaInfo { get; set; }
