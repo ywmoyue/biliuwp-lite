@@ -138,6 +138,7 @@
   <ItemGroup>
     <Compile Include="Extensions\QrCodeExtensions.cs" />
     <Compile Include="Models\Common\Anime\ISeasonItem.cs" />
+    <Compile Include="Models\Common\Dynamic\DynamicUgcSeasonCardModel.cs" />
     <Compile Include="Models\Common\Live\DefaultPlayUrlSourceOptions.cs" />
     <Compile Include="Models\Common\Live\InteractWordModel.cs" />
     <Compile Include="Models\Common\Live\LiveMessageHandleActionsMap.cs" />

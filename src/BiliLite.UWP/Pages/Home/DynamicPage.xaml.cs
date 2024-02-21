@@ -64,6 +64,17 @@ namespace BiliLite.Pages.Home
                     dontGoTo = dontGoTo
                 });
             }
+            else if (item.Desc.Type == 4310)
+            {
+                MessageCenter.NavigateToPage(this, new NavigationInfo()
+                {
+                    icon = Symbol.Play,
+                    page = typeof(VideoDetailPage),
+                    parameters = item.UgcSeason.Aid,
+                    title = item.UgcSeason.Title,
+                    dontGoTo = dontGoTo
+                });
+            }
             else if (item.Video.SeasonId != 0)
             {
                 MessageCenter.NavigateToPage(this, new NavigationInfo()

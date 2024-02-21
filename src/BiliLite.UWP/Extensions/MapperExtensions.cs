@@ -132,6 +132,9 @@ namespace BiliLite.Extensions
                     case DynamicType.Pgc:
                         type = 512;
                         break;
+                    case DynamicType.UgcSeason:
+                        type = 4310;
+                        break;
                 }
 
                 var moduleAuthor = src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleAuthor);
@@ -197,6 +200,21 @@ namespace BiliLite.Extensions
                             dynItemModel.Season = dynSeason;
                             break;
                         }
+                    case 4310:
+                    {
+                        var dynUgcSeason = new DynamicUgcSeasonCardModel()
+                        {
+                            Aid = moduleDynamic.ModuleDynamic
+                                .DynUgcSeason.Avid.ToString(),
+                            Duration = moduleDynamic.ModuleDynamic.DynUgcSeason.Duration,
+                            Pic = moduleDynamic.ModuleDynamic
+                                .DynUgcSeason.Cover,
+                            Title = moduleDynamic.ModuleDynamic.DynUgcSeason.Title,
+                        };
+
+                        dynItemModel.UgcSeason = dynUgcSeason;
+                        break;
+                    }
                 }
 
                 dynamicItemModels.Add(dynItemModel);

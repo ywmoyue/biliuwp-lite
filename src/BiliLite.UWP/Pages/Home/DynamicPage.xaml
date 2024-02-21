@@ -62,6 +62,43 @@
                 </StackPanel>
             </Grid>
         </DataTemplate>
+        <DataTemplate x:Key="DynamicUgcSeason" x:DataType="dynamic:DynamicItemModel">
+            <Grid Background="#00FFFFFF">
+                <Grid.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem x:Name="AddToWatchLater" Click="AddToWatchLater_Click" Icon="Add" Text="添加到稍后再看"/>
+                    </MenuFlyout>
+                </Grid.ContextFlyout>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="160"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Border CornerRadius="{StaticResource ImageCornerRadius}">
+                    <Grid>
+                        <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=UgcSeason.Pic,Converter={StaticResource imageConvert},ConverterParameter='120h'}"></toolkit:ImageEx>
+                        <Border Background="{ThemeResource HighLightColor}" Padding="4 2" Margin="4" CornerRadius="2" VerticalAlignment="Top" HorizontalAlignment="Right">
+                            <TextBlock Foreground="White" FontSize="12">投稿视频</TextBlock>
+                        </Border>
+                        <Grid VerticalAlignment="Bottom" Padding="5">
+                            <Grid.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#CC000005" Offset="0.993"/>
+                                    <GradientStop Color="#00000000" Offset="0"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <TextBlock FontSize="10" Foreground="White" VerticalAlignment="Bottom" HorizontalAlignment="Right" Text="{x:Bind UgcSeason.Duration, Mode=OneWay, Converter={StaticResource ProgressToTimeConverter}}"></TextBlock>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Border>
+                <StackPanel Grid.Column="1" Margin="8 0 0 0">
+                    <TextBlock TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=UgcSeason.Title}"></TextBlock>
+                    <TextBlock Foreground="Gray" Margin="0 2 0 0" Text="{x:Bind Path=Desc.DisplayTimeText}"></TextBlock>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
         <DataTemplate x:Key="DynamicSeason" x:DataType="dynamic:DynamicItemModel">
             <Grid>
                 <Grid.ColumnDefinitions>
