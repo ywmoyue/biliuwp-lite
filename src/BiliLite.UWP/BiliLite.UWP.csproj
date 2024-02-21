@@ -256,6 +256,7 @@
     <Compile Include="Models\Common\Live\LiveRoomWebUrlUrlinfoItemModel.cs" />
     <Compile Include="Models\Common\Live\LiveTitleModel.cs" />
     <Compile Include="Models\Common\Live\LiveWalletInfo.cs" />
+    <Compile Include="ViewModels\PlayControlViewModel.cs" />
     <Compile Include="ViewModels\UserDynamic\UserDynamicItemDisplayViewModel.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicItemDisplayOneRowInfo.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicItemDisplayImageInfo.cs" />

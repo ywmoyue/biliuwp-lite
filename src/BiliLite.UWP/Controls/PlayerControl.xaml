@@ -610,7 +610,7 @@
                     </StackPanel>
                 </Grid>
                 <ItemsControl x:Name="InteractionChoices" 
-                              ItemsSource="{x:Bind interactionVideoVM.Info.edges.questions}"
+                              ItemsSource="{x:Bind m_viewModel.Questions, Mode=OneWay}"
                               Visibility="Collapsed" VerticalAlignment="Bottom" Margin="0 0 0 80">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="player:InteractionEdgeInfoQuestionModel">
@@ -619,7 +619,7 @@
                                       x:Name="SelectChoice"
                                       IsItemClickEnabled="True"
                                       ItemClick="SelectChoice_ItemClick"
-                                      ItemsSource="{x:Bind Path=choices}">
+                                      ItemsSource="{x:Bind Path=choices, Mode=OneWay}">
                                 <GridView.ItemContainerStyle>
                                     <Style TargetType="GridViewItem">
                                         <Setter Property="Margin" Value="12"></Setter>
