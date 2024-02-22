@@ -1267,6 +1267,7 @@ namespace BiliLite.Controls
             CurrentPlayItem.cid = cid;
 
             await interactionVideoVM.GetNodes(node_id);
+            m_viewModel.Questions = interactionVideoVM.Info.edges.questions;
 
             TopTitle.Text = interactionVideoVM.Select.title;
             //if ((interactionVideoVM.Info.edges?.questions?.Count ?? 0) <= 0)
