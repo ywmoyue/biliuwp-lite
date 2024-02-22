@@ -19,7 +19,6 @@ using BiliLite.Services;
 using Windows.UI.Xaml.Controls.Primitives;
 using BiliLite.Models.Common.Comment;
 using BiliLite.Models.Common.Video;
-using BiliLite.Models.Common.Video.Detail;
 using BiliLite.Models.Download;
 using BiliLite.ViewModels.Video;
 using BiliLite.Services.Interfaces;
@@ -402,7 +401,7 @@ namespace BiliLite.Pages
 
         private void btnTagItem_Click(object sender, RoutedEventArgs e)
         {
-            var item = (sender as HyperlinkButton).DataContext as VideoDetailTagModel;
+            var item = (sender as HyperlinkButton).DataContext as BiliVideoTag;
             MessageCenter.NavigateToPage(this, new NavigationInfo()
             {
                 icon = Symbol.Find,

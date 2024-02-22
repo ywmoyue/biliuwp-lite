@@ -8,6 +8,7 @@ using System.Windows.Input;
 using Windows.UI.Xaml;
 using AutoMapper;
 using BiliLite.Extensions;
+using BiliLite.Models.Common.Video;
 using BiliLite.Models.Common.Video.Detail;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Responses;
@@ -148,6 +149,8 @@ namespace BiliLite.Modules
             }
         }
 
+        public List<BiliVideoTag> Tags { get; set; }
+
         #endregion
 
         #region Private Methods
@@ -167,6 +170,24 @@ namespace BiliLite.Modules
         private void OpenRightInfo()
         {
             IsOpenRightInfo = !IsOpenRightInfo;
+        }
+
+        private async Task LoadVideoTags(string avid)
+        {
+            var api = videoAPI.Tags(avid);
+            var results = await api.Request();
+            if (!results.status)
+            {
+                _logger.Warn(results.message);
+            }
+
+            var data = await results.GetJson<ApiDataModel<List<BiliVideoTag>>>();
+            if (!data.success)
+            {
+                _logger.Warn(data.message);
+            }
+
+            Tags = data.data;
         }
 
         #endregion
@@ -277,6 +298,8 @@ namespace BiliLite.Modules
                 Loaded = true;
 
                 await LoadFavorite(data.data.Aid);
+
+                await LoadVideoTags(data.data.Aid);
             }
             catch (Exception ex)
             {

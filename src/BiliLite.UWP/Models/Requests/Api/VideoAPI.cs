@@ -116,6 +116,7 @@ namespace BiliLite.Models.Requests.Api
             api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
         }
+
         /// <summary>
         /// 关注
         /// </summary>
@@ -134,6 +135,16 @@ namespace BiliLite.Models.Requests.Api
             return api;
         }
 
-
+        public ApiModel Tags(string aid)
+        {
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Get,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/tag/archive/tags",
+                parameter = $"&aid={aid}",
+                need_cookie = true,
+            };
+            return api;
+        }
     }
 }
