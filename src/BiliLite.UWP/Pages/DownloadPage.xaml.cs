@@ -234,7 +234,7 @@ namespace BiliLite.Pages
             {
                 var folder = await StorageFolder.GetFolderFromPathAsync(data.Path);
                 await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
-                m_viewModel.Downloadeds.Remove(data);
+                m_viewModel.DownloadedViewModels.Remove(data);
             }
             catch (Exception ex)
             {
@@ -315,5 +315,11 @@ namespace BiliLite.Pages
         }
 
 
+        private void SearchBox_OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            var keyword = sender.Text;
+            m_viewModel.SearchDownloaded(keyword);
+            DownloadPivot.SelectedIndex = 1;
+        }
     }
 }

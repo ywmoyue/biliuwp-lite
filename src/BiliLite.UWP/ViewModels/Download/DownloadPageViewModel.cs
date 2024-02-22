@@ -42,8 +42,9 @@ namespace BiliLite.ViewModels.Download
 
         public DownloadPageViewModel()
         {
-            Downloadeds = new ObservableCollection<DownloadedItem>();
+            DownloadedViewModels = new ObservableCollection<DownloadedItem>();
             Downloadings = new ObservableCollection<DownloadingItemViewModel>();
+            Downloadeds = new List<DownloadedItem>();
 
             RefreshDownloadedCommand = new RelayCommand(RefreshDownloaded);
             PauseItemCommand = new RelayCommand<DownloadingSubItemViewModel>(PauseItem);
@@ -81,7 +82,10 @@ namespace BiliLite.ViewModels.Download
 
         public ObservableCollection<DownloadingItemViewModel> Downloadings { get; set; }
 
-        public ObservableCollection<DownloadedItem> Downloadeds { get; set; }
+        public ObservableCollection<DownloadedItem> DownloadedViewModels { get; set; }
+
+        [DoNotNotify]
+        public List<DownloadedItem> Downloadeds { get; set; }
 
         public bool LoadingDownloaded { get; set; } = true;
 
@@ -407,6 +411,13 @@ namespace BiliLite.ViewModels.Download
             LoadDownloaded();
         }
 
+        public void SearchDownloaded(string keyword)
+        {
+            var searchResult = Downloadeds.Where(x => x.Title.Contains(keyword)).ToList();
+            DownloadedViewModels.Clear();
+            DownloadedViewModels.AddRange(searchResult);
+        }
+
         /// <summary>
         /// 读取下载的视频
         /// </summary>
@@ -415,6 +426,7 @@ namespace BiliLite.ViewModels.Download
         {
 
             LoadingDownloaded = true;
+            DownloadedViewModels.Clear();
             Downloadeds.Clear();
             var folder = await GetDownloadFolder();
             await LoadDiskSize(folder);
@@ -553,6 +565,7 @@ namespace BiliLite.ViewModels.Download
             //{
             //    Downloadeds.Add(item);
             //}
+            DownloadedViewModels.AddRange(Downloadeds);
             LoadingDownloaded = false;
         }
 
@@ -670,14 +683,13 @@ namespace BiliLite.ViewModels.Download
                     Debug.WriteLine(ex.Message);
                     continue;
                 }
-
-
             }
 
             // list = list.OrderByDescending(x => x.UpdateTime).ToList();
 
             //return list;
 
+            DownloadedViewModels.AddRange(Downloadeds);
         }
 
         /// <summary>

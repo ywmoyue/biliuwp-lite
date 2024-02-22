@@ -516,7 +516,7 @@ namespace BiliLite.Pages
                 {
                     state = 2;
                 }
-                if (downloadViewModel.Downloadeds.FirstOrDefault(x => x.Epsidoes.FirstOrDefault(y => y.EpisodeID == item.Id.ToString()) != null) != null)
+                if (downloadViewModel.DownloadedViewModels.FirstOrDefault(x => x.Epsidoes.FirstOrDefault(y => y.EpisodeID == item.Id.ToString()) != null) != null)
                 {
                     state = 3;
                 }
