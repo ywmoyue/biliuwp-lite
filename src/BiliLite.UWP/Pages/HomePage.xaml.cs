@@ -7,6 +7,8 @@ using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.ViewModels.Download;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -19,7 +21,7 @@ namespace BiliLite.Pages
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
 
-        DownloadVM downloadVM;
+        private readonly DownloadPageViewModel m_downloadPageViewModel;
         readonly HomeVM homeVM;
         readonly Account account;
 
@@ -30,7 +32,7 @@ namespace BiliLite.Pages
             MessageCenter.LogoutedEvent += MessageCenter_LogoutedEvent;
             homeVM = new HomeVM();
             account = new Account();
-            downloadVM = DownloadVM.Instance;
+            m_downloadPageViewModel = App.ServiceProvider.GetRequiredService<DownloadPageViewModel>();
             this.DataContext = homeVM;
         }
         private void MessageCenter_LogoutedEvent(object sender, EventArgs e)

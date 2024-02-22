@@ -23,6 +23,7 @@ using BiliLite.Models.Common.Video;
 using BiliLite.Models.Download;
 using BiliLite.ViewModels.Season;
 using BiliLite.Services.Interfaces;
+using BiliLite.ViewModels.Download;
 using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -510,11 +511,12 @@ namespace BiliLite.Pages
             {
                 // 检查正在下载及下载完成是否存在此视频
                 int state = 0;
-                if (DownloadVM.Instance.Downloadings.FirstOrDefault(x => x.EpisodeID == item.Id.ToString()) != null)
+                var downloadViewModel = App.ServiceProvider.GetRequiredService<DownloadPageViewModel>();
+                if (downloadViewModel.Downloadings.FirstOrDefault(x => x.EpisodeID == item.Id.ToString()) != null)
                 {
                     state = 2;
                 }
-                if (DownloadVM.Instance.Downloadeds.FirstOrDefault(x => x.Epsidoes.FirstOrDefault(y => y.EpisodeID == item.Id.ToString()) != null) != null)
+                if (downloadViewModel.Downloadeds.FirstOrDefault(x => x.Epsidoes.FirstOrDefault(y => y.EpisodeID == item.Id.ToString()) != null) != null)
                 {
                     state = 3;
                 }

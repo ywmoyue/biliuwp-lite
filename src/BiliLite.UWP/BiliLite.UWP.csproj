@@ -190,6 +190,9 @@
     <Compile Include="Models\Exceptions\CustomizedErrorWithDataException.cs" />
     <Compile Include="Models\Exceptions\PlayerException.cs" />
     <Compile Include="Models\Requests\Api\BaseApi.cs" />
+    <Compile Include="Models\Common\Download\DownloadedItem.cs" />
+    <Compile Include="Models\Common\Download\DownloadedSubItem.cs" />
+    <Compile Include="ViewModels\Download\DownloadingItemViewModel.cs" />
     <Compile Include="Player\Controllers\BasePlayerController.cs" />
     <Compile Include="Player\Controllers\LivePlayerController.cs" />
     <Compile Include="Player\Controllers\PlayerControllerFactory.cs" />
@@ -233,6 +236,8 @@
     <Compile Include="Services\QrCoderQrCodeService.cs" />
     <Compile Include="Services\WbiKeyService.cs" />
     <Compile Include="Services\ZXingQrCodeService.cs" />
+    <Compile Include="ViewModels\Download\DownloadingSubItemViewModel.cs" />
+    <Compile Include="ViewModels\Download\DownloadPageViewModel.cs" />
     <Compile Include="ViewModels\Live\LiveDetailPageViewModel.cs" />
     <Compile Include="ViewModels\Live\LiveRoomLotteryViewModel.cs" />
     <Compile Include="ViewModels\Live\SuperChatMsgViewModel.cs" />
@@ -572,7 +577,6 @@
     <Compile Include="Models\ReturnModel.cs" />
     <Compile Include="Models\UserModels.cs" />
     <Compile Include="Modules\Detail\FavoriteDetailVM.cs" />
-    <Compile Include="Modules\DownloadVM.cs" />
     <Compile Include="Modules\EmoteVM.cs" />
     <Compile Include="Modules\Home\RegionVM.cs" />
     <Compile Include="Modules\Live\LiveAreaDetailVM.cs" />

@@ -17,6 +17,8 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.ViewModels.Download;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -28,11 +30,14 @@ namespace BiliLite.Pages
     public sealed partial class SettingPage : BasePage
     {
         SettingVM settingVM;
+        private readonly DownloadPageViewModel m_downloadPageViewModel;
+
         public SettingPage()
         {
             this.InitializeComponent();
             Title = "设置";
             settingVM = new SettingVM();
+            m_downloadPageViewModel = App.ServiceProvider.GetRequiredService<DownloadPageViewModel>();
             LoadUI();
             LoadPlayer();
             LoadRoaming();
@@ -653,7 +658,7 @@ namespace BiliLite.Pages
                     SettingService.SetValue(SettingConstants.Download.DOWNLOAD_PATH, folder.Path);
                     txtDownloadPath.Text = folder.Path;
                     Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(folder);
-                    DownloadVM.Instance.RefreshDownloaded();
+                    m_downloadPageViewModel.RefreshDownloaded();
                 }
             });
             //旧版下载目录
@@ -690,14 +695,14 @@ namespace BiliLite.Pages
             swDownloadParallelDownload.Toggled += new RoutedEventHandler((e, args) =>
             {
                 SettingService.SetValue(SettingConstants.Download.PARALLEL_DOWNLOAD, swDownloadParallelDownload.IsOn);
-                DownloadVM.Instance.UpdateSetting();
+                m_downloadPageViewModel.UpdateSetting();
             });
             //付费网络下载
             swDownloadAllowCostNetwork.IsOn = SettingService.GetValue<bool>(SettingConstants.Download.ALLOW_COST_NETWORK, false);
             swDownloadAllowCostNetwork.Toggled += new RoutedEventHandler((e, args) =>
             {
                 SettingService.SetValue(SettingConstants.Download.ALLOW_COST_NETWORK, swDownloadAllowCostNetwork.IsOn);
-                DownloadVM.Instance.UpdateSetting();
+                m_downloadPageViewModel.UpdateSetting();
             });
             //下载完成发送通知
             swDownloadSendToast.IsOn = SettingService.GetValue<bool>(SettingConstants.Download.SEND_TOAST, false);
