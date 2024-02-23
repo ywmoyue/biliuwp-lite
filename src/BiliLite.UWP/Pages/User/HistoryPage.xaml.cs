@@ -1,10 +1,11 @@
 ﻿using BiliLite.Models.Common;
-using BiliLite.Modules.User;
 using BiliLite.Services;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using BiliLite.Models.Common.User;
+using BiliLite.ViewModels.User;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -15,19 +16,19 @@ namespace BiliLite.Pages.User
     /// </summary>
     public sealed partial class HistoryPage : BasePage
     {
-        HistoryVM historyVM;
+        private readonly HistoryViewModel m_viewModel;
         public HistoryPage()
         {
+            m_viewModel = App.ServiceProvider.GetRequiredService<HistoryViewModel>();
             this.InitializeComponent();
             Title = "历史记录";
-            historyVM = new HistoryVM();
         }
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.NavigationMode == NavigationMode.New && historyVM.Videos == null)
+            if (e.NavigationMode == NavigationMode.New && m_viewModel.Videos == null)
             {
-                await historyVM.LoadHistory();
+                await m_viewModel.LoadHistory();
             }
         }
 
@@ -100,7 +101,13 @@ namespace BiliLite.Pages.User
         private void removeVideoHistory_Click(object sender, RoutedEventArgs e)
         {
             var item = (sender as MenuFlyoutItem).DataContext as UserHistoryItem;
-            historyVM.Del(item);
+            m_viewModel.Del(item);
+        }
+
+        private async void SearchBox_OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            var keyword = sender.Text;
+            await m_viewModel.SearchHistory(keyword);
         }
     }
 }

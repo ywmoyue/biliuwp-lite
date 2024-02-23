@@ -184,6 +184,7 @@
     <Compile Include="Models\Common\Live\GiftMsgModel.cs" />
     <Compile Include="Models\Common\Live\GuardBuyMsgModel.cs" />
     <Compile Include="Models\Common\Live\RoomChangeMsgModel.cs" />
+    <Compile Include="Models\Common\User\SearchHistoryData.cs" />
     <Compile Include="Models\Common\User\SubmitCollectionItemModel.cs" />
     <Compile Include="Models\Common\Video\BiliVideoTag.cs" />
     <Compile Include="Models\Common\WbiKey.cs" />
@@ -611,7 +612,7 @@
     <Compile Include="ViewModels\UserDynamic\UserDynamicViewModel.cs" />
     <Compile Include="Modules\User\LoginVM.cs" />
     <Compile Include="Modules\User\SendDynamic\AtVM.cs" />
-    <Compile Include="Modules\User\HistoryVM.cs" />
+    <Compile Include="ViewModels\User\HistoryViewModel.cs" />
     <Compile Include="Modules\User\MyFollowSeasonVM.cs" />
     <Compile Include="Modules\Player\PlayerVM.cs" />
     <Compile Include="Modules\RankVM.cs" />

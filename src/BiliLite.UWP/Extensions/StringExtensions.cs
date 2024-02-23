@@ -320,6 +320,11 @@ namespace BiliLite.Extensions
             return Uri.TryCreate(url, UriKind.Absolute, out Uri _);
         }
 
+        public static string UrlEncode(this string text)
+        {
+            return Uri.EscapeDataString(text);
+        }
+
         #region Private methods
 
         /// <summary>

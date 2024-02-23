@@ -20,6 +20,7 @@ namespace BiliLite.Extensions
             services.AddTransient<DynamicPageViewModel>();
             services.AddTransient<AnimePageViewModel>();
             services.AddTransient<LiveDetailPageViewModel>();
+            services.AddTransient<HistoryViewModel>();
             return services;
         }
     }
