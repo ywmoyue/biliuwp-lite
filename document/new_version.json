@@ -1,7 +1,7 @@
 {
-    "version": "4.6.25",
-    "version_num": 40625,
-    "version_desc": "更新内容:\r\n\r\n- 修复无法播放港澳台番剧 \r\n\r\n- 修复个人主页搜索视频为空时的报错反馈 \r\n\r\n- 修复番剧详情页样式错误\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+    "version": "4.6.26",
+    "version_num": 40626,
+    "version_desc": "更新内容:\r\n\r\n- 直播间添加开关底部礼物栏的按钮\r\n\r\n- 支持设置新标签页到首页中\r\n\r\n- 支持搜索已下载视频\r\n\r\n- 支持搜索播放历史记录\r\n\r\n- 美化直播弹幕栏\r\n\r\n- 优化直播播放器加载行为\r\n\r\n- 支持设置请求时使用的build值\r\n\r\n- 修复订阅合集视频在视频动态页中无法打开\r\n\r\n- 修复港澳台番剧播放\r\n\r\n- 修复从非番剧页打开番剧时产生的错误\r\n\r\n- 直播间部分问题修复\r\n\r\n- 画面尺寸添加兼容模式，修复部分设备缩放画面黑屏的问题 \r\n\r\n- 修复创建收藏夹私密问题\r\n\r\n- 修复热门页没有up主名称\r\n\r\n- 修复互动视频可能无选项问题\r\n\r\n- 修复视频详情页视频标签不显示\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
     "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
     "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
