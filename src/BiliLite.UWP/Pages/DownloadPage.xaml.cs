@@ -18,8 +18,11 @@ using Windows.UI.Xaml.Navigation;
 using BiliLite.Extensions;
 using BiliLite.Services;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Download;
 using BiliLite.Models.Common.Video;
 using BiliLite.Models.Common.Video.PlayUrlInfos;
+using BiliLite.ViewModels.Download;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -31,11 +34,11 @@ namespace BiliLite.Pages
     public sealed partial class DownloadPage : BasePage
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
+        private readonly DownloadPageViewModel m_viewModel;
 
-        DownloadVM downloadVM;
         public DownloadPage()
         {
-            downloadVM = DownloadVM.Instance;
+            m_viewModel = App.ServiceProvider.GetRequiredService<DownloadPageViewModel>();
             this.InitializeComponent();
             Title = "下载";
         }
@@ -44,7 +47,7 @@ namespace BiliLite.Pages
             base.OnNavigatedTo(e);
             if (e.NavigationMode == NavigationMode.New)
             {
-                downloadVM.RefreshDownloaded();
+                m_viewModel.RefreshDownloaded();
             }
         }
         private void listDowned_ItemClick(object sender, ItemClickEventArgs e)
@@ -231,7 +234,7 @@ namespace BiliLite.Pages
             {
                 var folder = await StorageFolder.GetFolderFromPathAsync(data.Path);
                 await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
-                downloadVM.Downloadeds.Remove(data);
+                m_viewModel.DownloadedViewModels.Remove(data);
             }
             catch (Exception ex)
             {
@@ -312,5 +315,11 @@ namespace BiliLite.Pages
         }
 
 
+        private void SearchBox_OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            var keyword = sender.Text;
+            m_viewModel.SearchDownloaded(keyword);
+            DownloadPivot.SelectedIndex = 1;
+        }
     }
 }

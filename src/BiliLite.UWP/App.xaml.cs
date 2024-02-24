@@ -18,6 +18,8 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.ViewModels.Download;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite
 {
@@ -181,8 +183,9 @@ namespace BiliLite
             //圆角
             App.Current.Resources["ImageCornerRadius"] = new CornerRadius(SettingService.GetValue<double>(SettingConstants.UI.IMAGE_CORNER_RADIUS, 0));
             await AppHelper.SetRegions();
-            DownloadVM.Instance.LoadDownloading();
-            DownloadVM.Instance.LoadDownloaded();
+            var downloadViewModel = ServiceProvider.GetRequiredService<DownloadPageViewModel>();
+            downloadViewModel.LoadDownloading();
+            downloadViewModel.LoadDownloaded();
             VideoPlayHistoryHelper.LoadABPlayHistories(true);
         }
 

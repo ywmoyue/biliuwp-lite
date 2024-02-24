@@ -308,6 +308,19 @@ namespace BiliLite.Models.Requests.Api
             return api;
         }
 
+        public ApiModel SearchHistory(string keyword, int page)
+        {
+            var kw = keyword.UrlEncode();
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Get,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/web-goblin/history/search",
+                parameter = $"pn={page}&ps=20&keyword={kw}&business=all",
+                need_cookie = true,
+            };
+            return api;
+        }
+
         public ApiModel DelHistory(string id)
         {
             var api = new ApiModel()

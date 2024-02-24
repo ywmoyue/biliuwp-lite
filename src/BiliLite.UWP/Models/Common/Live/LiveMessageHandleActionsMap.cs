@@ -6,6 +6,8 @@ using BiliLite.ViewModels.Live;
 using Newtonsoft.Json;
 using BiliLite.Extensions;
 using BiliLite.Services;
+using Windows.UI;
+using Windows.UI.Xaml.Media;
 
 namespace BiliLite.Models.Common.Live
 {
@@ -31,9 +33,11 @@ namespace BiliLite.Models.Common.Live
                     { MessageType.WaringOrCutOff, WaringOrCutOff },
                     { MessageType.StartLive, StartLive },
                     { MessageType.WatchedChange, WatchedChange },
-                    { MessageType.RedPocketLotteryStart, RedPocketLotteryStart},
-                    { MessageType.RedPocketLotteryWinner, RedPocketLotteryWinner},
-                    { MessageType.OnlineRankChange, OnlineRankChange},
+                    { MessageType.RedPocketLotteryStart, RedPocketLotteryStart },
+                    { MessageType.RedPocketLotteryWinner, RedPocketLotteryWinner },
+                    { MessageType.OnlineRankChange, OnlineRankChange },
+                    { MessageType.StopLive, StopLive },
+                    { MessageType.RoomSlient, RoomSlient },
                 };
         }
 
@@ -51,7 +55,11 @@ namespace BiliLite.Models.Common.Live
         {
             viewModel.Messages.Add(new DanmuMsgModel()
             {
-                UserName = message.ToString(),
+                ShowUserFace = Visibility.Collapsed,
+                ShowUserName = Visibility.Collapsed,
+                CardPadding = new Thickness(6, 4, 6, 4),
+                RichText = ("直播间 " + viewModel.RoomID.ToString() + " " + message.ToString()).ToRichTextBlock(null, fontWeight: "Medium"),
+                CardHorizontalAlignment = HorizontalAlignment.Center,
             });
         }
 
@@ -98,9 +106,10 @@ namespace BiliLite.Models.Common.Live
             if (!viewModel.ReceiveWelcomeMsg) return;
             var msg = new DanmuMsgModel()
             {
-                UserName = info.UserName,
-                // UserNameColor = "#FFFF69B4",//Colors.HotPink
-                RichText = info.MsgType == 1 ? "进入直播间".ToRichTextBlock(null, color: "Gray") : "关注了主播".ToRichTextBlock(null, color: "Gray")
+                ShowUserName = Visibility.Visible,
+                ShowUserFace = Visibility.Collapsed,
+                ShowRichText = Visibility.Collapsed,
+                UserName = info.UserName + " 进入直播间",
             };
 
             if (info.ShowMedal == Visibility.Visible)
@@ -172,22 +181,29 @@ namespace BiliLite.Models.Common.Live
             var info = message as GuardBuyMsgModel;
             var msg = new DanmuMsgModel
             {
-                UserName = info.UserName,
-                UserNameColor = "#FFFF69B4",//Colors.HotPink
-                RichText = $"成为了主播的{info.GiftName}🎉".ToRichTextBlock(null, fontWeight: "Medium"),
-                UserCaptain = info.GiftName,
-                ShowCaptain = Visibility.Visible,
-                UserNameFontWeight = "SemiBold", // 字重调大, 防止与进场弹幕混淆
+                ShowUserName = Visibility.Collapsed,
+                ShowUserFace = Visibility.Collapsed,
+                RichText = (info.UserName + $" 成为了主播的{info.GiftName}🎉").ToRichTextBlock(null, fontWeight: "SemiBold", fontColor: info.FontColor),
+                CardColor = new SolidColorBrush(info.CardColor),
+                CardHorizontalAlignment = HorizontalAlignment.Center,
             };
-
             viewModel.Messages.Add(msg);
             // 刷新舰队列表
-            _ = viewModel.GetGuardList();
+            viewModel.ReloadGuardList().RunWithoutAwait();
         }
 
         private void RoomChange(LiveRoomViewModel viewModel, object message)
         {
             var info = message as RoomChangeMsgModel;
+            var msg = new DanmuMsgModel
+            {
+                ShowUserFace = Visibility.Collapsed,
+                ShowUserName = Visibility.Collapsed,
+                RichText = ($"直播间标题已修改:\n{viewModel.RoomTitle} ➡️ {info.Title}").ToRichTextBlock(null, fontWeight: "SemiBold", fontColor: "#ff1e653a"), //一种绿色
+                CardColor = new SolidColorBrush(Color.FromArgb(255, 228, 255, 233)),
+                CardHorizontalAlignment = HorizontalAlignment.Center,
+            };
+            viewModel.Messages.Add(msg);
             viewModel.RoomTitle = info.Title;
         }
 
@@ -196,9 +212,11 @@ namespace BiliLite.Models.Common.Live
             var info = message as RoomBlockMsgModel;
             var msg = new DanmuMsgModel()
             {
-                UserName = info.UserName,
-                RichText = "被直播间禁言🚫".ToRichTextBlock(null, fontWeight: "Medium"), // 字重调大, 防止与进场弹幕混淆)
-                UserNameFontWeight = "SemiBold",
+                ShowUserFace = Visibility.Collapsed,
+                ShowUserName = Visibility.Collapsed,
+                RichText = (info.UserName + " 被直播间禁言🚫").ToRichTextBlock(null, fontWeight: "SemiBold", fontColor: "White"), // 白色
+                CardColor = new SolidColorBrush(Color.FromArgb(255, 235, 45, 80)), // 一种红色
+                CardHorizontalAlignment = HorizontalAlignment.Center,
             };
 
             viewModel.Messages.Add(msg);
@@ -207,35 +225,71 @@ namespace BiliLite.Models.Common.Live
         private void WaringOrCutOff(LiveRoomViewModel viewModel, object message)
         {
             var info = message as WarningOrCutOffMsgModel;
+            var text = info.Command switch
+            {
+                "WARNING" => "⚠️直播间警告",
+                "CUT_OFF" => "⛔直播间切断",
+                _ => null,
+            };
+            var cardColor = info.Command switch
+            {
+                "WARNING" => new SolidColorBrush(Color.FromArgb(255, 235, 156, 0)), // 一种橙黄色
+                "CUT_OFF" => new SolidColorBrush(Color.FromArgb(255, 210, 20, 54)), // 一种深红色
+                _ => null,
+            };
             var msg = new DanmuMsgModel()
             {
-                UserName = info.Command switch
-                {
-                    "WARNING" => "⚠️直播间警告",
-                    "CUT_OFF" => "⛔直播间切断",
-                    _ => null,
-                },
-                UserNameColor = "FFFF0000",
-                RichText = info.Message.ToRichTextBlock(null, color: "Red", fontWeight: "Medium"), // 字重调大, 防止与进场弹幕混淆
-                UserNameFontWeight = "SemiBold",
+                ShowUserFace = Visibility.Collapsed,
+                ShowUserName = Visibility.Collapsed,
+                RichText = (text + "\n" + info.Message).ToRichTextBlock(null, fontColor: "White", fontWeight: "SemiBold"), 
+                CardColor = cardColor,
+                CardHorizontalAlignment = HorizontalAlignment.Center,
             };
 
             viewModel.Messages.Add(msg);
         }
 
-        private async void StartLive(LiveRoomViewModel viewModel, object room_Id)
+        private void StartLive(LiveRoomViewModel viewModel, object room_Id)
         {
-            await System.Threading.Tasks.Task.Delay(TimeSpan.FromSeconds(5)); // 挂起五秒再获取, 否则很大可能一直卡加载而不缓冲
             viewModel.GetPlayUrls(room_Id.ToInt32(), SettingService.GetValue(SettingConstants.Live.DEFAULT_QUALITY, 10000)).RunWithoutAwait();
             viewModel.Messages.Add(new DanmuMsgModel()
             {
-                UserName = $"{room_Id} 直播间开始直播",
+                ShowUserFace = Visibility.Collapsed,
+                ShowUserName = Visibility.Collapsed,
+                RichText = $"直播间 {room_Id} 开始直播".ToRichTextBlock(null, fontWeight: "Medium"),
+                CardHorizontalAlignment = HorizontalAlignment.Center,
+                CardPadding = new Thickness(6, 4, 6, 4),
             });
         }
 
         private void OnlineRankChange(LiveRoomViewModel viewModel, object message)
         {
             viewModel.Ranks.Where(rank => rank.RankType == "contribution-rank").ToList()?[0]?.ReloadData().RunWithoutAwait();
+        }
+
+        private void StopLive(LiveRoomViewModel viewModel, object message)
+        {
+            //viewModel.GetPlayUrls(viewModel.RoomID.ToInt32(), SettingService.GetValue(SettingConstants.Live.DEFAULT_QUALITY, 10000)).RunWithoutAwait();
+            viewModel.Messages.Add(new DanmuMsgModel()
+            {
+                ShowUserFace = Visibility.Collapsed,
+                ShowUserName = Visibility.Collapsed,
+                RichText = $"直播间 {viewModel.RoomID} 停止直播".ToRichTextBlock(null, fontWeight: "Medium"),
+                CardHorizontalAlignment = HorizontalAlignment.Center,
+                CardPadding = new Thickness(6, 4, 6, 4),
+            });
+        }
+        
+        private void RoomSlient(LiveRoomViewModel viewModel, object level)
+        {
+            viewModel.Messages.Add(new DanmuMsgModel()
+            {
+                ShowUserFace = Visibility.Collapsed,
+                ShowUserName = Visibility.Collapsed,
+                RichText = ((int)level > 0 ? $"直播间开启了等级{level}禁言🤐" : "直播间关闭了等级禁言🗣️").ToRichTextBlock(null, fontWeight: "SemiBold", fontColor: "White"),
+                CardHorizontalAlignment = HorizontalAlignment.Center,
+                CardColor = new SolidColorBrush(Color.FromArgb(255, 235, 45, 80)), // 一种红色
+            });
         }
     }
 }

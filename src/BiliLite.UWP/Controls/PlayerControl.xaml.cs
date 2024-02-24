@@ -41,6 +41,7 @@ using BiliLite.Models.Common.Danmaku;
 using BiliLite.Models.Common.Player;
 using BiliLite.Models.Common.Video.PlayUrlInfos;
 using BiliLite.Services.Interfaces;
+using BiliLite.ViewModels;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -51,13 +52,16 @@ namespace BiliLite.Controls
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly bool m_useNsDanmaku = true;
         private readonly IDanmakuController m_danmakuController;
+        private readonly PlayControlViewModel m_viewModel;
         public event PropertyChangedEventHandler PropertyChanged;
         private GestureRecognizer gestureRecognizer;
         private void DoPropertyChanged(string name)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+
         InteractionVideoVM interactionVideoVM;
+
         /// <summary>
         /// 铺满窗口事件
         /// </summary>
@@ -120,6 +124,7 @@ namespace BiliLite.Controls
 
         public PlayerControl()
         {
+            m_viewModel = new PlayControlViewModel();
             this.InitializeComponent();
             dispRequest = new DisplayRequest();
             playerHelper = new PlayerVM();
@@ -1262,6 +1267,7 @@ namespace BiliLite.Controls
             CurrentPlayItem.cid = cid;
 
             await interactionVideoVM.GetNodes(node_id);
+            m_viewModel.Questions = interactionVideoVM.Info.edges.questions;
 
             TopTitle.Text = interactionVideoVM.Select.title;
             //if ((interactionVideoVM.Info.edges?.questions?.Count ?? 0) <= 0)
@@ -1588,9 +1594,9 @@ namespace BiliLite.Controls
                 {
                     interactionVideoVM = new InteractionVideoVM(CurrentPlayItem.avid, player_info.interaction.graph_version);
                     NodeList.DataContext = interactionVideoVM;
-                    InteractionChoices.DataContext = interactionVideoVM;
                     ShowPlaylistButton = false;
                     await interactionVideoVM.GetNodes();
+                    m_viewModel.Questions = interactionVideoVM.Info.edges.questions;
                     TopTitle.Text = interactionVideoVM.Select.title;
                 }
             }
@@ -2329,6 +2335,8 @@ namespace BiliLite.Controls
                     BottomBtnLoading.Visibility = Visibility.Visible;
                     BottomBtnPlay.Visibility = Visibility.Collapsed;
                     BottomBtnPause.Visibility = Visibility.Collapsed;
+                    // 更新画面比例
+                    Player.SetRatioMode(PlayerSettingRatio.SelectedIndex);
                     break;
                 case PlayState.Playing:
                     KeepScreenOn(true);

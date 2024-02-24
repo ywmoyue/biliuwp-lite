@@ -19,11 +19,11 @@ using BiliLite.Services;
 using Windows.UI.Xaml.Controls.Primitives;
 using BiliLite.Models.Common.Comment;
 using BiliLite.Models.Common.Video;
-using BiliLite.Models.Common.Video.Detail;
 using BiliLite.Models.Download;
 using BiliLite.ViewModels.Video;
 using BiliLite.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using BiliLite.ViewModels.Download;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -401,7 +401,7 @@ namespace BiliLite.Pages
 
         private void btnTagItem_Click(object sender, RoutedEventArgs e)
         {
-            var item = (sender as HyperlinkButton).DataContext as VideoDetailTagModel;
+            var item = (sender as HyperlinkButton).DataContext as BiliVideoTag;
             MessageCenter.NavigateToPage(this, new NavigationInfo()
             {
                 icon = Symbol.Find,
@@ -602,11 +602,12 @@ namespace BiliLite.Pages
             {
                 //检查正在下载及下载完成是否存在此视频
                 int state = 0;
-                if (DownloadVM.Instance.Downloadings.FirstOrDefault(x => x.EpisodeID == item.Cid) != null)
+                var downloadViewModel = App.ServiceProvider.GetRequiredService<DownloadPageViewModel>();
+                if (downloadViewModel.Downloadings.FirstOrDefault(x => x.EpisodeID == item.Cid) != null)
                 {
                     state = 2;
                 }
-                if (DownloadVM.Instance.Downloadeds.FirstOrDefault(x => x.Epsidoes.FirstOrDefault(y => y.CID == item.Cid) != null) != null)
+                if (downloadViewModel.DownloadedViewModels.FirstOrDefault(x => x.Epsidoes.FirstOrDefault(y => y.CID == item.Cid) != null) != null)
                 {
                     state = 3;
                 }

@@ -1,11 +1,13 @@
-﻿using BiliLite.Models.Common;
+﻿using BiliLite.Models;
+using BiliLite.Models.Common;
+using BiliLite.Models.Common.Season;
+using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Models.Responses;
 using BiliLite.Services;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -29,12 +31,25 @@ namespace BiliLite.Extensions
         {
             try
             {
-                var re = await $"https://bangumi.bilibili.com/view/web_api/season?ep_id={epid}".GetString();
-                var obj = JObject.Parse(re);
-                return obj["result"]["season_id"].ToString();
+                var results = await new SeasonApi().Detail(epid, SeasonIdType.EpId).Request();
+                if (!results.status)
+                {
+                    throw new CustomizedErrorException(results.message);
+                }
+
+                //访问番剧详情
+                var data = await results.GetJson<ApiDataModel<SeasonDetailModel>>();
+
+                if (!data.success)
+                {
+                    throw new CustomizedErrorException(data.message);
+                }
+
+                return data.data.SeasonId.ToString();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.Error("转换epId到seasonId错误", ex);
                 return "";
             }
         }

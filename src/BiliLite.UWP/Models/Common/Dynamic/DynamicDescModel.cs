@@ -8,7 +8,7 @@ namespace BiliLite.Models.Common.Dynamic
         public string Uid { get; set; }
 
         /// <summary>
-        /// 8=视频，512=番剧
+        /// 8=视频，512=番剧， 4310=合集
         /// </summary>
         public int Type { get; set; }
 

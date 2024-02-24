@@ -684,6 +684,7 @@ namespace BiliLite.Pages
             {
                 logger.Log("播放失败", LogType.Error, ex);
                 Notify.ShowMessageToast("播放失败" + ex.Message);
+                await m_playerController.PlayState.Stop();
             }
         }
 
@@ -851,6 +852,22 @@ namespace BiliLite.Pages
                 title = "用户信息",
                 page = typeof(UserInfoPage),
                 parameters = m_liveRoomViewModel.LiveInfo.RoomInfo.Uid
+            });
+        }
+
+        private void BtnOpenDanmuSpace_Click(object sender, RoutedEventArgs e)
+        {
+            var uid = ((sender as HyperlinkButton).DataContext as DanmuMsgModel).Uid;
+            if (uid == null || uid.Length == 0)
+            {
+                return;
+            }
+            MessageCenter.NavigateToPage(this, new NavigationInfo()
+            {
+                icon = Symbol.Account,
+                title = "用户信息",
+                page = typeof(UserInfoPage),
+                parameters = uid
             });
         }
 
@@ -1230,6 +1247,11 @@ namespace BiliLite.Pages
             SettingService.SetValue(SettingConstants.Live.DEFAULT_LIVE_PLAY_URL_SOURCE, m_viewModel.LivePlayUrlSource);
             LiveRoomViewModelChangedPlayUrl(null, null);
             await LoadPlayer();
+        }
+
+        private void BottomBtnSwitchGiftBar_Click(object sender, RoutedEventArgs e)
+        {
+            m_viewModel.ShowBottomGiftBar = !m_viewModel.ShowBottomGiftBar;
         }
     }
 }

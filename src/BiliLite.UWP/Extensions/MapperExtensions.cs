@@ -5,11 +5,11 @@ using AutoMapper;
 using Bilibili.App.Dynamic.V2;
 using Bilibili.App.Interface.V1;
 using Bilibili.Tv.Interfaces.Dm.V1;
-using BiliLite.Controls.Dynamic;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Anime;
 using BiliLite.Models.Common.Comment;
 using BiliLite.Models.Common.Dynamic;
+using BiliLite.Models.Common.Home;
 using BiliLite.Models.Common.Season;
 using BiliLite.Models.Common.User;
 using BiliLite.Models.Common.UserDynamic;
@@ -47,6 +47,7 @@ namespace BiliLite.Extensions
                 expression.CreateMap<SeasonDetailUserStatusModel, SeasonDetailUserStatusViewModel>();
                 expression.CreateMap<SeasonDetailModel, SeasonDetailViewModel>();
                 expression.CreateMap<AnimeFallModel, AnimeFallViewModel>();
+                expression.CreateMap<HomeNavItem, HomeNavItemViewModel>();
 
                 expression.CreateMap<Arc, SubmitVideoItemModel>()
                     .ForMember(dest => dest.Play, opt => opt.MapFrom(src => src.Archive.Stat.View))
@@ -132,6 +133,9 @@ namespace BiliLite.Extensions
                     case DynamicType.Pgc:
                         type = 512;
                         break;
+                    case DynamicType.UgcSeason:
+                        type = 4310;
+                        break;
                 }
 
                 var moduleAuthor = src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleAuthor);
@@ -197,6 +201,21 @@ namespace BiliLite.Extensions
                             dynItemModel.Season = dynSeason;
                             break;
                         }
+                    case 4310:
+                    {
+                        var dynUgcSeason = new DynamicUgcSeasonCardModel()
+                        {
+                            Aid = moduleDynamic.ModuleDynamic
+                                .DynUgcSeason.Avid.ToString(),
+                            Duration = moduleDynamic.ModuleDynamic.DynUgcSeason.Duration,
+                            Pic = moduleDynamic.ModuleDynamic
+                                .DynUgcSeason.Cover,
+                            Title = moduleDynamic.ModuleDynamic.DynUgcSeason.Title,
+                        };
+
+                        dynItemModel.UgcSeason = dynUgcSeason;
+                        break;
+                    }
                 }
 
                 dynamicItemModels.Add(dynItemModel);

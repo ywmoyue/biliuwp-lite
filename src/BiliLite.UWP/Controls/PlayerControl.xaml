@@ -494,6 +494,7 @@
                                             <ComboBoxItem>填充</ComboBoxItem>
                                             <ComboBoxItem>16:9</ComboBoxItem>
                                             <ComboBoxItem>4:3</ComboBoxItem>
+                                            <ComboBoxItem>兼容</ComboBoxItem>
                                         </ComboBox.Items>
                                     </ComboBox>
                                     <ToggleSwitch x:Name="PlayerSettingABPlayMode" Margin="0 8"  Foreground="White" >
@@ -609,7 +610,7 @@
                     </StackPanel>
                 </Grid>
                 <ItemsControl x:Name="InteractionChoices" 
-                              ItemsSource="{x:Bind interactionVideoVM.Info.edges.questions}"
+                              ItemsSource="{x:Bind m_viewModel.Questions, Mode=OneWay}"
                               Visibility="Collapsed" VerticalAlignment="Bottom" Margin="0 0 0 80">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="player:InteractionEdgeInfoQuestionModel">
@@ -618,7 +619,7 @@
                                       x:Name="SelectChoice"
                                       IsItemClickEnabled="True"
                                       ItemClick="SelectChoice_ItemClick"
-                                      ItemsSource="{x:Bind Path=choices}">
+                                      ItemsSource="{x:Bind Path=choices, Mode=OneWay}">
                                 <GridView.ItemContainerStyle>
                                     <Style TargetType="GridViewItem">
                                         <Setter Property="Margin" Value="12"></Setter>
