@@ -11,6 +11,7 @@ namespace BiliLite.Extensions
     {
         public static IServiceCollection AddViewModels(this IServiceCollection services)
         {
+            services.AddSingleton<HomeViewModel>();
             services.AddSingleton<DownloadPageViewModel>();
             services.AddTransient<DownloadDialogViewModel>();
             services.AddTransient<CommentControlViewModel>();

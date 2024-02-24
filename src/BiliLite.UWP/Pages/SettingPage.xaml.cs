@@ -6,7 +6,6 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using Microsoft.UI.Xaml.Controls;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.Foundation;
@@ -17,6 +16,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Models.Common.Home;
 using BiliLite.ViewModels.Download;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -272,11 +272,9 @@ namespace BiliLite.Pages
                 });
             });
 
-            gridHomeCustom.ItemsSource = SettingService.GetValue<ObservableCollection<HomeNavItem>>(SettingConstants.UI.HOEM_ORDER, HomeVM.GetAllNavItems());
+            var navItems = SettingService.GetValue(SettingConstants.UI.HOEM_ORDER, DefaultHomeNavItems.GetDefaultHomeNavItems());
+            gridHomeCustom.ItemsSource = new ObservableCollection<HomeNavItem>(navItems);
             ExceptHomeNavItems();
-
-
-
         }
         private void LoadPlayer()
         {
@@ -810,28 +808,41 @@ namespace BiliLite.Pages
 
         private void ExceptHomeNavItems()
         {
-            List<HomeNavItem> list = new List<HomeNavItem>();
-            var all = HomeVM.GetAllNavItems();
-            foreach (var item in all)
+            var defaultNavItems = DefaultHomeNavItems.GetDefaultHomeNavItems();
+            var hideNavItems = DefaultHomeNavItems.GetDefaultHideHomeNavItems();
+            var customNavItem = gridHomeCustom.ItemsSource as ObservableCollection<HomeNavItem>;
+
+            var customDontHideNavItems = hideNavItems.Where(hideNavItem =>
+                customNavItem.Any(x => x.Title == hideNavItem.Title)).ToList();
+
+            foreach (var customDontHideNavItem in customDontHideNavItems)
             {
-                if ((gridHomeCustom.ItemsSource as ObservableCollection<HomeNavItem>).FirstOrDefault(x => x.Title == item.Title) == null)
+                hideNavItems.Remove(customDontHideNavItem);
+            }
+
+            foreach (var navItem in defaultNavItems)
+            {
+                if (!customNavItem.Any(x => x.Title == navItem.Title))
                 {
-                    list.Add(item);
+                    hideNavItems.Add(navItem);
                 }
             }
-            gridHomeNavItem.ItemsSource = list;
+
+            gridHomeNavItem.ItemsSource = hideNavItems;
         }
         private void gridHomeCustom_DragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
         {
-            SettingService.SetValue(SettingConstants.UI.HOEM_ORDER, gridHomeCustom.ItemsSource as ObservableCollection<HomeNavItem>);
+            if (!(gridHomeCustom.ItemsSource is ObservableCollection<HomeNavItem> navItems)) return;
+            SettingService.SetValue(SettingConstants.UI.HOEM_ORDER, navItems.ToList());
             Notify.ShowMessageToast("更改成功,重启生效");
         }
 
         private void gridHomeNavItem_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as HomeNavItem;
-            (gridHomeCustom.ItemsSource as ObservableCollection<HomeNavItem>).Add(item);
-            SettingService.SetValue(SettingConstants.UI.HOEM_ORDER, gridHomeCustom.ItemsSource as ObservableCollection<HomeNavItem>);
+            if (!(gridHomeCustom.ItemsSource is ObservableCollection<HomeNavItem> navItems)) return;
+            navItems.Add(item);
+            SettingService.SetValue(SettingConstants.UI.HOEM_ORDER, navItems.ToList());
             ExceptHomeNavItems();
             Notify.ShowMessageToast("更改成功,重启生效");
         }

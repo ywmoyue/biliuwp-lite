@@ -10,6 +10,7 @@
     xmlns:font="using:FontAwesome5"
     xmlns:covert="using:BiliLite.Converters" xmlns:controls="using:Microsoft.UI.Xaml.Controls" xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:common="using:BiliLite.Models.Common"
+    xmlns:home="using:BiliLite.Models.Common.Home"
     Background="Transparent">
     <Page.Resources>
         <SolidColorBrush x:Key="PivotHeaderBackground" Color="{ThemeResource TopPaneBackground}"></SolidColorBrush>
@@ -104,7 +105,7 @@
                                     </Style>
                                 </GridView.ItemContainerStyle>
                                 <GridView.ItemTemplate>
-                                    <DataTemplate x:DataType="modules:HomeNavItem">
+                                    <DataTemplate x:DataType="home:HomeNavItem">
                                         <Grid Background="#00FFFFFF">
                                             <Grid.ContextFlyout>
                                                 <MenuFlyout>
@@ -134,7 +135,7 @@
                                     </Style>
                                 </GridView.ItemContainerStyle>
                                 <GridView.ItemTemplate>
-                                    <DataTemplate x:DataType="modules:HomeNavItem">
+                                    <DataTemplate x:DataType="home:HomeNavItem">
                                         <Grid>
                                             <StackPanel Orientation="Horizontal"  VerticalAlignment="Center" HorizontalAlignment="Center">
                                                 <font:FontAwesome FontSize="14" VerticalAlignment="Bottom" Icon="{x:Bind Path=Icon}"></font:FontAwesome>
