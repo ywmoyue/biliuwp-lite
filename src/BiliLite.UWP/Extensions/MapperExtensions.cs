@@ -8,6 +8,7 @@ using Bilibili.Tv.Interfaces.Dm.V1;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Anime;
 using BiliLite.Models.Common.Comment;
+using BiliLite.Models.Common.Download;
 using BiliLite.Models.Common.Dynamic;
 using BiliLite.Models.Common.Home;
 using BiliLite.Models.Common.Season;
@@ -48,6 +49,11 @@ namespace BiliLite.Extensions
                 expression.CreateMap<SeasonDetailModel, SeasonDetailViewModel>();
                 expression.CreateMap<AnimeFallModel, AnimeFallViewModel>();
                 expression.CreateMap<HomeNavItem, HomeNavItemViewModel>();
+
+                expression.CreateMap<DownloadSaveEpisodeInfo, DownloadedSubItem>()
+                    .ForMember(dest => dest.Paths, opt => opt.MapFrom(src => new List<string>()))
+                    .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.EpisodeTitle))
+                    .ForMember(dest => dest.SubtitlePath, opt => opt.MapFrom(src => new List<DownloadSubtitleInfo>()));
 
                 expression.CreateMap<Arc, SubmitVideoItemModel>()
                     .ForMember(dest => dest.Play, opt => opt.MapFrom(src => src.Archive.Stat.View))
