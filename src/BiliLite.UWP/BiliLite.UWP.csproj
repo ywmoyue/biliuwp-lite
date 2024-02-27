@@ -876,6 +876,7 @@
     <Content Include="Assets\Fonts\vanfont.otf" />
     <Content Include="Assets\Fonts\FansNum.otf" />
     <Content Include="Assets\Fonts\biliicon.ttf" />
+    <Content Include="Assets\GeeTest\bili_gt.cshtml" />
     <None Include="Assets\Text\new_version.json" />
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
