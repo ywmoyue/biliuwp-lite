@@ -147,6 +147,14 @@ namespace BiliLite.Extensions
                 var moduleAuthor = src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleAuthor);
                 var moduleDynamic = src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleDynamic);
 
+
+                // 处理特殊情况：类型为番剧但是数据为普通视频
+                if (moduleDynamic != null && type == 512 && moduleDynamic.ModuleDynamic.DynArchive != null &&
+                    moduleDynamic.ModuleDynamic.DynPgc == null)
+                {
+                    type = 8;
+                }
+
                 var dynDesc = new DynamicDescModel()
                 {
                     Type = type,
@@ -157,6 +165,7 @@ namespace BiliLite.Extensions
                 {
                     Desc = dynDesc,
                 };
+
                 switch (type)
                 {
                     case 8:

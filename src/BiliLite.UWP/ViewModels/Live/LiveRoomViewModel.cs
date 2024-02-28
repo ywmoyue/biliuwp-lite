@@ -329,7 +329,7 @@ namespace BiliLite.ViewModels.Live
         {
             try
             {
-                var uid = 0;
+                long uid = 0;
                 if (SettingService.Account.Logined)
                 {
                     uid = SettingService.Account.UserID;

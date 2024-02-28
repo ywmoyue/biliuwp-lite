@@ -53,7 +53,7 @@ namespace BiliLite.Services
 
             public static string AccessKey => GetValue(SettingConstants.Account.ACCESS_KEY, "");
 
-            public static int UserID => GetValue(SettingConstants.Account.USER_ID, 0);
+            public static long UserID => GetValue(SettingConstants.Account.USER_ID, 0);
 
             public static ApiKeyInfo GetLoginAppKeySecret()
             {

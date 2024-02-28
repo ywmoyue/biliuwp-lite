@@ -15,6 +15,7 @@ using BiliLite.Models.Common;
 using BiliLite.Models.Common.Video;
 using BiliLite.Models.Common.Video.PlayUrlInfos;
 using PlayURL = BiliLite.gRPC.Api.PlayURL;
+using BiliLite.gRPC.Api;
 
 namespace BiliLite.Modules.Player.Playurl
 {
@@ -686,7 +687,11 @@ namespace BiliLite.Modules.Player.Playurl
             {
                 Bilibili.App.Playurl.V1.CodeType codec = CodecMode == PlayUrlCodecMode.DASH_H265 ? Bilibili.App.Playurl.V1.CodeType.Code265 : Bilibili.App.Playurl.V1.CodeType.Code264;
 
-                var playViewReply = await playUrlApi.VideoPlayView(Convert.ToInt64(playInfo.avid), Convert.ToInt64(playInfo.cid), qualityID, 16, codec, SettingService.Account.AccessKey);
+                var requestUserInfo = new GrpcBiliUserInfo(
+                    SettingService.Account.AccessKey,
+                    SettingService.Account.UserID,
+                    SettingService.Account.GetLoginAppKeySecret().Appkey);
+                var playViewReply = await playUrlApi.VideoPlayView(Convert.ToInt64(playInfo.avid), Convert.ToInt64(playInfo.cid), qualityID, 16, codec, requestUserInfo);
 
                 var grpcResult = await ParseGrpc(qualityID, playViewReply, AndroidUserAgent, "");
                 return grpcResult;
@@ -784,7 +789,11 @@ namespace BiliLite.Modules.Player.Playurl
 
                 CodeType codec = CodecMode == PlayUrlCodecMode.DASH_H265 ? CodeType.Code265 : CodeType.Code264;
 
-                var playViewReply = await playUrlApi.BangumiPlayView(Convert.ToInt64(playInfo.ep_id), Convert.ToInt64(playInfo.cid), qualityID, 0, codec, SettingService.Account.AccessKey);
+                var requestUserInfo = new GrpcBiliUserInfo(
+                    SettingService.Account.AccessKey,
+                    SettingService.Account.UserID,
+                    SettingService.Account.GetLoginAppKeySecret().Appkey);
+                var playViewReply = await playUrlApi.BangumiPlayView(Convert.ToInt64(playInfo.ep_id), Convert.ToInt64(playInfo.cid), qualityID, 0, codec, requestUserInfo);
 
                 var grpcResult = await ParseGrpc(qualityID, playViewReply, AndroidUserAgent, "");
                 return grpcResult;
