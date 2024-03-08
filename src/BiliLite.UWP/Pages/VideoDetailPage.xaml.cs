@@ -595,7 +595,7 @@ namespace BiliLite.Pages
                 Subtitle = m_viewModel.VideoInfo.Bvid,
                 Title = m_viewModel.VideoInfo.Title,
                 Type = DownloadType.Video,
-                UpMid = m_viewModel.VideoInfo.Owner.Mid.ToInt32(),
+                UpMid = m_viewModel.VideoInfo.Owner.Mid.ToInt64(),
             };
             int i = 0;
             foreach (var item in m_viewModel.VideoInfo.Pages)

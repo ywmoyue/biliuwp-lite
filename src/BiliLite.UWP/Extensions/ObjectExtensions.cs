@@ -7,6 +7,19 @@ namespace BiliLite.Extensions
 {
     public static class ObjectExtensions
     {
+        public static long ToInt64(this object obj)
+        {
+
+            if (long.TryParse(obj.ToString(), out var value))
+            {
+                return value;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
         public static int ToInt32(this object obj)
         {
 
