@@ -55,10 +55,10 @@ namespace BiliLite.Models.Requests.Api.User
         /// 添加到收藏夹
         /// </summary>
         /// <returns></returns>
-        public ApiModel AddFavorite(List<string> fav_ids, string avid)
+        public ApiModel AddFavorite(List<string> favIds, string avid)
         {
             var ids = "";
-            foreach (var item in fav_ids)
+            foreach (var item in favIds)
             {
                 ids += item + ",";
             }

@@ -196,6 +196,16 @@
     <Compile Include="Models\Common\Download\DownloadedItem.cs" />
     <Compile Include="Models\Common\Download\DownloadedSubItem.cs" />
     <Compile Include="Models\Common\Home\HomeNavItem.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoLiveRoomModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoNameplateModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoOfficialModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoPendantModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoStatModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoVipLabelModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoVipModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterSpaceStatModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoModel.cs" />
+    <Compile Include="ViewModels\User\UserCenterInfoViewModel.cs" />
     <Compile Include="ViewModels\Home\HomeNavItemViewModel.cs" />
     <Compile Include="ViewModels\Download\DownloadingItemViewModel.cs" />
     <Compile Include="Player\Controllers\BasePlayerController.cs" />
@@ -628,7 +638,7 @@
     <Compile Include="Modules\User\MyFollowVideoVM.cs" />
     <Compile Include="Modules\User\SendDynamic\SendDynamicVM.cs" />
     <Compile Include="Modules\User\SendDynamic\TopicVM.cs" />
-    <Compile Include="Modules\User\UserDetail\UserDetailVM.cs" />
+    <Compile Include="ViewModels\User\UserDetailViewModel.cs" />
     <Compile Include="Modules\User\UserDetail\UserFavlistVM.cs" />
     <Compile Include="Modules\User\UserDetail\UserFollowVM.cs" />
     <Compile Include="Modules\User\UserDetail\UserSubmitArticleVM.cs" />

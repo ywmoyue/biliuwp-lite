@@ -13,6 +13,7 @@ using BiliLite.Models.Common.Dynamic;
 using BiliLite.Models.Common.Home;
 using BiliLite.Models.Common.Season;
 using BiliLite.Models.Common.User;
+using BiliLite.Models.Common.User.UserDetails;
 using BiliLite.Models.Common.UserDynamic;
 using BiliLite.Models.Common.Video.Detail;
 using BiliLite.Models.Download;
@@ -22,6 +23,7 @@ using BiliLite.ViewModels.Comment;
 using BiliLite.ViewModels.Download;
 using BiliLite.ViewModels.Home;
 using BiliLite.ViewModels.Season;
+using BiliLite.ViewModels.User;
 using BiliLite.ViewModels.UserDynamic;
 using BiliLite.ViewModels.Video;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,6 +51,7 @@ namespace BiliLite.Extensions
                 expression.CreateMap<SeasonDetailModel, SeasonDetailViewModel>();
                 expression.CreateMap<AnimeFallModel, AnimeFallViewModel>();
                 expression.CreateMap<HomeNavItem, HomeNavItemViewModel>();
+                expression.CreateMap<UserCenterInfoModel, UserCenterInfoViewModel>();
 
                 expression.CreateMap<DownloadSaveEpisodeInfo, DownloadedSubItem>()
                     .ForMember(dest => dest.Paths, opt => opt.MapFrom(src => new List<string>()))
