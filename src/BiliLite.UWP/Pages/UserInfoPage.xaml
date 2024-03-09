@@ -160,27 +160,13 @@
                             </Button.Flyout>
                         </Button>
                         <StackPanel x:Name="appBar" HorizontalAlignment="Right" Orientation="Horizontal"  VerticalAlignment="Center">
-
+                            <control:UserFollowingTagsFlyout x:Name="UserFollowingTagsFlyout"></control:UserFollowingTagsFlyout>
                             <AppBarButton  
-                                Label="关注分组"  Icon="Sort"
+                                Label="关注分组"
+                                x:Name="BtnFollowingTag"
+                                Click="BtnFollowingTag_OnClick"
                                            Visibility="{x:Bind Path=m_viewModel.UserInfo.IsFollowed,Mode=OneWay}">
-                                <AppBarButton.Flyout>
-                                    <Flyout Placement="Bottom" 
-                                            x:Name="FollowingTagFlyout" 
-                                            AllowFocusOnInteraction="False"
-                                            Closed="FollowingTagFlyout_OnClosed">
-                                        <StackPanel Orientation="Vertical">
-                                            <ListView ItemsSource="{x:Bind m_viewModel.FollowingTags,Mode=OneWay}">
-                                                <ListView.ItemTemplate>
-                                                    <DataTemplate x:DataType="userViewModel:UserRelationFollowingTagViewModel">
-                                                        <CheckBox Content="{x:Bind Name}" IsChecked="{x:Bind UserInThisTag,Mode=TwoWay}" />
-                                                    </DataTemplate>
-                                                </ListView.ItemTemplate>
-                                            </ListView>
-                                            <Button x:Name="SaveFollowingTagUser" Click="SaveFollowingTagUser_OnClick">保存</Button>
-                                        </StackPanel>
-                                    </Flyout>
-                                </AppBarButton.Flyout>
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE779;" />
                             </AppBarButton>
 
                             <AppBarButton Label="关注" 

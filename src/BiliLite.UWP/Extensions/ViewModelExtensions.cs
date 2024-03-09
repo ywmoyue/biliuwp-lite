@@ -23,6 +23,7 @@ namespace BiliLite.Extensions
             services.AddTransient<LiveDetailPageViewModel>();
             services.AddTransient<HistoryViewModel>();
             services.AddTransient<UserDetailViewModel>();
+            services.AddTransient<UserFollowingTagsFlyoutViewModel>();
             return services;
         }
     }

@@ -115,7 +115,7 @@ namespace BiliLite.Pages
             //    Oid = id
             //});
         }
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             SetStaggered();
@@ -154,12 +154,11 @@ namespace BiliLite.Pages
                 m_userDynamicViewModel.DynamicType = DynamicType.Space;
                 m_userDynamicViewModel.Uid = mid;
                 m_viewModel.GetUserInfo();
-
+                await UserFollowingTagsFlyout.Init(mid);
                 if (tabIndex != 0)
                 {
                     pivot.SelectedIndex = tabIndex;
                 }
-
             }
         }
 
@@ -401,15 +400,9 @@ namespace BiliLite.Pages
             followVM.Refresh();
         }
 
-        private void FollowingTagFlyout_OnClosed(object sender, object e)
+        private void BtnFollowingTag_OnClick(object sender, RoutedEventArgs e)
         {
-            m_viewModel.CancelSaveFollowingTagUser();
-        }
-
-        private async void SaveFollowingTagUser_OnClick(object sender, RoutedEventArgs e)
-        {
-            await m_viewModel.SaveFollowingTagUser();
-            FollowingTagFlyout.Hide();
+            UserFollowingTagsFlyout.ShowAt(sender as DependencyObject);
         }
     }
 }

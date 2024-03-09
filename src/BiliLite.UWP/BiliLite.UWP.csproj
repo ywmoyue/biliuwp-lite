@@ -136,6 +136,9 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Controls\UserFollowingTagsFlyout.xaml.cs">
+      <DependentUpon>UserFollowingTagsFlyout.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Extensions\QrCodeExtensions.cs" />
     <Compile Include="Models\Common\Anime\ISeasonItem.cs" />
     <Compile Include="Models\Common\Dynamic\DynamicUgcSeasonCardModel.cs" />
@@ -187,6 +190,7 @@
     <Compile Include="Models\Common\Live\RoomChangeMsgModel.cs" />
     <Compile Include="Models\Common\User\SearchHistoryData.cs" />
     <Compile Include="Models\Common\User\SubmitCollectionItemModel.cs" />
+    <Compile Include="ViewModels\User\UserFollowingTagsFlyoutViewModel.cs" />
     <Compile Include="ViewModels\User\UserRelationFollowingTagViewModel.cs" />
     <Compile Include="Models\Common\Video\BiliVideoTag.cs" />
     <Compile Include="Models\Common\WbiKey.cs" />
@@ -912,6 +916,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\CommentControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\UserFollowingTagsFlyout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
