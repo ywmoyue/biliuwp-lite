@@ -382,9 +382,9 @@ namespace BiliLite.Pages
 
         private void ComboBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
         {
-            if (followVM != null && followVM.CurrentTid != followVM.SelectTid.tagid)
+            if (followVM != null && followVM.CurrentTid != followVM.SelectTid.TagId)
             {
-                if (followVM.SelectTid.tagid == -1)
+                if (followVM.SelectTid.TagId == -1)
                 {
                     searchFollow.Visibility = Visibility.Visible;
                 }
@@ -394,12 +394,22 @@ namespace BiliLite.Pages
                 }
                 followVM.Refresh();
             }
-
         }
 
         private void searchFollow_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             followVM.Refresh();
+        }
+
+        private void FollowingTagFlyout_OnClosed(object sender, object e)
+        {
+            m_viewModel.CancelSaveFollowingTagUser();
+        }
+
+        private async void SaveFollowingTagUser_OnClick(object sender, RoutedEventArgs e)
+        {
+            await m_viewModel.SaveFollowingTagUser();
+            FollowingTagFlyout.Hide();
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using Newtonsoft.Json;
 
 namespace BiliLite.Extensions
 {
@@ -69,6 +70,19 @@ namespace BiliLite.Extensions
                 format.Serialize(ms, obj);
                 ms.Seek(0, SeekOrigin.Begin);
                 return (T)format.Deserialize(ms);
+            }
+            catch (Exception e)
+            {
+                return default;
+            }
+        }
+
+        public static T ObjectCloneWithoutSerializable<T>(this T obj)
+        {
+            try
+            {
+                var serializedObj = JsonConvert.SerializeObject(obj);
+                return JsonConvert.DeserializeObject<T>(serializedObj);
             }
             catch (Exception e)
             {

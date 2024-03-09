@@ -1,17 +1,11 @@
-﻿using BiliLite.Models;
-using BiliLite.Models.Requests.Api.User;
+﻿using BiliLite.Models.Requests.Api.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Windows.Storage.Streams;
-using Windows.UI;
-using Windows.UI.Xaml.Media;
 using BiliLite.Extensions;
 using BiliLite.Models.Common;
 
@@ -33,8 +27,8 @@ namespace BiliLite.Modules.User.UserDetail
             Tlist = new ObservableCollection<FollowTlistItemModel>() {
                 new FollowTlistItemModel()
                 {
-                    name="全部关注",
-                    tagid=-1
+                    Name="全部关注",
+                    TagId=-1
                 }
             };
             SelectTid = Tlist.First();
@@ -124,7 +118,7 @@ namespace BiliLite.Modules.User.UserDetail
                 Nothing = false;
                 CanLoadMore = false;
                 Loading = true;
-                CurrentTid = SelectTid.tagid;
+                CurrentTid = SelectTid.TagId;
                 var api = await userDetailAPI.Followings(mid, Page, 30, tid: CurrentTid, keyword: Keyword, (FollowingsOrder)SelectOrder);
                 if (IsFans)
                 {
@@ -259,9 +253,13 @@ namespace BiliLite.Modules.User.UserDetail
     }
     public class FollowTlistItemModel
     {
-        public int tagid { get; set; }
-        public string name { get; set; }
-        public int count { get; set; }
-        public string tip { get; set; }
+        [JsonProperty("tagid")]
+        public int TagId { get; set; }
+
+        public string Name { get; set; }
+
+        public int Count { get; set; }
+
+        public string Tip { get; set; }
     }
 }

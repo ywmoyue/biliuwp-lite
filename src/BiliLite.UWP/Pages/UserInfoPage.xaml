@@ -14,6 +14,7 @@
     xmlns:user="using:BiliLite.Models.Common.User"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:userViewModel="using:BiliLite.ViewModels.User"
     Background="{ThemeResource ApplicationBackground}">
     <Page.Resources>
         <ResourceDictionary>
@@ -159,8 +160,32 @@
                             </Button.Flyout>
                         </Button>
                         <StackPanel x:Name="appBar" HorizontalAlignment="Right" Orientation="Horizontal"  VerticalAlignment="Center">
-                            
-                            <AppBarButton Label="关注" Command="{x:Bind Path=m_viewModel.AttentionCommand,Mode=OneWay}" Visibility="{x:Bind Path=m_viewModel.UserInfo.IsFollowed,Mode=OneWay,Converter={StaticResource display}}">
+
+                            <AppBarButton  
+                                Label="关注分组"  Icon="Sort"
+                                           Visibility="{x:Bind Path=m_viewModel.UserInfo.IsFollowed,Mode=OneWay}">
+                                <AppBarButton.Flyout>
+                                    <Flyout Placement="Bottom" 
+                                            x:Name="FollowingTagFlyout" 
+                                            AllowFocusOnInteraction="False"
+                                            Closed="FollowingTagFlyout_OnClosed">
+                                        <StackPanel Orientation="Vertical">
+                                            <ListView ItemsSource="{x:Bind m_viewModel.FollowingTags,Mode=OneWay}">
+                                                <ListView.ItemTemplate>
+                                                    <DataTemplate x:DataType="userViewModel:UserRelationFollowingTagViewModel">
+                                                        <CheckBox Content="{x:Bind Name}" IsChecked="{x:Bind UserInThisTag,Mode=TwoWay}" />
+                                                    </DataTemplate>
+                                                </ListView.ItemTemplate>
+                                            </ListView>
+                                            <Button x:Name="SaveFollowingTagUser" Click="SaveFollowingTagUser_OnClick">保存</Button>
+                                        </StackPanel>
+                                    </Flyout>
+                                </AppBarButton.Flyout>
+                            </AppBarButton>
+
+                            <AppBarButton Label="关注" 
+                                          Command="{x:Bind Path=m_viewModel.AttentionCommand,Mode=OneWay}" 
+                                          Visibility="{x:Bind Path=m_viewModel.UserInfo.IsFollowed,Mode=OneWay,Converter={StaticResource display}}">
                                 <AppBarButton.Icon>
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE006;" />
                                 </AppBarButton.Icon>
@@ -171,7 +196,8 @@
                                 </interactivity:Interaction.Behaviors>-->
                             </AppBarButton>
                             
-                            <AppBarButton Label="取消关注" Command="{x:Bind Path=m_viewModel.AttentionCommand,Mode=OneWay}" Visibility="{x:Bind Path=m_viewModel.UserInfo.IsFollowed,Mode=OneWay}">
+                            <AppBarButton Label="取消关注" Command="{x:Bind Path=m_viewModel.AttentionCommand,Mode=OneWay}" 
+                                          Visibility="{x:Bind Path=m_viewModel.UserInfo.IsFollowed,Mode=OneWay}">
                                 <AppBarButton.Icon>
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE00B;" />
                                 </AppBarButton.Icon>
@@ -549,7 +575,7 @@
                                     <toolkit:AdaptiveGridView.Header>
                                         <Grid Margin="4 8" x:Name="followHeader">
                                             <StackPanel Orientation="Horizontal">
-                                                <ComboBox DisplayMemberPath="name" ItemsSource="{x:Bind Path=followVM.Tlist,Mode=OneWay}" SelectionChanged="ComboBox_SelectionChanged_1" SelectedItem="{x:Bind Path=followVM.SelectTid,Mode=TwoWay}">
+                                                <ComboBox DisplayMemberPath="Name" ItemsSource="{x:Bind Path=followVM.Tlist,Mode=OneWay}" SelectionChanged="ComboBox_SelectionChanged_1" SelectedItem="{x:Bind Path=followVM.SelectTid,Mode=TwoWay}">
 
                                                 </ComboBox>
                                                 <ComboBox x:Name="comFollowOrder" SelectionChanged="comFollowOrder_SelectionChanged" Margin="8 0"  SelectedIndex="{x:Bind Path=followVM.SelectOrder,Mode=TwoWay}">

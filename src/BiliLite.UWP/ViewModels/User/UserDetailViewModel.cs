@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -10,8 +11,10 @@ using BiliLite.Models.Common.User.UserDetails;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests.Api.User;
 using BiliLite.Modules;
+using BiliLite.Modules.User.UserDetail;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
 
@@ -25,6 +28,7 @@ namespace BiliLite.ViewModels.User
         private readonly UserDetailAPI m_userDetailApi;
         private readonly FollowAPI m_followApi;
         private readonly IMapper m_mapper;
+        private List<UserRelationFollowingTagViewModel> m_followingTags;
 
         #endregion
 
@@ -49,9 +53,38 @@ namespace BiliLite.ViewModels.User
 
         public UserCenterInfoViewModel UserInfo { get; set; }
 
+        public List<UserRelationFollowingTagViewModel> FollowingTags { get; set; }
+
         #endregion
 
         #region Private Methods
+
+        private async Task GetFollowingTagsCore()
+        {
+            var api = m_userDetailApi.FollowingsTag();
+            var results = await api.Request();
+            if (!results.status) throw new CustomizedErrorException(results.message);
+
+            var data = await results.GetData<JArray>();
+            var items = JsonConvert.DeserializeObject<List<FollowTlistItemModel>>(data.data.ToString());
+            FollowingTags = m_mapper.Map<List<UserRelationFollowingTagViewModel>>(items);
+
+            m_followingTags = FollowingTags.ObjectCloneWithoutSerializable();
+        }
+
+        private async Task GetFollowingTagUser()
+        {
+            var api = m_userDetailApi.FollowingTagUser(long.Parse(Mid));
+            var results = await api.Request();
+            if (!results.status) throw new CustomizedErrorException(results.message);
+            var data = await results.GetData<Dictionary<string, string>>();
+            foreach (var tag in FollowingTags)
+            {
+                tag.UserInThisTag = data.data.ContainsKey(tag.TagId.ToString());
+            }
+
+            m_followingTags = FollowingTags.ObjectCloneWithoutSerializable();
+        }
 
         private async Task GetUserInfoCore()
         {
@@ -113,6 +146,23 @@ namespace BiliLite.ViewModels.User
             Notify.ShowMessageToast("操作成功");
         }
 
+        private async Task UpdateFollowingTagUserCore()
+        {
+            var followingTags = FollowingTags
+                .Where(x => x.UserInThisTag)
+                .Select(x => x.TagId)
+                .ToList();
+            var api = m_userDetailApi.AddFollowingTagUsers(new List<long>() { Mid.ToInt64() }, followingTags);
+            var results = await api.Request();
+
+            if (!results.status)
+                throw new CustomizedErrorException(results.message);
+            var data = await results.GetData<object>();
+            if(!data.success)
+                throw new CustomizedErrorException(data.message);
+            m_followingTags = FollowingTags.ObjectCloneWithoutSerializable();
+        }
+
         #endregion
 
         #region Public Methods
@@ -122,6 +172,8 @@ namespace BiliLite.ViewModels.User
             try
             {
                 await GetUserInfoCore();
+                await GetFollowingTagsCore();
+                await GetFollowingTagUser();
             }
             catch (Exception ex)
             {
@@ -154,6 +206,24 @@ namespace BiliLite.ViewModels.User
                 _logger.Log("读取个人资料失败", LogType.Error, ex);
                 return null;
             }
+        }
+
+        public async Task SaveFollowingTagUser()
+        {
+            try
+            {
+                await UpdateFollowingTagUserCore();
+            }
+            catch (Exception ex)
+            {
+                _logger.Log("设置关注分组失败", LogType.Error, ex);
+                Notify.ShowMessageToast("设置关注分组失败");
+            }
+        }
+
+        public void CancelSaveFollowingTagUser()
+        {
+            FollowingTags = m_followingTags.ObjectCloneWithoutSerializable();
         }
 
         public async void DoAttentionUP()

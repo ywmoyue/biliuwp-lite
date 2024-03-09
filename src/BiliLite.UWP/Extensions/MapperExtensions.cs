@@ -18,6 +18,7 @@ using BiliLite.Models.Common.UserDynamic;
 using BiliLite.Models.Common.Video.Detail;
 using BiliLite.Models.Download;
 using BiliLite.Models.Dynamic;
+using BiliLite.Modules.User.UserDetail;
 using BiliLite.Services;
 using BiliLite.ViewModels.Comment;
 using BiliLite.ViewModels.Download;
@@ -52,6 +53,7 @@ namespace BiliLite.Extensions
                 expression.CreateMap<AnimeFallModel, AnimeFallViewModel>();
                 expression.CreateMap<HomeNavItem, HomeNavItemViewModel>();
                 expression.CreateMap<UserCenterInfoModel, UserCenterInfoViewModel>();
+                expression.CreateMap<FollowTlistItemModel, UserRelationFollowingTagViewModel>();
 
                 expression.CreateMap<DownloadSaveEpisodeInfo, DownloadedSubItem>()
                     .ForMember(dest => dest.Paths, opt => opt.MapFrom(src => new List<string>()))

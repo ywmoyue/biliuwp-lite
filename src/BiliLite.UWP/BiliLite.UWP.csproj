@@ -187,6 +187,7 @@
     <Compile Include="Models\Common\Live\RoomChangeMsgModel.cs" />
     <Compile Include="Models\Common\User\SearchHistoryData.cs" />
     <Compile Include="Models\Common\User\SubmitCollectionItemModel.cs" />
+    <Compile Include="ViewModels\User\UserRelationFollowingTagViewModel.cs" />
     <Compile Include="Models\Common\Video\BiliVideoTag.cs" />
     <Compile Include="Models\Common\WbiKey.cs" />
     <Compile Include="Models\Exceptions\NotFoundException.cs" />
