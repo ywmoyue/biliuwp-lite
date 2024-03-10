@@ -136,6 +136,9 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Controls\AttentionButton.xaml.cs">
+      <DependentUpon>AttentionButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\UserFollowingTagsFlyout.xaml.cs">
       <DependentUpon>UserFollowingTagsFlyout.xaml</DependentUpon>
     </Compile>
@@ -190,6 +193,7 @@
     <Compile Include="Models\Common\Live\RoomChangeMsgModel.cs" />
     <Compile Include="Models\Common\User\SearchHistoryData.cs" />
     <Compile Include="Models\Common\User\SubmitCollectionItemModel.cs" />
+    <Compile Include="ViewModels\User\UserAttentionButtonViewModel.cs" />
     <Compile Include="ViewModels\User\UserFollowingTagsFlyoutViewModel.cs" />
     <Compile Include="ViewModels\User\UserRelationFollowingTagViewModel.cs" />
     <Compile Include="Models\Common\Video\BiliVideoTag.cs" />
@@ -911,6 +915,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\AttentionButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Carousel\Carousel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

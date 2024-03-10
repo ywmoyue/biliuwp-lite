@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+﻿using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using BiliLite.ViewModels.User;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -30,6 +19,8 @@ namespace BiliLite.Controls
             this.InitializeComponent();
         }
 
+        public bool HasInit { get; set; }
+
         private void FollowingTagFlyout_OnClosed(object sender, object e)
         {
             m_viewModel.CancelSaveFollowingTagUser();
@@ -44,6 +35,7 @@ namespace BiliLite.Controls
         public async Task Init(string userId)
         {
             await m_viewModel.Init(userId);
+            HasInit = true;
         }
 
         public void ShowAt(DependencyObject target)
