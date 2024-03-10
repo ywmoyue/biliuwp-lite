@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    Background="Transparent"
     d:DesignHeight="300"
     d:DesignWidth="400">
     <UserControl.Resources>
@@ -14,12 +15,12 @@
             <MenuFlyoutItem Command="{x:Bind m_viewModel.AttentionCommand}">取消关注</MenuFlyoutItem>
         </MenuFlyout>
     </UserControl.Resources>
-    <Grid>
+    <Grid Background="Transparent">
         <local:UserFollowingTagsFlyout x:Name="UserFollowingTagsFlyout"></local:UserFollowingTagsFlyout>
         <Button Width="80" 
                 x:Name="AttendedBtn"
                 Visibility="{x:Bind Path=m_viewModel.Attention,Converter={StaticResource display},ConverterParameter=1,Mode=OneWay}" 
-                Click="ButtonBase_OnClick"
+                Click="AttendedBtn_OnClick"
                 Padding="16 4"  FontSize="12">已关注</Button>
         <Button Width="80" 
                 Visibility="{x:Bind Path=m_viewModel.Attention,Converter={StaticResource display},ConverterParameter=0,Mode=OneWay}" 

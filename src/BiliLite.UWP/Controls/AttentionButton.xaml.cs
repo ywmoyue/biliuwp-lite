@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml;
+﻿using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using BiliLite.ViewModels.User;
@@ -36,7 +37,12 @@ namespace BiliLite.Controls
             set => m_viewModel.UserId = value;
         }
 
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        public async Task AttentionUp()
+        {
+            await m_viewModel.AttentionUP(m_viewModel.UserId, 1);
+        }
+
+        private void AttendedBtn_OnClick(object sender, RoutedEventArgs e)
         {
             var flyoutShowOptions = new FlyoutShowOptions()
             {
