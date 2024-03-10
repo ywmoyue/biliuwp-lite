@@ -636,6 +636,7 @@ namespace BiliLite.ViewModels.Live
                 SuperChats.Clear();
                 var ls = JsonConvert.DeserializeObject<List<LiveRoomSuperChatModel>>(
                     data.data["list"]?.ToString() ?? "[]");
+                if (ls == null) return;
                 foreach (var item in ls)
                 {
                     SuperChats.Add(new SuperChatMsgViewModel()
