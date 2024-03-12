@@ -1,7 +1,7 @@
 {
-    "version": "4.6.26",
-    "version_num": 40626,
-    "version_desc": "更新内容:\r\n\r\n- 直播间添加开关底部礼物栏的按钮\r\n\r\n- 支持设置新标签页到首页中\r\n\r\n- 支持搜索已下载视频\r\n\r\n- 支持搜索播放历史记录\r\n\r\n- 美化直播弹幕栏\r\n\r\n- 优化直播播放器加载行为\r\n\r\n- 支持设置请求时使用的build值\r\n\r\n- 修复订阅合集视频在视频动态页中无法打开\r\n\r\n- 修复港澳台番剧播放\r\n\r\n- 修复从非番剧页打开番剧时产生的错误\r\n\r\n- 直播间部分问题修复\r\n\r\n- 画面尺寸添加兼容模式，修复部分设备缩放画面黑屏的问题 \r\n\r\n- 修复创建收藏夹私密问题\r\n\r\n- 修复热门页没有up主名称\r\n\r\n- 修复互动视频可能无选项问题\r\n\r\n- 修复视频详情页视频标签不显示\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+    "version": "4.6.27",
+    "version_num": 40627,
+    "version_desc": "更新内容:\r\n\r\n- 恢复同时加载与显示已下载视频，并显示加载进度\r\n\r\n- 视频详情页、个人空间页支持给已关注up设置分组\r\n\r\n- 登录验证弹窗中WebView控件更换为WebView2\r\n\r\n- 修复ios key无法使用GRPC请求到数据\r\n\r\n- 兼容新注册用户long类型id\r\n\r\n- 修复新标签页添加到首页时，部分功能按钮失效\r\n\r\n- 修复直播醒目留言为空时报错\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
     "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
     "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
