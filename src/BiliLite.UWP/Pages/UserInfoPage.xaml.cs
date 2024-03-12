@@ -1,7 +1,6 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Models.Requests.Api;
-using BiliLite.Modules.User;
 using BiliLite.Modules.User.UserDetail;
 using BiliLite.Pages.User;
 using BiliLite.Services;
@@ -38,7 +37,7 @@ namespace BiliLite.Pages
     public sealed partial class UserInfoPage : BasePage
     {
         readonly UserDynamicViewModel m_userDynamicViewModel;
-        UserDetailVM userDetailVM;
+        UserDetailViewModel m_viewModel;
         UserSubmitVideoViewModel m_userSubmitVideoViewModel;
         UserSubmitCollectionViewModel m_userSubmitCollectionViewModel;
         UserSubmitArticleVM userSubmitArticleVM;
@@ -49,9 +48,9 @@ namespace BiliLite.Pages
         bool isSelf = false;
         public UserInfoPage()
         {
+            m_viewModel = App.ServiceProvider.GetRequiredService<UserDetailViewModel>();
             this.InitializeComponent();
             Title = "用户中心";
-            userDetailVM = new Modules.User.UserDetailVM();
             m_userSubmitVideoViewModel = App.ServiceProvider.GetService<UserSubmitVideoViewModel>();
             m_userSubmitCollectionViewModel = App.ServiceProvider.GetService<UserSubmitCollectionViewModel>();
             userSubmitArticleVM = new UserSubmitArticleVM();
@@ -116,7 +115,7 @@ namespace BiliLite.Pages
             //    Oid = id
             //});
         }
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             SetStaggered();
@@ -134,14 +133,14 @@ namespace BiliLite.Pages
                 {
                     mid = e.Parameter.ToString();
                 }
-                userDetailVM.mid = mid;
+                m_viewModel.Mid = mid;
                 m_userSubmitVideoViewModel.Mid = mid;
                 m_userSubmitCollectionViewModel.Mid = mid;
                 userSubmitArticleVM.mid = mid;
                 userFavlistVM.mid = mid;
                 fansVM.mid = mid;
                 followVM.mid = mid;
-                if (userDetailVM.mid == SettingService.Account.UserID.ToString())
+                if (m_viewModel.Mid == SettingService.Account.UserID.ToString())
                 {
                     isSelf = true;
                     appBar.Visibility = Visibility.Collapsed;
@@ -154,13 +153,12 @@ namespace BiliLite.Pages
                 }
                 m_userDynamicViewModel.DynamicType = DynamicType.Space;
                 m_userDynamicViewModel.Uid = mid;
-                userDetailVM.GetUserInfo();
-
+                m_viewModel.GetUserInfo();
+                await UserFollowingTagsFlyout.Init(mid);
                 if (tabIndex != 0)
                 {
                     pivot.SelectedIndex = tabIndex;
                 }
-
             }
         }
 
@@ -190,13 +188,13 @@ namespace BiliLite.Pages
 
         private void btnLiveRoom_Click(object sender, RoutedEventArgs e)
         {
-            if (userDetailVM.UserInfo == null) return;
+            if (m_viewModel.UserInfo == null) return;
             MessageCenter.NavigateToPage(this, new NavigationInfo()
             {
                 icon = Symbol.Video,
                 page = typeof(LiveDetailPage),
-                title = userDetailVM.UserInfo.name + "的直播间",
-                parameters = userDetailVM.UserInfo.live_room.roomid
+                title = m_viewModel.UserInfo.Name + "的直播间",
+                parameters = m_viewModel.UserInfo.LiveRoom.RoomId
             });
         }
 
@@ -207,7 +205,7 @@ namespace BiliLite.Pages
                 icon = Symbol.Message,
                 title = "消息中心",
                 page = typeof(WebPage),
-                parameters = $"https://message.bilibili.com/#whisper/mid{userDetailVM.mid}"
+                parameters = $"https://message.bilibili.com/#whisper/mid{m_viewModel.Mid}"
             });
         }
 
@@ -383,9 +381,9 @@ namespace BiliLite.Pages
 
         private void ComboBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
         {
-            if (followVM != null && followVM.CurrentTid != followVM.SelectTid.tagid)
+            if (followVM != null && followVM.CurrentTid != followVM.SelectTid.TagId)
             {
-                if (followVM.SelectTid.tagid == -1)
+                if (followVM.SelectTid.TagId == -1)
                 {
                     searchFollow.Visibility = Visibility.Visible;
                 }
@@ -395,12 +393,16 @@ namespace BiliLite.Pages
                 }
                 followVM.Refresh();
             }
-
         }
 
         private void searchFollow_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             followVM.Refresh();
+        }
+
+        private void BtnFollowingTag_OnClick(object sender, RoutedEventArgs e)
+        {
+            UserFollowingTagsFlyout.ShowAt(sender as DependencyObject);
         }
     }
 }

@@ -50,7 +50,6 @@ namespace BiliLite.Modules
             DislikeCommand = new RelayCommand(DoDislike);
             LaunchUrlCommand = new RelayCommand<object>(LaunchUrl);
             CoinCommand = new RelayCommand<string>(DoCoin);
-            AttentionCommand = new RelayCommand(DoAttentionUP);
             SetStaffHeightCommand = new RelayCommand<string>(SetStaffHeight);
             OpenRightInfoCommand = new RelayCommand(OpenRightInfo);
         }
@@ -66,8 +65,6 @@ namespace BiliLite.Modules
         public ICommand DislikeCommand { get; private set; }
 
         public ICommand CoinCommand { get; private set; }
-
-        public ICommand AttentionCommand { get; private set; }
 
         public ICommand LaunchUrlCommand { get; private set; }
 
@@ -610,23 +607,6 @@ namespace BiliLite.Modules
             }
         }
 
-        public async void DoAttentionUP()
-        {
-            var result = await AttentionUP(VideoInfo.Owner.Mid, VideoInfo.ReqUser.Attention == 1 ? 2 : 1);
-            if (result)
-            {
-                if (VideoInfo.ReqUser.Attention == 1)
-                {
-                    VideoInfo.ReqUser.Attention = -999;
-                    VideoInfo.OwnerExt.Fans -= 1;
-                }
-                else
-                {
-                    VideoInfo.ReqUser.Attention = 1;
-                    VideoInfo.OwnerExt.Fans += 1;
-                }
-            }
-        }
         public async Task<bool> AttentionUP(string mid, int mode)
         {
             if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())

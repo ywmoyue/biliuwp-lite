@@ -22,6 +22,9 @@ namespace BiliLite.Extensions
             services.AddTransient<AnimePageViewModel>();
             services.AddTransient<LiveDetailPageViewModel>();
             services.AddTransient<HistoryViewModel>();
+            services.AddTransient<UserDetailViewModel>();
+            services.AddTransient<UserFollowingTagsFlyoutViewModel>();
+            services.AddTransient<UserAttentionButtonViewModel>();
             return services;
         }
     }

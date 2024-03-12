@@ -18,9 +18,12 @@ namespace BiliLite.Services
                 Pn = page,
                 Ps = pageSize,
             };
-            var accessKey = SettingService.Account.AccessKey;
+            var requestUserInfo = new GrpcBiliUserInfo(
+                SettingService.Account.AccessKey, 
+                SettingService.Account.UserID,
+                SettingService.Account.GetLoginAppKeySecret().Appkey);
 
-            var result = await GrpcRequest.Instance.SendMessage("https://grpc.biliapi.net:443/bilibili.app.interface.v1.Space/SearchArchive", message, accessKey);
+            var result = await GrpcRequest.Instance.SendMessage("https://grpc.biliapi.net:443/bilibili.app.interface.v1.Space/SearchArchive", message, requestUserInfo);
             if (result.status)
             {
                 var reply = SearchArchiveReply.Parser.ParseFrom(result.results);
@@ -43,9 +46,12 @@ namespace BiliLite.Services
             {
                 Page = page
             };
-            var accessKey = SettingService.Account.AccessKey;
+            var requestUserInfo = new GrpcBiliUserInfo(
+                SettingService.Account.AccessKey,
+                SettingService.Account.UserID,
+                SettingService.Account.GetLoginAppKeySecret().Appkey);
 
-            var result = await GrpcRequest.Instance.SendMessage("https://grpc.biliapi.net:443/bilibili.app.dynamic.v2.Dynamic/DynAll", message, accessKey);
+            var result = await GrpcRequest.Instance.SendMessage("https://grpc.biliapi.net:443/bilibili.app.dynamic.v2.Dynamic/DynAll", message, requestUserInfo);
             if (result.status)
             {
                 var reply = DynAllReply.Parser.ParseFrom(result.results);
@@ -70,9 +76,12 @@ namespace BiliLite.Services
                 message.Page = page;
                 message.RefreshType = Refresh.History;
             }
-            var accessKey = SettingService.Account.AccessKey;
+            var requestUserInfo = new GrpcBiliUserInfo(
+                SettingService.Account.AccessKey,
+                SettingService.Account.UserID,
+                SettingService.Account.GetLoginAppKeySecret().Appkey);
 
-            var result = await GrpcRequest.Instance.SendMessage("https://grpc.biliapi.net:443/bilibili.app.dynamic.v2.Dynamic/DynVideo", message, accessKey);
+            var result = await GrpcRequest.Instance.SendMessage("https://grpc.biliapi.net:443/bilibili.app.dynamic.v2.Dynamic/DynVideo", message, requestUserInfo);
             if (result.status)
             {
                 var reply = DynVideoReply.Parser.ParseFrom(result.results);

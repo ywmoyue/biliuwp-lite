@@ -353,25 +353,6 @@ namespace BiliLite.Pages
             }
         }
 
-        private async void btnAttention_Click(object sender, RoutedEventArgs e)
-        {
-            var data = (sender as Button).DataContext as VideoDetailStaffViewModel;
-            var result = await m_viewModel.AttentionUP(data.Mid, data.Attention == 1 ? 2 : 1);
-            if (result)
-            {
-                if (data.Attention == 1)
-                {
-                    data.Attention = 0;
-                }
-                else
-                {
-                    data.Attention = 1;
-                }
-            }
-
-        }
-
-
         private void listRelates_ItemClick(object sender, ItemClickEventArgs e)
         {
             var data = e.ClickedItem as VideoDetailRelatesViewModel;
@@ -595,7 +576,7 @@ namespace BiliLite.Pages
                 Subtitle = m_viewModel.VideoInfo.Bvid,
                 Title = m_viewModel.VideoInfo.Title,
                 Type = DownloadType.Video,
-                UpMid = m_viewModel.VideoInfo.Owner.Mid.ToInt32(),
+                UpMid = m_viewModel.VideoInfo.Owner.Mid.ToInt64(),
             };
             int i = 0;
             foreach (var item in m_viewModel.VideoInfo.Pages)

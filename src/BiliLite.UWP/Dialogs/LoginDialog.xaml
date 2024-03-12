@@ -10,6 +10,7 @@
     PrimaryButtonText="登录"
     SecondaryButtonText="取消"
     xmlns:user="using:BiliLite.Modules.User"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     IsPrimaryButtonEnabled="{x:Bind Path=loginVM.PrimaryButtonEnable,Mode=OneWay}"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
@@ -142,7 +143,7 @@
          
         </StackPanel>
         <!--WebView-->
-        <WebView x:Name="webView" NavigationStarting="webView_NavigationStarting" NavigationCompleted="WebView_NavigationCompleted"  Height="444" Width="346" Visibility="Collapsed"></WebView>
+        <controls:WebView2 x:Name="webView" NavigationStarting="WebView_OnNavigationStarting" NavigationCompleted="WebView_OnNavigationCompleted"  Height="444" Width="346" Visibility="Collapsed"></controls:WebView2>
     </Grid>
   
 </ContentDialog>

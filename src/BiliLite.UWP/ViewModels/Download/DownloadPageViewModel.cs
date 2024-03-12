@@ -20,6 +20,7 @@ using Newtonsoft.Json.Linq;
 using PropertyChanged;
 using System.Threading;
 using Windows.Networking.BackgroundTransfer;
+using AutoMapper;
 using BiliLite.Extensions;
 
 namespace BiliLite.ViewModels.Download
@@ -34,14 +35,16 @@ namespace BiliLite.ViewModels.Download
         private List<Task> m_handelList;
         private const string DOWNLOAD_FOLDER_NAME = "哔哩哔哩下载";
         private const string OLD_DOWNLOAD_FOLDER_NAME = "BiliBiliDownload";
+        private readonly IMapper m_mapper;
 
         #endregion
 
         #region Constructors
 
 
-        public DownloadPageViewModel()
+        public DownloadPageViewModel(IMapper mapper)
         {
+            m_mapper = mapper;
             DownloadedViewModels = new ObservableCollection<DownloadedItem>();
             Downloadings = new ObservableCollection<DownloadingItemViewModel>();
             Downloadeds = new List<DownloadedItem>();
@@ -94,6 +97,13 @@ namespace BiliLite.ViewModels.Download
         public double DiskUse { get; set; }
 
         public double DiskFree { get; set; }
+
+        public int TotalDownloadedCount { get; set; }
+
+        public int LoadedDownloadedCount { get; set; }
+
+        [DependsOn(nameof(TotalDownloadedCount), nameof(LoadedDownloadedCount))]
+        public int LoadingDownloadedPercent => (int)((LoadedDownloadedCount * 1f / TotalDownloadedCount * 1f) * 100);
 
         #endregion
 
@@ -424,31 +434,26 @@ namespace BiliLite.ViewModels.Download
         /// <returns></returns>
         public async void LoadDownloaded()
         {
-
             LoadingDownloaded = true;
             DownloadedViewModels.Clear();
             Downloadeds.Clear();
             var folder = await GetDownloadFolder();
             await LoadDiskSize(folder);
-            // var list = new List<DownloadedItem>();
-            foreach (var item in await folder.GetFoldersAsync())
+            var folders = await folder.GetFoldersAsync();
+            LoadedDownloadedCount = 0;
+            TotalDownloadedCount = folders.Count;
+            foreach (var item in folders)
             {
                 try
                 {
                     //检查是否存在info.json
-                    var infoFile = await item.TryGetItemAsync("info.json") as StorageFile;
-                    if (infoFile == null)
-                    {
-                        continue;
-                    }
+                    if (!(await item.TryGetItemAsync("info.json") is StorageFile infoFile)) continue;
+
                     var info = JsonConvert.DeserializeObject<DownloadSaveInfo>(await FileIO.ReadTextAsync(infoFile));
                     //旧版无Cover字段，跳过
-                    if (string.IsNullOrEmpty(info.Cover))
-                    {
-                        continue;
-                    }
-                    List<DownloadedSubItem> lsEpisodes = new List<DownloadedSubItem>();
-                    DownloadedItem downloadedItem = new DownloadedItem()
+                    if (string.IsNullOrEmpty(info.Cover)) continue;
+                    var lsEpisodes = new List<DownloadedSubItem>();
+                    var downloadedItem = new DownloadedItem()
                     {
                         CoverPath = Path.Combine(item.Path, "cover.jpg"),
                         Epsidoes = new ObservableCollection<DownloadedSubItem>(),
@@ -458,44 +463,33 @@ namespace BiliLite.ViewModels.Download
                         IsSeason = info.Type == DownloadType.Season,
                         Path = item.Path
                     };
-                    var coverFile = await item.TryGetItemAsync("cover.jpg") as StorageFile;
-                    if (coverFile != null)
+                    if (await item.TryGetItemAsync("cover.jpg") is StorageFile coverFile)
                     {
-                        BitmapImage bitmapImage = new BitmapImage();
+                        var bitmapImage = new BitmapImage();
                         var buffer = await FileIO.ReadBufferAsync(coverFile);
-                        using (IRandomAccessStream stream = new InMemoryRandomAccessStream())
-                        {
-                            await stream.WriteAsync(buffer);
-                            stream.Seek(0);
-                            bitmapImage.SetSource(stream);
-                            downloadedItem.Cover = bitmapImage;
-
-                        }
-
+                        using IRandomAccessStream stream = new InMemoryRandomAccessStream();
+                        await stream.WriteAsync(buffer);
+                        stream.Seek(0);
+                        bitmapImage.SetSource(stream);
+                        downloadedItem.Cover = bitmapImage;
                     }
 
                     foreach (var episodeItem in await item.GetFoldersAsync())
                     {
                         //检查是否存在info.json
-                        var episodeInfoFile = await episodeItem.TryGetItemAsync("info.json") as StorageFile;
-                        if (episodeInfoFile == null)
-                        {
-                            continue;
-                        }
+                        if (!(await episodeItem.TryGetItemAsync("info.json") is StorageFile episodeInfoFile)) continue;
                         var files = (await episodeItem.GetFilesAsync()).Where(x => x.FileType == ".blv" || x.FileType == ".mp4" || x.FileType == ".m4s");
-                        if (files.Count() == 0)
+                        if (!files.Any())
                         {
                             continue;
                         }
-                        bool flag = false;
+                        var flag = false;
                         foreach (var subfile in files)
                         {
                             var size = (await subfile.GetBasicPropertiesAsync()).Size;
-                            if (size == 0)
-                            {
-                                flag = true;
-                                break;
-                            }
+                            if (size != 0) continue;
+                            flag = true;
+                            break;
                         }
                         files = null;
                         if (flag)
@@ -504,18 +498,7 @@ namespace BiliLite.ViewModels.Download
                         }
 
                         var episodeInfo = JsonConvert.DeserializeObject<DownloadSaveEpisodeInfo>(await FileIO.ReadTextAsync(episodeInfoFile));
-                        var downloadedSubItem = new DownloadedSubItem()
-                        {
-                            AVID = episodeInfo.AVID,
-                            CID = episodeInfo.CID,
-                            Index = episodeInfo.Index,
-                            EpisodeID = episodeInfo.EpisodeID,
-                            IsDash = episodeInfo.IsDash,
-                            Paths = new List<string>(),
-                            Title = episodeInfo.EpisodeTitle,
-                            SubtitlePath = new List<DownloadSubtitleInfo>(),
-                            Path = episodeItem.Path
-                        };
+                        var downloadedSubItem = m_mapper.Map<DownloadedSubItem>(episodeInfo);
                         //设置视频
                         foreach (var path in episodeInfo.VideoPath)
                         {
@@ -546,26 +529,22 @@ namespace BiliLite.ViewModels.Download
                     }
 
                     Downloadeds.Add(downloadedItem);
+                    DownloadedViewModels.Add(downloadedItem);
+                    LoadedDownloadedCount++;
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
+                    _logger.Warn(ex.Message);
                     continue;
                 }
             }
 
-            // list = list.OrderByDescending(x => x.UpdateTime).ToList();
             if (SettingService.GetValue(SettingConstants.Download.LOAD_OLD_DOWNLOAD, false))
             {
                 await LoadDownloadedOld();
             }
 
-
-            //foreach (var item in list)
-            //{
-            //    Downloadeds.Add(item);
-            //}
-            DownloadedViewModels.AddRange(Downloadeds);
             LoadingDownloaded = false;
         }
 
@@ -580,16 +559,14 @@ namespace BiliLite.ViewModels.Download
             var folder = await GetDownloadOldFolder();
 
             //var list = new List<DownloadedItem>();
-            foreach (var item in await folder.GetFoldersAsync())
+            var folders = await folder.GetFoldersAsync();
+            TotalDownloadedCount += folders.Count;
+            foreach (var item in folders)
             {
                 try
                 {
                     //检查是否存在info.json
-                    var infoFile = await item.TryGetItemAsync("info.json") as StorageFile;
-                    if (infoFile == null)
-                    {
-                        continue;
-                    }
+                    if (!(await item.TryGetItemAsync("info.json") is StorageFile infoFile)) continue;
 
                     var info = JObject.Parse(await FileIO.ReadTextAsync(infoFile));
                     //新版下载无thumb字段
@@ -629,7 +606,7 @@ namespace BiliLite.ViewModels.Download
                         {
                             continue;
                         }
-                        bool flag = false;
+                        var flag = false;
                         foreach (var subfile in files)
                         {
                             var size = (await subfile.GetBasicPropertiesAsync()).Size;
@@ -677,19 +654,16 @@ namespace BiliLite.ViewModels.Download
                     }
 
                     Downloadeds.Add(downloadedItem);
+                    DownloadedViewModels.Add(downloadedItem);
+                    LoadedDownloadedCount++;
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
+                    _logger.Warn(ex.Message);
                     continue;
                 }
             }
-
-            // list = list.OrderByDescending(x => x.UpdateTime).ToList();
-
-            //return list;
-
-            DownloadedViewModels.AddRange(Downloadeds);
         }
 
         /// <summary>

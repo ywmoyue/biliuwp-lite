@@ -12,6 +12,9 @@
     xmlns:modules="using:BiliLite.Modules.User"
     xmlns:control="using:BiliLite.Controls" xmlns:modules1="using:BiliLite.Modules.User.UserDetail"
     xmlns:user="using:BiliLite.Models.Common.User"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:userViewModel="using:BiliLite.ViewModels.User"
     Background="{ThemeResource ApplicationBackground}">
     <Page.Resources>
         <ResourceDictionary>
@@ -108,16 +111,16 @@
                                 <StackPanel VerticalAlignment="Center" Orientation="Horizontal" >
                                     <Ellipse Width="36" Height="36">
                                         <Ellipse.Fill>
-                                            <ImageBrush ImageSource="{x:Bind Path=userDetailVM.UserInfo.face,Mode=OneWay,Converter={StaticResource imageConvert2},ConverterParameter='56h'}"></ImageBrush>
+                                            <ImageBrush ImageSource="{x:Bind Path=m_viewModel.UserInfo.Face,Mode=OneWay,Converter={StaticResource imageConvert2},ConverterParameter='56h'}"></ImageBrush>
                                         </Ellipse.Fill>
                                     </Ellipse>
-                                    <TextBlock Margin="8 0" VerticalAlignment="Center" Text="{x:Bind Path=userDetailVM.UserInfo.name,Mode=OneWay}"></TextBlock>
+                                    <TextBlock Margin="8 0" VerticalAlignment="Center" Text="{x:Bind Path=m_viewModel.UserInfo.Name,Mode=OneWay}"></TextBlock>
                                 </StackPanel>
                             </Button.Content>
                             <Button.Flyout>
                                 <Flyout>
                                     <Grid Margin="-12 -12 -12 12" Width="340">
-                                        <Image Width="340" VerticalAlignment="Top" Height="100" Stretch="UniformToFill"  Source="{x:Bind Path=userDetailVM.UserInfo.top_photo,Mode=OneWay,Converter={StaticResource imageConvert2},ConverterParameter='400w_120h_1c'}"></Image>
+                                        <Image Width="340" VerticalAlignment="Top" Height="100" Stretch="UniformToFill"  Source="{x:Bind Path=m_viewModel.UserInfo.TopPhoto,Mode=OneWay,Converter={StaticResource imageConvert2},ConverterParameter='400w_120h_1c'}"></Image>
                                         <Grid VerticalAlignment="Top" Margin="0 80 0 0">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
@@ -127,29 +130,29 @@
                                             <Grid Margin="12 0"  VerticalAlignment="Top" >
                                                 <Ellipse  Width="56" Height="56" Stroke="White" StrokeThickness="2" >
                                                     <Ellipse.Fill>
-                                                        <ImageBrush ImageSource="{x:Bind Path=userDetailVM.UserInfo.face,Mode=OneWay,Converter={StaticResource imageConvert2},ConverterParameter='56h'}"></ImageBrush>
+                                                        <ImageBrush ImageSource="{x:Bind Path=m_viewModel.UserInfo.Face,Mode=OneWay,Converter={StaticResource imageConvert2},ConverterParameter='56h'}"></ImageBrush>
                                                     </Ellipse.Fill>
                                                 </Ellipse>
-                                                <Image Width="84" Visibility="Collapsed" Height="84" Source="{x:Bind Path=userDetailVM.UserInfo.pendant_str,Mode=OneWay}"></Image>
-                                                <Image Width="16" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="12 12 0 0" Height="16" Source="{x:Bind Path=userDetailVM.UserInfo.Verify,Mode=OneWay}"></Image>
+                                                <Image Width="84" Visibility="Collapsed" Height="84" Source="{x:Bind Path=m_viewModel.UserInfo.PendantStr,Mode=OneWay}"></Image>
+                                                <Image Width="16" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="12 12 0 0" Height="16" Source="{x:Bind Path=m_viewModel.UserInfo.Verify,Mode=OneWay}"></Image>
                                             </Grid>
 
                                             <StackPanel Margin="0 24 12 0" Grid.Column="1">
 
                                                 <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Visibility="{x:Bind Path=userDetailVM.UserInfo.vip.status,Mode=OneWay,Converter={StaticResource display},ConverterParameter=1}" FontWeight="Bold" Foreground="HotPink" VerticalAlignment="Center" Text="{x:Bind Path=userDetailVM.UserInfo.name,Mode=OneWay}"></TextBlock>
-                                                    <TextBlock Visibility="{x:Bind Path=userDetailVM.UserInfo.vip.status,Mode=OneWay,Converter={StaticResource display},ConverterParameter=0}" FontWeight="Bold"  VerticalAlignment="Center" Text="{x:Bind Path=userDetailVM.UserInfo.name,Mode=OneWay}"></TextBlock>
-                                                    <Border Background="{x:Bind Path=userDetailVM.UserInfo.level_color,Mode=OneWay}" Opacity=".8" Margin="8 0" CornerRadius="2">
-                                                        <TextBlock Margin="4 2" Foreground="White" FontSize="12">LV<Run Text="{x:Bind Path=userDetailVM.UserInfo.level,Mode=OneWay}"/></TextBlock>
+                                                    <TextBlock Visibility="{x:Bind Path=m_viewModel.UserInfo.Vip.Status,Mode=OneWay,Converter={StaticResource display},ConverterParameter=1}" FontWeight="Bold" Foreground="HotPink" VerticalAlignment="Center" Text="{x:Bind Path=m_viewModel.UserInfo.Name,Mode=OneWay}"></TextBlock>
+                                                    <TextBlock Visibility="{x:Bind Path=m_viewModel.UserInfo.Vip.Status,Mode=OneWay,Converter={StaticResource display},ConverterParameter=0}" FontWeight="Bold"  VerticalAlignment="Center" Text="{x:Bind Path=m_viewModel.UserInfo.Name,Mode=OneWay}"></TextBlock>
+                                                    <Border Background="{x:Bind Path=m_viewModel.UserInfo.LevelColor,Mode=OneWay}" Opacity=".8" Margin="8 0" CornerRadius="2">
+                                                        <TextBlock Margin="4 2" Foreground="White" FontSize="12">LV<Run Text="{x:Bind Path=m_viewModel.UserInfo.Level,Mode=OneWay}"/></TextBlock>
                                                     </Border>
-                                                    <Border Visibility="{x:Bind Path=userDetailVM.UserInfo.vip.status,Mode=OneWay,Converter={StaticResource display},ConverterParameter=1}" Background="HotPink" Opacity=".8" CornerRadius="2">
-                                                        <TextBlock Margin="4 2" Foreground="White" FontSize="12" Text="{x:Bind Path=userDetailVM.UserInfo.vip.label.text,Mode=OneWay}"></TextBlock>
+                                                    <Border Visibility="{x:Bind Path=m_viewModel.UserInfo.Vip.Status,Mode=OneWay,Converter={StaticResource display},ConverterParameter=1}" Background="HotPink" Opacity=".8" CornerRadius="2">
+                                                        <TextBlock Margin="4 2" Foreground="White" FontSize="12" Text="{x:Bind Path=m_viewModel.UserInfo.Vip.Label.Text,Mode=OneWay}"></TextBlock>
                                                     </Border>
                                                 </StackPanel>
-                                                <TextBlock FontSize="14" Margin="0 4 0 0" Visibility="{x:Bind Path=userDetailVM.UserInfo.official.showOfficial,Mode=OneWay}" Opacity="0.8" TextWrapping="Wrap" Text="{x:Bind Path=userDetailVM.UserInfo.official.title,Mode=OneWay}"></TextBlock>
-                                                <TextBlock Margin="0 4" Foreground="{ThemeResource TextColor}">关注 <Run Text="{x:Bind Path=userDetailVM.UserInfo.stat.following,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"></Run>　　粉丝 <Run Text="{x:Bind Path=userDetailVM.UserInfo.stat.follower,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"></Run></TextBlock>
+                                                <TextBlock FontSize="14" Margin="0 4 0 0" Visibility="{x:Bind Path=m_viewModel.UserInfo.Official.ShowOfficial,Mode=OneWay}" Opacity="0.8" TextWrapping="Wrap" Text="{x:Bind Path=m_viewModel.UserInfo.Official.Title,Mode=OneWay}"></TextBlock>
+                                                <TextBlock Margin="0 4" Foreground="{ThemeResource TextColor}">关注 <Run Text="{x:Bind Path=m_viewModel.UserInfo.Stat.Following,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"></Run>　　粉丝 <Run Text="{x:Bind Path=m_viewModel.UserInfo.Stat.Follower,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"></Run></TextBlock>
 
-                                                <TextBlock FontSize="14" IsTextSelectionEnabled="True" Foreground="Gray" TextWrapping="Wrap" Text="{x:Bind Path=userDetailVM.UserInfo.sign,Mode=OneWay}"></TextBlock>
+                                                <TextBlock FontSize="14" IsTextSelectionEnabled="True" Foreground="Gray" TextWrapping="Wrap" Text="{x:Bind Path=m_viewModel.UserInfo.Sign,Mode=OneWay}"></TextBlock>
                                             </StackPanel>
                                         </Grid>
                                     </Grid>
@@ -157,14 +160,30 @@
                             </Button.Flyout>
                         </Button>
                         <StackPanel x:Name="appBar" HorizontalAlignment="Right" Orientation="Horizontal"  VerticalAlignment="Center">
-                            
-                            <AppBarButton Label="关注" Command="{x:Bind Path=userDetailVM.AttentionCommand,Mode=OneWay}" Visibility="{x:Bind Path=userDetailVM.UserInfo.is_followed,Mode=OneWay,Converter={StaticResource display}}">
+                            <control:UserFollowingTagsFlyout x:Name="UserFollowingTagsFlyout"></control:UserFollowingTagsFlyout>
+                            <AppBarButton  
+                                Label="关注分组"
+                                x:Name="BtnFollowingTag"
+                                Click="BtnFollowingTag_OnClick"
+                                           Visibility="{x:Bind Path=m_viewModel.UserInfo.IsFollowed,Mode=OneWay}">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE779;" />
+                            </AppBarButton>
+
+                            <AppBarButton Label="关注" 
+                                          Command="{x:Bind Path=m_viewModel.AttentionCommand,Mode=OneWay}" 
+                                          Visibility="{x:Bind Path=m_viewModel.UserInfo.IsFollowed,Mode=OneWay,Converter={StaticResource display}}">
                                 <AppBarButton.Icon>
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE006;" />
                                 </AppBarButton.Icon>
+                                <!--<interactivity:Interaction.Behaviors>
+                                    <core:EventTriggerBehavior EventName="RightTapped">
+                                        <core:InvokeCommandAction Command="{x:Bind userDetailVM.AttentionWithGroupCommand,Mode=OneWay}"></core:InvokeCommandAction>
+                                    </core:EventTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>-->
                             </AppBarButton>
                             
-                            <AppBarButton Label="取消关注" Command="{x:Bind Path=userDetailVM.AttentionCommand,Mode=OneWay}" Visibility="{x:Bind Path=userDetailVM.UserInfo.is_followed,Mode=OneWay}">
+                            <AppBarButton Label="取消关注" Command="{x:Bind Path=m_viewModel.AttentionCommand,Mode=OneWay}" 
+                                          Visibility="{x:Bind Path=m_viewModel.UserInfo.IsFollowed,Mode=OneWay}">
                                 <AppBarButton.Icon>
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE00B;" />
                                 </AppBarButton.Icon>
@@ -189,7 +208,7 @@
             </Pivot.RightHeader>-->
                         <PivotItem Margin="0">
                             <PivotItem.Header>
-                                <TextBlock FontSize="15">视频<Run Foreground="Gray" FontSize="12" Text="{x:Bind Path=userDetailVM.UserInfo.stat.video,Mode=OneWay}"/></TextBlock>
+                                <TextBlock FontSize="15">视频<Run Foreground="Gray" FontSize="12" Text="{x:Bind Path=m_viewModel.UserInfo.Stat.Video,Mode=OneWay}"/></TextBlock>
                             </PivotItem.Header>
                             <Grid>
                                 <control:MyAdaptiveGridView
@@ -316,7 +335,7 @@
                         </PivotItem>
                         <PivotItem Margin="0">
                             <PivotItem.Header>
-                                <TextBlock FontSize="15">专栏<Run Foreground="Gray" FontSize="12" Text="{x:Bind Path=userDetailVM.UserInfo.stat.article,Mode=OneWay}"/></TextBlock>
+                                <TextBlock FontSize="15">专栏<Run Foreground="Gray" FontSize="12" Text="{x:Bind Path=m_viewModel.UserInfo.Stat.Article,Mode=OneWay}"/></TextBlock>
                             </PivotItem.Header>
                             <Grid>
                                 <control:MyAdaptiveGridView
@@ -394,7 +413,7 @@
                         </PivotItem>
                         <PivotItem Margin="0">
                             <PivotItem.Header>
-                                <TextBlock FontSize="15">合集<Run Foreground="Gray" FontSize="12" Text="{x:Bind Path=userDetailVM.UserInfo.stat.Collection,Mode=OneWay}"/></TextBlock>
+                                <TextBlock FontSize="15">合集<Run Foreground="Gray" FontSize="12" Text="{x:Bind Path=m_viewModel.UserInfo.Stat.Collection,Mode=OneWay}"/></TextBlock>
                             </PivotItem.Header>
                             <Grid>
                                 <control:MyAdaptiveGridView
@@ -476,7 +495,7 @@
                         </PivotItem>
                         <PivotItem Margin="0">
                             <PivotItem.Header>
-                                <TextBlock FontSize="15">收藏<Run Foreground="Gray" FontSize="12" Text="{x:Bind Path=userDetailVM.UserInfo.stat.favourite,Mode=OneWay}"/></TextBlock>
+                                <TextBlock FontSize="15">收藏<Run Foreground="Gray" FontSize="12" Text="{x:Bind Path=m_viewModel.UserInfo.Stat.Favourite,Mode=OneWay}"/></TextBlock>
                             </PivotItem.Header>
                             <Grid>
                                 <toolkit:AdaptiveGridView 
@@ -523,7 +542,7 @@
                         </PivotItem>
                         <PivotItem Margin="0">
                             <PivotItem.Header>
-                                <TextBlock FontSize="15">关注<Run Foreground="Gray" FontSize="12" Text="{x:Bind Path=userDetailVM.UserInfo.stat.attention,Mode=OneWay}"/></TextBlock>
+                                <TextBlock FontSize="15">关注<Run Foreground="Gray" FontSize="12" Text="{x:Bind Path=m_viewModel.UserInfo.Stat.Attention,Mode=OneWay}"/></TextBlock>
                             </PivotItem.Header>
                             <Grid>
                                 <control:MyAdaptiveGridView
@@ -542,7 +561,7 @@
                                     <toolkit:AdaptiveGridView.Header>
                                         <Grid Margin="4 8" x:Name="followHeader">
                                             <StackPanel Orientation="Horizontal">
-                                                <ComboBox DisplayMemberPath="name" ItemsSource="{x:Bind Path=followVM.Tlist,Mode=OneWay}" SelectionChanged="ComboBox_SelectionChanged_1" SelectedItem="{x:Bind Path=followVM.SelectTid,Mode=TwoWay}">
+                                                <ComboBox DisplayMemberPath="Name" ItemsSource="{x:Bind Path=followVM.Tlist,Mode=OneWay}" SelectionChanged="ComboBox_SelectionChanged_1" SelectedItem="{x:Bind Path=followVM.SelectTid,Mode=TwoWay}">
 
                                                 </ComboBox>
                                                 <ComboBox x:Name="comFollowOrder" SelectionChanged="comFollowOrder_SelectionChanged" Margin="8 0"  SelectedIndex="{x:Bind Path=followVM.SelectOrder,Mode=TwoWay}">
@@ -578,7 +597,7 @@
                         </PivotItem>
                         <PivotItem Margin="0">
                             <PivotItem.Header>
-                                <TextBlock FontSize="15">粉丝<Run Foreground="Gray" FontSize="12" Text="{x:Bind Path=userDetailVM.UserInfo.stat.fans,Mode=OneWay}"/></TextBlock>
+                                <TextBlock FontSize="15">粉丝<Run Foreground="Gray" FontSize="12" Text="{x:Bind Path=m_viewModel.UserInfo.Stat.Fans,Mode=OneWay}"/></TextBlock>
                             </PivotItem.Header>
                             <Grid>
                                 <control:MyAdaptiveGridView

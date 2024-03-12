@@ -313,14 +313,10 @@
                                             <TextBlock Margin="8 0"  Text="{x:Bind Path=m_viewModel.VideoInfo.Owner.Name,Mode=OneWay}"></TextBlock>
                                             <TextBlock Margin="8 0" FontSize="12" Foreground="Gray"><Run Text="{x:Bind Path=m_viewModel.VideoInfo.OwnerExt.Fans,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/>粉丝</TextBlock>
                                         </StackPanel>
-                                        <Button Width="80" 
-                                    Visibility="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Attention,Converter={StaticResource display},ConverterParameter=1,Mode=OneWay}" 
-                                    Command="{x:Bind Path=m_viewModel.AttentionCommand}" 
-                                    Grid.Column="2" Padding="16 4"  FontSize="12">已关注</Button>
-                                        <Button Width="80" 
-                                    Visibility="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Attention,Converter={StaticResource display},ConverterParameter=-999,Mode=OneWay}" 
-                                    Command="{x:Bind Path=m_viewModel.AttentionCommand}" 
-                                    Grid.Column="2" Padding="16 4"  BorderThickness="1" Background="Transparent" BorderBrush="{ThemeResource HighLightColor}" Foreground="{ThemeResource HighLightColor}" FontSize="12">关注</Button>
+                                        <control:AttentionButton 
+                                            Grid.Column="2" 
+                                            UserId="{x:Bind m_viewModel.VideoInfo.Owner.Mid}"
+                                            Attention="{x:Bind m_viewModel.VideoInfo.ReqUser.Attention,Mode=TwoWay}"></control:AttentionButton>
                                     </Grid>
                                 </HyperlinkButton>
 
@@ -344,12 +340,10 @@
                                                             <TextBlock Margin="8 0" Text="{x:Bind Name}"></TextBlock>
                                                             <TextBlock Margin="8 0" FontSize="12" Foreground="Gray" Text="{x:Bind Title}"></TextBlock>
                                                         </StackPanel>
-                                                        <Button Width="80" 
-                                                    Visibility="{x:Bind Path=Attention,Converter={StaticResource display},Mode=OneWay,ConverterParameter=1}"
-                                                    Click="btnAttention_Click"
-                                                    Grid.Column="2" Padding="16 4"  FontSize="12">已关注</Button>
-                                                        <Button  Width="80"  Click="btnAttention_Click" 
-                                                     Visibility="{x:Bind Path=Attention,Converter={StaticResource display},ConverterParameter=0,Mode=OneWay}" Grid.Column="2" Padding="16 4"  BorderThickness="1" Background="Transparent" BorderBrush="{ThemeResource HighLightColor}" Foreground="{ThemeResource HighLightColor}" FontSize="12">关注</Button>
+                                                        <control:AttentionButton 
+                                                            Grid.Column="2" 
+                                                            UserId="{x:Bind Mid}"
+                                                            Attention="{x:Bind Attention,Mode=TwoWay}"></control:AttentionButton>
                                                     </Grid>
                                                 </HyperlinkButton>
                                             </DataTemplate>

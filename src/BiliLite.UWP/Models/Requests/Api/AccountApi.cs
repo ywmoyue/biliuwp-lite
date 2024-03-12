@@ -94,6 +94,10 @@ namespace BiliLite.Models.Requests.Api
 
         public ApiModel SendSMSWithCaptcha(string cid, string phone, string session_id, string seccode = "", string validate = "", string challenge = "", string recaptchaToken = "", ApiKeyInfo appKey = null)
         {
+            if (seccode.Contains("|"))
+            {
+                seccode = seccode.UrlEncode();
+            }
             var buvid = ApiHelper.GetBuvid();
             var api = new ApiModel()
             {

@@ -225,7 +225,7 @@ namespace BiliLite.Extensions
 
         public static string ParseArea(this string title, string mid)
         {
-            return title.ParseArea(mid.ToInt32());
+            return title.ParseArea(mid.ToInt64());
         }
 
         /// <summary>

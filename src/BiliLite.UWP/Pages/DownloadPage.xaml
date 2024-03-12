@@ -27,6 +27,13 @@
         <Pivot x:Name="DownloadPivot">
             <Pivot.RightHeader>
                 <StackPanel Background="{StaticResource PivotHeaderBackground}" Orientation="Horizontal">
+                    <TextBlock 
+                        Margin="8 16"
+                        Visibility="{x:Bind m_viewModel.LoadingDownloaded,Converter={StaticResource BoolToVisibilityConverter},Mode=OneWay}">
+                        加载中
+                        <Run Text="{x:Bind m_viewModel.LoadingDownloadedPercent,Mode=OneWay}"></Run>
+                        %
+                    </TextBlock>
                     <AutoSuggestBox x:Name="SearchBox" 
                                     MinWidth="200" 
                                     FontSize="12"

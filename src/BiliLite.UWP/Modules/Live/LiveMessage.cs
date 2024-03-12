@@ -37,7 +37,7 @@ namespace BiliLite.Modules.Live
             ws = new ClientWebSocket();
         }
         private static System.Timers.Timer heartBeatTimer;
-        public async Task Connect(int roomID, int uid, string token, string buvid, string host, CancellationToken cancellationToken)
+        public async Task Connect(int roomID, long uid, string token, string buvid, string host, CancellationToken cancellationToken)
         {
             ws.Options.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.69");
             //连接
@@ -89,7 +89,7 @@ namespace BiliLite.Modules.Live
         /// </summary>
         /// <param name="roomId"></param>
         /// <returns></returns>
-        private async Task JoinRoomAsync(int roomId, string buvid, string token, int uid = 0)
+        private async Task JoinRoomAsync(int roomId, string buvid, string token, long uid = 0)
         {
             if (ws.State == WebSocketState.Open)
             {

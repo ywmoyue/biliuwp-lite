@@ -136,6 +136,12 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Controls\AttentionButton.xaml.cs">
+      <DependentUpon>AttentionButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\UserFollowingTagsFlyout.xaml.cs">
+      <DependentUpon>UserFollowingTagsFlyout.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Extensions\QrCodeExtensions.cs" />
     <Compile Include="Models\Common\Anime\ISeasonItem.cs" />
     <Compile Include="Models\Common\Dynamic\DynamicUgcSeasonCardModel.cs" />
@@ -187,6 +193,9 @@
     <Compile Include="Models\Common\Live\RoomChangeMsgModel.cs" />
     <Compile Include="Models\Common\User\SearchHistoryData.cs" />
     <Compile Include="Models\Common\User\SubmitCollectionItemModel.cs" />
+    <Compile Include="ViewModels\User\UserAttentionButtonViewModel.cs" />
+    <Compile Include="ViewModels\User\UserFollowingTagsFlyoutViewModel.cs" />
+    <Compile Include="ViewModels\User\UserRelationFollowingTagViewModel.cs" />
     <Compile Include="Models\Common\Video\BiliVideoTag.cs" />
     <Compile Include="Models\Common\WbiKey.cs" />
     <Compile Include="Models\Exceptions\NotFoundException.cs" />
@@ -196,6 +205,16 @@
     <Compile Include="Models\Common\Download\DownloadedItem.cs" />
     <Compile Include="Models\Common\Download\DownloadedSubItem.cs" />
     <Compile Include="Models\Common\Home\HomeNavItem.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoLiveRoomModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoNameplateModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoOfficialModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoPendantModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoStatModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoVipLabelModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoVipModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterSpaceStatModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoModel.cs" />
+    <Compile Include="ViewModels\User\UserCenterInfoViewModel.cs" />
     <Compile Include="ViewModels\Home\HomeNavItemViewModel.cs" />
     <Compile Include="ViewModels\Download\DownloadingItemViewModel.cs" />
     <Compile Include="Player\Controllers\BasePlayerController.cs" />
@@ -628,7 +647,7 @@
     <Compile Include="Modules\User\MyFollowVideoVM.cs" />
     <Compile Include="Modules\User\SendDynamic\SendDynamicVM.cs" />
     <Compile Include="Modules\User\SendDynamic\TopicVM.cs" />
-    <Compile Include="Modules\User\UserDetail\UserDetailVM.cs" />
+    <Compile Include="ViewModels\User\UserDetailViewModel.cs" />
     <Compile Include="Modules\User\UserDetail\UserFavlistVM.cs" />
     <Compile Include="Modules\User\UserDetail\UserFollowVM.cs" />
     <Compile Include="Modules\User\UserDetail\UserSubmitArticleVM.cs" />
@@ -876,6 +895,7 @@
     <Content Include="Assets\Fonts\vanfont.otf" />
     <Content Include="Assets\Fonts\FansNum.otf" />
     <Content Include="Assets\Fonts\biliicon.ttf" />
+    <Content Include="Assets\GeeTest\bili_gt.cshtml" />
     <None Include="Assets\Text\new_version.json" />
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
@@ -895,11 +915,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\AttentionButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Carousel\Carousel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\CommentControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\UserFollowingTagsFlyout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
