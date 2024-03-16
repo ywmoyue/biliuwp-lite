@@ -158,6 +158,7 @@ namespace BiliLite.Services
 
         public override void UpdateTime(long position)
         {
+            base.UpdateTime(position);
             m_danmakuMaster.UpdateTime((uint)position * 1000);
         }
     }

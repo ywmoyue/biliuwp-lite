@@ -9,6 +9,8 @@ namespace BiliLite.Services.Interfaces
     {
         public DanmakuViewModel DanmakuViewModel { get; protected set; }
 
+        public long Position { get; private set; }
+
         public IDanmakuController()
         {
             DanmakuViewModel = new DanmakuViewModel();
@@ -166,6 +168,9 @@ namespace BiliLite.Services.Interfaces
         /// 更新时间
         /// </summary>
         /// <param name="position"></param>
-        public virtual void UpdateTime(long position){}
+        public virtual void UpdateTime(long position)
+        {
+            Position = position;
+        }
     }
 }

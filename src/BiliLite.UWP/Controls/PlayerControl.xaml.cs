@@ -842,6 +842,9 @@ namespace BiliLite.Controls
                     .SelectMany(x => x.Value.Take(max));
             }
 
+            // 移除当前播放时间之前的弹幕，避免弹幕堆叠
+            danmakus = danmakus.Where(x => x.StartMs > Player.Position * 1000);
+
             return danmakus.ToList();
         }
 
@@ -917,6 +920,11 @@ namespace BiliLite.Controls
             {
                 await LoadDanmaku(segIndex);
             }
+            else if (position < m_danmakuController.Position && !m_useNsDanmaku)
+            {
+                await LoadDanmaku(segIndex);
+            }
+
             if (Buffering)
             {
                 return;
@@ -1331,13 +1339,16 @@ namespace BiliLite.Controls
                 }
                 else
                 {
-                    var segIndex = Math.Ceiling(Player.Position / (60 * 6d));
                     if (update)
                     {
+                        var segIndex = Math.Ceiling(Player.Position / (60 * 6d));
                         await LoadDanmaku(segIndex.ToInt32());
                         Notify.ShowMessageToast($"已更新弹幕");
                     }
-                    await LoadDanmaku(1);
+                    else
+                    {
+                        await LoadDanmaku(1);
+                    }
                     //var danmuList = (await danmakuParse.ParseBiliBili(Convert.ToInt64(CurrentPlayItem.cid)));
                     ////await playerHelper.GetDanmaku(CurrentPlayItem.cid, 1) ;
                     //danmakuPool = danmuList.GroupBy(x=>x.time_s).ToDictionary(x => x.Key, x => x.ToList());
