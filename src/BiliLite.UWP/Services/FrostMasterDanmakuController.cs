@@ -5,6 +5,8 @@ using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Atelier39;
+using AutoMapper;
+using BiliLite.Models.Common.Danmaku;
 using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels.Video;
 using Microsoft.Graphics.Canvas.UI.Xaml;
@@ -13,11 +15,13 @@ namespace BiliLite.Services
 {
     public class FrostMasterDanmakuController : IDanmakuController
     {
+        private readonly IMapper m_mapper;
         private CanvasAnimatedControl m_danmakuCanvas;
         private DanmakuFrostMaster m_danmakuMaster;
 
-        public FrostMasterDanmakuController()
+        public FrostMasterDanmakuController(IMapper mapper)
         {
+            m_mapper = mapper;
             DanmakuViewModel = new DanmakuViewModel()
             {
                 ShowAreaControl = true,
@@ -136,9 +140,9 @@ namespace BiliLite.Services
             m_danmakuMaster.SetDanmakuList(realDanmakuList);
         }
 
-        public override void Add(object danmakuItem, bool owner)
+        public override void Add(BiliDanmakuItem danmakuItem, bool owner)
         {
-            var realDanmakuItem = danmakuItem as DanmakuItem;
+            var realDanmakuItem = m_mapper.Map<DanmakuItem>(danmakuItem);
             m_danmakuMaster.AddRealtimeDanmaku(realDanmakuItem, false);
         }
 

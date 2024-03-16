@@ -5,6 +5,8 @@ using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using AutoMapper;
+using BiliLite.Models.Common.Danmaku;
 using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels.Video;
 using NSDanmaku.Controls;
@@ -14,10 +16,12 @@ namespace BiliLite.Services
 {
     public class NsDanmakuController : IDanmakuController
     {
+        private readonly IMapper m_mapper;
         private Danmaku m_danmakuControl;
 
-        public NsDanmakuController()
+        public NsDanmakuController(IMapper mapper)
         {
+            m_mapper = mapper;
             DanmakuViewModel = new DanmakuViewModel()
             {
                 ShowAreaControl = true,
@@ -130,9 +134,9 @@ namespace BiliLite.Services
             }
         }
 
-        public override void Add(object danmakuItem,bool owner)
+        public override void Add(BiliDanmakuItem danmakuItem,bool owner)
         {
-            var realDanmakuItem = danmakuItem as DanmakuModel;
+            var realDanmakuItem = m_mapper.Map<DanmakuModel>(danmakuItem);
             m_danmakuControl.AddDanmu(realDanmakuItem, owner);
         }
 

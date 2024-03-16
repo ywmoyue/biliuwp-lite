@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Windows.UI.Xaml.Controls;
+using BiliLite.Models.Common.Danmaku;
 using BiliLite.ViewModels.Video;
 
 namespace BiliLite.Services.Interfaces
@@ -142,7 +143,7 @@ namespace BiliLite.Services.Interfaces
         /// <summary>
         /// 添加弹幕
         /// </summary>
-        public abstract void Add(object danmakuItem, bool owner);
+        public abstract void Add(BiliDanmakuItem danmakuItem, bool owner);
 
         /// <summary>
         /// 暂停
