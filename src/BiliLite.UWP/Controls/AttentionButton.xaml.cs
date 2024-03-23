@@ -25,7 +25,16 @@ namespace BiliLite.Controls
         public int Attention
         {
             get => m_viewModel.Attention;
-            set => m_viewModel.Attention = value;
+            set
+            {
+                if (value < 0)
+                {
+                    m_viewModel.Attention = 0;
+                    return;
+                }
+
+                m_viewModel.Attention = value;
+            }
         }
 
         public static readonly DependencyProperty UserIdProperty =
