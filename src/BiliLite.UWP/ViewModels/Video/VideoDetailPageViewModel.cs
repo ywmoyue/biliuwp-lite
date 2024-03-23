@@ -8,6 +8,7 @@ using System.Windows.Input;
 using Windows.UI.Xaml;
 using AutoMapper;
 using BiliLite.Extensions;
+using BiliLite.Models.Common.Video;
 using BiliLite.Models.Common.Video.Detail;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Responses;
@@ -49,7 +50,6 @@ namespace BiliLite.Modules
             DislikeCommand = new RelayCommand(DoDislike);
             LaunchUrlCommand = new RelayCommand<object>(LaunchUrl);
             CoinCommand = new RelayCommand<string>(DoCoin);
-            AttentionCommand = new RelayCommand(DoAttentionUP);
             SetStaffHeightCommand = new RelayCommand<string>(SetStaffHeight);
             OpenRightInfoCommand = new RelayCommand(OpenRightInfo);
         }
@@ -65,8 +65,6 @@ namespace BiliLite.Modules
         public ICommand DislikeCommand { get; private set; }
 
         public ICommand CoinCommand { get; private set; }
-
-        public ICommand AttentionCommand { get; private set; }
 
         public ICommand LaunchUrlCommand { get; private set; }
 
@@ -148,6 +146,8 @@ namespace BiliLite.Modules
             }
         }
 
+        public List<BiliVideoTag> Tags { get; set; }
+
         #endregion
 
         #region Private Methods
@@ -167,6 +167,24 @@ namespace BiliLite.Modules
         private void OpenRightInfo()
         {
             IsOpenRightInfo = !IsOpenRightInfo;
+        }
+
+        private async Task LoadVideoTags(string avid)
+        {
+            var api = videoAPI.Tags(avid);
+            var results = await api.Request();
+            if (!results.status)
+            {
+                _logger.Warn(results.message);
+            }
+
+            var data = await results.GetJson<ApiDataModel<List<BiliVideoTag>>>();
+            if (!data.success)
+            {
+                _logger.Warn(data.message);
+            }
+
+            Tags = data.data;
         }
 
         #endregion
@@ -277,6 +295,8 @@ namespace BiliLite.Modules
                 Loaded = true;
 
                 await LoadFavorite(data.data.Aid);
+
+                await LoadVideoTags(data.data.Aid);
             }
             catch (Exception ex)
             {
@@ -587,23 +607,6 @@ namespace BiliLite.Modules
             }
         }
 
-        public async void DoAttentionUP()
-        {
-            var result = await AttentionUP(VideoInfo.Owner.Mid, VideoInfo.ReqUser.Attention == 1 ? 2 : 1);
-            if (result)
-            {
-                if (VideoInfo.ReqUser.Attention == 1)
-                {
-                    VideoInfo.ReqUser.Attention = -999;
-                    VideoInfo.OwnerExt.Fans -= 1;
-                }
-                else
-                {
-                    VideoInfo.ReqUser.Attention = 1;
-                    VideoInfo.OwnerExt.Fans += 1;
-                }
-            }
-        }
         public async Task<bool> AttentionUP(string mid, int mode)
         {
             if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())

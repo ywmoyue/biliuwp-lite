@@ -11,6 +11,8 @@ namespace BiliLite.Extensions
     {
         public static IServiceCollection AddViewModels(this IServiceCollection services)
         {
+            services.AddSingleton<HomeViewModel>();
+            services.AddSingleton<DownloadPageViewModel>();
             services.AddTransient<DownloadDialogViewModel>();
             services.AddTransient<CommentControlViewModel>();
             services.AddTransient<UserSubmitVideoViewModel>();
@@ -19,6 +21,10 @@ namespace BiliLite.Extensions
             services.AddTransient<DynamicPageViewModel>();
             services.AddTransient<AnimePageViewModel>();
             services.AddTransient<LiveDetailPageViewModel>();
+            services.AddTransient<HistoryViewModel>();
+            services.AddTransient<UserDetailViewModel>();
+            services.AddTransient<UserFollowingTagsFlyoutViewModel>();
+            services.AddTransient<UserAttentionButtonViewModel>();
             return services;
         }
     }

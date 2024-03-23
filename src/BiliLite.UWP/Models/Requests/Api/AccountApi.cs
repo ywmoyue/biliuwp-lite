@@ -94,6 +94,10 @@ namespace BiliLite.Models.Requests.Api
 
         public ApiModel SendSMSWithCaptcha(string cid, string phone, string session_id, string seccode = "", string validate = "", string challenge = "", string recaptchaToken = "", ApiKeyInfo appKey = null)
         {
+            if (seccode.Contains("|"))
+            {
+                seccode = seccode.UrlEncode();
+            }
             var buvid = ApiHelper.GetBuvid();
             var api = new ApiModel()
             {
@@ -303,6 +307,19 @@ namespace BiliLite.Models.Requests.Api
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/web-interface/history/cursor",
                 parameter = $"max={cursor.Max}&view_at={cursor.ViewAt}&business=",
+                need_cookie = true,
+            };
+            return api;
+        }
+
+        public ApiModel SearchHistory(string keyword, int page)
+        {
+            var kw = keyword.UrlEncode();
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Get,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/web-goblin/history/search",
+                parameter = $"pn={page}&ps=20&keyword={kw}&business=all",
                 need_cookie = true,
             };
             return api;

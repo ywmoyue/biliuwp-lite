@@ -19,11 +19,11 @@ using BiliLite.Services;
 using Windows.UI.Xaml.Controls.Primitives;
 using BiliLite.Models.Common.Comment;
 using BiliLite.Models.Common.Video;
-using BiliLite.Models.Common.Video.Detail;
 using BiliLite.Models.Download;
 using BiliLite.ViewModels.Video;
 using BiliLite.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using BiliLite.ViewModels.Download;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -353,25 +353,6 @@ namespace BiliLite.Pages
             }
         }
 
-        private async void btnAttention_Click(object sender, RoutedEventArgs e)
-        {
-            var data = (sender as Button).DataContext as VideoDetailStaffViewModel;
-            var result = await m_viewModel.AttentionUP(data.Mid, data.Attention == 1 ? 2 : 1);
-            if (result)
-            {
-                if (data.Attention == 1)
-                {
-                    data.Attention = 0;
-                }
-                else
-                {
-                    data.Attention = 1;
-                }
-            }
-
-        }
-
-
         private void listRelates_ItemClick(object sender, ItemClickEventArgs e)
         {
             var data = e.ClickedItem as VideoDetailRelatesViewModel;
@@ -401,7 +382,7 @@ namespace BiliLite.Pages
 
         private void btnTagItem_Click(object sender, RoutedEventArgs e)
         {
-            var item = (sender as HyperlinkButton).DataContext as VideoDetailTagModel;
+            var item = (sender as HyperlinkButton).DataContext as BiliVideoTag;
             MessageCenter.NavigateToPage(this, new NavigationInfo()
             {
                 icon = Symbol.Find,
@@ -595,18 +576,19 @@ namespace BiliLite.Pages
                 Subtitle = m_viewModel.VideoInfo.Bvid,
                 Title = m_viewModel.VideoInfo.Title,
                 Type = DownloadType.Video,
-                UpMid = m_viewModel.VideoInfo.Owner.Mid.ToInt32(),
+                UpMid = m_viewModel.VideoInfo.Owner.Mid.ToInt64(),
             };
             int i = 0;
             foreach (var item in m_viewModel.VideoInfo.Pages)
             {
                 //检查正在下载及下载完成是否存在此视频
                 int state = 0;
-                if (DownloadVM.Instance.Downloadings.FirstOrDefault(x => x.EpisodeID == item.Cid) != null)
+                var downloadViewModel = App.ServiceProvider.GetRequiredService<DownloadPageViewModel>();
+                if (downloadViewModel.Downloadings.FirstOrDefault(x => x.EpisodeID == item.Cid) != null)
                 {
                     state = 2;
                 }
-                if (DownloadVM.Instance.Downloadeds.FirstOrDefault(x => x.Epsidoes.FirstOrDefault(y => y.CID == item.Cid) != null) != null)
+                if (downloadViewModel.DownloadedViewModels.FirstOrDefault(x => x.Epsidoes.FirstOrDefault(y => y.CID == item.Cid) != null) != null)
                 {
                     state = 3;
                 }

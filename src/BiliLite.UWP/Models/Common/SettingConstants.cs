@@ -581,6 +581,9 @@ namespace BiliLite.Models.Common
 
         }
 
+        /// <summary>
+        /// 开发者选项
+        /// </summary>
         public class Other
         {
             /// <summary>
@@ -622,6 +625,16 @@ namespace BiliLite.Models.Common
             /// 更新json请求地址
             /// </summary>
             public const string UPDATE_JSON_ADDRESS = "RawRepositoryAddress";
+
+            /// <summary>
+            /// 发起请求时使用的build值
+            /// </summary>
+            public const string REQUEST_BUILD = "RequestBuild";
+
+            /// <summary>
+            /// 默认发起请求时使用的build值
+            /// </summary>
+            public const string DEFAULT_REQUEST_BUILD = "75900200";
         }
     }
 }

@@ -129,7 +129,8 @@ namespace BiliLite.Models.Requests.Api.User
             };
             if (SettingService.Account.Logined)
             {
-                api.parameter += $"&access_key={SettingService.Account.AccessKey}";
+                api.parameter += ApiHelper.MustParameter(AppKey, true);
+                api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             }
 
             return api;
@@ -154,8 +155,6 @@ namespace BiliLite.Models.Requests.Api.User
         /// <summary>
         /// 发表图片动态
         /// </summary>
-        /// <param name="mid">用户ID</param>
-        /// <param name="mode">1为关注，2为取消关注</param>
         /// <returns></returns>
         public ApiModel CreateDynamicPhoto(string imgs, string content, string at_uids, string at_control)
         {
@@ -173,8 +172,6 @@ namespace BiliLite.Models.Requests.Api.User
         /// <summary>
         /// 发表文本动态
         /// </summary>
-        /// <param name="mid">用户ID</param>
-        /// <param name="mode">1为关注，2为取消关注</param>
         /// <returns></returns>
         public ApiModel CreateDynamicText(string content, string at_uids, string at_control)
         {
@@ -192,8 +189,6 @@ namespace BiliLite.Models.Requests.Api.User
         /// <summary>
         /// 转发动态
         /// </summary>
-        /// <param name="mid">用户ID</param>
-        /// <param name="mode">1为关注，2为取消关注</param>
         /// <returns></returns>
         public ApiModel RepostDynamic(string dynamic_id, string content, string at_uids, string at_control)
         {

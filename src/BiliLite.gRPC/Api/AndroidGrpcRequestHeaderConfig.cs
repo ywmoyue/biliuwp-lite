@@ -9,11 +9,11 @@ using Google.Protobuf;
 
 namespace BiliLite.gRPC.Api
 {
-    public class GrpcRequestHeaderConfig
+    public class AndroidGrpcRequestHeaderConfig
     {
-        public GrpcRequestHeaderConfig(string accessKey)
+        public AndroidGrpcRequestHeaderConfig(GrpcBiliUserInfo userInfo)
         {
-            AccessKey = accessKey;
+            AccessKey = userInfo.AccessKey;
         }
         public string AccessKey { get; set; }
 

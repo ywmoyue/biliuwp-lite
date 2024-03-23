@@ -1,7 +1,7 @@
 {
-    "version": "4.6.25",
-    "version_num": 40625,
-    "version_desc": "更新内容:\r\n\r\n- 修复无法播放港澳台番剧 \r\n\r\n- 修复个人主页搜索视频为空时的报错反馈 \r\n\r\n- 修复番剧详情页样式错误\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+    "version": "4.6.28",
+    "version_num": 40628,
+    "version_desc": "更新内容:\r\n\r\n- 播放器音量偏低打开新视频时提示当前音量\r\n\r\n- 修复使用寒霜弹幕使时发送弹幕后报错\r\n\r\n- 修复使用寒霜弹幕使时更新弹幕会将当前时间段当前时间之前的所有弹幕全部显示\r\n\r\n- 修复仅1位作者的视频详情页不显示关注按钮\r\n\r\n- 修复用户空间查看动态报错鉴权失 败\r\n\r\n- 修复启用自动全屏后播放视频按空格暂停左上角会出现内部透明的白色实线方框\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
     "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
     "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }

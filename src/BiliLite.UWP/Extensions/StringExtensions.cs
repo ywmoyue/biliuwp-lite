@@ -225,7 +225,7 @@ namespace BiliLite.Extensions
 
         public static string ParseArea(this string title, string mid)
         {
-            return title.ParseArea(mid.ToInt32());
+            return title.ParseArea(mid.ToInt64());
         }
 
         /// <summary>
@@ -318,6 +318,11 @@ namespace BiliLite.Extensions
         public static bool IsUrl(this string url)
         {
             return Uri.TryCreate(url, UriKind.Absolute, out Uri _);
+        }
+
+        public static string UrlEncode(this string text)
+        {
+            return Uri.EscapeDataString(text);
         }
 
         #region Private methods

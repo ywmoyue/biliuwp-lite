@@ -1,10 +1,20 @@
-﻿using BiliLite.Services;
+﻿using System.Collections.Generic;
+using System.Linq;
+using BiliLite.Services;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite.Models.Requests.Api.User
 {
     public class UserDetailAPI : BaseApi
     {
+        private readonly CookieService m_cookieService;
+
+        public UserDetailAPI()
+        {
+            m_cookieService = App.ServiceProvider.GetRequiredService<CookieService>();
+        }
+
         /// <summary>
         /// 用户信息
         /// </summary>
@@ -132,6 +142,66 @@ namespace BiliLite.Models.Requests.Api.User
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
+
+        /// <summary>
+        /// 查询目标用户所在的分组
+        /// </summary>
+        /// <returns></returns>
+        public ApiModel FollowingTagUser(long targetUserId)
+        {
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Get,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/relation/tag/user",
+                parameter = $"fid={targetUserId}&" + ApiHelper.MustParameter(AppKey, true)
+            };
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
+            return api;
+        }
+
+        /// <summary>
+        /// 创建分组
+        /// </summary>
+        /// <returns></returns>
+        public ApiModel CreateFollowingTag(long tag)
+        {
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Post,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/relation/tag/create",
+                body = $"tag={tag}&" + ApiHelper.MustParameter(AppKey, true)
+            };
+            api.body += ApiHelper.GetSign(api.parameter, AppKey);
+            return api;
+        }
+
+        /// <summary>
+        /// 修改分组成员
+        /// </summary>
+        /// <returns></returns>
+        public ApiModel AddFollowingTagUsers(List<long> targetUserIdList,List<long> tagIdList)
+        {
+            var csrf = m_cookieService.GetCSRFToken();
+            var fids = targetUserIdList.Aggregate("", (current, id) => current + $"{id},");
+            fids = fids.TrimEnd(',');
+            var tagids = "0";
+            if (tagIdList.Any())
+            {
+                tagids = tagIdList.Aggregate("", (current, id) => current + $"{id},");
+                tagids = tagids.TrimEnd(',');
+            }
+
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Post,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/relation/tags/addUsers",
+                body = $"fids={fids}&tagids={tagids}&csrf={csrf}",// + ApiHelper.MustParameter(AppKey, true)
+                need_cookie = true,
+            };
+            //api.body += ApiHelper.GetSign(api.body, AppKey);
+            return api;
+        }
+
         /// <summary>
         /// 关注的人
         /// </summary>

@@ -69,7 +69,7 @@ namespace BiliLite.Modules.User
                                     {
                                         Face = item["face"].ToString(),
                                         UserName = item["name"].ToString(),
-                                        ID = item["mid"].ToInt32(),
+                                        ID = item["mid"].ToInt64(),
                                     });
                                 }
                             }
@@ -83,7 +83,7 @@ namespace BiliLite.Modules.User
                                 {
                                     Face = item["face"].ToString(),
                                     UserName = item["uname"].ToString(),
-                                    ID = item["uid"].ToInt32(),
+                                    ID = item["uid"].ToInt64(),
                                 });
                             }
                         }
@@ -135,7 +135,7 @@ namespace BiliLite.Modules.User
 }
 public class AtUserModel
 {
-    public int ID { get; set; }
+    public long ID { get; set; }
     public string UserName { get; set; }
     public string Face { get; set; }
     public string Display { get { return "@" + UserName; } }

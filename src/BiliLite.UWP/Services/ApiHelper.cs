@@ -49,7 +49,6 @@ namespace BiliLite.Services
         public static ApiKeyInfo AndroidKey = new ApiKeyInfo(Constants.ANDROID_APP_KEY, "560c52ccd288fed045859ed18bffd973",
             Constants.ANDROID_MOBI_APP, Constants.ANDROID_USER_AGENT);
         
-        private const string build = "6235200";
         private const string _platform = "android";
         public static string deviceId = "";
         private static int[] mixinKeyEncTab = new int[] {
@@ -134,6 +133,9 @@ namespace BiliLite.Services
             {
                 url = $"access_key={SettingService.Account.AccessKey}&";
             }
+
+            var build = SettingService.GetValue(SettingConstants.Other.REQUEST_BUILD,
+                SettingConstants.Other.DEFAULT_REQUEST_BUILD);
             
             return url + $"appkey={apikey.Appkey}&build={build}&mobi_app={apikey.MobiApp}&platform={_platform}&ts={TimeExtensions.GetTimestampS()}";
         }

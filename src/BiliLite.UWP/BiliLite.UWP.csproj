@@ -136,8 +136,17 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Controls\AttentionButton.xaml.cs">
+      <DependentUpon>AttentionButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\UserFollowingTagsFlyout.xaml.cs">
+      <DependentUpon>UserFollowingTagsFlyout.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Extensions\QrCodeExtensions.cs" />
     <Compile Include="Models\Common\Anime\ISeasonItem.cs" />
+    <Compile Include="Models\Common\Danmaku\BiliDanmakuItem.cs" />
+    <Compile Include="Models\Common\Dynamic\DynamicUgcSeasonCardModel.cs" />
+    <Compile Include="Models\Common\Home\DefaultHomeNavItems.cs" />
     <Compile Include="Models\Common\Live\DefaultPlayUrlSourceOptions.cs" />
     <Compile Include="Models\Common\Live\InteractWordModel.cs" />
     <Compile Include="Models\Common\Live\LiveMessageHandleActionsMap.cs" />
@@ -183,12 +192,32 @@
     <Compile Include="Models\Common\Live\GiftMsgModel.cs" />
     <Compile Include="Models\Common\Live\GuardBuyMsgModel.cs" />
     <Compile Include="Models\Common\Live\RoomChangeMsgModel.cs" />
+    <Compile Include="Models\Common\User\SearchHistoryData.cs" />
     <Compile Include="Models\Common\User\SubmitCollectionItemModel.cs" />
+    <Compile Include="ViewModels\User\UserAttentionButtonViewModel.cs" />
+    <Compile Include="ViewModels\User\UserFollowingTagsFlyoutViewModel.cs" />
+    <Compile Include="ViewModels\User\UserRelationFollowingTagViewModel.cs" />
+    <Compile Include="Models\Common\Video\BiliVideoTag.cs" />
     <Compile Include="Models\Common\WbiKey.cs" />
     <Compile Include="Models\Exceptions\NotFoundException.cs" />
     <Compile Include="Models\Exceptions\CustomizedErrorWithDataException.cs" />
     <Compile Include="Models\Exceptions\PlayerException.cs" />
     <Compile Include="Models\Requests\Api\BaseApi.cs" />
+    <Compile Include="Models\Common\Download\DownloadedItem.cs" />
+    <Compile Include="Models\Common\Download\DownloadedSubItem.cs" />
+    <Compile Include="Models\Common\Home\HomeNavItem.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoLiveRoomModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoNameplateModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoOfficialModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoPendantModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoStatModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoVipLabelModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoVipModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterSpaceStatModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoModel.cs" />
+    <Compile Include="ViewModels\User\UserCenterInfoViewModel.cs" />
+    <Compile Include="ViewModels\Home\HomeNavItemViewModel.cs" />
+    <Compile Include="ViewModels\Download\DownloadingItemViewModel.cs" />
     <Compile Include="Player\Controllers\BasePlayerController.cs" />
     <Compile Include="Player\Controllers\LivePlayerController.cs" />
     <Compile Include="Player\Controllers\PlayerControllerFactory.cs" />
@@ -232,6 +261,8 @@
     <Compile Include="Services\QrCoderQrCodeService.cs" />
     <Compile Include="Services\WbiKeyService.cs" />
     <Compile Include="Services\ZXingQrCodeService.cs" />
+    <Compile Include="ViewModels\Download\DownloadingSubItemViewModel.cs" />
+    <Compile Include="ViewModels\Download\DownloadPageViewModel.cs" />
     <Compile Include="ViewModels\Live\LiveDetailPageViewModel.cs" />
     <Compile Include="ViewModels\Live\LiveRoomLotteryViewModel.cs" />
     <Compile Include="ViewModels\Live\SuperChatMsgViewModel.cs" />
@@ -256,6 +287,7 @@
     <Compile Include="Models\Common\Live\LiveRoomWebUrlUrlinfoItemModel.cs" />
     <Compile Include="Models\Common\Live\LiveTitleModel.cs" />
     <Compile Include="Models\Common\Live\LiveWalletInfo.cs" />
+    <Compile Include="ViewModels\PlayControlViewModel.cs" />
     <Compile Include="ViewModels\UserDynamic\UserDynamicItemDisplayViewModel.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicItemDisplayOneRowInfo.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicItemDisplayImageInfo.cs" />
@@ -570,7 +602,6 @@
     <Compile Include="Models\ReturnModel.cs" />
     <Compile Include="Models\UserModels.cs" />
     <Compile Include="Modules\Detail\FavoriteDetailVM.cs" />
-    <Compile Include="Modules\DownloadVM.cs" />
     <Compile Include="Modules\EmoteVM.cs" />
     <Compile Include="Modules\Home\RegionVM.cs" />
     <Compile Include="Modules\Live\LiveAreaDetailVM.cs" />
@@ -595,7 +626,7 @@
     <Compile Include="ViewModels\Home\AnimePageViewModel.cs" />
     <Compile Include="Modules\Home\CinemaVM.cs" />
     <Compile Include="ViewModels\Home\DynamicPageViewModel.cs" />
-    <Compile Include="Modules\Home\HomeVM.cs" />
+    <Compile Include="ViewModels\Home\HomeViewModel.cs" />
     <Compile Include="Modules\Home\HotVM.cs" />
     <Compile Include="Modules\IModules.cs" />
     <Compile Include="ViewModels\Live\LiveRoomViewModel.cs" />
@@ -604,7 +635,7 @@
     <Compile Include="ViewModels\UserDynamic\UserDynamicViewModel.cs" />
     <Compile Include="Modules\User\LoginVM.cs" />
     <Compile Include="Modules\User\SendDynamic\AtVM.cs" />
-    <Compile Include="Modules\User\HistoryVM.cs" />
+    <Compile Include="ViewModels\User\HistoryViewModel.cs" />
     <Compile Include="Modules\User\MyFollowSeasonVM.cs" />
     <Compile Include="Modules\Player\PlayerVM.cs" />
     <Compile Include="Modules\RankVM.cs" />
@@ -617,7 +648,7 @@
     <Compile Include="Modules\User\MyFollowVideoVM.cs" />
     <Compile Include="Modules\User\SendDynamic\SendDynamicVM.cs" />
     <Compile Include="Modules\User\SendDynamic\TopicVM.cs" />
-    <Compile Include="Modules\User\UserDetail\UserDetailVM.cs" />
+    <Compile Include="ViewModels\User\UserDetailViewModel.cs" />
     <Compile Include="Modules\User\UserDetail\UserFavlistVM.cs" />
     <Compile Include="Modules\User\UserDetail\UserFollowVM.cs" />
     <Compile Include="Modules\User\UserDetail\UserSubmitArticleVM.cs" />
@@ -865,6 +896,7 @@
     <Content Include="Assets\Fonts\vanfont.otf" />
     <Content Include="Assets\Fonts\FansNum.otf" />
     <Content Include="Assets\Fonts\biliicon.ttf" />
+    <Content Include="Assets\GeeTest\bili_gt.cshtml" />
     <None Include="Assets\Text\new_version.json" />
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
@@ -884,11 +916,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\AttentionButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Carousel\Carousel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\CommentControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\UserFollowingTagsFlyout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -31,5 +31,7 @@ namespace BiliLite.Models.Common.Dynamic
         public DynamicVideoCardModel Video { get; set; }
 
         public DynamicSeasonCardModel Season { get; set; }
+
+        public DynamicUgcSeasonCardModel UgcSeason { get; set; }
     }
 }

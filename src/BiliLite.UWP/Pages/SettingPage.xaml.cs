@@ -6,7 +6,6 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using Microsoft.UI.Xaml.Controls;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.Foundation;
@@ -17,6 +16,9 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Models.Common.Home;
+using BiliLite.ViewModels.Download;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -28,11 +30,14 @@ namespace BiliLite.Pages
     public sealed partial class SettingPage : BasePage
     {
         SettingVM settingVM;
+        private readonly DownloadPageViewModel m_downloadPageViewModel;
+
         public SettingPage()
         {
             this.InitializeComponent();
             Title = "设置";
             settingVM = new SettingVM();
+            m_downloadPageViewModel = App.ServiceProvider.GetRequiredService<DownloadPageViewModel>();
             LoadUI();
             LoadPlayer();
             LoadRoaming();
@@ -267,11 +272,9 @@ namespace BiliLite.Pages
                 });
             });
 
-            gridHomeCustom.ItemsSource = SettingService.GetValue<ObservableCollection<HomeNavItem>>(SettingConstants.UI.HOEM_ORDER, HomeVM.GetAllNavItems());
+            var navItems = SettingService.GetValue(SettingConstants.UI.HOEM_ORDER, DefaultHomeNavItems.GetDefaultHomeNavItems());
+            gridHomeCustom.ItemsSource = new ObservableCollection<HomeNavItem>(navItems);
             ExceptHomeNavItems();
-
-
-
         }
         private void LoadPlayer()
         {
@@ -653,7 +656,7 @@ namespace BiliLite.Pages
                     SettingService.SetValue(SettingConstants.Download.DOWNLOAD_PATH, folder.Path);
                     txtDownloadPath.Text = folder.Path;
                     Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(folder);
-                    DownloadVM.Instance.RefreshDownloaded();
+                    m_downloadPageViewModel.RefreshDownloaded();
                 }
             });
             //旧版下载目录
@@ -690,14 +693,14 @@ namespace BiliLite.Pages
             swDownloadParallelDownload.Toggled += new RoutedEventHandler((e, args) =>
             {
                 SettingService.SetValue(SettingConstants.Download.PARALLEL_DOWNLOAD, swDownloadParallelDownload.IsOn);
-                DownloadVM.Instance.UpdateSetting();
+                m_downloadPageViewModel.UpdateSetting();
             });
             //付费网络下载
             swDownloadAllowCostNetwork.IsOn = SettingService.GetValue<bool>(SettingConstants.Download.ALLOW_COST_NETWORK, false);
             swDownloadAllowCostNetwork.Toggled += new RoutedEventHandler((e, args) =>
             {
                 SettingService.SetValue(SettingConstants.Download.ALLOW_COST_NETWORK, swDownloadAllowCostNetwork.IsOn);
-                DownloadVM.Instance.UpdateSetting();
+                m_downloadPageViewModel.UpdateSetting();
             });
             //下载完成发送通知
             swDownloadSendToast.IsOn = SettingService.GetValue<bool>(SettingConstants.Download.SEND_TOAST, false);
@@ -760,6 +763,9 @@ namespace BiliLite.Pages
                 SettingService.SetValue(SettingConstants.Other.FIRST_GRPC_REQUEST_DYNAMIC, swFirstGrpcRequestDynamic.IsOn);
             });
 
+            RequestBuildTextBox.Text = SettingService.GetValue(SettingConstants.Other.REQUEST_BUILD,
+                SettingConstants.Other.DEFAULT_REQUEST_BUILD);
+
             // BiliLiteWebApi
             BiliLiteWebApiTextBox.Text = SettingService.GetValue(SettingConstants.Other.BILI_LITE_WEB_API_BASE_URL, ApiConstants.BILI_LITE_WEB_API_DEFAULT_BASE_URL);
             BiliLiteWebApiTextBox.Loaded += (sender, e) =>
@@ -802,28 +808,41 @@ namespace BiliLite.Pages
 
         private void ExceptHomeNavItems()
         {
-            List<HomeNavItem> list = new List<HomeNavItem>();
-            var all = HomeVM.GetAllNavItems();
-            foreach (var item in all)
+            var defaultNavItems = DefaultHomeNavItems.GetDefaultHomeNavItems();
+            var hideNavItems = DefaultHomeNavItems.GetDefaultHideHomeNavItems();
+            var customNavItem = gridHomeCustom.ItemsSource as ObservableCollection<HomeNavItem>;
+
+            var customDontHideNavItems = hideNavItems.Where(hideNavItem =>
+                customNavItem.Any(x => x.Title == hideNavItem.Title)).ToList();
+
+            foreach (var customDontHideNavItem in customDontHideNavItems)
             {
-                if ((gridHomeCustom.ItemsSource as ObservableCollection<HomeNavItem>).FirstOrDefault(x => x.Title == item.Title) == null)
+                hideNavItems.Remove(customDontHideNavItem);
+            }
+
+            foreach (var navItem in defaultNavItems)
+            {
+                if (!customNavItem.Any(x => x.Title == navItem.Title))
                 {
-                    list.Add(item);
+                    hideNavItems.Add(navItem);
                 }
             }
-            gridHomeNavItem.ItemsSource = list;
+
+            gridHomeNavItem.ItemsSource = hideNavItems;
         }
         private void gridHomeCustom_DragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
         {
-            SettingService.SetValue(SettingConstants.UI.HOEM_ORDER, gridHomeCustom.ItemsSource as ObservableCollection<HomeNavItem>);
+            if (!(gridHomeCustom.ItemsSource is ObservableCollection<HomeNavItem> navItems)) return;
+            SettingService.SetValue(SettingConstants.UI.HOEM_ORDER, navItems.ToList());
             Notify.ShowMessageToast("更改成功,重启生效");
         }
 
         private void gridHomeNavItem_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as HomeNavItem;
-            (gridHomeCustom.ItemsSource as ObservableCollection<HomeNavItem>).Add(item);
-            SettingService.SetValue(SettingConstants.UI.HOEM_ORDER, gridHomeCustom.ItemsSource as ObservableCollection<HomeNavItem>);
+            if (!(gridHomeCustom.ItemsSource is ObservableCollection<HomeNavItem> navItems)) return;
+            navItems.Add(item);
+            SettingService.SetValue(SettingConstants.UI.HOEM_ORDER, navItems.ToList());
             ExceptHomeNavItems();
             Notify.ShowMessageToast("更改成功,重启生效");
         }
@@ -1020,6 +1039,27 @@ namespace BiliLite.Pages
                         mirrorDonateText.Visibility = Visibility.Collapsed; break;
                     }
             }
+        }
+
+        private void RequestBuildSaveBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            var build = RequestBuildTextBox.Text;
+            if (string.IsNullOrWhiteSpace(build))
+            {
+                Notify.ShowMessageToast("请输入正确的build值");
+                return;
+            }
+
+            SettingService.SetValue(SettingConstants.Other.REQUEST_BUILD, build);
+            Notify.ShowMessageToast("已保存");
+        }
+
+        private void RequestBuildDefaultBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            var build = SettingConstants.Other.DEFAULT_REQUEST_BUILD;
+            SettingService.SetValue(SettingConstants.Other.REQUEST_BUILD, build);
+            RequestBuildTextBox.Text = build;
+            Notify.ShowMessageToast("已恢复默认");
         }
     }
 }

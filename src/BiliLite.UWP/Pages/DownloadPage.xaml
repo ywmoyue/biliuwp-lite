@@ -9,6 +9,8 @@
       xmlns:convert="using:BiliLite.Converters" 
     xmlns:controls="using:BiliLite.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls" xmlns:modules="using:BiliLite.Modules"
+    xmlns:download="using:BiliLite.Models.Common.Download"
+    xmlns:viewModel="using:BiliLite.ViewModels.Download"
     Background="Transparent">
     <Page.Resources>
         <SolidColorBrush x:Key="PivotHeaderBackground" Color="{ThemeResource TopPaneBackground}"></SolidColorBrush>
@@ -22,16 +24,31 @@
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Pivot>
+        <Pivot x:Name="DownloadPivot">
             <Pivot.RightHeader>
-                <Grid Background="{StaticResource PivotHeaderBackground}">
+                <StackPanel Background="{StaticResource PivotHeaderBackground}" Orientation="Horizontal">
+                    <TextBlock 
+                        Margin="8 16"
+                        Visibility="{x:Bind m_viewModel.LoadingDownloaded,Converter={StaticResource BoolToVisibilityConverter},Mode=OneWay}">
+                        加载中
+                        <Run Text="{x:Bind m_viewModel.LoadingDownloadedPercent,Mode=OneWay}"></Run>
+                        %
+                    </TextBlock>
+                    <AutoSuggestBox x:Name="SearchBox" 
+                                    MinWidth="200" 
+                                    FontSize="12"
+                                    QuerySubmitted="SearchBox_OnQuerySubmitted"
+                                    Margin="8 12"
+                                    PlaceholderText="你想找什么呢?" 
+                                    QueryIcon="Find">
+                    </AutoSuggestBox>
                     <Button x:Name="btnMerge" Click="btnMerge_Click" Margin="8 0" FontSize="12">合并视频</Button>
-                </Grid>
+                </StackPanel>
             </Pivot.RightHeader>
             <PivotItem Margin="0">
                 <PivotItem.Header>
                     <TextBlock FontSize="15" >
-                        正在下载(<Run Text="{x:Bind Path=downloadVM.Downloadings.Count,Mode=OneWay}"/>)
+                        正在下载(<Run Text="{x:Bind Path=m_viewModel.Downloadings.Count,Mode=OneWay}"/>)
                     </TextBlock>
                 </PivotItem.Header>
                 <Grid>
@@ -41,19 +58,19 @@
                     </Grid.RowDefinitions>
                     <Grid  Background="{StaticResource PivotHeaderBackground}">
                         <StackPanel Margin="12 8" Orientation="Horizontal">
-                            <Button Command="{x:Bind Path=downloadVM.StartCommand}" FontSize="12" Margin="0 0 8 0">
+                            <Button Command="{x:Bind Path=m_viewModel.StartCommand}" FontSize="12" Margin="0 0 8 0">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon FontSize="14" FontFamily="Segoe MDL2 Assets" Glyph="&#xE102;" />
                                     <TextBlock Margin="4 0 0 0">开始全部</TextBlock>
                                 </StackPanel>
                             </Button>
-                            <Button Command="{x:Bind Path=downloadVM.PauseCommand}" FontSize="12" Margin="0 0 8 0">
+                            <Button Command="{x:Bind Path=m_viewModel.PauseCommand}" FontSize="12" Margin="0 0 8 0">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon FontSize="14" FontFamily="Segoe MDL2 Assets" Glyph="&#xE103;" />
                                     <TextBlock Margin="4 0 0 0">暂停全部</TextBlock>
                                 </StackPanel>
                             </Button>
-                            <Button Command="{x:Bind Path=downloadVM.DeleteCommand}" FontSize="12" Margin="0 0 8 0">
+                            <Button Command="{x:Bind Path=m_viewModel.DeleteCommand}" FontSize="12" Margin="0 0 8 0">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon FontSize="14" FontFamily="Segoe MDL2 Assets" Glyph="&#xE107;" />
                                     <TextBlock Margin="4 0 0 0">删除全部</TextBlock>
@@ -61,7 +78,7 @@
                             </Button>
                         </StackPanel>
                     </Grid>
-                    <ListView SelectionMode="None" IsItemClickEnabled="False" ItemsSource="{x:Bind Path=downloadVM.Downloadings}" Padding="4" Grid.Row="1">
+                    <ListView SelectionMode="None" IsItemClickEnabled="False" ItemsSource="{x:Bind Path=m_viewModel.Downloadings}" Padding="4" Grid.Row="1">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -72,7 +89,7 @@
                             </Style>
                         </ListView.ItemContainerStyle>
                         <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="modules:DownloadingItem">
+                            <DataTemplate x:DataType="viewModel:DownloadingItemViewModel">
                                 <StackPanel >
                                     <Grid >
                                         <Grid.ColumnDefinitions>
@@ -88,7 +105,7 @@
                                     </Grid>
                                     <ItemsControl Margin="0 4 0 0" ItemsSource="{x:Bind Items}">
                                         <ItemsControl.ItemTemplate>
-                                            <DataTemplate x:DataType="modules:DownloadingSubItem">
+                                            <DataTemplate x:DataType="viewModel:DownloadingSubItemViewModel">
                                                 <Grid BorderThickness="0 1 0 0" BorderBrush="#33808080">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition/>
@@ -128,7 +145,7 @@
             <PivotItem Margin="0">
                 <PivotItem.Header>
                     <TextBlock FontSize="15" >
-                        下载完成(<Run Text="{x:Bind Path=downloadVM.Downloadeds.Count,Mode=OneWay}"/>)
+                        下载完成(<Run Text="{x:Bind Path=m_viewModel.DownloadedViewModels.Count,Mode=OneWay}"/>)
                     </TextBlock>
                 </PivotItem.Header>
                 <SplitView x:Name="splitView" OpenPaneLength="360" PanePlacement="Right" PaneBackground="Transparent">
@@ -204,7 +221,7 @@
                                           StretchContentForSingleRow="false"
                                           DesiredWidth="460"
                                           SelectionMode="None" 
-                                          ItemsSource="{x:Bind Path=downloadVM.Downloadeds,Mode=OneWay}"
+                                          ItemsSource="{x:Bind Path=m_viewModel.DownloadedViewModels,Mode=OneWay}"
                                           IsItemClickEnabled="True">
                                 <toolkit:AdaptiveGridView.ItemContainerStyle>
                                     <Style TargetType="GridViewItem">
@@ -214,7 +231,7 @@
                                     </Style>
                                 </toolkit:AdaptiveGridView.ItemContainerStyle>
                                 <toolkit:AdaptiveGridView.ItemTemplate>
-                                    <DataTemplate x:DataType="modules:DownloadedItem">
+                                    <DataTemplate x:DataType="download:DownloadedItem">
                                         <Grid Background="#00FFFFFF">
                                             <Grid.ContextFlyout>
                                                 <MenuFlyout>
@@ -252,7 +269,7 @@
                                     </DataTemplate>
                                 </toolkit:AdaptiveGridView.ItemTemplate>
                             </toolkit:AdaptiveGridView>
-                            <controls:RoundButton  Command="{x:Bind Path=downloadVM.RefreshDownloadedCommand}" Visibility="{x:Bind Path=downloadVM.LoadingDownloaded,Mode=OneWay,Converter={StaticResource display}}" VerticalAlignment="Bottom" Padding="12" Margin="12" HorizontalAlignment="Right">
+                            <controls:RoundButton  Command="{x:Bind Path=m_viewModel.RefreshDownloadedCommand}" Visibility="{x:Bind Path=m_viewModel.LoadingDownloaded,Mode=OneWay,Converter={StaticResource display}}" VerticalAlignment="Bottom" Padding="12" Margin="12" HorizontalAlignment="Right">
                                 <SymbolIcon Symbol="Refresh" Foreground="White"></SymbolIcon>
                             </controls:RoundButton>
                         </Grid>
@@ -263,11 +280,11 @@
         </Pivot>
         <StackPanel BorderThickness="0 1 0 0" BorderBrush="#40808080" Grid.Row="1" Padding="12 4">
             <Grid>
-                <TextBlock>磁盘可用空间 <Run Text="{x:Bind Path=downloadVM.DiskFree,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/>GB</TextBlock>
-                <TextBlock Foreground="Gray" HorizontalAlignment="Right"><Run Text="{x:Bind Path=downloadVM.DiskUse,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/>GB/<Run Text="{x:Bind Path=downloadVM.DiskTotal,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/>GB</TextBlock>
+                <TextBlock>磁盘可用空间 <Run Text="{x:Bind Path=m_viewModel.DiskFree,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/>GB</TextBlock>
+                <TextBlock Foreground="Gray" HorizontalAlignment="Right"><Run Text="{x:Bind Path=m_viewModel.DiskUse,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/>GB/<Run Text="{x:Bind Path=m_viewModel.DiskTotal,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/>GB</TextBlock>
             </Grid>
 
-            <ProgressBar Margin="0 4 0 0" Height="8" Value="{x:Bind Path=downloadVM.DiskUse,Mode=OneWay}" Maximum="{x:Bind Path=downloadVM.DiskTotal,Mode=OneWay}"></ProgressBar>
+            <ProgressBar Margin="0 4 0 0" Height="8" Value="{x:Bind Path=m_viewModel.DiskUse,Mode=OneWay}" Maximum="{x:Bind Path=m_viewModel.DiskTotal,Mode=OneWay}"></ProgressBar>
 
         </StackPanel>
        

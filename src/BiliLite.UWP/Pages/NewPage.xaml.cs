@@ -1,27 +1,16 @@
 ﻿using BiliLite.Pages.Bangumi;
-using FFmpegInteropX;
 using Microsoft.UI.Xaml.Controls;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using BiliLite.Extensions;
+using NavigationView = Microsoft.UI.Xaml.Controls.NavigationView;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -59,28 +48,17 @@ namespace BiliLite.Pages
         }
         private void BtnOpenRank_Click(object sender, RoutedEventArgs e)
         {
-            ((this.Parent as Frame).Parent as TabViewItem).Header = "排行榜";
-            ((this.Parent as Frame).Parent as TabViewItem).IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.FourBars };
-            this.Frame.Navigate(typeof(RankPage));
-            //MessageCenter.NavigateToPage(this,new NavigationInfo() { 
-            //    icon= Symbol.FourBars,
-            //    page=typeof(RankPage),
-            //    title="排行榜"
-            //});
+            OpenNewTabPage("排行榜", Symbol.FourBars, typeof(RankPage));
         }
 
         private void BtnOpenBangumiIndex_Click(object sender, RoutedEventArgs e)
         {
-            ((this.Parent as Frame).Parent as TabViewItem).Header = "番剧索引";
-            ((this.Parent as Frame).Parent as TabViewItem).IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Filter };
-            this.Frame.Navigate(typeof(AnimeIndexPage));
+            OpenNewTabPage("番剧索引", Symbol.Filter, typeof(AnimeIndexPage));
         }
 
         private void BtnOpenBangumiTimeline_Click(object sender, RoutedEventArgs e)
         {
-            ((this.Parent as Frame).Parent as TabViewItem).Header = "番剧时间表";
-            ((this.Parent as Frame).Parent as TabViewItem).IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Clock };
-            this.Frame.Navigate(typeof(TimelinePage), AnimeType.Bangumi);
+            OpenNewTabPage("番剧时间表", Symbol.Clock, typeof(TimelinePage), AnimeType.Bangumi);
         }
 
         private async void BtnOpenMyFollow_Click(object sender, RoutedEventArgs e)
@@ -90,16 +68,12 @@ namespace BiliLite.Pages
                 Notify.ShowMessageToast("请先登录");
                 return;
             }
-            ((this.Parent as Frame).Parent as TabViewItem).Header = "我的收藏";
-            ((this.Parent as Frame).Parent as TabViewItem).IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.OutlineStar };
-            this.Frame.Navigate(typeof(User.FavoritePage), User.OpenFavoriteType.Video);
+            OpenNewTabPage("我的收藏", Symbol.OutlineStar, typeof(User.FavoritePage), User.OpenFavoriteType.Video);
         }
 
         private void BtnOpenSetting_Click(object sender, RoutedEventArgs e)
         {
-            ((this.Parent as Frame).Parent as TabViewItem).Header = "设置";
-            ((this.Parent as Frame).Parent as TabViewItem).IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Setting };
-            this.Frame.Navigate(typeof(SettingPage));
+            OpenNewTabPage("设置", Symbol.Setting, typeof(SettingPage));
         }
 
         private async void SearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
@@ -152,16 +126,12 @@ namespace BiliLite.Pages
                 Notify.ShowMessageToast("请先登录");
                 return;
             }
-            ((this.Parent as Frame).Parent as TabViewItem).Header = "历史记录";
-            ((this.Parent as Frame).Parent as TabViewItem).IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Clock };
-            this.Frame.Navigate(typeof(User.HistoryPage));
+            OpenNewTabPage("历史记录", Symbol.Clock, typeof(User.HistoryPage));
         }
 
         private void BtnOpenDownload_Click(object sender, RoutedEventArgs e)
         {
-            ((this.Parent as Frame).Parent as TabViewItem).Header = "离线下载";
-            ((this.Parent as Frame).Parent as TabViewItem).IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Download };
-            this.Frame.Navigate(typeof(DownloadPage));
+            OpenNewTabPage("离线下载", Symbol.Download, typeof(DownloadPage));
         }
 
         private void BtnOpenLive_Click(object sender, RoutedEventArgs e)
@@ -172,6 +142,32 @@ namespace BiliLite.Pages
                 page = typeof(Live.LiveRecommendPage),
                 title = "全部直播"
             });
+        }
+
+        private void OpenNewTabPage(string title, Symbol symbol, Type pageType, object parameter = null)
+        {
+            if (!(this.Parent is Frame frame)) return;
+            // 首页中的新标签页Tab
+            if (frame.Parent is NavigationView navigationView)
+            {
+                MessageCenter.NavigateToPage(this, new NavigationInfo()
+                {
+                    icon = symbol,
+                    page = pageType,
+                    title = title,
+                    parameters = parameter,
+                });
+            }
+            // 新标签页
+            else if (frame.Parent is TabViewItem tabItem)
+            {
+                tabItem.Header = title;
+                tabItem.IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = symbol };
+                if (parameter == null)
+                    this.Frame.Navigate(pageType);
+                else
+                    this.Frame.Navigate(pageType, parameter);
+            }
         }
     }
 }
