@@ -208,7 +208,8 @@ namespace BiliLite.Controls
             }
             timer_focus.Stop();
         }
-        private void PlayerControl_Loaded(object sender, RoutedEventArgs e)
+
+        private async void PlayerControl_Loaded(object sender, RoutedEventArgs e)
         {
             m_danmakuController.Clear();
             Window.Current.CoreWindow.KeyDown += PlayerControl_KeyDown;
@@ -224,6 +225,7 @@ namespace BiliLite.Controls
                 updater.VideoProperties.Title = CurrentPlayItem.title;
                 updater.Update();
             }
+
             _systemMediaTransportControls.ButtonPressed += _systemMediaTransportControls_ButtonPressed;
 
             LoadPlayerSetting();
@@ -232,6 +234,25 @@ namespace BiliLite.Controls
 
             danmuTimer.Start();
             timer_focus.Start();
+
+            // 检查音量是否偏低
+            if (Player.Volume > 0.95) return;
+            var toolTipText = "";
+            if (Player.Volume == 0)
+            {
+                toolTipText = "静音";
+            }
+            else
+            {
+                toolTipText = "音量:" + Player.Volume.ToString("P");
+            }
+
+            TxtToolTip.Text = toolTipText;
+            ToolTip.Background = new SolidColorBrush(Color.FromArgb(90, 240, 240, 240));
+            ToolTip.Visibility = Visibility.Visible;
+            await Task.Delay(2000);
+            ToolTip.Visibility = Visibility.Collapsed;
+            ToolTip.Background = new SolidColorBrush(Color.FromArgb(204, 255, 255, 255));
         }
 
         private async void _systemMediaTransportControls_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
