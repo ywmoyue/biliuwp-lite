@@ -129,7 +129,8 @@ namespace BiliLite.Models.Requests.Api.User
             };
             if (SettingService.Account.Logined)
             {
-                api.parameter += $"&access_key={SettingService.Account.AccessKey}";
+                api.parameter += ApiHelper.MustParameter(AppKey, true);
+                api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             }
 
             return api;

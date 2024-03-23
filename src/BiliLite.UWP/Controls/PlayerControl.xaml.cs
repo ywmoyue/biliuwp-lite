@@ -42,6 +42,7 @@ using BiliLite.Models.Common.Player;
 using BiliLite.Models.Common.Video.PlayUrlInfos;
 using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -148,12 +149,12 @@ namespace BiliLite.Controls
                 (int)SettingConstants.VideoDanmaku.DEFAULT_DANMAKU_ENGINE) == DanmakuEngineType.NSDanmaku;
             if (m_useNsDanmaku)
             {
-                m_danmakuController = new NsDanmakuController();
+                m_danmakuController = App.ServiceProvider.GetRequiredService<NsDanmakuController>();
                 m_danmakuController.Init(DanmuControl);
             }
             else
             {
-                m_danmakuController = new FrostMasterDanmakuController();
+                m_danmakuController = App.ServiceProvider.GetRequiredService<FrostMasterDanmakuController>(); 
                 m_danmakuController.Init(DanmakuCanvas);
             }
         }
@@ -207,7 +208,8 @@ namespace BiliLite.Controls
             }
             timer_focus.Stop();
         }
-        private void PlayerControl_Loaded(object sender, RoutedEventArgs e)
+
+        private async void PlayerControl_Loaded(object sender, RoutedEventArgs e)
         {
             m_danmakuController.Clear();
             Window.Current.CoreWindow.KeyDown += PlayerControl_KeyDown;
@@ -223,6 +225,7 @@ namespace BiliLite.Controls
                 updater.VideoProperties.Title = CurrentPlayItem.title;
                 updater.Update();
             }
+
             _systemMediaTransportControls.ButtonPressed += _systemMediaTransportControls_ButtonPressed;
 
             LoadPlayerSetting();
@@ -231,6 +234,25 @@ namespace BiliLite.Controls
 
             danmuTimer.Start();
             timer_focus.Start();
+
+            // 检查音量是否偏低
+            if (Player.Volume > 0.95) return;
+            var toolTipText = "";
+            if (Player.Volume == 0)
+            {
+                toolTipText = "静音";
+            }
+            else
+            {
+                toolTipText = "音量:" + Player.Volume.ToString("P");
+            }
+
+            TxtToolTip.Text = toolTipText;
+            ToolTip.Background = new SolidColorBrush(Color.FromArgb(90, 240, 240, 240));
+            ToolTip.Visibility = Visibility.Visible;
+            await Task.Delay(2000);
+            ToolTip.Visibility = Visibility.Collapsed;
+            ToolTip.Background = new SolidColorBrush(Color.FromArgb(204, 255, 255, 255));
         }
 
         private async void _systemMediaTransportControls_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
@@ -841,6 +863,9 @@ namespace BiliLite.Controls
                     .SelectMany(x => x.Value.Take(max));
             }
 
+            // 移除当前播放时间之前的弹幕，避免弹幕堆叠
+            danmakus = danmakus.Where(x => x.StartMs > Player.Position * 1000);
+
             return danmakus.ToList();
         }
 
@@ -916,6 +941,11 @@ namespace BiliLite.Controls
             {
                 await LoadDanmaku(segIndex);
             }
+            else if (position < m_danmakuController.Position && !m_useNsDanmaku)
+            {
+                await LoadDanmaku(segIndex);
+            }
+
             if (Buffering)
             {
                 return;
@@ -1330,13 +1360,16 @@ namespace BiliLite.Controls
                 }
                 else
                 {
-                    var segIndex = Math.Ceiling(Player.Position / (60 * 6d));
                     if (update)
                     {
+                        var segIndex = Math.Ceiling(Player.Position / (60 * 6d));
                         await LoadDanmaku(segIndex.ToInt32());
                         Notify.ShowMessageToast($"已更新弹幕");
                     }
-                    await LoadDanmaku(1);
+                    else
+                    {
+                        await LoadDanmaku(1);
+                    }
                     //var danmuList = (await danmakuParse.ParseBiliBili(Convert.ToInt64(CurrentPlayItem.cid)));
                     ////await playerHelper.GetDanmaku(CurrentPlayItem.cid, 1) ;
                     //danmakuPool = danmuList.GroupBy(x=>x.time_s).ToDictionary(x => x.Key, x => x.ToList());
@@ -2591,13 +2624,13 @@ namespace BiliLite.Controls
             SendDanmakuDialog sendDanmakuDialog = new SendDanmakuDialog(CurrentPlayItem.avid, CurrentPlayItem.cid, Player.Position);
             sendDanmakuDialog.DanmakuSended += new EventHandler<SendDanmakuModel>((obj, arg) =>
             {
-                m_danmakuController.Add(new DanmakuModel()
+                m_danmakuController.Add(new BiliDanmakuItem()
                 {
-                    color = NSDanmaku.Utils.ToColor(arg.color),
-                    text = arg.text,
-                    location = (DanmakuLocation)arg.location,
-                    size = 25,
-                    time = Player.Position
+                    Color = NSDanmaku.Utils.ToColor(arg.color),
+                    Text = arg.text,
+                    Location = (DanmakuLocation)arg.location,
+                    Size = 25,
+                    Time = Player.Position
                 }, true);
             });
             await sendDanmakuDialog.ShowAsync();
@@ -2698,13 +2731,13 @@ namespace BiliLite.Controls
             var result = await playerHelper.SendDanmaku(CurrentPlayItem.avid, CurrentPlayItem.cid, SendDanmakuTextBox.Text, Convert.ToInt32(Player.Position), modeInt, color);
             if (result)
             {
-                m_danmakuController.Add(new DanmakuModel()
+                m_danmakuController.Add(new BiliDanmakuItem()
                 {
-                    color = NSDanmaku.Utils.ToColor(color),
-                    text = SendDanmakuTextBox.Text,
-                    location = location,
-                    size = 25,
-                    time = Player.Position
+                    Color = NSDanmaku.Utils.ToColor(color),
+                    Text = SendDanmakuTextBox.Text,
+                    Location = location,
+                    Size = 25,
+                    Time = Player.Position
                 }, true);
                 SendDanmakuTextBox.Text = "";
             }

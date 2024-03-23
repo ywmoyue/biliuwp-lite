@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation.Collections;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -264,6 +265,12 @@ namespace BiliLite
         private void tabView_TabItemsChanged(TabView sender, IVectorChangedEventArgs args)
         {
 
+        }
+
+        private void TabView_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if(e.Key == VirtualKey.Space)
+                e.Handled = true;
         }
     }
 }

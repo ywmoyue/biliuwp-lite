@@ -8,6 +8,7 @@ using Bilibili.Tv.Interfaces.Dm.V1;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Anime;
 using BiliLite.Models.Common.Comment;
+using BiliLite.Models.Common.Danmaku;
 using BiliLite.Models.Common.Download;
 using BiliLite.Models.Common.Dynamic;
 using BiliLite.Models.Common.Home;
@@ -28,6 +29,8 @@ using BiliLite.ViewModels.User;
 using BiliLite.ViewModels.UserDynamic;
 using BiliLite.ViewModels.Video;
 using Microsoft.Extensions.DependencyInjection;
+using NSDanmaku.Model;
+using DanmakuMode = Atelier39.DanmakuMode;
 using DynamicType = Bilibili.App.Dynamic.V2.DynamicType;
 
 namespace BiliLite.Extensions
@@ -54,6 +57,21 @@ namespace BiliLite.Extensions
                 expression.CreateMap<HomeNavItem, HomeNavItemViewModel>();
                 expression.CreateMap<UserCenterInfoModel, UserCenterInfoViewModel>();
                 expression.CreateMap<FollowTlistItemModel, UserRelationFollowingTagViewModel>();
+
+                var danmakuModeConvertDic = new Dictionary<DanmakuLocation, DanmakuMode>()
+                {
+                    { DanmakuLocation.Scroll, DanmakuMode.Rolling },
+                    { DanmakuLocation.Top, DanmakuMode.Top },
+                    { DanmakuLocation.Bottom, DanmakuMode.Bottom },
+                    { DanmakuLocation.Position, DanmakuMode.Unknown },
+                    { DanmakuLocation.Other, DanmakuMode.Unknown },
+                };
+                expression.CreateMap<BiliDanmakuItem, DanmakuModel>();
+                expression.CreateMap<BiliDanmakuItem, DanmakuItem>()
+                    .ForMember(dest => dest.BaseFontSize, opt => opt.MapFrom(src => src.Size))
+                    .ForMember(dest => dest.TextColor, opt => opt.MapFrom(src => src.Color))
+                    .ForMember(dest => dest.StartMs, opt => opt.MapFrom(src => src.Time))
+                    .ForMember(dest => dest.Mode, opt => opt.MapFrom(src => danmakuModeConvertDic.GetValueOrDefault(src.Location)));
 
                 expression.CreateMap<DownloadSaveEpisodeInfo, DownloadedSubItem>()
                     .ForMember(dest => dest.Paths, opt => opt.MapFrom(src => new List<string>()))
