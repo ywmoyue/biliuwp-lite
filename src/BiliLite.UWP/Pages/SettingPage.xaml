@@ -183,6 +183,11 @@
                             </StackPanel>
 
                             <StackPanel  Margin="0 0 0 8">
+                                <TextBlock  Margin="0 8" FontSize="16">展示评论热门回复</TextBlock>
+                                <ToggleSwitch x:Name="swShowHotReplies" ></ToggleSwitch>
+                            </StackPanel>
+
+                            <StackPanel  Margin="0 0 0 8">
                                 <TextBlock  Margin="0 8"  FontSize="16">新窗口打开图片预览</TextBlock>
                                 <ToggleSwitch x:Name="swPreviewImageNavigateToPage" ></ToggleSwitch>
                             </StackPanel>

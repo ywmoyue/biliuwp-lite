@@ -232,6 +232,16 @@ namespace BiliLite.Pages
                 };
             };
 
+            // 展示评论热门回复
+            swShowHotReplies.IsOn = SettingService.GetValue(SettingConstants.UI.SHOW_HOT_REPLIES, SettingConstants.UI.DEFAULT_SHOW_HOT_REPLIES);
+            swShowHotReplies.Loaded += (sender, e) =>
+            {
+                swShowHotReplies.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.SHOW_HOT_REPLIES, swShowHotReplies.IsOn);
+                };
+            };
+
             //动态显示
             cbDynamicDisplayMode.SelectedIndex = SettingService.GetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 0);
             cbDynamicDisplayMode.Loaded += new RoutedEventHandler((sender, e) =>

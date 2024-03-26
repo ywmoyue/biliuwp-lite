@@ -104,6 +104,7 @@ namespace BiliLite.Controls
                     result = await m_commentApi.CommentV2(m_loadCommentInfo.Oid, m_loadCommentInfo.CommentSort, m_page,
                         m_loadCommentInfo.CommentMode, offsetStr: m_nextCursor?.PaginationReply?.NextOffset).Request();
                 }
+
                 if (!result.status)
                 {
                     throw new CustomizedErrorException("加载评论失败");

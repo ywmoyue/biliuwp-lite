@@ -43,7 +43,8 @@ namespace BiliLite.Extensions
             {
                 expression.CreateMap<DownloadItem, DownloadItemViewModel>();
                 expression.CreateMap<DownloadEpisodeItem, DownloadEpisodeItemViewModel>();
-                expression.CreateMap<CommentItem, CommentViewModel>();
+                expression.CreateMap<CommentItem, CommentViewModel>()
+                    .ForMember(dest => dest.HotReplies, opt => opt.MapFrom(src => src.Replies));
                 expression.CreateMap<DataCommentModel, DataCommentViewModel>();
                 expression.CreateMap<CommentContentModel, CommentContentViewModel>();
                 expression.CreateMap<VideoDetailModel, VideoDetailViewModel>();
