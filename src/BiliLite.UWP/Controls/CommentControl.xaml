@@ -192,11 +192,18 @@
                     <Run Text="{x:Bind Path=ReplyControl.Location}"></Run>
                 </TextBlock>
 
-                <StackPanel Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" Visibility="{Binding ElementName=CommentControlContent,Path=DataContext.IsNarrowMode,Mode=OneWay,Converter={StaticResource BoolToVisibilityConverter}}">
+                <StackPanel Grid.Column="0" 
+                            Grid.ColumnSpan="3" 
+                            Grid.Row="2" 
+                            Margin="3 0 0 0"
+                            Visibility="{Binding ElementName=CommentControlContent,Path=DataContext.IsNarrowMode,Mode=OneWay,Converter={StaticResource BoolToVisibilityConverter}}">
                     <ContentPresenter Content="{x:Bind Mode=OneWay}" ContentTemplate="{StaticResource CommentContentTemplate}"></ContentPresenter>
                 </StackPanel>
 
-                <StackPanel Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="2" Visibility="{Binding ElementName=CommentControlContent,Path=DataContext.IsWideMode,Mode=OneWay,Converter={StaticResource BoolToVisibilityConverter}}">
+                <StackPanel Grid.Column="1" 
+                            Grid.ColumnSpan="2" 
+                            Grid.Row="2" 
+                            Visibility="{Binding ElementName=CommentControlContent,Path=DataContext.IsWideMode,Mode=OneWay,Converter={StaticResource BoolToVisibilityConverter}}">
                     <ContentPresenter Content="{x:Bind Mode=OneWay}" ContentTemplate="{StaticResource CommentContentTemplate}"></ContentPresenter>
                 </StackPanel>
             </Grid>
@@ -398,7 +405,7 @@
                 <ListView  
                     Grid.Row="6"
                     Visibility="{x:Bind ShowHotReplies,Mode=OneWay}"
-                    ItemsSource="{x:Bind HotReplies,Mode=OneWay}" 
+                    ItemsSource="{x:Bind HotReplyContents,Mode=OneWay}" 
                     ItemContainerStyle="{StaticResource hotReplyStyle}"  
                     Background="{ThemeResource CardColor}"
                     SelectionMode="None" 
@@ -408,22 +415,8 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock 
-                                    Grid.Column="0"
-                                    FontSize="11"
-                                    Margin="0 0 8 0"
-                                            VerticalAlignment="Top">
-                                    <Run 
-                                        Text="{Binding Path=Member.Uname}" ></Run>
-                                    <Run>:</Run>
-                                </TextBlock>
                                 <ContentControl
-                                    Grid.Column="1"
-                                    FontSize="11" Content="{Binding Path=CommentText,Mode=OneWay}" Visibility="Visible">
+                                    FontSize="12" Content="{Binding Path=Content,Mode=OneWay}" Visibility="Visible">
                                 </ContentControl>
                             </Grid>
                         </DataTemplate>

@@ -32,9 +32,9 @@ namespace BiliLite.ViewModels.Comment
 
         public double Width { get; set; } = 320;
 
-        [DependsOn(nameof(Width))] public bool IsNarrowMode => Width < 300;
+        [DependsOn(nameof(Width))] public bool IsNarrowMode => Width < 360;
 
-        [DependsOn(nameof(Width))] public bool IsWideMode => Width >= 300;
+        [DependsOn(nameof(Width))] public bool IsWideMode => Width >= 360;
 
         [DependsOn(nameof(Width))] public bool IsNarrow2Mode => Width < 200;
 
