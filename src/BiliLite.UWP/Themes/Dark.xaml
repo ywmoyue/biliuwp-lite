@@ -14,6 +14,7 @@
     <Color x:Key="DefaultTextColor">#CC000000</Color>
     <Color x:Key="SystemColorHighLightColor">#ec407a</Color>
     <Color x:Key="LinkTextColor">#008ac5</Color>
+    <Color x:Key="LowProfileTextColor">Gray</Color>
 
     <SolidColorBrush x:Key="NavigationViewTopPaneBackground" Color="{ThemeResource TopPaneBackground}" />
     <Color x:Key="NoTapGridBackground">#FF282828</Color>

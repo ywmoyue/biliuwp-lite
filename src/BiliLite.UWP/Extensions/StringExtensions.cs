@@ -80,7 +80,7 @@ namespace BiliLite.Extensions
         /// <param name="txt"></param>
         /// <param name="emote"></param>
         /// <returns></returns>
-        public static RichTextBlock ToRichTextBlock(this string txt, JObject emote, bool isLive = false, string fontColor = null, string fontWeight = "Normal")
+        public static RichTextBlock ToRichTextBlock(this string txt, JObject emote, bool isLive = false, string fontColor = null, string fontWeight = "Normal",string lowProfilePrefix="")
         {
             var input = txt;
             try
@@ -105,15 +105,21 @@ namespace BiliLite.Extensions
                     //处理av号/bv号
                     if (!isLive) { input = HandelVideoID(input); }
 
+                    if (!string.IsNullOrEmpty(lowProfilePrefix))
+                    {
+                        lowProfilePrefix = $"<Run Foreground=\"{{ThemeResource LowProfileTextColor}}\" Text=\"{lowProfilePrefix}\"></Run>";
+                    }
+
                     //生成xaml
                     var xaml = string.Format(@"<RichTextBlock HorizontalAlignment=""Stretch"" xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
                                             xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"" xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
                                             xmlns:mc = ""http://schemas.openxmlformats.org/markup-compatibility/2006"" LineHeight=""{1}"" {2} {3}>
-                                            <Paragraph>{0}</Paragraph>
+                                            <Paragraph>{4}{0}</Paragraph>
                                             </RichTextBlock>", input, 
                                                                 isLive ? 22 : 20,
                                                                 fontColor == null ? "" : $"Foreground=\"{fontColor}\"",
-                                                                $"FontWeight=\"{fontWeight}\"");
+                                                                $"FontWeight=\"{fontWeight}\"",
+                                                                lowProfilePrefix);
                     var p = (RichTextBlock)XamlReader.Load(xaml);
                     return p;
                 }

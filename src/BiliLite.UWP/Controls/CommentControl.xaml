@@ -195,7 +195,7 @@
                 <StackPanel Grid.Column="0" 
                             Grid.ColumnSpan="3" 
                             Grid.Row="2" 
-                            Margin="3 0 0 0"
+                            Margin="8 0 0 0"
                             Visibility="{Binding ElementName=CommentControlContent,Path=DataContext.IsNarrowMode,Mode=OneWay,Converter={StaticResource BoolToVisibilityConverter}}">
                     <ContentPresenter Content="{x:Bind Mode=OneWay}" ContentTemplate="{StaticResource CommentContentTemplate}"></ContentPresenter>
                 </StackPanel>
@@ -408,6 +408,7 @@
                     ItemsSource="{x:Bind HotReplyContents,Mode=OneWay}" 
                     ItemContainerStyle="{StaticResource hotReplyStyle}"  
                     Background="{ThemeResource CardColor}"
+                    Margin="0 0 8 0"
                     SelectionMode="None" 
                     IsItemClickEnabled="False" 
                     ScrollViewer.VerticalScrollMode="Disabled" 
