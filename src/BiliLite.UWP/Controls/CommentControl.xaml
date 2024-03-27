@@ -30,6 +30,13 @@
             <Setter Property="BorderBrush" Value="#33808080"></Setter>
             <Setter Property="Padding" Value="0"></Setter>
         </Style>
+
+        <Style TargetType="ListViewItem" x:Key="hotReplyStyle">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+            <Setter Property="BorderThickness" Value="0 1 0 1"></Setter>
+            <Setter Property="BorderBrush" Value="#33808080"></Setter>
+            <Setter Property="Padding" Value="0"></Setter>
+        </Style>
         <convert:ColorSelecteConvert x:Key="colorSelct" ></convert:ColorSelecteConvert>
         <convert:ColorConvert x:Key="colorConvert" ></convert:ColorConvert>
         <Flyout  x:Key="FaceFlyout" x:Name="FaceFlyout">
@@ -185,11 +192,18 @@
                     <Run Text="{x:Bind Path=ReplyControl.Location}"></Run>
                 </TextBlock>
 
-                <StackPanel Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" Visibility="{Binding ElementName=CommentControlContent,Path=DataContext.IsNarrowMode,Mode=OneWay,Converter={StaticResource BoolToVisibilityConverter}}">
+                <StackPanel Grid.Column="0" 
+                            Grid.ColumnSpan="3" 
+                            Grid.Row="2" 
+                            Margin="3 0 0 0"
+                            Visibility="{Binding ElementName=CommentControlContent,Path=DataContext.IsNarrowMode,Mode=OneWay,Converter={StaticResource BoolToVisibilityConverter}}">
                     <ContentPresenter Content="{x:Bind Mode=OneWay}" ContentTemplate="{StaticResource CommentContentTemplate}"></ContentPresenter>
                 </StackPanel>
 
-                <StackPanel Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="2" Visibility="{Binding ElementName=CommentControlContent,Path=DataContext.IsWideMode,Mode=OneWay,Converter={StaticResource BoolToVisibilityConverter}}">
+                <StackPanel Grid.Column="1" 
+                            Grid.ColumnSpan="2" 
+                            Grid.Row="2" 
+                            Visibility="{Binding ElementName=CommentControlContent,Path=DataContext.IsWideMode,Mode=OneWay,Converter={StaticResource BoolToVisibilityConverter}}">
                     <ContentPresenter Content="{x:Bind Mode=OneWay}" ContentTemplate="{StaticResource CommentContentTemplate}"></ContentPresenter>
                 </StackPanel>
             </Grid>
@@ -198,6 +212,7 @@
         <DataTemplate x:Key="CommentContentTemplate" x:DataType="comment:CommentViewModel">
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
@@ -268,8 +283,6 @@
                             <TextBlock FontSize="10" Margin="8 8" Foreground="Gray">UP主觉得很赞</TextBlock>
                         </Border>
                     </StackPanel>
-
-
                 </Grid>
 
                 <StackPanel Grid.Row="4" Margin="0 4" Background="#19AAAAAA" Padding="8" Visibility="{x:Bind Path=ShowReplies,Mode=OneWay}">
@@ -388,6 +401,28 @@
                     </StackPanel>
 
                 </StackPanel>
+
+                <ListView  
+                    Grid.Row="6"
+                    Visibility="{x:Bind ShowHotReplies,Mode=OneWay}"
+                    ItemsSource="{x:Bind HotReplyContents,Mode=OneWay}" 
+                    ItemContainerStyle="{StaticResource hotReplyStyle}"  
+                    Background="{ThemeResource CardColor}"
+                    SelectionMode="None" 
+                    IsItemClickEnabled="False" 
+                    ScrollViewer.VerticalScrollMode="Disabled" 
+                    ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <ContentControl
+                                    FontSize="12" Content="{Binding Path=Content,Mode=OneWay}" Visibility="Visible">
+                                </ContentControl>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
             </Grid>
         </DataTemplate>
     </UserControl.Resources>

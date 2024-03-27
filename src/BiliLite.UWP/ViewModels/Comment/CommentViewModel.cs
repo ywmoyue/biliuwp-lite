@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -150,6 +151,20 @@ namespace BiliLite.ViewModels.Comment
         public CommentReplyControlModel ReplyControl { get; set; }
 
         public ObservableCollection<CommentViewModel> Replies { get; set; }
+
+        public ObservableCollection<CommentViewModel> HotReplies { get; set; }
+
+        public List<HotReply> HotReplyContents { get; set; }
+
+        [DependsOn(nameof(ShowReplies))]
+        public bool ShowHotReplies
+        {
+            get
+            {
+                if (!SettingService.GetValue(SettingConstants.UI.SHOW_HOT_REPLIES, SettingConstants.UI.DEFAULT_SHOW_HOT_REPLIES)) return false;
+                return !ShowReplies;
+            }
+        }
 
         //public ObservableCollection<CommentModel> replies { get; set; }
 

@@ -144,6 +144,7 @@
     </Compile>
     <Compile Include="Extensions\QrCodeExtensions.cs" />
     <Compile Include="Models\Common\Anime\ISeasonItem.cs" />
+    <Compile Include="Models\Common\Comment\HotReply.cs" />
     <Compile Include="Models\Common\Danmaku\BiliDanmakuItem.cs" />
     <Compile Include="Models\Common\Dynamic\DynamicUgcSeasonCardModel.cs" />
     <Compile Include="Models\Common\Home\DefaultHomeNavItems.cs" />

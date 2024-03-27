@@ -104,6 +104,31 @@ namespace BiliLite.Services
             {
                 url = await BiliExtensions.GetShortLinkLocation(url);
             }
+
+
+
+            /*
+             * 直播
+             * http://live.bilibili.com/live/5619438.html
+             * http://live.bilibili.com/h5/5619438
+             * http://live.bilibili.com/5619438
+             * bilibili://live/5619438
+             */
+
+            var live = StringExtensions.RegexMatch(url.Replace("h5", "live").Replace("live.bilibili.com", "live").Replace("/", ""), @"live(\d+)");
+            if (live != "")
+            {
+                NavigateToPage(null, new NavigationInfo()
+                {
+                    icon = Symbol.Video,
+                    page = typeof(LiveDetailPage),
+                    title = "直播间加载中...",
+                    parameters = live,
+                    dontGoTo = dontGoTo,
+                });
+                return true;
+            }
+
             /*
              * 视频
              * https://www.bilibili.com/video/av3905642
@@ -264,28 +289,6 @@ namespace BiliLite.Services
             //}
 
 
-
-            /*
-            * 直播
-            * http://live.bilibili.com/live/5619438.html
-            * http://live.bilibili.com/h5/5619438
-            * http://live.bilibili.com/5619438
-            * bilibili://live/5619438
-            */
-
-            var live = StringExtensions.RegexMatch(url.Replace("h5", "live").Replace("live.bilibili.com", "live").Replace("/", ""), @"live(\d+)");
-            if (live != "")
-            {
-                NavigateToPage(null, new NavigationInfo()
-                {
-                    icon = Symbol.Video,
-                    page = typeof(LiveDetailPage),
-                    title = "直播间加载中...",
-                    parameters = live,
-                    dontGoTo = dontGoTo,
-                });
-                return true;
-            }
 
             ///*
             // * 小视频

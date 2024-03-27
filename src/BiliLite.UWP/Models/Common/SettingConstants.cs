@@ -107,6 +107,16 @@ namespace BiliLite.Models.Common
             /// 默认折叠评论长度
             /// </summary>
             public const int COMMENT_SHRINK_DEFAULT_LENGTH = 75;
+
+            /// <summary>
+            /// 显示评论热门回复
+            /// </summary>
+            public const string SHOW_HOT_REPLIES = "ShowHotReplies";
+
+            /// <summary>
+            /// 显示评论热门回复默认选项
+            /// </summary>
+            public const bool DEFAULT_SHOW_HOT_REPLIES = true;
         }
 
         public class Account
