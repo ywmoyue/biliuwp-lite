@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Documents;
+﻿using Windows.UI.Xaml.Controls;
 using BiliLite.Extensions;
 using Newtonsoft.Json.Linq;
 
@@ -21,12 +18,12 @@ namespace BiliLite.Models.Common.Comment
             {
                 if (Message.Length <= 50)
                 {
-                    return $"{UserName}: {Message}"
-                        .ToRichTextBlock(Emote);
+                    return $"{Message}"
+                        .ToRichTextBlock(Emote, lowProfilePrefix: $"{UserName}:  ");
                 }
 
-                return $"{UserName}: {Message.SubstringCommentText(50)}..."
-                    .ToRichTextBlock(Emote);
+                return $"{Message.SubstringCommentText(50)}..."
+                    .ToRichTextBlock(Emote, lowProfilePrefix: $"{UserName}:  ");
             }
         }
     }
