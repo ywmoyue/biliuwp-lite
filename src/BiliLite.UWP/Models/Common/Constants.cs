@@ -81,5 +81,14 @@
             /// </summary>
             public const string MY_ICON_IMAGE = "ms-appx:///Assets/Icon/我的.png";
         }
+
+        public static class DynamicTypes
+        {
+            public const string DRAW = "Draw";
+
+            public const string ARTICLE = "Article";
+
+            public const string FORWARD = "Forward";
+        }
     }
 }

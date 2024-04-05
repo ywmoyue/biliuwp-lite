@@ -65,7 +65,7 @@ namespace BiliLite.Extensions
         /// <param name="emote"></param>
         /// <param name="extend_json"></param>
         /// <returns></returns>
-        public static RichTextBlock UserDynamicStringToRichText(this string txt, string id, List<DynamicCardDisplayEmojiInfoItemModel> emote, JObject extend_json)
+        public static RichTextBlock UserDynamicStringToRichText(this string txt, string id, List<DynamicCardDisplayEmojiInfoItemModel> emote, JObject extend_json,string title=null)
         {
             if (string.IsNullOrEmpty(txt)) return new RichTextBlock();
             var input = txt;
@@ -93,6 +93,10 @@ namespace BiliLite.Extensions
                 //处理话题
                 input = HandelTag(input);
 
+                //标题
+                var titlePara = string.IsNullOrEmpty(title) ? 
+                    "" : $" <Paragraph>{title}</Paragraph>";
+
                 //互动抽奖🎁
                 input = HandelLottery(input, id, extend_json);
                 input = HandelVideoID(input);
@@ -101,8 +105,9 @@ namespace BiliLite.Extensions
                 var xaml = string.Format(@"<RichTextBlock HorizontalAlignment=""Stretch"" TextWrapping=""Wrap""  xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
                                             xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"" xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
     xmlns:mc = ""http://schemas.openxmlformats.org/markup-compatibility/2006"" LineHeight=""20"">
-                                          <Paragraph>{0}</Paragraph>
-                                      </RichTextBlock>", input);
+         {1}                                 
+<Paragraph>{0}</Paragraph>
+                                      </RichTextBlock>", input,titlePara);
                 var p = (RichTextBlock)XamlReader.Load(xaml);
                 return p;
 

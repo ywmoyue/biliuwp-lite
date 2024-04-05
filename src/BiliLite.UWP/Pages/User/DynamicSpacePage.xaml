@@ -1,0 +1,55 @@
+﻿<Page
+    x:Class="BiliLite.Pages.User.DynamicSpacePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BiliLite.Pages.User"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:dynamic="using:BiliLite.Controls.Dynamic"
+    xmlns:controls="using:BiliLite.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource AppBarBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Controls/Dynamic/DynamicV2Template.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+    <Grid>
+        <controls:MyListView SelectionMode="None" 
+                  IsItemClickEnabled="false" 
+                          x:Name="list"
+                  ItemsSource="{x:Bind Path=m_viewModel.DynamicItems,Mode=OneWay}" 
+                                         CanLoadMore="{x:Bind Path=m_viewModel.CanLoadMore,Mode=OneWay}"
+                                         LoadMoreBottomOffset="0"
+                  Padding="4" 
+                 ItemTemplateSelector="{StaticResource DynamicTemplateSelector}"
+                  HorizontalContentAlignment="Center">
+            <controls:MyListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                    <Setter Property="MaxWidth" Value="800"></Setter>
+                    <Setter Property="Margin" Value="4"></Setter>
+
+                </Style>
+            </controls:MyListView.ItemContainerStyle>
+        </controls:MyListView>
+        <ProgressRing  VerticalAlignment="Bottom" Margin="8" IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"></ProgressRing>
+        <!--<StackPanel Orientation="Vertical"  Grid.Row="1" VerticalAlignment="Bottom" Margin="20 12" HorizontalAlignment="Right">
+            <controls:RoundButton x:Name="btnGrid"  ToolTipService.ToolTip="切换为瀑布流" Click="btnGrid_Click" Margin="0 0 0 8"  Padding="12">
+                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE80A;"  Foreground="White"/>
+            </controls:RoundButton>
+            <controls:RoundButton x:Name="btnList"  Visibility="Collapsed" ToolTipService.ToolTip="切换为列表" Click="btnList_Click" Margin="0 0 0 8"  Padding="12">
+                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE292;" Foreground="White"/>
+            </controls:RoundButton>
+            <controls:RoundButton x:Name="btnTop" Click="btnTop_Click" ToolTipService.ToolTip="返回顶部"  Margin="0 0 0 8"  Padding="12">
+                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE110;" Foreground="White"/>
+            </controls:RoundButton>
+            <controls:RoundButton x:Name="btnRefreshDynamic"  Command="{x:Bind Path=m_userDynamicViewModel.RefreshCommand}"   Padding="12">
+                <SymbolIcon Symbol="Refresh" Foreground="White"></SymbolIcon>
+            </controls:RoundButton>
+        </StackPanel>-->
+    </Grid>
+</Page>

@@ -63,6 +63,31 @@ namespace BiliLite.Services
             }
         }
 
+        public async Task<DynSpaceRsp> GetDynSpace(long mid,string from = "space", int page = 1)
+        {
+            var message = new DynSpaceReq()
+            {
+                Page = page,
+                From = from,
+                HostUid = mid
+            };
+            var requestUserInfo = new GrpcBiliUserInfo(
+                SettingService.Account.AccessKey,
+                SettingService.Account.UserID,
+                SettingService.Account.GetLoginAppKeySecret().Appkey);
+
+            var result = await GrpcRequest.Instance.SendMessage("https://grpc.biliapi.net:443/bilibili.app.dynamic.v2.Dynamic/DynSpace", message, requestUserInfo);
+            if (result.status)
+            {
+                var reply = DynSpaceRsp.Parser.ParseFrom(result.results);
+                return reply;
+            }
+            else
+            {
+                throw new Exception(result.message);
+            }
+        }
+
         public async Task<DynVideoReply> GetDynVideo(int page, string historyOffset, string updateBaseline)
         {
             var message = new DynVideoReq()

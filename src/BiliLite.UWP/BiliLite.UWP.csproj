@@ -139,6 +139,10 @@
     <Compile Include="Controls\AttentionButton.xaml.cs">
       <DependentUpon>AttentionButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\DataTemplateSelectors\UserDynamicItemV2DataTemplateSelector.cs" />
+    <Compile Include="Controls\Dynamic\DynamicItemV2Control.xaml.cs">
+      <DependentUpon>DynamicItemV2Control.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\UserFollowingTagsFlyout.xaml.cs">
       <DependentUpon>UserFollowingTagsFlyout.xaml</DependentUpon>
     </Compile>
@@ -147,6 +151,7 @@
     <Compile Include="Models\Common\Comment\HotReply.cs" />
     <Compile Include="Models\Common\Danmaku\BiliDanmakuItem.cs" />
     <Compile Include="Models\Common\Dynamic\DynamicUgcSeasonCardModel.cs" />
+    <Compile Include="ViewModels\UserDynamic\DynamicV2ItemViewModel.cs" />
     <Compile Include="Models\Common\Home\DefaultHomeNavItems.cs" />
     <Compile Include="Models\Common\Live\DefaultPlayUrlSourceOptions.cs" />
     <Compile Include="Models\Common\Live\InteractWordModel.cs" />
@@ -195,6 +200,10 @@
     <Compile Include="Models\Common\Live\RoomChangeMsgModel.cs" />
     <Compile Include="Models\Common\User\SearchHistoryData.cs" />
     <Compile Include="Models\Common\User\SubmitCollectionItemModel.cs" />
+    <Compile Include="Pages\User\DynamicSpacePage.xaml.cs">
+      <DependentUpon>DynamicSpacePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\UserDynamic\UserDynamicSpaceViewModel.cs" />
     <Compile Include="ViewModels\User\UserAttentionButtonViewModel.cs" />
     <Compile Include="ViewModels\User\UserFollowingTagsFlyoutViewModel.cs" />
     <Compile Include="ViewModels\User\UserRelationFollowingTagViewModel.cs" />
@@ -929,7 +938,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Dynamic\DynamicItemV2Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dynamic\DynamicV2Template.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\UserFollowingTagsFlyout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\User\DynamicSpacePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

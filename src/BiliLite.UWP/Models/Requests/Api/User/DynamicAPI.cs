@@ -135,6 +135,24 @@ namespace BiliLite.Models.Requests.Api.User
 
             return api;
         }
+
+        public ApiModel SpaceHistoryV2(string mid, string offset = "")
+        {
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Get,
+                baseUrl = $"https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space",
+                parameter = $"offset={offset}&host_mid={mid}",
+                need_cookie = true,
+            };
+            //if (SettingService.Account.Logined)
+            //{
+            //    api.parameter += ApiHelper.MustParameter(AppKey, true);
+            //    api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
+            //}
+
+            return api;
+        }
         /// <summary>
         /// 推荐话题
         /// </summary>

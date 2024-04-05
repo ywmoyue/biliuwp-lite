@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml.Data;
 
 namespace BiliLite.Converters
@@ -14,6 +10,11 @@ namespace BiliLite.Converters
             if (value == null)
             {
                 return "";
+            }
+
+            if (value is string valueStr)
+            {
+                value = long.Parse(valueStr);
             }
             if (value is int || value is long)
             {

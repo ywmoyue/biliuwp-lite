@@ -126,6 +126,20 @@ namespace BiliLite.Extensions
                             SubTitle = src.SubTitle,
                             Title = src.Title,
                         }));
+
+                expression.CreateMap<DynamicItem, DynamicV2ItemViewModel>()
+                    .ForMember(dest => dest.Author,
+                        opt => opt.MapFrom(src =>
+                            src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleAuthor).ModuleAuthor))
+                    .ForMember(dest => dest.Dynamic,
+                        opt => opt.MapFrom(src =>
+                            src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleDynamic).ModuleDynamic))
+                    .ForMember(dest => dest.Desc,
+                        opt => opt.MapFrom(src =>
+                            src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleDesc).ModuleDesc))
+                    .ForMember(dest => dest.Stat,
+                        opt => opt.MapFrom(src =>
+                            src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleStat).ModuleStat));
             }));
 
             services.AddSingleton<IMapper>(mapper);
