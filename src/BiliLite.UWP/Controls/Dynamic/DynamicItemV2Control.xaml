@@ -25,7 +25,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <HyperlinkButton Padding="0"
-                             Visibility="{x:Bind ViewModel.IsReport,Converter={StaticResource display}}"
+                             Visibility="{x:Bind ViewModel.IsReport,Converter={StaticResource display},Mode=OneWay}"
                              VerticalAlignment="Top">
                 <Grid >
                     <Ellipse Width="40"  Height="40" Stroke="WhiteSmoke" StrokeThickness="1">
@@ -38,31 +38,10 @@
                 </Grid>
             </HyperlinkButton>
 
-            <HyperlinkButton HorizontalContentAlignment="Stretch"
-                             HorizontalAlignment="Stretch" 
-                             Visibility="{x:Bind Path=ViewModel.IsReport,Mode=OneWay}"
-                             Padding="0" >
-                <Grid >
-                    <StackPanel VerticalAlignment="Center"  Orientation="Horizontal" >
-                        <Ellipse Width="24" Height="24" Margin="0 0 8 0">
-                            <Ellipse.Fill>
-                                <ImageBrush ImageSource="{x:Bind Path=ViewModel.AuthorForward.FaceUrl,Mode=OneWay,Converter={StaticResource imageConvert2},ConverterParameter='64w'}"></ImageBrush>
-                            </Ellipse.Fill>
-                        </Ellipse>
-                        <TextBlock VerticalAlignment="Center" Foreground="#178bcf">
-                            <Run Text="{x:Bind Path=ViewModel.Extend.OrigName,Mode=OneWay}"></Run>
-                            <Run Text="{x:Bind Path=ViewModel.AuthorForward.PtimeLabelText,Mode=OneWay}" Foreground="Gray" FontSize="12"></Run>
-                        </TextBlock>
-                    </StackPanel>
-                    <Button HorizontalAlignment="Right" 
-                            Foreground="Gray" 
-                            Background="Transparent">
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE17C;" />
-                    </Button>
-                </Grid>
-            </HyperlinkButton>
-
-            <HyperlinkButton Grid.Column="1" Padding="12,0,0,0" VerticalAlignment="Top" >
+            <HyperlinkButton 
+                Grid.Column="1" 
+                Visibility="{x:Bind ViewModel.IsReport,Converter={StaticResource display},Mode=OneWay}"
+                Padding="12,0,0,0" VerticalAlignment="Top" >
                 <Grid Height="56" >
                     <StackPanel VerticalAlignment="Center" >
                         <StackPanel Orientation="Horizontal" >
@@ -73,7 +52,15 @@
                     </StackPanel>
                 </Grid>
             </HyperlinkButton>
-            <AppBarButton Background="Transparent" Style="{StaticResource AppBarButtonNoChevronStyle}" Width="48" Height="48" VerticalAlignment="Center" Margin="8,0,0,0" Grid.Column="2" Icon="More" Foreground="Gray">
+            <AppBarButton 
+                Background="Transparent" 
+                Visibility="{x:Bind ViewModel.IsReport,Converter={StaticResource display},Mode=OneWay}"
+                Style="{StaticResource AppBarButtonNoChevronStyle}" 
+                Width="48" 
+                Height="48" 
+                VerticalAlignment="Center" 
+                Margin="8,0,0,0" 
+                Grid.Column="2" Icon="More" Foreground="Gray">
                 <AppBarButton.Flyout>
                     <MenuFlyout>
                         <MenuFlyoutItem Text="打开详情">
@@ -99,6 +86,31 @@
                     </MenuFlyout>
                 </AppBarButton.Flyout>
             </AppBarButton>
+
+            <HyperlinkButton HorizontalContentAlignment="Stretch"
+                             HorizontalAlignment="Stretch" 
+                             Grid.ColumnSpan="2"
+                             Visibility="{x:Bind Path=ViewModel.IsReport,Mode=OneWay}"
+                             Padding="0" >
+                <Grid >
+                    <StackPanel VerticalAlignment="Center"  Orientation="Horizontal" >
+                        <Ellipse Width="24" Height="24" Margin="0 0 8 0">
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="{x:Bind Path=ViewModel.AuthorForward.FaceUrl,Mode=OneWay,Converter={StaticResource imageConvert2},ConverterParameter='64w'}"></ImageBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <TextBlock VerticalAlignment="Center" Foreground="#178bcf">
+                            <Run Text="{x:Bind Path=ViewModel.Extend.OrigName,Mode=OneWay}"></Run>
+                            <Run Text="{x:Bind Path=ViewModel.AuthorForward.PtimeLabelText,Mode=OneWay}" Foreground="Gray" FontSize="12"></Run>
+                        </TextBlock>
+                    </StackPanel>
+                    <Button HorizontalAlignment="Right" 
+                            Foreground="Gray" 
+                            Background="Transparent">
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE17C;" />
+                    </Button>
+                </Grid>
+            </HyperlinkButton>
         </Grid>
         <ContentPresenter Margin="0 4" 
                           Visibility="{x:Bind ViewModel.ShowContent,Mode=OneWay}"
@@ -109,7 +121,7 @@
         <StackPanel 
             Margin="0 4 0 0" 
             Orientation="Horizontal"
-            Visibility="{x:Bind ViewModel.IsReport,Converter={StaticResource display}}">
+            Visibility="{x:Bind ViewModel.IsReport,Mode=OneWay,Converter={StaticResource display}}">
             <StackPanel.Resources>
                 <Style TargetType="Button">
                     <Setter Property="Margin" Value="0,8,12,0"/>

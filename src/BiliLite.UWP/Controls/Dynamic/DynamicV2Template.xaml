@@ -5,16 +5,140 @@
     xmlns:local="using:BiliLite.Controls.Dynamic"
     xmlns:dataTemplateSelectors="using:BiliLite.Controls.DataTemplateSelectors">
     <dataTemplateSelectors:UserDynamicItemV2DataTemplateSelector x:Key="DynamicTemplateSelector" 
+                                                                 AvTemplate="{StaticResource DynamicAv}"
+                                                                 PgcTemplate="{StaticResource DynamicPgc}"
+                                                                 WordTemplate="{StaticResource DynamicWord}"
+                                                                 MusicTemplate="{StaticResource DynamicMusic}"
                                                                  ArticleTemplate="{StaticResource DynamicArticle}"
                                                                  OtherTemplate="{StaticResource DynamicOther}"
                                                                  ForwardTemplate="{StaticResource DynamicForward}"
                                                                  Draw1x1Template="{StaticResource DynamicDraw1x1}"
                                                                  Draw2x2Template="{StaticResource DynamicDraw2x2}"
-                                                                 Draw3x3Template="{StaticResource DynamicDraw3x3}">
+                                                                 Draw3x3Template="{StaticResource DynamicDraw3x3}"
+                                                                 CommonSquareTemplate="{StaticResource DynamicCommonSquare}">
     </dataTemplateSelectors:UserDynamicItemV2DataTemplateSelector>
 
-    <DataTemplate x:Key="DynamicDraw">
-        <local:DynamicItemV2Control DataContext="{Binding}" ></local:DynamicItemV2Control>
+    <DataTemplate x:Key="DynamicWord">
+        <local:DynamicItemV2Control ViewModel="{Binding}"></local:DynamicItemV2Control>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DynamicAv">
+        <local:DynamicItemV2Control ViewModel="{Binding}">
+            <local:DynamicItemV2Control.CardContent>
+                <Button HorizontalAlignment="Stretch" 
+                HorizontalContentAlignment="Left" 
+                Padding="0" 
+                Background="Transparent"  
+                Command="{Binding Path=UserDynamicItemDisplayCommands.LaunchUrlCommand}" 
+                CommandParameter="{Binding Path=OneRowInfo.Url}">
+                    <Button.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Icon="Add" 
+                                    Text="添加到稍后再看" 
+                                    Command="{Binding Path=UserDynamicItemDisplayCommands.WatchLaterCommand}" 
+                                    CommandParameter="{Binding Path=OneRowInfo.ID}"></MenuFlyoutItem>
+                        </MenuFlyout>
+                    </Button.ContextFlyout>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid>
+                            <Border CornerRadius="4">
+                                <Image Source="{Binding Path=Dynamic.DynArchive.Cover}" Width="{Binding Path=CoverWidth}"></Image>
+                            </Border>
+                            <Border Background="#C8FF69B4" CornerRadius="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4">
+                                <TextBlock Margin="4 2" Foreground="White" FontSize="12" Text="视频"></TextBlock>
+                            </Border>
+                            <Border Background="#C8000000" CornerRadius="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4">
+                                <TextBlock Margin="4 2" Foreground="White" FontSize="12" Text="{Binding Path=Dynamic.DynArchive.CoverLeftText1}"></TextBlock>
+                            </Border>
+                        </Grid>
+
+                        <StackPanel HorizontalAlignment="Stretch" Grid.Column="1" Margin="8 4 8 0">
+                            <TextBlock Text="{Binding Path=Dynamic.DynArchive.Title}" Foreground="{ThemeResource TextColor}" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap"></TextBlock>
+                            <TextBlock Margin="0 8 0 0" FontSize="14" Foreground="Gray">
+                        <Run Text="{Binding Dynamic.DynArchive.CoverLeftText2}"></Run>
+                        <Run Text=" "></Run>
+                        <Run Text="{Binding Dynamic.DynArchive.CoverLeftText3}"></Run>
+                            </TextBlock>
+                        </StackPanel>
+                    </Grid>
+                </Button>
+            </local:DynamicItemV2Control.CardContent>
+        </local:DynamicItemV2Control>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DynamicPgc">
+        <local:DynamicItemV2Control ViewModel="{Binding}">
+            <local:DynamicItemV2Control.CardContent>
+                <Button HorizontalAlignment="Stretch" 
+                HorizontalContentAlignment="Left" 
+                Padding="0" 
+                Background="Transparent"  
+                Command="{Binding Path=UserDynamicItemDisplayCommands.LaunchUrlCommand}" 
+                CommandParameter="{Binding Path=OneRowInfo.Url}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid>
+                            <Border CornerRadius="4">
+                                <Image Source="{Binding Path=Dynamic.DynPgc.Cover}" Width="{Binding Path=CoverWidth}"></Image>
+                            </Border>
+                            <Border Background="#C8FF69B4" CornerRadius="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4">
+                                <TextBlock Margin="4 2" Foreground="White" FontSize="12" Text="番剧"></TextBlock>
+                            </Border>
+                            <Border Background="#C8000000" CornerRadius="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4">
+                                <TextBlock Margin="4 2" Foreground="White" FontSize="12" Text="{Binding Path=Dynamic.DynArchive.CoverLeftText1}"></TextBlock>
+                            </Border>
+                        </Grid>
+
+                        <StackPanel HorizontalAlignment="Stretch" Grid.Column="1" Margin="8 4 8 0">
+                            <TextBlock Text="{Binding Path=Dynamic.DynPgc.Title}" Foreground="{ThemeResource TextColor}" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap"></TextBlock>
+                        </StackPanel>
+                    </Grid>
+                </Button>
+            </local:DynamicItemV2Control.CardContent>
+        </local:DynamicItemV2Control>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DynamicMusic">
+        <local:DynamicItemV2Control ViewModel="{Binding}">
+            <local:DynamicItemV2Control.CardContent>
+                <Button HorizontalAlignment="Stretch" 
+                HorizontalContentAlignment="Left" 
+                Padding="0" 
+                Background="Transparent"  
+                Command="{Binding Path=UserDynamicItemDisplayCommands.LaunchUrlCommand}" 
+                CommandParameter="{Binding Path=OneRowInfo.Url}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid>
+                            <Border CornerRadius="4">
+                                <Image Source="{Binding Path=Dynamic.DynMusic.Cover}" Width="80"></Image>
+                            </Border>
+                            <Border Background="#C8FF69B4" CornerRadius="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4">
+                                <TextBlock Margin="4 2" Foreground="White" FontSize="12" Text="音频"></TextBlock>
+                            </Border>
+                            <Border Background="#C8000000" CornerRadius="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4">
+                                <TextBlock Margin="4 2" Foreground="White" FontSize="12" Text="{Binding Path=Dynamic.DynArchive.CoverLeftText1}"></TextBlock>
+                            </Border>
+                        </Grid>
+
+                        <StackPanel HorizontalAlignment="Stretch" Grid.Column="1" Margin="8 4 8 0">
+                            <TextBlock Text="{Binding Path=Dynamic.DynMusic.Title}" Foreground="{ThemeResource TextColor}" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap"></TextBlock>
+                            <TextBlock Margin="0 8 0 0" FontSize="14" Foreground="Gray" Text="{Binding Dynamic.DynMusic.Label1}"></TextBlock>
+                        </StackPanel>
+                    </Grid>
+                </Button>
+            </local:DynamicItemV2Control.CardContent>
+        </local:DynamicItemV2Control>
     </DataTemplate>
 
     <DataTemplate x:Key="DynamicForward">
@@ -67,7 +191,6 @@
             </local:DynamicItemV2Control.CardContent>
         </local:DynamicItemV2Control>
     </DataTemplate>
-
 
     <DataTemplate x:Key="DynamicDraw1x1">
         <local:DynamicItemV2Control ViewModel="{Binding}">
@@ -134,6 +257,38 @@
                         </DataTemplate>
                     </GridView.ItemTemplate>
                 </GridView>
+            </local:DynamicItemV2Control.CardContent>
+        </local:DynamicItemV2Control>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DynamicCommonSquare">
+        <local:DynamicItemV2Control ViewModel="{Binding}">
+            <local:DynamicItemV2Control.CardContent>
+                <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="0" Background="Transparent"  Command="{Binding Path=UserDynamicItemDisplayCommands.LaunchUrlCommand}" CommandParameter="{Binding Path=OneRowInfo.Url}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid>
+                            <Border CornerRadius="4">
+                                <Image Source="{Binding Path=Dynamic.DynCommon.Cover}" Width="80"></Image>
+                            </Border>
+                            <Border Background="#C8FF69B4" CornerRadius="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4">
+                                <TextBlock Margin="4 2" Foreground="White" FontSize="12" Text="活动"></TextBlock>
+                            </Border>
+                        </Grid>
+
+                        <StackPanel HorizontalAlignment="Stretch" Grid.Column="1" Margin="8 4 8 0">
+                            <TextBlock Text="{Binding Path=Dynamic.DynCommon.Title}" Foreground="{ThemeResource TextColor}" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap"></TextBlock>
+                            <TextBlock  Text="{Binding Path=Dynamic.DynCommon.Desc}" 
+                                        Margin="0 8 0 0" 
+                                        FontSize="14" 
+                                        Foreground="Gray">
+                            </TextBlock>
+                        </StackPanel>
+                    </Grid>
+                </Button>
             </local:DynamicItemV2Control.CardContent>
         </local:DynamicItemV2Control>
     </DataTemplate>

@@ -131,6 +131,9 @@ namespace BiliLite.Extensions
                     .ForMember(dest => dest.Author,
                         opt => opt.MapFrom(src =>
                             src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleAuthor).ModuleAuthor))
+                    .ForMember(dest => dest.AuthorForward,
+                        opt => opt.MapFrom(src =>
+                            src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleAuthorForward).ModuleAuthorForward))
                     .ForMember(dest => dest.Dynamic,
                         opt => opt.MapFrom(src =>
                             src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleDynamic).ModuleDynamic))

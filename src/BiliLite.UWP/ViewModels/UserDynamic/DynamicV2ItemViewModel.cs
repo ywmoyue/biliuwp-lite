@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Windows.UI.Xaml.Controls;
 using AutoMapper;
 using Bilibili.App.Dynamic.V2;
 using BiliLite.Extensions;
 using BiliLite.Models.Common;
-using BiliLite.Models.Dynamic;
 using BiliLite.ViewModels.Common;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Linq;
 using PropertyChanged;
 
 namespace BiliLite.ViewModels.UserDynamic
@@ -75,10 +74,7 @@ namespace BiliLite.ViewModels.UserDynamic
                     {
                         return
                             Desc.Text.UserDynamicStringToRichText(
-                                Extend.DynIdStr,
-                                new List<DynamicCardDisplayEmojiInfoItemModel>(),
-                                JObject.FromObject(new { }));
-
+                                Extend.DynIdStr,wordNodes:Extend.OpusSummary?.Summary?.Text?.Nodes?.ToList());
                     }
 
                     return new RichTextBlock();

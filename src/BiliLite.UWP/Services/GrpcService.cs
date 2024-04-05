@@ -63,7 +63,7 @@ namespace BiliLite.Services
             }
         }
 
-        public async Task<DynSpaceRsp> GetDynSpace(long mid,string from = "space", int page = 1)
+        public async Task<DynSpaceRsp> GetDynSpace(long mid,string from = "space", int page = 1,string offset = null)
         {
             var message = new DynSpaceReq()
             {
@@ -71,6 +71,10 @@ namespace BiliLite.Services
                 From = from,
                 HostUid = mid
             };
+            if (offset != null)
+            {
+                message.HistoryOffset = offset;
+            }
             var requestUserInfo = new GrpcBiliUserInfo(
                 SettingService.Account.AccessKey,
                 SettingService.Account.UserID,

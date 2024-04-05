@@ -84,11 +84,21 @@
 
         public static class DynamicTypes
         {
+            public const string AV = "Av";
+
+            public const string PGC = "Pgc";
+
+            public const string WORD = "Word";
+
             public const string DRAW = "Draw";
+
+            public const string MUSIC = "Music";
 
             public const string ARTICLE = "Article";
 
             public const string FORWARD = "Forward";
+
+            public const string COMMON_SQUARE = "CommonSquare";
         }
     }
 }
