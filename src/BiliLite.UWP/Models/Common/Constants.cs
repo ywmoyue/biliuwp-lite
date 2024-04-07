@@ -99,6 +99,8 @@
             public const string FORWARD = "Forward";
 
             public const string COMMON_SQUARE = "CommonSquare";
+
+            public const string LIVE_RCMD = "LiveRcmd";
         }
     }
 }

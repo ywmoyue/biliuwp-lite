@@ -25,7 +25,9 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <HyperlinkButton Padding="0"
-                             Visibility="{x:Bind ViewModel.IsReport,Converter={StaticResource display},Mode=OneWay}"
+                             Command="{x:Bind Path=ViewModel.Parent.UserCommand,Mode=OneWay}" 
+                             CommandParameter="{x:Bind Path=ViewModel.Author.Mid,Mode=OneWay}"
+                             Visibility="{x:Bind ViewModel.IsRepost,Converter={StaticResource display},Mode=OneWay}"
                              VerticalAlignment="Top">
                 <Grid >
                     <Ellipse Width="40"  Height="40" Stroke="WhiteSmoke" StrokeThickness="1">
@@ -40,7 +42,9 @@
 
             <HyperlinkButton 
                 Grid.Column="1" 
-                Visibility="{x:Bind ViewModel.IsReport,Converter={StaticResource display},Mode=OneWay}"
+                Command="{x:Bind Path=ViewModel.Parent.UserCommand,Mode=OneWay}" 
+                CommandParameter="{x:Bind Path=ViewModel.Author.Mid,Mode=OneWay}"
+                Visibility="{x:Bind ViewModel.IsRepost,Converter={StaticResource display},Mode=OneWay}"
                 Padding="12,0,0,0" VerticalAlignment="Top" >
                 <Grid Height="56" >
                     <StackPanel VerticalAlignment="Center" >
@@ -54,7 +58,7 @@
             </HyperlinkButton>
             <AppBarButton 
                 Background="Transparent" 
-                Visibility="{x:Bind ViewModel.IsReport,Converter={StaticResource display},Mode=OneWay}"
+                Visibility="{x:Bind ViewModel.IsRepost,Converter={StaticResource display},Mode=OneWay}"
                 Style="{StaticResource AppBarButtonNoChevronStyle}" 
                 Width="48" 
                 Height="48" 
@@ -63,19 +67,18 @@
                 Grid.Column="2" Icon="More" Foreground="Gray">
                 <AppBarButton.Flyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem Text="打开详情">
+                        <MenuFlyoutItem Text="打开详情"
+                                        Command="{x:Bind Path=ViewModel.Parent.DetailCommand,Mode=OneWay}" 
+                                        CommandParameter="{x:Bind Path=ViewModel.Extend.DynIdStr,Mode=OneWay}">
                             <MenuFlyoutItem.Icon>
                                 <SymbolIcon Symbol="OpenWith"></SymbolIcon>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="网页打开" >
+                        <MenuFlyoutItem Text="网页打开" 
+                                        Command="{x:Bind Path=ViewModel.Parent.WebDetailCommand,Mode=OneWay}" 
+                                        CommandParameter="{x:Bind Path=ViewModel.Extend.DynIdStr,Mode=OneWay}">
                             <MenuFlyoutItem.Icon>
                                 <SymbolIcon Symbol="World"></SymbolIcon>
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="举报">
-                            <MenuFlyoutItem.Icon>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7BA;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                         <!--<MenuFlyoutItem Text="删除" Visibility="{x:Bind Path=IsSelf,Mode=OneWay}">
@@ -90,7 +93,7 @@
             <HyperlinkButton HorizontalContentAlignment="Stretch"
                              HorizontalAlignment="Stretch" 
                              Grid.ColumnSpan="2"
-                             Visibility="{x:Bind Path=ViewModel.IsReport,Mode=OneWay}"
+                             Visibility="{x:Bind Path=ViewModel.IsRepost,Mode=OneWay}"
                              Padding="0" >
                 <Grid >
                     <StackPanel VerticalAlignment="Center"  Orientation="Horizontal" >
@@ -121,7 +124,7 @@
         <StackPanel 
             Margin="0 4 0 0" 
             Orientation="Horizontal"
-            Visibility="{x:Bind ViewModel.IsReport,Mode=OneWay,Converter={StaticResource display}}">
+            Visibility="{x:Bind ViewModel.IsRepost,Mode=OneWay,Converter={StaticResource display}}">
             <StackPanel.Resources>
                 <Style TargetType="Button">
                     <Setter Property="Margin" Value="0,8,12,0"/>
@@ -133,30 +136,40 @@
                     <Setter Property="CornerRadius" Value="4"/>
                 </Style>
             </StackPanel.Resources>
-            <Button>
+            <Button
+                Command="{x:Bind Path=ViewModel.Parent.RepostCommand,Mode=OneWay}" 
+                CommandParameter="{x:Bind Path=ViewModel,Mode=OneWay}">
                 <StackPanel Orientation="Horizontal">
                     <fontAwesome5:FontAwesome Icon="Solid_Share" Margin="0 2 0 0" FontSize="14"></fontAwesome5:FontAwesome>
                     <TextBlock Margin="8 0" Text="{x:Bind Path=ViewModel.Stat.Repost,Mode=OneWay,Converter={StaticResource countConvert},ConverterParameter='转发'}"></TextBlock>
                 </StackPanel>
             </Button>
-            <Button>
+            <Button 
+                Command="{x:Bind Path=ViewModel.Parent.CommentCommand,Mode=OneWay}" 
+                CommandParameter="{x:Bind Path=ViewModel,Mode=OneWay}">
                 <StackPanel Orientation="Horizontal">
                     <fontAwesome5:FontAwesome Icon="Regular_Comment" Margin="0 2 0 0" FontSize="14"></fontAwesome5:FontAwesome>
                     <TextBlock Margin="8 0" Text="{x:Bind Path=ViewModel.Stat.Reply,Mode=OneWay,Converter={StaticResource countConvert},ConverterParameter='评论'}"></TextBlock>
                 </StackPanel>
             </Button>
-            <Button Visibility="{x:Bind Path=ViewModel.Stat.LikeInfo.IsLike,Mode=OneWay,Converter={StaticResource display}}" >
+            <Button
+                Command="{x:Bind Path=ViewModel.Parent.LikeCommand,Mode=OneWay}" 
+                CommandParameter="{x:Bind Path=ViewModel,Mode=OneWay}"
+                Visibility="{x:Bind Path=ViewModel.Liked,Mode=OneWay,Converter={StaticResource display}}" >
                 <StackPanel Orientation="Horizontal">
                     <fontAwesome5:FontAwesome Icon="Regular_ThumbsUp" Margin="0 2 0 0" FontSize="14"></fontAwesome5:FontAwesome>
                     <TextBlock Margin="8 0" 
-                               Text="{x:Bind Path=ViewModel.Stat.Like,Mode=OneWay,Converter={StaticResource countConvert},ConverterParameter='点赞'}"></TextBlock>
+                               Text="{x:Bind Path=ViewModel.LikeCount,Mode=OneWay,Converter={StaticResource countConvert},ConverterParameter='点赞'}"></TextBlock>
                 </StackPanel>
             </Button>
-            <Button Visibility="{x:Bind Path=ViewModel.Stat.LikeInfo.IsLike,Mode=OneWay}" Foreground="{ThemeResource HighLightColor}">
+            <Button
+                Command="{x:Bind Path=ViewModel.Parent.LikeCommand,Mode=OneWay}" 
+                CommandParameter="{x:Bind Path=ViewModel,Mode=OneWay}"
+                Visibility="{x:Bind Path=ViewModel.Liked,Mode=OneWay}" Foreground="{ThemeResource HighLightColor}">
                 <StackPanel Orientation="Horizontal">
                     <fontAwesome5:FontAwesome Icon="Regular_ThumbsUp" Margin="0 2 0 0" FontSize="14"></fontAwesome5:FontAwesome>
                     <TextBlock Margin="8 0" 
-                               Text="{x:Bind Path=ViewModel.Stat.Like,Mode=OneWay,Converter={StaticResource countConvert},ConverterParameter='点赞'}"></TextBlock>
+                               Text="{x:Bind Path=ViewModel.LikeCount,Mode=OneWay,Converter={StaticResource countConvert},ConverterParameter='点赞'}"></TextBlock>
                 </StackPanel>
             </Button>
         </StackPanel>

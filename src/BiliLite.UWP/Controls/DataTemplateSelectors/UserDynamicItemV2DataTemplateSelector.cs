@@ -37,6 +37,7 @@ namespace BiliLite.Controls.DataTemplateSelectors
                     { Constants.DynamicTypes.WORD, (selector, model) => selector.WordTemplate },
                     { Constants.DynamicTypes.MUSIC, (selector, model) => selector.MusicTemplate },
                     { Constants.DynamicTypes.COMMON_SQUARE, (selector, model) => selector.CommonSquareTemplate },
+                    { Constants.DynamicTypes.LIVE_RCMD, (selector, model) => selector.LiveRcmdTemplate },
                 };
         }
 
@@ -59,6 +60,8 @@ namespace BiliLite.Controls.DataTemplateSelectors
         public DataTemplate Draw3x3Template { get; set; }
 
         public DataTemplate CommonSquareTemplate { get; set; }
+
+        public DataTemplate LiveRcmdTemplate { get; set; }
 
         public DataTemplate OtherTemplate { get; set; }
 

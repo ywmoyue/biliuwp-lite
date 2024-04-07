@@ -11,9 +11,9 @@ namespace BiliLite.Models.Common.UserDynamic
 
         public string ImageUrl { get; set; }
 
-        public int Width { get; set; }
+        public long Width { get; set; }
 
-        public int Height { get; set; }
+        public long Height { get; set; }
 
         public List<string> AllImages { get; set; }
 

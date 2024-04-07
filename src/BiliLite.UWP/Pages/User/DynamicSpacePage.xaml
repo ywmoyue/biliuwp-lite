@@ -25,6 +25,46 @@
             <ItemsPanelTemplate x:Key="ListPanel">
                 <ItemsStackPanel />
             </ItemsPanelTemplate>
+
+            <Storyboard x:Name="HideComment">
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CommentPanel" Storyboard.TargetProperty="(UIElement.Opacity)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.5000000" Value="0"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.5100000" Value="0"/>
+                </DoubleAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CommentPanel" Storyboard.TargetProperty="(UIElement.Visibility)">
+                    <DiscreteObjectKeyFrame KeyTime="00:00:00.5000000">
+                        <DiscreteObjectKeyFrame.Value>
+                            <Visibility>Visible</Visibility>
+                        </DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                    <DiscreteObjectKeyFrame KeyTime="00:00:00.5100000">
+                        <DiscreteObjectKeyFrame.Value>
+                            <Visibility>Collapsed</Visibility>
+                        </DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+            </Storyboard>
+
+            <Storyboard x:Name="ShowComment">
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CommentPanel" Storyboard.TargetProperty="(UIElement.Opacity)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.0100000" Value="0"/>
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.5100000" Value="1"/>
+                </DoubleAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CommentPanel" Storyboard.TargetProperty="(UIElement.Visibility)">
+                    <DiscreteObjectKeyFrame KeyTime="00:00:00">
+                        <DiscreteObjectKeyFrame.Value>
+                            <Visibility>Collapsed</Visibility>
+                        </DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                    <DiscreteObjectKeyFrame KeyTime="00:00:00.0100000">
+                        <DiscreteObjectKeyFrame.Value>
+                            <Visibility>Visible</Visibility>
+                        </DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+            </Storyboard>
         </ResourceDictionary>
     </Page.Resources>
     <Grid>
@@ -63,5 +103,22 @@
                 <SymbolIcon Symbol="Refresh" Foreground="White"></SymbolIcon>
             </controls:RoundButton>
         </StackPanel>
+        <Grid x:Name="CommentPanel"
+              Visibility="Collapsed"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+              Background="{ThemeResource HalfTransparentBackground}">
+            <Grid 
+                Tapped="CommentPanel_OnTapped"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Background="Transparent"></Grid>
+            <Grid HorizontalAlignment="Right"
+                  Background="{ThemeResource ApplicationBackground}"
+                  Width="{x:Bind m_viewModel.CommentControlWidth}"
+                  VerticalAlignment="Stretch">
+                <controls:CommentControl x:Name="Comment"></controls:CommentControl>
+            </Grid>
+        </Grid>
     </Grid>
 </Page>

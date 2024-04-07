@@ -28,12 +28,14 @@ namespace BiliLite.Modules.User
             dynamicAPI = new DynamicAPI();
             Images = new ObservableCollection<UploadImagesModel>();
         }
+        
         public SendDynamicVM(UserDynamicItemDisplayViewModel repostInfo)
         {
             dynamicAPI = new DynamicAPI();
             RepostInfo = repostInfo;
             IsRepost = true;
         }
+
         private bool _IsRepost = false;
         public bool IsRepost
         {

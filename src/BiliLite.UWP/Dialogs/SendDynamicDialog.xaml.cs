@@ -27,6 +27,12 @@ namespace BiliLite.Dialogs
             sendDynamicVM = new SendDynamicVM();
             topicVM = new TopicVM();
         }
+
+        public SendDynamicDialog(DynamicV2ItemViewModel userDynamicItem)
+        {
+            throw new NotImplementedException();
+        }
+
         public SendDynamicDialog(UserDynamicItemDisplayViewModel userDynamicItem)
         {
             this.InitializeComponent();

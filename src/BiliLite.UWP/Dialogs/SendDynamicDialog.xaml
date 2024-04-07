@@ -104,8 +104,20 @@
             <TextBox x:Name="txtContent" TextChanged="txtContent_TextChanged" MinHeight="120"  Margin="0 4 0 0" TextWrapping="Wrap" MaxLength="233"  AcceptsReturn="True" PlaceholderText="说点什么吧..."></TextBox>
 
             <StackPanel Visibility="{x:Bind Path=sendDynamicVM.IsRepost,Mode=OneWay}" Margin="0 8" Padding="8" Background="#33808080">
-                <TextBlock MaxLines="1" TextTrimming="CharacterEllipsis">@<Run Text="{x:Bind Path=sendDynamicVM.RepostInfo.UserName,Mode=OneWay}"></Run></TextBlock>
-                <TextBlock Text="{x:Bind Path=sendDynamicVM.RepostInfo.ContentStr,Mode=OneWay}" MaxLines="1" TextTrimming="CharacterEllipsis" FontSize="14" Foreground="Gray"></TextBlock>
+                <TextBlock 
+                    MaxLines="1" 
+                    TextTrimming="CharacterEllipsis"
+                    Visibility="{x:Bind Path=sendDynamicVM.IsRepost,Mode=OneWay}" >
+                    @
+                    <Run Text="{x:Bind Path=sendDynamicVM.RepostInfo.UserName,Mode=OneWay}"></Run>
+                </TextBlock>
+                <TextBlock 
+                    Visibility="{x:Bind Path=sendDynamicVM.IsRepost,Mode=OneWay}"
+                    Text="{x:Bind Path=sendDynamicVM.RepostInfo.ContentStr,Mode=OneWay}" 
+                    MaxLines="1" 
+                    TextTrimming="CharacterEllipsis" 
+                    FontSize="14" 
+                    Foreground="Gray"></TextBlock>
             </StackPanel>
 
             <Grid Margin="0 4 0 0">
