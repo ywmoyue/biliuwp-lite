@@ -135,6 +135,14 @@ namespace BiliLite.Models.Common.Home
                     Title = "历史记录",
                     NeedLogin = true,
                     Show = false
+                },
+                new HomeNavItem()
+                {
+                    Icon = FontAwesome5.EFontAwesomeIcon.Regular_Star,
+                    Page = typeof(Pages.User.FavoritePage),
+                    Title = "我的收藏",
+                    NeedLogin = true,
+                    Show = false
                 }
             };
         }
