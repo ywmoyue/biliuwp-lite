@@ -48,8 +48,7 @@ namespace BiliLite.Extensions
                     .ForMember(dest => dest.Message, opt => opt.MapFrom(src => src.Content.Message))
                     .ForMember(dest => dest.Emote, opt => opt.MapFrom(src => src.Content.Emote));
                 expression.CreateMap<CommentItem, CommentViewModel>()
-                    .ForMember(dest => dest.HotReplies, opt => opt.MapFrom(src => src.Replies))
-                    .ForMember(dest => dest.HotReplyContents, opt => opt.MapFrom(src => src.Replies));
+                    .ForMember(dest => dest.HotReplies, opt => opt.MapFrom(src => src.Replies));
                 expression.CreateMap<DataCommentModel, DataCommentViewModel>();
                 expression.CreateMap<CommentContentModel, CommentContentViewModel>();
                 expression.CreateMap<VideoDetailModel, VideoDetailViewModel>();

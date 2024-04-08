@@ -405,7 +405,7 @@
                 <ListView  
                     Grid.Row="6"
                     Visibility="{x:Bind ShowHotReplies,Mode=OneWay}"
-                    ItemsSource="{x:Bind HotReplyContents,Mode=OneWay}" 
+                    ItemsSource="{x:Bind HotReplies,Mode=OneWay}" 
                     ItemContainerStyle="{StaticResource hotReplyStyle}"  
                     Background="{ThemeResource CardColor}"
                     Margin="0 0 8 0"
@@ -417,6 +417,7 @@
                         <DataTemplate>
                             <Grid>
                                 <ContentControl
+                                    Margin="4 0"
                                     FontSize="12" Content="{Binding Path=Content,Mode=OneWay}" Visibility="Visible">
                                 </ContentControl>
                             </Grid>
