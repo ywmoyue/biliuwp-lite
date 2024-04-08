@@ -6,48 +6,50 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using BiliLite.Extensions;
+using BiliLite.Models.Common.User.SendDynamic;
+using BiliLite.Modules;
+using BiliLite.ViewModels.Common;
+using PropertyChanged;
 
-namespace BiliLite.Modules.User
+namespace BiliLite.ViewModels.User.SendDynamic
 {
-    public class AtVM : IModules
+    public class AtViewModel : BaseViewModel
     {
-        readonly AtApi atApi;
-        public AtVM()
+        readonly AtApi m_atApi;
+
+        public AtViewModel()
         {
-            atApi = new AtApi();
+            m_atApi = new AtApi();
             SearchCommand = new RelayCommand<string>(Search);
             LoadMoreCommand = new RelayCommand(LoadMore);
             Users = new ObservableCollection<AtUserModel>();
         }
+
+        [DoNotNotify]
         public ICommand LoadMoreCommand { get; private set; }
+
+        [DoNotNotify]
         public ICommand SearchCommand { get; private set; }
 
+        public ObservableCollection<AtUserModel> Users { get; set; }
 
-        private ObservableCollection<AtUserModel> _user;
+        public bool Loading { get; set; } = true;
 
-        public ObservableCollection<AtUserModel> Users
-        {
-            get { return _user; }
-            set { _user = value; DoPropertyChanged("Users"); }
-        }
-
-        private bool _loading = true;
-        public bool Loading
-        {
-            get { return _loading; }
-            set { _loading = value; DoPropertyChanged("Loading"); }
-        }
+        [DoNotNotify]
         public int Page { get; set; } = 1;
+
+        [DoNotNotify]
         public string Keyword { get; set; }
+
         public async Task GetUser()
         {
             try
             {
                 Loading = true;
-                var api = atApi.RecommendAt(Page);
+                var api = m_atApi.RecommendAt(Page);
                 if (!string.IsNullOrEmpty(Keyword))
                 {
-                    api = atApi.SearchUser(Keyword, Page);
+                    api = m_atApi.SearchUser(Keyword, Page);
                 }
                 if (Page == 1)
                 {
@@ -102,7 +104,7 @@ namespace BiliLite.Modules.User
             }
             catch (Exception ex)
             {
-                var handel = HandelError<AtVM>(ex);
+                var handel = HandelError<AtViewModel>(ex);
                 Notify.ShowMessageToast(handel.message);
             }
             finally
@@ -132,11 +134,4 @@ namespace BiliLite.Modules.User
             await GetUser();
         }
     }
-}
-public class AtUserModel
-{
-    public long ID { get; set; }
-    public string UserName { get; set; }
-    public string Face { get; set; }
-    public string Display { get { return "@" + UserName; } }
 }

@@ -1,8 +1,10 @@
-﻿using BiliLite.ViewModels.Comment;
+﻿using BiliLite.ViewModels;
+using BiliLite.ViewModels.Comment;
 using BiliLite.ViewModels.Download;
 using BiliLite.ViewModels.Home;
 using BiliLite.ViewModels.Live;
 using BiliLite.ViewModels.User;
+using BiliLite.ViewModels.User.SendDynamic;
 using BiliLite.ViewModels.UserDynamic;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -27,6 +29,11 @@ namespace BiliLite.Extensions
             services.AddTransient<UserFollowingTagsFlyoutViewModel>();
             services.AddTransient<UserAttentionButtonViewModel>();
             services.AddTransient<UserDynamicSpaceViewModel>();
+            services.AddTransient<SendDynamicViewModel>();
+            services.AddTransient<SendDynamicV2ViewModel>();
+            services.AddTransient<EmoteViewModel>();
+            services.AddTransient<AtViewModel>();
+            services.AddTransient<TopicViewModel>();
             return services;
         }
     }

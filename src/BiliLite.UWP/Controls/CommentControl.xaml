@@ -11,6 +11,7 @@
     xmlns:convert="using:BiliLite.Converters" xmlns:modules="using:BiliLite.Modules"
     xmlns:comment="using:BiliLite.ViewModels.Comment"
     xmlns:common="using:BiliLite.Models.Common"
+    xmlns:viewModels="using:BiliLite.ViewModels"
     d:DesignHeight="300"
     d:DesignWidth="400"
     x:Name="CommentControlContent"
@@ -43,7 +44,7 @@
             <Grid Width="320">
                 <Pivot x:Name="PivotFace" ItemsSource="{x:Bind Path=emoteVM.Packages,Mode=OneWay}">
                     <Pivot.HeaderTemplate>
-                        <DataTemplate x:DataType="modules:EmotePackageModel">
+                        <DataTemplate x:DataType="viewModels:EmotePackageModel">
                             <TextBlock FontSize="18" Text="{x:Bind text}"></TextBlock>
                         </DataTemplate>
                     </Pivot.HeaderTemplate>

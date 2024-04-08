@@ -330,10 +330,10 @@ namespace BiliLite.ViewModels.UserDynamic
         {
             if (!await BiliExtensions.ActionCheckLogin()) return;
 
-            var sendDynamicDialog = new SendDynamicDialog();
+            var sendDynamicDialog = App.ServiceProvider.GetRequiredService<SendDynamicDialog>();
             if (data != null)
             {
-                sendDynamicDialog = new SendDynamicDialog(data);
+                sendDynamicDialog.SetRepost(data);
             }
             await sendDynamicDialog.ShowAsync();
         }

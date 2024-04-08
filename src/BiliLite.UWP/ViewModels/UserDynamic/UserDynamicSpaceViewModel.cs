@@ -20,6 +20,7 @@ using BiliLite.Models;
 using BiliLite.Models.Requests.Api.User;
 using BiliLite.Dialogs;
 using BiliLite.Modules.User;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
 namespace BiliLite.ViewModels.UserDynamic
@@ -250,10 +251,10 @@ namespace BiliLite.ViewModels.UserDynamic
         {
             if (!await BiliExtensions.ActionCheckLogin()) return;
 
-            var sendDynamicDialog = new SendDynamicDialog();
+            var sendDynamicDialog = App.ServiceProvider.GetRequiredService<SendDynamicV2Dialog>();
             if (data != null)
             {
-                sendDynamicDialog = new SendDynamicDialog(data);
+                sendDynamicDialog.SetRepost(data);
             }
             await sendDynamicDialog.ShowAsync();
         }

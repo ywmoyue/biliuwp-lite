@@ -1,5 +1,5 @@
 ﻿<ContentDialog
-    x:Class="BiliLite.Dialogs.SendDynamicDialog"
+    x:Class="BiliLite.Dialogs.SendDynamicV2Dialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:BiliLite.Controls"
@@ -110,11 +110,11 @@
                     TextTrimming="CharacterEllipsis"
                     Visibility="{x:Bind Path=m_viewModel.IsRepost,Mode=OneWay}" >
                     @
-                    <Run Text="{x:Bind Path=m_viewModel.RepostInfo.UserName,Mode=OneWay}"></Run>
+                    <Run Text="{x:Bind Path=m_viewModel.RepostInfo.Author.Author.Name,Mode=OneWay}"></Run>
                 </TextBlock>
                 <TextBlock 
                     Visibility="{x:Bind Path=m_viewModel.IsRepost,Mode=OneWay}"
-                    Text="{x:Bind Path=m_viewModel.RepostInfo.ContentStr,Mode=OneWay}" 
+                    Text="{x:Bind Path=m_viewModel.RepostInfo.Desc.Text,Mode=OneWay}" 
                     MaxLines="1" 
                     TextTrimming="CharacterEllipsis" 
                     FontSize="14" 
