@@ -16,7 +16,7 @@
         <converters:ColorConvert x:Name="colorConvert"></converters:ColorConvert>
     </UserControl.Resources>
 
-    <StackPanel>
+    <StackPanel CornerRadius="8" Padding="12" Background="{ThemeResource CardColor}">
         <!--用户信息-->
         <Grid Height="64">
             <Grid.ColumnDefinitions>

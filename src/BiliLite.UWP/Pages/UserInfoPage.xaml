@@ -293,7 +293,7 @@
                                 <TextBlock FontSize="15">动态</TextBlock>
                             </PivotItem.Header>
 
-                            <Grid Background="{ThemeResource AppBarBackgroundThemeBrush}">
+                            <Grid Background="Transparent">
                                 <Frame x:Name="DynamicSpaceFrame">
                                 </Frame>
                             </Grid>

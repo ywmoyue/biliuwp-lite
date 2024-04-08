@@ -56,6 +56,7 @@ namespace BiliLite.ViewModels.UserDynamic
             RepostCommand = new RelayCommand<DynamicV2ItemViewModel>(OpenSendDynamicDialog);
             LaunchUrlCommand = new RelayCommand<string>(LaunchUrl);
             CopyDynCommand = new RelayCommand<DynamicV2ItemViewModel>(CopyDyn);
+            TagCommand = new RelayCommand<object>(OpenTag);
             WatchLaterCommand = m_watchLaterVm.AddCommandWithAvId;
         }
 
@@ -84,6 +85,8 @@ namespace BiliLite.ViewModels.UserDynamic
         public ICommand WatchLaterCommand { get; set; }
 
         public ICommand CopyDynCommand { get; set; }
+
+        public ICommand TagCommand { get; set; }
 
         public bool CanLoadMore { get; set; }
 
@@ -136,6 +139,18 @@ namespace BiliLite.ViewModels.UserDynamic
                 page = typeof(WebPage),
                 title = "加载中...",
                 parameters = url
+            });
+        }
+
+        private void OpenTag(object name)
+        {
+            //TODO 打开话题
+            MessageCenter.NavigateToPage(this, new NavigationInfo()
+            {
+                icon = Symbol.World,
+                page = typeof(WebPage),
+                title = name.ToString(),
+                parameters = "https://t.bilibili.com/topic/name/" + Uri.EscapeDataString(name.ToString())
             });
         }
 

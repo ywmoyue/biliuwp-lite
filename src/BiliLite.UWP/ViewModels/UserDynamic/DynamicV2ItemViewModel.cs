@@ -105,7 +105,8 @@ namespace BiliLite.ViewModels.UserDynamic
                     {
                         return
                             Desc.Text.UserDynamicStringToRichText(
-                                Extend.DynIdStr,wordNodes:Extend.OpusSummary?.Summary?.Text?.Nodes?.ToList());
+                                Extend.DynIdStr, wordNodes: Extend.OpusSummary?.Summary?.Text?.Nodes?.ToList(),
+                                bindingCommands: nameof(Parent));
                     }
 
                     return new RichTextBlock();

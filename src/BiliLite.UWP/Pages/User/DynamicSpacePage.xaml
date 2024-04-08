@@ -9,7 +9,7 @@
     xmlns:controls="using:BiliLite.Controls"
     xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
-    Background="{ThemeResource AppBarBackgroundThemeBrush}">
+    Background="{ThemeResource TopPaneBackground}">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -84,7 +84,6 @@
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
                     <Setter Property="MaxWidth" Value="800"></Setter>
                     <Setter Property="Margin" Value="4"></Setter>
-
                 </Style>
             </controls:MyListView.ItemContainerStyle>
         </controls:MyListView>
