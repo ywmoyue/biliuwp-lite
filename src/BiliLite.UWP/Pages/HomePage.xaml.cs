@@ -317,6 +317,8 @@ namespace BiliLite.Pages
         {
             if (args.Reason != AutoSuggestionBoxTextChangeReason.UserInput) return;
             var text = sender.Text;
+            text = text.TrimEnd();
+            if (string.IsNullOrWhiteSpace(text)) return;
             var suggestSearchContents = await new SearchService().GetSearchSuggestContents(text);
             if (m_viewModel.SuggestSearchContents == null)
             {
