@@ -116,6 +116,13 @@ jobs:
       run: cp C:\Package\安装教程.pdf ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x64_Test\安装教程.pdf
       if: github.event.inputs.enableX64 == 'true'
 
+    - name: Remove x64 useless files
+      run: |
+        cd ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x64_Test
+        rm -r -fo *.appxsym
+        cd Dependencies
+        rm -r -fo arm,arm64,x86
+
     - name: Create x64 archive
       run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x64_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x64.zip
       if: github.event.inputs.enableX64 == 'true'
@@ -142,6 +149,13 @@ jobs:
     - name: copy x86 document
       run: cp C:\Package\安装教程.pdf ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x86_Test\安装教程.pdf
       if: github.event.inputs.enableX86 == 'true'
+
+    - name: Remove x86 useless files
+      run: |
+        cd ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x86_Test
+        rm -r -fo *.appxsym
+        cd Dependencies
+        rm -r -fo arm,arm64,x64
 
     - name: Create x86 archive
       run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x86_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x86.zip
@@ -170,6 +184,13 @@ jobs:
       run: cp C:\Package\安装教程.pdf ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_ARM64_Test\安装教程.pdf
       if: github.event.inputs.enableArm64 == 'true'
 
+    - name: Remove arm64 useless files
+      run: |
+        cd ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_ARM64_Test
+        rm -r -fo *.appxsym
+        cd Dependencies
+        rm -r -fo arm,x64,x86
+
     - name: Create ARM64 archive
       run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_ARM64_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_ARM64.zip
       if: github.event.inputs.enableArm64 == 'true'
@@ -196,6 +217,13 @@ jobs:
     - name: copy arm32 document
       run: cp C:\Package\安装教程.pdf ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_ARM_Test\安装教程.pdf
       if: github.event.inputs.enableArm32 == 'true'
+
+    - name: Remove arm32 useless files
+      run: |
+        cd ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_ARM_Test
+        rm -r -fo *.appxsym
+        cd Dependencies
+        rm -r -fo arm64,x64,x86
 
     - name: Create ARM32 archive
       run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_ARM_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_ARM.zip
