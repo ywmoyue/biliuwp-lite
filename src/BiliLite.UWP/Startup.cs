@@ -11,6 +11,7 @@ namespace BiliLite
         {
             services.AddMapper();
             services.AddViewModels();
+            services.AddControls();
             services.AddDanmakuController();
 
             services.AddSingleton<CookieService>();

@@ -1,11 +1,15 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using System;
+using Windows.UI.Xaml.Controls;
 using BiliLite.Extensions;
+using BiliLite.Services;
 using Newtonsoft.Json.Linq;
 
 namespace BiliLite.Models.Common.Comment
 {
     public class HotReply
     {
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+
         public string UserName { get; set; }
 
         public string Message { get; set; }
@@ -16,14 +20,23 @@ namespace BiliLite.Models.Common.Comment
         {
             get
             {
-                if (Message.Length <= 50)
+                try
                 {
-                    return $"{Message}"
-                        .ToRichTextBlock(Emote, lowProfilePrefix: $"{UserName}:  ");
-                }
+                    if (Message.Length <= 50)
+                    {
+                        return $"{Message}"
+                            .ToRichTextBlock(Emote, lowProfilePrefix: $"{UserName}:  ");
+                    }
 
-                return $"{Message.SubstringCommentText(50)}..."
-                    .ToRichTextBlock(Emote, lowProfilePrefix: $"{UserName}:  ");
+                    var substringMsg = $"{Message.SubstringCommentText(50)}...";
+
+                    return substringMsg.ToRichTextBlock(Emote, lowProfilePrefix: $"{UserName}:  ");
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error("热门回复加载失败", ex);
+                    return new RichTextBlock();
+                }
             }
         }
     }

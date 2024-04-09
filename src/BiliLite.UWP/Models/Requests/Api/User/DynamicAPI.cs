@@ -63,7 +63,9 @@ namespace BiliLite.Models.Requests.Api.User
             //使用Web的API
             if (SettingService.Account.Logined)
             {
-                api.parameter += $"&access_key={SettingService.Account.AccessKey}";
+                api.parameter += "&";
+                api.parameter += ApiHelper.MustParameter(AppKey, true);
+                api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             }
 
             return api;
@@ -132,6 +134,24 @@ namespace BiliLite.Models.Requests.Api.User
                 api.parameter += ApiHelper.MustParameter(AppKey, true);
                 api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             }
+
+            return api;
+        }
+
+        public ApiModel SpaceHistoryV2(string mid, string offset = "")
+        {
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Get,
+                baseUrl = $"https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space",
+                parameter = $"offset={offset}&host_mid={mid}",
+                need_cookie = true,
+            };
+            //if (SettingService.Account.Logined)
+            //{
+            //    api.parameter += ApiHelper.MustParameter(AppKey, true);
+            //    api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
+            //}
 
             return api;
         }

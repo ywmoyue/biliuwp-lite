@@ -269,7 +269,7 @@ namespace BiliLite
 
         private void TabView_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if(e.Key == VirtualKey.Space)
+            if(e.Key == VirtualKey.Space && e.OriginalSource.GetType()!= typeof(TextBox))
                 e.Handled = true;
         }
     }

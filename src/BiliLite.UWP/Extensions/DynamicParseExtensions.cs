@@ -5,13 +5,14 @@ using System.Text.RegularExpressions;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Markup;
-using BiliLite.Controls.Dynamic;
+using Bilibili.App.Dynamic.V2;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.UserDynamic;
 using BiliLite.Models.Dynamic;
 using BiliLite.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Paragraph = Windows.UI.Xaml.Documents.Paragraph;
 
 namespace BiliLite.Extensions
 {
@@ -48,6 +49,7 @@ namespace BiliLite.Extensions
                 return null;
             }
         }
+
         /**
          * Command
          * UserCommand=>打开用户页面
@@ -65,7 +67,14 @@ namespace BiliLite.Extensions
         /// <param name="emote"></param>
         /// <param name="extend_json"></param>
         /// <returns></returns>
-        public static RichTextBlock UserDynamicStringToRichText(this string txt, string id, List<DynamicCardDisplayEmojiInfoItemModel> emote, JObject extend_json)
+        public static RichTextBlock UserDynamicStringToRichText(
+            this string txt,
+            string id,
+            List<DynamicCardDisplayEmojiInfoItemModel> emote = null,
+            JObject extend_json = null,
+            List<Bilibili.App.Dynamic.V2.TextNode> wordNodes = null,
+            string title = null,
+            string bindingCommands= "UserDynamicItemDisplayCommands")
         {
             if (string.IsNullOrEmpty(txt)) return new RichTextBlock();
             var input = txt;
@@ -84,25 +93,31 @@ namespace BiliLite.Extensions
                 input = Regex.Replace(input, @"[\p{Cc}\p{Cf}]", string.Empty);
 
                 //处理@
-                input = HandelAtAndVote(input, txt, extend_json);
+                input = HandelAtAndVote(input, txt, extend_json, bindingCommands);
                 //处理网页🔗
-                input = HandelUrl(input);
+                input = HandelUrl(input, bindingCommands);
 
                 //处理表情
                 input = HandelEmoji(input, emote);
+                input = HandelWordNodes(input, wordNodes, bindingCommands);
                 //处理话题
-                input = HandelTag(input);
+                input = HandelTag(input, bindingCommands);
+
+                //标题
+                var titlePara = string.IsNullOrEmpty(title) ? "" : $" <Paragraph>{title}</Paragraph>";
 
                 //互动抽奖🎁
-                input = HandelLottery(input, id, extend_json);
-                input = HandelVideoID(input);
+                input = HandelLottery(input, id, extend_json, bindingCommands);
+                input = HandelVideoID(input, bindingCommands);
                 input = input.Replace("^x$%^", "@");
                 //生成xaml
-                var xaml = string.Format(@"<RichTextBlock HorizontalAlignment=""Stretch"" TextWrapping=""Wrap""  xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+                var xaml = string.Format(
+                    @"<RichTextBlock HorizontalAlignment=""Stretch"" TextWrapping=""Wrap""  xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
                                             xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"" xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
     xmlns:mc = ""http://schemas.openxmlformats.org/markup-compatibility/2006"" LineHeight=""20"">
-                                          <Paragraph>{0}</Paragraph>
-                                      </RichTextBlock>", input);
+         {1}                                 
+<Paragraph>{0}</Paragraph>
+                                      </RichTextBlock>", input, titlePara);
                 var p = (RichTextBlock)XamlReader.Load(xaml);
                 return p;
 
@@ -142,11 +157,63 @@ namespace BiliLite.Extensions
         }
 
         /// <summary>
+        /// 处理Word节点
+        /// </summary>
+        private static string HandelWordNodes(string input, List<Bilibili.App.Dynamic.V2.TextNode> nodes, string bindingCommands)
+        {
+            if (nodes == null || nodes.Count <= 0) return input;
+
+            //替换表情
+            var emotes = nodes.Where(x => x.NodeType == TextNode.Types.TextNodeType.Emote);
+            if (emotes.Count() != 0)
+            {
+                var matchCollection = Regex.Matches(input, @"\[.*?\]");
+                foreach (Match item in matchCollection)
+                {
+                    var name = item.Groups[0].Value;
+                    var emoji = emotes.FirstOrDefault(x =>
+                        x.NodeType == TextNode.Types.TextNodeType.Emote && x.RawText.Equals(name));
+                    if (emoji != null)
+                    {
+                        input = input.Replace(item.Groups[0].Value, string.Format(
+                            @"<InlineUIContainer><Border Margin=""0 -4 4 -4""><Image Source=""{0}"" Width=""{1}"" Height=""{1}""/></Border></InlineUIContainer>",
+                            emoji.Emote.EmoteUrl, 24));
+                    }
+                }
+            }
+
+            //替换AT
+            var ats = nodes.Where(x => x.NodeType == TextNode.Types.TextNodeType.At);
+            if (ats.Count() != 0)
+            {
+                foreach (var atItem in ats)
+                {
+                    try
+                    {
+                        var run = @"<InlineUIContainer>"
+                                  + $@"<HyperlinkButton Command=""{{Binding {bindingCommands}.UserCommand}}""  IsEnabled=""True"" Margin=""0 -4 4 -4"" Padding=""0"" "
+                                  + string.Format(@" Tag=""{1}""  CommandParameter=""{1}"" ><TextBlock>{0}</TextBlock></HyperlinkButton>"
+                                                  +"</InlineUIContainer>"
+                                      , atItem.RawText.Replace("@", "^x$%^"), atItem.Link.Link);
+
+                        input = input.Replace(atItem.RawText, run);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error("处理At及投票信息失败", ex);
+                    }
+                }
+            }
+
+            return input;
+        }
+
+        /// <summary>
         /// 处理标签
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        private static string HandelTag(string input)
+        private static string HandelTag(string input,string bindingCommands)
         {
             //处理话题
             var avMatchCollection = Regex.Matches(input, @"\#(.*?)\#");
@@ -154,7 +221,7 @@ namespace BiliLite.Extensions
             foreach (Match item in avMatchCollection)
             {
                 if (handel.Contains(item.Groups[0].Value)) continue;
-                var data = @"<InlineUIContainer><HyperlinkButton Command=""{Binding UserDynamicItemDisplayCommands.TagCommand}""  IsEnabled=""True"" Margin=""0 -4 4 -4"" Padding=""0"" " + string.Format(@" Tag=""{1}""  CommandParameter=""{1}"" ><TextBlock>{0}</TextBlock></HyperlinkButton></InlineUIContainer>",
+                var data = $@"<InlineUIContainer><HyperlinkButton Command=""{{Binding {bindingCommands}.TagCommand}}""  IsEnabled=""True"" Margin=""0 -4 4 -4"" Padding=""0"" " + string.Format(@" Tag=""{1}""  CommandParameter=""{1}"" ><TextBlock>{0}</TextBlock></HyperlinkButton></InlineUIContainer>",
                     item.Groups[0].Value, item.Groups[1].Value);
                 handel.Add(item.Groups[0].Value);
                 input = input.Replace(item.Groups[0].Value, data);
@@ -169,7 +236,7 @@ namespace BiliLite.Extensions
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        private static string HandelUrl(string input)
+        private static string HandelUrl(string input, string bindingCommands)
         {
             var keyword = new List<string>();
             var urlMatchCollection = Regex.Matches(input, @"(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]");
@@ -180,7 +247,7 @@ namespace BiliLite.Extensions
                     continue;
                 }
                 keyword.Add(item.Groups[0].Value);
-                var data = @"<InlineUIContainer><HyperlinkButton x:Name=""btn"" Command=""{Binding UserDynamicItemDisplayCommands.LaunchUrlCommand}""  IsEnabled=""True"" Margin=""0 -4 0 -4"" Padding=""0"" " +
+                var data = $@"<InlineUIContainer><HyperlinkButton x:Name=""btn"" Command=""{{Binding {bindingCommands}.LaunchUrlCommand}}""  IsEnabled=""True"" Margin=""0 -4 0 -4"" Padding=""0"" " +
                     string.Format(@" CommandParameter=""{0}"" ><TextBlock>🔗网页链接</TextBlock></HyperlinkButton></InlineUIContainer>", item.Groups[0].Value);
                 input = input.Replace(item.Groups[0].Value, data);
             }
@@ -194,8 +261,9 @@ namespace BiliLite.Extensions
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        private static string HandelAtAndVote(string input, string origin_content, JObject extendJson)
+        private static string HandelAtAndVote(string input, string origin_content, JObject extendJson, string bindingCommands)
         {
+            if (extendJson == null) return input;
             var content = origin_content;
             var ctrls = new List<UserDynamicCtrlItem>();
             if (extendJson.TryGetValue("ctrl", out var ctrl))
@@ -218,7 +286,7 @@ namespace BiliLite.Extensions
                         var d = content.Substring(item.Location, item.Length);
                         var index = input.IndexOf(d);
                         input = input.Remove(index, item.Length);
-                        var run = @"<InlineUIContainer><HyperlinkButton Command=""{Binding UserDynamicItemDisplayCommands.UserCommand}""  IsEnabled=""True"" Margin=""0 -4 4 -4"" Padding=""0"" " + string.Format(@" Tag=""{1}""  CommandParameter=""{1}"" ><TextBlock>{0}</TextBlock></HyperlinkButton></InlineUIContainer>", d.Replace("@", "^x$%^"), item.Data);
+                        var run = $@"<InlineUIContainer><HyperlinkButton Command=""{{Binding {bindingCommands}.UserCommand}}""  IsEnabled=""True"" Margin=""0 -4 4 -4"" Padding=""0"" " + string.Format(@" Tag=""{1}""  CommandParameter=""{1}"" ><TextBlock>{0}</TextBlock></HyperlinkButton></InlineUIContainer>", d.Replace("@", "^x$%^"), item.Data);
                         input = input.Insert(index, run);
                     }
                     catch (Exception ex)
@@ -232,7 +300,7 @@ namespace BiliLite.Extensions
                     var d = content.Substring(item.Location, content.Length - item.Location);
                     var index = input.IndexOf(d);
                     input = input.Remove(index, content.Length - item.Location);
-                    var run = @"<InlineUIContainer><HyperlinkButton Command=""{Binding UserDynamicItemDisplayCommands.VoteCommand}""  IsEnabled=""True"" Margin=""0 -4 4 -4"" Padding=""0"" " + string.Format(@" Tag=""{1}""  CommandParameter=""{1}"" ><TextBlock>{0}</TextBlock></HyperlinkButton></InlineUIContainer>",
+                    var run = $@"<InlineUIContainer><HyperlinkButton Command=""{{Binding {bindingCommands}.VoteCommand}}""  IsEnabled=""True"" Margin=""0 -4 4 -4"" Padding=""0"" " + string.Format(@" Tag=""{1}""  CommandParameter=""{1}"" ><TextBlock>{0}</TextBlock></HyperlinkButton></InlineUIContainer>",
                         "📊" + d, extendJson["vote"]?["vote_id"]?.ToInt32() ?? 0);
                     input = input.Insert(index, run);
                 }
@@ -246,15 +314,16 @@ namespace BiliLite.Extensions
         /// <param name="input"></param>
         /// <param name="extendJson"></param>
         /// <returns></returns>
-        private static string HandelLottery(string input, string id, JObject extendJson)
+        private static string HandelLottery(string input, string id, JObject extendJson, string bindingCommands)
         {
+            if (extendJson == null) return input;
             if (!extendJson.ContainsKey("lott")) return input;
 
             if (input.IndexOf("互动抽奖") == 1)
             {
                 input = input.Remove(1, 4);
             }
-            input = input.Insert(0, $@"<InlineUIContainer><HyperlinkButton Command=""{{Binding UserDynamicItemDisplayCommands.LotteryCommand}}""  CommandParameter=""{id}"" IsEnabled=""True"" Margin=""0 -4 4 -4"" Padding=""0"" ><TextBlock>🎁互动抽奖</TextBlock></HyperlinkButton></InlineUIContainer>");
+            input = input.Insert(0, $@"<InlineUIContainer><HyperlinkButton Command=""{{Binding {bindingCommands}.LotteryCommand}}""  CommandParameter=""{id}"" IsEnabled=""True"" Margin=""0 -4 4 -4"" Padding=""0"" ><TextBlock>🎁互动抽奖</TextBlock></HyperlinkButton></InlineUIContainer>");
             return input;
         }
 
@@ -263,7 +332,7 @@ namespace BiliLite.Extensions
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        private static string HandelVideoID(string input)
+        private static string HandelVideoID(string input, string bindingCommands)
         {
             var keyword = new List<string>();
             //如果是链接就不处理了
@@ -280,7 +349,7 @@ namespace BiliLite.Extensions
                     keyword.Add(item.Groups[0].Value);
                     var urlPrefix = "bilibili://video/";
                     var data =
-                        $"<InlineUIContainer><HyperlinkButton Command=\"{{Binding {nameof(UserDynamicItemDisplayCommands)}.{nameof(UserDynamicItemDisplayCommands.LaunchUrlCommand)}}}\"  IsEnabled=\"True\" Margin=\"0 -4 0 -4\" Padding=\"0\" " +
+                        $"<InlineUIContainer><HyperlinkButton Command=\"{{Binding {bindingCommands}.LaunchUrlCommand}}\"  IsEnabled=\"True\" Margin=\"0 -4 0 -4\" Padding=\"0\" " +
                         $" CommandParameter=\"{urlPrefix}{item.Groups[0].Value}\" ><TextBlock>{item.Groups[0].Value}</TextBlock></HyperlinkButton></InlineUIContainer>";
                     input = input.Replace(item.Groups[0].Value, data);
                 }
@@ -296,7 +365,7 @@ namespace BiliLite.Extensions
                     keyword.Add(item.Groups[0].Value);
                     var urlPrefix = "bilibili://video/";
                     var data =
-                        $"<InlineUIContainer><HyperlinkButton Command=\"{{Binding {nameof(UserDynamicItemDisplayCommands)}.{nameof(UserDynamicItemDisplayCommands.LaunchUrlCommand)}}}\"  IsEnabled=\"True\" Margin=\"0 -4 0 -4\" Padding=\"0\" " +
+                        $"<InlineUIContainer><HyperlinkButton Command=\"{{Binding {bindingCommands}.LaunchUrlCommand}}\"  IsEnabled=\"True\" Margin=\"0 -4 0 -4\" Padding=\"0\" " +
                         $" CommandParameter=\"{urlPrefix}{item.Groups[0].Value}\" ><TextBlock>{item.Groups[0].Value}</TextBlock></HyperlinkButton></InlineUIContainer>";
                     input = input.Replace(item.Groups[0].Value, data);
                 }
@@ -312,7 +381,7 @@ namespace BiliLite.Extensions
                     keyword.Add(item.Groups[0].Value);
                     var urlPrefix = "bilibili://article/";
                     var data =
-                        $"<InlineUIContainer><HyperlinkButton Command=\"{{Binding {nameof(UserDynamicItemDisplayCommands)}.{nameof(UserDynamicItemDisplayCommands.LaunchUrlCommand)}}}\"  IsEnabled=\"True\" Margin=\"0 -4 0 -4\" Padding=\"0\" " +
+                        $"<InlineUIContainer><HyperlinkButton Command=\"{{Binding {bindingCommands}.LaunchUrlCommand}}\"  IsEnabled=\"True\" Margin=\"0 -4 0 -4\" Padding=\"0\" " +
                         $" CommandParameter=\"{urlPrefix}{item.Groups[1].Value}\" ><TextBlock>{item.Groups[0].Value}</TextBlock></HyperlinkButton></InlineUIContainer>";
                     input = input.Replace(item.Groups[0].Value, data);
                 }

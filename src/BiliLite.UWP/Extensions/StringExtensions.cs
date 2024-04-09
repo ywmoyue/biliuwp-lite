@@ -163,6 +163,7 @@ namespace BiliLite.Extensions
                 matches.Add(index, value);
             }
             var newInput = regex.Replace(input, "");
+            if (newInput.Length < length) return input;
             var output = newInput.Substring(0, length);
             foreach (var pair in matches)
             {

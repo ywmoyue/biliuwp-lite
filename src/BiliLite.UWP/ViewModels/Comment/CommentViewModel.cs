@@ -152,9 +152,7 @@ namespace BiliLite.ViewModels.Comment
 
         public ObservableCollection<CommentViewModel> Replies { get; set; }
 
-        public ObservableCollection<CommentViewModel> HotReplies { get; set; }
-
-        public List<HotReply> HotReplyContents { get; set; }
+        public List<HotReply> HotReplies { get; set; }
 
         [DependsOn(nameof(ShowReplies))]
         public bool ShowHotReplies
