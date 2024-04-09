@@ -122,6 +122,7 @@ jobs:
         rm -r -fo *.appxsym
         cd Dependencies
         rm -r -fo arm,arm64,x86
+      if: github.event.inputs.enableX64 == 'true'
 
     - name: Create x64 archive
       run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x64_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x64.zip
@@ -156,6 +157,7 @@ jobs:
         rm -r -fo *.appxsym
         cd Dependencies
         rm -r -fo arm,arm64,x64
+      if: github.event.inputs.enableX86 == 'true'
 
     - name: Create x86 archive
       run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x86_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x86.zip
@@ -190,6 +192,7 @@ jobs:
         rm -r -fo *.appxsym
         cd Dependencies
         rm -r -fo arm,x64,x86
+      if: github.event.inputs.enableArm64 == 'true'
 
     - name: Create ARM64 archive
       run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_ARM64_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_ARM64.zip
@@ -224,6 +227,7 @@ jobs:
         rm -r -fo *.appxsym
         cd Dependencies
         rm -r -fo arm64,x64,x86
+      if: github.event.inputs.enableArm32 == 'true'
 
     - name: Create ARM32 archive
       run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_ARM_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_ARM.zip
