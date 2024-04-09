@@ -60,6 +60,8 @@ namespace BiliLite.ViewModels.UserDynamic
 
         public ModuleDesc Desc { get; set; }
 
+        public ModuleOpusSummary OpusSummary { get; set; }
+
         public DynamicV2ItemViewModel Item { get; set; }
 
         public List<DynamicV2ItemViewModel> Items
@@ -91,10 +93,9 @@ namespace BiliLite.ViewModels.UserDynamic
 
         public Extend Extend { get; set; }
 
-        [DependsOn(nameof(Content))]
-        public bool ShowContent => Desc != null;
+        [DependsOn(nameof(Content))] public bool ShowContent => Desc != null || OpusSummary != null;
 
-        [DependsOn(nameof(Desc))]
+        [DependsOn(nameof(Desc),nameof(OpusSummary))]
         public RichTextBlock Content
         {
             get
@@ -109,6 +110,15 @@ namespace BiliLite.ViewModels.UserDynamic
                                 bindingCommands: nameof(Parent));
                     }
 
+                    if (OpusSummary != null)
+                    {
+                        var text = OpusSummary.Summary.Text.Nodes.Aggregate("", (current, textNode) => current + textNode.RawText);
+                        return
+                            text.UserDynamicStringToRichText(
+                                Extend.DynIdStr, wordNodes: Extend.OpusSummary?.Summary?.Text?.Nodes?.ToList(),
+                                bindingCommands: nameof(Parent));
+                    }
+
                     return new RichTextBlock();
                 }
                 catch (Exception ex)
@@ -119,6 +129,16 @@ namespace BiliLite.ViewModels.UserDynamic
         }
 
         public int CoverWidth => 160;
+
+        [DependsOn(nameof(Dynamic))]
+        public bool IsShortVideo
+        {
+            get
+            {
+                if (Dynamic.DynArchive?.Dimension == null) return false;
+                return (Dynamic.DynArchive.Dimension.Height / Dynamic.DynArchive.Dimension.Width) > 1.5;
+            }
+        }
 
         [DependsOn(nameof(AuthorForward),nameof(CardType),nameof(ItemType))]
         public bool IsRepost => AuthorForward != null;
