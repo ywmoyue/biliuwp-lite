@@ -288,49 +288,14 @@
                                 </control:RoundButton>
                             </Grid>
                         </PivotItem>
-                        <PivotItem Margin="0">
+                        <PivotItem Margin="0" >
                             <PivotItem.Header>
                                 <TextBlock FontSize="15">动态</TextBlock>
                             </PivotItem.Header>
 
-                            <Grid Background="{ThemeResource AppBarBackgroundThemeBrush}">
-
-
-                                <control:MyListView SelectionMode="None" 
-                  IsItemClickEnabled="false" 
-                          x:Name="list"
-                  ItemsSource="{x:Bind Path=m_userDynamicViewModel.Items,Mode=OneWay}" 
-                                         CanLoadMore="{x:Bind Path=m_userDynamicViewModel.CanLoadMore,Mode=OneWay}"
-                                         LoadMoreBottomOffset="0"
-                                         LoadMoreCommand="{x:Bind Path=m_userDynamicViewModel.LoadMoreCommand}"
-                  Padding="4" 
-                  Grid.Row="1"
-                 ItemTemplateSelector="{StaticResource select}"
-                  HorizontalContentAlignment="Center">
-                                    <control:MyListView.ItemContainerStyle>
-                                        <Style TargetType="ListViewItem">
-                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-                                            <Setter Property="MaxWidth" Value="800"></Setter>
-                                            <Setter Property="Margin" Value="4"></Setter>
-
-                                        </Style>
-                                    </control:MyListView.ItemContainerStyle>
-                                </control:MyListView>
-                                <ProgressRing Grid.Row="1" VerticalAlignment="Bottom" Margin="8" IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_userDynamicViewModel.Loading,Mode=OneWay}"></ProgressRing>
-                                <StackPanel Orientation="Vertical"  Grid.Row="1" VerticalAlignment="Bottom" Margin="20 12" HorizontalAlignment="Right">
-                                    <control:RoundButton x:Name="btnGrid"  ToolTipService.ToolTip="切换为瀑布流" Click="btnGrid_Click" Margin="0 0 0 8"  Padding="12">
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE80A;"  Foreground="White"/>
-                                    </control:RoundButton>
-                                    <control:RoundButton x:Name="btnList"  Visibility="Collapsed" ToolTipService.ToolTip="切换为列表" Click="btnList_Click" Margin="0 0 0 8"  Padding="12">
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE292;" Foreground="White"/>
-                                    </control:RoundButton>
-                                    <control:RoundButton x:Name="btnTop" Click="btnTop_Click" ToolTipService.ToolTip="返回顶部"  Margin="0 0 0 8"  Padding="12">
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE110;" Foreground="White"/>
-                                    </control:RoundButton>
-                                    <control:RoundButton x:Name="btnRefreshDynamic"  Command="{x:Bind Path=m_userDynamicViewModel.RefreshCommand}"   Padding="12">
-                                        <SymbolIcon Symbol="Refresh" Foreground="White"></SymbolIcon>
-                                    </control:RoundButton>
-                                </StackPanel>
+                            <Grid Background="Transparent">
+                                <Frame x:Name="DynamicSpaceFrame">
+                                </Frame>
                             </Grid>
                         </PivotItem>
                         <PivotItem Margin="0">

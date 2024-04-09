@@ -8,6 +8,7 @@
     mc:Ignorable="d"
     Title="发表评论"
     xmlns:modules="using:BiliLite.Modules"
+    xmlns:viewModels="using:BiliLite.ViewModels"
     PrimaryButtonText="发送"
     SecondaryButtonText="取消"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
@@ -17,7 +18,7 @@
             <Grid Width="320">
                 <Pivot x:Name="pivot_face" ItemsSource="{x:Bind Path=emoteVM.Packages,Mode=OneWay}">
                     <Pivot.HeaderTemplate>
-                        <DataTemplate x:DataType="modules:EmotePackageModel">
+                        <DataTemplate x:DataType="viewModels:EmotePackageModel">
                             <TextBlock FontSize="18" Text="{x:Bind text}"></TextBlock>
                         </DataTemplate>
                     </Pivot.HeaderTemplate>

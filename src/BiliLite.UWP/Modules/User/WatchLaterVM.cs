@@ -5,12 +5,9 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using BiliLite.Extensions;
-using BiliLite.Models.Common;
 using BiliLite.Services;
 
 namespace BiliLite.Modules.User
@@ -39,6 +36,7 @@ namespace BiliLite.Modules.User
         {
             watchLaterAPI = new WatchLaterAPI();
             AddCommand = new RelayCommand<string>(AddToWatchlater);
+            AddCommandWithAvId = new RelayCommand<long>(AddToWatchlater);
             RefreshCommand = new RelayCommand(Refresh);
             CleanCommand = new RelayCommand(Clear);
             DeleteCommand = new RelayCommand<WatchlaterItemModel>(Del);
@@ -46,10 +44,20 @@ namespace BiliLite.Modules.User
         }
 
         public ICommand AddCommand { get; private set; }
+
+        public ICommand AddCommandWithAvId { get; private set; }
+
         public ICommand CleanCommand { get; private set; }
         public ICommand CleanViewedCommand { get; private set; }
         public ICommand DeleteCommand { get; private set; }
         public ICommand RefreshCommand { get; private set; }
+
+
+        public async void AddToWatchlater(long aid)
+        {
+            AddToWatchlater(aid.ToString());
+        }
+
         public async void AddToWatchlater(string aid)
         {
             try

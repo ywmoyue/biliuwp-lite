@@ -1,10 +1,11 @@
 ﻿using BiliLite.Models.Requests.Api;
-using BiliLite.Modules;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using BiliLite.Extensions;
+using BiliLite.ViewModels;
 using static BiliLite.Models.Requests.Api.CommentApi;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 
@@ -13,14 +14,14 @@ namespace BiliLite.Dialogs
     public sealed partial class SendCommentDialog : ContentDialog
     {
         readonly CommentApi commentApi;
-        readonly EmoteVM emoteVM;
+        readonly EmoteViewModel emoteVM;
         readonly string oid;
         readonly CommentType commentType;
         public SendCommentDialog(string oid, CommentType commentType)
         {
+            emoteVM = App.ServiceProvider.GetService<EmoteViewModel>();
             this.InitializeComponent();
             commentApi = new CommentApi();
-            emoteVM = new EmoteVM();
             this.oid = oid;
             this.commentType = commentType;
         }

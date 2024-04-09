@@ -1,43 +1,34 @@
-﻿using BiliLite.Models;
-using BiliLite.Models.Requests.Api;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BiliLite.Extensions;
+using BiliLite.Models;
+using BiliLite.Models.Requests.Api;
+using BiliLite.ViewModels.Common;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
-namespace BiliLite.Modules
+namespace BiliLite.ViewModels
 {
-    public class EmoteVM : IModules
+    public class EmoteViewModel : BaseViewModel
     {
-        readonly EmoteApi emoteApi;
-        public EmoteVM()
+        private readonly EmoteApi m_emoteApi;
+
+        public EmoteViewModel()
         {
-            emoteApi = new EmoteApi();
+            m_emoteApi = new EmoteApi();
         }
 
-        private List<EmotePackageModel> _packages;
+        public List<EmotePackageModel> Packages { get; set; }
 
-        public List<EmotePackageModel> Packages
-        {
-            get { return _packages; }
-            set { _packages = value; DoPropertyChanged("Packages"); }
-        }
-
-        private bool _loading = true;
-        public bool Loading
-        {
-            get { return _loading; }
-            set { _loading = value; DoPropertyChanged("Loading"); }
-        }
+        public bool Loading { get; set; } = true;
 
         public async Task GetEmote(EmoteBusiness business)
         {
             try
             {
                 Loading = true;
-                var api = emoteApi.UserEmote(business);
+                var api = m_emoteApi.UserEmote(business);
 
                 var results = await api.Request();
                 if (results.status)
@@ -60,7 +51,7 @@ namespace BiliLite.Modules
             }
             catch (Exception ex)
             {
-                var handel = HandelError<EmoteVM>(ex);
+                var handel = HandelError<EmoteViewModel>(ex);
                 Notify.ShowMessageToast(handel.message);
             }
             finally
@@ -69,7 +60,6 @@ namespace BiliLite.Modules
             }
         }
     }
-
 
     public class EmotePackageModel
     {
@@ -81,6 +71,7 @@ namespace BiliLite.Modules
         public int attr { get; set; }
         public List<EmotePackageItemModel> emote { get; set; }
     }
+
     public class EmotePackageItemModel
     {
         public int id { get; set; }

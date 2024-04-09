@@ -48,7 +48,7 @@
             <uap:ShowOn Tile="wide310x150Logo"/>
           </uap:ShowNameOnTiles>
         </uap:DefaultTile >
-        <uap:SplashScreen Image="Images\SplashScreen.png"   BackgroundColor="#E6E6E6" uap5:Optional="true"/>
+        <uap:SplashScreen Image="Images\SplashScreen.png"   BackgroundColor="transparent" uap5:Optional="true"/>
       </uap:VisualElements>
       <Extensions>
         <uap:Extension Category="windows.protocol" EntryPoint="BiliLite.App">

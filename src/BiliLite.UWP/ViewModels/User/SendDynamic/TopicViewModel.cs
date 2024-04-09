@@ -1,37 +1,29 @@
-﻿using BiliLite.Models;
-using BiliLite.Models.Requests.Api.User;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using BiliLite.Extensions;
+using BiliLite.Models;
+using BiliLite.Models.Common.User.SendDynamic;
+using BiliLite.Models.Requests.Api.User;
+using BiliLite.ViewModels.Common;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
-namespace BiliLite.Modules.User.SendDynamic
+namespace BiliLite.ViewModels.User.SendDynamic
 {
-    public class TopicVM : IModules
+    public class TopicViewModel : BaseViewModel
     {
         readonly DynamicAPI dynamicAPI;
-        public TopicVM()
+
+        public TopicViewModel()
         {
             dynamicAPI = new DynamicAPI();
             Items = new ObservableCollection<RcmdTopicModel>();
         }
 
-        private ObservableCollection<RcmdTopicModel> _items;
+        public ObservableCollection<RcmdTopicModel> Items { get; set; }
 
-        public ObservableCollection<RcmdTopicModel> Items
-        {
-            get { return _items; }
-            set { _items = value; DoPropertyChanged("Items"); }
-        }
-
-        private bool _loading = true;
-        public bool Loading
-        {
-            get { return _loading; }
-            set { _loading = value; DoPropertyChanged("Loading"); }
-        }
+        public bool Loading { get; set; } = true;
 
         public async Task GetTopic()
         {
@@ -62,7 +54,7 @@ namespace BiliLite.Modules.User.SendDynamic
             }
             catch (Exception ex)
             {
-                var handel = HandelError<TopicVM>(ex);
+                var handel = HandelError<TopicViewModel>(ex);
                 Notify.ShowMessageToast(handel.message);
             }
             finally
@@ -70,19 +62,5 @@ namespace BiliLite.Modules.User.SendDynamic
                 Loading = false;
             }
         }
-
-
-    }
-
-    public class RcmdTopicModel
-    {
-        public int topic_id { get; set; }
-        public string topic_name { get; set; }
-        public int is_activity { get; set; }
-        public string display
-        {
-            get { return "#" + topic_name + "#"; }
-        }
-
     }
 }

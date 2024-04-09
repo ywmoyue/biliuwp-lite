@@ -13,22 +13,23 @@ using BiliLite.ViewModels.UserDynamic;
 
 namespace BiliLite.Dialogs
 {
-    public sealed partial class SendDynamicDialog : ContentDialog
+    public sealed partial class SendDynamicV2Dialog : ContentDialog
     {
         readonly EmoteViewModel emoteVM;
         readonly AtViewModel atVM;
-        readonly SendDynamicViewModel m_viewModel;
+        readonly SendDynamicV2ViewModel m_viewModel;
         readonly TopicViewModel topicVM;
-        public SendDynamicDialog(SendDynamicViewModel sendDynamicViewModel, EmoteViewModel emoteViewModel, AtViewModel atViewModel, TopicViewModel topicVm)
+
+        public SendDynamicV2Dialog(SendDynamicV2ViewModel sendDynamicV2ViewModel, EmoteViewModel emoteViewModel, AtViewModel atViewModel, TopicViewModel topicVm)
         {
-            m_viewModel = sendDynamicViewModel;
+            m_viewModel = sendDynamicV2ViewModel;
             emoteVM = emoteViewModel;
             atVM = atViewModel;
             topicVM = topicVm;
             this.InitializeComponent();
         }
 
-        public void SetRepost(UserDynamicItemDisplayViewModel userDynamicItem)
+        public void SetRepost(DynamicV2ItemViewModel userDynamicItem)
         {
             m_viewModel.SetRepost(userDynamicItem);
         }

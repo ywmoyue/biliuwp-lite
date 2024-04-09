@@ -43,7 +43,12 @@ namespace BiliLite.Extensions
             {
                 expression.CreateMap<DownloadItem, DownloadItemViewModel>();
                 expression.CreateMap<DownloadEpisodeItem, DownloadEpisodeItemViewModel>();
-                expression.CreateMap<CommentItem, CommentViewModel>();
+                expression.CreateMap<CommentItem, HotReply>()
+                    .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Member.Uname))
+                    .ForMember(dest => dest.Message, opt => opt.MapFrom(src => src.Content.Message))
+                    .ForMember(dest => dest.Emote, opt => opt.MapFrom(src => src.Content.Emote));
+                expression.CreateMap<CommentItem, CommentViewModel>()
+                    .ForMember(dest => dest.HotReplies, opt => opt.MapFrom(src => src.Replies));
                 expression.CreateMap<DataCommentModel, DataCommentViewModel>();
                 expression.CreateMap<CommentContentModel, CommentContentViewModel>();
                 expression.CreateMap<VideoDetailModel, VideoDetailViewModel>();
@@ -120,6 +125,23 @@ namespace BiliLite.Extensions
                             SubTitle = src.SubTitle,
                             Title = src.Title,
                         }));
+
+                expression.CreateMap<DynamicItem, DynamicV2ItemViewModel>()
+                    .ForMember(dest => dest.Author,
+                        opt => opt.MapFrom(src =>
+                            src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleAuthor).ModuleAuthor))
+                    .ForMember(dest => dest.AuthorForward,
+                        opt => opt.MapFrom(src =>
+                            src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleAuthorForward).ModuleAuthorForward))
+                    .ForMember(dest => dest.Dynamic,
+                        opt => opt.MapFrom(src =>
+                            src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleDynamic).ModuleDynamic))
+                    .ForMember(dest => dest.Desc,
+                        opt => opt.MapFrom(src =>
+                            src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleDesc).ModuleDesc))
+                    .ForMember(dest => dest.Stat,
+                        opt => opt.MapFrom(src =>
+                            src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleStat).ModuleStat));
             }));
 
             services.AddSingleton<IMapper>(mapper);

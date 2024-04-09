@@ -35,7 +35,7 @@ namespace BiliLite.Pages
         private async void CoreWebView2_NewWindowRequested(CoreWebView2 sender, CoreWebView2NewWindowRequestedEventArgs args)
         {
             args.Handled = true;
-            var handelUrlResult = await MessageCenter.HandelUrl(sender.Source);
+            var handelUrlResult = await MessageCenter.HandelUrl(args.Uri);
             if (handelUrlResult) return;
             var md = new MessageDialog("是否使用外部浏览器打开此链接？");
             md.Commands.Add(new UICommand("确定", new UICommandInvokedHandler(async (e) => { await Windows.System.Launcher.LaunchUriAsync(new Uri(args.Uri)); })));

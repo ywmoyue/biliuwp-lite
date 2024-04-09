@@ -139,13 +139,29 @@
     <Compile Include="Controls\AttentionButton.xaml.cs">
       <DependentUpon>AttentionButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\DataTemplateSelectors\UserDynamicItemV2DataTemplateSelector.cs" />
+    <Compile Include="Controls\Dynamic\DynamicItemV2Control.xaml.cs">
+      <DependentUpon>DynamicItemV2Control.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\UserFollowingTagsFlyout.xaml.cs">
       <DependentUpon>UserFollowingTagsFlyout.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\SendDynamicV2Dialog.xaml.cs">
+      <DependentUpon>SendDynamicV2Dialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Extensions\ControlsExtensions.cs" />
     <Compile Include="Extensions\QrCodeExtensions.cs" />
     <Compile Include="Models\Common\Anime\ISeasonItem.cs" />
+    <Compile Include="Models\Common\Comment\HotReply.cs" />
     <Compile Include="Models\Common\Danmaku\BiliDanmakuItem.cs" />
     <Compile Include="Models\Common\Dynamic\DynamicUgcSeasonCardModel.cs" />
+    <Compile Include="Models\Common\UserDynamic\DynLiveInfo.cs" />
+    <Compile Include="Models\Common\User\SendDynamic\AtDisplayModel.cs" />
+    <Compile Include="Models\Common\User\SendDynamic\AtModel.cs" />
+    <Compile Include="Models\Common\User\SendDynamic\SendImagesModel.cs" />
+    <Compile Include="Models\Common\User\SendDynamic\UploadImagesModel.cs" />
+    <Compile Include="Models\Common\User\SendDynamic\RcmdTopicModel.cs" />
+    <Compile Include="ViewModels\UserDynamic\DynamicV2ItemViewModel.cs" />
     <Compile Include="Models\Common\Home\DefaultHomeNavItems.cs" />
     <Compile Include="Models\Common\Live\DefaultPlayUrlSourceOptions.cs" />
     <Compile Include="Models\Common\Live\InteractWordModel.cs" />
@@ -194,6 +210,12 @@
     <Compile Include="Models\Common\Live\RoomChangeMsgModel.cs" />
     <Compile Include="Models\Common\User\SearchHistoryData.cs" />
     <Compile Include="Models\Common\User\SubmitCollectionItemModel.cs" />
+    <Compile Include="Pages\User\DynamicSpacePage.xaml.cs">
+      <DependentUpon>DynamicSpacePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\UserDynamic\UserDynamicSpaceViewModel.cs" />
+    <Compile Include="Models\Common\User\SendDynamic\AtUserModel.cs" />
+    <Compile Include="ViewModels\User\SendDynamic\SendDynamicV2ViewModel.cs" />
     <Compile Include="ViewModels\User\UserAttentionButtonViewModel.cs" />
     <Compile Include="ViewModels\User\UserFollowingTagsFlyoutViewModel.cs" />
     <Compile Include="ViewModels\User\UserRelationFollowingTagViewModel.cs" />
@@ -602,7 +624,7 @@
     <Compile Include="Models\ReturnModel.cs" />
     <Compile Include="Models\UserModels.cs" />
     <Compile Include="Modules\Detail\FavoriteDetailVM.cs" />
-    <Compile Include="Modules\EmoteVM.cs" />
+    <Compile Include="ViewModels\EmoteViewModel.cs" />
     <Compile Include="Modules\Home\RegionVM.cs" />
     <Compile Include="Modules\Live\LiveAreaDetailVM.cs" />
     <Compile Include="Modules\Live\LiveAreaVM.cs" />
@@ -634,7 +656,7 @@
     <Compile Include="ViewModels\UserDynamic\UserDynamicRepostViewModel.cs" />
     <Compile Include="ViewModels\UserDynamic\UserDynamicViewModel.cs" />
     <Compile Include="Modules\User\LoginVM.cs" />
-    <Compile Include="Modules\User\SendDynamic\AtVM.cs" />
+    <Compile Include="ViewModels\User\SendDynamic\AtViewModel.cs" />
     <Compile Include="ViewModels\User\HistoryViewModel.cs" />
     <Compile Include="Modules\User\MyFollowSeasonVM.cs" />
     <Compile Include="Modules\Player\PlayerVM.cs" />
@@ -646,8 +668,8 @@
     <Compile Include="Modules\SettingVM.cs" />
     <Compile Include="ViewModels\Video\VideoDetailPageViewModel.cs" />
     <Compile Include="Modules\User\MyFollowVideoVM.cs" />
-    <Compile Include="Modules\User\SendDynamic\SendDynamicVM.cs" />
-    <Compile Include="Modules\User\SendDynamic\TopicVM.cs" />
+    <Compile Include="ViewModels\User\SendDynamic\SendDynamicViewModel.cs" />
+    <Compile Include="ViewModels\User\SendDynamic\TopicViewModel.cs" />
     <Compile Include="ViewModels\User\UserDetailViewModel.cs" />
     <Compile Include="Modules\User\UserDetail\UserFavlistVM.cs" />
     <Compile Include="Modules\User\UserDetail\UserFollowVM.cs" />
@@ -928,7 +950,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Dynamic\DynamicItemV2Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dynamic\DynamicV2Template.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\UserFollowingTagsFlyout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\SendDynamicV2Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\User\DynamicSpacePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1311,6 +1349,7 @@
   <ItemGroup>
     <Folder Include="Assets\Tools\" />
     <Folder Include="Models\Requests\Api\Grpc\" />
+    <Folder Include="Modules\User\SendDynamic\" />
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="WindowsDesktop, Version=10.0.17763.0">

@@ -119,6 +119,30 @@ namespace BiliLite.Models.Common.Home
                     Title = "新标签页",
                     NeedLogin = false,
                     Show = true
+                },
+                new HomeNavItem()
+                {
+                    Icon = FontAwesome5.EFontAwesomeIcon.Regular_PlayCircle,
+                    Page = typeof(Pages.User.WatchlaterPage),
+                    Title = "稍后再看",
+                    NeedLogin = true,
+                    Show = false
+                },
+                new HomeNavItem()
+                {
+                    Icon = FontAwesome5.EFontAwesomeIcon.Solid_History,
+                    Page = typeof(Pages.User.HistoryPage),
+                    Title = "历史记录",
+                    NeedLogin = true,
+                    Show = false
+                },
+                new HomeNavItem()
+                {
+                    Icon = FontAwesome5.EFontAwesomeIcon.Regular_Star,
+                    Page = typeof(Pages.User.FavoritePage),
+                    Title = "我的收藏",
+                    NeedLogin = true,
+                    Show = false
                 }
             };
         }

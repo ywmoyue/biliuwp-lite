@@ -118,7 +118,7 @@ namespace BiliLite.Pages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            SetStaggered();
+            //SetStaggered();
             if (e.NavigationMode == NavigationMode.New)
             {
                 var mid = "";
@@ -237,49 +237,49 @@ namespace BiliLite.Pages
             }
         }
 
-        void SetStaggered()
-        {
-            var staggered = SettingService.GetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 0) == 1;
-            if (staggered != IsStaggered)
-            {
-                IsStaggered = staggered;
-                if (staggered)
-                {
-                    btnGrid_Click(this, null);
-                }
-                else
-                {
-                    btnList_Click(this, null);
-                }
-            }
-        }
+        //void SetStaggered()
+        //{
+        //    var staggered = SettingService.GetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 0) == 1;
+        //    if (staggered != IsStaggered)
+        //    {
+        //        IsStaggered = staggered;
+        //        if (staggered)
+        //        {
+        //            btnGrid_Click(this, null);
+        //        }
+        //        else
+        //        {
+        //            btnList_Click(this, null);
+        //        }
+        //    }
+        //}
 
-        private void btnGrid_Click(object sender, RoutedEventArgs e)
-        {
-            SettingService.SetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 1);
-            IsStaggered = true;
-            btnGrid.Visibility = Visibility.Collapsed;
-            btnList.Visibility = Visibility.Visible;
-            //XAML
-            list.ItemsPanel = (ItemsPanelTemplate)this.Resources["GridPanel"];
-        }
+        //private void btnGrid_Click(object sender, RoutedEventArgs e)
+        //{
+        //    SettingService.SetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 1);
+        //    IsStaggered = true;
+        //    btnGrid.Visibility = Visibility.Collapsed;
+        //    btnList.Visibility = Visibility.Visible;
+        //    //XAML
+        //    list.ItemsPanel = (ItemsPanelTemplate)this.Resources["GridPanel"];
+        //}
 
-        private void btnList_Click(object sender, RoutedEventArgs e)
-        {
-            IsStaggered = false;
-            //右下角按钮
-            btnGrid.Visibility = Visibility.Visible;
-            btnList.Visibility = Visibility.Collapsed;
-            //设置
-            SettingService.SetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 0);
-            //XAML
-            list.ItemsPanel = (ItemsPanelTemplate)this.Resources["ListPanel"];
-        }
+        //private void btnList_Click(object sender, RoutedEventArgs e)
+        //{
+        //    IsStaggered = false;
+        //    //右下角按钮
+        //    btnGrid.Visibility = Visibility.Visible;
+        //    btnList.Visibility = Visibility.Collapsed;
+        //    //设置
+        //    SettingService.SetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 0);
+        //    //XAML
+        //    list.ItemsPanel = (ItemsPanelTemplate)this.Resources["ListPanel"];
+        //}
 
-        private void btnTop_Click(object sender, RoutedEventArgs e)
-        {
-            list.ScrollIntoView(list.Items[0]);
-        }
+        //private void btnTop_Click(object sender, RoutedEventArgs e)
+        //{
+        //    list.ScrollIntoView(list.Items[0]);
+        //}
 
         private async void pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -287,9 +287,10 @@ namespace BiliLite.Pages
             {
                 await m_userSubmitVideoViewModel.GetSubmitVideo();
             }
-            if (pivot.SelectedIndex == 1 && m_userDynamicViewModel.Items == null)
+            if (pivot.SelectedIndex == 1 && DynamicSpaceFrame.Content==null)
             {
-                await m_userDynamicViewModel.GetDynamicItems();
+                DynamicSpaceFrame.Navigate(typeof(DynamicSpacePage), m_viewModel.Mid);
+                //await m_userDynamicViewModel.GetDynamicItems();
             }
             if (pivot.SelectedIndex == 2 && userSubmitArticleVM.SubmitArticleItems == null)
             {
