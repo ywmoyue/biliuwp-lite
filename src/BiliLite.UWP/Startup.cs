@@ -15,6 +15,7 @@ namespace BiliLite
             services.AddDanmakuController();
 
             services.AddSingleton<CookieService>();
+            services.AddTransient<SettingsImportExportService>();
             services.AddQrCodeService();
             
             services.AddSingleton<GrpcService>();

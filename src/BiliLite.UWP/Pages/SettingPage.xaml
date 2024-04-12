@@ -600,6 +600,11 @@
                         <StackPanel Orientation="Horizontal">
                             <AutoSuggestBox Margin="0 8" x:Name="BiliLiteWebApiTextBox" QueryIcon="Accept" HorizontalAlignment="Left" PlaceholderText="https://example.com/"></AutoSuggestBox>
                         </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0 8" >
+                            <Button x:Name="BtnExportSettings" Click="BtnExportSettings_OnClick" Margin="0 0 8 0">导出设置</Button>
+                            <Button x:Name="BtnExportSettingsWithAccount" Click="BtnExportSettingsWithAccount_OnClick" Margin="0 0 8 0">导出设置与登录信息</Button>
+                            <Button x:Name="BtnImportSettings" Click="BtnImportSettings_OnClick" Margin="0 0 0 0">导入设置</Button>
+                        </StackPanel>
                         <TextBlock Margin="0 8 0 0" FontSize="16">更新json请求地址（用于解决github在国内访问不佳的问题）</TextBlock>
                         <StackPanel Orientation="Horizontal">
                             <ComboBox x:Name="updateJsonAddress" Margin="0 8"  MinWidth="200"
