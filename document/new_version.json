@@ -1,7 +1,7 @@
 {
-    "version": "4.6.28",
-    "version_num": 40628,
-    "version_desc": "更新内容:\r\n\r\n- 播放器音量偏低打开新视频时提示当前音量\r\n\r\n- 修复使用寒霜弹幕使时发送弹幕后报错\r\n\r\n- 修复使用寒霜弹幕使时更新弹幕会将当前时间段当前时间之前的所有弹幕全部显示\r\n\r\n- 修复仅1位作者的视频详情页不显示关注按钮\r\n\r\n- 修复用户空间查看动态报错鉴权失 败\r\n\r\n- 修复启用自动全屏后播放视频按空格暂停左上角会出现内部透明的白色实线方框\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+    "version": "4.6.29",
+    "version_num": 40629,
+    "version_desc": "更新内容:\r\n\r\n- 首页Tab自定义支持添加稍后再看、历史记录、我的收藏\r\n\r\n- 展示评论下热门回复\r\n\r\n- 提高评论控件狭窄模式触发宽度，默认宽度时单行显示文字更多\r\n\r\n- 启动画面背景色跟随系统主题\r\n\r\n- 减少安装包体积\r\n\r\n- 修复首页推荐Tab中无法打开直播\r\n\r\n- 修复页面中输入框无法输入空格\r\n\r\n- 修复WebPage打开新页面错误\r\n\r\n- 修复用户主页空间动态打开失败，更换接口并重新适配数据\r\n\r\n- 修复动态详情打开失败\r\n\r\n- 修复首页搜索视频请求搜索建议报错\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
     "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
     "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }

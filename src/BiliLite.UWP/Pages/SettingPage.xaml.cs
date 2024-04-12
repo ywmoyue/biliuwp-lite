@@ -19,6 +19,8 @@ using Windows.UI.Xaml.Navigation;
 using BiliLite.Models.Common.Home;
 using BiliLite.ViewModels.Download;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -1070,6 +1072,33 @@ namespace BiliLite.Pages
             SettingService.SetValue(SettingConstants.Other.REQUEST_BUILD, build);
             RequestBuildTextBox.Text = build;
             Notify.ShowMessageToast("已恢复默认");
+        }
+
+        private async void BtnExportSettings_OnClick(object sender, RoutedEventArgs e)
+        {
+            var exportService = App.ServiceProvider.GetRequiredService<SettingsImportExportService>();
+            await exportService.ExportSettings();
+        }
+
+        private async void BtnImportSettings_OnClick(object sender, RoutedEventArgs e)
+        {
+            var importService = App.ServiceProvider.GetRequiredService<SettingsImportExportService>();
+            await importService.ImportSettings();
+            Notify.ShowMessageToast("导入成功，正在重启应用");
+            // 等用户看提示
+            await Task.Delay(3000);
+            var result = await CoreApplication.RequestRestartAsync("");
+
+            if (result == AppRestartFailureReason.NotInForeground || result == AppRestartFailureReason.Other)
+            {
+                Notify.ShowMessageToast("重启失败，请手动重启应用");
+            }
+        }
+
+        private async void BtnExportSettingsWithAccount_OnClick(object sender, RoutedEventArgs e)
+        {
+            var exportService = App.ServiceProvider.GetRequiredService<SettingsImportExportService>();
+            await exportService.ExportSettingsWithAccount();
         }
     }
 }

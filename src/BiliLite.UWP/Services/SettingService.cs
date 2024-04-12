@@ -25,6 +25,11 @@ namespace BiliLite.Services
             storageHelper.Save<T>(key, value);
         }
 
+        public static bool HasValue(string key)
+        {
+            return storageHelper.KeyExists(key);
+        }
+
         public class UI
         {
             private static bool? _loadOriginalImage = null;

@@ -46,7 +46,8 @@ namespace BiliLite.Models.Requests.Api.User
             //使用Web的API
             if (SettingService.Account.Logined)
             {
-                api.parameter += $"&access_key={SettingService.Account.AccessKey}";
+                api.parameter += "&";
+                api.parameter += ApiHelper.MustParameter(AppKey, true);
             }
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
