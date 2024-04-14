@@ -82,7 +82,7 @@ namespace BiliLite.Models.Builders
                         m_displayViewModel.ImagesInfo = imgs;
                         break;
                     }
-                case UserDynamicDisplayType.Repost when card.ContainsKey("origin_user"):
+                case UserDynamicDisplayType.Repost when card.ContainsKey("origin_user") && card["origin_user"].ToString() != string.Empty:
                     {
                         var originUser = JsonConvert.DeserializeObject<DynamicCardDescUserProfileModel>(card["origin_user"].ToString());
                         var model = new DynamicCardModel
