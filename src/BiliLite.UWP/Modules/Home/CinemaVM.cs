@@ -372,9 +372,9 @@ namespace BiliLite.Modules
     }
     public class CinemaHomeStatModel
     {
-        public int view { get; set; }
+        public long view { get; set; }
         public string follow_view { get; set; }
-        public int follow { get; set; }
-        public int danmaku { get; set; }
+        public long follow { get; set; }
+        public long danmaku { get; set; }
     }
 }

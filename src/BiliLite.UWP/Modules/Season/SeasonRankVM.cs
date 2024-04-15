@@ -141,9 +141,9 @@ namespace BiliLite.Modules.Season
     }
     public class SeasonRankItemStatModel
     {
-        public int danmaku { get; set; }
-        public int follow { get; set; }
-        public int view { get; set; }
+        public long danmaku { get; set; }
+        public long follow { get; set; }
+        public long view { get; set; }
     }
     public class SeasonRankItemNewEPModel
     {

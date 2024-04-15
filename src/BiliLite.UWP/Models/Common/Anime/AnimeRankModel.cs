@@ -16,11 +16,11 @@ namespace BiliLite.Models.Common.Anime
         [JsonProperty("index_show")]
         public string IndexShow { get; set; }
 
-        public int Follow { get; set; }
+        public long Follow { get; set; }
 
-        public int Danmaku { get; set; }
+        public long Danmaku { get; set; }
 
-        public int View { get; set; }
+        public long View { get; set; }
 
         [JsonProperty("show_badge")]
         public bool ShowBadge => !string.IsNullOrEmpty(Badge);
