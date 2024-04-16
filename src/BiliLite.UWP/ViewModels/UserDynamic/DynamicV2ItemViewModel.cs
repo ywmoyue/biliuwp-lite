@@ -25,7 +25,7 @@ namespace BiliLite.ViewModels.UserDynamic
             m_mapper = App.ServiceProvider.GetRequiredService<IMapper>();
         }
 
-        public UserDynamicSpaceViewModel Parent { get; set; }
+        public IUserDynamicCommands Parent { get; set; }
 
         public string CardType { get; set; }
 
