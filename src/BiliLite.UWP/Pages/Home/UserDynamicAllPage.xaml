@@ -82,7 +82,7 @@
             </Grid.RowDefinitions>
             <Grid x:Name="gridTopBar" MaxWidth="800" Margin="8 0">
                 <Border x:Name="borderTopBar" Margin="12 4"  CornerRadius="4"  Background="{ThemeResource CardColor}">
-                    <Pivot x:Name="pivot" SelectionChanged="Pivot_OnSelectionChanged">
+                    <Pivot x:Name="DynPivot" SelectionChanged="Pivot_OnSelectionChanged">
                         <Pivot.RightHeader>
                             <StackPanel Orientation="Horizontal">
 
@@ -138,6 +138,7 @@
                 </controls:MyListView.ItemContainerStyle>
 
             </controls:MyListView>
+
             <ProgressRing Grid.Row="1" VerticalAlignment="Bottom" Margin="8" IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"></ProgressRing>
             <StackPanel Orientation="Vertical"  Grid.Row="1" VerticalAlignment="Bottom" Margin="20 12" HorizontalAlignment="Right">
                 <controls:RoundButton x:Name="BtnGrid"  ToolTipService.ToolTip="切换为瀑布流" Click="BtnGrid_OnClick" Margin="0 0 0 8"  Padding="12">

@@ -23,12 +23,14 @@ namespace BiliLite.Pages.Home
     {
         readonly UserDynamicAllViewModel m_viewModel;
         private bool m_isStaggered = false;
+        private UserDynamicShowType m_currentShowType;
 
         public UserDynamicAllPage()
         {
             m_viewModel = App.ServiceProvider.GetRequiredService<UserDynamicAllViewModel>();
             m_viewModel.OpenCommentEvent += UserDynamicViewModelOpenCommentEvent;
             this.InitializeComponent();
+            m_currentShowType = (UserDynamicShowType)DynPivot.SelectedIndex;
         }
 
         protected  override async void OnNavigatedTo(NavigationEventArgs e)
@@ -85,7 +87,7 @@ namespace BiliLite.Pages.Home
 
         private async void BtnRefreshDynamic_OnClick(object sender, RoutedEventArgs e)
         {
-            await m_viewModel.GetDynamicItems();
+            await m_viewModel.GetDynamicItems(showType: m_currentShowType);
         }
 
         private void BtnTop_OnClick(object sender, RoutedEventArgs e)
@@ -105,9 +107,12 @@ namespace BiliLite.Pages.Home
             SetGridCore();
         }
 
-        private void Pivot_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void Pivot_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //throw new System.NotImplementedException();
+            var showType = (UserDynamicShowType)DynPivot.SelectedIndex;
+            if (showType == m_currentShowType) return;
+            m_currentShowType = showType;
+            await m_viewModel.GetDynamicItems(showType: showType);
         }
 
         private void CloseCommentCore()

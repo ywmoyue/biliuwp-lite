@@ -35,6 +35,8 @@ namespace BiliLite.ViewModels.UserDynamic
 
         public ModuleAuthorForward AuthorForward { get; set; }
 
+        public UserDynamicSeasonInfo Season { get; set; }
+
         public ModuleDynamic Dynamic
         {
             get
@@ -62,12 +64,16 @@ namespace BiliLite.ViewModels.UserDynamic
 
         public ModuleOpusSummary OpusSummary { get; set; }
 
+        [DependsOn(nameof(Item))]
+        public bool ForwardMissed => Item == null;
+
         public DynamicV2ItemViewModel Item { get; set; }
 
         public List<DynamicV2ItemViewModel> Items
         {
             get
             {
+                if (Item == null) return null;
                 Item.Parent = Parent;
                 return new List<DynamicV2ItemViewModel>()
                 {
