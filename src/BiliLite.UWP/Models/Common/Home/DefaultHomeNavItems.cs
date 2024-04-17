@@ -1,9 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using BiliLite.Services;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BiliLite.Models.Common.Home
 {
     public static class DefaultHomeNavItems
     {
+        public static List<HomeNavItem> CheckHomeNavItems(List<HomeNavItem> navList)
+        {
+            var defaultItems = GetDefaultHomeNavItems();
+            defaultItems.AddRange(GetDefaultHideHomeNavItems());
+            var result = new List<HomeNavItem>(navList);
+            foreach (var homeNavItem in navList.Where(homeNavItem =>
+                         defaultItems.All(x => x.Title != homeNavItem.Title || x.Page != homeNavItem.Page)))
+            {
+                result.Remove(homeNavItem);
+            }
+            SettingService.SetValue(SettingConstants.UI.HOEM_ORDER, result);
+
+            return result;
+        }
+
         public static List<HomeNavItem> GetDefaultHomeNavItems()
         {
             return new List<HomeNavItem>()
@@ -27,7 +44,7 @@ namespace BiliLite.Models.Common.Home
                 new HomeNavItem()
                 {
                     Icon = FontAwesome5.EFontAwesomeIcon.Solid_Heart,
-                    Page = typeof(Pages.Home.UserDynamicPage),
+                    Page = typeof(Pages.Home.UserDynamicAllPage),
                     Title = "动态",
                     NeedLogin = true,
                     Show = false
@@ -143,7 +160,15 @@ namespace BiliLite.Models.Common.Home
                     Title = "我的收藏",
                     NeedLogin = true,
                     Show = false
-                }
+                },
+                new HomeNavItem()
+                {
+                    Icon = FontAwesome5.EFontAwesomeIcon.Solid_Heart,
+                    Page = typeof(Pages.Home.UserDynamicPage),
+                    Title = "动态(旧版)",
+                    NeedLogin = true,
+                    Show = false
+                },
             };
         }
     }

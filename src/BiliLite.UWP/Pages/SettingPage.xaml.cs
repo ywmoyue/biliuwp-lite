@@ -1083,7 +1083,10 @@ namespace BiliLite.Pages
         private async void BtnImportSettings_OnClick(object sender, RoutedEventArgs e)
         {
             var importService = App.ServiceProvider.GetRequiredService<SettingsImportExportService>();
-            await importService.ImportSettings();
+            if (!await importService.ImportSettings())
+            {
+                return;
+            }
             Notify.ShowMessageToast("导入成功，正在重启应用");
             // 等用户看提示
             await Task.Delay(3000);

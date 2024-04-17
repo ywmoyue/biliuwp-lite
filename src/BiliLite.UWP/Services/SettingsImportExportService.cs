@@ -12,28 +12,28 @@ using Tomlyn.Model;
 using BiliLite.Extensions;
 using System.Security.Cryptography;
 using Windows.Storage;
+using ArtisanCode.SimpleAesEncryption;
 
 namespace BiliLite.Services
 {
     public class SettingsImportExportService
     {
-        private const string SettingsExportKey = "4bmsD9chgoP1jdohv2+OV9Pv2403r4IfJU18ixpFWQA=";
-        private const string SettingsExportIV = "ABxrLAWa7MrKg6w1xxtZmw==";
-
-        private AesCryptoServiceProvider aesProvider;
-        private ICryptoTransform encryptor;
-        private ICryptoTransform decryptor;
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+        private const string SETTINGS_EXPORT_KEY = "4bmsD9chgoP1jdohv2+OV9Pv2403r4IfJU18ixpFWQA=";
+        private const string SETTINGS_EXPORT_IV = "ABxrLAWa7MrKg6w1xxtZmw==";
+        private readonly RijndaelMessageEncryptor m_encryptor;
+        private readonly RijndaelMessageDecryptor m_decryptor;
 
         public SettingsImportExportService()
         {
-            aesProvider = new AesCryptoServiceProvider();
-            aesProvider.Key = Convert.FromBase64String(SettingsExportKey);
-            aesProvider.IV = Convert.FromBase64String(SettingsExportIV);
-            aesProvider.Mode = CipherMode.CBC;
-            aesProvider.Padding = PaddingMode.PKCS7;
-
-            encryptor = aesProvider.CreateEncryptor(aesProvider.Key, aesProvider.IV);
-            decryptor = aesProvider.CreateDecryptor(aesProvider.Key, aesProvider.IV);
+            var config = new SimpleAesEncryptionConfiguration()
+            {
+                CipherMode = CipherMode.CBC,
+                Padding = PaddingMode.PKCS7,
+                EncryptionKey = new EncryptionKeyConfigurationElement(256, SETTINGS_EXPORT_KEY),
+            };
+            m_encryptor = new RijndaelMessageEncryptor(config);
+            m_decryptor = new RijndaelMessageDecryptor(config);
         }
 
         private void ExportSettingsCore(TomlTable model, Type settingsType)
@@ -125,24 +125,14 @@ namespace BiliLite.Services
 
         public byte[] EncryptToBinary(string plainText)
         {
-            byte[] encrypted;
-            using var msEncrypt = new MemoryStream();
-            using var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write);
-            using var swEncrypt = new StreamWriter(csEncrypt);
-            swEncrypt.Write(plainText);
-            encrypted = msEncrypt.ToArray();
-
-            return encrypted;
+            var cyphertext = m_encryptor.Encrypt(plainText);
+            return System.Text.Encoding.UTF8.GetBytes(cyphertext);
         }
 
         public string DecryptFromBinary(byte[] cipherTextBinary)
         {
-            string plaintext = null;
-            using var msDecrypt = new MemoryStream(cipherTextBinary);
-            using var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
-            using var srDecrypt = new StreamReader(csDecrypt);
-            plaintext = srDecrypt.ReadToEnd();
-
+            var binText = System.Text.Encoding.UTF8.GetString(cipherTextBinary);
+            var plaintext = m_decryptor.Decrypt(binText);
             return plaintext;
         }
 
@@ -158,80 +148,110 @@ namespace BiliLite.Services
             return bin;
         }
 
-        public async Task ExportSettings()
+        public async Task<bool> ExportSettings()
         {
             var folder = await new FolderPicker().PickSingleFolderAsync();
-            if (folder == null) return;
+            if (folder == null) return false;
             var file = await folder.CreateFileAsync($"{DateTime.Now.ToString("yyyy-M-d-HH_mm_ss")}.bililiteSettings");
 
-            var model = Toml.ToModel("");
+            try
+            {
+                var model = Toml.ToModel("");
 
-            ExportSettingsCore(model, typeof(SettingConstants.UI));
-            ExportSettingsCore(model, typeof(SettingConstants.VideoDanmaku));
-            ExportSettingsCore(model, typeof(SettingConstants.Live));
-            ExportSettingsCore(model, typeof(SettingConstants.Player));
-            ExportSettingsCore(model, typeof(SettingConstants.Roaming));
-            ExportSettingsCore(model, typeof(SettingConstants.Download));
-            ExportSettingsCore(model, typeof(SettingConstants.Other));
+                ExportSettingsCore(model, typeof(SettingConstants.UI));
+                ExportSettingsCore(model, typeof(SettingConstants.VideoDanmaku));
+                ExportSettingsCore(model, typeof(SettingConstants.Live));
+                ExportSettingsCore(model, typeof(SettingConstants.Player));
+                ExportSettingsCore(model, typeof(SettingConstants.Roaming));
+                ExportSettingsCore(model, typeof(SettingConstants.Download));
+                ExportSettingsCore(model, typeof(SettingConstants.Other));
 
-            var modelString = Toml.FromModel(model);
+                var modelString = Toml.FromModel(model);
 
-            var bin = Encode(modelString);
+                var bin = Encode(modelString);
 
-            using var stream = await file.OpenStreamForWriteAsync();
-            await stream.WriteAsync(bin, 0, bin.Length);
-            await stream.FlushAsync();
+                using var stream = await file.OpenStreamForWriteAsync();
+                await stream.WriteAsync(bin, 0, bin.Length);
+                await stream.FlushAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("导出失败", ex);
+                Notify.ShowMessageToast("导出失败，已记录错误");
+                return false;
+            }
         }
 
-        public async Task ExportSettingsWithAccount()
+        public async Task<bool> ExportSettingsWithAccount()
         {
             var folder = await new FolderPicker().PickSingleFolderAsync();
-            if (folder == null) return;
+            if (folder == null) return false;
             var file = await folder.CreateFileAsync($"{DateTime.Now.ToString("yyyy-M-d-HH_mm_ss")}.bililiteSettings");
 
-            var model = Toml.ToModel("");
+            try
+            {
+                var model = Toml.ToModel("");
 
-            ExportSettingsCore(model, typeof(SettingConstants.UI));
-            ExportSettingsCore(model, typeof(SettingConstants.Account));
-            ExportSettingsCore(model, typeof(SettingConstants.VideoDanmaku));
-            ExportSettingsCore(model, typeof(SettingConstants.Live));
-            ExportSettingsCore(model, typeof(SettingConstants.Player));
-            ExportSettingsCore(model, typeof(SettingConstants.Roaming));
-            ExportSettingsCore(model, typeof(SettingConstants.Download));
-            ExportSettingsCore(model, typeof(SettingConstants.Other));
+                ExportSettingsCore(model, typeof(SettingConstants.UI));
+                ExportSettingsCore(model, typeof(SettingConstants.Account));
+                ExportSettingsCore(model, typeof(SettingConstants.VideoDanmaku));
+                ExportSettingsCore(model, typeof(SettingConstants.Live));
+                ExportSettingsCore(model, typeof(SettingConstants.Player));
+                ExportSettingsCore(model, typeof(SettingConstants.Roaming));
+                ExportSettingsCore(model, typeof(SettingConstants.Download));
+                ExportSettingsCore(model, typeof(SettingConstants.Other));
 
-            var modelString = Toml.FromModel(model);
+                var modelString = Toml.FromModel(model);
 
-            var bin = Encode(modelString);
+                var bin = Encode(modelString);
 
-            using var stream = await file.OpenStreamForWriteAsync();
-            await stream.WriteAsync(bin, 0, bin.Length);
-            await stream.FlushAsync();
+                using var stream = await file.OpenStreamForWriteAsync();
+                await stream.WriteAsync(bin, 0, bin.Length);
+                await stream.FlushAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("导出失败", ex);
+                Notify.ShowMessageToast("导出失败，已记录错误");
+                return false;
+            }
         }
 
-        public async Task ImportSettings()
+        public async Task<bool> ImportSettings()
         {
             var filePicker = new FileOpenPicker();
             filePicker.FileTypeFilter.Add(".bililiteSettings");
             var file = await filePicker.PickSingleFileAsync();
-            if (file == null) return;
+            if (file == null) return false;
             using var openFile = await file.OpenAsync(FileAccessMode.Read);
             using var stream = openFile.AsStreamForRead();
             var bin = new byte[stream.Length];
 
             await stream.ReadAsync(bin, 0, bin.Length);
 
-            var text = Decode(bin);
-            var model = Toml.ToModel(text);
+            try
+            {
+                var text = Decode(bin);
+                var model = Toml.ToModel(text);
 
-            ImportSettingsCore(model, typeof(SettingConstants.UI));
-            ImportSettingsCore(model, typeof(SettingConstants.Account));
-            ImportSettingsCore(model, typeof(SettingConstants.VideoDanmaku));
-            ImportSettingsCore(model, typeof(SettingConstants.Live));
-            ImportSettingsCore(model, typeof(SettingConstants.Player));
-            ImportSettingsCore(model, typeof(SettingConstants.Roaming));
-            ImportSettingsCore(model, typeof(SettingConstants.Download));
-            ImportSettingsCore(model, typeof(SettingConstants.Other));
+                ImportSettingsCore(model, typeof(SettingConstants.UI));
+                ImportSettingsCore(model, typeof(SettingConstants.Account));
+                ImportSettingsCore(model, typeof(SettingConstants.VideoDanmaku));
+                ImportSettingsCore(model, typeof(SettingConstants.Live));
+                ImportSettingsCore(model, typeof(SettingConstants.Player));
+                ImportSettingsCore(model, typeof(SettingConstants.Roaming));
+                ImportSettingsCore(model, typeof(SettingConstants.Download));
+                ImportSettingsCore(model, typeof(SettingConstants.Other));
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("导入失败", ex);
+                Notify.ShowMessageToast("导入失败，已记录错误");
+                return false;
+            }
+            return true;
         }
     }
 }

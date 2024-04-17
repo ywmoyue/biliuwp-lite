@@ -1,31 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Windows.UI.Xaml.Controls;
-using AutoMapper;
-using Bilibili.App.Dynamic.V2;
-using BiliLite.Extensions;
-using BiliLite.Models.Common;
+﻿using AutoMapper;
 using BiliLite.Models.Exceptions;
-using BiliLite.Modules;
-using BiliLite.Pages;
+using BiliLite.Models.Requests.Api.User;
+using BiliLite.Modules.User;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
-using BiliLite.Models.Common.UserDynamic;
-using BiliLite.Pages.User;
-using BiliLite.Models;
-using BiliLite.Models.Requests.Api.User;
+using System;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using BiliLite.Extensions;
+using Bilibili.App.Dynamic.V2;
+using System.Collections.Generic;
+using System.Linq;
+using Windows.UI.Xaml.Controls;
 using BiliLite.Dialogs;
-using BiliLite.Modules.User;
+using BiliLite.Models;
+using BiliLite.Models.Common;
+using BiliLite.Models.Common.UserDynamic;
+using BiliLite.Modules;
+using BiliLite.Pages;
+using BiliLite.Pages.User;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
 namespace BiliLite.ViewModels.UserDynamic
 {
-    public class UserDynamicSpaceViewModel : BaseViewModel, IUserDynamicCommands
+    public class UserDynamicAllViewModel : BaseViewModel, IUserDynamicCommands
     {
         #region Fields
 
@@ -41,7 +41,7 @@ namespace BiliLite.ViewModels.UserDynamic
 
         #region Constructors
 
-        public UserDynamicSpaceViewModel(GrpcService grpcService, IMapper mapper)
+        public UserDynamicAllViewModel(GrpcService grpcService, IMapper mapper)
         {
             m_grpcService = grpcService;
             m_mapper = mapper;
@@ -89,11 +89,9 @@ namespace BiliLite.ViewModels.UserDynamic
 
         public ICommand TagCommand { get; set; }
 
-        public bool CanLoadMore { get; set; }
-
         public bool Loading { get; set; }
 
-        public string UserId { get; set; }
+        public bool CanLoadMore { get; set; }
 
         public ObservableCollection<DynamicV2ItemViewModel> DynamicItems { get; set; }
 
@@ -175,23 +173,6 @@ namespace BiliLite.ViewModels.UserDynamic
             });
         }
 
-        private void HandleDynamicResults(DynSpaceRsp results)
-        {
-            CanLoadMore = results.HasMore;
-            m_offset = results.HistoryOffset;
-            var items = m_mapper.Map<List<DynamicV2ItemViewModel>>(results.List.ToList());
-            foreach (var item in items)
-            {
-                item.Parent = this;
-            }
-            if (m_page == 1)
-                DynamicItems = new ObservableCollection<DynamicV2ItemViewModel>(items);
-            else
-            {
-                DynamicItems.AddRange(items);
-            }
-        }
-
         private async void LaunchUrl(string url)
         {
             var result = await MessageCenter.HandelUrl(url);
@@ -265,6 +246,23 @@ namespace BiliLite.ViewModels.UserDynamic
             Notify.ShowMessageToast(dataStr.SetClipboard() ? "已复制" : "复制失败");
         }
 
+        private void HandleDynamicResults(DynAllReply results)
+        {
+            CanLoadMore = results.DynamicList.HasMore;
+            m_offset = results.DynamicList.HistoryOffset;
+            var items = m_mapper.Map<List<DynamicV2ItemViewModel>>(results.DynamicList.List.ToList());
+            foreach (var item in items)
+            {
+                item.Parent = this;
+            }
+            if (m_page == 1)
+                DynamicItems = new ObservableCollection<DynamicV2ItemViewModel>(items);
+            else
+            {
+                DynamicItems.AddRange(items);
+            }
+        }
+
         #endregion
 
         #region Public Methods
@@ -294,7 +292,7 @@ namespace BiliLite.ViewModels.UserDynamic
                 {
                     m_offset = null;
                 }
-                var results = await m_grpcService.GetDynSpace(UserId.ToInt64(), page: page, offset: m_offset);
+                var results = await m_grpcService.GetDynAll(page: page, offset: m_offset);
                 HandleDynamicResults(results);
             }
             catch (CustomizedErrorException ex)

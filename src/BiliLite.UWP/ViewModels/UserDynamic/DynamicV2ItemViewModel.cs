@@ -25,7 +25,7 @@ namespace BiliLite.ViewModels.UserDynamic
             m_mapper = App.ServiceProvider.GetRequiredService<IMapper>();
         }
 
-        public UserDynamicSpaceViewModel Parent { get; set; }
+        public IUserDynamicCommands Parent { get; set; }
 
         public string CardType { get; set; }
 
@@ -164,9 +164,34 @@ namespace BiliLite.ViewModels.UserDynamic
         }
 
         [DoNotNotify]
-        public string Verify { get; set; } = Constants.App.TRANSPARENT_IMAGE;
+        public string Verify
+        {
+            get
+            {
+                if (Author == null) return Constants.App.TRANSPARENT_IMAGE;
+                return Author.Author.Official.Type switch
+                {
+                    1 => Constants.App.VERIFY_OGANIZATION_IMAGE,
+                    0 => Constants.App.VERIFY_PERSONAL_IMAGE,
+                    -1 => Constants.App.TRANSPARENT_IMAGE,
+                    _ => Constants.App.TRANSPARENT_IMAGE
+                };
+            }
+        }
 
         [DoNotNotify]
-        public string Pendant { get; set; } = Constants.App.TRANSPARENT_IMAGE;
+        public string Pendant
+        {
+            get
+            {
+                if (Author == null) return Constants.App.TRANSPARENT_IMAGE;
+                if (Author.Author.Pendant != null && !string.IsNullOrEmpty(Author.Author.Pendant.Image))
+                {
+                    return Author.Author.Pendant.Image;
+                }
+
+                return Constants.App.TRANSPARENT_IMAGE;
+            }
+        }
     }
 }

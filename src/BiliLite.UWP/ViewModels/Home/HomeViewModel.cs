@@ -27,6 +27,7 @@ namespace BiliLite.ViewModels.Home
             m_account = new Account();
             m_mapper = App.ServiceProvider.GetRequiredService<IMapper>();
             var homeNavItemList = SettingService.GetValue(SettingConstants.UI.HOEM_ORDER, DefaultHomeNavItems.GetDefaultHomeNavItems());
+            homeNavItemList = DefaultHomeNavItems.CheckHomeNavItems(homeNavItemList);
             HomeNavItems = m_mapper.Map<ObservableCollection<HomeNavItemViewModel>>(homeNavItemList);
             SelectItem = HomeNavItems.FirstOrDefault();
             if (!SettingService.Account.Logined) return;

@@ -10,42 +10,42 @@ namespace BiliLite.ViewModels.Video
         /// <summary>
         /// 播放
         /// </summary>
-        public int View { get; set; }
+        public long View { get; set; }
 
         /// <summary>
         /// 弹幕
         /// </summary>
-        public int Danmaku { get; set; }
+        public long Danmaku { get; set; }
 
         /// <summary>
         /// 评论
         /// </summary>
-        public int Reply { get; set; }
+        public long Reply { get; set; }
         
         /// <summary>
         /// 收藏
         /// </summary>
-        public int Favorite { get; set; }
+        public long Favorite { get; set; }
         
         /// <summary>
         /// 投币
         /// </summary>
-        public int Coin { get; set; }
+        public long Coin { get; set; }
         
         /// <summary>
         /// 分享
         /// </summary>
-        public int Share { get; set; }
+        public long Share { get; set; }
         
         /// <summary>
         /// 点赞
         /// </summary>
-        public int Like { get; set; }
+        public long Like { get; set; }
 
         /// <summary>
         /// 不喜欢，固定0
         /// </summary>
         [JsonProperty("dislike")]
-        public int DisLike { get; set; }
+        public long DisLike { get; set; }
     }
 }

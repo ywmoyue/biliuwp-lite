@@ -194,20 +194,20 @@ namespace BiliLite.Modules
         public RankItemOwnerModel owner { get; set; }
         public RankItemStatModel stat { get; set; }
         public string dynamic { get; set; }
-        public int cid { get; set; }
+        public long cid { get; set; }
 
         public string bvid { get; set; }
         public int score { get; set; }
     }
     public class RankItemStatModel
     {
-        public int aid { get; set; }
-        public int view { get; set; }
-        public int danmaku { get; set; }
-        public int reply { get; set; }
-        public int favorite { get; set; }
-        public int coin { get; set; }
-        public int share { get; set; }
+        public long aid { get; set; }
+        public long view { get; set; }
+        public long danmaku { get; set; }
+        public long reply { get; set; }
+        public long favorite { get; set; }
+        public long coin { get; set; }
+        public long share { get; set; }
     }
     public class RankItemOwnerModel
     {
