@@ -101,6 +101,8 @@
             public const string COMMON_SQUARE = "CommonSquare";
 
             public const string LIVE_RCMD = "LiveRcmd";
+
+            public const string CUSTOM_SEASON = "CustomSeason";
         }
     }
 }

@@ -145,6 +145,9 @@ namespace BiliLite.Extensions
                     .ForMember(dest => dest.Stat,
                         opt => opt.MapFrom(src =>
                             src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleStat).ModuleStat));
+
+                expression.CreateMap<NewEP, UserDynamicSeasonNewEpInfo>();
+                expression.CreateMap<FollowListItem, UserDynamicSeasonInfo>();
             }));
 
             services.AddSingleton<IMapper>(mapper);

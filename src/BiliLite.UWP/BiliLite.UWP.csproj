@@ -159,6 +159,7 @@
     <Compile Include="Models\Common\Dynamic\DynamicUgcSeasonCardModel.cs" />
     <Compile Include="Models\Common\UserDynamic\DynLiveInfo.cs" />
     <Compile Include="Models\Common\UserDynamic\IUserDynamicCommands.cs" />
+    <Compile Include="Models\Common\UserDynamic\UserDynamicSeasonInfo.cs" />
     <Compile Include="Models\Common\User\SendDynamic\AtDisplayModel.cs" />
     <Compile Include="Models\Common\User\SendDynamic\AtModel.cs" />
     <Compile Include="Models\Common\User\SendDynamic\SendImagesModel.cs" />

@@ -36,6 +36,7 @@ namespace BiliLite.ViewModels.UserDynamic
         private readonly WatchLaterVM m_watchLaterVm;
         private int m_page = 1;
         private string m_offset = null;
+        private string m_baseline = null;
 
         #endregion
 
@@ -263,6 +264,33 @@ namespace BiliLite.ViewModels.UserDynamic
             }
         }
 
+        private void HandleDynamicSeasonResults(DynVideoReply results)
+        {
+            CanLoadMore = false;
+            var seasonItems = m_mapper.Map<List<UserDynamicSeasonInfo>>(results.VideoFollowList.List.ToList());
+            var dynamicItems = seasonItems.Select(x => x.ToDynamicItem()).ToList();
+            DynamicItems = new ObservableCollection<DynamicV2ItemViewModel>(dynamicItems);
+        }
+
+        private void HandleDynamicVideoResults(DynVideoReply results)
+        {
+            CanLoadMore = results.DynamicList.HasMore;
+            m_offset = results.DynamicList.HistoryOffset;
+            m_baseline = results.DynamicList.UpdateBaseline;
+            var items = m_mapper.Map<List<DynamicV2ItemViewModel>>(results.DynamicList.List.ToList());
+
+            foreach (var item in items)
+            {
+                item.Parent = this;
+            }
+            if (m_page == 1)
+                DynamicItems = new ObservableCollection<DynamicV2ItemViewModel>(items);
+            else
+            {
+                DynamicItems.AddRange(items);
+            }
+        }
+
         #endregion
 
         #region Public Methods
@@ -281,7 +309,7 @@ namespace BiliLite.ViewModels.UserDynamic
             await GetDynamicItems(m_page + 1);
         }
 
-        public async Task GetDynamicItems(int page = 1)
+        public async Task GetDynamicItems(int page = 1, UserDynamicShowType showType = UserDynamicShowType.All)
         {
             try
             {
@@ -291,9 +319,33 @@ namespace BiliLite.ViewModels.UserDynamic
                 if (page == 1)
                 {
                     m_offset = null;
+                    DynamicItems?.Clear();
                 }
-                var results = await m_grpcService.GetDynAll(page: page, offset: m_offset);
-                HandleDynamicResults(results);
+
+                switch (showType)
+                {
+                    case UserDynamicShowType.All:
+                    {
+                        var results = await m_grpcService.GetDynAll(page: page, offset: m_offset);
+                        HandleDynamicResults(results);
+                        break;
+                    }
+                    case UserDynamicShowType.Video:
+                    {
+                        var results = await m_grpcService.GetDynVideo(page, m_offset, m_baseline);
+                        HandleDynamicVideoResults(results);
+                        break;
+                    }
+                    case UserDynamicShowType.Season:
+                    {
+                        var results = await m_grpcService.GetDynVideo(page, m_offset, m_baseline);
+                        HandleDynamicSeasonResults(results);
+                        break;
+                    }
+                    case UserDynamicShowType.Article:
+                        throw new NotImplementedException();
+                        break;
+                }
             }
             catch (CustomizedErrorException ex)
             {

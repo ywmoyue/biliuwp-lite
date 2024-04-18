@@ -38,6 +38,7 @@ namespace BiliLite.Controls.DataTemplateSelectors
                     { Constants.DynamicTypes.MUSIC, (selector, model) => selector.MusicTemplate },
                     { Constants.DynamicTypes.COMMON_SQUARE, (selector, model) => selector.CommonSquareTemplate },
                     { Constants.DynamicTypes.LIVE_RCMD, (selector, model) => selector.LiveRcmdTemplate },
+                    { Constants.DynamicTypes.CUSTOM_SEASON, (selector, model) => selector.CustomSeasonTemplate },
                 };
         }
 
@@ -62,6 +63,8 @@ namespace BiliLite.Controls.DataTemplateSelectors
         public DataTemplate CommonSquareTemplate { get; set; }
 
         public DataTemplate LiveRcmdTemplate { get; set; }
+
+        public DataTemplate CustomSeasonTemplate { get; set; }
 
         public DataTemplate OtherTemplate { get; set; }
 
