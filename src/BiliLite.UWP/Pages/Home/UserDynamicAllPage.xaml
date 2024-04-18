@@ -154,22 +154,22 @@
                     <SymbolIcon Symbol="Refresh" Foreground="White"></SymbolIcon>
                 </controls:RoundButton>
             </StackPanel>
-            <Grid x:Name="CommentPanel"
-                  Visibility="Collapsed"
-                  HorizontalAlignment="Stretch"
-                  VerticalAlignment="Stretch"
-                  Background="{ThemeResource HalfTransparentBackground}">
-                <Grid 
-                    Tapped="CommentPanel_OnTapped"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    Background="Transparent"></Grid>
-                <Grid HorizontalAlignment="Right"
-                      Background="{ThemeResource ApplicationBackground}"
-                      Width="{x:Bind m_viewModel.CommentControlWidth}"
-                      VerticalAlignment="Stretch">
-                    <controls:CommentControl x:Name="Comment"></controls:CommentControl>
-                </Grid>
+        </Grid>
+        <Grid x:Name="CommentPanel"
+              Visibility="Collapsed"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+              Background="{ThemeResource HalfTransparentBackground}">
+            <Grid 
+                Tapped="CommentPanel_OnTapped"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Background="Transparent"></Grid>
+            <Grid HorizontalAlignment="Right"
+                  Background="{ThemeResource ApplicationBackground}"
+                  Width="{x:Bind m_viewModel.CommentControlWidth}"
+                  VerticalAlignment="Stretch">
+                <controls:CommentControl x:Name="Comment"></controls:CommentControl>
             </Grid>
         </Grid>
     </Grid>
