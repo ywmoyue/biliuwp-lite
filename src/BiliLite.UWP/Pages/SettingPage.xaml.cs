@@ -161,6 +161,16 @@ namespace BiliLite.Pages
                 });
             });
 
+            //动态评论宽度
+            NumBoxDynamicCommentWidth.Value = SettingService.GetValue<double>(SettingConstants.UI.DYNAMIC_COMMENT_WIDTH, SettingConstants.UI.DEFAULT_DYNAMIC_COMMENT_WIDTH);
+            NumBoxDynamicCommentWidth.Loaded += (sender, e) =>
+            {
+                NumBoxDynamicCommentWidth.ValueChanged += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.DYNAMIC_COMMENT_WIDTH, args.NewValue);
+                };
+            };
+
             //图片圆角半径
             numImageCornerRadius.Value = SettingService.GetValue<double>(SettingConstants.UI.IMAGE_CORNER_RADIUS, 0);
             ImageCornerRadiusExample.CornerRadius = new CornerRadius(numImageCornerRadius.Value);

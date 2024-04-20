@@ -56,6 +56,12 @@ namespace BiliLite.Models.Common
             [SettingKey(typeof(bool))]
             public const string RIGHT_WIDTH_CHANGEABLE = "PlayerRightDetailWidthChangeable";
 
+            [SettingKey(typeof(double))]
+            public const string DYNAMIC_COMMENT_WIDTH = "DynamicCommentWidth";
+
+            [SettingDefaultValue]
+            public const double DEFAULT_DYNAMIC_COMMENT_WIDTH = 480;
+
             /// <summary>
             /// 图片圆角半径
             /// </summary>

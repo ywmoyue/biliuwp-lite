@@ -96,13 +96,7 @@ namespace BiliLite.ViewModels.UserDynamic
 
         public ObservableCollection<DynamicV2ItemViewModel> DynamicItems { get; set; }
 
-        public int CommentControlWidth
-        {
-            get
-            {
-                return SettingService.GetValue(SettingConstants.UI.RIGHT_DETAIL_WIDTH, 320);
-            }
-        }
+        public double CommentControlWidth => SettingService.GetValue(SettingConstants.UI.DYNAMIC_COMMENT_WIDTH, SettingConstants.UI.DEFAULT_DYNAMIC_COMMENT_WIDTH);
 
         #endregion
 
