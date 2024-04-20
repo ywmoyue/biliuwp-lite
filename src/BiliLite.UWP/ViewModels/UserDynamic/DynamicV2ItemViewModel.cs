@@ -39,6 +39,8 @@ namespace BiliLite.ViewModels.UserDynamic
 
         public NavDynArticle CustomArticle { get; set; }
 
+        public string SourceJson { get; set; }
+
         public ModuleDynamic Dynamic
         {
             get

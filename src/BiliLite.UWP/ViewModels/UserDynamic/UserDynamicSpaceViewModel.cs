@@ -261,7 +261,7 @@ namespace BiliLite.ViewModels.UserDynamic
 
         private void CopyDyn(DynamicV2ItemViewModel data)
         {
-            var dataStr = JsonConvert.SerializeObject(data);
+            var dataStr = data.SourceJson;
             Notify.ShowMessageToast(dataStr.SetClipboard() ? "已复制" : "复制失败");
         }
 
