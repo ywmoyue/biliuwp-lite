@@ -124,58 +124,61 @@
                           Content="{x:Bind Path=ViewModel.Content,Mode=OneWay}"></ContentPresenter>
 
         <ContentPresenter  Content="{x:Bind Path=CardContent,Mode=OneWay}" Padding="0 4 0 0"></ContentPresenter>
-        
+
         <StackPanel 
+            Visibility="{x:Bind ViewModel.Stat,Converter={StaticResource display}}">
+            <StackPanel 
             Margin="0 4 0 0" 
             Orientation="Horizontal"
             Visibility="{x:Bind ViewModel.IsRepost,Mode=OneWay,Converter={StaticResource display}}">
-            <StackPanel.Resources>
-                <Style TargetType="Button">
-                    <Setter Property="Margin" Value="0,8,12,0"/>
-                    <Setter Property="Height" Value="32"/>
-                    <Setter Property="Width" Value="96"/>
-                    <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="Foreground" Value="Gray"/>
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="CornerRadius" Value="4"/>
-                </Style>
-            </StackPanel.Resources>
-            <Button
+                <StackPanel.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="Margin" Value="0,8,12,0"/>
+                        <Setter Property="Height" Value="32"/>
+                        <Setter Property="Width" Value="96"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="Gray"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="CornerRadius" Value="4"/>
+                    </Style>
+                </StackPanel.Resources>
+                <Button
                 Command="{x:Bind Path=ViewModel.Parent.RepostCommand,Mode=OneWay}" 
                 CommandParameter="{x:Bind Path=ViewModel,Mode=OneWay}">
-                <StackPanel Orientation="Horizontal">
-                    <fontAwesome5:FontAwesome Icon="Solid_Share" Margin="0 2 0 0" FontSize="14"></fontAwesome5:FontAwesome>
-                    <TextBlock Margin="8 0" Text="{x:Bind Path=ViewModel.Stat.Repost,Mode=OneWay,Converter={StaticResource countConvert},ConverterParameter='转发'}"></TextBlock>
-                </StackPanel>
-            </Button>
-            <Button 
+                    <StackPanel Orientation="Horizontal">
+                        <fontAwesome5:FontAwesome Icon="Solid_Share" Margin="0 2 0 0" FontSize="14"></fontAwesome5:FontAwesome>
+                        <TextBlock Margin="8 0" Text="{x:Bind Path=ViewModel.Stat.Repost,Mode=OneWay,Converter={StaticResource countConvert},ConverterParameter='转发'}"></TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button 
                 Command="{x:Bind Path=ViewModel.Parent.CommentCommand,Mode=OneWay}" 
                 CommandParameter="{x:Bind Path=ViewModel,Mode=OneWay}">
-                <StackPanel Orientation="Horizontal">
-                    <fontAwesome5:FontAwesome Icon="Regular_Comment" Margin="0 2 0 0" FontSize="14"></fontAwesome5:FontAwesome>
-                    <TextBlock Margin="8 0" Text="{x:Bind Path=ViewModel.Stat.Reply,Mode=OneWay,Converter={StaticResource countConvert},ConverterParameter='评论'}"></TextBlock>
-                </StackPanel>
-            </Button>
-            <Button
+                    <StackPanel Orientation="Horizontal">
+                        <fontAwesome5:FontAwesome Icon="Regular_Comment" Margin="0 2 0 0" FontSize="14"></fontAwesome5:FontAwesome>
+                        <TextBlock Margin="8 0" Text="{x:Bind Path=ViewModel.Stat.Reply,Mode=OneWay,Converter={StaticResource countConvert},ConverterParameter='评论'}"></TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button
                 Command="{x:Bind Path=ViewModel.Parent.LikeCommand,Mode=OneWay}" 
                 CommandParameter="{x:Bind Path=ViewModel,Mode=OneWay}"
                 Visibility="{x:Bind Path=ViewModel.Liked,Mode=OneWay,Converter={StaticResource display}}" >
-                <StackPanel Orientation="Horizontal">
-                    <fontAwesome5:FontAwesome Icon="Regular_ThumbsUp" Margin="0 2 0 0" FontSize="14"></fontAwesome5:FontAwesome>
-                    <TextBlock Margin="8 0" 
+                    <StackPanel Orientation="Horizontal">
+                        <fontAwesome5:FontAwesome Icon="Regular_ThumbsUp" Margin="0 2 0 0" FontSize="14"></fontAwesome5:FontAwesome>
+                        <TextBlock Margin="8 0" 
                                Text="{x:Bind Path=ViewModel.LikeCount,Mode=OneWay,Converter={StaticResource countConvert},ConverterParameter='点赞'}"></TextBlock>
-                </StackPanel>
-            </Button>
-            <Button
+                    </StackPanel>
+                </Button>
+                <Button
                 Command="{x:Bind Path=ViewModel.Parent.LikeCommand,Mode=OneWay}" 
                 CommandParameter="{x:Bind Path=ViewModel,Mode=OneWay}"
                 Visibility="{x:Bind Path=ViewModel.Liked,Mode=OneWay}" Foreground="{ThemeResource HighLightColor}">
-                <StackPanel Orientation="Horizontal">
-                    <fontAwesome5:FontAwesome Icon="Regular_ThumbsUp" Margin="0 2 0 0" FontSize="14"></fontAwesome5:FontAwesome>
-                    <TextBlock Margin="8 0" 
+                    <StackPanel Orientation="Horizontal">
+                        <fontAwesome5:FontAwesome Icon="Regular_ThumbsUp" Margin="0 2 0 0" FontSize="14"></fontAwesome5:FontAwesome>
+                        <TextBlock Margin="8 0" 
                                Text="{x:Bind Path=ViewModel.LikeCount,Mode=OneWay,Converter={StaticResource countConvert},ConverterParameter='点赞'}"></TextBlock>
-                </StackPanel>
-            </Button>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
         </StackPanel>
     </StackPanel>
 </UserControl>

@@ -37,6 +37,8 @@ namespace BiliLite.ViewModels.UserDynamic
 
         public UserDynamicSeasonInfo Season { get; set; }
 
+        public NavDynArticle CustomArticle { get; set; }
+
         public ModuleDynamic Dynamic
         {
             get

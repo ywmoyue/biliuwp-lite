@@ -291,6 +291,38 @@ namespace BiliLite.ViewModels.UserDynamic
             }
         }
 
+        private async Task<NavDynArticles> GetDynArticle()
+        {
+            if (m_offset == null)
+            {
+                m_baseline = "0";
+            }
+            var api = m_dynamicApi.Article(m_baseline);
+            var results = await api.Request();
+            if (!results.status)
+            {
+                throw new CustomizedErrorException(results.message);
+            }
+
+            var data = await results.GetData<NavDynArticles>();
+
+            if (!data.success)
+            {
+                throw new CustomizedErrorException(data.message);
+            }
+
+            return data.data;
+        }
+
+        private void HandleDynamicArticleResults(NavDynArticles results)
+        {
+            CanLoadMore = results.HasMore;
+            m_offset = results.Offset;
+            m_baseline = results.UpdateBaseline;
+            var dynamicItems = results.Items.Select(x => x.ToDynamicItem()).ToList();
+            DynamicItems = new ObservableCollection<DynamicV2ItemViewModel>(dynamicItems);
+        }
+
         #endregion
 
         #region Public Methods
@@ -343,8 +375,11 @@ namespace BiliLite.ViewModels.UserDynamic
                         break;
                     }
                     case UserDynamicShowType.Article:
-                        throw new NotImplementedException();
+                    {
+                        var results = await GetDynArticle();
+                        HandleDynamicArticleResults(results);
                         break;
+                    }
                 }
             }
             catch (CustomizedErrorException ex)

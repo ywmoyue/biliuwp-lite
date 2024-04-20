@@ -157,6 +157,20 @@ namespace BiliLite.Models.Requests.Api.User
 
             return api;
         }
+
+        public ApiModel Article(string updateBaseline,string type="article")
+        {
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Get,
+                baseUrl = $"https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/nav",
+                parameter = $"type={type}&update_baseline={updateBaseline}",
+                need_cookie = true,
+            };
+
+            return api;
+        }
+
         /// <summary>
         /// 推荐话题
         /// </summary>

@@ -39,6 +39,7 @@ namespace BiliLite.Controls.DataTemplateSelectors
                     { Constants.DynamicTypes.COMMON_SQUARE, (selector, model) => selector.CommonSquareTemplate },
                     { Constants.DynamicTypes.LIVE_RCMD, (selector, model) => selector.LiveRcmdTemplate },
                     { Constants.DynamicTypes.CUSTOM_SEASON, (selector, model) => selector.CustomSeasonTemplate },
+                    { Constants.DynamicTypes.CUSTOM_ARTICLE, (selector, model) => selector.CustomArticleTemplate },
                 };
         }
 
@@ -65,6 +66,8 @@ namespace BiliLite.Controls.DataTemplateSelectors
         public DataTemplate LiveRcmdTemplate { get; set; }
 
         public DataTemplate CustomSeasonTemplate { get; set; }
+
+        public DataTemplate CustomArticleTemplate { get; set; }
 
         public DataTemplate OtherTemplate { get; set; }
 
