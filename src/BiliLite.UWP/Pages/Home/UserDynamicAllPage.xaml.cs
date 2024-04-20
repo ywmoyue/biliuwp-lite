@@ -121,7 +121,6 @@ namespace BiliLite.Pages.Home
             storyboard.Begin();
         }
 
-
         private void UserDynamicViewModelOpenCommentEvent(object sender, DynamicV2ItemViewModel e)
         {
             CommentApi.CommentType commentType = CommentApi.CommentType.Dynamic;
