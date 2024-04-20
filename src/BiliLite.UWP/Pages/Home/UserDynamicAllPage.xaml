@@ -102,16 +102,16 @@
             </Storyboard>
         </ResourceDictionary>
     </Page.Resources>
-    <Grid  >
+    <Grid>
         <!--背景图-->
         <Image Visibility="Collapsed" Stretch="UniformToFill" Source="https://i0.hdslb.com/bfs/album/eb65ae5ee6f66b6381090f5bee4fe6cbabfd6d0d.png@1920w.jpg"></Image>
-        <Grid >
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Grid x:Name="gridTopBar" MaxWidth="800" Margin="8 0">
-                <Border x:Name="borderTopBar" Margin="12 4"  CornerRadius="4"  Background="{ThemeResource CardColor}">
+            <Grid x:Name="GridTopBar" MaxWidth="800" Margin="8 0">
+                <Border x:Name="BorderTopBar" Margin="12 4"  CornerRadius="4"  Background="{ThemeResource CardColor}">
                     <Pivot x:Name="DynPivot" SelectionChanged="Pivot_OnSelectionChanged">
                         <Pivot.RightHeader>
                             <StackPanel Orientation="Horizontal">
