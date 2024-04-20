@@ -21,7 +21,7 @@ using BiliLite.Modules;
 using BiliLite.Pages;
 using BiliLite.Pages.User;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
+using DynamicType = Bilibili.App.Dynamic.V2.DynamicType;
 
 namespace BiliLite.ViewModels.UserDynamic
 {
@@ -251,7 +251,8 @@ namespace BiliLite.ViewModels.UserDynamic
         {
             CanLoadMore = results.DynamicList.HasMore;
             m_offset = results.DynamicList.HistoryOffset;
-            var items = m_mapper.Map<List<DynamicV2ItemViewModel>>(results.DynamicList.List.ToList());
+            var items = m_mapper.Map<List<DynamicV2ItemViewModel>>(results.DynamicList.List
+                .Where(x => x.CardType != DynamicType.Banner).ToList());
             foreach (var item in items)
             {
                 item.Parent = this;
