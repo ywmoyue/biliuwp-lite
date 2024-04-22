@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using BiliLite.Services;
 using BiliLite.Models.Common;
 using BiliLite.Models.Requests.Api;
@@ -19,7 +20,7 @@ namespace BiliLite.Pages.Home
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class UserDynamicAllPage : Page
+    public sealed partial class UserDynamicAllPage : Page,IRefreshablePage
     {
         readonly UserDynamicAllViewModel m_viewModel;
         private bool m_isStaggered = false;
@@ -99,7 +100,7 @@ namespace BiliLite.Pages.Home
 
         private async void BtnRefreshDynamic_OnClick(object sender, RoutedEventArgs e)
         {
-            await m_viewModel.GetDynamicItems(showType: m_currentShowType);
+            await Refresh();
         }
 
         private void BtnTop_OnClick(object sender, RoutedEventArgs e)
@@ -186,6 +187,11 @@ namespace BiliLite.Pages.Home
         private void CommentPanel_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             CloseCommentCore();
+        }
+
+        public async Task Refresh()
+        {
+            await m_viewModel.GetDynamicItems(showType: m_currentShowType);
         }
     }
 }

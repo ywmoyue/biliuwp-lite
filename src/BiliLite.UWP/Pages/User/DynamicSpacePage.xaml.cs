@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -18,7 +19,7 @@ namespace BiliLite.Pages.User
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class DynamicSpacePage : Page
+    public sealed partial class DynamicSpacePage : Page, IRefreshablePage
     {
         private readonly UserDynamicSpaceViewModel m_viewModel;
         private bool m_isStaggered = false;
@@ -75,7 +76,7 @@ namespace BiliLite.Pages.User
 
         private async void BtnRefreshDynamic_OnClick(object sender, RoutedEventArgs e)
         {
-            await m_viewModel.GetDynamicItems();
+            await Refresh();
         }
 
         private void BtnTop_OnClick(object sender, RoutedEventArgs e)
@@ -155,6 +156,11 @@ namespace BiliLite.Pages.User
         private void CommentPanel_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             CloseCommentCore();
+        }
+
+        public async Task Refresh()
+        {
+            await m_viewModel.GetDynamicItems();
         }
     }
 }

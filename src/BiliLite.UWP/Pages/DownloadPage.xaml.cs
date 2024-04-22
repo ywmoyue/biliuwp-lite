@@ -1,19 +1,12 @@
-﻿using BiliLite.Modules;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using BiliLite.Extensions;
 using BiliLite.Services;
@@ -31,7 +24,7 @@ namespace BiliLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class DownloadPage : BasePage
+    public sealed partial class DownloadPage : BasePage, IRefreshablePage
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
         private readonly DownloadPageViewModel m_viewModel;
@@ -50,6 +43,12 @@ namespace BiliLite.Pages
                 m_viewModel.RefreshDownloaded();
             }
         }
+
+        public async Task Refresh()
+        {
+            m_viewModel.RefreshDownloaded();
+        }
+
         private void listDowned_ItemClick(object sender, ItemClickEventArgs e)
         {
             var data = e.ClickedItem as DownloadedItem;

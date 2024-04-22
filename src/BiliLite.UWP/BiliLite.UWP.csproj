@@ -167,10 +167,15 @@
     <Compile Include="Models\Common\User\SendDynamic\SendImagesModel.cs" />
     <Compile Include="Models\Common\User\SendDynamic\UploadImagesModel.cs" />
     <Compile Include="Models\Common\User\SendDynamic\RcmdTopicModel.cs" />
+    <Compile Include="Models\Functions\IShortcutFunction.cs" />
+    <Compile Include="Models\Functions\RefreshShortcutFunction.cs" />
     <Compile Include="Pages\Home\UserDynamicAllPage.xaml.cs">
       <DependentUpon>UserDynamicAllPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\IMainPage.cs" />
+    <Compile Include="Pages\IRefreshablePage.cs" />
     <Compile Include="Services\SettingsImportExportService.cs" />
+    <Compile Include="Services\ShortcutKeyService.cs" />
     <Compile Include="ViewModels\UserDynamic\DynamicV2ItemViewModel.cs" />
     <Compile Include="Models\Common\Home\DefaultHomeNavItems.cs" />
     <Compile Include="Models\Common\Live\DefaultPlayUrlSourceOptions.cs" />

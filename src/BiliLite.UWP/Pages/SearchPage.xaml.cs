@@ -1,4 +1,5 @@
-﻿using BiliLite.Extensions;
+﻿using System.Threading.Tasks;
+using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Modules;
 using BiliLite.Services;
@@ -55,7 +56,7 @@ namespace BiliLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class SearchPage : BasePage
+    public sealed partial class SearchPage : BasePage, IRefreshablePage
     {
         SearchVM searchVM;
         public SearchPage()
@@ -270,6 +271,12 @@ namespace BiliLite.Pages
             {
                 searchVM.SuggestSearchContents.ReplaceRange(suggestSearchContents);
             }
+        }
+
+        public async Task Refresh()
+        {
+            if (!(pivot.SelectedItem is ISearchVM searchVm)) return;
+            searchVm.Refresh();
         }
     }
     public class SearchDataTemplateSelector : DataTemplateSelector
