@@ -97,13 +97,7 @@ namespace BiliLite.ViewModels.UserDynamic
 
         public ObservableCollection<DynamicV2ItemViewModel> DynamicItems { get; set; }
 
-        public int CommentControlWidth
-        {
-            get
-            {
-                return SettingService.GetValue(SettingConstants.UI.RIGHT_DETAIL_WIDTH, 320);
-            }
-        }
+        public double CommentControlWidth => SettingService.GetValue(SettingConstants.UI.DYNAMIC_COMMENT_WIDTH, SettingConstants.UI.DEFAULT_DYNAMIC_COMMENT_WIDTH);
 
         #endregion
 
@@ -261,7 +255,7 @@ namespace BiliLite.ViewModels.UserDynamic
 
         private void CopyDyn(DynamicV2ItemViewModel data)
         {
-            var dataStr = JsonConvert.SerializeObject(data);
+            var dataStr = data.SourceJson;
             Notify.ShowMessageToast(dataStr.SetClipboard() ? "已复制" : "复制失败");
         }
 

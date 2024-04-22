@@ -153,6 +153,12 @@
                                 <ToggleSwitch x:Name="swRightWidthChangeable" Header="右侧视频详情宽度可调整(下次打开视频生效)"></ToggleSwitch>
                             </StackPanel>
 
+                            <StackPanel Margin="0 0 0 8">
+                                <TextBlock  Margin="0 8"  FontSize="16">动态</TextBlock>
+                                <TextBlock  FontSize="14">动态评论宽度(下次打开应用生效)</TextBlock>
+                                <controls:NumberBox x:Name="NumBoxDynamicCommentWidth" Minimum="40" Margin="0 0 0 8" Width="200" HorizontalAlignment="Left" Value="320" SpinButtonPlacementMode="Compact" SmallChange="20" ></controls:NumberBox>
+                            </StackPanel>
+
                             <TextBlock  Margin="0 0 0 8" FontSize="16">图片圆角半径(重启生效)</TextBlock>
                             <controls:NumberBox x:Name="numImageCornerRadius" Minimum="0" Margin="0 0 0 8" Width="200" HorizontalAlignment="Left" Value="0" SpinButtonPlacementMode="Compact" SmallChange="2" ></controls:NumberBox>
                             <Border x:Name="ImageCornerRadiusExample" Width="120" Height="120" HorizontalAlignment="Left" Background="#99808080">

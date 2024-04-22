@@ -17,7 +17,9 @@
                                                                  Draw3x3Template="{StaticResource DynamicDraw3x3}"
                                                                  CommonSquareTemplate="{StaticResource DynamicCommonSquare}"
                                                                  LiveRcmdTemplate="{StaticResource DynamicLiveRcmd}"
-                                                                 CustomSeasonTemplate="{StaticResource DynamicCustomSeason}">
+                                                                 UgcSeasonTemplate="{StaticResource DynamicUgcSeason}"
+                                                                 CustomSeasonTemplate="{StaticResource DynamicCustomSeason}"
+                                                                 CustomArticleTemplate="{StaticResource DynamicCustomArticle}">
     </dataTemplateSelectors:UserDynamicItemV2DataTemplateSelector>
 
     <DataTemplate x:Key="DynamicWord">
@@ -212,6 +214,35 @@
         </local:DynamicItemV2Control>
     </DataTemplate>
 
+    <DataTemplate x:Key="DynamicUgcSeason">
+        <local:DynamicItemV2Control ViewModel="{Binding}">
+            <local:DynamicItemV2Control.CardContent>
+                <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="0" Background="Transparent"  
+                        Command="{Binding Path=Parent.LaunchUrlCommand}" 
+                        CommandParameter="{Binding Path=Extend.CardUrl}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid>
+                            <Border CornerRadius="4">
+                                <Image Source="{Binding Path=Extend.OrigImgUrl}" Width="{Binding Path=CoverWidth}"></Image>
+                            </Border>
+                            <Border Background="#C8FF69B4" CornerRadius="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4">
+                                <TextBlock Margin="4 2" Foreground="White" FontSize="12" Text="合集"></TextBlock>
+                            </Border>
+                        </Grid>
+
+                        <StackPanel HorizontalAlignment="Stretch" Grid.Column="1" Margin="8 4 8 0">
+                            <TextBlock Text="{Binding Path=Extend.OrigDesc[0].Text}" Foreground="{ThemeResource TextColor}" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap"></TextBlock>
+                        </StackPanel>
+                    </Grid>
+                </Button>
+            </local:DynamicItemV2Control.CardContent>
+        </local:DynamicItemV2Control>
+    </DataTemplate>
+
     <DataTemplate x:Key="DynamicDraw1x1">
         <local:DynamicItemV2Control ViewModel="{Binding}">
             <local:DynamicItemV2Control.CardContent>
@@ -381,6 +412,37 @@
                 </Grid>
             </Button>
         </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DynamicCustomArticle">
+        <local:DynamicItemV2Control ViewModel="{Binding}">
+            <local:DynamicItemV2Control.CardContent>
+                <StackPanel CornerRadius="8" Padding="12" Background="{ThemeResource CardColor}">
+                    <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="0" Background="Transparent"  
+                        Command="{Binding Path=Parent.LaunchUrlCommand}" 
+                        CommandParameter="{Binding Path=CustomArticle.JumpUrl}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid>
+                                <Border CornerRadius="4">
+                                    <Image Source="{Binding Path=CustomArticle.Cover}" Width="{Binding Path=CoverWidth}"></Image>
+                                </Border>
+                                <Border Background="#C8FF69B4" CornerRadius="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4">
+                                <TextBlock Margin="4 2" Foreground="White" FontSize="12" Text="专栏"></TextBlock>
+                                </Border>
+                            </Grid>
+
+                            <StackPanel HorizontalAlignment="Stretch" Grid.Column="1" Margin="8 4 8 0">
+                                <TextBlock Text="{Binding Path=CustomArticle.Title}" Foreground="{ThemeResource TextColor}" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap"></TextBlock>
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+                </StackPanel>
+            </local:DynamicItemV2Control.CardContent>
+        </local:DynamicItemV2Control>
     </DataTemplate>
 
     <DataTemplate x:Key="DynamicOther">

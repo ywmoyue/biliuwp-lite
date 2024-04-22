@@ -73,6 +73,12 @@ namespace BiliLite.Pages.Home
             BtnList.Visibility = Visibility.Visible;
             //XAML
             ListDyn.ItemsPanel = (ItemsPanelTemplate)this.Resources["GridPanel"];
+
+            //顶部
+            GridTopBar.MaxWidth = double.MaxValue;
+            GridTopBar.Margin = new Thickness(0, 0, 0, 4);
+            BorderTopBar.CornerRadius = new CornerRadius(0);
+            BorderTopBar.Margin = new Thickness(0);
         }
 
         private void SetListCore()
@@ -83,6 +89,12 @@ namespace BiliLite.Pages.Home
             BtnList.Visibility = Visibility.Collapsed;
             //XAML
             ListDyn.ItemsPanel = (ItemsPanelTemplate)this.Resources["ListPanel"];
+
+            //顶部
+            GridTopBar.MaxWidth = 800;
+            GridTopBar.Margin = new Thickness(8, 0, 8, 0);
+            BorderTopBar.CornerRadius = new CornerRadius(4);
+            BorderTopBar.Margin = new Thickness(12, 4, 12, 4);
         }
 
         private async void BtnRefreshDynamic_OnClick(object sender, RoutedEventArgs e)
@@ -120,7 +132,6 @@ namespace BiliLite.Pages.Home
             var storyboard = (Storyboard)this.Resources["HideComment"];
             storyboard.Begin();
         }
-
 
         private void UserDynamicViewModelOpenCommentEvent(object sender, DynamicV2ItemViewModel e)
         {

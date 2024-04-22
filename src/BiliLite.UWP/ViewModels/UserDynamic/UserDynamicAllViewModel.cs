@@ -21,7 +21,7 @@ using BiliLite.Modules;
 using BiliLite.Pages;
 using BiliLite.Pages.User;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
+using DynamicType = Bilibili.App.Dynamic.V2.DynamicType;
 
 namespace BiliLite.ViewModels.UserDynamic
 {
@@ -96,13 +96,7 @@ namespace BiliLite.ViewModels.UserDynamic
 
         public ObservableCollection<DynamicV2ItemViewModel> DynamicItems { get; set; }
 
-        public int CommentControlWidth
-        {
-            get
-            {
-                return SettingService.GetValue(SettingConstants.UI.RIGHT_DETAIL_WIDTH, 320);
-            }
-        }
+        public double CommentControlWidth => SettingService.GetValue(SettingConstants.UI.DYNAMIC_COMMENT_WIDTH, SettingConstants.UI.DEFAULT_DYNAMIC_COMMENT_WIDTH);
 
         #endregion
 
@@ -243,7 +237,7 @@ namespace BiliLite.ViewModels.UserDynamic
 
         private void CopyDyn(DynamicV2ItemViewModel data)
         {
-            var dataStr = JsonConvert.SerializeObject(data);
+            var dataStr = data.SourceJson;
             Notify.ShowMessageToast(dataStr.SetClipboard() ? "已复制" : "复制失败");
         }
 
@@ -251,7 +245,8 @@ namespace BiliLite.ViewModels.UserDynamic
         {
             CanLoadMore = results.DynamicList.HasMore;
             m_offset = results.DynamicList.HistoryOffset;
-            var items = m_mapper.Map<List<DynamicV2ItemViewModel>>(results.DynamicList.List.ToList());
+            var items = m_mapper.Map<List<DynamicV2ItemViewModel>>(results.DynamicList.List
+                .Where(x => x.CardType != DynamicType.Banner).ToList());
             foreach (var item in items)
             {
                 item.Parent = this;
@@ -289,6 +284,38 @@ namespace BiliLite.ViewModels.UserDynamic
             {
                 DynamicItems.AddRange(items);
             }
+        }
+
+        private async Task<NavDynArticles> GetDynArticle()
+        {
+            if (m_offset == null)
+            {
+                m_baseline = "0";
+            }
+            var api = m_dynamicApi.Article(m_baseline);
+            var results = await api.Request();
+            if (!results.status)
+            {
+                throw new CustomizedErrorException(results.message);
+            }
+
+            var data = await results.GetData<NavDynArticles>();
+
+            if (!data.success)
+            {
+                throw new CustomizedErrorException(data.message);
+            }
+
+            return data.data;
+        }
+
+        private void HandleDynamicArticleResults(NavDynArticles results)
+        {
+            CanLoadMore = results.HasMore;
+            m_offset = results.Offset;
+            m_baseline = results.UpdateBaseline;
+            var dynamicItems = results.Items.Select(x => x.ToDynamicItem()).ToList();
+            DynamicItems = new ObservableCollection<DynamicV2ItemViewModel>(dynamicItems);
         }
 
         #endregion
@@ -343,8 +370,11 @@ namespace BiliLite.ViewModels.UserDynamic
                         break;
                     }
                     case UserDynamicShowType.Article:
-                        throw new NotImplementedException();
+                    {
+                        var results = await GetDynArticle();
+                        HandleDynamicArticleResults(results);
                         break;
+                    }
                 }
             }
             catch (CustomizedErrorException ex)

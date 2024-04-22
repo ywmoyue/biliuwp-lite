@@ -37,6 +37,10 @@ namespace BiliLite.ViewModels.UserDynamic
 
         public UserDynamicSeasonInfo Season { get; set; }
 
+        public NavDynArticle CustomArticle { get; set; }
+
+        public string SourceJson { get; set; }
+
         public ModuleDynamic Dynamic
         {
             get
@@ -174,7 +178,8 @@ namespace BiliLite.ViewModels.UserDynamic
         {
             get
             {
-                if (Author == null) return Constants.App.TRANSPARENT_IMAGE;
+                if (Author?.Author?.Official == null)
+                    return Constants.App.TRANSPARENT_IMAGE;
                 return Author.Author.Official.Type switch
                 {
                     1 => Constants.App.VERIFY_OGANIZATION_IMAGE,
