@@ -59,6 +59,23 @@ namespace BiliLite.ViewModels.UserDynamic
                 {
                     LiveInfo = JsonConvert.DeserializeObject<DynLiveInfo>(value.DynLiveRcmd.Content);
                 }
+
+                if (value.DynCommonLive != null)
+                {
+                    LiveInfo = new DynLiveInfo()
+                    {
+                        PlayInfo = new DynLivePlayInfo()
+                        {
+                            Cover = value.DynCommonLive.Cover,
+                            Title = value.DynCommonLive.Title,
+                            AreaName = value.DynCommonLive.CoverLabel,
+                            WatchedShow = new DynLiveWatchedShow()
+                            {
+                                TextLarge = value.DynCommonLive.CoverLabel2,
+                            }
+                        }
+                    };
+                }
             }
         }
 

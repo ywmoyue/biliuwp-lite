@@ -102,6 +102,8 @@
 
             public const string LIVE_RCMD = "LiveRcmd";
 
+            public const string LIVE = "Live";
+
             public const string UGC_SEASON = "UgcSeason";
 
             public const string BANNER = "Banner";

@@ -17,6 +17,7 @@
                                                                  Draw3x3Template="{StaticResource DynamicDraw3x3}"
                                                                  CommonSquareTemplate="{StaticResource DynamicCommonSquare}"
                                                                  LiveRcmdTemplate="{StaticResource DynamicLiveRcmd}"
+                                                                 LiveTemplate="{StaticResource DynamicLiveRcmd}"
                                                                  UgcSeasonTemplate="{StaticResource DynamicUgcSeason}"
                                                                  CustomSeasonTemplate="{StaticResource DynamicCustomSeason}"
                                                                  CustomArticleTemplate="{StaticResource DynamicCustomArticle}">
