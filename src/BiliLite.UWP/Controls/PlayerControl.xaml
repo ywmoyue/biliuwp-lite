@@ -586,6 +586,8 @@
                 </Grid>
                 <!--亮度-->
                 <Grid x:Name="BrightnessShield" Tapped="Grid_Tapped" Background="#99000000" Opacity="0"></Grid>
+
+                <Canvas x:Name="ToolTipContainer"></Canvas>
                 <Border 
                     x:Name="ToolTip" 
                     Visibility="Collapsed" 

@@ -143,6 +143,9 @@
     <Compile Include="Controls\Dynamic\DynamicItemV2Control.xaml.cs">
       <DependentUpon>DynamicItemV2Control.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PlayerToast.xaml.cs">
+      <DependentUpon>PlayerToast.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\UserFollowingTagsFlyout.xaml.cs">
       <DependentUpon>UserFollowingTagsFlyout.xaml</DependentUpon>
     </Compile>
@@ -174,8 +177,10 @@
     </Compile>
     <Compile Include="Pages\IMainPage.cs" />
     <Compile Include="Pages\IRefreshablePage.cs" />
+    <Compile Include="Services\PlayerToastService.cs" />
     <Compile Include="Services\SettingsImportExportService.cs" />
     <Compile Include="Services\ShortcutKeyService.cs" />
+    <Compile Include="ViewModels\PlayerToastViewModel.cs" />
     <Compile Include="ViewModels\UserDynamic\DynamicV2ItemViewModel.cs" />
     <Compile Include="Models\Common\Home\DefaultHomeNavItems.cs" />
     <Compile Include="Models\Common\Live\DefaultPlayUrlSourceOptions.cs" />
@@ -973,6 +978,10 @@
     <Page Include="Controls\Dynamic\DynamicV2Template.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\PlayerToast.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\UserFollowingTagsFlyout.xaml">
       <SubType>Designer</SubType>

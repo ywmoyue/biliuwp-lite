@@ -16,6 +16,7 @@ namespace BiliLite
 
             services.AddSingleton<CookieService>();
             services.AddSingleton<ShortcutKeyService>();
+            services.AddTransient<PlayerToastService>();
             services.AddTransient<SettingsImportExportService>();
             services.AddQrCodeService();
             

@@ -1,4 +1,5 @@
-﻿using BiliLite.Dialogs;
+﻿using BiliLite.Controls;
+using BiliLite.Dialogs;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite.Extensions
@@ -9,6 +10,7 @@ namespace BiliLite.Extensions
         {
             services.AddTransient<SendDynamicDialog>();
             services.AddTransient<SendDynamicV2Dialog>();
+            services.AddTransient<PlayerToast>();
             return services;
         }
     }
