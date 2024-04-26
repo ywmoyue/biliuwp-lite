@@ -94,8 +94,12 @@ namespace BiliLite.Services
         /// <param name="par"></param>
         public static async Task<bool> HandelUrl(string url, bool dontGoTo = false)
         {
-            var uri = new Uri(url);
-            var uriHref = uri.GetLeftPart(UriPartial.Path);
+            var uriHref = "";
+            if (url.IsUrl())
+            {
+                var uri = new Uri(url);
+                uriHref = uri.GetLeftPart(UriPartial.Path);
+            }
 
             _logger.Debug($"处理链接：{url}");
             if (url.First() == '@')
