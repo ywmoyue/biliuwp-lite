@@ -97,6 +97,8 @@
             <HyperlinkButton HorizontalContentAlignment="Stretch"
                              HorizontalAlignment="Stretch" 
                              Grid.ColumnSpan="2"
+                             Command="{x:Bind Path=ViewModel.Parent.UserCommand,Mode=OneWay}" 
+                             CommandParameter="{x:Bind Path=ViewModel.AuthorForward.Uid,Mode=OneWay}"
                              Visibility="{x:Bind Path=ViewModel.IsRepost,Mode=OneWay}"
                              Padding="0" >
                 <Grid >
@@ -112,6 +114,8 @@
                         </TextBlock>
                     </StackPanel>
                     <Button HorizontalAlignment="Right" 
+                            Command="{x:Bind Path=ViewModel.Parent.DetailCommand,Mode=OneWay}" 
+                            CommandParameter="{x:Bind Path=ViewModel.Extend.DynIdStr,Mode=OneWay}"
                             Foreground="Gray" 
                             Background="Transparent">
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE17C;" />
