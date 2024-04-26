@@ -83,6 +83,8 @@ namespace BiliLite.ViewModels.UserDynamic
 
         public ModuleDesc Desc { get; set; }
 
+        public ModuleFold Fold { get; set; }
+
         public ModuleOpusSummary OpusSummary { get; set; }
 
         [DependsOn(nameof(Item))]

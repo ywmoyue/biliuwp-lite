@@ -42,6 +42,7 @@ namespace BiliLite.Controls.DataTemplateSelectors
                     { Constants.DynamicTypes.CUSTOM_SEASON, (selector, model) => selector.CustomSeasonTemplate },
                     { Constants.DynamicTypes.CUSTOM_ARTICLE, (selector, model) => selector.CustomArticleTemplate },
                     { Constants.DynamicTypes.UGC_SEASON, (selector, model) => selector.UgcSeasonTemplate },
+                    { Constants.DynamicTypes.FOLD, (selector, model) => selector.FoldTemplate },
                 };
         }
 
@@ -70,6 +71,8 @@ namespace BiliLite.Controls.DataTemplateSelectors
         public DataTemplate LiveTemplate { get; set; }
 
         public DataTemplate UgcSeasonTemplate { get; set; }
+
+        public DataTemplate FoldTemplate { get; set; }
 
         public DataTemplate CustomSeasonTemplate { get; set; }
 

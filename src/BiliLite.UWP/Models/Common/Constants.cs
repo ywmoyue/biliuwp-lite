@@ -106,6 +106,8 @@
 
             public const string UGC_SEASON = "UgcSeason";
 
+            public const string FOLD = "Fold";
+
             public const string BANNER = "Banner";
 
             public const string CUSTOM_SEASON = "CustomSeason";
