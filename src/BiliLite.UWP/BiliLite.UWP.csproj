@@ -172,8 +172,8 @@
     <Compile Include="Models\Common\User\SendDynamic\RcmdTopicModel.cs" />
     <Compile Include="Models\Functions\IShortcutFunction.cs" />
     <Compile Include="Models\Functions\RefreshShortcutFunction.cs" />
-    <Compile Include="Pages\Home\UserDynamicAllPage.xaml.cs">
-      <DependentUpon>UserDynamicAllPage.xaml</DependentUpon>
+    <Compile Include="Pages\Home\UserDynamicPage.xaml.cs">
+      <DependentUpon>UserDynamicPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\IMainPage.cs" />
     <Compile Include="Pages\IRefreshablePage.cs" />
@@ -743,9 +743,6 @@
     <Compile Include="Pages\Home\RecommendPage.xaml.cs">
       <DependentUpon>RecommendPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Home\UserDynamicPage.xaml.cs">
-      <DependentUpon>UserDynamicPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\LiveDetailPage.xaml.cs">
       <DependentUpon>LiveDetailPage.xaml</DependentUpon>
     </Compile>
@@ -991,7 +988,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\Home\UserDynamicAllPage.xaml">
+    <Page Include="Pages\Home\UserDynamicPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1144,10 +1141,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\Home\RecommendPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\Home\UserDynamicPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

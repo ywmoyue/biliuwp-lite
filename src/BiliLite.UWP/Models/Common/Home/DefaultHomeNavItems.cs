@@ -1,11 +1,15 @@
-﻿using BiliLite.Services;
+﻿using System;
+using BiliLite.Services;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace BiliLite.Models.Common.Home
 {
     public static class DefaultHomeNavItems
     {
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+
         public static List<HomeNavItem> CheckHomeNavItems(List<HomeNavItem> navList)
         {
             var defaultItems = GetDefaultHomeNavItems();
@@ -19,6 +23,36 @@ namespace BiliLite.Models.Common.Home
             SettingService.SetValue(SettingConstants.UI.HOEM_ORDER, result);
 
             return result;
+        }
+
+        public static List<HomeNavItem> GetHomeNavItems()
+        {
+            var homeNavItemList = new List<HomeNavItem>();
+            var tempHomeNavItemList = SettingService.GetValue<List<object>>(SettingConstants.UI.HOEM_ORDER,
+                null);
+
+            if (tempHomeNavItemList == null)
+            {
+                homeNavItemList = DefaultHomeNavItems.GetDefaultHomeNavItems();
+                return homeNavItemList;
+            }
+            else
+            {
+                foreach (var item in tempHomeNavItemList)
+                {
+                    try
+                    {
+                        var navItem = JsonConvert.DeserializeObject<HomeNavItem>(JsonConvert.SerializeObject(item));
+                        homeNavItemList.Add(navItem);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Warn(ex.Message, ex);
+                    }
+                }
+            }
+            homeNavItemList = DefaultHomeNavItems.CheckHomeNavItems(homeNavItemList);
+            return homeNavItemList;
         }
 
         public static List<HomeNavItem> GetDefaultHomeNavItems()
@@ -44,7 +78,7 @@ namespace BiliLite.Models.Common.Home
                 new HomeNavItem()
                 {
                     Icon = FontAwesome5.EFontAwesomeIcon.Solid_Heart,
-                    Page = typeof(Pages.Home.UserDynamicAllPage),
+                    Page = typeof(Pages.Home.UserDynamicPage),
                     Title = "动态",
                     NeedLogin = true,
                     Show = false
@@ -158,14 +192,6 @@ namespace BiliLite.Models.Common.Home
                     Icon = FontAwesome5.EFontAwesomeIcon.Regular_Star,
                     Page = typeof(Pages.User.FavoritePage),
                     Title = "我的收藏",
-                    NeedLogin = true,
-                    Show = false
-                },
-                new HomeNavItem()
-                {
-                    Icon = FontAwesome5.EFontAwesomeIcon.Solid_Heart,
-                    Page = typeof(Pages.Home.UserDynamicPage),
-                    Title = "动态(旧版)",
                     NeedLogin = true,
                     Show = false
                 },
