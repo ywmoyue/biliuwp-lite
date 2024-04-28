@@ -659,6 +659,10 @@ namespace BiliLite.Pages
                 m_liveRoomViewModel.ReceiveLotteryMsg = !LiveSettingDotReceiveLotteryMsg.IsOn;
                 SettingService.SetValue<bool>(SettingConstants.Live.HIDE_LOTTERY, LiveSettingDotReceiveLotteryMsg.IsOn);
             });
+
+            // 显示底部礼物栏
+            m_viewModel.ShowBottomGiftBar = SettingService.GetValue(SettingConstants.Live.SHOW_BOTTOM_GIFT_BAR,
+                SettingConstants.Live.DEFAULT_SHOW_BOTTOM_GIFT_BAR);
         }
 
         public void ChangeTitle(string title)
@@ -1257,6 +1261,7 @@ namespace BiliLite.Pages
         private void BottomBtnSwitchGiftBar_Click(object sender, RoutedEventArgs e)
         {
             m_viewModel.ShowBottomGiftBar = !m_viewModel.ShowBottomGiftBar;
+            SettingService.SetValue(SettingConstants.Live.SHOW_BOTTOM_GIFT_BAR, m_viewModel.ShowBottomGiftBar);
         }
     }
 }

@@ -441,6 +441,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(string))]
             public const string DEFAULT_LIVE_PLAY_URL_SOURCE = "DefaultLivePlayUrlSource";
+
+            /// <summary>
+            /// 显示底部礼物栏
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string SHOW_BOTTOM_GIFT_BAR = "ShowBottomGiftBar";
+
+            /// <summary>
+            /// 默认显示底部礼物栏
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_SHOW_BOTTOM_GIFT_BAR = true;
         }
 
         public class Player
