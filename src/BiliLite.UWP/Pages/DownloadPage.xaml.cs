@@ -16,6 +16,7 @@ using BiliLite.Models.Common.Video;
 using BiliLite.Models.Common.Video.PlayUrlInfos;
 using BiliLite.ViewModels.Download;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.RegularExpressions;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -306,7 +307,8 @@ namespace BiliLite.Pages
             savePicker.SuggestedStartLocation =
                 Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary;
             savePicker.FileTypeChoices.Add("MP4", new List<string>() { ".mp4" });
-            savePicker.SuggestedFileName = "导出的视频";
+            var fileName = Regex.Replace(data.Title + "-" + item.Title, "[<>/\\\\|:\":?*]", "");
+            savePicker.SuggestedFileName = fileName;
             var file = await savePicker.PickSaveFileAsync();
             if (file == null)
                 return;
