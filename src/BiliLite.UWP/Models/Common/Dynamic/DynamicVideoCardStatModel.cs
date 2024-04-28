@@ -2,18 +2,18 @@
 {
     public class DynamicVideoCardStatModel
     {
-        public int Coin { get; set; }
+        public long Coin { get; set; }
 
-        public int Danmaku { get; set; }
+        public long Danmaku { get; set; }
 
-        public int Favorite { get; set; }
+        public long Favorite { get; set; }
 
-        public int Like { get; set; }
+        public long Like { get; set; }
 
-        public int Reply { get; set; }
+        public long Reply { get; set; }
 
-        public int Share { get; set; }
+        public long Share { get; set; }
 
-        public int View { get; set; }
+        public long View { get; set; }
     }
 }

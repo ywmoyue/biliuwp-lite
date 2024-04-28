@@ -16,7 +16,12 @@
                                                                  Draw2x2Template="{StaticResource DynamicDraw2x2}"
                                                                  Draw3x3Template="{StaticResource DynamicDraw3x3}"
                                                                  CommonSquareTemplate="{StaticResource DynamicCommonSquare}"
-                                                                 LiveRcmdTemplate="{StaticResource DynamicLiveRcmd}">
+                                                                 LiveRcmdTemplate="{StaticResource DynamicLiveRcmd}"
+                                                                 LiveTemplate="{StaticResource DynamicLiveRcmd}"
+                                                                 UgcSeasonTemplate="{StaticResource DynamicUgcSeason}"
+                                                                 FoldTemplate="{StaticResource DynamicFold}"
+                                                                 CustomSeasonTemplate="{StaticResource DynamicCustomSeason}"
+                                                                 CustomArticleTemplate="{StaticResource DynamicCustomArticle}">
     </dataTemplateSelectors:UserDynamicItemV2DataTemplateSelector>
 
     <DataTemplate x:Key="DynamicWord">
@@ -147,23 +152,37 @@
     <DataTemplate x:Key="DynamicForward">
         <local:DynamicItemV2Control ViewModel="{Binding}">
             <local:DynamicItemV2Control.CardContent>
-                <Border BorderThickness="1"  BorderBrush="#C8E5E9EF"  CornerRadius="4" Background="{ThemeResource TopPaneBackground}">
-                    <ListView 
-                        SelectionMode="None" 
-                        IsItemClickEnabled="false" 
-                        ItemsSource="{Binding Path=Items}" 
-                        ItemTemplateSelector="{StaticResource DynamicTemplateSelector}"
-                        ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden">
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-                                <Setter Property="MaxWidth" Value="800"></Setter>
-                                <Setter Property="Margin" Value="0 0"></Setter>
-                                <Setter Property="Padding" Value="4 0"></Setter>
-                            </Style>
-                        </ListView.ItemContainerStyle>
-                    </ListView>
-                </Border>
+                <Grid>
+                    <Border BorderThickness="1"  
+                            BorderBrush="#C8E5E9EF"  
+                            CornerRadius="4" Background="{ThemeResource TopPaneBackground}"
+                            Visibility="{Binding ForwardMissed,Converter={StaticResource display} }">
+                        <ListView 
+                            SelectionMode="None" 
+                            IsItemClickEnabled="false" 
+                            ItemsSource="{Binding Path=Items}" 
+                            ItemTemplateSelector="{StaticResource DynamicTemplateSelector}"
+                            ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                    <Setter Property="MaxWidth" Value="800"></Setter>
+                                    <Setter Property="Margin" Value="0 0"></Setter>
+                                    <Setter Property="Padding" Value="4 0"></Setter>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
+                    </Border>
+
+                    <Border BorderThickness="1" 
+                            HorizontalAlignment="Stretch"  BorderBrush="#C8E5E9EF" CornerRadius="4" 
+                            Visibility="{Binding ForwardMissed }">
+                        <StackPanel Orientation="Horizontal"  Margin="12">
+                            <FontIcon Foreground="Gray" FontSize="14" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7BA;" />
+                            <TextBlock Foreground="Gray" Margin="8 0 0 0">资源已失效</TextBlock>
+                        </StackPanel>
+                    </Border>
+                </Grid>
             </local:DynamicItemV2Control.CardContent>
         </local:DynamicItemV2Control>
     </DataTemplate>
@@ -185,6 +204,35 @@
                             </Border>
                             <Border Background="#C8FF69B4" CornerRadius="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4">
                                 <TextBlock Margin="4 2" Foreground="White" FontSize="12" Text="专栏"></TextBlock>
+                            </Border>
+                        </Grid>
+
+                        <StackPanel HorizontalAlignment="Stretch" Grid.Column="1" Margin="8 4 8 0">
+                            <TextBlock Text="{Binding Path=Extend.OrigDesc[0].Text}" Foreground="{ThemeResource TextColor}" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap"></TextBlock>
+                        </StackPanel>
+                    </Grid>
+                </Button>
+            </local:DynamicItemV2Control.CardContent>
+        </local:DynamicItemV2Control>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DynamicUgcSeason">
+        <local:DynamicItemV2Control ViewModel="{Binding}">
+            <local:DynamicItemV2Control.CardContent>
+                <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="0" Background="Transparent"  
+                        Command="{Binding Path=Parent.LaunchUrlCommand}" 
+                        CommandParameter="{Binding Path=Extend.CardUrl}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid>
+                            <Border CornerRadius="4">
+                                <Image Source="{Binding Path=Extend.OrigImgUrl}" Width="{Binding Path=CoverWidth}"></Image>
+                            </Border>
+                            <Border Background="#C8FF69B4" CornerRadius="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4">
+                                <TextBlock Margin="4 2" Foreground="White" FontSize="12" Text="合集"></TextBlock>
                             </Border>
                         </Grid>
 
@@ -336,6 +384,77 @@
                         </StackPanel>
                     </Grid>
                 </Button>
+            </local:DynamicItemV2Control.CardContent>
+        </local:DynamicItemV2Control>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DynamicFold">
+        <Border BorderThickness="1" HorizontalAlignment="Stretch"  BorderBrush="#C8E5E9EF" CornerRadius="4">
+            <Button HorizontalAlignment="Stretch" 
+                    Padding="0" 
+                    Background="Transparent" 
+                    Command="{Binding Parent.DetailCommand,Mode=OneWay}" 
+                    CommandParameter="{Binding Extend.DynIdStr,Mode=OneWay}">
+                <TextBlock Text="{Binding Fold.Text}" HorizontalAlignment="Center"></TextBlock>
+            </Button>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DynamicCustomSeason">
+        <StackPanel CornerRadius="8" Padding="12" Background="{ThemeResource CardColor}">
+            <Button HorizontalAlignment="Stretch" 
+                    HorizontalContentAlignment="Left" 
+                    Padding="0" 
+                    Background="Transparent"  
+                    Command="{Binding Path=Parent.LaunchUrlCommand}" 
+                    CommandParameter="{Binding Path=Season.Url}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Border CornerRadius="4">
+                            <Image Source="{Binding Path=Season.Cover}" Width="160"></Image>
+                        </Border>
+                    </Grid>
+
+                    <StackPanel HorizontalAlignment="Stretch" Grid.Column="1" Margin="8 4 8 0">
+                        <TextBlock Text="{Binding Path=Season.Title}" Foreground="{ThemeResource TextColor}" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap"></TextBlock>
+                        <TextBlock Margin="0 8 0 0" Text="{Binding Path=Season.SubTitle}" FontSize="14" Foreground="Gray"></TextBlock>
+                    </StackPanel>
+                </Grid>
+            </Button>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DynamicCustomArticle">
+        <local:DynamicItemV2Control ViewModel="{Binding}">
+            <local:DynamicItemV2Control.CardContent>
+                <StackPanel CornerRadius="8" Padding="12" Background="{ThemeResource CardColor}">
+                    <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="0" Background="Transparent"  
+                        Command="{Binding Path=Parent.LaunchUrlCommand}" 
+                        CommandParameter="{Binding Path=CustomArticle.JumpUrl}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid>
+                                <Border CornerRadius="4">
+                                    <Image Source="{Binding Path=CustomArticle.Cover}" Width="{Binding Path=CoverWidth}"></Image>
+                                </Border>
+                                <Border Background="#C8FF69B4" CornerRadius="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4">
+                                <TextBlock Margin="4 2" Foreground="White" FontSize="12" Text="专栏"></TextBlock>
+                                </Border>
+                            </Grid>
+
+                            <StackPanel HorizontalAlignment="Stretch" Grid.Column="1" Margin="8 4 8 0">
+                                <TextBlock Text="{Binding Path=CustomArticle.Title}" Foreground="{ThemeResource TextColor}" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap"></TextBlock>
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+                </StackPanel>
             </local:DynamicItemV2Control.CardContent>
         </local:DynamicItemV2Control>
     </DataTemplate>

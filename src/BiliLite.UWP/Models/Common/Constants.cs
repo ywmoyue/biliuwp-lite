@@ -101,6 +101,18 @@
             public const string COMMON_SQUARE = "CommonSquare";
 
             public const string LIVE_RCMD = "LiveRcmd";
+
+            public const string LIVE = "Live";
+
+            public const string UGC_SEASON = "UgcSeason";
+
+            public const string FOLD = "Fold";
+
+            public const string BANNER = "Banner";
+
+            public const string CUSTOM_SEASON = "CustomSeason";
+
+            public const string CUSTOM_ARTICLE = "CustomArticle";
         }
     }
 }

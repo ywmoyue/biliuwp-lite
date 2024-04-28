@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using BiliLite.Models.Common;
 using BiliLite.Models.Common.Home;
 using BiliLite.Modules;
 using BiliLite.Services;
@@ -15,6 +14,7 @@ namespace BiliLite.ViewModels.Home
     {
         #region Fields
 
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly IMapper m_mapper;
         private readonly Account m_account;
 
@@ -26,7 +26,7 @@ namespace BiliLite.ViewModels.Home
         {
             m_account = new Account();
             m_mapper = App.ServiceProvider.GetRequiredService<IMapper>();
-            var homeNavItemList = SettingService.GetValue(SettingConstants.UI.HOEM_ORDER, DefaultHomeNavItems.GetDefaultHomeNavItems());
+            var homeNavItemList = DefaultHomeNavItems.GetHomeNavItems();
             HomeNavItems = m_mapper.Map<ObservableCollection<HomeNavItemViewModel>>(homeNavItemList);
             SelectItem = HomeNavItems.FirstOrDefault();
             if (!SettingService.Account.Logined) return;

@@ -3,6 +3,7 @@ using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Pages;
 using BiliLite.Services;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using Windows.ApplicationModel.Core;
@@ -20,10 +21,14 @@ namespace BiliLite
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class NoTabMainPage : Page
+    public sealed partial class NoTabMainPage : Page, IMainPage
     {
+        private readonly ShortcutKeyService m_shortcutKeyService;
+
         public NoTabMainPage()
         {
+            m_shortcutKeyService = App.ServiceProvider.GetRequiredService<ShortcutKeyService>();
+            m_shortcutKeyService.SetMainPage(this);
             this.InitializeComponent();
             var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             mode = SettingService.GetValue<int>(SettingConstants.UI.DISPLAY_MODE, 0);
@@ -34,7 +39,20 @@ namespace BiliLite
             MessageCenter.ViewImageEvent += MessageCenter_ViewImageEvent;
             MessageCenter.MiniWindowEvent += MessageCenter_MiniWindowEvent;
             Window.Current.Content.PointerPressed += Content_PointerPressed;
+
+            Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
         }
+
+        public object CurrentPage => frame.Content;
+
+        private void Dispatcher_AcceleratorKeyActivated(Windows.UI.Core.CoreDispatcher sender, Windows.UI.Core.AcceleratorKeyEventArgs args)
+        {
+            if (args.EventType.ToString().Contains("Down"))
+            {
+                m_shortcutKeyService.HandleKeyDown(args.VirtualKey);
+            }
+        }
+
         private void MessageCenter_MiniWindowEvent(object sender, bool e)
         {
             if (e)

@@ -435,4 +435,12 @@
         SeasonId,
         EpId,
     }
+
+    public enum UserDynamicShowType
+    {
+        All = 0,
+        Video = 1,
+        Season = 2,
+        Article = 3
+    }
 }

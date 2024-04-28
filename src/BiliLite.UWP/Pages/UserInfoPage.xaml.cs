@@ -1,4 +1,5 @@
-﻿using BiliLite.Extensions;
+﻿using System.Threading.Tasks;
+using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Modules.User.UserDetail;
@@ -34,7 +35,7 @@ namespace BiliLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class UserInfoPage : BasePage
+    public sealed partial class UserInfoPage : BasePage, IRefreshablePage
     {
         readonly UserDynamicViewModel m_userDynamicViewModel;
         UserDetailViewModel m_viewModel;
@@ -404,6 +405,11 @@ namespace BiliLite.Pages
         private void BtnFollowingTag_OnClick(object sender, RoutedEventArgs e)
         {
             UserFollowingTagsFlyout.ShowAt(sender as DependencyObject);
+        }
+
+        public async Task Refresh()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

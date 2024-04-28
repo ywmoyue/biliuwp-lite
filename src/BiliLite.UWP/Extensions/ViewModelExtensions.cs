@@ -34,6 +34,8 @@ namespace BiliLite.Extensions
             services.AddTransient<EmoteViewModel>();
             services.AddTransient<AtViewModel>();
             services.AddTransient<TopicViewModel>();
+            services.AddTransient<UserDynamicAllViewModel>();
+            services.AddTransient<PlayerToastViewModel>();
             return services;
         }
     }

@@ -19,6 +19,8 @@ using Windows.UI.Xaml.Navigation;
 using BiliLite.Models.Common.Home;
 using BiliLite.ViewModels.Download;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -158,6 +160,16 @@ namespace BiliLite.Pages
                     SettingService.SetValue(SettingConstants.UI.RIGHT_WIDTH_CHANGEABLE, swRightWidthChangeable.IsOn);
                 });
             });
+
+            //动态评论宽度
+            NumBoxDynamicCommentWidth.Value = SettingService.GetValue<double>(SettingConstants.UI.DYNAMIC_COMMENT_WIDTH, SettingConstants.UI.DEFAULT_DYNAMIC_COMMENT_WIDTH);
+            NumBoxDynamicCommentWidth.Loaded += (sender, e) =>
+            {
+                NumBoxDynamicCommentWidth.ValueChanged += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.DYNAMIC_COMMENT_WIDTH, args.NewValue);
+                };
+            };
 
             //图片圆角半径
             numImageCornerRadius.Value = SettingService.GetValue<double>(SettingConstants.UI.IMAGE_CORNER_RADIUS, 0);
@@ -418,6 +430,70 @@ namespace BiliLite.Pages
                 cbRatePlaySpeed.SelectionChanged += (obj, args) =>
                 {
                     SettingService.SetValue(SettingConstants.Player.HIGH_RATE_PLAY_SPEED, SettingConstants.Player.HIGH_RATE_PLAY_SPEED_LIST[cbRatePlaySpeed.SelectedIndex]);
+                };
+            };
+
+            // 音量
+            NumBoxVolume.Value = Math.Round((SettingService.GetValue(SettingConstants.Player.PLAYER_VOLUME,
+                SettingConstants.Player.DEFAULT_PLAYER_VOLUME)) * 100, 2);
+            NumBoxVolume.Loaded += (sender, e) =>
+            {
+                NumBoxVolume.ValueChanged += (obj, args) =>
+                {
+                    if (NumBoxVolume.Value > 100)
+                    {
+                        NumBoxVolume.Value = 100;
+                    }
+
+                    if (NumBoxVolume.Value < 0)
+                    {
+                        NumBoxVolume.Value = 0;
+                    }
+                    SettingService.SetValue(SettingConstants.Player.PLAYER_VOLUME, NumBoxVolume.Value/100);
+                };
+            };
+
+            // 锁定播放器音量设置
+            SwLockPlayerVolume.IsOn = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_VOLUME, SettingConstants.Player.DEFAULT_LOCK_PLAYER_VOLUME);
+            SwLockPlayerVolume.Loaded += (sender, e) =>
+            {
+                SwLockPlayerVolume.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.LOCK_PLAYER_VOLUME, SwLockPlayerVolume.IsOn);
+                };
+            };
+
+            // 亮度
+            NumBoxBrightness.Value = Math.Round(
+                (Math.Abs(SettingService.GetValue(
+                SettingConstants.Player.PLAYER_BRIGHTNESS,
+                SettingConstants.Player.DEFAULT_PLAYER_BRIGHTNESS) - 1)) * 100, 2);
+            NumBoxBrightness.Loaded += (sender, e) =>
+            {
+                NumBoxBrightness.ValueChanged += (obj, args) =>
+                {
+                    if (NumBoxBrightness.Value > 100)
+                    {
+                        NumBoxBrightness.Value = 100;
+                    }
+
+                    if (NumBoxBrightness.Value < 0)
+                    {
+                        NumBoxBrightness.Value = 0;
+                    }
+
+                    var brightness = Math.Abs((NumBoxBrightness.Value / 100) - 1);
+                    SettingService.SetValue(SettingConstants.Player.PLAYER_BRIGHTNESS, brightness);
+                };
+            };
+
+            // 锁定播放器亮度设置
+            SwLockPlayerBrightness.IsOn = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_BRIGHTNESS, SettingConstants.Player.DEFAULT_LOCK_PLAYER_BRIGHTNESS);
+            SwLockPlayerBrightness.Loaded += (sender, e) =>
+            {
+                SwLockPlayerBrightness.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.LOCK_PLAYER_BRIGHTNESS, SwLockPlayerBrightness.IsOn);
                 };
             };
 
@@ -1070,6 +1146,36 @@ namespace BiliLite.Pages
             SettingService.SetValue(SettingConstants.Other.REQUEST_BUILD, build);
             RequestBuildTextBox.Text = build;
             Notify.ShowMessageToast("已恢复默认");
+        }
+
+        private async void BtnExportSettings_OnClick(object sender, RoutedEventArgs e)
+        {
+            var exportService = App.ServiceProvider.GetRequiredService<SettingsImportExportService>();
+            await exportService.ExportSettings();
+        }
+
+        private async void BtnImportSettings_OnClick(object sender, RoutedEventArgs e)
+        {
+            var importService = App.ServiceProvider.GetRequiredService<SettingsImportExportService>();
+            if (!await importService.ImportSettings())
+            {
+                return;
+            }
+            Notify.ShowMessageToast("导入成功，正在重启应用");
+            // 等用户看提示
+            await Task.Delay(3000);
+            var result = await CoreApplication.RequestRestartAsync("");
+
+            if (result == AppRestartFailureReason.NotInForeground || result == AppRestartFailureReason.Other)
+            {
+                Notify.ShowMessageToast("重启失败，请手动重启应用");
+            }
+        }
+
+        private async void BtnExportSettingsWithAccount_OnClick(object sender, RoutedEventArgs e)
+        {
+            var exportService = App.ServiceProvider.GetRequiredService<SettingsImportExportService>();
+            await exportService.ExportSettingsWithAccount();
         }
     }
 }

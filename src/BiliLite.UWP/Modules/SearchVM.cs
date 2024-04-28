@@ -1007,9 +1007,9 @@ namespace BiliLite.Modules
         public string category_name { get; set; }
         public string type { get; set; }
         public string desc { get; set; }
-        public int like { get; set; }
-        public int view { get; set; }
-        public int reply { get; set; }
+        public long like { get; set; }
+        public long view { get; set; }
+        public long reply { get; set; }
         public string id { get; set; }
         public List<string> image_urls { get; set; }
         public string cover

@@ -14,11 +14,11 @@ namespace BiliLite.Models.Common.Dynamic
 
         public string Rid { get; set; }
 
-        public int View { get; set; }
+        public long View { get; set; }
 
-        public int Like { get; set; }
+        public long Like { get; set; }
 
-        public int Comment { get; set; }
+        public long Comment { get; set; }
 
         [JsonProperty("is_liked")]
         public int IsLiked { get; set; }

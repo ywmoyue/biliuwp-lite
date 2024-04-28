@@ -4,6 +4,7 @@ using BiliLite.Modules;
 using BiliLite.Services;
 using Microsoft.Toolkit.Uwp.Connectivity;
 using System;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -18,7 +19,7 @@ namespace BiliLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class HomePage : Page
+    public sealed partial class HomePage : Page, IRefreshablePage
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
 
@@ -36,6 +37,15 @@ namespace BiliLite.Pages
             m_downloadPageViewModel = App.ServiceProvider.GetRequiredService<DownloadPageViewModel>();
             this.DataContext = m_viewModel;
         }
+
+        public async Task Refresh()
+        {
+            if (frame.Content is IRefreshablePage page)
+            {
+                await page.Refresh();
+            }
+        }
+
         private void MessageCenter_LogoutedEvent(object sender, EventArgs e)
         {
             LaodUserStatus();

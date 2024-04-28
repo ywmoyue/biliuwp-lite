@@ -40,12 +40,17 @@ namespace BiliLite.Services
             }
         }
 
-        public async Task<DynAllReply> GetDynAll(int page = 1)
+        public async Task<DynAllReply> GetDynAll(int page = 1, string offset = null)
         {
             var message = new DynAllReq()
             {
-                Page = page
+                Page = page,
             };
+            if (offset != null)
+            {
+                message.Offset = offset;
+                message.RefreshType = Refresh.History;
+            }
             var requestUserInfo = new GrpcBiliUserInfo(
                 SettingService.Account.AccessKey,
                 SettingService.Account.UserID,

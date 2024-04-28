@@ -25,7 +25,7 @@ namespace BiliLite.ViewModels.UserDynamic
             m_mapper = App.ServiceProvider.GetRequiredService<IMapper>();
         }
 
-        public UserDynamicSpaceViewModel Parent { get; set; }
+        public IUserDynamicCommands Parent { get; set; }
 
         public string CardType { get; set; }
 
@@ -34,6 +34,12 @@ namespace BiliLite.ViewModels.UserDynamic
         public ModuleAuthor Author { get; set; }
 
         public ModuleAuthorForward AuthorForward { get; set; }
+
+        public UserDynamicSeasonInfo Season { get; set; }
+
+        public NavDynArticle CustomArticle { get; set; }
+
+        public string SourceJson { get; set; }
 
         public ModuleDynamic Dynamic
         {
@@ -53,6 +59,23 @@ namespace BiliLite.ViewModels.UserDynamic
                 {
                     LiveInfo = JsonConvert.DeserializeObject<DynLiveInfo>(value.DynLiveRcmd.Content);
                 }
+
+                if (value.DynCommonLive != null)
+                {
+                    LiveInfo = new DynLiveInfo()
+                    {
+                        PlayInfo = new DynLivePlayInfo()
+                        {
+                            Cover = value.DynCommonLive.Cover,
+                            Title = value.DynCommonLive.Title,
+                            AreaName = value.DynCommonLive.CoverLabel,
+                            WatchedShow = new DynLiveWatchedShow()
+                            {
+                                TextLarge = value.DynCommonLive.CoverLabel2,
+                            }
+                        }
+                    };
+                }
             }
         }
 
@@ -60,7 +83,12 @@ namespace BiliLite.ViewModels.UserDynamic
 
         public ModuleDesc Desc { get; set; }
 
+        public ModuleFold Fold { get; set; }
+
         public ModuleOpusSummary OpusSummary { get; set; }
+
+        [DependsOn(nameof(Item))]
+        public bool ForwardMissed => Item == null;
 
         public DynamicV2ItemViewModel Item { get; set; }
 
@@ -68,6 +96,7 @@ namespace BiliLite.ViewModels.UserDynamic
         {
             get
             {
+                if (Item == null) return null;
                 Item.Parent = Parent;
                 return new List<DynamicV2ItemViewModel>()
                 {
@@ -164,9 +193,35 @@ namespace BiliLite.ViewModels.UserDynamic
         }
 
         [DoNotNotify]
-        public string Verify { get; set; } = Constants.App.TRANSPARENT_IMAGE;
+        public string Verify
+        {
+            get
+            {
+                if (Author?.Author?.Official == null)
+                    return Constants.App.TRANSPARENT_IMAGE;
+                return Author.Author.Official.Type switch
+                {
+                    1 => Constants.App.VERIFY_OGANIZATION_IMAGE,
+                    0 => Constants.App.VERIFY_PERSONAL_IMAGE,
+                    -1 => Constants.App.TRANSPARENT_IMAGE,
+                    _ => Constants.App.TRANSPARENT_IMAGE
+                };
+            }
+        }
 
         [DoNotNotify]
-        public string Pendant { get; set; } = Constants.App.TRANSPARENT_IMAGE;
+        public string Pendant
+        {
+            get
+            {
+                if (Author == null) return Constants.App.TRANSPARENT_IMAGE;
+                if (Author.Author.Pendant != null && !string.IsNullOrEmpty(Author.Author.Pendant.Image))
+                {
+                    return Author.Author.Pendant.Image;
+                }
+
+                return Constants.App.TRANSPARENT_IMAGE;
+            }
+        }
     }
 }
