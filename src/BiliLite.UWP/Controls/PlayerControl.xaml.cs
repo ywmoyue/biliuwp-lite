@@ -2443,7 +2443,7 @@ namespace BiliLite.Controls
             m_danmakuController.Resume();
         }
 
-        private void Player_PlayMediaEnded(object sender, EventArgs e)
+        private async void Player_PlayMediaEnded(object sender, EventArgs e)
         {
             if (CurrentPlayItem.is_interaction)
             {
@@ -2458,7 +2458,10 @@ namespace BiliLite.Controls
             }
             _logger.Debug("视频结束，上报进度");
 
-            playerHelper.ReportHistory(CurrentPlayItem, Player.Duration).RunWithoutAwait();
+            await playerHelper.ReportHistory(CurrentPlayItem, Player.Duration);
+
+            _logger.Debug("进度归0");
+            await playerHelper.ReportHistory(CurrentPlayItem, 0);
             //列表顺序播放
             if (PlayerSettingPlayMode.SelectedIndex == 0)
             {
