@@ -534,15 +534,18 @@ namespace BiliLite.Pages
         private void LoadSetting()
         {
             //音量
-            m_player.Volume = SettingService.GetValue(SettingConstants.Player.PLAYER_VOLUME, 1.0);
+            m_player.Volume = SettingService.GetValue(SettingConstants.Player.PLAYER_VOLUME, SettingConstants.Player.DEFAULT_PLAYER_VOLUME);
             SliderVolume.Value = m_player.Volume;
+            var lockPlayerVolume = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_VOLUME, SettingConstants.Player.DEFAULT_LOCK_PLAYER_VOLUME);
             SliderVolume.ValueChanged += (e, args) =>
             {
                 m_player.Volume = SliderVolume.Value;
-                SettingService.SetValue(SettingConstants.Player.PLAYER_VOLUME, SliderVolume.Value);
+                if(!lockPlayerVolume)
+                    SettingService.SetValue(SettingConstants.Player.PLAYER_VOLUME, SliderVolume.Value);
             };
             //亮度
-            _brightness = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_BRIGHTNESS, 0);
+            lockBrightness = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_BRIGHTNESS, SettingConstants.Player.DEFAULT_LOCK_PLAYER_BRIGHTNESS);
+            _brightness = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_BRIGHTNESS, SettingConstants.Player.DEFAULT_PLAYER_BRIGHTNESS);
             BrightnessShield.Opacity = _brightness;
 
             //弹幕顶部距离
@@ -1185,6 +1188,7 @@ namespace BiliLite.Pages
 
         }
 
+        private bool lockBrightness = true;
         double _brightness;
         double Brightness
         {
@@ -1193,7 +1197,8 @@ namespace BiliLite.Pages
             {
                 _brightness = value;
                 BrightnessShield.Opacity = value;
-                SettingService.SetValue<double>(SettingConstants.Player.PLAYER_BRIGHTNESS, _brightness);
+                if (!lockBrightness)
+                    SettingService.SetValue<double>(SettingConstants.Player.PLAYER_BRIGHTNESS, _brightness);
             }
         }
 

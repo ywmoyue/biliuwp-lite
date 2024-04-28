@@ -461,9 +461,9 @@ namespace BiliLite.Controls
         }
 
         /// <summary>
-        /// 检查音量是否偏低
+        /// 检查音量和亮度是否偏低
         /// </summary>
-        private void CheckVolumeLower()
+        private void CheckVolumeAndBrightnessLower()
         {
             // 检查音量是否偏低
             if (Player.Volume > 0.95) return;
@@ -478,6 +478,10 @@ namespace BiliLite.Controls
             }
 
             m_playerToastService.Show(PlayerToastService.VOLUME_KEY, toolTipText);
+
+            // 检查亮度是否偏低
+            if (Math.Abs(Brightness - 1) > 0.8) return;
+            m_playerToastService.Show(PlayerToastService.BRIGHTNESS_KEY, "亮度:" + Math.Abs(Brightness - 1).ToString("P"));
         }
 
         private void LoadDanmuSetting()
@@ -654,16 +658,21 @@ namespace BiliLite.Controls
         }
         private void LoadPlayerSetting()
         {
-
             //音量
-            Player.Volume = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_VOLUME, 1.0);
-            SliderVolume.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
+            Player.Volume = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_VOLUME, SettingConstants.Player.DEFAULT_PLAYER_VOLUME);
+            
+            var lockPlayerVolume = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_VOLUME, SettingConstants.Player.DEFAULT_LOCK_PLAYER_VOLUME);
+            if (!lockPlayerVolume)
             {
-                SettingService.SetValue<double>(SettingConstants.Player.PLAYER_VOLUME, SliderVolume.Value);
-            });
+                SliderVolume.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
+                {
+                    SettingService.SetValue<double>(SettingConstants.Player.PLAYER_VOLUME, SliderVolume.Value);
+                });
+            }
             //亮度
-            //_brightness = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_BRIGHTNESS, 0);
-            //BrightnessShield.Opacity = _brightness;
+            lockBrightness = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_BRIGHTNESS, SettingConstants.Player.DEFAULT_LOCK_PLAYER_BRIGHTNESS);
+            _brightness = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_BRIGHTNESS, SettingConstants.Player.DEFAULT_PLAYER_BRIGHTNESS);
+            BrightnessShield.Opacity = _brightness;
 
             //播放模式
             var selectedValue = (PlayUrlCodecMode)SettingService.GetValue(SettingConstants.Player.DEFAULT_VIDEO_TYPE, (int)DefaultVideoTypeOptions.DEFAULT_VIDEO_TYPE);
@@ -1050,7 +1059,7 @@ namespace BiliLite.Controls
 
             await GetPlayerInfo();
 
-            CheckVolumeLower();
+            CheckVolumeAndBrightnessLower();
 
             Player.ABPlay = VideoPlayHistoryHelper.FindABPlayHistory(CurrentPlayItem);
             if (Player.ABPlay == null)
@@ -1918,6 +1927,7 @@ namespace BiliLite.Controls
         double ssValue = 0;
         bool ManipulatingBrightness = false;
         double _brightness = 0;
+        private bool lockBrightness = true;
         PlayerHoldingAction m_playerHoldingAction;
         double Brightness
         {
@@ -1926,8 +1936,8 @@ namespace BiliLite.Controls
             {
                 _brightness = value;
                 BrightnessShield.Opacity = value;
-                //SettingHelper.SetValue<double>(SettingHelper.Player.PLAYER_BRIGHTNESS, _brightness);
-                //}
+                if(!lockBrightness)
+                    SettingService.SetValue<double>(SettingConstants.Player.PLAYER_BRIGHTNESS, _brightness);
             }
         }
         private void InitializeGesture()

@@ -510,11 +510,49 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(double))]
             public const string PLAYER_VOLUME = "PlayerVolume";
+
+            /// <summary>
+            /// 音量默认值
+            /// </summary>
+            [SettingDefaultValue]
+            public const double DEFAULT_PLAYER_VOLUME = 1.0;
+
             /// <summary>
             /// 亮度
             /// </summary>
             [SettingKey(typeof(double))]
             public const string PLAYER_BRIGHTNESS = "PlayeBrightness";
+
+            /// <summary>
+            /// 亮度默认值
+            /// </summary>
+            [SettingDefaultValue]
+            public const double DEFAULT_PLAYER_BRIGHTNESS = 0;
+
+            /// <summary>
+            /// 锁定播放器音量设置（播放器内修改音量时不写设置）
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string LOCK_PLAYER_VOLUME = "LockPlayerVolume";
+
+            /// <summary>
+            /// 锁定播放器音量设置默认值
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_LOCK_PLAYER_VOLUME = false;
+
+            /// <summary>
+            /// 锁定播放器亮度设置（播放器内修改亮度时不写设置）
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string LOCK_PLAYER_BRIGHTNESS = "LockPlayerBrightness";
+
+            /// <summary>
+            /// 锁定播放器亮度设置默认值
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_LOCK_PLAYER_BRIGHTNESS = true;
+
             /// <summary>
             /// A-B 循环播放模式的播放记录
             /// </summary>
