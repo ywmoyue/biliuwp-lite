@@ -5,6 +5,7 @@ using BiliLite.Modules;
 using BiliLite.Services;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -22,7 +23,7 @@ namespace BiliLite.Pages.User
     /// <summary>
     /// 收藏夹详情、播放列表详情
     /// </summary>
-    public sealed partial class FavoriteDetailPage : BasePage
+    public sealed partial class FavoriteDetailPage : BasePage, IRefreshablePage
     {
         FavoriteDetailVM favoriteDetailVM;
         public FavoriteDetailPage()
@@ -191,6 +192,11 @@ namespace BiliLite.Pages.User
                     Playlist = items
                 }
             });
+        }
+
+        public async Task Refresh()
+        {
+            favoriteDetailVM.Refresh();
         }
     }
 }

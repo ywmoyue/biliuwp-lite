@@ -4,19 +4,9 @@ using BiliLite.Models.Common;
 using BiliLite.Modules;
 using BiliLite.Services;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -26,7 +16,7 @@ namespace BiliLite.Pages.Home
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class MoviePage : Page
+    public sealed partial class MoviePage : Page, IRefreshablePage
     {
         readonly Modules.CinemaVM cinemaVM;
         public MoviePage()
@@ -95,7 +85,7 @@ namespace BiliLite.Pages.Home
         }
         private async void RefreshContainer_RefreshRequested(Microsoft.UI.Xaml.Controls.RefreshContainer sender, Microsoft.UI.Xaml.Controls.RefreshRequestedEventArgs args)
         {
-            await LoadData();
+            await Refresh();
         }
 
         private async void BannerItem_Click(object sender, RoutedEventArgs e)
@@ -183,6 +173,11 @@ namespace BiliLite.Pages.Home
         {
             var item = e.ClickedItem as PageEntranceModel;
             MessageCenter.NavigateToPage(this, item.NavigationInfo);
+        }
+
+        public async Task Refresh()
+        {
+            await LoadData();
         }
     }
 }

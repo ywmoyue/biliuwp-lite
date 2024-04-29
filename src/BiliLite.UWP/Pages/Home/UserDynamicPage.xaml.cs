@@ -1,13 +1,17 @@
-﻿using BiliLite.Services;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using BiliLite.Services;
 using BiliLite.Models.Common;
 using BiliLite.Models.Requests.Api;
-using BiliLite.Models.Requests.Api.User;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using BiliLite.Extensions;
-using BiliLite.Models.Common.UserDynamic;
 using BiliLite.ViewModels.UserDynamic;
+using Microsoft.Extensions.DependencyInjection;
+using BiliLite.Models.Common.Comment;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media.Animation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -16,91 +20,28 @@ namespace BiliLite.Pages.Home
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class UserDynamicPage : Page
+    public sealed partial class UserDynamicPage : Page,IRefreshablePage
     {
-        readonly UserDynamicViewModel m_userDynamicViewModel;
-        private bool IsStaggered { get; set; } = false;
+        readonly UserDynamicAllViewModel m_viewModel;
+        private bool m_isStaggered = false;
+        private UserDynamicShowType m_currentShowType;
+
         public UserDynamicPage()
         {
+            m_viewModel = App.ServiceProvider.GetRequiredService<UserDynamicAllViewModel>();
+            m_viewModel.OpenCommentEvent += UserDynamicViewModelOpenCommentEvent;
             this.InitializeComponent();
-            m_userDynamicViewModel = new UserDynamicViewModel();
-            m_userDynamicViewModel.OpenCommentEvent += UserDynamicViewModelOpenCommentEvent;
-            splitView.PaneClosed += SplitView_PaneClosed;
-            this.DataContext = m_userDynamicViewModel;
-            if (SettingService.GetValue<bool>(SettingConstants.UI.CACHE_HOME, true))
-            {
-                this.NavigationCacheMode = NavigationCacheMode.Enabled;
-            }
-            else
-            {
-                this.NavigationCacheMode = NavigationCacheMode.Disabled;
-            }
+            m_currentShowType = (UserDynamicShowType)DynPivot.SelectedIndex;
         }
 
-        private void SplitView_PaneClosed(SplitView sender, object args)
-        {
-            comment.ClearComment();
-            repost.UserDynamicRepostViewModel.Clear();
-        }
-        string dynamic_id;
-        private void UserDynamicViewModelOpenCommentEvent(object sender, UserDynamicItemDisplayViewModel e)
-        {
-            // splitView.IsPaneOpen = true;
-            dynamic_id = e.DynamicID;
-            pivotRight.SelectedIndex = 1;
-            repostCount.Text = e.ShareCount.ToString();
-            commentCount.Text = e.CommentCount.ToString();
-            CommentApi.CommentType commentType = CommentApi.CommentType.Dynamic;
-            var id = e.ReplyID;
-            switch (e.Type)
-            {
-
-                case UserDynamicDisplayType.Photo:
-                    commentType = CommentApi.CommentType.Photo;
-                    break;
-                case UserDynamicDisplayType.Video:
-
-                    commentType = CommentApi.CommentType.Video;
-                    break;
-                case UserDynamicDisplayType.Season:
-                    id = e.OneRowInfo.AID;
-                    commentType = CommentApi.CommentType.Video;
-                    break;
-                case UserDynamicDisplayType.ShortVideo:
-                    commentType = CommentApi.CommentType.MiniVideo;
-                    break;
-                case UserDynamicDisplayType.Music:
-                    commentType = CommentApi.CommentType.Song;
-                    break;
-                case UserDynamicDisplayType.Article:
-                    commentType = CommentApi.CommentType.Article;
-                    break;
-                case UserDynamicDisplayType.MediaList:
-                    if (e.OneRowInfo.Tag != "收藏夹")
-                        commentType = CommentApi.CommentType.Video;
-                    break;
-                default:
-                    id = e.DynamicID;
-                    break;
-            }
-
-            //comment.LoadComment(new Controls.LoadCommentInfo()
-            //{
-            //    commentMode = (int)commentType,
-            //    commentSort = Api.CommentApi.commentSort.Hot,
-            //    oid = id
-            //});
-            Notify.ShowComment(id, (int)commentType, CommentApi.CommentSort.Hot);
-        }
-
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        protected  override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
             SetStaggered();
-            if (e.NavigationMode == NavigationMode.New && m_userDynamicViewModel.Items == null)
+            if (e.NavigationMode == NavigationMode.New && m_viewModel.DynamicItems == null)
             {
-                await m_userDynamicViewModel.GetDynamicItems();
+                await m_viewModel.GetDynamicItems();
                 if (SettingService.GetValue<bool>("动态切换提示", true) && SettingService.GetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 0) != 1)
                 {
                     SettingService.SetValue("动态切换提示", false);
@@ -109,89 +50,148 @@ namespace BiliLite.Pages.Home
             }
         }
 
-        void SetStaggered()
+        private void SetStaggered()
         {
             var staggered = SettingService.GetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 0) == 1;
-            if (staggered != IsStaggered)
+            if (staggered != m_isStaggered)
             {
-                IsStaggered = staggered;
+                m_isStaggered = staggered;
                 if (staggered)
                 {
-                    btnGrid_Click(this, null);
+                    SetGridCore();
                 }
                 else
                 {
-                    btnList_Click(this, null);
+                    SetListCore();
                 }
             }
         }
 
-        private void pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void SetGridCore()
         {
-            if ((int)m_userDynamicViewModel.UserDynamicType == pivot.SelectedIndex) return;
-            m_userDynamicViewModel.UserDynamicType = (UserDynamicType)pivot.SelectedIndex;
-            m_userDynamicViewModel.Refresh();
+            m_isStaggered = true;
+            BtnGrid.Visibility = Visibility.Collapsed;
+            BtnList.Visibility = Visibility.Visible;
+            //XAML
+            ListDyn.ItemsPanel = (ItemsPanelTemplate)this.Resources["GridPanel"];
+
+            //顶部
+            GridTopBar.MaxWidth = double.MaxValue;
+            GridTopBar.Margin = new Thickness(0, 0, 0, 4);
+            BorderTopBar.CornerRadius = new CornerRadius(0);
+            BorderTopBar.Margin = new Thickness(0);
         }
 
-        private void btnGrid_Click(object sender, RoutedEventArgs e)
+        private void SetListCore()
+        {
+            m_isStaggered = false;
+            //右下角按钮
+            BtnGrid.Visibility = Visibility.Visible;
+            BtnList.Visibility = Visibility.Collapsed;
+            //XAML
+            ListDyn.ItemsPanel = (ItemsPanelTemplate)this.Resources["ListPanel"];
+
+            //顶部
+            GridTopBar.MaxWidth = 800;
+            GridTopBar.Margin = new Thickness(8, 0, 8, 0);
+            BorderTopBar.CornerRadius = new CornerRadius(4);
+            BorderTopBar.Margin = new Thickness(12, 4, 12, 4);
+        }
+
+        private async void BtnRefreshDynamic_OnClick(object sender, RoutedEventArgs e)
+        {
+            await Refresh();
+        }
+
+        private void BtnTop_OnClick(object sender, RoutedEventArgs e)
+        {
+            ListDyn.ScrollIntoView(ListDyn.Items.FirstOrDefault());
+        }
+
+        private void BtnList_OnClick(object sender, RoutedEventArgs e)
+        {
+            SettingService.SetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 0);
+            SetListCore();
+        }
+
+        private void BtnGrid_OnClick(object sender, RoutedEventArgs e)
         {
             SettingService.SetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 1);
-            IsStaggered = true;
-            btnGrid.Visibility = Visibility.Collapsed;
-            btnList.Visibility = Visibility.Visible;
-            //顶部
-            gridTopBar.MaxWidth = double.MaxValue;
-            gridTopBar.Margin = new Thickness(0, 0, 0, 4);
-            borderTopBar.CornerRadius = new CornerRadius(0);
-            borderTopBar.Margin = new Thickness(0);
-
-            //XAML
-            //            var tmp = @" <controls:StaggeredPanel DesiredColumnWidth='450' HorizontalAlignment='Stretch' ColumnSpacing='-12' RowSpacing='8' />";
-            //            var xaml = $@"<ItemsPanelTemplate 
-            //xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' 
-            //xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' 
-            //xmlns:controls='using:Microsoft.Toolkit.Uwp.UI.Controls'>
-            //                   {tmp}
-            //               </ItemsPanelTemplate>";
-            //list.ItemsPanel = (ItemsPanelTemplate)XamlReader.Load(xaml);
-            list.ItemsPanel = (ItemsPanelTemplate)this.Resources["GridPanel"];
+            SetGridCore();
         }
 
-        private void btnList_Click(object sender, RoutedEventArgs e)
+        private async void Pivot_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            IsStaggered = false;
-            //右下角按钮
-            btnGrid.Visibility = Visibility.Visible;
-            btnList.Visibility = Visibility.Collapsed;
-            //设置
-            SettingService.SetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 0);
-            //顶部
-            gridTopBar.MaxWidth = 800;
-            gridTopBar.Margin = new Thickness(8, 0, 8, 0);
-            borderTopBar.CornerRadius = new CornerRadius(4);
-            borderTopBar.Margin = new Thickness(12, 4, 12, 4);
-            //XAML
-            //            var tmp = @" <ItemsStackPanel/>";
-            //            var xaml = $@"<ItemsPanelTemplate 
-            //xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' 
-            //xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'>
-            //                   {tmp}
-            //               </ItemsPanelTemplate>";
-            //list.ItemsPanel = (ItemsPanelTemplate)XamlReader.Load(xaml);
-            list.ItemsPanel = (ItemsPanelTemplate)this.Resources["ListPanel"];
+            var showType = (UserDynamicShowType)DynPivot.SelectedIndex;
+            if (showType == m_currentShowType) return;
+            m_currentShowType = showType;
+            await m_viewModel.GetDynamicItems(showType: showType);
         }
 
-        private void btnTop_Click(object sender, RoutedEventArgs e)
+        private void CloseCommentCore()
         {
-            list.ScrollIntoView(list.Items[0]);
+            var storyboard = (Storyboard)this.Resources["HideComment"];
+            storyboard.Begin();
         }
 
-        private void pivotRight_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void UserDynamicViewModelOpenCommentEvent(object sender, DynamicV2ItemViewModel e)
         {
-            if (pivotRight.SelectedIndex == 0 && splitView.IsPaneOpen && (repost.UserDynamicRepostViewModel.Items == null || repost.UserDynamicRepostViewModel.Items.Count == 0))
+            CommentApi.CommentType commentType = CommentApi.CommentType.Dynamic;
+            var id = e.Extend.BusinessId;
+            switch (e.CardType)
             {
-                repost.LoadData(dynamic_id);
+                case Constants.DynamicTypes.DRAW:
+                    commentType = CommentApi.CommentType.Photo;
+                    break;
+                case Constants.DynamicTypes.AV:
+                    commentType = CommentApi.CommentType.Video;
+                    break;
+                case Constants.DynamicTypes.PGC:
+                    id = e.Dynamic.DynPgc.Aid.ToString();
+                    commentType = CommentApi.CommentType.Video;
+                    break;
+                //case UserDynamicDisplayType.ShortVideo:
+                //    commentType = CommentApi.CommentType.MiniVideo;
+                //    break;
+                case Constants.DynamicTypes.MUSIC:
+                    commentType = CommentApi.CommentType.Song;
+                    break;
+                case Constants.DynamicTypes.ARTICLE:
+                    commentType = CommentApi.CommentType.Article;
+                    break;
+                //case UserDynamicDisplayType.MediaList:
+                //    if (e.OneRowInfo.Tag != "收藏夹")
+                //        commentType = CommentApi.CommentType.Video;
+                //    break;
+                default:
+                    id = e.Extend.DynIdStr;
+                    break;
             }
+
+            OpenCommentCore(id, (int)commentType, CommentApi.CommentSort.Hot);
+        }
+
+        private void OpenCommentCore(string oid, int commentMode, CommentApi.CommentSort commentSort)
+        {
+            Comment.LoadComment(new LoadCommentInfo()
+            {
+                CommentMode = commentMode,
+                CommentSort = commentSort,
+                Oid = oid,
+                IsDialog = true
+            });
+            var storyboard = (Storyboard)this.Resources["ShowComment"];
+            storyboard.Begin();
+        }
+
+        private void CommentPanel_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            CloseCommentCore();
+        }
+
+        public async Task Refresh()
+        {
+            await m_viewModel.GetDynamicItems(showType: m_currentShowType);
         }
     }
 }

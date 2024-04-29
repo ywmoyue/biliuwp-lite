@@ -37,6 +37,7 @@ namespace BiliLite.ViewModels.UserDynamic
         private int m_page = 1;
         private string m_offset = null;
         private string m_baseline = null;
+        private UserDynamicShowType m_showType;
 
         #endregion
 
@@ -333,7 +334,7 @@ namespace BiliLite.ViewModels.UserDynamic
                 return;
             }
 
-            await GetDynamicItems(m_page + 1);
+            await GetDynamicItems(m_page + 1, m_showType);
         }
 
         public async Task GetDynamicItems(int page = 1, UserDynamicShowType showType = UserDynamicShowType.All)
@@ -343,6 +344,7 @@ namespace BiliLite.ViewModels.UserDynamic
                 CanLoadMore = false;
                 Loading = true;
                 m_page = page;
+                m_showType = showType;
                 if (page == 1)
                 {
                     m_offset = null;

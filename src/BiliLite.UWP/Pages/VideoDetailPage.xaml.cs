@@ -41,7 +41,7 @@ namespace BiliLite.Pages
         public string Cover { get; set; }
         public string Title { get; set; }
     }
-    public sealed partial class VideoDetailPage : PlayPage
+    public sealed partial class VideoDetailPage : PlayPage, IRefreshablePage
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
 
@@ -610,10 +610,15 @@ namespace BiliLite.Pages
             await downloadDialog.ShowAsync();
         }
 
-        private async void btnRefresh_Click(object sender, RoutedEventArgs e)
+        public async Task Refresh()
         {
             if (m_viewModel.Loading) return;
             await InitializeVideo(_id);
+        }
+
+        private async void btnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            await Refresh();
         }
 
         private void btnOpenQR_Click(object sender, RoutedEventArgs e)

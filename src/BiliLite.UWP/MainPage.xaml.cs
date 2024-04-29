@@ -12,6 +12,7 @@ using BiliLite.Controls;
 using BiliLite.Models.Common;
 using BiliLite.Extensions;
 using BiliLite.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -20,12 +21,15 @@ namespace BiliLite
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class MainPage : Windows.UI.Xaml.Controls.Page
+    public sealed partial class MainPage : Windows.UI.Xaml.Controls.Page, IMainPage
     {
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+        private readonly ShortcutKeyService m_shortcutKeyService;
 
         public MainPage()
         {
+            m_shortcutKeyService = App.ServiceProvider.GetRequiredService<ShortcutKeyService>();
+            m_shortcutKeyService.SetMainPage(this);
             this.InitializeComponent();
             // 处理标题栏
             var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
@@ -42,6 +46,26 @@ namespace BiliLite
 
             App.Current.Suspending += Current_Suspending;
             // Window.Current.Content.PointerPressed += Content_PointerPressed;
+
+            Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
+        }
+
+        public object CurrentPage
+        {
+            get
+            {
+                if (!(tabView.SelectedItem is TabViewItem tabItem)) return null;
+                if (!(tabItem.Content is Frame frame)) return null;
+                return frame.Content;
+            }
+        }
+
+        private void Dispatcher_AcceleratorKeyActivated(Windows.UI.Core.CoreDispatcher sender, Windows.UI.Core.AcceleratorKeyEventArgs args)
+        {
+            if (args.EventType.ToString().Contains("Down"))
+            {
+                m_shortcutKeyService.HandleKeyDown(args.VirtualKey);
+            }
         }
 
         private async void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
@@ -259,7 +283,6 @@ namespace BiliLite
                 ClosePage((TabViewItem)tabView.SelectedItem);
             }
             args.Handled = true;
-
         }
 
         private void tabView_TabItemsChanged(TabView sender, IVectorChangedEventArgs args)

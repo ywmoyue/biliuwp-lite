@@ -18,7 +18,7 @@ namespace BiliLite.Pages.Home
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class LivePage : Page
+    public sealed partial class LivePage : Page,IRefreshablePage
     {
         private Modules.LiveVM liveVM;
         public LivePage()
@@ -53,9 +53,14 @@ namespace BiliLite.Pages.Home
             }
         }
 
-        private async void btnRefresh_Click(object sender, RoutedEventArgs e)
+        public async Task Refresh()
         {
             await LoadData();
+        }
+
+        private async void btnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            await Refresh();
         }
 
         private async void BannerItem_Click(object sender, RoutedEventArgs e)

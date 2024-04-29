@@ -17,7 +17,9 @@
                                                                  Draw3x3Template="{StaticResource DynamicDraw3x3}"
                                                                  CommonSquareTemplate="{StaticResource DynamicCommonSquare}"
                                                                  LiveRcmdTemplate="{StaticResource DynamicLiveRcmd}"
+                                                                 LiveTemplate="{StaticResource DynamicLiveRcmd}"
                                                                  UgcSeasonTemplate="{StaticResource DynamicUgcSeason}"
+                                                                 FoldTemplate="{StaticResource DynamicFold}"
                                                                  CustomSeasonTemplate="{StaticResource DynamicCustomSeason}"
                                                                  CustomArticleTemplate="{StaticResource DynamicCustomArticle}">
     </dataTemplateSelectors:UserDynamicItemV2DataTemplateSelector>
@@ -384,6 +386,18 @@
                 </Button>
             </local:DynamicItemV2Control.CardContent>
         </local:DynamicItemV2Control>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DynamicFold">
+        <Border BorderThickness="1" HorizontalAlignment="Stretch"  BorderBrush="#C8E5E9EF" CornerRadius="4">
+            <Button HorizontalAlignment="Stretch" 
+                    Padding="0" 
+                    Background="Transparent" 
+                    Command="{Binding Parent.DetailCommand,Mode=OneWay}" 
+                    CommandParameter="{Binding Extend.DynIdStr,Mode=OneWay}">
+                <TextBlock Text="{Binding Fold.Text}" HorizontalAlignment="Center"></TextBlock>
+            </Button>
+        </Border>
     </DataTemplate>
 
     <DataTemplate x:Key="DynamicCustomSeason">

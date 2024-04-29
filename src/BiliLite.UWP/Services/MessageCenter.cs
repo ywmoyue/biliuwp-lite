@@ -94,6 +94,13 @@ namespace BiliLite.Services
         /// <param name="par"></param>
         public static async Task<bool> HandelUrl(string url, bool dontGoTo = false)
         {
+            var uriHref = "";
+            if (url.IsUrl())
+            {
+                var uri = new Uri(url);
+                uriHref = uri.GetLeftPart(UriPartial.Path);
+            }
+
             _logger.Debug($"处理链接：{url}");
             if (url.First() == '@')
             {
@@ -115,7 +122,7 @@ namespace BiliLite.Services
              * bilibili://live/5619438
              */
 
-            var live = StringExtensions.RegexMatch(url.Replace("h5", "live").Replace("live.bilibili.com", "live").Replace("/", ""), @"live(\d+)");
+            var live = StringExtensions.RegexMatch(uriHref.Replace("h5", "live").Replace("live.bilibili.com", "live").Replace("/", ""), @"live(\d+)");
             if (live != "")
             {
                 NavigateToPage(null, new NavigationInfo()

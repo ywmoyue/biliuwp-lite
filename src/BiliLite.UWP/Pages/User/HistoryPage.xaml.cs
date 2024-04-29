@@ -1,4 +1,5 @@
-﻿using BiliLite.Models.Common;
+﻿using System.Threading.Tasks;
+using BiliLite.Models.Common;
 using BiliLite.Services;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -14,7 +15,7 @@ namespace BiliLite.Pages.User
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class HistoryPage : BasePage
+    public sealed partial class HistoryPage : BasePage, IRefreshablePage
     {
         private readonly HistoryViewModel m_viewModel;
         public HistoryPage()
@@ -108,6 +109,11 @@ namespace BiliLite.Pages.User
         {
             var keyword = sender.Text;
             await m_viewModel.SearchHistory(keyword);
+        }
+
+        public async Task Refresh()
+        {
+            m_viewModel.Refresh();
         }
     }
 }

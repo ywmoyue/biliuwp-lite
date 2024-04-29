@@ -433,6 +433,70 @@ namespace BiliLite.Pages
                 };
             };
 
+            // 音量
+            NumBoxVolume.Value = Math.Round((SettingService.GetValue(SettingConstants.Player.PLAYER_VOLUME,
+                SettingConstants.Player.DEFAULT_PLAYER_VOLUME)) * 100, 2);
+            NumBoxVolume.Loaded += (sender, e) =>
+            {
+                NumBoxVolume.ValueChanged += (obj, args) =>
+                {
+                    if (NumBoxVolume.Value > 100)
+                    {
+                        NumBoxVolume.Value = 100;
+                    }
+
+                    if (NumBoxVolume.Value < 0)
+                    {
+                        NumBoxVolume.Value = 0;
+                    }
+                    SettingService.SetValue(SettingConstants.Player.PLAYER_VOLUME, NumBoxVolume.Value/100);
+                };
+            };
+
+            // 锁定播放器音量设置
+            SwLockPlayerVolume.IsOn = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_VOLUME, SettingConstants.Player.DEFAULT_LOCK_PLAYER_VOLUME);
+            SwLockPlayerVolume.Loaded += (sender, e) =>
+            {
+                SwLockPlayerVolume.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.LOCK_PLAYER_VOLUME, SwLockPlayerVolume.IsOn);
+                };
+            };
+
+            // 亮度
+            NumBoxBrightness.Value = Math.Round(
+                (Math.Abs(SettingService.GetValue(
+                SettingConstants.Player.PLAYER_BRIGHTNESS,
+                SettingConstants.Player.DEFAULT_PLAYER_BRIGHTNESS) - 1)) * 100, 2);
+            NumBoxBrightness.Loaded += (sender, e) =>
+            {
+                NumBoxBrightness.ValueChanged += (obj, args) =>
+                {
+                    if (NumBoxBrightness.Value > 100)
+                    {
+                        NumBoxBrightness.Value = 100;
+                    }
+
+                    if (NumBoxBrightness.Value < 0)
+                    {
+                        NumBoxBrightness.Value = 0;
+                    }
+
+                    var brightness = Math.Abs((NumBoxBrightness.Value / 100) - 1);
+                    SettingService.SetValue(SettingConstants.Player.PLAYER_BRIGHTNESS, brightness);
+                };
+            };
+
+            // 锁定播放器亮度设置
+            SwLockPlayerBrightness.IsOn = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_BRIGHTNESS, SettingConstants.Player.DEFAULT_LOCK_PLAYER_BRIGHTNESS);
+            SwLockPlayerBrightness.Loaded += (sender, e) =>
+            {
+                SwLockPlayerBrightness.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.LOCK_PLAYER_BRIGHTNESS, SwLockPlayerBrightness.IsOn);
+                };
+            };
+
             //自动打开AI字幕
             swPlayerSettingAutoOpenAISubtitle.IsOn = SettingService.GetValue<bool>(SettingConstants.Player.AUTO_OPEN_AI_SUBTITLE, false);
             swPlayerSettingAutoOpenAISubtitle.Loaded += new RoutedEventHandler((sender, e) =>
