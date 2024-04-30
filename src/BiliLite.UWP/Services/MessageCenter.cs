@@ -384,8 +384,16 @@ namespace BiliLite.Services
              * bilibili://album/2403422
              * https://t.bilibili.com/84935538081511530
              * bilibili://following/detail/314560419758546547
+             * bilibili://opus/detail/922046211927572500
              */
-            var album = StringExtensions.RegexMatch(url.Replace("bilibili://following/detail/", "album").Replace("h.bilibili.com/ywh/h5/", "album").Replace("h.bilibili.com", "album").Replace("t.bilibili.com", "album").Replace("/", ""), @"album(\d+)");
+            var album = StringExtensions
+                .RegexMatch(url
+                    .Replace("bilibili://opus/detail/", "album")
+                    .Replace("bilibili://following/detail/", "album")
+                    .Replace("h.bilibili.com/ywh/h5/", "album")
+                    .Replace("h.bilibili.com", "album")
+                    .Replace("t.bilibili.com", "album")
+                    .Replace("/", ""), @"album(\d+)");
             if (album != "")
             {
                 NavigateToPage(null, new NavigationInfo()
