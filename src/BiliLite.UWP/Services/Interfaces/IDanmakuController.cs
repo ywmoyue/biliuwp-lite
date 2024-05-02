@@ -73,6 +73,12 @@ namespace BiliLite.Services.Interfaces
         public abstract void ShowScroll();
 
         /// <summary>
+        /// 设置字体
+        /// </summary>
+        /// <param name="fontName"></param>
+        public abstract void SetFont(string fontName);
+
+        /// <summary>
         /// 设置弹幕字体缩放
         /// </summary>
         public virtual void SetFontZoom(double fontZoom)

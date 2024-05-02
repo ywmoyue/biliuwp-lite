@@ -338,6 +338,12 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(int))]
             public const string SHIELD_LEVEL = "VideoDanmuShieldLevel";
+
+            /// <summary>
+            /// 弹幕字体
+            /// </summary>
+            [SettingKey(typeof(string))] 
+            public const string DANMAKU_FONT_FAMILY = "VideoDanmuFontFamily";
         }
 
         public class Live

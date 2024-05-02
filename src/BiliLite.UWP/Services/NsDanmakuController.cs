@@ -83,6 +83,12 @@ namespace BiliLite.Services
             m_danmakuControl.ShowDanmaku(DanmakuLocation.Scroll);
         }
 
+        public override void SetFont(string fontName)
+        {
+            if (string.IsNullOrEmpty(fontName)) return;
+            m_danmakuControl.FontFamily = new FontFamily(fontName);
+        }
+
         public override void SetFontZoom(double fontZoom)
         {
             base.SetFontZoom(fontZoom);

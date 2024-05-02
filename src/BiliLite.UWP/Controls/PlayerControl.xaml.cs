@@ -626,6 +626,17 @@ namespace BiliLite.Controls
                     SettingService.SetValue<int>(SettingConstants.VideoDanmaku.BORDER_STYLE, DanmuSettingStyle.SelectedIndex);
                 }
             });
+
+            //弹幕字体
+            var fontFamily =
+                SettingService.GetValue<string>(SettingConstants.VideoDanmaku.DANMAKU_FONT_FAMILY, string.Empty);
+            m_danmakuController.SetFont(fontFamily);
+            DanmuSettingFont.Text = fontFamily;
+            DanmuSettingFont.QuerySubmitted += (e, args) =>
+            {
+                m_danmakuController.SetFont(DanmuSettingFont.Text);
+                SettingService.SetValue(SettingConstants.VideoDanmaku.DANMAKU_FONT_FAMILY, DanmuSettingFont.Text);
+            };
             //合并弹幕
             DanmuSettingMerge.IsOn = SettingService.GetValue<bool>(SettingConstants.VideoDanmaku.MERGE, false);
             DanmuSettingMerge.Toggled += async (e, args) =>
