@@ -81,34 +81,66 @@
     <DataTemplate x:Key="DynamicPgc">
         <local:DynamicItemV2Control ViewModel="{Binding}">
             <local:DynamicItemV2Control.CardContent>
-                <Button HorizontalAlignment="Stretch" 
-                HorizontalContentAlignment="Left" 
-                Padding="0" 
-                Background="Transparent"  
-                Command="{Binding Path=Parent.LaunchUrlCommand}" 
-                CommandParameter="{Binding Path=Dynamic.DynPgc.Uri}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
+                <Grid>
+                    <Button HorizontalAlignment="Stretch" 
+                            HorizontalContentAlignment="Left" 
+                            Padding="0" 
+                            Background="Transparent"  
+                            Visibility="{Binding Dynamic.DynPgc,Converter={StaticResource display}}"
+                            Command="{Binding Path=Parent.LaunchUrlCommand}" 
+                            CommandParameter="{Binding Path=Dynamic.DynPgc.Uri}">
                         <Grid>
-                            <Border CornerRadius="4">
-                                <Image Source="{Binding Path=Dynamic.DynPgc.Cover}" Width="{Binding Path=CoverWidth}"></Image>
-                            </Border>
-                            <Border Background="#C8FF69B4" CornerRadius="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4">
-                                <TextBlock Margin="4 2" Foreground="White" FontSize="12" Text="番剧"></TextBlock>
-                            </Border>
-                            <Border Background="#C8000000" CornerRadius="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4">
-                                <TextBlock Margin="4 2" Foreground="White" FontSize="12" Text="{Binding Path=Dynamic.DynArchive.CoverLeftText1}"></TextBlock>
-                            </Border>
-                        </Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid>
+                                <Border CornerRadius="4">
+                                    <Image Source="{Binding Path=Dynamic.DynPgc.Cover}" Width="{Binding Path=CoverWidth}"></Image>
+                                </Border>
+                                <Border Background="#C8FF69B4" CornerRadius="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4">
+                                    <TextBlock Margin="4 2" Foreground="White" FontSize="12" Text="番剧"></TextBlock>
+                                </Border>
+                                <Border Background="#C8000000" CornerRadius="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4">
+                                    <TextBlock Margin="4 2" Foreground="White" FontSize="12" Text="{Binding Path=Dynamic.DynArchive.CoverLeftText1}"></TextBlock>
+                                </Border>
+                            </Grid>
 
-                        <StackPanel HorizontalAlignment="Stretch" Grid.Column="1" Margin="8 4 8 0">
-                            <TextBlock Text="{Binding Path=Dynamic.DynPgc.Title}" Foreground="{ThemeResource TextColor}" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap"></TextBlock>
-                        </StackPanel>
-                    </Grid>
-                </Button>
+                            <StackPanel HorizontalAlignment="Stretch" Grid.Column="1" Margin="8 4 8 0">
+                                <TextBlock Text="{Binding Path=Dynamic.DynPgc.Title}" Foreground="{ThemeResource TextColor}" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap"></TextBlock>
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+                    <Button HorizontalAlignment="Stretch" 
+                            HorizontalContentAlignment="Left" 
+                            Padding="0" 
+                            Background="Transparent"  
+                            Visibility="{Binding Dynamic.DynArchive,Converter={StaticResource display}}"
+                            Command="{Binding Path=Parent.LaunchUrlCommand}" 
+                            CommandParameter="{Binding Path=Dynamic.DynArchive.Uri}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid>
+                                <Border CornerRadius="4">
+                                    <Image Source="{Binding Path=Dynamic.DynArchive.Cover}" Width="{Binding Path=CoverWidth}"></Image>
+                                </Border>
+                                <Border Background="#C8FF69B4" CornerRadius="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4">
+                                    <TextBlock Margin="4 2" Foreground="White" FontSize="12" Text="番剧"></TextBlock>
+                                </Border>
+                                <Border Background="#C8000000" CornerRadius="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4">
+                                    <TextBlock Margin="4 2" Foreground="White" FontSize="12" Text="{Binding Path=Dynamic.DynArchive.CoverLeftText1}"></TextBlock>
+                                </Border>
+                            </Grid>
+
+                            <StackPanel HorizontalAlignment="Stretch" Grid.Column="1" Margin="8 4 8 0">
+                                <TextBlock Text="{Binding Path=Dynamic.DynArchive.Title}" Foreground="{ThemeResource TextColor}" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap"></TextBlock>
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+                </Grid>
             </local:DynamicItemV2Control.CardContent>
         </local:DynamicItemV2Control>
     </DataTemplate>

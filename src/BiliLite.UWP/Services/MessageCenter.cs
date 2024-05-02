@@ -137,6 +137,49 @@ namespace BiliLite.Services
             }
 
             /*
+             * 番剧/影视
+             * https://bangumi.bilibili.com/anime/21680
+             * https://www.bilibili.com/bangumi/play/ss21715
+             * https://www.bilibili.com/bangumi/play/ep150706
+             * https://m.bilibili.com/bangumi/play/ep150706
+             * http://m.bilibili.com/bangumi/play/ss21715
+             * bilibili://bangumi/season/21715
+             * https://bangumi.bilibili.com/movie/12364
+             */
+            if (uriHref.Contains("bangumi"))
+            {
+                var bangumi = StringExtensions.RegexMatch(url.Replace("movie", "ss").Replace("anime", "ss").Replace("season", "ss").Replace("/", ""), @"ss(\d{4,})");
+                if (bangumi != "")
+                {
+                    NavigateToPage(null, new NavigationInfo()
+                    {
+                        icon = Symbol.Play,
+                        page = typeof(SeasonDetailPage),
+                        title = "剧集加载中...",
+                        parameters = bangumi,
+                        dontGoTo = dontGoTo,
+                    });
+                    return true;
+                }
+                bangumi = StringExtensions.RegexMatch(url, @"ep(\d+)");
+                if (bangumi != "")
+                {
+                    NavigateToPage(null, new NavigationInfo()
+                    {
+                        icon = Symbol.Play,
+                        page = typeof(SeasonDetailPage),
+                        title = "剧集加载中...",
+                        dontGoTo = dontGoTo,
+                        parameters = new object[] {
+                            await BiliExtensions.BangumiEpidToSid(bangumi),
+                            bangumi
+                        }
+                    });
+                    return true;
+                }
+            }
+
+            /*
              * 视频
              * https://www.bilibili.com/video/av3905642
              * https://m.bilibili.com/video/av3905642.html
@@ -234,47 +277,6 @@ namespace BiliLite.Services
                     title = "视频加载中...",
                     parameters = video_bv,
                     dontGoTo = dontGoTo,
-                });
-                return true;
-            }
-
-            /* 
-             * 番剧/影视
-             * https://bangumi.bilibili.com/anime/21680
-             * https://www.bilibili.com/bangumi/play/ss21715
-             * https://www.bilibili.com/bangumi/play/ep150706
-             * https://m.bilibili.com/bangumi/play/ep150706
-             * http://m.bilibili.com/bangumi/play/ss21715
-             * bilibili://bangumi/season/21715
-             * https://bangumi.bilibili.com/movie/12364
-             */
-
-            var bangumi = StringExtensions.RegexMatch(url.Replace("movie", "ss").Replace("anime", "ss").Replace("season", "ss").Replace("/", ""), @"ss(\d{4,})");
-            if (bangumi != "")
-            {
-                NavigateToPage(null, new NavigationInfo()
-                {
-                    icon = Symbol.Play,
-                    page = typeof(SeasonDetailPage),
-                    title = "剧集加载中...",
-                    parameters = bangumi,
-                    dontGoTo = dontGoTo,
-                });
-                return true;
-            }
-            bangumi = StringExtensions.RegexMatch(url, @"ep(\d+)");
-            if (bangumi != "")
-            {
-                NavigateToPage(null, new NavigationInfo()
-                {
-                    icon = Symbol.Play,
-                    page = typeof(SeasonDetailPage),
-                    title = "剧集加载中...",
-                    dontGoTo = dontGoTo,
-                    parameters = new object[] {
-                        await BiliExtensions.BangumiEpidToSid(bangumi),
-                            bangumi
-                    }
                 });
                 return true;
             }

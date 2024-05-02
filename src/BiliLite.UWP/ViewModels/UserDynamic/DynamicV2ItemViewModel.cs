@@ -33,6 +33,15 @@ namespace BiliLite.ViewModels.UserDynamic
 
         public ModuleAuthor Author { get; set; }
 
+        public bool AuthorIsVip
+        {
+            get
+            {
+                if (Author?.Author.Vip == null) return false;
+                return Author.Author.Vip.Status == 1;
+            }
+        }
+
         public ModuleAuthorForward AuthorForward { get; set; }
 
         public UserDynamicSeasonInfo Season { get; set; }
