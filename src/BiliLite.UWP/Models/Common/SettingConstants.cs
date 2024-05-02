@@ -689,6 +689,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(int))]
             public const string DEFAULT_LIVE_PLAYER_MODE = "DefaultLivePlayerMode";
+
+            [SettingKey(typeof(bool))]
+            public const string REPORT_HISTORY = "ReportHistory";
+
+            [SettingDefaultValue]
+            public const bool DEFAULT_REPORT_HISTORY = true;
+
+            [SettingKey(typeof(bool))]
+            public const string REPORT_HISTORY_ZERO_WHEN_VIDEO_END = "ReportHistoryZeroWhenVideoEnd";
+
+            [SettingDefaultValue]
+            public const bool DEFAULT_REPORT_HISTORY_ZERO_WHEN_VIDEO_END = false;
         }
 
         public class Roaming

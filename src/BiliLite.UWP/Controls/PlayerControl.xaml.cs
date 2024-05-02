@@ -1050,7 +1050,7 @@ namespace BiliLite.Controls
                 _postion = 0;
             }
             _logger.Trace("SetPlayItem,上报进度");
-            await playerHelper.ReportHistory(CurrentPlayItem, 0);
+            await ReportHistory(0);
             await SetDanmaku();
 
             if (!await CheckDownloaded())
@@ -1654,9 +1654,17 @@ namespace BiliLite.Controls
 
         }
 
-        public async Task ReportHistory()
+        public async Task ReportHistory(double progress = double.NaN)
         {
-            await playerHelper.ReportHistory(CurrentPlayItem, Player.Position);
+            if (!(SettingService.GetValue(SettingConstants.Player.REPORT_HISTORY,
+                    SettingConstants.Player.DEFAULT_REPORT_HISTORY)))
+                return;
+            if (double.IsNaN(progress))
+            {
+                progress = Player.Position;
+            }
+
+            await playerHelper.ReportHistory(CurrentPlayItem, progress);
         }
 
         BiliPlayUrlInfo current_quality_info = null;
@@ -2469,10 +2477,14 @@ namespace BiliLite.Controls
             }
             _logger.Debug("视频结束，上报进度");
 
-            await playerHelper.ReportHistory(CurrentPlayItem, Player.Duration);
+            await ReportHistory(Player.Duration);
 
-            _logger.Debug("进度归0");
-            await playerHelper.ReportHistory(CurrentPlayItem, 0);
+            if (SettingService.GetValue(SettingConstants.Player.REPORT_HISTORY_ZERO_WHEN_VIDEO_END,
+                    SettingConstants.Player.DEFAULT_REPORT_HISTORY_ZERO_WHEN_VIDEO_END))
+            {
+                _logger.Debug("进度归0");
+                await ReportHistory(0);
+            }
             //列表顺序播放
             if (PlayerSettingPlayMode.SelectedIndex == 0)
             {
@@ -2681,7 +2693,7 @@ namespace BiliLite.Controls
                 SettingService.SetValue<double>(CurrentPlayItem.season_id != 0 ? "ep" + CurrentPlayItem.ep_id : CurrentPlayItem.cid, Player.Position);
                 //当视频播放结束的话，Position为0
                 if (Player.PlayState != PlayState.End)
-                    await playerHelper.ReportHistory(CurrentPlayItem, Player.Position);
+                    await ReportHistory(Player.Position);
             }
 
             Player.PlayStateChanged -= Player_PlayStateChanged;
