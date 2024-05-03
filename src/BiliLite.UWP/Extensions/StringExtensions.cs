@@ -135,7 +135,7 @@ namespace BiliLite.Extensions
             }
             catch (Exception ex)
             {
-                _logger.Error($"富文本转换失败: {txt}", ex);
+                _logger.Error($"富文本转换失败: {txt} || {input}", ex);
                 var tx = new RichTextBlock();
                 Paragraph paragraph = new Paragraph();
                 Run run = new Run() { Text = txt };
@@ -387,7 +387,7 @@ namespace BiliLite.Extensions
             List<string> keyword = new List<string>();
             List<List<int>> haveHandledOffset = new List<List<int>>();
             //如果是链接就不处理了
-            if (!Regex.IsMatch(input, @"/[aAbBcC][vV]([a-zA-Z0-9]+)"))
+            if (!Regex.IsMatch(input, @"(?<=://)[^\s]*[aAbBcC][vV]([a-zA-Z0-9]+)"))
             {
                 var offset = 0;
 

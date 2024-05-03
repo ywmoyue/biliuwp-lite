@@ -124,7 +124,7 @@ namespace BiliLite.Extensions
             }
             catch (Exception ex)
             {
-                _logger.Error($"用户动态文本转富文本失败:{id}:", ex);
+                _logger.Error($"用户动态文本转富文本失败:{id} : {txt}||{input}", ex);
                 var tx = new RichTextBlock();
                 var paragraph = new Paragraph();
                 var run = new Run() { Text = txt };
