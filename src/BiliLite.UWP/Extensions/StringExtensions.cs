@@ -16,6 +16,8 @@ using Windows.Security.Cryptography;
 using Windows.Storage.Streams;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Xml;
+using BiliLite.Models.Exceptions;
 
 namespace BiliLite.Extensions
 {
@@ -120,6 +122,10 @@ namespace BiliLite.Extensions
                                                                 fontColor == null ? "" : $"Foreground=\"{fontColor}\"",
                                                                 $"FontWeight=\"{fontWeight}\"",
                                                                 lowProfilePrefix);
+                    if (!xaml.IsXmlString())
+                    {
+                        throw new CustomizedErrorException("不是有效的xml字符串");
+                    }
                     var p = (RichTextBlock)XamlReader.Load(xaml);
                     return p;
                 }
@@ -330,6 +336,23 @@ namespace BiliLite.Extensions
         public static string UrlEncode(this string text)
         {
             return Uri.EscapeDataString(text);
+        }
+
+        public static bool IsXmlString(this string text)
+        {
+            if (string.IsNullOrEmpty(text)) return false;
+            var detail = text.Trim();
+            if (!detail.StartsWith("<") && !detail.EndsWith(">")) return false;
+            var xml = new XmlDocument();
+            try
+            {
+                xml.LoadXml($"<Root>{detail}</Root>");
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         #region Private methods

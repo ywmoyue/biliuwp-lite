@@ -9,6 +9,7 @@ using Bilibili.App.Dynamic.V2;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.UserDynamic;
 using BiliLite.Models.Dynamic;
+using BiliLite.Models.Exceptions;
 using BiliLite.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -118,6 +119,11 @@ namespace BiliLite.Extensions
          {1}                                 
 <Paragraph>{0}</Paragraph>
                                       </RichTextBlock>", input, titlePara);
+                if (!xaml.IsXmlString())
+                {
+                    throw new CustomizedErrorException("不是有效的xml字符串");
+                }
+
                 var p = (RichTextBlock)XamlReader.Load(xaml);
                 return p;
 
