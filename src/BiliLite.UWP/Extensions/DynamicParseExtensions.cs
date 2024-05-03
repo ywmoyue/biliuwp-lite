@@ -134,6 +134,16 @@ namespace BiliLite.Extensions
             }
         }
 
+        public static RichTextBlock GetSimpleRichTextBlock(this string txt)
+        {
+            var tx = new RichTextBlock();
+            var paragraph = new Paragraph();
+            var run = new Run() { Text = txt };
+            paragraph.Inlines.Add(run);
+            tx.Blocks.Add(paragraph);
+            return tx;
+        }
+
         /// <summary>
         /// 处理表情
         /// </summary>

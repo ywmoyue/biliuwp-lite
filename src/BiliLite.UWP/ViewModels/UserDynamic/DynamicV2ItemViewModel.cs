@@ -140,6 +140,11 @@ namespace BiliLite.ViewModels.UserDynamic
             {
                 try
                 {
+                    if (CardType == Constants.DynamicTypes.ARTICLE && OpusSummary != null)
+                    {
+                        var text = OpusSummary.Summary.Text.Nodes.Aggregate("", (current, textNode) => current + textNode.RawText);
+                        return text.GetSimpleRichTextBlock();
+                    }
                     if (Desc != null)
                     {
                         return
