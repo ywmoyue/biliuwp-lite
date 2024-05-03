@@ -124,7 +124,7 @@ namespace BiliLite.Extensions
             }
             catch (Exception ex)
             {
-                _logger.Error("用户动态文本转富文本失败", ex);
+                _logger.Error($"用户动态文本转富文本失败:{id} : {txt}||{input}", ex);
                 var tx = new RichTextBlock();
                 var paragraph = new Paragraph();
                 var run = new Run() { Text = txt };
@@ -132,6 +132,16 @@ namespace BiliLite.Extensions
                 tx.Blocks.Add(paragraph);
                 return tx;
             }
+        }
+
+        public static RichTextBlock GetSimpleRichTextBlock(this string txt)
+        {
+            var tx = new RichTextBlock();
+            var paragraph = new Paragraph();
+            var run = new Run() { Text = txt };
+            paragraph.Inlines.Add(run);
+            tx.Blocks.Add(paragraph);
+            return tx;
         }
 
         /// <summary>
