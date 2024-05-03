@@ -90,6 +90,11 @@ namespace BiliLite.Services
             m_danmakuMaster.SetLayerRenderState(DanmakuDefaultLayerDef.RollingLayerId, true);
         }
 
+        public override void SetFont(string fontName)
+        {
+            m_danmakuMaster.SetFontFamilyName(fontName);
+        }
+
         public override void SetFontZoom(double fontZoom)
         {
             base.SetFontZoom(fontZoom);

@@ -336,7 +336,7 @@ namespace BiliLite.Extensions
         {
             var keyword = new List<string>();
             //如果是链接就不处理了
-            if (!Regex.IsMatch(input, @"/[aAbBcC][vV]([a-zA-Z0-9]+)"))
+            if (!Regex.IsMatch(input, @"(?<=://)[^\s]*[aAbBcC][vV]([a-zA-Z0-9]+)"))
             {
                 //处理AV号
                 var av = Regex.Matches(input, @"[aA][vV](\d+)");

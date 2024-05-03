@@ -506,6 +506,25 @@ namespace BiliLite.Pages
                     SettingService.SetValue(SettingConstants.Player.AUTO_OPEN_AI_SUBTITLE, swPlayerSettingAutoOpenAISubtitle.IsOn);
                 });
             });
+            //上报历史纪录
+            SwitchPlayerReportHistory.IsOn = SettingService.GetValue(SettingConstants.Player.REPORT_HISTORY, SettingConstants.Player.DEFAULT_REPORT_HISTORY);
+            SwitchPlayerReportHistory.Loaded += (sender, e) =>
+            {
+                SwitchPlayerReportHistory.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.REPORT_HISTORY, SwitchPlayerReportHistory.IsOn);
+                };
+            };
+
+            //视频结束上报历史纪录0
+            SwitchReportHistoryZeroWhenVideoEnd.IsOn = SettingService.GetValue(SettingConstants.Player.REPORT_HISTORY_ZERO_WHEN_VIDEO_END, SettingConstants.Player.DEFAULT_REPORT_HISTORY_ZERO_WHEN_VIDEO_END);
+            SwitchReportHistoryZeroWhenVideoEnd.Loaded += (sender, e) =>
+            {
+                SwitchReportHistoryZeroWhenVideoEnd.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.REPORT_HISTORY_ZERO_WHEN_VIDEO_END, SwitchReportHistoryZeroWhenVideoEnd.IsOn);
+                };
+            };
             //替换CDN
             cbPlayerReplaceCDN.SelectedIndex = SettingService.GetValue<int>(SettingConstants.Player.REPLACE_CDN, 3);
             cbPlayerReplaceCDN.Loaded += new RoutedEventHandler((sender, e) =>

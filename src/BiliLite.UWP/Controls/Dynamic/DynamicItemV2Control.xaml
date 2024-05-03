@@ -26,7 +26,7 @@
             </Grid.ColumnDefinitions>
             <HyperlinkButton Padding="0"
                              Command="{x:Bind Path=ViewModel.Parent.UserCommand,Mode=OneWay}" 
-                             CommandParameter="{x:Bind Path=ViewModel.Author.Mid,Mode=OneWay}"
+                             CommandParameter="{x:Bind Path=ViewModel,Mode=OneWay}"
                              Visibility="{x:Bind ViewModel.IsRepost,Converter={StaticResource display},Mode=OneWay}"
                              VerticalAlignment="Top">
                 <Grid >
@@ -43,14 +43,14 @@
             <HyperlinkButton 
                 Grid.Column="1" 
                 Command="{x:Bind Path=ViewModel.Parent.UserCommand,Mode=OneWay}" 
-                CommandParameter="{x:Bind Path=ViewModel.Author.Mid,Mode=OneWay}"
+                CommandParameter="{x:Bind Path=ViewModel,Mode=OneWay}"
                 Visibility="{x:Bind ViewModel.IsRepost,Converter={StaticResource display},Mode=OneWay}"
                 Padding="12,0,0,0" VerticalAlignment="Top" >
                 <Grid Height="56" >
                     <StackPanel VerticalAlignment="Center" >
                         <StackPanel Orientation="Horizontal" >
-                            <TextBlock Text="{x:Bind Path=ViewModel.Author.Author.Name,Mode=OneWay}" Foreground="DeepPink"  Opacity=".8" Visibility="{x:Bind Path=ViewModel.Author.Author.Vip.Status,Converter={StaticResource display},ConverterParameter=1,Mode=OneWay}"></TextBlock>
-                            <TextBlock Text="{x:Bind Path=ViewModel.Author.Author.Name,Mode=OneWay}" Foreground="{ThemeResource TextColor}" Visibility="{x:Bind Path=ViewModel.Author.Author.Vip.Status,Mode=OneWay,Converter={StaticResource display},ConverterParameter=0}"></TextBlock>
+                            <TextBlock Text="{x:Bind Path=ViewModel.Author.Author.Name,Mode=OneWay}" Foreground="DeepPink"  Opacity=".8" Visibility="{x:Bind ViewModel.AuthorIsVip,Mode=OneWay}"></TextBlock>
+                            <TextBlock Text="{x:Bind Path=ViewModel.Author.Author.Name,Mode=OneWay}" Foreground="{ThemeResource TextColor}" Visibility="{x:Bind ViewModel.AuthorIsVip,Mode=OneWay,Converter={StaticResource display}}"></TextBlock>
                         </StackPanel>
                         <TextBlock Margin="0 4 0 0" FontSize="12" Foreground="Gray" Text="{x:Bind Path=ViewModel.Author.PtimeLabelText,Mode=OneWay}"></TextBlock>
                     </StackPanel>
@@ -98,7 +98,7 @@
                              HorizontalAlignment="Stretch" 
                              Grid.ColumnSpan="2"
                              Command="{x:Bind Path=ViewModel.Parent.UserCommand,Mode=OneWay}" 
-                             CommandParameter="{x:Bind Path=ViewModel.AuthorForward.Uid,Mode=OneWay}"
+                             CommandParameter="{x:Bind Path=ViewModel,Mode=OneWay}"
                              Visibility="{x:Bind Path=ViewModel.IsRepost,Mode=OneWay}"
                              Padding="0" >
                 <Grid >
