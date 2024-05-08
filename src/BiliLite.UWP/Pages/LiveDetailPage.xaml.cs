@@ -4,14 +4,12 @@ using BiliLite.Models.Common;
 using BiliLite.Modules;
 using BiliLite.Services;
 using Microsoft.UI.Xaml.Controls;
-using NSDanmaku.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
@@ -22,7 +20,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using BiliLite.Models.Common.Live;
@@ -37,6 +34,8 @@ using BiliLite.Player.States.ScreenStates;
 using BiliLite.ViewModels.Live;
 using Windows.UI.Xaml.Documents;
 using System.Text.RegularExpressions;
+using BiliLite.Services.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -54,6 +53,8 @@ namespace BiliLite.Pages
         private readonly RealPlayInfo m_realPlayInfo;
         private readonly PlayerConfig m_playerConfig;
         private readonly LiveDetailPageViewModel m_viewModel;
+        private readonly bool m_useNsDanmaku = true;
+        private readonly IDanmakuController m_danmakuController;
 
         DisplayRequest dispRequest;
         LiveRoomViewModel m_liveRoomViewModel;
@@ -101,7 +102,20 @@ namespace BiliLite.Pages
             m_liveRoomViewModel.LotteryViewModel.AnchorLotteryStart += LiveRoomViewModelAnchorLotteryStart;
             m_liveRoomViewModel.SetManualPlayUrl += LiveRoomViewModelSetManualPlayUrl;
             this.Loaded += LiveDetailPage_Loaded;
-            this.Unloaded += LiveDetailPage_Unloaded;
+            this.Unloaded += LiveDetailPage_Unloaded; 
+            
+            m_useNsDanmaku = (DanmakuEngineType)SettingService.GetValue(SettingConstants.Live.DANMAKU_ENGINE,
+                (int)SettingConstants.Live.DEFAULT_DANMAKU_ENGINE) == DanmakuEngineType.NSDanmaku;
+            if (m_useNsDanmaku)
+            {
+                m_danmakuController = App.ServiceProvider.GetRequiredService<NsDanmakuController>();
+                m_danmakuController.Init(DanmuControl);
+            }
+            else
+            {
+                m_danmakuController = App.ServiceProvider.GetRequiredService<FrostMasterDanmakuController>();
+                m_danmakuController.Init(DanmakuCanvas);
+            }
         }
 
         private void LiveRoomViewModelSetManualPlayUrl(object sender, object e)
@@ -182,14 +196,15 @@ namespace BiliLite.Pages
 
         private void LiveRoomViewModelAddNewDanmu(object sender, DanmuMsgModel e)
         {
-            if (DanmuControl.Visibility != Visibility.Visible) return;
+            if (m_danmakuController.DanmakuViewModel.IsHide) return;
+
             if (settingVM.LiveWords != null && settingVM.LiveWords.Count > 0)
             {
                 if (settingVM.LiveWords.FirstOrDefault(x => e.Text.Contains(x)) != null) return;
             }
             try
             {
-                DanmuControl.AddLiveDanmu(e.Text, false, e.DanmuColor.StrToColor());
+                m_danmakuController.AddLiveDanmaku(e.Text, false, e.DanmuColor.StrToColor());
             }
             catch (Exception ex)
             {
@@ -216,7 +231,7 @@ namespace BiliLite.Pages
         {
             Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
             BtnFoucs.Focus(FocusState.Programmatic);
-            DanmuControl.ClearAll();
+            m_danmakuController.Clear();
             if (this.Parent is MyFrame frame)
             {
                 frame.ClosedPage -= LiveDetailPage_ClosedPage;
@@ -487,13 +502,13 @@ namespace BiliLite.Pages
                     break;
                 case Windows.System.VirtualKey.F9:
                 case Windows.System.VirtualKey.D:
-                    if (DanmuControl.Visibility == Visibility.Visible)
+                    if (!m_danmakuController.DanmakuViewModel.IsHide)
                     {
-                        DanmuControl.Visibility = Visibility.Collapsed;
+                        m_danmakuController.Hide();
                     }
                     else
                     {
-                        DanmuControl.Visibility = Visibility.Visible;
+                        m_danmakuController.Show();
                     }
                     break;
                 default:
@@ -563,41 +578,46 @@ namespace BiliLite.Pages
             BrightnessShield.Opacity = _brightness;
 
             //弹幕顶部距离
-            DanmuControl.Margin = new Thickness(0, SettingService.GetValue<int>(SettingConstants.VideoDanmaku.TOP_MARGIN, 0), 0, 0);
-            DanmuTopMargin.Value = DanmuControl.Margin.Top;
+            var marginTop = SettingService.GetValue<double>(SettingConstants.VideoDanmaku.TOP_MARGIN, 0);
+            m_danmakuController.SetTopMargin(marginTop);
+            DanmuTopMargin.Value = marginTop;
             DanmuTopMargin.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
             {
                 SettingService.SetValue<double>(SettingConstants.VideoDanmaku.TOP_MARGIN, DanmuTopMargin.Value);
-                DanmuControl.Margin = new Thickness(0, DanmuTopMargin.Value, 0, 0);
+                m_danmakuController.SetTopMargin(DanmuTopMargin.Value);
             });
             //弹幕大小
-            DanmuControl.DanmakuSizeZoom = SettingService.GetValue<double>(SettingConstants.Live.FONT_ZOOM, 1);
+            m_danmakuController.SetFontZoom(SettingService.GetValue<double>(SettingConstants.Live.FONT_ZOOM, 1));
             DanmuSettingFontZoom.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
             {
                 if (isMini) return;
                 SettingService.SetValue<double>(SettingConstants.Live.FONT_ZOOM, DanmuSettingFontZoom.Value);
+                m_danmakuController.SetFontZoom(DanmuSettingFontZoom.Value);
             });
             //弹幕速度
-            DanmuControl.DanmakuDuration = SettingService.GetValue<int>(SettingConstants.Live.SPEED, 10);
+            m_danmakuController.SetSpeed(SettingService.GetValue<int>(SettingConstants.Live.SPEED, 10));
             DanmuSettingSpeed.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
             {
                 if (isMini) return;
-                SettingService.SetValue<double>(SettingConstants.Live.SPEED, DanmuSettingSpeed.Value);
+                SettingService.SetValue<int>(SettingConstants.Live.SPEED, (int)DanmuSettingSpeed.Value);
+                m_danmakuController.SetSpeed((int)DanmuSettingSpeed.Value);
             });
             //弹幕透明度
-            DanmuControl.Opacity = SettingService.GetValue<double>(SettingConstants.Live.OPACITY, 1.0);
+            m_danmakuController.SetOpacity(SettingService.GetValue<double>(SettingConstants.Live.OPACITY, 1.0));
             DanmuSettingOpacity.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
             {
                 SettingService.SetValue<double>(SettingConstants.Live.OPACITY, DanmuSettingOpacity.Value);
+                m_danmakuController.SetOpacity(DanmuSettingOpacity.Value);
             });
             //弹幕加粗
-            DanmuControl.DanmakuBold = SettingService.GetValue<bool>(SettingConstants.Live.BOLD, false);
+            m_danmakuController.SetBold(SettingService.GetValue<bool>(SettingConstants.Live.BOLD, false));
             DanmuSettingBold.Toggled += new RoutedEventHandler((e, args) =>
             {
                 SettingService.SetValue<bool>(SettingConstants.Live.BOLD, DanmuSettingBold.IsOn);
+                m_danmakuController.SetBold(DanmuSettingBold.IsOn);
             });
             //弹幕样式
-            DanmuControl.DanmakuStyle = (DanmakuBorderStyle)SettingService.GetValue<int>(SettingConstants.Live.BORDER_STYLE, 2);
+            m_danmakuController.SetBolderStyle(SettingService.GetValue<int>(SettingConstants.Live.BORDER_STYLE, 2));
             DanmuSettingStyle.SelectionChanged += new SelectionChangedEventHandler((e, args) =>
             {
                 if (DanmuSettingStyle.SelectedIndex != -1)
@@ -606,16 +626,23 @@ namespace BiliLite.Pages
                 }
             });
 
-
             //弹幕显示区域
-            DanmuControl.DanmakuArea = SettingService.GetValue<double>(SettingConstants.Live.AREA, 1);
+            m_danmakuController.SetArea(SettingService.GetValue<double>(SettingConstants.Live.AREA, 1));
             DanmuSettingArea.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
             {
                 SettingService.SetValue<double>(SettingConstants.Live.AREA, DanmuSettingArea.Value);
+                m_danmakuController.SetArea(DanmuSettingArea.Value);
             });
 
             //弹幕开关
-            DanmuControl.Visibility = SettingService.GetValue<Visibility>(SettingConstants.Live.SHOW, Visibility.Visible);
+            if (SettingService.GetValue<Visibility>(SettingConstants.Live.SHOW, Visibility.Visible) == Visibility.Visible)
+            {
+                m_danmakuController.Show();
+            }
+            else
+            {
+                m_danmakuController.Hide();
+            }
             //弹幕延迟
             //LiveSettingDelay.Value = SettingService.GetValue<int>(SettingConstants.Live.DELAY, 20);
             //liveRoomVM.SetDelay(LiveSettingDelay.Value.ToInt32());
@@ -624,6 +651,17 @@ namespace BiliLite.Pages
             //    SettingService.SetValue(SettingConstants.Live.DELAY, LiveSettingDelay.Value);
             //    liveRoomVM.SetDelay(LiveSettingDelay.Value.ToInt32());
             //});
+
+            //弹幕字体
+            var fontFamily =
+                SettingService.GetValue<string>(SettingConstants.Live.DANMAKU_FONT_FAMILY, string.Empty);
+            m_danmakuController.SetFont(fontFamily);
+            DanmuSettingFont.Text = fontFamily;
+            DanmuSettingFont.QuerySubmitted += (e, args) =>
+            {
+                m_danmakuController.SetFont(DanmuSettingFont.Text);
+                SettingService.SetValue(SettingConstants.Live.DANMAKU_FONT_FAMILY, DanmuSettingFont.Text);
+            };
 
             //互动清理数量
             LiveSettingCount.Value = SettingService.GetValue<int>(SettingConstants.Live.DANMU_CLEAN_COUNT, 200);
@@ -846,15 +884,14 @@ namespace BiliLite.Pages
 
         private void TopBtnCloseDanmaku_Click(object sender, RoutedEventArgs e)
         {
-            DanmuControl.Visibility = Visibility.Collapsed;
-            SettingService.SetValue(SettingConstants.Live.SHOW, Visibility.Collapsed);
-            DanmuControl.ClearAll();
+            m_danmakuController.Hide();
+            SettingService.SetValue<Visibility>(SettingConstants.Live.SHOW, Visibility.Collapsed);
         }
 
         private void TopBtnOpenDanmaku_Click(object sender, RoutedEventArgs e)
         {
-            DanmuControl.Visibility = Visibility.Visible;
-            SettingService.SetValue(SettingConstants.Live.SHOW, Visibility.Visible);
+            m_danmakuController.Show();
+            SettingService.SetValue<Visibility>(SettingConstants.Live.SHOW, Visibility.Visible);
         }
 
         private async void BtnOpenBox_Click(object sender, RoutedEventArgs e)
@@ -1043,9 +1080,10 @@ namespace BiliLite.Pages
                     //隐藏标题栏
                     this.Margin = new Thickness(0, -40, 0, 0);
                     await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay);
-                    DanmuControl.DanmakuSizeZoom = 0.5;
-                    DanmuControl.DanmakuDuration = 6;
-                    DanmuControl.ClearAll();
+
+                    m_danmakuController.SetFontZoom(0.5);
+                    m_danmakuController.SetSpeed(6);
+                    m_danmakuController.Clear();
                 }
             }
             else
@@ -1055,10 +1093,17 @@ namespace BiliLite.Pages
                 StandardControl.Visibility = Visibility.Visible;
                 MiniControl.Visibility = Visibility.Collapsed;
                 await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default);
-                DanmuControl.DanmakuSizeZoom = SettingService.GetValue<double>(SettingConstants.Live.FONT_ZOOM, 1);
-                DanmuControl.DanmakuDuration = SettingService.GetValue<int>(SettingConstants.Live.SPEED, 10);
-                DanmuControl.ClearAll();
-                DanmuControl.Visibility = SettingService.GetValue<Visibility>(SettingConstants.Live.SHOW, Visibility.Visible);
+                m_danmakuController.SetFontZoom(SettingService.GetValue<double>(SettingConstants.VideoDanmaku.FONT_ZOOM, 1));
+                m_danmakuController.SetSpeed(SettingService.GetValue<int>(SettingConstants.VideoDanmaku.SPEED, 10));
+                m_danmakuController.Clear();
+                if (SettingService.GetValue<Visibility>(SettingConstants.VideoDanmaku.SHOW, Visibility.Visible) == Visibility.Visible)
+                {
+                    m_danmakuController.Show();
+                }
+                else
+                {
+                    m_danmakuController.Hide();
+                }
             }
             MessageCenter.SetMiniWindow(mini);
         }
@@ -1254,9 +1299,7 @@ namespace BiliLite.Pages
 
         private void Player_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            var rectangle = new RectangleGeometry();
-            rectangle.Rect = new Rect(0, 0, PlayerView.ActualWidth, PlayerView.ActualHeight);
-            DanmuControl.Clip = rectangle;
+            m_danmakuController.UpdateSize(PlayerView.ActualWidth, PlayerView.ActualHeight);
         }
 
         private async void PlayerModeComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -31,6 +31,8 @@ namespace BiliLite.Services
             };
         }
 
+        public bool IsShow => DanmakuViewModel.IsHide;
+
         public override void Init(UserControl danmakuElement)
         {
             m_danmakuCanvas = danmakuElement as CanvasAnimatedControl;
@@ -149,6 +151,16 @@ namespace BiliLite.Services
         {
             var realDanmakuItem = m_mapper.Map<DanmakuItem>(danmakuItem);
             m_danmakuMaster.AddRealtimeDanmaku(realDanmakuItem, false);
+        }
+
+        public override void AddLiveDanmaku(string text, bool owner, Color color)
+        {
+            Add(new BiliDanmakuItem()
+            {
+                Color = color,
+                Text = text,
+                Size = 25,
+            }, owner);
         }
 
         public override void Pause()

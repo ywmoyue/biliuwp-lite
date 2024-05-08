@@ -349,6 +349,18 @@ namespace BiliLite.Models.Common
         public class Live
         {
             /// <summary>
+            /// 默认弹幕引擎
+            /// </summary>
+            [SettingDefaultValue]
+            public const DanmakuEngineType DEFAULT_DANMAKU_ENGINE = DanmakuEngineType.NSDanmaku;
+
+            /// <summary>
+            /// 弹幕引擎
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const string DANMAKU_ENGINE = "DanmakuEngine";
+
+            /// <summary>
             /// 直播默认清晰度
             /// </summary>
             [SettingKey(typeof(int))]
@@ -464,6 +476,12 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const bool DEFAULT_SHOW_BOTTOM_GIFT_BAR = true;
+
+            /// <summary>
+            /// 弹幕字体
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string DANMAKU_FONT_FAMILY = "VideoDanmuFontFamily";
         }
 
         public class Player

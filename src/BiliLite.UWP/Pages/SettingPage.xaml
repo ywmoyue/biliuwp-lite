@@ -515,6 +515,18 @@
                 </PivotItem.Header>
                 <ScrollViewer Padding="12 0" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
+                        <TextBlock  Margin="0 16 0 8"  FontSize="16">弹幕引擎</TextBlock>
+                        <ComboBox x:Name="cbLiveDanmakuEngine" SelectedIndex="0" MinWidth="200" SelectedValuePath="Value">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Text}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                            <ComboBox.Items>
+                                <common:ComboBoxItemData Text="NSDanmaku" Value="0"></common:ComboBoxItemData>
+                                <common:ComboBoxItemData Text="寒霜弹幕使" Value="1"></common:ComboBoxItemData>
+                            </ComboBox.Items>
+                        </ComboBox>
                         <TextBlock  Margin="0 16 0 8" FontSize="16">默认弹幕状态</TextBlock>
                         <ToggleSwitch x:Name="LiveDanmuSettingState" OnContent="打开" OffContent="关闭"></ToggleSwitch>
                    

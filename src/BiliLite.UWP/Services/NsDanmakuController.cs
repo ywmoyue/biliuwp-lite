@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Windows.Foundation;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -144,6 +145,11 @@ namespace BiliLite.Services
         {
             var realDanmakuItem = m_mapper.Map<DanmakuModel>(danmakuItem);
             m_danmakuControl.AddDanmu(realDanmakuItem, owner);
+        }
+
+        public override void AddLiveDanmaku(string text, bool owner, Color color)
+        {
+            m_danmakuControl.AddLiveDanmu(text, false, color);
         }
 
         public override void Pause()

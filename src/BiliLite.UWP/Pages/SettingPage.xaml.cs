@@ -722,6 +722,15 @@ namespace BiliLite.Pages
         }
         private void LoadLiveDanmu()
         {
+            // 弹幕引擎
+            cbLiveDanmakuEngine.SelectedValue = SettingService.GetValue(SettingConstants.Live.DANMAKU_ENGINE, (int)SettingConstants.Live.DEFAULT_DANMAKU_ENGINE);
+            cbLiveDanmakuEngine.Loaded += (sender, e) =>
+            {
+                cbLiveDanmakuEngine.SelectionChanged += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Live.DANMAKU_ENGINE, cbLiveDanmakuEngine.SelectedValue);
+                };
+            };
             //弹幕开关
             var state = SettingService.GetValue<Visibility>(SettingConstants.Live.SHOW, Visibility.Visible) == Visibility.Visible;
             LiveDanmuSettingState.IsOn = state;
