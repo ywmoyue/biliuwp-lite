@@ -44,7 +44,7 @@ namespace BiliLite.Player.MediaInfos
             return collectInfo;
         }
 
-        private void StartCollect()
+        public void StartCollect()
         {
             var collectInfo = GetCollectInfo();
 

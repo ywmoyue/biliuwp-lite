@@ -457,7 +457,7 @@
                                         <Image Width="32" Height="32" Source="/Assets/Icon/icon_settings.png" ></Image>
                                         <Button.Flyout>
                                             <Flyout>
-                                                <Pivot Width="280">
+                                                <Pivot Width="340">
                                                     <PivotItem>
                                                         <PivotItem.Header>
                                                             <TextBlock FontSize="18">设置</TextBlock>
@@ -533,7 +533,32 @@
                                                                 </ItemsControl.ItemTemplate>
                                                             </ItemsControl>
                                                         </StackPanel>
-
+                                                    </PivotItem>
+                                                    <PivotItem>
+                                                        <PivotItem.Header>
+                                                            <TextBlock FontSize="18">低延迟(实验性)</TextBlock>
+                                                        </PivotItem.Header>
+                                                        <StackPanel>
+                                                            <ToggleSwitch x:Name="LowDelayMode" Toggled="LowDelaySwitch_Toggled" Margin="0 8 0 0" Header="⚡低延迟模式"></ToggleSwitch>
+                                                            <TextBlock Margin="0 6 0 0" FontSize="12" IsColorFontEnabled="False" Foreground="Gray" TextWrapping="Wrap">💡开启后请关闭再打开当前直播界面</TextBlock>
+                                                            <StackPanel x:Name="LowDelayModeBlock" Visibility="Collapsed">
+                                                                <StackPanel Margin="0 8 0 0" Orientation="Horizontal">
+                                                                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center">
+                                                                        <Run>🎞 已储存视频流: </Run>
+                                                                        <Run x:Name="LowDelayHaveStorageUrl">否</Run>
+                                                                    </TextBlock>
+                                                                    <Button Margin="8 0 0 0" Padding="4" VerticalAlignment="Center" Click="btnManualPlayUrlCopy_Click">📜复制视频流</Button>
+                                                                </StackPanel>
+                                                                <TextBlock Margin="0 6 0 0" FontSize="12" IsColorFontEnabled="False" Foreground="Gray" TextWrapping="Wrap">⚠️一般来说, 开播时获取的原始流有效期为1小时</TextBlock>
+                                                                <StackPanel Margin="0 16 0 0" Orientation="Horizontal">
+                                                                    <TextBox x:Name="LowDelayManualPlayUrlTextBox" Padding="4" Width="120" VerticalAlignment="Center" PlaceholderText="✏️输入视频流..."></TextBox>
+                                                                    <Button Margin="8 0 0 0" Padding="4" VerticalAlignment="Center" Click="btnRefreshPlayUrl_Click">🔄更新视频流</Button>
+                                                                </StackPanel>
+                                                                <TextBlock Margin="0 6 0 0" FontSize="12" IsColorFontEnabled="False" Foreground="Gray" TextWrapping="Wrap">⚠️如果输入为空并更新, 则会清除储存的视频流</TextBlock>
+                                                                <Button Margin="0 12 0 0" Padding="5" Click="btnPlayForward_Click">⏩前进一秒</Button>
+                                                                <TextBlock Margin="0 6 0 0" FontSize="12" IsColorFontEnabled="False" Foreground="Gray" TextWrapping="Wrap">💡使用此按钮来手动向前缩小延迟</TextBlock>
+                                                            </StackPanel>
+                                                        </StackPanel>
                                                     </PivotItem>
                                                 </Pivot>
                                             </Flyout>

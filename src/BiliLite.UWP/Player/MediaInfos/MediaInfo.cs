@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System;
+using BiliLite.Extensions;
 
 namespace BiliLite.Player.MediaInfos
 {
@@ -17,9 +18,19 @@ namespace BiliLite.Player.MediaInfos
 
         public string Resolution => $"{VideoWidth} * {VideoHeight}";
 
-        public double VideoBitRate { get; set; }
+        private double _VideoBitRate { get; set; }
+        public string VideoBitRate
+        {
+            get => (_VideoBitRate / 1000).ToString() + " Kbps";
+            set => _VideoBitRate = value.ToInt32();
+        }
 
-        public double AudioBitRate { get; set;}
+        private double _AudioBitRate { get; set; }
+        public string AudioBitRate
+        {
+            get => (_AudioBitRate / 1000).ToString() + " Kbps";
+            set => _AudioBitRate = value.ToInt32();
+        }
 
         [MediaInfoDoNotToString]
         public string DecoderEngine { get; set; }

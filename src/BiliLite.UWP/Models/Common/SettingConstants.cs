@@ -449,6 +449,11 @@ namespace BiliLite.Models.Common
             public const string DEFAULT_LIVE_PLAY_URL_SOURCE = "DefaultLivePlayUrlSource";
 
             /// <summary>
+            /// 低延迟模式开关
+            /// </summary>
+            public const string LOW_DELAY_MODE = "LowDelayMode";
+
+            /// <summary>
             /// 显示底部礼物栏
             /// </summary>
             [SettingKey(typeof(bool))]

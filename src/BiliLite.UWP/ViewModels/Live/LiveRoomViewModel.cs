@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Input;
@@ -204,6 +205,8 @@ namespace BiliLite.ViewModels.Live
 
         public string RedPocketSendDanmuBtnText { get; set; } = "一键关注并发送弹幕";
 
+        public string ManualPlayUrl { get; set; } = "";
+
         #endregion
 
         #region Events
@@ -219,6 +222,8 @@ namespace BiliLite.ViewModels.Live
         public event EventHandler<LiveRoomEndRedPocketLotteryInfoModel> RedPocketLotteryEnd;
 
         public event EventHandler<LiveAnchorInfoLiveInfoModel> AnchorLotteryStart;
+
+        public event EventHandler<string> SetManualPlayUrl;
 
         #endregion
 
@@ -436,6 +441,16 @@ namespace BiliLite.ViewModels.Live
 
             var urlList = codec.UrlInfo.Select(urlInfo => new BasePlayUrlInfo
                 { Url = urlInfo.Host + codec.BaseUrl + urlInfo.Extra, Name = urlInfo.Name }).ToList();
+
+            var regex = new Regex(@"live_\d+_\d+\.flv");
+            foreach (var item in urlList)
+            {
+                if (regex.IsMatch(item.Url)) 
+                {
+                    SetManualPlayUrl?.Invoke(this, item.Url);
+                    break;
+                }
+            }
 
             return urlList;
         }
