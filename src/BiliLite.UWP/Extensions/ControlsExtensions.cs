@@ -11,6 +11,7 @@ namespace BiliLite.Extensions
             services.AddTransient<SendDynamicDialog>();
             services.AddTransient<SendDynamicV2Dialog>();
             services.AddTransient<PlayerToast>();
+            services.AddTransient<VideoListView>();
             return services;
         }
     }

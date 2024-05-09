@@ -10,6 +10,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Models.Common.Video;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -175,7 +176,7 @@ namespace BiliLite.Pages.User
                     {
                         Cover = item.cover,
                         Author = item.upper.name,
-                        ID = item.id,
+                        Id = item.id,
                         Title = item.title
                     });
                 }

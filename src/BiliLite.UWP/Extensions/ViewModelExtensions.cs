@@ -6,6 +6,7 @@ using BiliLite.ViewModels.Live;
 using BiliLite.ViewModels.User;
 using BiliLite.ViewModels.User.SendDynamic;
 using BiliLite.ViewModels.UserDynamic;
+using BiliLite.ViewModels.Video;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite.Extensions
@@ -36,6 +37,7 @@ namespace BiliLite.Extensions
             services.AddTransient<TopicViewModel>();
             services.AddTransient<UserDynamicAllViewModel>();
             services.AddTransient<PlayerToastViewModel>();
+            services.AddTransient<VideoListViewModel>();
             return services;
         }
     }

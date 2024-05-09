@@ -28,35 +28,12 @@
         <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="#64B0B0B0" />
         <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="{ThemeResource SystemListLowColor}" />
         <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource HighLightColor}" />
+
         <DataTemplate x:Name="PlayListTpl">
             <PivotItem Margin="0" >
                 <PivotItem.Header>
                     <TextBlock Text="播放列表" FontSize="18"></TextBlock>
                 </PivotItem.Header>
-                <ListView  ItemsSource="{Binding Path=Playlist}" SelectionChanged="ListView_SelectionChanged" SelectedIndex="{Binding Index}" SelectionMode="Single">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Image Grid.Column="0" HorizontalAlignment="Left" Width="140" Source="{Binding Cover,Converter={StaticResource imageConvert},ConverterParameter='140w'}"></Image>
-
-                                <StackPanel Grid.Column="1" Margin="8 0 0 0">
-                                    <TextBlock TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{Binding Title}"></TextBlock>
-                                    <TextBlock Foreground="Gray" FontSize="12" Margin="0 4 0 0" Text="{Binding Author}"></TextBlock>
-                                </StackPanel>
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="Margin" Value="0 4 0 0"></Setter>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                  
-                </ListView>
             </PivotItem>
         </DataTemplate>
         <MenuFlyout x:Name="TitleRightTappedMenu">
