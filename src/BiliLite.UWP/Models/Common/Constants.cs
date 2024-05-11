@@ -108,6 +108,8 @@
 
             public const string FOLD = "Fold";
 
+            public const string COUR_UP = "CourUp";
+
             public const string BANNER = "Banner";
 
             public const string CUSTOM_SEASON = "CustomSeason";

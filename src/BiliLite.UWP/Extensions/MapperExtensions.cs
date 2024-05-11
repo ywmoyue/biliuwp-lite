@@ -16,6 +16,7 @@ using BiliLite.Models.Common.Season;
 using BiliLite.Models.Common.User;
 using BiliLite.Models.Common.User.UserDetails;
 using BiliLite.Models.Common.UserDynamic;
+using BiliLite.Models.Common.Video;
 using BiliLite.Models.Common.Video.Detail;
 using BiliLite.Models.Download;
 using BiliLite.Models.Dynamic;
@@ -62,6 +63,8 @@ namespace BiliLite.Extensions
                 expression.CreateMap<HomeNavItem, HomeNavItemViewModel>();
                 expression.CreateMap<UserCenterInfoModel, UserCenterInfoViewModel>();
                 expression.CreateMap<FollowTlistItemModel, UserRelationFollowingTagViewModel>();
+                expression.CreateMap<VideoListSection, VideoListSectionViewModel>();
+                expression.CreateMap<VideoPlaylistItem,VideoListItem>();
 
                 var danmakuModeConvertDic = new Dictionary<DanmakuLocation, DanmakuMode>()
                 {

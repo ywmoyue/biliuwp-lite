@@ -20,6 +20,7 @@
                                                                  LiveTemplate="{StaticResource DynamicLiveRcmd}"
                                                                  UgcSeasonTemplate="{StaticResource DynamicUgcSeason}"
                                                                  FoldTemplate="{StaticResource DynamicFold}"
+                                                                 CourUpTemplate="{StaticResource DynamicCourUp}"
                                                                  CustomSeasonTemplate="{StaticResource DynamicCustomSeason}"
                                                                  CustomArticleTemplate="{StaticResource DynamicCustomArticle}">
     </dataTemplateSelectors:UserDynamicItemV2DataTemplateSelector>
@@ -430,6 +431,38 @@
                 <TextBlock Text="{Binding Fold.Text}" HorizontalAlignment="Center"></TextBlock>
             </Button>
         </Border>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DynamicCourUp">
+        <local:DynamicItemV2Control ViewModel="{Binding}">
+            <local:DynamicItemV2Control.CardContent>
+                <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="0" Background="Transparent"  
+                        Command="{Binding Path=Parent.LaunchUrlCommand}" 
+                        CommandParameter="{Binding Path=Extend.CardUrl}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid>
+                            <Border CornerRadius="4">
+                                <Image Source="{Binding Path=Dynamic.DynCourBatchUp.Cover}" Width="160"></Image>
+                            </Border>
+                            <Border Background="#C8FF69B4" CornerRadius="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4">
+                                <TextBlock Margin="4 2" Foreground="White" FontSize="12" Text="课堂"></TextBlock>
+                            </Border>
+                        </Grid>
+
+                        <StackPanel HorizontalAlignment="Stretch" Grid.Column="1" Margin="8 4 8 0">
+                            <TextBlock Text="{Binding Path=Dynamic.DynCourBatchUp.Title}" Foreground="{ThemeResource TextColor}" TextTrimming="CharacterEllipsis" MaxLines="2" TextWrapping="Wrap"></TextBlock>
+                            <TextBlock Margin="0 8 0 0" FontSize="14" Foreground="Gray">
+                                <Run Text="{Binding Dynamic.DynCourBatchUp.Text1}"></Run>
+                            </TextBlock>
+                        </StackPanel>
+                    </Grid>
+                </Button>
+            </local:DynamicItemV2Control.CardContent>
+        </local:DynamicItemV2Control>
     </DataTemplate>
 
     <DataTemplate x:Key="DynamicCustomSeason">
