@@ -18,19 +18,15 @@ namespace BiliLite.Player.MediaInfos
 
         public string Resolution => $"{VideoWidth} * {VideoHeight}";
 
-        private double _VideoBitRate { get; set; }
-        public string VideoBitRate
-        {
-            get => (_VideoBitRate / 1000).ToString() + " Kbps";
-            set => _VideoBitRate = value.ToInt32();
-        }
+        [MediaInfoDoNotToString]
+        public double VideoBitRate { get; set; }
 
-        private double _AudioBitRate { get; set; }
-        public string AudioBitRate
-        {
-            get => (_AudioBitRate / 1000).ToString() + " Kbps";
-            set => _AudioBitRate = value.ToInt32();
-        }
+        public string VideoBitRateKbps => (VideoBitRate / 1000).ToString() + " Kbps";
+
+        [MediaInfoDoNotToString]
+        public double AudioBitRate { get; set; }
+
+        public string AudioBitRateKbps => (AudioBitRate / 1000).ToString() + " Kbps";
 
         [MediaInfoDoNotToString]
         public string DecoderEngine { get; set; }
@@ -49,6 +45,10 @@ namespace BiliLite.Player.MediaInfos
         public string PlayerType { get; set; }
 
         public string Url { get; set; }
+
+        public double BufferingProgress { get; set; }
+
+        public string BufferTime { get; set; }
 
         public override string ToString()
         {
