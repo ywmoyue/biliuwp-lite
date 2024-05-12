@@ -32,6 +32,8 @@ namespace BiliLite.Modules.Live
         public event MessageHandler NewMessage;
         ClientWebSocket ws;
 
+        long PreviousDanmuPackageTimeStamp = 0;
+
         public LiveMessage()
         {
             ws = new ClientWebSocket();
@@ -143,30 +145,46 @@ namespace BiliLite.Modules.Live
             else if (operation == 5)
             {
                 body = DecompressData(protocolVersion, body);
-
                 var text = Encoding.UTF8.GetString(body);
+
+                // 记录此包中的普通弹幕信息个数
+                var danmakuNum = Regex.Matches(text, Regex.Escape("DANMU_MSG"), RegexOptions.IgnoreCase).Count;
+                // 记录时间戳
+                var timeStampNow = (long)0;
+                if (danmakuNum > 0)
+                {
+                    timeStampNow = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                    PreviousDanmuPackageTimeStamp = PreviousDanmuPackageTimeStamp == 0 ? timeStampNow : PreviousDanmuPackageTimeStamp;
+                }
+
                 //可能有多条数据，做个分割
                 var textLines = Regex.Split(text, "[\x00-\x1f]+").Where(x => x.Length > 2 && x[0] == '{').ToArray();
 
                 foreach (var item in textLines)
                 {
-                    // 每波弹幕大约2.5秒, 使用2.3秒避免弹幕延迟
+                    // 使用上波弹幕到这波的间隔确定延迟
+                    var danmuDelay = (timeStampNow - PreviousDanmuPackageTimeStamp) / danmakuNum * 1.3;
                     var delay = ParseMessage(item) switch
                     {
-                        MessageDelayType.DanmuMessage => 2.3 / textLines.Length, // 常规弹幕类型, 加延迟
-                        MessageDelayType.GiftMessage => 0.1 / textLines.Length, // 礼物消息类型, 加一点延迟
+                        MessageDelayType.DanmuMessage => danmuDelay <= 30 ? 30 : danmuDelay, // 常规弹幕类型, 加延迟
+                        MessageDelayType.GiftMessage => 100 / textLines.Length, // 礼物消息类型, 加一点延迟
                         MessageDelayType.SystemMessage => 0.0, // 其他系统消息类型, 无需加延迟
                         _ => 0.0
                     };
 
                     if (delay > 0.0)
                     {
-                        await Task.Delay(TimeSpan.FromSeconds(delay));
+                        await Task.Delay(TimeSpan.FromMilliseconds(delay));
                     }
                     else
                     {
                         continue;
                     }
+                }
+
+                if (danmakuNum > 0)
+                {
+                    PreviousDanmuPackageTimeStamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                 }
             }
         }
