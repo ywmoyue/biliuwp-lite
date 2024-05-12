@@ -148,10 +148,10 @@ namespace BiliLite.Modules.Live
                 var text = Encoding.UTF8.GetString(body);
 
                 // 记录此包中的普通弹幕信息个数
-                var danmakuNum = Regex.Matches(text, Regex.Escape("DANMU_MSG"), RegexOptions.IgnoreCase).Count;
+                var danmuCount = Regex.Matches(text, Regex.Escape("DANMU_MSG"), RegexOptions.IgnoreCase).Count;
                 // 记录时间戳
                 var timeStampNow = (long)0;
-                if (danmakuNum > 0)
+                if (danmuCount > 0)
                 {
                     timeStampNow = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                     PreviousDanmuPackageTimeStamp = PreviousDanmuPackageTimeStamp == 0 ? timeStampNow : PreviousDanmuPackageTimeStamp;
@@ -163,7 +163,7 @@ namespace BiliLite.Modules.Live
                 foreach (var item in textLines)
                 {
                     // 使用上波弹幕到这波的间隔确定延迟
-                    var danmuDelay = (timeStampNow - PreviousDanmuPackageTimeStamp) / danmakuNum * 1.3;
+                    var danmuDelay = (timeStampNow - PreviousDanmuPackageTimeStamp) / danmuCount * 1.3;
                     var delay = ParseMessage(item) switch
                     {
                         MessageDelayType.DanmuMessage => danmuDelay <= 30 ? 30 : danmuDelay, // 常规弹幕类型, 加延迟
@@ -182,7 +182,7 @@ namespace BiliLite.Modules.Live
                     }
                 }
 
-                if (danmakuNum > 0)
+                if (danmuCount > 0)
                 {
                     PreviousDanmuPackageTimeStamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                 }
