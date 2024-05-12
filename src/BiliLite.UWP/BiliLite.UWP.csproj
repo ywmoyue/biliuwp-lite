@@ -182,6 +182,7 @@
     <Compile Include="Pages\IRefreshablePage.cs" />
     <Compile Include="Models\Common\Video\VideoPlaylist.cs" />
     <Compile Include="Models\Common\Video\VideoPlaylistItem.cs" />
+    <Compile Include="Player\MediaInfos\FFMpegInteropMssCollectInfoData.cs" />
     <Compile Include="Services\PlayerToastService.cs" />
     <Compile Include="Services\SettingsImportExportService.cs" />
     <Compile Include="Services\ShortcutKeyService.cs" />

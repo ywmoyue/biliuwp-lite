@@ -32,6 +32,8 @@ using BiliLite.Player.States.PauseStates;
 using BiliLite.Player.States.PlayStates;
 using BiliLite.Player.States.ScreenStates;
 using BiliLite.ViewModels.Live;
+using Windows.UI.Xaml.Documents;
+using System.Text.RegularExpressions;
 using BiliLite.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -60,7 +62,6 @@ namespace BiliLite.Pages
         DispatcherTimer timer_focus;
         DispatcherTimer controlTimer;
 
-        private string url = "";
         private bool changePlayUrlFlag = false;
 
         public LiveDetailPage()
@@ -99,6 +100,7 @@ namespace BiliLite.Pages
             m_liveRoomViewModel.RedPocketLotteryEnd += LiveRoomViewModelRedPocketLotteryEnd;
             m_liveRoomViewModel.ChatScrollToEnd += LiveRoomViewModelChatScrollToEnd;
             m_liveRoomViewModel.LotteryViewModel.AnchorLotteryStart += LiveRoomViewModelAnchorLotteryStart;
+            m_liveRoomViewModel.SetManualPlayUrl += LiveRoomViewModelSetManualPlayUrl;
             this.Loaded += LiveDetailPage_Loaded;
             this.Unloaded += LiveDetailPage_Unloaded; 
             
@@ -114,6 +116,17 @@ namespace BiliLite.Pages
                 m_danmakuController = App.ServiceProvider.GetRequiredService<FrostMasterDanmakuController>();
                 m_danmakuController.Init(DanmakuCanvas);
             }
+        }
+
+        private void LiveRoomViewModelSetManualPlayUrl(object sender, object e)
+        {
+            var url = e as string;
+            m_liveRoomViewModel.ManualPlayUrl = url;
+            m_realPlayInfo.ManualPlayUrl = url;
+
+            LowDelayHaveStorageUrl.Text = url.Length > 0 ? "是" : "否";
+            var regex = new Regex(@"live_\d+_\d+\.flv");
+            if (regex.IsMatch(url)) { LowDelayHaveStorageUrl.Text = "是[原始流]"; }
         }
 
         private void ControlTimer_Tick(object sender, object e)
@@ -334,7 +347,6 @@ namespace BiliLite.Pages
 
         private void MediaStopped()
         {
-            url = "";
         }
 
         private async Task MediaFailed(PlayerException exception)
@@ -543,6 +555,9 @@ namespace BiliLite.Pages
             m_viewModel.LivePlayUrlSource = SettingService.GetValue(
                 SettingConstants.Live.DEFAULT_LIVE_PLAY_URL_SOURCE,
                 DefaultPlayUrlSourceOptions.DEFAULT_PLAY_URL_SOURCE);
+
+            // 低延迟模式
+            LowDelayMode.IsOn = SettingService.GetValue<bool>(SettingConstants.Live.LOW_DELAY_MODE, false);
         }
 
         private void LoadSetting()
@@ -811,6 +826,7 @@ namespace BiliLite.Pages
 
         private async void BottomBtnRefresh_Click(object sender, RoutedEventArgs e)
         {
+            LiveRoomViewModelSetManualPlayUrl(this, "");
             await m_liveRoomViewModel.LoadLiveRoomDetail(roomid);
         }
 
@@ -1300,10 +1316,69 @@ namespace BiliLite.Pages
             await LoadPlayer();
         }
 
+        private async void btnRefreshPlayUrl_Click(object sender, RoutedEventArgs e)
+        {
+            var text = LowDelayManualPlayUrlTextBox.Text;
+            if (text.Length > 0)
+            {
+                if (!text.IsUrl())
+                {
+                    LowDelayManualPlayUrlTextBox.Text = "";
+                    Notify.ShowMessageToast("不是正确格式的链接... 🤔 检查一下吧~");
+                    return;
+                }
+                LiveRoomViewModelSetManualPlayUrl(this, text);
+            }
+            await LoadPlayer();
+        }
+
+        private void btnManualPlayUrlCopy_Click(object sender, RoutedEventArgs e)
+        {
+            if (m_liveRoomViewModel.ManualPlayUrl != null && m_liveRoomViewModel.ManualPlayUrl.Length > 0)
+            {
+                m_liveRoomViewModel.ManualPlayUrl.SetClipboard();
+                Notify.ShowMessageToast("已复制链接到剪切板");
+            }
+            else
+            {
+                Notify.ShowMessageToast("没存储链接怎么复制... (｀-_ゝ-)");
+            }
+        }
+
+        private bool IsPlayForward {  get; set; } = false;
+        private async void btnPlayForward_Click(object sender, RoutedEventArgs e)
+        {
+            if (IsPlayForward) { return; }
+            IsPlayForward = true;
+            playerElement.MediaPlayer.PlaybackSession.PlaybackRate = 2.0;
+            await Task.Delay(1000);
+            playerElement.MediaPlayer.PlaybackSession.PlaybackRate = 1.0;
+            IsPlayForward = false;
+        }
+
         private void BottomBtnSwitchGiftBar_Click(object sender, RoutedEventArgs e)
         {
             m_viewModel.ShowBottomGiftBar = !m_viewModel.ShowBottomGiftBar;
             SettingService.SetValue(SettingConstants.Live.SHOW_BOTTOM_GIFT_BAR, m_viewModel.ShowBottomGiftBar);
+        }
+
+        private void LowDelaySwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            ToggleSwitch ts = sender as ToggleSwitch;
+            if (ts != null)
+            {
+                if (ts.IsOn)
+                {
+                    LowDelayModeBlock.Visibility = Visibility.Visible;
+                    SettingService.SetValue(SettingConstants.Live.LOW_DELAY_MODE, true);
+                }
+                else
+                {
+                    LowDelayModeBlock.Visibility = Visibility.Collapsed;
+                    SettingService.SetValue(SettingConstants.Live.LOW_DELAY_MODE, false);
+                }
+                // 这里可以做个重启播放器的功能...就不需要用户手动重启了
+            }
         }
     }
 }
