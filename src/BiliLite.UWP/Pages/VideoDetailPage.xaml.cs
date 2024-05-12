@@ -161,7 +161,7 @@ namespace BiliLite.Pages
             _id = id;
             if (flag) return;
             flag = true;
-            if (int.TryParse(id, out var aid))
+            if (long.TryParse(id, out var aid))
             {
                 avid = id;
                 is_bvid = false;
