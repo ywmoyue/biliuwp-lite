@@ -155,7 +155,11 @@ namespace BiliLite.Player
         {
             return new CollectInfo()
             {
-                Data = m_fFmpegMediaSource,
+                Data = new FFMpegInteropMssCollectInfoData()
+                {
+                    FFMpegInteropMss = m_fFmpegMediaSource,
+                    MediaPlayer = m_mediaPlayer,
+                },
                 RealPlayInfo = m_realPlayInfo,
                 Type = "LiveHls",
                 Url = m_url,

@@ -75,10 +75,5 @@ namespace BiliLite.Player.Controllers
         {
             Player = player;
         }
-
-        public void UpdateMediaInfo()
-        {
-            m_mediaInfosCollector.StartCollect();
-        }
     }
 }

@@ -1330,7 +1330,6 @@ namespace BiliLite.Pages
                 LiveRoomViewModelSetManualPlayUrl(this, text);
             }
             await LoadPlayer();
-            m_playerController.UpdateMediaInfo();
         }
 
         private void btnManualPlayUrlCopy_Click(object sender, RoutedEventArgs e)
