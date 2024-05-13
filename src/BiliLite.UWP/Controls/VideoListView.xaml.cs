@@ -28,8 +28,11 @@ namespace BiliLite.Controls
 
         public void LoadData(List<VideoListSection> sections)
         {
-            if(m_viewModel.Sections == null)
+            if (m_viewModel.Sections == null)
+            {
                 m_viewModel.Sections = m_mapper.Map<ObservableCollection<VideoListSectionViewModel>>(sections);
+                m_viewModel.LastSelectedItem = CurrentItem();
+            }
             else
             {
                 var mapSections = m_mapper.Map<List<VideoListSectionViewModel>>(sections);
@@ -72,12 +75,15 @@ namespace BiliLite.Controls
         private void ListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!(sender is ListView { SelectedItem: VideoListItem item })) return;
+            if (item == m_viewModel.LastSelectedItem) return;
             foreach (var section in m_viewModel.Sections.Where(
                          x => x.SelectedItem != item && x.SelectedItem != null))
             {
                 section.SelectedItem = null;
             }
             ScrollToItem(item);
+
+            m_viewModel.LastSelectedItem = item;
 
             OnSelectionChanged?.Invoke(this, item);
         }
