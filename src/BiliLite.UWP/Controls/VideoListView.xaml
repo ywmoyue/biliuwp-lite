@@ -12,6 +12,17 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <MenuFlyout x:Key="SectionFlyout">
+                <MenuFlyoutItem Click="CloseList_OnClick">关闭列表</MenuFlyoutItem>
+            </MenuFlyout>
+            <MenuFlyout x:Key="VideoItemFlyout">
+                <!--<MenuFlyoutItem>移出稍后再看</MenuFlyoutItem>-->
+            </MenuFlyout>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <Grid>
         <ListView 
             x:Name="SectionListView"
@@ -20,6 +31,7 @@
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="video:VideoListSectionViewModel">
                     <muxc:Expander
+                        ContextRequested="UIElement_OnContextRequested" ContextFlyout="{StaticResource SectionFlyout}" 
                         HorizontalContentAlignment="Left"
                         IsExpanded="{x:Bind Selected,Mode=OneWay}">
                         <muxc:Expander.Header>
@@ -33,7 +45,9 @@
                                 SelectedItem="{x:Bind SelectedItem,Mode=TwoWay}">
                                 <ListView.ItemTemplate>
                                     <DataTemplate x:DataType="video1:VideoListItem">
-                                        <Grid ToolTipService.ToolTip="{x:Bind Title}">
+                                        <Grid ToolTipService.ToolTip="{x:Bind Title}"
+                                              ContextRequested="UIElement_OnContextRequested" 
+                                              ContextFlyout="{StaticResource VideoItemFlyout}" >
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
