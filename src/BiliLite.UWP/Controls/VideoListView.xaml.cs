@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Input;
 using AutoMapper;
 using BiliLite.Extensions;
 using BiliLite.Models.Common.Video;
@@ -16,6 +19,7 @@ namespace BiliLite.Controls
     {
         private readonly VideoListViewModel m_viewModel;
         private readonly IMapper m_mapper;
+        private object m_flyoutContextElement;
 
         public VideoListView(VideoListViewModel viewModel, IMapper mapper)
         {
@@ -28,8 +32,11 @@ namespace BiliLite.Controls
 
         public void LoadData(List<VideoListSection> sections)
         {
-            if(m_viewModel.Sections == null)
+            if (m_viewModel.Sections == null)
+            {
                 m_viewModel.Sections = m_mapper.Map<ObservableCollection<VideoListSectionViewModel>>(sections);
+                m_viewModel.LastSelectedItem = CurrentItem();
+            }
             else
             {
                 var mapSections = m_mapper.Map<List<VideoListSectionViewModel>>(sections);
@@ -72,12 +79,15 @@ namespace BiliLite.Controls
         private void ListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!(sender is ListView { SelectedItem: VideoListItem item })) return;
+            if (item == m_viewModel.LastSelectedItem) return;
             foreach (var section in m_viewModel.Sections.Where(
                          x => x.SelectedItem != item && x.SelectedItem != null))
             {
                 section.SelectedItem = null;
             }
             ScrollToItem(item);
+
+            m_viewModel.LastSelectedItem = item;
 
             OnSelectionChanged?.Invoke(this, item);
         }
@@ -86,6 +96,20 @@ namespace BiliLite.Controls
         {
             //TODO: 实现滚动到指定item
             //SectionListView.ScrollIntoView();
+        }
+
+        private void UIElement_OnContextRequested(UIElement sender, ContextRequestedEventArgs args)
+        {
+            m_flyoutContextElement = sender;
+            sender.ContextFlyout.ShowAt(sender, new FlyoutShowOptions());
+        }
+
+        private void CloseList_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is Control { DataContext: VideoListSectionViewModel section })
+            {
+                m_viewModel.Sections.Remove(section);
+            }
         }
     }
 }

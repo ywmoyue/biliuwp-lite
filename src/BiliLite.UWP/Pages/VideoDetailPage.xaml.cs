@@ -261,7 +261,6 @@ namespace BiliLite.Pages
         private void InitUgcSeason(string id)
         {
             m_loadUgcSeasonData = true;
-            isFirstUgcSeasonVideo = true;
             VideoListSection currentSeasonSection = null;
             VideoListItem currentSeasonItem = null;
 
@@ -570,18 +569,16 @@ namespace BiliLite.Pages
 
         private async void VideoListView_SelectionChanged(object sender,VideoListItem item)
         {
-            if (isFirstUgcSeasonVideo)
-            {
-                isFirstUgcSeasonVideo = false;
-                return;
-            }
-
             await InitializeVideo(item.Id);
         }
 
         private void player_AllMediaEndEvent(object sender, EventArgs e)
         {
-            if (m_videoListView == null || !m_videoListView.IsLast(m_viewModel.VideoInfo.Aid)) return;
+            if (m_videoListView == null || m_videoListView.IsLast(m_viewModel.VideoInfo.Aid)) return;
+
+            // 切换到播放列表Tab使播放列表控件被渲染事件能触发
+            pivot.SelectedIndex = 0;
+
             m_videoListView.Next(m_viewModel.VideoInfo.Aid);
         }
 
