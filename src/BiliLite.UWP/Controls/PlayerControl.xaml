@@ -298,7 +298,7 @@
                                 <ListView Margin="0 4" x:Name="EpisodeList" SelectionChanged="EpisodeList_SelectionChanged" >
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding title}" ToolTipService.ToolTip="{Binding title}"></TextBlock>
+                                            <TextBlock Text="{Binding title}" TextWrapping="Wrap" ToolTipService.ToolTip="{Binding title}"></TextBlock>
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
                                     <ListView.ItemContainerStyle>
