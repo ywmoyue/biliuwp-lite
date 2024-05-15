@@ -463,7 +463,14 @@ namespace BiliLite.Models.Common
             /// <summary>
             /// 低延迟模式开关
             /// </summary>
+            [SettingKey(typeof(bool))]
             public const string LOW_DELAY_MODE = "LowDelayMode";
+
+            /// <summary>
+            /// 低延迟模式开关
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_LOW_DELAY_MODE = false;
 
             /// <summary>
             /// 显示底部礼物栏
