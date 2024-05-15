@@ -128,7 +128,7 @@ namespace BiliLite.Models.Common.Live
         public int ComboResourcesId { get; set; }
 
         [JsonProperty("goods_id")]
-        public int GoodsId { get; set; }
+        public long GoodsId { get; set; }
 
         public int Num { get; set; } = 1;
     }
