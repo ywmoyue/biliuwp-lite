@@ -354,7 +354,7 @@
                                 </StackPanel>
                                 <toolkit:AdaptiveGridView 
                                     Visibility="{x:Bind Path=m_viewModel.VideoInfo.ShowPages,Mode=OneWay}" 
-                                    DesiredWidth="180" 
+                                    DesiredWidth="{x:Bind m_viewModel.VideoDetailListEpisodeDesiredWidth,Mode=OneWay}" 
                                     ItemHeight="36"  
                                     Margin="0 8 0 0" 
                                     x:Name="listEpisode"  

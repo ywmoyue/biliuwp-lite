@@ -8,6 +8,7 @@ using System.Windows.Input;
 using Windows.UI.Xaml;
 using AutoMapper;
 using BiliLite.Extensions;
+using BiliLite.Models.Common;
 using BiliLite.Models.Common.Video;
 using BiliLite.Models.Common.Video.Detail;
 using BiliLite.Models.Exceptions;
@@ -91,6 +92,10 @@ namespace BiliLite.Modules
         public double BottomActionBarHeight { get; set; }
 
         public double BottomActionBarWidth { get; set; }
+
+        public double VideoDetailListEpisodeDesiredWidth => SettingService.GetValue(
+            SettingConstants.UI.VIDEO_DETAIL_LIST_EPISODE_DESIRED_WIDTH,
+            SettingConstants.UI.DEFAULT_VIDEO_DETAIL_LIST_EPISODE_DESIRED_WIDTH);
 
         [DependsOn(nameof(BottomActionBarWidth))]
         public bool ShowNormalDownloadBtn => !(BottomActionBarWidth < 460);

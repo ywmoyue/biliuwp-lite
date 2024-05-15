@@ -161,6 +161,16 @@ namespace BiliLite.Pages
                 });
             });
 
+            //视频详情页分集列表设计宽度
+            NumListEpisodeDesiredWidth.Value = SettingService.GetValue<double>(SettingConstants.UI.VIDEO_DETAIL_LIST_EPISODE_DESIRED_WIDTH, SettingConstants.UI.DEFAULT_VIDEO_DETAIL_LIST_EPISODE_DESIRED_WIDTH);
+            NumListEpisodeDesiredWidth.Loaded += (sender, e) =>
+            {
+                NumListEpisodeDesiredWidth.ValueChanged += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.VIDEO_DETAIL_LIST_EPISODE_DESIRED_WIDTH, args.NewValue);
+                };
+            };
+
             //动态评论宽度
             NumBoxDynamicCommentWidth.Value = SettingService.GetValue<double>(SettingConstants.UI.DYNAMIC_COMMENT_WIDTH, SettingConstants.UI.DEFAULT_DYNAMIC_COMMENT_WIDTH);
             NumBoxDynamicCommentWidth.Loaded += (sender, e) =>

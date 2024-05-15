@@ -151,6 +151,9 @@
                                 <TextBlock  FontSize="14">右侧视频详情宽度(下次打开视频生效)</TextBlock>
                                 <controls:NumberBox x:Name="numRightWidth" Minimum="40" Margin="0 0 0 8" Width="200" HorizontalAlignment="Left" Value="320" SpinButtonPlacementMode="Compact" SmallChange="20" ></controls:NumberBox>
                                 <ToggleSwitch x:Name="swRightWidthChangeable" Header="右侧视频详情宽度可调整(下次打开视频生效)"></ToggleSwitch>
+
+                                <TextBlock  FontSize="14">视频详情页分集列表设计宽度(下次打开视频生效)</TextBlock>
+                                <controls:NumberBox x:Name="NumListEpisodeDesiredWidth" Minimum="40" Margin="0 0 0 8" Width="200" HorizontalAlignment="Left" Value="180" SpinButtonPlacementMode="Compact" SmallChange="20" ></controls:NumberBox>
                             </StackPanel>
 
                             <StackPanel Margin="0 0 0 8">
