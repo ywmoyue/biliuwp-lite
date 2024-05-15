@@ -163,7 +163,7 @@ namespace BiliLite.Modules.Live
                 foreach (var item in textLines)
                 {
                     // 使用上波弹幕到这波的间隔确定延迟
-                    var danmuDelay = (timeStampNow - PreviousDanmuPackageTimeStamp) / danmuCount * 1.3;
+                    var danmuDelay = danmuCount > 0 ? ((timeStampNow - PreviousDanmuPackageTimeStamp) / danmuCount  * 1.3) : 0;
                     var delay = ParseMessage(item) switch
                     {
                         MessageDelayType.DanmuMessage => danmuDelay <= 30 ? 30 : danmuDelay, // 常规弹幕类型, 加延迟
