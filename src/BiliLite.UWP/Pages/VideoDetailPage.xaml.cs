@@ -131,7 +131,7 @@ namespace BiliLite.Pages
                         });
                     }
 
-                    videoSections.First().SelectedItem = videoSections.First().Items.First();
+                    videoSections.First().SelectedItem = videoSections.First().Items.ElementAt(videoPlaylist.Index);
                     m_videoListView = App.ServiceProvider.GetRequiredService<VideoListView>();
                     m_videoListView.LoadData(videoSections);
                     var pivotItem = PlayListTpl.GetElement(new Windows.UI.Xaml.ElementFactoryGetArgs()) as PivotItem;
