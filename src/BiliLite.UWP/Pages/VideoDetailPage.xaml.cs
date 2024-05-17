@@ -240,6 +240,8 @@ namespace BiliLite.Pages
                     order = i,
                     play_mode = VideoPlayType.Video,
                     title = "P" + item.Page + " " + item.Part,
+                    TitlePage = "P"+item.Page,
+                    TitlePart = item.Part.TrimStart(' '),
                     area = m_viewModel.VideoInfo.Title.ParseArea(m_viewModel.VideoInfo.Owner.Mid)
                 });
                 i++;

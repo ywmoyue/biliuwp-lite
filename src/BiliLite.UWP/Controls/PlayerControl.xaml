@@ -298,7 +298,26 @@
                                 <ListView Margin="0 4" x:Name="EpisodeList" SelectionChanged="EpisodeList_SelectionChanged" >
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding title}" TextWrapping="Wrap" ToolTipService.ToolTip="{Binding title}"></TextBlock>
+                                            <StackPanel>
+                                                <Grid Visibility="{Binding ShowTitlePart}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="25"></ColumnDefinition>
+                                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="{Binding TitlePage}" 
+                                                               VerticalAlignment="Center"
+                                                               Width="25">
+                                                    </TextBlock>
+                                                    <TextBlock Grid.Column="1"
+                                                               Text="{Binding TitlePart}" 
+                                                               TextWrapping="Wrap" ></TextBlock>
+                                                </Grid>
+                                                <TextBlock  
+                                                    Visibility="{Binding ShowTitlePart,Converter={StaticResource display}}" 
+                                                    Text="{Binding title}" 
+                                                    TextWrapping="Wrap" 
+                                                    ToolTipService.ToolTip="{Binding title}"></TextBlock>
+                                            </StackPanel>
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
                                     <ListView.ItemContainerStyle>
