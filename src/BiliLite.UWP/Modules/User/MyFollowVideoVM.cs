@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using BiliLite.Extensions;
@@ -179,6 +178,25 @@ namespace BiliLite.Modules
             MyFavorite = null;
             CollectFavorite = null;
             await LoadFavorite();
+        }
+
+        public async Task SortMyFavorite()
+        {
+            var favIds = MyFavorite.Select(x => x.id).ToList();
+            var result = await favoriteAPI.Sort(favIds).Request();
+            if (!result.status)
+            {
+                Notify.ShowMessageToast("排序失败"+result.message);
+                return;
+            }
+
+            var data = await result.GetData<object>();
+            if (data.success)
+            {
+                Notify.ShowMessageToast("排序成功");
+                return;
+            }
+            Notify.ShowMessageToast("排序失败" + data.message);
         }
     }
 

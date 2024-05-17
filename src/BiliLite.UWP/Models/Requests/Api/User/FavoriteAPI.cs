@@ -265,5 +265,18 @@ namespace BiliLite.Models.Requests.Api.User
             api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
         }
+
+        public ApiModel Sort(List<string> favIdList)
+        {
+            var sort = string.Join(',', favIdList);
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Post,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/sort",
+                body = ApiHelper.MustParameter(AppKey, true) + $"&sort={sort}"
+            };
+            api.body += ApiHelper.GetSign(api.body, AppKey);
+            return api;
+        }
     }
 }

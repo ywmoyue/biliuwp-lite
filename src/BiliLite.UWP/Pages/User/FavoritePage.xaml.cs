@@ -162,5 +162,10 @@ namespace BiliLite.Pages.User
         {
             videoVM.Refresh();
         }
+
+        private async void VideoFavGridView_OnDragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
+        {
+            await videoVM.SortMyFavorite();
+        }
     }
 }
