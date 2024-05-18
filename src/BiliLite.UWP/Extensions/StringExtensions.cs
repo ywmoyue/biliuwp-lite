@@ -506,7 +506,7 @@ namespace BiliLite.Extensions
                 var data =
                     @"<InlineUIContainer><HyperlinkButton x:Name=""btn"" Command=""{Binding LaunchUrlCommand}""  IsEnabled=""True"" Margin=""2 -3 2 -5"" Padding=""0 2 0 0"" " +
                     string.Format(
-                        @"CommandParameter=""{0}"" ><TextBlock>🔗网页链接</TextBlock></HyperlinkButton></InlineUIContainer>",
+                        @"ToolTipService.ToolTip=""{0}"" CommandParameter=""{0}"" ><TextBlock>🔗网页链接</TextBlock></HyperlinkButton></InlineUIContainer>",
                         item.Groups[0].Value.IsUrl() ? item.Groups[0].Value : ApiHelper.NOT_FOUND_URL);
                 input = input.Replace(item.Groups[0].Value, data);
             }
