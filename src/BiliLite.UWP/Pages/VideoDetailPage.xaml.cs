@@ -117,7 +117,7 @@ namespace BiliLite.Pages
                     videoSections.Add(new VideoListSection()
                     {
                         Selected = true,
-                        Title = "播放列表",
+                        Title = videoPlaylist.Title,
                         Items = new List<VideoListItem>(),
                     });
                     foreach (var videoPlaylistItem in videoPlaylist.Playlist)

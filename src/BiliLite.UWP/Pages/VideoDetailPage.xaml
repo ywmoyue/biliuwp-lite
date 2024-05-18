@@ -347,10 +347,11 @@
                                            RightTapped="txtDesc_RightTapped" 
                                            Holding="txtDesc_Holding"  Tapped="txtDesc_Tapped" 
                                            IsTextSelectionEnabled="False"  
-                                           TextTrimming="CharacterEllipsis" 
+                                           TextTrimming="CharacterEllipsis"
                                            TextWrapping="Wrap" Foreground="Gray"  
-                                           Text="{x:Bind Path=m_viewModel.VideoInfo.Desc,Mode=OneWay}"></TextBlock>
-                                    <ContentControl x:Name="contentDesc"  Foreground="Gray"  ></ContentControl>
+                                           Text="{x:Bind Path=m_viewModel.VideoInfo.Desc,Mode=OneWay}">
+                                    </TextBlock>
+                                    <ContentControl x:Name="contentDesc" Foreground="Gray" ></ContentControl>
                                 </StackPanel>
                                 <toolkit:AdaptiveGridView 
                                     Visibility="{x:Bind Path=m_viewModel.VideoInfo.ShowPages,Mode=OneWay}" 

@@ -28,6 +28,7 @@ namespace BiliLite.Pages.User
     public sealed partial class FavoriteDetailPage : BasePage, IRefreshablePage
     {
         FavoriteDetailVM favoriteDetailVM;
+
         public FavoriteDetailPage()
         {
             this.InitializeComponent();
@@ -191,7 +192,8 @@ namespace BiliLite.Pages.User
                 parameters = new VideoPlaylist()
                 {
                     Index = 0,
-                    Playlist = items
+                    Playlist = items,
+                    Title = $"收藏夹:{favoriteDetailVM.FavoriteInfo.title}"
                 }
             });
         }
