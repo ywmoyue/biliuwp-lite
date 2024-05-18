@@ -95,7 +95,11 @@
                                           StretchContentForSingleRow="False"
                                           ItemContainerStyle="{StaticResource ItemStyle}"
                                           ItemTemplate="{StaticResource VideoDataTemplate}"
-                                          ItemsSource="{x:Bind Path=favoriteDetailVM.Videos,Mode=OneWay}"
+                                          ItemsSource="{x:Bind Path=favoriteDetailVM.Videos,Mode=TwoWay}"
+                                          AllowDrop="True"
+                                          CanReorderItems="True"
+                                          CanDragItems="True"
+                                          DragItemsCompleted="FavItemGridView_OnDragItemsCompleted"
                                           ItemHeight="80" Grid.ColumnSpan="2">
 
                 <toolkit:AdaptiveGridView.Footer>

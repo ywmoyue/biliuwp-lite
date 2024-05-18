@@ -5,6 +5,7 @@ using BiliLite.Modules;
 using BiliLite.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -198,6 +199,21 @@ namespace BiliLite.Pages.User
         public async Task Refresh()
         {
             favoriteDetailVM.Refresh();
+        }
+
+        private async void FavItemGridView_OnDragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
+        {
+            var item = args.Items.FirstOrDefault();
+            if (!(item is FavoriteInfoVideoItemModel favVideo)) return;
+            var endIndex = favoriteDetailVM.Videos.IndexOf(favVideo);
+            var targetId = "";
+            if (endIndex != 0)
+            {
+                var target = favoriteDetailVM.Videos[endIndex - 1];
+                targetId = target.id;
+            }
+
+            await favoriteDetailVM.Sort(favVideo.id, targetId);
         }
     }
 }
