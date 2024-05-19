@@ -5,11 +5,13 @@ using BiliLite.Modules;
 using BiliLite.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Models.Common.Video;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -26,6 +28,7 @@ namespace BiliLite.Pages.User
     public sealed partial class FavoriteDetailPage : BasePage, IRefreshablePage
     {
         FavoriteDetailVM favoriteDetailVM;
+
         public FavoriteDetailPage()
         {
             this.InitializeComponent();
@@ -175,7 +178,7 @@ namespace BiliLite.Pages.User
                     {
                         Cover = item.cover,
                         Author = item.upper.name,
-                        ID = item.id,
+                        Id = item.id,
                         Title = item.title
                     });
                 }
@@ -189,7 +192,8 @@ namespace BiliLite.Pages.User
                 parameters = new VideoPlaylist()
                 {
                     Index = 0,
-                    Playlist = items
+                    Playlist = items,
+                    Title = $"收藏夹:{favoriteDetailVM.FavoriteInfo.title}"
                 }
             });
         }
@@ -197,6 +201,21 @@ namespace BiliLite.Pages.User
         public async Task Refresh()
         {
             favoriteDetailVM.Refresh();
+        }
+
+        private async void FavItemGridView_OnDragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
+        {
+            var item = args.Items.FirstOrDefault();
+            if (!(item is FavoriteInfoVideoItemModel favVideo)) return;
+            var endIndex = favoriteDetailVM.Videos.IndexOf(favVideo);
+            var targetId = "";
+            if (endIndex != 0)
+            {
+                var target = favoriteDetailVM.Videos[endIndex - 1];
+                targetId = target.id;
+            }
+
+            await favoriteDetailVM.Sort(favVideo.id, targetId);
         }
     }
 }

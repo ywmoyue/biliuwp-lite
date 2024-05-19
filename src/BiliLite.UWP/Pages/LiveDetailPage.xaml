@@ -15,6 +15,7 @@
     xmlns:live="using:BiliLite.Models.Common.Live"
     xmlns:live1="using:BiliLite.ViewModels.Live"
     xmlns:Player="using:BiliLite.Models.Common.Player"
+    xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     Margin="{x:Bind m_viewModel.Margin, Mode=OneWay}"
     Background="Transparent">
     <Page.Resources>
@@ -405,6 +406,9 @@
                     <Grid Tapped="Grid_Tapped">
                         <danmaku:Danmaku x:Name="DanmuControl"/>
                     </Grid>
+                    <Grid>
+                        <canvas:CanvasAnimatedControl x:Name="DanmakuCanvas"/>
+                    </Grid>
                     <!--亮度-->
                     <Grid x:Name="BrightnessShield" Tapped="Grid_Tapped" Background="#99000000" Opacity="0"></Grid>
                     <TextBlock Visibility="{x:Bind Path=m_viewModel.Living,Mode=OneWay,Converter={StaticResource display}}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" Foreground="Gray">主播正在换女装</TextBlock>
@@ -457,7 +461,7 @@
                                         <Image Width="32" Height="32" Source="/Assets/Icon/icon_settings.png" ></Image>
                                         <Button.Flyout>
                                             <Flyout>
-                                                <Pivot Width="280">
+                                                <Pivot Width="340">
                                                     <PivotItem>
                                                         <PivotItem.Header>
                                                             <TextBlock FontSize="18">设置</TextBlock>
@@ -533,7 +537,32 @@
                                                                 </ItemsControl.ItemTemplate>
                                                             </ItemsControl>
                                                         </StackPanel>
-
+                                                    </PivotItem>
+                                                    <PivotItem>
+                                                        <PivotItem.Header>
+                                                            <TextBlock FontSize="18">低延迟(实验性)</TextBlock>
+                                                        </PivotItem.Header>
+                                                        <StackPanel>
+                                                            <ToggleSwitch x:Name="LowDelayMode" Toggled="LowDelaySwitch_Toggled" Margin="0 8 0 0" Header="⚡低延迟模式"></ToggleSwitch>
+                                                            <TextBlock Margin="0 6 0 0" FontSize="12" IsColorFontEnabled="False" Foreground="Gray" TextWrapping="Wrap">💡开启后请关闭再打开当前直播界面</TextBlock>
+                                                            <StackPanel x:Name="LowDelayModeBlock" Visibility="Collapsed">
+                                                                <StackPanel Margin="0 8 0 0" Orientation="Horizontal">
+                                                                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center">
+                                                                        <Run>🎞 已储存视频流: </Run>
+                                                                        <Run x:Name="LowDelayHaveStorageUrl">否</Run>
+                                                                    </TextBlock>
+                                                                    <Button Margin="8 0 0 0" Padding="4" VerticalAlignment="Center" Click="btnManualPlayUrlCopy_Click">📜复制视频流</Button>
+                                                                </StackPanel>
+                                                                <TextBlock Margin="0 6 0 0" FontSize="12" IsColorFontEnabled="False" Foreground="Gray" TextWrapping="Wrap">⚠️一般来说, 开播时获取的原始流有效期为1小时</TextBlock>
+                                                                <StackPanel Margin="0 16 0 0" Orientation="Horizontal">
+                                                                    <TextBox x:Name="LowDelayManualPlayUrlTextBox" Padding="4" Width="120" VerticalAlignment="Center" PlaceholderText="✏️输入视频流..."></TextBox>
+                                                                    <Button Margin="8 0 0 0" Padding="4" VerticalAlignment="Center" Click="btnRefreshPlayUrl_Click">🔄更新视频流</Button>
+                                                                </StackPanel>
+                                                                <TextBlock Margin="0 6 0 0" FontSize="12" IsColorFontEnabled="False" Foreground="Gray" TextWrapping="Wrap">⚠️如果输入为空并更新, 则会清除储存的视频流</TextBlock>
+                                                                <Button Margin="0 12 0 0" Padding="5" Click="btnPlayForward_Click">⏩前进一秒</Button>
+                                                                <TextBlock Margin="0 6 0 0" FontSize="12" IsColorFontEnabled="False" Foreground="Gray" TextWrapping="Wrap">💡使用此按钮来手动向前缩小延迟</TextBlock>
+                                                            </StackPanel>
+                                                        </StackPanel>
                                                     </PivotItem>
                                                 </Pivot>
                                             </Flyout>
@@ -571,10 +600,10 @@
                                         <TextBlock x:Name="BottomTextPostion" VerticalAlignment="Center" Foreground="White" Margin="8 0" FontSize="18" Text="{x:Bind Path=m_liveRoomViewModel.LiveTime,Mode=OneWay}"></TextBlock>
 
 
-                                        <Button x:Name="TopBtnOpenDanmaku" BorderThickness="0" Click="TopBtnOpenDanmaku_Click" Visibility="{x:Bind Path=DanmuControl.Visibility,Mode=OneWay,Converter={StaticResource display}}" Background="Transparent" Padding="0" Width="48" Height="48">
+                                        <Button x:Name="TopBtnOpenDanmaku" BorderThickness="0" Click="TopBtnOpenDanmaku_Click" Visibility="{x:Bind Path=m_danmakuController.DanmakuViewModel.IsHide,Mode=OneWay}" Background="Transparent" Padding="0" Width="48" Height="48">
                                             <Image Width="28" Height="28" Source="/Assets/Icon/icon_danmaku_open.png" ></Image>
                                         </Button>
-                                        <Button x:Name="TopBtnCloseDanmaku" BorderThickness="0" Click="TopBtnCloseDanmaku_Click" Visibility="{x:Bind Path=DanmuControl.Visibility,Mode=OneWay}" Background="Transparent" Padding="0" Width="48" Height="48">
+                                        <Button x:Name="TopBtnCloseDanmaku" BorderThickness="0" Click="TopBtnCloseDanmaku_Click" Visibility="{x:Bind Path=m_danmakuController.DanmakuViewModel.IsHide,Mode=OneWay,Converter={StaticResource display}}" Background="Transparent" Padding="0" Width="48" Height="48">
                                             <Image Width="28" Height="28" Source="/Assets/Icon/icon_danmaku_close.png" ></Image>
                                         </Button>
                                         <Button x:Name="TopBtnSettingDanmaku" BorderThickness="0" Background="Transparent" Padding="0" Width="48" Height="48">
@@ -582,33 +611,45 @@
                                             <Button.Flyout>
                                                 <Flyout>
                                                     <StackPanel>
-                                                        <TextBlock Margin="0 4 0 0">弹幕顶部距离 <Run Text="{x:Bind Path=DanmuControl.Margin.Top,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
+                                                        <TextBlock Margin="0 4 0 0">弹幕顶部距离 <Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.MarginTop,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
                                                         <Slider  x:Name="DanmuTopMargin" Value="0" Minimum="0" StepFrequency="4"></Slider>
-                                                        <TextBlock Margin="0 4 0 0">弹幕显示区域 <Run Text="{x:Bind Path=DanmuControl.DanmakuArea,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
-                                                        <Slider x:Name="DanmuSettingArea" Value="{x:Bind Path=DanmuControl.DanmakuArea,Mode=TwoWay}" Minimum="0.1" Maximum="1" StepFrequency="0.1"></Slider>
-                                                        <TextBlock Margin="0 4 0 0">弹幕缩放 <Run Text="{x:Bind Path=DanmuControl.DanmakuSizeZoom,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
-                                                        <Slider x:Name="DanmuSettingFontZoom" Value="{x:Bind Path=DanmuControl.DanmakuSizeZoom,Mode=TwoWay}" Minimum="0.1" Maximum="2" StepFrequency="0.05"></Slider>
-                                                        <TextBlock Margin="0 4 0 0">弹幕速度 <Run Text="{x:Bind Path=DanmuControl.DanmakuDuration,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
-                                                        <Slider x:Name="DanmuSettingSpeed" Value="{x:Bind Path=DanmuControl.DanmakuDuration,Mode=TwoWay}" Minimum="1" Maximum="25" StepFrequency="1"></Slider>
-                                                        <TextBlock Margin="0 4 0 0">弹幕透明度 <Run Text="{x:Bind Path=DanmuControl.Opacity,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
-                                                        <Slider  x:Name="DanmuSettingOpacity" Value="{x:Bind Path=DanmuControl.Opacity,Mode=TwoWay}" Minimum="0.1" Maximum="1" StepFrequency="0.1"></Slider>
-                                                        <TextBlock  Margin="0 4">弹幕样式</TextBlock>
-                                                        <ComboBox  x:Name="DanmuSettingStyle"  SelectedIndex="{x:Bind Path=DanmuControl.DanmakuStyle,Converter={StaticResource styleConvert},Mode=TwoWay}" HorizontalAlignment="Stretch">
-                                                            <ComboBox.Items>
-                                                                <ComboBoxItem>重叠</ComboBoxItem>
-                                                                <ComboBoxItem>无边</ComboBoxItem>
-                                                                <ComboBoxItem>阴影</ComboBoxItem>
-                                                                <ComboBoxItem>描边</ComboBoxItem>
-                                                            </ComboBox.Items>
-                                                        </ComboBox>
-                                                        <ToggleSwitch x:Name="DanmuSettingBold" Margin="0 8 0 0"  IsOn="{x:Bind Path=DanmuControl.DanmakuBold,Mode=TwoWay}">
+                                                        <TextBlock Margin="0 4 0 0" Visibility="{x:Bind m_danmakuController.DanmakuViewModel.ShowAreaControl}">弹幕显示区域 
+                                                            <Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.Area,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
+                                                        <Slider x:Name="DanmuSettingArea" Visibility="{x:Bind m_danmakuController.DanmakuViewModel.ShowAreaControl}" 
+                                                                Value="{x:Bind Path=m_danmakuController.DanmakuViewModel.Area,Mode=OneWay}" Minimum="0.1" Maximum="1" StepFrequency="0.1"></Slider>
+                                                        <TextBlock Margin="0 4 0 0">弹幕缩放 
+                                                            <Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.SizeZoom,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
+                                                        <Slider x:Name="DanmuSettingFontZoom" Value="{x:Bind Path=m_danmakuController.DanmakuViewModel.SizeZoom,Mode=OneWay}" Minimum="0.1" Maximum="2" StepFrequency="0.05"></Slider>
+                                                        <TextBlock Margin="0 4 0 0">弹幕速度 
+                                                            <Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.Speed,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
+                                                        <Slider x:Name="DanmuSettingSpeed" Value="{x:Bind Path=m_danmakuController.DanmakuViewModel.Speed,Mode=OneWay}" Minimum="1" Maximum="25" StepFrequency="1"></Slider>
+                                                        <TextBlock Margin="0 4 0 0">弹幕透明度 
+                                                            <Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.Opacity,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
+                                                        <Slider  x:Name="DanmuSettingOpacity" Value="{x:Bind Path=m_danmakuController.DanmakuViewModel.Opacity,Mode=OneWay}" Minimum="0.1" Maximum="1" StepFrequency="0.1"></Slider>
+
+                                                        <TextBlock Margin="0 4 0 0">
+                                                            弹幕字体
+                                                        </TextBlock>
+                                                        <AutoSuggestBox QueryIcon="Accept" x:Name="DanmuSettingFont"></AutoSuggestBox>
+
+                                                        <StackPanel Visibility="{x:Bind m_danmakuController.DanmakuViewModel.ShowBoldStyleControl}">
+                                                            <TextBlock  Margin="0 4">弹幕样式</TextBlock>
+                                                            <ComboBox  x:Name="DanmuSettingStyle" SelectedIndex="{x:Bind Path=m_danmakuController.DanmakuViewModel.BolderStyle,Converter={StaticResource styleConvert},Mode=TwoWay}">
+                                                                <ComboBox.Items>
+                                                                    <ComboBoxItem>重叠</ComboBoxItem>
+                                                                    <ComboBoxItem>无边</ComboBoxItem>
+                                                                    <ComboBoxItem>阴影</ComboBoxItem>
+                                                                    <ComboBoxItem>描边</ComboBoxItem>
+                                                                </ComboBox.Items>
+                                                            </ComboBox>
+                                                        </StackPanel>
+
+                                                        <ToggleSwitch x:Name="DanmuSettingBold" Margin="0 8 0 0"  IsOn="{x:Bind Path=m_danmakuController.DanmakuViewModel.Bold,Mode=TwoWay}" Visibility="{x:Bind m_danmakuController.DanmakuViewModel.ShowBoldControl}">
                                                             <ToggleSwitch.Header>
-                                                                <TextBlock >字体加粗</TextBlock>
+                                                                <TextBlock>字体加粗</TextBlock>
                                                             </ToggleSwitch.Header>
                                                         </ToggleSwitch>
 
-
-                                                        
                                                     </StackPanel>
                                                 </Flyout>
                                             </Button.Flyout>
@@ -692,10 +733,10 @@
                                 <HyperlinkButton  Click="BottomBtnPlay_Click" Visibility="{Binding ElementName=BottomBtnPlay,Path=Visibility,Mode=OneWay}" Foreground="White" Padding="8" Width="48" Height="48">
                                     <fa:FontAwesome Icon="Solid_Play"  FontSize="20"></fa:FontAwesome>
                                 </HyperlinkButton>
-                                <Button Click="TopBtnOpenDanmaku_Click" Visibility="{x:Bind Path=DanmuControl.Visibility,Mode=OneWay,Converter={StaticResource display}}" Background="Transparent" Padding="0" Width="48" Height="48">
+                                <Button Click="TopBtnOpenDanmaku_Click" Visibility="{x:Bind Path=m_danmakuController.DanmakuViewModel.IsHide,Mode=OneWay}" Background="Transparent" Padding="0" Width="48" Height="48">
                                     <Image Width="28" Height="28" Source="/Assets/Icon/icon_danmaku_open.png" ></Image>
                                 </Button>
-                                <Button  Click="TopBtnCloseDanmaku_Click" Visibility="{x:Bind Path=DanmuControl.Visibility,Mode=OneWay}" Background="Transparent" Padding="0" Width="48" Height="48">
+                                <Button  Click="TopBtnCloseDanmaku_Click" Visibility="{x:Bind Path=m_danmakuController.DanmakuViewModel.IsHide,Mode=OneWay,Converter={StaticResource display}}" Background="Transparent" Padding="0" Width="48" Height="48">
                                     <Image Width="28" Height="28" Source="/Assets/Icon/icon_danmaku_close.png" ></Image>
                                 </Button>
                                 <HyperlinkButton x:Name="BottomBtnExitMiniWindows"  VerticalAlignment="Bottom" Click="BottomBtnExitMiniWindows_Click"  ToolTipService.ToolTip="退出小窗置顶" Foreground="White" Padding="8" Width="48" Height="48">

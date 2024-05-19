@@ -251,6 +251,25 @@ namespace BiliLite.Modules
             Videos = null;
             await LoadFavoriteInfo();
         }
+
+        public async Task Sort(string sourceId,string targetId)
+        {
+            var result= await favoriteApi.SortResource(Id, sourceId, targetId).Request();
+            if (!result.status)
+            {
+                Notify.ShowMessageToast("排序失败" + result.message);
+                return;
+            }
+
+            var data = await result.GetData<object>();
+            if (data.success)
+            {
+                Notify.ShowMessageToast("排序成功");
+                return;
+            }
+            Notify.ShowMessageToast("排序失败" + data.message);
+        }
+
         public async void LoadMore()
         {
             if (Loading)

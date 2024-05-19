@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Windows.UI;
 using Windows.UI.Xaml.Controls;
 using BiliLite.Models.Common.Danmaku;
 using BiliLite.ViewModels.Video;
@@ -71,6 +72,12 @@ namespace BiliLite.Services.Interfaces
         /// 显示滚动
         /// </summary>
         public abstract void ShowScroll();
+
+        /// <summary>
+        /// 设置字体
+        /// </summary>
+        /// <param name="fontName"></param>
+        public abstract void SetFont(string fontName);
 
         /// <summary>
         /// 设置弹幕字体缩放
@@ -146,6 +153,11 @@ namespace BiliLite.Services.Interfaces
         /// 添加弹幕
         /// </summary>
         public abstract void Add(BiliDanmakuItem danmakuItem, bool owner);
+
+        /// <summary>
+        /// 添加直播弹幕
+        /// </summary>
+        public abstract void AddLiveDanmaku(string text, bool owner, Color color);
 
         /// <summary>
         /// 暂停

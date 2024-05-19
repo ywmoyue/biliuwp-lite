@@ -56,5 +56,11 @@ namespace BiliLite.Models.Common.Video
         public object parameter { get; set; }
 
         public string area { get; set; } = "";
+
+        public string TitlePage { get; set; }
+
+        public string TitlePart { get; set; }
+
+        public bool ShowTitlePart => TitlePage != null;
     }
 }

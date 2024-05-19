@@ -151,6 +151,9 @@
                                 <TextBlock  FontSize="14">右侧视频详情宽度(下次打开视频生效)</TextBlock>
                                 <controls:NumberBox x:Name="numRightWidth" Minimum="40" Margin="0 0 0 8" Width="200" HorizontalAlignment="Left" Value="320" SpinButtonPlacementMode="Compact" SmallChange="20" ></controls:NumberBox>
                                 <ToggleSwitch x:Name="swRightWidthChangeable" Header="右侧视频详情宽度可调整(下次打开视频生效)"></ToggleSwitch>
+
+                                <TextBlock  FontSize="14">视频详情页分集列表设计宽度(下次打开视频生效)</TextBlock>
+                                <controls:NumberBox x:Name="NumListEpisodeDesiredWidth" Minimum="40" Margin="0 0 0 8" Width="200" HorizontalAlignment="Left" Value="180" SpinButtonPlacementMode="Compact" SmallChange="20" ></controls:NumberBox>
                             </StackPanel>
 
                             <StackPanel Margin="0 0 0 8">
@@ -335,6 +338,13 @@
                         <ToggleSwitch  x:Name="swPlayerSettingAutoOpenAISubtitle"></ToggleSwitch>
                         <TextBlock>部分自动生成的AI字幕会与视频自带字幕冲突</TextBlock>
                         <TextBlock Margin="0 0 0 16">建议关闭，有需要时再手动打开字幕</TextBlock>
+
+                        <TextBlock>上报历史纪录</TextBlock>
+                        <ToggleSwitch  x:Name="SwitchPlayerReportHistory"></ToggleSwitch>
+
+                        <TextBlock>视频结束上报历史纪录位置0</TextBlock>
+                        <ToggleSwitch  x:Name="SwitchReportHistoryZeroWhenVideoEnd"></ToggleSwitch>
+
                         <TextBlock  Margin="0 16 0 8" FontSize="16">替换CDN链接</TextBlock>
                       
                         <ComboBox x:Name="cbPlayerReplaceCDN" SelectedIndex="0" MinWidth="200">
@@ -508,6 +518,18 @@
                 </PivotItem.Header>
                 <ScrollViewer Padding="12 0" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
+                        <TextBlock  Margin="0 16 0 8"  FontSize="16">弹幕引擎</TextBlock>
+                        <ComboBox x:Name="cbLiveDanmakuEngine" SelectedIndex="0" MinWidth="200" SelectedValuePath="Value">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Text}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                            <ComboBox.Items>
+                                <common:ComboBoxItemData Text="NSDanmaku" Value="0"></common:ComboBoxItemData>
+                                <common:ComboBoxItemData Text="寒霜弹幕使" Value="1"></common:ComboBoxItemData>
+                            </ComboBox.Items>
+                        </ComboBox>
                         <TextBlock  Margin="0 16 0 8" FontSize="16">默认弹幕状态</TextBlock>
                         <ToggleSwitch x:Name="LiveDanmuSettingState" OnContent="打开" OffContent="关闭"></ToggleSwitch>
                    

@@ -9,6 +9,7 @@ using Bilibili.App.Dynamic.V2;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.UserDynamic;
 using BiliLite.Models.Dynamic;
+using BiliLite.Models.Exceptions;
 using BiliLite.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -118,13 +119,18 @@ namespace BiliLite.Extensions
          {1}                                 
 <Paragraph>{0}</Paragraph>
                                       </RichTextBlock>", input, titlePara);
+                if (!xaml.IsXmlString())
+                {
+                    throw new CustomizedErrorException("不是有效的xml字符串");
+                }
+
                 var p = (RichTextBlock)XamlReader.Load(xaml);
                 return p;
 
             }
             catch (Exception ex)
             {
-                _logger.Error("用户动态文本转富文本失败", ex);
+                _logger.Error($"用户动态文本转富文本失败:{id} : {txt}||{input}", ex);
                 var tx = new RichTextBlock();
                 var paragraph = new Paragraph();
                 var run = new Run() { Text = txt };
@@ -132,6 +138,16 @@ namespace BiliLite.Extensions
                 tx.Blocks.Add(paragraph);
                 return tx;
             }
+        }
+
+        public static RichTextBlock GetSimpleRichTextBlock(this string txt)
+        {
+            var tx = new RichTextBlock();
+            var paragraph = new Paragraph();
+            var run = new Run() { Text = txt };
+            paragraph.Inlines.Add(run);
+            tx.Blocks.Add(paragraph);
+            return tx;
         }
 
         /// <summary>
@@ -336,7 +352,7 @@ namespace BiliLite.Extensions
         {
             var keyword = new List<string>();
             //如果是链接就不处理了
-            if (!Regex.IsMatch(input, @"/[aAbBcC][vV]([a-zA-Z0-9]+)"))
+            if (!Regex.IsMatch(input, @"(?<=://)[^\s]*[aAbBcC][vV]([a-zA-Z0-9]+)"))
             {
                 //处理AV号
                 var av = Regex.Matches(input, @"[aA][vV](\d+)");

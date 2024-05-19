@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Models.Common.Video;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -44,7 +45,7 @@ namespace BiliLite.Pages.User
                     {
                         Cover = item.pic,
                         Author = item.owner.name,
-                        ID = item.aid,
+                        Id = item.aid,
                         Title = item.title
                     });
                 }
@@ -58,7 +59,8 @@ namespace BiliLite.Pages.User
                 parameters = new VideoPlaylist()
                 {
                     Index = watchLaterVM.Videos.IndexOf(data),
-                    Playlist = items
+                    Playlist = items,
+                    Title = $"稍后再看"
                 }
             });
         }

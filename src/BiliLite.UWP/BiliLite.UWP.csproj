@@ -149,6 +149,9 @@
     <Compile Include="Controls\UserFollowingTagsFlyout.xaml.cs">
       <DependentUpon>UserFollowingTagsFlyout.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\VideoListView.xaml.cs">
+      <DependentUpon>VideoListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\SendDynamicV2Dialog.xaml.cs">
       <DependentUpon>SendDynamicV2Dialog.xaml</DependentUpon>
     </Compile>
@@ -177,6 +180,9 @@
     </Compile>
     <Compile Include="Pages\IMainPage.cs" />
     <Compile Include="Pages\IRefreshablePage.cs" />
+    <Compile Include="Models\Common\Video\VideoPlaylist.cs" />
+    <Compile Include="Models\Common\Video\VideoPlaylistItem.cs" />
+    <Compile Include="Player\MediaInfos\FFMpegInteropMssCollectInfoData.cs" />
     <Compile Include="Services\PlayerToastService.cs" />
     <Compile Include="Services\SettingsImportExportService.cs" />
     <Compile Include="Services\ShortcutKeyService.cs" />
@@ -820,6 +826,10 @@
     <Compile Include="Services\SearchService.cs" />
     <Compile Include="ViewModels\Common\BaseViewModel.cs" />
     <Compile Include="ViewModels\Download\DownloadDialogViewModel.cs" />
+    <Compile Include="Models\Common\Video\VideoListItem.cs" />
+    <Compile Include="Models\Common\Video\VideoListSection.cs" />
+    <Compile Include="ViewModels\Video\VideoListSectionViewModel.cs" />
+    <Compile Include="ViewModels\Video\VideoListViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\GeeTest\bili_gt.html" />
@@ -981,6 +991,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\UserFollowingTagsFlyout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\VideoListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -298,7 +298,26 @@
                                 <ListView Margin="0 4" x:Name="EpisodeList" SelectionChanged="EpisodeList_SelectionChanged" >
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding title}" ToolTipService.ToolTip="{Binding title}"></TextBlock>
+                                            <StackPanel>
+                                                <Grid Visibility="{Binding ShowTitlePart}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="25"></ColumnDefinition>
+                                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="{Binding TitlePage}" 
+                                                               VerticalAlignment="Center"
+                                                               Width="25">
+                                                    </TextBlock>
+                                                    <TextBlock Grid.Column="1"
+                                                               Text="{Binding TitlePart}" 
+                                                               TextWrapping="Wrap" ></TextBlock>
+                                                </Grid>
+                                                <TextBlock  
+                                                    Visibility="{Binding ShowTitlePart,Converter={StaticResource display}}" 
+                                                    Text="{Binding title}" 
+                                                    TextWrapping="Wrap" 
+                                                    ToolTipService.ToolTip="{Binding title}"></TextBlock>
+                                            </StackPanel>
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
                                     <ListView.ItemContainerStyle>
@@ -376,17 +395,24 @@
                                     </Grid>
                                     <TextBlock Margin="0 4 0 0" Visibility="{x:Bind m_danmakuController.DanmakuViewModel.ShowAreaControl}">弹幕显示区域 <Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.Area,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
                                     <Slider x:Name="DanmuSettingArea" Value="{x:Bind Path=m_danmakuController.DanmakuViewModel.Area,Mode=OneWay}" Minimum="0.1" Maximum="1" StepFrequency="0.1" Visibility="{x:Bind m_danmakuController.DanmakuViewModel.ShowAreaControl}"></Slider>
-                                    <TextBlock Margin="0 4 0 0">弹幕缩放 <Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.SizeZoom,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
+                                    <TextBlock Margin="0 4 0 0">弹幕缩放 
+                                        <Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.SizeZoom,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
                                     <Slider x:Name="DanmuSettingFontZoom" Value="{x:Bind Path=m_danmakuController.DanmakuViewModel.SizeZoom,Mode=OneWay}" Minimum="0.1" Maximum="2" StepFrequency="0.05"></Slider>
-                                    <TextBlock Margin="0 4 0 0">弹幕速度 <Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.Speed,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
+                                    <TextBlock Margin="0 4 0 0">弹幕速度 
+                                        <Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.Speed,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
                                     <Slider x:Name="DanmuSettingSpeed" Value="{x:Bind Path=m_danmakuController.DanmakuViewModel.Speed,Mode=OneWay}" Minimum="1" Maximum="25" StepFrequency="1"></Slider>
-                                    <TextBlock Margin="0 4 0 0">弹幕透明度 <Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.Opacity,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
+                                    <TextBlock Margin="0 4 0 0">弹幕透明度 
+                                        <Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.Opacity,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
                                     <Slider  x:Name="DanmuSettingOpacity" Value="{x:Bind Path=m_danmakuController.DanmakuViewModel.Opacity,Mode=OneWay}" Minimum="0.1" Maximum="1" StepFrequency="0.1"></Slider>
                                     <TextBlock Margin="0 4 0 0">弹幕顶部距离 <Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.MarginTop,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
                                     <Slider  x:Name="DanmuTopMargin" Value="0" Minimum="0" Maximum="200" StepFrequency="4"></Slider>
                                     <TextBlock Margin="0 4 0 0">弹幕同屏密度(0为不限制) <Run Text="{x:Bind Path=DanmuSettingMaxNum.Value,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
                                     <Slider  x:Name="DanmuSettingMaxNum" Value="0" Minimum="0" Maximum="50" StepFrequency="1"></Slider>
-                                    
+                                    <TextBlock Margin="0 4 0 0">
+                                        弹幕字体 
+                                    </TextBlock>
+                                    <AutoSuggestBox QueryIcon="Accept" x:Name="DanmuSettingFont"></AutoSuggestBox>
+
                                     <Grid Margin="0 4 0 0">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition/>

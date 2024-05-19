@@ -161,6 +161,16 @@ namespace BiliLite.Pages
                 });
             });
 
+            //视频详情页分集列表设计宽度
+            NumListEpisodeDesiredWidth.Value = SettingService.GetValue<double>(SettingConstants.UI.VIDEO_DETAIL_LIST_EPISODE_DESIRED_WIDTH, SettingConstants.UI.DEFAULT_VIDEO_DETAIL_LIST_EPISODE_DESIRED_WIDTH);
+            NumListEpisodeDesiredWidth.Loaded += (sender, e) =>
+            {
+                NumListEpisodeDesiredWidth.ValueChanged += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.VIDEO_DETAIL_LIST_EPISODE_DESIRED_WIDTH, args.NewValue);
+                };
+            };
+
             //动态评论宽度
             NumBoxDynamicCommentWidth.Value = SettingService.GetValue<double>(SettingConstants.UI.DYNAMIC_COMMENT_WIDTH, SettingConstants.UI.DEFAULT_DYNAMIC_COMMENT_WIDTH);
             NumBoxDynamicCommentWidth.Loaded += (sender, e) =>
@@ -506,6 +516,25 @@ namespace BiliLite.Pages
                     SettingService.SetValue(SettingConstants.Player.AUTO_OPEN_AI_SUBTITLE, swPlayerSettingAutoOpenAISubtitle.IsOn);
                 });
             });
+            //上报历史纪录
+            SwitchPlayerReportHistory.IsOn = SettingService.GetValue(SettingConstants.Player.REPORT_HISTORY, SettingConstants.Player.DEFAULT_REPORT_HISTORY);
+            SwitchPlayerReportHistory.Loaded += (sender, e) =>
+            {
+                SwitchPlayerReportHistory.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.REPORT_HISTORY, SwitchPlayerReportHistory.IsOn);
+                };
+            };
+
+            //视频结束上报历史纪录0
+            SwitchReportHistoryZeroWhenVideoEnd.IsOn = SettingService.GetValue(SettingConstants.Player.REPORT_HISTORY_ZERO_WHEN_VIDEO_END, SettingConstants.Player.DEFAULT_REPORT_HISTORY_ZERO_WHEN_VIDEO_END);
+            SwitchReportHistoryZeroWhenVideoEnd.Loaded += (sender, e) =>
+            {
+                SwitchReportHistoryZeroWhenVideoEnd.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.REPORT_HISTORY_ZERO_WHEN_VIDEO_END, SwitchReportHistoryZeroWhenVideoEnd.IsOn);
+                };
+            };
             //替换CDN
             cbPlayerReplaceCDN.SelectedIndex = SettingService.GetValue<int>(SettingConstants.Player.REPLACE_CDN, 3);
             cbPlayerReplaceCDN.Loaded += new RoutedEventHandler((sender, e) =>
@@ -703,6 +732,15 @@ namespace BiliLite.Pages
         }
         private void LoadLiveDanmu()
         {
+            // 弹幕引擎
+            cbLiveDanmakuEngine.SelectedValue = SettingService.GetValue(SettingConstants.Live.DANMAKU_ENGINE, (int)SettingConstants.Live.DEFAULT_DANMAKU_ENGINE);
+            cbLiveDanmakuEngine.Loaded += (sender, e) =>
+            {
+                cbLiveDanmakuEngine.SelectionChanged += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Live.DANMAKU_ENGINE, cbLiveDanmakuEngine.SelectedValue);
+                };
+            };
             //弹幕开关
             var state = SettingService.GetValue<Visibility>(SettingConstants.Live.SHOW, Visibility.Visible) == Visibility.Visible;
             LiveDanmuSettingState.IsOn = state;

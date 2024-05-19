@@ -16,6 +16,8 @@ using Windows.Security.Cryptography;
 using Windows.Storage.Streams;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Xml;
+using BiliLite.Models.Exceptions;
 
 namespace BiliLite.Extensions
 {
@@ -120,6 +122,10 @@ namespace BiliLite.Extensions
                                                                 fontColor == null ? "" : $"Foreground=\"{fontColor}\"",
                                                                 $"FontWeight=\"{fontWeight}\"",
                                                                 lowProfilePrefix);
+                    if (!xaml.IsXmlString())
+                    {
+                        throw new CustomizedErrorException("不是有效的xml字符串");
+                    }
                     var p = (RichTextBlock)XamlReader.Load(xaml);
                     return p;
                 }
@@ -135,7 +141,7 @@ namespace BiliLite.Extensions
             }
             catch (Exception ex)
             {
-                _logger.Error($"富文本转换失败: {txt}", ex);
+                _logger.Error($"富文本转换失败: {txt} || {input}", ex);
                 var tx = new RichTextBlock();
                 Paragraph paragraph = new Paragraph();
                 Run run = new Run() { Text = txt };
@@ -332,6 +338,23 @@ namespace BiliLite.Extensions
             return Uri.EscapeDataString(text);
         }
 
+        public static bool IsXmlString(this string text)
+        {
+            if (string.IsNullOrEmpty(text)) return false;
+            var detail = text.Trim();
+            if (!detail.StartsWith("<") && !detail.EndsWith(">")) return false;
+            var xml = new XmlDocument();
+            try
+            {
+                xml.LoadXml($"<Root>{detail}</Root>");
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         #region Private methods
 
         /// <summary>
@@ -387,7 +410,7 @@ namespace BiliLite.Extensions
             List<string> keyword = new List<string>();
             List<List<int>> haveHandledOffset = new List<List<int>>();
             //如果是链接就不处理了
-            if (!Regex.IsMatch(input, @"/[aAbBcC][vV]([a-zA-Z0-9]+)"))
+            if (!Regex.IsMatch(input, @"(?<=://)[^\s]*[aAbBcC][vV]([a-zA-Z0-9]+)"))
             {
                 var offset = 0;
 
@@ -483,7 +506,7 @@ namespace BiliLite.Extensions
                 var data =
                     @"<InlineUIContainer><HyperlinkButton x:Name=""btn"" Command=""{Binding LaunchUrlCommand}""  IsEnabled=""True"" Margin=""2 -3 2 -5"" Padding=""0 2 0 0"" " +
                     string.Format(
-                        @"CommandParameter=""{0}"" ><TextBlock>🔗网页链接</TextBlock></HyperlinkButton></InlineUIContainer>",
+                        @"ToolTipService.ToolTip=""{0}"" CommandParameter=""{0}"" ><TextBlock>🔗网页链接</TextBlock></HyperlinkButton></InlineUIContainer>",
                         item.Groups[0].Value.IsUrl() ? item.Groups[0].Value : ApiHelper.NOT_FOUND_URL);
                 input = input.Replace(item.Groups[0].Value, data);
             }

@@ -101,11 +101,15 @@
                                           DesiredWidth="500"
                                           StretchContentForSingleRow="False"
                                           ItemContainerStyle="{StaticResource SeasonItemStyle}"
-                                          ItemsSource="{x:Bind Path=videoVM.MyFavorite,Mode=OneWay}"
+                                          ItemsSource="{x:Bind Path=videoVM.MyFavorite,Mode=TwoWay}"
                                           ItemTemplate="{StaticResource VideoDataTemplate}"
                                           ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                           ItemClick="VideoFavorite_ItemClick"
                                           ScrollViewer.VerticalScrollMode="Disabled"
+                                          AllowDrop="True"
+                                          CanReorderItems="True"
+                                          CanDragItems="True"
+                                          DragItemsCompleted="VideoFavGridView_OnDragItemsCompleted"
                                           ItemHeight="80">
                                 <toolkit:AdaptiveGridView.Header>
                                     <Grid Margin="12 8 0 0">

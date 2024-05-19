@@ -148,6 +148,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const bool DEFAULT_SHOW_HOT_REPLIES = true;
+
+            /// <summary>
+            /// 视频详情页分集列表设计宽度
+            /// </summary>
+            [SettingKey(typeof(double))]
+            public const string VIDEO_DETAIL_LIST_EPISODE_DESIRED_WIDTH = "VideoDetailListEpisodeDesiredWidth";
+
+            /// <summary>
+            /// 视频详情页分集列表设计宽度默认值
+            /// </summary>
+            [SettingDefaultValue]
+            public const double DEFAULT_VIDEO_DETAIL_LIST_EPISODE_DESIRED_WIDTH = 180;
         }
 
         public class Account
@@ -338,10 +350,28 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(int))]
             public const string SHIELD_LEVEL = "VideoDanmuShieldLevel";
+
+            /// <summary>
+            /// 弹幕字体
+            /// </summary>
+            [SettingKey(typeof(string))] 
+            public const string DANMAKU_FONT_FAMILY = "VideoDanmuFontFamily";
         }
 
         public class Live
         {
+            /// <summary>
+            /// 默认弹幕引擎
+            /// </summary>
+            [SettingDefaultValue]
+            public const DanmakuEngineType DEFAULT_DANMAKU_ENGINE = DanmakuEngineType.NSDanmaku;
+
+            /// <summary>
+            /// 弹幕引擎
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const string DANMAKU_ENGINE = "DanmakuEngine";
+
             /// <summary>
             /// 直播默认清晰度
             /// </summary>
@@ -443,6 +473,18 @@ namespace BiliLite.Models.Common
             public const string DEFAULT_LIVE_PLAY_URL_SOURCE = "DefaultLivePlayUrlSource";
 
             /// <summary>
+            /// 低延迟模式开关
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string LOW_DELAY_MODE = "LowDelayMode";
+
+            /// <summary>
+            /// 低延迟模式开关
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_LOW_DELAY_MODE = false;
+
+            /// <summary>
             /// 显示底部礼物栏
             /// </summary>
             [SettingKey(typeof(bool))]
@@ -453,6 +495,12 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const bool DEFAULT_SHOW_BOTTOM_GIFT_BAR = true;
+
+            /// <summary>
+            /// 弹幕字体
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string DANMAKU_FONT_FAMILY = "VideoDanmuFontFamily";
         }
 
         public class Player
@@ -683,6 +731,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(int))]
             public const string DEFAULT_LIVE_PLAYER_MODE = "DefaultLivePlayerMode";
+
+            [SettingKey(typeof(bool))]
+            public const string REPORT_HISTORY = "ReportHistory";
+
+            [SettingDefaultValue]
+            public const bool DEFAULT_REPORT_HISTORY = true;
+
+            [SettingKey(typeof(bool))]
+            public const string REPORT_HISTORY_ZERO_WHEN_VIDEO_END = "ReportHistoryZeroWhenVideoEnd";
+
+            [SettingDefaultValue]
+            public const bool DEFAULT_REPORT_HISTORY_ZERO_WHEN_VIDEO_END = false;
         }
 
         public class Roaming

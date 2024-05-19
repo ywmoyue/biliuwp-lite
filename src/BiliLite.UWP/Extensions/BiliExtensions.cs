@@ -108,14 +108,7 @@ namespace BiliLite.Extensions
                 var ver = JsonConvert.DeserializeObject<NewVersionResponse>(result.results);
                 var ignoreVersion = SettingService.GetValue(SettingConstants.Other.IGNORE_VERSION, "");
                 if (ignoreVersion.Equals(ver.Version)) return;
-                // 获取临时版本号
-                var revision = SystemInformation.ApplicationVersion.Revision;
                 var v = int.Parse(num);
-                // 存在临时版本号时，正式版本号减一
-                if (revision > 0)
-                {
-                    v--;
-                }
                 if (ver.VersionNum > v)
                 {
                     var dialog = new ContentDialog();
