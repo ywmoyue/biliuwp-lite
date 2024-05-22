@@ -39,7 +39,7 @@ namespace BiliLite.ViewModels.User
             if (!result) return;
             if (Attention == 1)
             {
-                Attention = -999;
+                Attention = 0;
                 CancelAttention?.Invoke(this, EventArgs.Empty);
             }
             else

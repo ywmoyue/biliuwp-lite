@@ -292,7 +292,7 @@
                                         </StackPanel>
                                         <control:AttentionButton 
                                             Grid.Column="2" 
-                                            UserId="{x:Bind m_viewModel.VideoInfo.Owner.Mid}"
+                                            UserId="{x:Bind m_viewModel.VideoInfo.Owner.Mid,Mode=OneWay}"
                                             Attention="{x:Bind m_viewModel.VideoInfo.ReqUser.Attention,Mode=TwoWay}"></control:AttentionButton>
                                     </Grid>
                                 </HyperlinkButton>
@@ -319,7 +319,7 @@
                                                         </StackPanel>
                                                         <control:AttentionButton 
                                                             Grid.Column="2" 
-                                                            UserId="{x:Bind Mid}"
+                                                            UserId="{x:Bind Mid,Mode=OneWay}"
                                                             Attention="{x:Bind Attention,Mode=TwoWay}"></control:AttentionButton>
                                                     </Grid>
                                                 </HyperlinkButton>
