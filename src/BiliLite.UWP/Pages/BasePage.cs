@@ -42,6 +42,11 @@ namespace BiliLite.Pages
             Player?.Dispose();
         }
 
+        public void Seek(double position)
+        {
+            Player.SetPosition(position);
+        }
+
         public async Task ReportHistory()
         {
             if (Player == null) return;

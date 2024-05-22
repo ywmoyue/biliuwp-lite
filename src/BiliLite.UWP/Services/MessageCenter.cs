@@ -33,6 +33,7 @@ namespace BiliLite.Services
         public static event EventHandler<object> LoginedEvent;
         public static event EventHandler<ImageViewerParameter> ViewImageEvent;
         public static event EventHandler GoBackEvent;
+        public static event EventHandler<double> SeekEvent;
         public static event EventHandler LogoutedEvent;
         public static void NavigateToPage(object sender, NavigationInfo navigationInfo)
         {
@@ -578,6 +579,11 @@ namespace BiliLite.Services
 
             return false;
 
+        }
+
+        public static void HandleSeek(double position)
+        {
+            SeekEvent?.Invoke(null, position);
         }
 
         public async static Task<string> HandelSeasonID(string url)

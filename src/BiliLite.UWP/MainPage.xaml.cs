@@ -43,6 +43,7 @@ namespace BiliLite
             MessageCenter.ViewImageEvent += MessageCenter_ViewImageEvent;
             MessageCenter.MiniWindowEvent += MessageCenter_MiniWindowEvent;
             MessageCenter.GoBackEvent += MessageCenter_GoBackEvent;
+            MessageCenter.SeekEvent += MessageCenter_SeekEvent;
 
             App.Current.Suspending += Current_Suspending;
             // Window.Current.Content.PointerPressed += Content_PointerPressed;
@@ -80,6 +81,14 @@ namespace BiliLite
                 if(!(page is PlayPage playPage)) continue;
                 await playPage.ReportHistory();
             }
+        }
+
+        private void MessageCenter_SeekEvent(object sender, double e)
+        {
+            if (!(tabView.SelectedItem is TabViewItem tabItem)) return;
+            if (!(tabItem.Content is Frame frame)) return;
+            if (!(frame.Content is PlayPage playPage)) return;
+            playPage.Seek(e);
         }
 
         private void MessageCenter_GoBackEvent(object sender, EventArgs e)
