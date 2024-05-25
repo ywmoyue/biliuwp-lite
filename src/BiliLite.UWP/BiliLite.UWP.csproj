@@ -175,6 +175,8 @@
     <Compile Include="Models\Common\User\SendDynamic\RcmdTopicModel.cs" />
     <Compile Include="Models\Functions\IShortcutFunction.cs" />
     <Compile Include="Models\Functions\RefreshShortcutFunction.cs" />
+    <Compile Include="Models\Common\User\FavoriteItemModel.cs" />
+    <Compile Include="ViewModels\User\FavoriteItemViewModel.cs" />
     <Compile Include="Pages\Home\UserDynamicPage.xaml.cs">
       <DependentUpon>UserDynamicPage.xaml</DependentUpon>
     </Compile>
@@ -182,6 +184,9 @@
     <Compile Include="Pages\IRefreshablePage.cs" />
     <Compile Include="Models\Common\Video\VideoPlaylist.cs" />
     <Compile Include="Models\Common\Video\VideoPlaylistItem.cs" />
+    <Compile Include="Pages\User\CollectedPage.xaml.cs">
+      <DependentUpon>CollectedPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Player\MediaInfos\FFMpegInteropMssCollectInfoData.cs" />
     <Compile Include="Services\PlayerToastService.cs" />
     <Compile Include="Services\SettingsImportExportService.cs" />
@@ -242,6 +247,7 @@
     <Compile Include="ViewModels\UserDynamic\UserDynamicAllViewModel.cs" />
     <Compile Include="ViewModels\UserDynamic\UserDynamicSpaceViewModel.cs" />
     <Compile Include="Models\Common\User\SendDynamic\AtUserModel.cs" />
+    <Compile Include="ViewModels\User\CollectedPageViewModel.cs" />
     <Compile Include="ViewModels\User\SendDynamic\SendDynamicV2ViewModel.cs" />
     <Compile Include="ViewModels\User\UserAttentionButtonViewModel.cs" />
     <Compile Include="ViewModels\User\UserFollowingTagsFlyoutViewModel.cs" />
@@ -694,7 +700,7 @@
     <Compile Include="Modules\Season\SeasonIndexVM.cs" />
     <Compile Include="Modules\SettingVM.cs" />
     <Compile Include="ViewModels\Video\VideoDetailPageViewModel.cs" />
-    <Compile Include="Modules\User\MyFollowVideoVM.cs" />
+    <Compile Include="ViewModels\User\MyFollowVideoViewModel.cs" />
     <Compile Include="ViewModels\User\SendDynamic\SendDynamicViewModel.cs" />
     <Compile Include="ViewModels\User\SendDynamic\TopicViewModel.cs" />
     <Compile Include="ViewModels\User\UserDetailViewModel.cs" />
@@ -1005,6 +1011,10 @@
     <Page Include="Pages\Home\UserDynamicPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\User\CollectedPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\User\DynamicSpacePage.xaml">
       <SubType>Designer</SubType>

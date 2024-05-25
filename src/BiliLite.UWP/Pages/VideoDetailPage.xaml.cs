@@ -24,6 +24,7 @@ using BiliLite.ViewModels.Video;
 using BiliLite.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using BiliLite.ViewModels.Download;
+using BiliLite.ViewModels.User;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -523,13 +524,13 @@ namespace BiliLite.Pages
 
         private void listAddFavorite_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var item = e.ClickedItem as FavoriteItemModel;
-            m_viewModel.DoFavorite(new List<string>() { item.id }, avid);
+            var item = e.ClickedItem as FavoriteItemViewModel;
+            m_viewModel.DoFavorite(new List<string>() { item.Id }, avid);
         }
 
         private void BtnAddFavorite_Click(object sender, RoutedEventArgs e)
         {
-            m_viewModel.DoFavorite(m_viewModel.MyFavorite.Where(x => x.is_fav).Select(x => x.id).ToList(), avid);
+            m_viewModel.DoFavorite(m_viewModel.MyFavorite.Where(x => x.IsFav).Select(x => x.Id).ToList(), avid);
         }
 
         private async void btnOpenWeb_Click(object sender, RoutedEventArgs e)

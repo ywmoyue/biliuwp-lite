@@ -15,6 +15,7 @@
     xmlns:detail="using:BiliLite.Models.Common.Video.Detail"
     xmlns:video="using:BiliLite.ViewModels.Video"
     xmlns:videoModel="using:BiliLite.Models.Common.Video"
+    xmlns:user="using:BiliLite.ViewModels.User"
     Background="Transparent"
     SizeChanged="VideoDetailPage_OnSizeChanged">
     <Page.Resources>
@@ -118,7 +119,7 @@
                                             </ListView.ItemContainerStyle>
 
                                             <ListView.ItemTemplate>
-                                                <DataTemplate x:DataType="modules:FavoriteItemModel">
+                                                <DataTemplate x:DataType="user:FavoriteItemViewModel">
                                                     <!--<CheckBox IsChecked="{x:Bind Path=is_fav,Mode=TwoWay}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                                     
                                                 </CheckBox>-->
@@ -127,9 +128,9 @@
                                                             <ColumnDefinition/>
                                                             <ColumnDefinition Width="Auto"/>
                                                         </Grid.ColumnDefinitions>
-                                                        <TextBlock  Text="{x:Bind title}"></TextBlock>
-                                                        <TextBlock  Margin="0 4" Grid.Column="1" FontSize="14" Foreground="Gray" Visibility="{x:Bind Path=privacy,Converter={StaticResource display}}">公开</TextBlock>
-                                                        <TextBlock  Margin="0 4"  Grid.Column="1" FontSize="14" Foreground="Gray" Visibility="{x:Bind Path=privacy}">私密</TextBlock>
+                                                        <TextBlock  Text="{x:Bind Title}"></TextBlock>
+                                                        <TextBlock  Margin="0 4" Grid.Column="1" FontSize="14" Foreground="Gray" Visibility="{x:Bind Path=Privacy,Converter={StaticResource display}}">公开</TextBlock>
+                                                        <TextBlock  Margin="0 4"  Grid.Column="1" FontSize="14" Foreground="Gray" Visibility="{x:Bind Path=Privacy}">私密</TextBlock>
                                                     </Grid>
                                                 </DataTemplate>
                                             </ListView.ItemTemplate>

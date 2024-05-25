@@ -17,6 +17,7 @@ using BiliLite.Models.Requests.Api;
 using BiliLite.Models.Requests.Api.User;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
+using BiliLite.ViewModels.User;
 using BiliLite.ViewModels.Video;
 using Microsoft.Extensions.DependencyInjection;
 using PropertyChanged;
@@ -87,7 +88,7 @@ namespace BiliLite.Modules
 
         public bool ShowMoreStaff { get; set; }
 
-        public ObservableCollection<FavoriteItemModel> MyFavorite { get; set; }
+        public ObservableCollection<FavoriteItemViewModel> MyFavorite { get; set; }
 
         public double BottomActionBarHeight { get; set; }
 
@@ -210,7 +211,7 @@ namespace BiliLite.Modules
                     var data = await results.GetJson<ApiDataModel<JObject>>();
                     if (data.success)
                     {
-                        MyFavorite = await data.data["list"].ToString().DeserializeJson<ObservableCollection<FavoriteItemModel>>();
+                        MyFavorite = await data.data["list"].ToString().DeserializeJson<ObservableCollection<FavoriteItemViewModel>>();
                     }
                     else
                     {
