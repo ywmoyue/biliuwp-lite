@@ -61,6 +61,7 @@ namespace BiliLite.Pages
             followVM = new UserFollowVM(false);
             m_userDynamicViewModel.OpenCommentEvent += UserDynamicViewModelOpenCommentEvent;
             splitView.PaneClosed += SplitView_PaneClosed;
+            m_viewModel.LiveStreaming += (_, e) => btnLiveRoom.Label = "正在直播";
         }
         private void SplitView_PaneClosed(SplitView sender, object args)
         {
@@ -189,7 +190,7 @@ namespace BiliLite.Pages
 
         private void btnLiveRoom_Click(object sender, RoutedEventArgs e)
         {
-            if (m_viewModel.UserInfo == null) return;
+            if (!m_viewModel.HaveLiveRoom) return;
             MessageCenter.NavigateToPage(this, new NavigationInfo()
             {
                 icon = Symbol.Video,
