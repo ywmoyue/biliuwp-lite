@@ -28,6 +28,7 @@ namespace BiliLite.Models.Common.Live
                     { MessageType.AnchorLotteryStart, AnchorLotteryStart },
                     { MessageType.AnchorLotteryAward, AnchorLotteryAward },
                     { MessageType.GuardBuy, GuardBuy },
+                    { MessageType.GuardBuyNew, GuardBuyNew},
                     { MessageType.RoomChange, RoomChange },
                     { MessageType.RoomBlock, RoomBlock },
                     { MessageType.WaringOrCutOff, WaringOrCutOff },
@@ -37,7 +38,7 @@ namespace BiliLite.Models.Common.Live
                     { MessageType.RedPocketLotteryWinner, RedPocketLotteryWinner },
                     { MessageType.OnlineRankChange, OnlineRankChange },
                     { MessageType.StopLive, StopLive },
-                    { MessageType.RoomSlient, RoomSlient },
+                    { MessageType.ChatLevelMute, ChatLevelMute },
                 };
         }
 
@@ -203,6 +204,36 @@ namespace BiliLite.Models.Common.Live
             viewModel.ReloadGuardList().RunWithoutAwait();
         }
 
+        private void GuardBuyNew(LiveRoomViewModel viewModel, object message)
+        {
+            var info = message as GuardBuyMsgModel;
+
+            var isNewGuard = info.Message.Contains("开通");
+
+            int accompanyDays = -1;
+            var match = Regex.Match(info.Message, @"今天是TA陪伴主播的第(\d+)天");
+            if (match.Success) accompanyDays = match.Groups[1].Value.ToInt32();
+
+            var text = info.UserName + 
+                       (isNewGuard ? "\n新开通了" : "\n续费了") +
+                       $"主播的{info.GiftName}" + 
+                       (info.Num > 1 ? $"×{info.Num}个{info.Unit}" : "") +
+                       "🎉" +
+                       ((match.Success && accompanyDays > 1) ? $"\nTA已陪伴主播{accompanyDays}天💖" : "");
+
+            var msg = new DanmuMsgModel
+            {
+                ShowUserName = Visibility.Collapsed,
+                ShowUserFace = Visibility.Collapsed,
+                RichText = text.ToRichTextBlock(null, fontWeight: "SemiBold", fontColor: info.FontColor, textAlignment: "Center"),
+                CardColor = new SolidColorBrush(info.CardColor),
+                CardHorizontalAlignment = HorizontalAlignment.Center,
+            };
+            
+            viewModel.Messages.Add(msg);
+            if (isNewGuard) viewModel.ReloadGuardList().RunWithoutAwait();
+        }
+
         private void RoomChange(LiveRoomViewModel viewModel, object message)
         {
             var info = message as RoomChangeMsgModel;
@@ -291,7 +322,7 @@ namespace BiliLite.Models.Common.Live
             });
         }
         
-        private void RoomSlient(LiveRoomViewModel viewModel, object level)
+        private void ChatLevelMute(LiveRoomViewModel viewModel, object level)
         {
             viewModel.Messages.Add(new DanmuMsgModel()
             {

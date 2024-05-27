@@ -261,24 +261,9 @@ namespace BiliLite.Modules.Live
                         }
 
                         // 是否为舰长
-                        if (obj["info"][3] != null && obj["info"][3].ToArray().Length != 0 &&
-                            obj["info"][3][10] != null && Convert.ToInt32(obj["info"][3][10].ToString()) != 0)
+                        if (obj["info"][7] != null && obj["info"][7].ToString().Length != 0)
                         {
-                            switch (Convert.ToInt32(obj["info"][3][10].ToString()))
-                            {
-                                case 3:
-                                    msg.UserCaptain = "舰长";
-                                    msg.UserNameColor = "#FF23709E";
-                                    break;
-                                case 2:
-                                    msg.UserCaptain = "提督";
-                                    msg.UserNameColor = "#FF7B166F";
-                                    break;
-                                case 1:
-                                    msg.UserCaptain = "总督";
-                                    msg.UserNameColor = "#FFC01039";
-                                    break;
-                            }
+                            msg.UserCaptain = obj["info"][7].ToInt32();
                             msg.ShowCaptain = Visibility.Visible;
                         }
 
@@ -286,7 +271,7 @@ namespace BiliLite.Modules.Live
                         if (obj["info"][3] != null && obj["info"][3].ToArray().Length != 0)
                         {
                             msg.MedalName = obj["info"][3][1].ToString();
-                            msg.MedalLevel = obj["info"][3][0].ToString();
+                            msg.MedalLevel = obj["info"][3][0].ToInt32();
                             msg.MedalColor = obj["info"][3][4].ToString();
                             msg.ShowMedal = Visibility.Visible;
                         }
@@ -350,7 +335,7 @@ namespace BiliLite.Modules.Live
                         if (obj["data"]["fans_medal"]["medal_level"].ToInt32() != 0)
                         {
                             w.MedalName = obj["data"]["fans_medal"]["medal_name"].ToString();
-                            w.MedalLevel = obj["data"]["fans_medal"]["medal_level"].ToString();
+                            w.MedalLevel = obj["data"]["fans_medal"]["medal_level"].ToInt32();
                             w.MedalColor = obj["data"]["fans_medal"]["medal_color"].ToString();
                             w.ShowMedal = Visibility.Visible;
                         }
@@ -432,19 +417,38 @@ namespace BiliLite.Modules.Live
                     }
                     return MessageDelayType.SystemMessage;
                 }
-                else if (cmd == "GUARD_BUY")
+                //else if (cmd == "GUARD_BUY")
+                //{
+                //    if (obj["data"] != null)
+                //    {
+                //        NewMessage?.Invoke(MessageType.GuardBuy, new GuardBuyMsgModel()
+                //        {
+                //            GiftId = obj["data"]["gift_id"].ToInt32(),
+                //            GiftName = obj["data"]["gift_name"].ToString(),
+                //            Num = obj["data"]["num"].ToInt32(),
+                //            Price = obj["data"]["price"].ToInt32(),
+                //            UserName = obj["data"]["username"].ToString(),
+                //            UserID = obj["data"]["uid"].ToString(),
+                //            GuardLevel = obj["data"]["guard_level"].ToInt32(),
+                //        });
+                //    }
+                //    return MessageDelayType.SystemMessage;
+                //}
+                else if (cmd == "USER_TOAST_MSG")
                 {
                     if (obj["data"] != null)
                     {
-                        NewMessage?.Invoke(MessageType.GuardBuy, new GuardBuyMsgModel()
+                        NewMessage?.Invoke(MessageType.GuardBuyNew, new GuardBuyMsgModel() 
                         {
                             GiftId = obj["data"]["gift_id"].ToInt32(),
-                            GiftName = obj["data"]["gift_name"].ToString(),
+                            GiftName = obj["data"]["role_name"].ToString(),
                             Num = obj["data"]["num"].ToInt32(),
                             Price = obj["data"]["price"].ToInt32(),
                             UserName = obj["data"]["username"].ToString(),
                             UserID = obj["data"]["uid"].ToString(),
                             GuardLevel = obj["data"]["guard_level"].ToInt32(),
+                            Unit = obj["data"]["unit"].ToString(),
+                            Message = obj["data"]["toast_msg"].ToString(),
                         });
                     }
                     return MessageDelayType.SystemMessage;
@@ -513,7 +517,7 @@ namespace BiliLite.Modules.Live
                 {
                     if (obj["data"] != null)
                     {
-                        NewMessage?.Invoke(MessageType.RoomSlient, obj["data"]["level"].ToInt32());
+                        NewMessage?.Invoke(MessageType.ChatLevelMute, obj["data"]["level"].ToInt32());
                     }
                     return MessageDelayType.SystemMessage;
                 }

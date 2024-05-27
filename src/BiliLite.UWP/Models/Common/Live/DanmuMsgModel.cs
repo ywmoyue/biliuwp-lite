@@ -30,10 +30,23 @@ namespace BiliLite.Models.Common.Live
         /// </summary>
         public string UserName { get; set; }
 
+        private string _userNameColor;
         /// <summary>
         /// 用户名颜色, 默认灰色
         /// </summary>
-        public string UserNameColor { get; set; } = "#FF808080";
+        public string UserNameColor 
+        { 
+            get => _userNameColor ?? 
+                UserCaptain switch
+                {
+                    3 => "#FF23709E",
+                    2 => "#FF7B166F",
+                    1 => "#FFC01039",
+                    _ => "#FF808080"
+                }; 
+
+            set => _userNameColor = value; 
+        }
 
         /// <summary>
         /// 用户名字重, 默认Normal
@@ -83,7 +96,7 @@ namespace BiliLite.Models.Common.Live
         /// <summary>
         /// 勋章等级
         /// </summary>
-        public string MedalLevel { get; set; }
+        public int MedalLevel { get; set; }
 
         /// <summary>
         /// 勋章颜色
@@ -91,9 +104,9 @@ namespace BiliLite.Models.Common.Live
         public string MedalColor { get; set; }
         
         /// <summary>
-        /// 用户上的舰的名称
+        /// 用户舰队等级
         /// </summary>
-        public string UserCaptain {  get; set; }
+        public int UserCaptain { get; set; }
 
         /// <summary>
         /// 用户上的舰的图片
@@ -102,9 +115,9 @@ namespace BiliLite.Models.Common.Live
         {
              get => UserCaptain switch
                     {
-                        "舰长" => "ms-appx:///Assets/Live/ic_live_guard_3.png",
-                        "提督" => "ms-appx:///Assets/Live/ic_live_guard_2.png",
-                        "总督" => "ms-appx:///Assets/Live/ic_live_guard_1.png",
+                        3 => "ms-appx:///Assets/Live/ic_live_guard_3.png", //舰长
+                        2 => "ms-appx:///Assets/Live/ic_live_guard_2.png", //提督
+                        1 => "ms-appx:///Assets/Live/ic_live_guard_1.png", //总督
                         _ => null,
                     };
         }
