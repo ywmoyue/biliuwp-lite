@@ -265,5 +265,58 @@ namespace BiliLite.Models.Requests.Api.User
             api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
         }
+
+        public ApiModel Sort(List<string> favIdList)
+        {
+            var sort = string.Join(',', favIdList);
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Post,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/sort",
+                body = ApiHelper.MustParameter(AppKey, true) + $"&sort={sort}"
+            };
+            api.body += ApiHelper.GetSign(api.body, AppKey);
+            return api;
+        }
+
+        public ApiModel SortResource(string mediaId, string sourceId, string targetId)
+        {
+            // 0:0:{sourceId}:2 将sourceId的视频移动到第一位
+            // {targetId}:2:{sourceId}:2 将sourceId的视频移动到targetId的视频之后
+            var sort = "";
+            sort = string.IsNullOrEmpty(targetId) ? $"0:0:{sourceId}:2" : $"{targetId}:2:{sourceId}:2";
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Post,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/resource/sort",
+                body = ApiHelper.MustParameter(AppKey, true) + $"&media_id={mediaId}&sort={sort}"
+            };
+            api.body += ApiHelper.GetSign(api.body, AppKey);
+            return api;
+        }
+
+        public ApiModel GetCollected(int page=1,int pageCount=20)
+        {
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Get,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/collected/list",
+                parameter = $"up_mid={SettingService.Account.UserID}&pn={page}&ps={pageCount}&platform=web",
+                need_cookie = true,
+            };
+            return api;
+        }
+
+        public ApiModel UnFavCollected(string seasonId)
+        {
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Post,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/season/unfav",
+                body = ApiHelper.MustParameter(AppKey, true) + $"&season_id={seasonId}"
+            };
+            api.body += ApiHelper.GetSign(api.body, AppKey);
+            return api;
+        }
     }
 }

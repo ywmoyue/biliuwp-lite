@@ -59,7 +59,8 @@ namespace BiliLite.Pages.User
                 parameters = new VideoPlaylist()
                 {
                     Index = watchLaterVM.Videos.IndexOf(data),
-                    Playlist = items
+                    Playlist = items,
+                    Title = $"稍后再看"
                 }
             });
         }

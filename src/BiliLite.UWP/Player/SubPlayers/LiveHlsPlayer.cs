@@ -180,7 +180,7 @@ namespace BiliLite.Player
             var url = "";
             var manualUrl = m_realPlayInfo.ManualPlayUrl;
 
-            if (manualUrl != null && manualUrl.Length > 0 && SettingService.GetValue(SettingConstants.Live.LOW_DELAY_MODE, false))
+            if (!string.IsNullOrEmpty(manualUrl) && SettingService.GetValue(SettingConstants.Live.LOW_DELAY_MODE, SettingConstants.Live.DEFAULT_LOW_DELAY_MODE))
             {
                 url = manualUrl;
             }

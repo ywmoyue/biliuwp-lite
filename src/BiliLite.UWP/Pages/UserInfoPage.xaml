@@ -226,6 +226,11 @@
                                     OneRowModeEnabled="False">
                                     <toolkit:AdaptiveGridView.Header>
                                         <Grid Margin="4 8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                            </Grid.ColumnDefinitions>
                                             <StackPanel Orientation="Horizontal">
                                                 <ComboBox DisplayMemberPath="Name" ItemsSource="{x:Bind Path=m_userSubmitVideoViewModel.Tlist,Mode=OneWay}" SelectionChanged="ComboBox_SelectionChanged" SelectedItem="{x:Bind Path=m_userSubmitVideoViewModel.SelectTid,Mode=TwoWay}">
 
@@ -235,7 +240,8 @@
                                                     <ComboBoxItem>最多播放</ComboBoxItem>
                                                 </ComboBox>
                                             </StackPanel>
-                                            <AutoSuggestBox Text="{x:Bind Path=m_userSubmitVideoViewModel.Keyword,Mode=TwoWay}" x:Name="searchVideo" QuerySubmitted="searchVideo_QuerySubmitted" QueryIcon="Find" PlaceholderText="搜索视频" Width="160" HorizontalAlignment="Right"></AutoSuggestBox>
+                                            <Button Grid.Column="1" Margin="0 0 8 0" x:Name="BtnPlayAll" Tapped="BtnPlayAll_OnTapped">全部播放</Button>
+                                            <AutoSuggestBox Grid.Column="2" Text="{x:Bind Path=m_userSubmitVideoViewModel.Keyword,Mode=TwoWay}" x:Name="searchVideo" QuerySubmitted="searchVideo_QuerySubmitted" QueryIcon="Find" PlaceholderText="搜索视频" Width="160" HorizontalAlignment="Right"></AutoSuggestBox>
                                         </Grid>
                                     </toolkit:AdaptiveGridView.Header>
                                     <toolkit:AdaptiveGridView.ItemContainerStyle>

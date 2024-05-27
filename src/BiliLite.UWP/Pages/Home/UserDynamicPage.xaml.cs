@@ -144,6 +144,7 @@ namespace BiliLite.Pages.Home
                     commentType = CommentApi.CommentType.Photo;
                     break;
                 case Constants.DynamicTypes.AV:
+                case Constants.DynamicTypes.UGC_SEASON:
                     commentType = CommentApi.CommentType.Video;
                     break;
                 case Constants.DynamicTypes.PGC:

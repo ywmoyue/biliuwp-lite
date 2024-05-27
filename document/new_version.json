@@ -1,7 +1,7 @@
 {
-    "version": "4.6.30",
-    "version_num": 40630,
-    "version_desc": "更新内容:\r\n\r\n- 新增导入导出设置功能\r\n\r\n- 支持F5或Ctrl+R快捷键刷新页面\r\n\r\n- 支持设置保持音量与亮度\r\n\r\n- 首页动态页支持查看评论区图片\r\n\r\n- 快捷键切换播放倍速时提示当前倍速\r\n\r\n- 播放器内消息提示位置及动画调整\r\n\r\n- 播放列表切换视频时检测低音量并提示\r\n\r\n- 播放完毕后上报历史记录位置0使其他平台打开该视频为重新开始播 放\r\n\r\n- 导出视频时自动设置文件名为视频标题+分p标题\r\n\r\n- 直播详情页保存显示底部礼物栏设置\r\n\r\n- 更 换首页动态页接口并重新适配数据，解决打开错误问题\r\n\r\n- 修复首页推荐页视频链接解析错误\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+    "version": "4.6.31",
+    "version_num": 40631,
+    "version_desc": "更新内容:\r\n\r\n- 直播弹幕支持设置寒霜弹幕使  \r\n\r\n- 支持设置弹幕字体 \r\n\r\n- 支持收藏夹拖拽排序和收藏夹内容拖拽排序 \r\n\r\n- 用户界面支持一键播放全部视频 \r\n\r\n- 直播间新增低延迟模式 \r\n\r\n- 添加播放历史记录相关设置项 \r\n\r\n- 临时版本/预发布版本更新检测逻辑改为正常版本逻辑 \r\n\r\n- 支持设置视频详情中分P列表设计宽度 \r\n\r\n- 播放器控件中播放列表分P显示换行并调整样式 \r\n\r\n- 封装重构视频详情页中播放列表控件，支持单个视频多合集显示，解决合集与其他播放列表冲突问题 \r\n\r\n- 视频详情页中视频简介中网页链接添加tooltip显示链接内容 \r\n\r\n- 修复专栏动态无法打开 \r\n\r\n- 修复部分动态内容导致崩溃，富文本转换时添加xml判断  \r\n\r\n- 修复番剧动态头像标题和打开错误  \r\n\r\n- 修复合集播放列表切换视频Bug  \r\n\r\n- 适配课程动态 \r\n\r\n- 修复Wbi签名时间戳错误  \r\n\r\n- 修复视频详情页中int越界问题   \r\n\r\n- 修复直播弹幕延迟问题  \r\n\r\n- 修复直播间礼物Id可能int越界问题\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
     "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
     "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }

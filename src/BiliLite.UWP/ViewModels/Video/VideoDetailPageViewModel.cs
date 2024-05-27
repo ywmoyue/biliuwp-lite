@@ -8,6 +8,7 @@ using System.Windows.Input;
 using Windows.UI.Xaml;
 using AutoMapper;
 using BiliLite.Extensions;
+using BiliLite.Models.Common;
 using BiliLite.Models.Common.Video;
 using BiliLite.Models.Common.Video.Detail;
 using BiliLite.Models.Exceptions;
@@ -16,6 +17,7 @@ using BiliLite.Models.Requests.Api;
 using BiliLite.Models.Requests.Api.User;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
+using BiliLite.ViewModels.User;
 using BiliLite.ViewModels.Video;
 using Microsoft.Extensions.DependencyInjection;
 using PropertyChanged;
@@ -86,11 +88,15 @@ namespace BiliLite.Modules
 
         public bool ShowMoreStaff { get; set; }
 
-        public ObservableCollection<FavoriteItemModel> MyFavorite { get; set; }
+        public ObservableCollection<FavoriteItemViewModel> MyFavorite { get; set; }
 
         public double BottomActionBarHeight { get; set; }
 
         public double BottomActionBarWidth { get; set; }
+
+        public double VideoDetailListEpisodeDesiredWidth => SettingService.GetValue(
+            SettingConstants.UI.VIDEO_DETAIL_LIST_EPISODE_DESIRED_WIDTH,
+            SettingConstants.UI.DEFAULT_VIDEO_DETAIL_LIST_EPISODE_DESIRED_WIDTH);
 
         [DependsOn(nameof(BottomActionBarWidth))]
         public bool ShowNormalDownloadBtn => !(BottomActionBarWidth < 460);
@@ -205,7 +211,7 @@ namespace BiliLite.Modules
                     var data = await results.GetJson<ApiDataModel<JObject>>();
                     if (data.success)
                     {
-                        MyFavorite = await data.data["list"].ToString().DeserializeJson<ObservableCollection<FavoriteItemModel>>();
+                        MyFavorite = await data.data["list"].ToString().DeserializeJson<ObservableCollection<FavoriteItemViewModel>>();
                     }
                     else
                     {

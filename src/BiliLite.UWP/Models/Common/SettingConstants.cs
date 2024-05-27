@@ -148,6 +148,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const bool DEFAULT_SHOW_HOT_REPLIES = true;
+
+            /// <summary>
+            /// 视频详情页分集列表设计宽度
+            /// </summary>
+            [SettingKey(typeof(double))]
+            public const string VIDEO_DETAIL_LIST_EPISODE_DESIRED_WIDTH = "VideoDetailListEpisodeDesiredWidth";
+
+            /// <summary>
+            /// 视频详情页分集列表设计宽度默认值
+            /// </summary>
+            [SettingDefaultValue]
+            public const double DEFAULT_VIDEO_DETAIL_LIST_EPISODE_DESIRED_WIDTH = 180;
         }
 
         public class Account
@@ -469,7 +481,14 @@ namespace BiliLite.Models.Common
             /// <summary>
             /// 低延迟模式开关
             /// </summary>
+            [SettingKey(typeof(bool))]
             public const string LOW_DELAY_MODE = "LowDelayMode";
+
+            /// <summary>
+            /// 低延迟模式开关
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_LOW_DELAY_MODE = false;
 
             /// <summary>
             /// 显示底部礼物栏

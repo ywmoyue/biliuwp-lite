@@ -2685,6 +2685,11 @@ namespace BiliLite.Controls
             }
         }
 
+        public void SetPosition(double position)
+        {
+            Player.SetPosition(position);
+        }
+
         public async void Dispose()
         {
             _logger.Trace("Dispose PlayerControl");

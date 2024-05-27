@@ -7,11 +7,15 @@ using BiliLite.Pages.User;
 using BiliLite.Services;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using BiliLite.Models.Common.User;
 using BiliLite.ViewModels.User;
 using BiliLite.ViewModels.UserDynamic;
 using Microsoft.Extensions.DependencyInjection;
+using BiliLite.Models.Common.Video;
+using BiliLite.Modules;
+using System.Collections.Generic;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -411,6 +415,35 @@ namespace BiliLite.Pages
         public async Task Refresh()
         {
             throw new System.NotImplementedException();
+        }
+
+        private void BtnPlayAll_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            var items = new List<VideoPlaylistItem>();
+            foreach (var item in m_userSubmitVideoViewModel.SubmitVideoItems)
+            {
+                items.Add(new VideoPlaylistItem()
+                {
+                    Cover = item.Pic,
+                    Author = item.Author,
+                    Id = item.Aid,
+                    Title = item.Title
+                });
+
+            }
+
+            MessageCenter.NavigateToPage(this, new NavigationInfo()
+            {
+                icon = Symbol.Play,
+                page = typeof(VideoDetailPage),
+                title = "视频播放",
+                parameters = new VideoPlaylist()
+                {
+                    Index = 0,
+                    Playlist = items,
+                    Title = $"{m_viewModel.UserInfo.Name}:全部视频",
+                }
+            });
         }
     }
 }

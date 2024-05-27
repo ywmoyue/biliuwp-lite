@@ -579,7 +579,7 @@ namespace BiliLite.Pages
                 DefaultPlayUrlSourceOptions.DEFAULT_PLAY_URL_SOURCE);
 
             // 低延迟模式
-            LowDelayMode.IsOn = SettingService.GetValue<bool>(SettingConstants.Live.LOW_DELAY_MODE, false);
+            LowDelayMode.IsOn = SettingService.GetValue<bool>(SettingConstants.Live.LOW_DELAY_MODE, SettingConstants.Live.DEFAULT_LOW_DELAY_MODE);
         }
 
         private void LoadSetting()
@@ -1402,21 +1402,18 @@ namespace BiliLite.Pages
 
         private void LowDelaySwitch_Toggled(object sender, RoutedEventArgs e)
         {
-            ToggleSwitch ts = sender as ToggleSwitch;
-            if (ts != null)
+            if (!(sender is ToggleSwitch ts)) return;
+            if (ts.IsOn)
             {
-                if (ts.IsOn)
-                {
-                    LowDelayModeBlock.Visibility = Visibility.Visible;
-                    SettingService.SetValue(SettingConstants.Live.LOW_DELAY_MODE, true);
-                }
-                else
-                {
-                    LowDelayModeBlock.Visibility = Visibility.Collapsed;
-                    SettingService.SetValue(SettingConstants.Live.LOW_DELAY_MODE, false);
-                }
-                // 这里可以做个重启播放器的功能...就不需要用户手动重启了
+                LowDelayModeBlock.Visibility = Visibility.Visible;
+                SettingService.SetValue(SettingConstants.Live.LOW_DELAY_MODE, true);
             }
+            else
+            {
+                LowDelayModeBlock.Visibility = Visibility.Collapsed;
+                SettingService.SetValue(SettingConstants.Live.LOW_DELAY_MODE, false);
+            }
+            // 这里可以做个重启播放器的功能...就不需要用户手动重启了
         }
 
         private void ChatList_PointerEntered(object sender, PointerRoutedEventArgs e) => isPointerInChatList = true;
