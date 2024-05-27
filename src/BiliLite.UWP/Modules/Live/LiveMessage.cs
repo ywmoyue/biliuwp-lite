@@ -399,6 +399,15 @@ namespace BiliLite.Modules.Live
                     msgView.Message = obj["data"]["message"].ToString();
                     msgView.Price = obj["data"]["price"].ToInt32();
                     msgView.Username = obj["data"]["user_info"]["uname"].ToString();
+                    msgView.GuardLevel = obj["data"]["user_info"]["guard_level"].ToInt32();
+                    msgView.Uid = obj["data"]["uid"].ToInt64();
+                    
+                    if (obj["data"]["medal_info"] != null && obj["data"]["medal_info"].ToArray().Length != 0)
+                    {
+                        msgView.MedalLevel = obj["data"]["medal_info"]["medal_level"].ToInt32();
+                        msgView.MedalName = obj["data"]["medal_info"]["medal_name"].ToString();
+                        msgView.MedalColor = obj["data"]["medal_info"]["medal_color"].ToString();
+                    }
                     NewMessage?.Invoke(MessageType.SuperChat, msgView);
                     return MessageDelayType.SystemMessage;
                 }

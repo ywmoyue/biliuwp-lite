@@ -59,9 +59,12 @@ namespace BiliLite.ViewModels.Live
             m_timer = new Timer(1000);
             m_timerBox = new Timer(1000);
             TimerAutoHideGift = new Timer(1000);
-            m_timer.Elapsed += Timer_Elapsed;
+            m_timer.Elapsed += Timer_LiveTime_Elapsed;
+            m_timer.Elapsed += Timer_SuperChats_Elapsed;
             m_timerBox.Elapsed += Timer_box_Elapsed;
             TimerAutoHideGift.Elapsed += Timer_auto_hide_gift_Elapsed;
+            LotteryViewModel.AddLotteryShieldWord += (_, e) => AddLotteryShieldWord?.Invoke(_, e);
+            LotteryViewModel.AnchorLotteryStart += (_, e) => AnchorLotteryStart?.Invoke(_, e);
             m_messageHandleActionsMap = InitLiveMessageHandleActionMap();
 
             LoadMoreGuardCommand = new RelayCommand(LoadMoreGuardList);
@@ -134,6 +137,9 @@ namespace BiliLite.ViewModels.Live
 
         [DoNotNotify]
         public bool ReceiveGiftMsg { get; set; } = true;
+
+        [DoNotNotify]
+        public bool ShowLotteryDanmu { get; set; } = true;
 
         public bool ShowGiftMessage { get; set; }
 
@@ -218,6 +224,7 @@ namespace BiliLite.ViewModels.Live
 
         public string ManualPlayUrl { get; set; } = "";
 
+        public Dictionary<string, string> LotteryDanmu = new Dictionary<string, string> { { "AnchorLottery", "" }, {"RedPocketLottery", ""} };
 
         /// <summary>
         /// 有的特殊直播间没有一些娱乐内容. 例如央视新闻直播间.
@@ -234,14 +241,15 @@ namespace BiliLite.ViewModels.Live
 
         public event EventHandler<DanmuMsgModel> AddNewDanmu;
 
-        public event EventHandler ChatScrollToEnd;
-
         public event EventHandler<LiveRoomEndRedPocketLotteryInfoModel> RedPocketLotteryEnd;
 
         public event EventHandler<LiveRoomAnchorLotteryInfoModel> AnchorLotteryStart;
 
         public event EventHandler<string> SetManualPlayUrl;
 
+        public event EventHandler<string> AddLotteryShieldWord;
+
+        public event EventHandler<string> DelShieldWord;
 
         public event EventHandler SpecialLiveRoomHideElements;
 
@@ -263,6 +271,14 @@ namespace BiliLite.ViewModels.Live
             actionMap.RedPocketLotteryEnd += (_, e) =>
             {
                 RedPocketLotteryEnd?.Invoke(this, e);
+            };
+            actionMap.AddShieldWord += (_, e) =>
+            {
+                AddLotteryShieldWord?.Invoke(this, e);
+            };
+            actionMap.DelShieldWord += (_, e) =>
+            {
+                DelShieldWord?.Invoke(this, e);
             };
             return actionMap;
         }
@@ -290,7 +306,6 @@ namespace BiliLite.ViewModels.Live
                 else
                 {
                     HideGiftFlag++;
-                    ChatScrollToEnd?.Invoke(null, null);
                 }
             });
         }
@@ -311,7 +326,7 @@ namespace BiliLite.ViewModels.Live
             //await GetFreeSilverTime();
         }
 
-        private async void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        private async void Timer_LiveTime_Elapsed(object sender, ElapsedEventArgs e)
         {
             try
             {
@@ -328,20 +343,26 @@ namespace BiliLite.ViewModels.Live
 
                 await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                 {
-                    for (var i = 0; i < SuperChats.Count; i++)
-                    {
-                        var item = SuperChats[i];
-                        if (item.Time <= 0)
-                        {
-                            SuperChats.Remove(item);
-                        }
-                        else
-                        {
-                            item.Time -= 1;
-                        }
-                    }
-
                     LiveTime = ts.ToString(@"hh\:mm\:ss");
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex.Message, ex);
+            }
+        }
+
+        private async void Timer_SuperChats_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            try
+            {
+                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    for(int i = 0; i < SuperChats.Count; i++)
+                    {
+                        if (SuperChats.ElementAt(i).Time <= 0) SuperChats.RemoveAt(i);
+                        else SuperChats.ElementAt(i).Time -= 1;
+                    }
                 });
             }
             catch (Exception ex)
@@ -689,14 +710,14 @@ namespace BiliLite.ViewModels.Live
                 {
                     await GetPlayUrls(RoomID, SettingService.GetValue(SettingConstants.Live.DEFAULT_QUALITY, 10000));
                 }
-                    //GetFreeSilverTime();  
-                    await LoadSuperChat();
-                    if (ReceiveLotteryMsg)
-                    {
+                //GetFreeSilverTime();  
+                await LoadSuperChat();
+                if (ReceiveLotteryMsg)
+                {
                     // 天选抽奖和红包抽奖
-                        LotteryViewModel.LoadLotteryInfo(RoomID).RunWithoutAwait();
-                        RedPocketSendDanmuBtnText = Attention ? "一键发送弹幕" : "一键关注并发送弹幕";
-                    }
+                    LotteryViewModel.LoadLotteryInfo(RoomID).RunWithoutAwait();
+                    RedPocketSendDanmuBtnText = Attention ? "一键发送弹幕" : "一键关注并发送弹幕";
+                }
 
                 await GetRoomGiftList();
                 await LoadBag();
@@ -769,7 +790,9 @@ namespace BiliLite.ViewModels.Live
                         Price = item.Price,
                         StartTime = item.StartTime,
                         Time = item.Time,
-                        Username = item.UserInfo.Uname
+                        Username = item.UserInfo.Uname,
+                        GuardLevel = item.UserInfo.GuardLevel,
+                        Uid = item.Uid
                     });
                 }
             }
@@ -1185,7 +1208,7 @@ namespace BiliLite.ViewModels.Live
 
         public async Task<bool> SendDanmu(string text)
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!Logined && !await Notify.ShowLoginDialog())
             {
                 Notify.ShowMessageToast("请先登录");
                 return false;

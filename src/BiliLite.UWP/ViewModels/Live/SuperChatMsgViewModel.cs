@@ -58,5 +58,25 @@ namespace BiliLite.ViewModels.Live
         [DoNotNotify]
         [JsonProperty("font_color")]
         public string FontColor { get; set; }
+
+        [DoNotNotify]
+        [JsonProperty("guard_level")]
+        public int GuardLevel { get; set; }
+
+        [DoNotNotify]
+        [JsonProperty("uid")]
+        public long Uid { get; set; }
+
+        [DoNotNotify]
+        [JsonProperty("medal_name")]
+        public string MedalName { get; set; }
+
+        [DoNotNotify]
+        [JsonProperty("medal_level")] 
+        public int MedalLevel { get; set; }
+
+        [DoNotNotify]
+        [JsonProperty("medal_color")]
+        public string MedalColor { get; set; }
     }
 }

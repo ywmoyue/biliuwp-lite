@@ -61,8 +61,11 @@ namespace BiliLite.Pages
         SettingVM settingVM;
         DispatcherTimer timer_focus;
         DispatcherTimer controlTimer;
+        DispatcherTimer chatScrollTimer;
 
         private bool changePlayUrlFlag = false;
+        private bool isPointerInChatList = false;
+        private bool isPointerInThisPage = true;
 
         public LiveDetailPage()
         {
@@ -87,10 +90,13 @@ namespace BiliLite.Pages
             dataTransferManager.DataRequested += DataTransferManager_DataRequested;
             //每过2秒就设置焦点
             timer_focus = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(2) };
-
             timer_focus.Tick += Timer_focus_Tick;
             controlTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1) };
             controlTimer.Tick += ControlTimer_Tick;
+            chatScrollTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(3)};
+            chatScrollTimer.Tick += ChatScrollTimer_Tick;
+            chatScrollTimer.Start();
+
             settingVM = new SettingVM();
 
             m_liveRoomViewModel = new LiveRoomViewModel();
@@ -98,9 +104,16 @@ namespace BiliLite.Pages
             m_liveRoomViewModel.AddNewDanmu += LiveRoomViewModelAddNewDanmu;
             m_liveRoomViewModel.AnchorLotteryEnd += LiveRoomViewModelAnchorLotteryEnd;
             m_liveRoomViewModel.RedPocketLotteryEnd += LiveRoomViewModelRedPocketLotteryEnd;
-            m_liveRoomViewModel.ChatScrollToEnd += LiveRoomViewModelChatScrollToEnd;
-            m_liveRoomViewModel.LotteryViewModel.AnchorLotteryStart += LiveRoomViewModelAnchorLotteryStart;
+            m_liveRoomViewModel.AnchorLotteryStart += LiveRoomViewModelAnchorLotteryStart;
             m_liveRoomViewModel.SetManualPlayUrl += LiveRoomViewModelSetManualPlayUrl;
+            m_liveRoomViewModel.AddLotteryShieldWord += (_, word) => 
+            {
+                if (m_liveRoomViewModel.ShowLotteryDanmu) return;
+                AddShieldWord(word);
+                if (_ is LiveRoomAnchorLotteryInfoModel) m_liveRoomViewModel.LotteryDanmu["AnchorLottery"] = (_ as LiveRoomAnchorLotteryInfoModel).Danmu;
+                if (_ is LiveRoomRedPocketLotteryInfoModel) m_liveRoomViewModel.LotteryDanmu["RedPocketLottery"] = (_ as LiveRoomRedPocketLotteryInfoModel).Danmu;
+            };
+            m_liveRoomViewModel.DelShieldWord += (_, word) => DelShieldWord(word);
             m_liveRoomViewModel.SpecialLiveRoomHideElements += (_, e) =>
             {
                 pivot.Items.Remove(pivot_Guard);
@@ -152,6 +165,18 @@ namespace BiliLite.Pages
             }
         }
 
+        private void ChatScrollTimer_Tick(object sender, object e)
+        {
+            ChatScrollToBottom();
+            chatScrollTimer.Stop();
+            chatScrollTimer.Start();
+        }
+
+        private void ChatScrollToBottom()
+        {
+            if (list_chat.Items.Count > 0 && !isPointerInChatList && isPointerInThisPage) list_chat.ScrollIntoView(list_chat.Items[list_chat.Items.Count - 1]);
+        }
+
         private void Timer_focus_Tick(object sender, object e)
         {
             var element = FocusManager.GetFocusedElement();
@@ -200,9 +225,9 @@ namespace BiliLite.Pages
         {
             if (m_danmakuController.DanmakuViewModel.IsHide) return;
 
-            if (settingVM.LiveWords != null && settingVM.LiveWords.Count > 0)
+            if (settingVM.LiveShieldWords != null && settingVM.LiveShieldWords.Count > 0)
             {
-                if (settingVM.LiveWords.FirstOrDefault(x => e.Text.Contains(x)) != null) return;
+                if (settingVM.LiveShieldWords.FirstOrDefault(x => e.Text.Contains(x)) != null) return;
             }
             try
             {
@@ -213,11 +238,6 @@ namespace BiliLite.Pages
                 //记录错误，不弹出通知
                 logger.Log(ex.Message, LogType.Error, ex);
             }
-        }
-
-        private void LiveRoomViewModelChatScrollToEnd(object sender, EventArgs e)
-        {
-            list_chat.ScrollIntoView(list_chat.Items[list_chat.Items.Count - 1]);
         }
 
         #region 页面生命周期
@@ -708,10 +728,19 @@ namespace BiliLite.Pages
             //屏蔽抽奖信息
             LiveSettingDotReceiveLotteryMsg.IsOn = SettingService.GetValue<bool>(SettingConstants.Live.HIDE_LOTTERY, false);
             m_liveRoomViewModel.ReceiveLotteryMsg = !LiveSettingDotReceiveLotteryMsg.IsOn;
-            LiveSettingDotReceiveWelcomeMsg.Toggled += new RoutedEventHandler((e, args) =>
+            LiveSettingDotReceiveLotteryMsg.Toggled += new RoutedEventHandler((e, args) =>
             {
                 m_liveRoomViewModel.ReceiveLotteryMsg = !LiveSettingDotReceiveLotteryMsg.IsOn;
                 SettingService.SetValue<bool>(SettingConstants.Live.HIDE_LOTTERY, LiveSettingDotReceiveLotteryMsg.IsOn);
+            });
+
+            //屏蔽抽奖弹幕关键字
+            LiveSettingDotShowLotteryDanmu.IsOn = SettingService.GetValue<bool>(SettingConstants.Live.HIDE_LOTTERY_DANMU, false);
+            m_liveRoomViewModel.ShowLotteryDanmu = !LiveSettingDotShowLotteryDanmu.IsOn;
+            LiveSettingDotShowLotteryDanmu.Toggled += new RoutedEventHandler((e, args) =>
+            {
+                m_liveRoomViewModel.ShowLotteryDanmu = !LiveSettingDotShowLotteryDanmu.IsOn;
+                SettingService.SetValue<bool>(SettingConstants.Live.HIDE_LOTTERY_DANMU, LiveSettingDotShowLotteryDanmu.IsOn);
             });
 
             // 显示底部礼物栏
@@ -1043,7 +1072,7 @@ namespace BiliLite.Pages
             FlyoutRedPocketLottery.Hide();
 
             var msg = "";
-                msg += "弹幕发送成功";
+            msg += "弹幕发送成功";
             if (!m_liveRoomViewModel.Attention)
             {
                 // 参与红包会自动关注, 无须手动关注
@@ -1108,28 +1137,37 @@ namespace BiliLite.Pages
             MessageCenter.SetMiniWindow(mini);
         }
 
-        private void btnRemoveWords_Click(object sender, RoutedEventArgs e)
+        private void btnRemoveShieldWord_Click(object sender, RoutedEventArgs e)
         {
             var word = (sender as HyperlinkButton).DataContext as string;
-            settingVM.LiveWords.Remove(word);
-            SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, settingVM.LiveWords);
-
+            DelShieldWord(word);
         }
 
-        private void DanmuSettingAddWord_Click(object sender, RoutedEventArgs e)
+        private void btnAddShieldWord_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(DanmuSettingTxtWord.Text))
             {
                 Notify.ShowMessageToast("关键字不能为空");
                 return;
             }
-            if (!settingVM.LiveWords.Contains(DanmuSettingTxtWord.Text))
-            {
-                settingVM.LiveWords.Add(DanmuSettingTxtWord.Text);
-                SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, settingVM.LiveWords);
-            }
+            AddShieldWord(DanmuSettingTxtWord.Text);
 
             DanmuSettingTxtWord.Text = "";
+        }
+
+        private void AddShieldWord(string word)
+        {
+            if (!settingVM.LiveShieldWords.Contains(word))
+            {
+                settingVM.LiveShieldWords.Add(word);
+                SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, settingVM.LiveShieldWords);
+            }
+        }
+
+        private void DelShieldWord(string word)
+        {
+            settingVM.LiveShieldWords.Remove(word);
+            SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, settingVM.LiveShieldWords);
         }
 
         #region 播放器手势
@@ -1380,5 +1418,22 @@ namespace BiliLite.Pages
                 // 这里可以做个重启播放器的功能...就不需要用户手动重启了
             }
         }
+
+        private void ChatList_PointerEntered(object sender, PointerRoutedEventArgs e) => isPointerInChatList = true;
+
+        private void ChatList_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            isPointerInChatList = false;
+            chatScrollTimer.Stop();
+            chatScrollTimer.Start();
+        }
+
+        private void RootGrid_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            isPointerInThisPage = true;
+            ChatScrollToBottom();
+        }
+
+        private void RootGrid_PointerExited(object sender, PointerRoutedEventArgs e) => isPointerInThisPage = false;
     }
 }

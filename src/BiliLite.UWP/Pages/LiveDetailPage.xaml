@@ -373,7 +373,7 @@
             </toolkit:WrapPanel>
         </DataTemplate>
     </Page.Resources>
-    <Grid>
+    <Grid PointerEntered="RootGrid_PointerEntered" PointerExited="RootGrid_PointerExited">
         <Button x:Name="BtnFoucs" Width="0" Height="0" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="-8 -8 0 0" Background="Transparent" BorderThickness="0"></Button>
         <Grid x:Name="detail" >
             <Grid.ColumnDefinitions>
@@ -461,7 +461,7 @@
                                         <Image Width="32" Height="32" Source="/Assets/Icon/icon_settings.png" ></Image>
                                         <Button.Flyout>
                                             <Flyout>
-                                                <Pivot Width="340">
+                                                <Pivot Width="325">
                                                     <PivotItem>
                                                         <PivotItem.Header>
                                                             <TextBlock FontSize="18">设置</TextBlock>
@@ -503,24 +503,26 @@
                                                         </PivotItem.Header>
                                                         <StackPanel>
                                                             <StackPanel Orientation="Horizontal">
-                                                                <ToggleSwitch  x:Name="LiveSettingDotReceiveGiftMsg" Margin="0 8 0 0" Header="屏蔽礼物"></ToggleSwitch>
-                                                                <ToggleSwitch  x:Name="LiveSettingDotReceiveWelcomeMsg" Margin="0 8 0 0" Header="屏蔽进场"></ToggleSwitch>
+                                                                <ToggleSwitch  x:Name="LiveSettingDotReceiveGiftMsg" Margin="0 8 0 0" Header="屏蔽礼物信息"></ToggleSwitch>
+                                                                <ToggleSwitch  x:Name="LiveSettingDotReceiveWelcomeMsg" Margin="0 8 0 0" Header="屏蔽进场信息"></ToggleSwitch>
                                                             </StackPanel>
                                                             <StackPanel Orientation="Horizontal">
-                                                                <ToggleSwitch  x:Name="LiveSettingDotReceiveLotteryMsg" Margin="0 8 0 0" Header="屏蔽抽奖信息"></ToggleSwitch>
+                                                                <ToggleSwitch  x:Name="LiveSettingDotReceiveLotteryMsg" Margin="0 8 0 0" Header="屏蔽天选/红包抽奖"></ToggleSwitch>
+                                                                <ToggleSwitch  x:Name="LiveSettingDotShowLotteryDanmu" Margin="0 8 0 0" Header="屏蔽抽奖弹幕"></ToggleSwitch>
                                                             </StackPanel>
                                                             <TextBlock Margin="0 8">关键词屏蔽</TextBlock>
+                                                            <TextBlock Margin="0 -4 0 8" FontSize="12" IsColorFontEnabled="False" Foreground="Gray">💡点击灰色按钮即可删除对应的关键词</TextBlock>
                                                             <Grid >
                                                                 <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition/>
-                                                                    <ColumnDefinition Width="Auto"/>
+                                                                    <ColumnDefinition MaxWidth="160"/>
+                                                                    <ColumnDefinition Width="auto"/>
                                                                     <ColumnDefinition Width="Auto"/>
                                                                 </Grid.ColumnDefinitions>
-                                                                <TextBox x:Name="DanmuSettingTxtWord" PlaceholderText="输入关键词"></TextBox>
-                                                                <Button x:Name="DanmuSettingAddWord" Click="DanmuSettingAddWord_Click" Grid.Column="1"  Margin="8 0 0 0">添加</Button>
+                                                                <TextBox x:Name="DanmuSettingTxtWord" PlaceholderText="输入关键词.."></TextBox>
+                                                                <Button x:Name="DanmuSettingAddWord" Click="btnAddShieldWord_Click" Grid.Column="1"  Margin="8 0 0 0">添加</Button>
                                                                 <Button x:Name="DanmuSettingSyncWords" Visibility="Collapsed"  Grid.Column="2"  Margin="8 0 0 0">同步</Button>
                                                             </Grid>
-                                                            <ItemsControl Margin="0 8 0 0" x:Name="DanmuSettingWords" ItemsSource="{x:Bind Path=settingVM.LiveWords,Mode=OneWay}">
+                                                            <ItemsControl Margin="0 8 0 0" x:Name="DanmuSettingWords" ItemsSource="{x:Bind Path=settingVM.LiveShieldWords,Mode=OneWay}">
                                                                 <ItemsControl.ItemsPanel>
                                                                     <ItemsPanelTemplate>
                                                                         <toolkit:WrapPanel VerticalSpacing="4" />
@@ -528,7 +530,7 @@
                                                                 </ItemsControl.ItemsPanel>
                                                                 <ItemsControl.ItemTemplate>
                                                                     <DataTemplate>
-                                                                        <HyperlinkButton Margin="0 0 8 0" Click="btnRemoveWords_Click">
+                                                                        <HyperlinkButton Margin="0 0 8 0" Click="btnRemoveShieldWord_Click">
                                                                             <Border CornerRadius="4" Padding="8 4" Background="Gray">
                                                                                 <TextBlock FontSize="12" Foreground="white" Text="{Binding}" ></TextBlock>
                                                                             </Border>
@@ -1119,7 +1121,7 @@
                         <PivotItem.Header>
                             <TextBlock  Text="互动" FontSize="16"></TextBlock>
                         </PivotItem.Header>
-                        <Grid>
+                        <Grid PointerEntered="ChatList_PointerEntered" PointerExited="ChatList_PointerExited">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition/>

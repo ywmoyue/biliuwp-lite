@@ -362,6 +362,11 @@
         GuardBuy,
 
         /// <summary>
+        /// 新上舰消息, 可区分续费和新人
+        /// </summary>
+        GuardBuyNew,
+
+        /// <summary>
         /// 房间信息更新
         /// </summary>
         RoomChange,
@@ -409,7 +414,7 @@
         /// <summary>
         /// 直播间等级禁言
         /// </summary>
-        RoomSlient,
+        ChatLevelMute,
     }
 
     public enum MessageDelayType {
