@@ -71,10 +71,21 @@ namespace BiliLite.Models.Common.Live
         private void Danmu(LiveRoomViewModel viewModel, object message)
         {
             var m = message as DanmuMsgModel;
-            if (viewModel.Messages.Count >= viewModel.CleanCount)
+
+            // 自己的消息和主播的消息特殊处理
+            if (m.Uid == SettingService.Account.UserID.ToString() || m.Uid == viewModel.AnchorUid.ToString())
             {
-                viewModel.Messages.RemoveAt(0);
+                // 暂时借用了直播间标题修改的颜色... 找不到好看的颜色了
+                m.CardColor = new SolidColorBrush(Color.FromArgb(255, 228, 255, 233));
+                m.RichText = m.Text.ToRichTextBlock(m.Emoji, true, fontWeight: "Medium", fontColor: "#ff1e653a");
+                if (m.Uid == viewModel.AnchorUid.ToString())
+                {
+                    m.Role = "主播";
+                    m.ShowAdmin = Visibility.Visible;
             }
+            }
+
+            if (viewModel.Messages.Count >= viewModel.CleanCount) viewModel.Messages.RemoveAt(0);
             viewModel.Messages.Add(m);
             AddNewDanmu?.Invoke(null, m);
         }
