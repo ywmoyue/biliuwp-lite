@@ -101,6 +101,12 @@ namespace BiliLite.Pages
             m_liveRoomViewModel.ChatScrollToEnd += LiveRoomViewModelChatScrollToEnd;
             m_liveRoomViewModel.LotteryViewModel.AnchorLotteryStart += LiveRoomViewModelAnchorLotteryStart;
             m_liveRoomViewModel.SetManualPlayUrl += LiveRoomViewModelSetManualPlayUrl;
+            m_liveRoomViewModel.SpecialLiveRoomHideElements += (_, e) =>
+            {
+                pivot.Items.Remove(pivot_Guard);
+                BottomBtnGiftRow.Visibility = Visibility.Collapsed;
+                BottomGiftBar.Visibility = Visibility.Collapsed;
+            };
             this.Loaded += LiveDetailPage_Loaded;
             this.Unloaded += LiveDetailPage_Unloaded; 
             

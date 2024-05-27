@@ -102,6 +102,12 @@ namespace BiliLite.ViewModels.Live
         public int RoomID { get; set; }
 
         /// <summary>
+        /// 主播uid
+        /// </summary>
+        [DoNotNotify]
+        public long AnchorUid { get; set; }
+
+        /// <summary>
         /// 房间标题
         /// </summary>
         public string RoomTitle { get; set; }
@@ -178,7 +184,7 @@ namespace BiliLite.ViewModels.Live
 
         public LiveAnchorProfile Profile { get; set; }
 
-        public bool Liveing { get; set; }
+        public bool Live { get; set; }
 
         public string LiveTime { get; set; }
 
@@ -212,6 +218,12 @@ namespace BiliLite.ViewModels.Live
 
         public string ManualPlayUrl { get; set; } = "";
 
+
+        /// <summary>
+        /// 有的特殊直播间没有一些娱乐内容. 例如央视新闻直播间.
+        /// </summary>
+        public bool IsSpecialLiveRoom = false;
+
         #endregion
 
         #region Events
@@ -229,6 +241,9 @@ namespace BiliLite.ViewModels.Live
         public event EventHandler<LiveRoomAnchorLotteryInfoModel> AnchorLotteryStart;
 
         public event EventHandler<string> SetManualPlayUrl;
+
+
+        public event EventHandler SpecialLiveRoomHideElements;
 
         #endregion
 
@@ -300,11 +315,11 @@ namespace BiliLite.ViewModels.Live
         {
             try
             {
-                if (LiveInfo == null && !Liveing)
+                if (!Live)
                 {
                     await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                     {
-                        LiveTime = "";
+                        LiveTime = "未开播";
                     });
                     return;
                 }
@@ -644,29 +659,36 @@ namespace BiliLite.ViewModels.Live
                     throw new CustomizedErrorException("加载直播间失败:" + data.message);
                 }
 
+                if (data.data.GuardInfo == null) 
+                {
+                    IsSpecialLiveRoom = true;
+                    SpecialLiveRoomHideElements?.Invoke(this, null);
+                };
+
                 RoomID = data.data.RoomInfo.RoomId;
                 RoomTitle = data.data.RoomInfo.Title;
-                Liveing = data.data.RoomInfo.LiveStatus == 1;
-                GuardNum = data.data.GuardInfo.Count;
+                Live = data.data.RoomInfo.LiveStatus == 1;
+                GuardNum = !IsSpecialLiveRoom ? data.data.GuardInfo.Count : 0;
+                AnchorUid = data.data.RoomInfo.Uid;
                 LiveInfo = data.data;
 
                 if (Ranks == null)
                 {
                     Ranks = new List<LiveRoomRankViewModel>()
                     {
-                        new LiveRoomRankViewModel(RoomID, data.data.RoomInfo.Uid, "高能用户贡献榜", "contribution-rank"),
-                        new LiveRoomRankViewModel(RoomID, data.data.RoomInfo.Uid, "粉丝榜", "fans"),
+                        new LiveRoomRankViewModel(RoomID, AnchorUid, "高能用户贡献榜", "contribution-rank"),
+                        new LiveRoomRankViewModel(RoomID, AnchorUid, "粉丝榜", "fans"),
                     };
                     SelectRank = Ranks[0];
                 }
 
 
                 await LoadAnchorProfile();
-                if (Liveing)
+                m_timer.Start();
+                if (Live)
                 {
-                    m_timer.Start();
-                    await GetPlayUrls(RoomID,
-                        SettingService.GetValue(SettingConstants.Live.DEFAULT_QUALITY, 10000));
+                    await GetPlayUrls(RoomID, SettingService.GetValue(SettingConstants.Live.DEFAULT_QUALITY, 10000));
+                }
                     //GetFreeSilverTime();  
                     await LoadSuperChat();
                     if (ReceiveLotteryMsg)
@@ -675,7 +697,6 @@ namespace BiliLite.ViewModels.Live
                         LotteryViewModel.LoadLotteryInfo(RoomID).RunWithoutAwait();
                         RedPocketSendDanmuBtnText = Attention ? "一键发送弹幕" : "一键关注并发送弹幕";
                     }
-                }
 
                 await GetRoomGiftList();
                 await LoadBag();
@@ -960,6 +981,7 @@ namespace BiliLite.ViewModels.Live
         /// <returns></returns>
         public async Task GetGuardList()
         {
+            if (IsSpecialLiveRoom) return;
             try
             {
                 LoadingGuard = true;
@@ -968,8 +990,7 @@ namespace BiliLite.ViewModels.Live
                 if (!result.status) return;
                 var data = await result.GetData<JObject>();
                 if (!data.success) return;
-                var guardNum = data.data["info"]["num"].ToInt32();
-                GuardNum = guardNum; // 更新显示数字
+                GuardNum = data.data["info"]["num"].ToInt32(); //更新舰长数
 
                 var top3 = JsonConvert.DeserializeObject<List<LiveGuardRankItem>>(data.data["top3"].ToString());
                 if (Guards.Count == 0 && top3 != null && top3.Count != 0 && Guards.Count < GuardNum)

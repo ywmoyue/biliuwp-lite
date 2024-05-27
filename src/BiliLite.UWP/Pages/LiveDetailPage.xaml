@@ -1354,9 +1354,9 @@
                             </Grid>
                         </Grid>
                     </PivotItem>
-                    <PivotItem Margin="0">
+                    <PivotItem Margin="0" x:Name="pivot_Guard">
                         <PivotItem.Header>
-                            <TextBlock FontSize="16">大航海(<Run Text="{x:Bind Path=m_liveRoomViewModel.GuardNum,Mode=OneWay}"/>)</TextBlock>
+                            <TextBlock FontSize="16">大航海<Run FontSize="13" Text="{x:Bind Path=m_liveRoomViewModel.GuardNum,Mode=OneWay}"/></TextBlock>
                         </PivotItem.Header>
                         <Grid>
                             <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8 0">
