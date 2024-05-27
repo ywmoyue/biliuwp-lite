@@ -166,13 +166,8 @@ namespace BiliLite.Pages
             var str = e.AwardUsers.Aggregate("", (current, item) => current + (item.Uname + "、"));
             str = str.TrimEnd('、');
             var msg = $"天选时刻 开奖信息:\r\n奖品: {e.AwardName} \r\n中奖用户:{str}";
-            foreach(var awardUser in e.AwardUsers)
-            {
-                if (awardUser.Uid == SettingService.Account.UserID)
-                {
-                    msg += $"\r\n你已抽中奖品: {e.AwardName}, 恭喜欧皇~";
-                }
-            }
+            msg += e.AwardUsers.Any(user => user.Uid == SettingService.Account.UserID) ? $"\r\n你已抽中奖品: {e.AwardName}, 恭喜欧皇~" : "";
+
             Notify.ShowMessageToast(msg, new List<MyUICommand>(), 10);
             AnchorLotteryWinnerList.Content = e.WinnerList;
             m_liveRoomViewModel.ShowAnchorLotteryWinnerList = true;
@@ -188,7 +183,8 @@ namespace BiliLite.Pages
             foreach (var winner in winners)
             {
                 if (winner[0] == (SettingService.Account.UserID).ToString()) {
-                    Notify.ShowMessageToast($"你已在人气红包抽中 {awards[winner[3]].AwardName} , 赶快查看吧~");
+                    Notify.ShowMessageToast($"你已在人气红包抽奖中抽中 {awards[winner[3]].AwardName} , 赶快到背包中查看吧~", 5);
+                    break;
                 }
             }
             m_liveRoomViewModel.LoadBag().RunWithoutAwait();
@@ -1017,41 +1013,39 @@ namespace BiliLite.Pages
             });
         }
 
-        private async void BtnSendLotteryDanmu_Click(object sender, RoutedEventArgs e)
+        private async void BtnSendAnchorLotteryDanmu_Click(object sender, RoutedEventArgs e)
         {
-            if (m_liveRoomViewModel.LotteryViewModel != null &&
-                m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo != null &&
-                !string.IsNullOrEmpty(m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.Danmu))
+            if (!await m_liveRoomViewModel.JoinAnchorLottery()) return;
+            FlyoutLottery.Hide();
+
+            var msg = "";
+            msg += "弹幕发送成功";
+
+            if(m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.RequireText.Contains("关注主播") && !m_liveRoomViewModel.Attention)
             {
-                var result = await m_liveRoomViewModel.SendDanmu(m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.Danmu);
-                if (result)
-                {
-                    Notify.ShowMessageToast("弹幕发送成功");
-                    FlyoutLottery.Hide();
-                }
+                // 参与天选会自动关注, 无须手动关注
+                m_liveRoomViewModel.Attention = true;
+                msg += ", 关注主播成功";
             }
+
+            Notify.ShowMessageToast(msg);
         }
 
         private async void BtnSendRedPocketLotteryDanmu_Click(object sender, RoutedEventArgs e)
         {
-            if (m_liveRoomViewModel.LotteryViewModel == null ||
-                m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryInfo == null ||
-                string.IsNullOrEmpty(m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryInfo.Danmu)) return;
-            var msg = "";
-            var result = await m_liveRoomViewModel.SendDanmu(m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryInfo.Danmu);
-            if (result)
-            {
-                FlyoutRedPocketLottery.Hide();
-                msg += "弹幕发送成功";
-            }
+            if (!await m_liveRoomViewModel.JoinRedPocketLottery()) return;
+            FlyoutRedPocketLottery.Hide();
 
+            var msg = "";
+                msg += "弹幕发送成功";
             if (!m_liveRoomViewModel.Attention)
             {
-                BtnAttention_Click(sender, e);
+                // 参与红包会自动关注, 无须手动关注
+                m_liveRoomViewModel.Attention = true;
                 msg += ", 关注主播成功";
             }
 
-            Notify.ShowMessageToast(msg, 4);
+            Notify.ShowMessageToast(msg);
         }
 
         private void BottomBtnMiniWindows_Click(object sender, RoutedEventArgs e)

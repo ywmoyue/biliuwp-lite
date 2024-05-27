@@ -1,11 +1,20 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Services;
+using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 
 namespace BiliLite.Models.Requests.Api.Live
 {
     public class LiveRoomAPI : BaseApi
     {
+        private readonly CookieService m_cookieService;
+
+        public LiveRoomAPI()
+        {
+            m_cookieService = App.ServiceProvider.GetRequiredService<CookieService>();
+        }
+
         /// <summary>
         /// 直播间信息
         /// </summary>
@@ -314,6 +323,11 @@ namespace BiliLite.Models.Requests.Api.Live
             return api;
         }
 
+        /// <summary>
+        /// 获取弹幕连接信息 
+        /// </summary>
+        /// <param name="roomId">房间号</param>
+        /// <returns></returns>
         public ApiModel GetDanmuInfo(int roomId)
         {
             var api = new ApiModel()
@@ -326,6 +340,10 @@ namespace BiliLite.Models.Requests.Api.Live
             return api;
         }
 
+        /// <summary>
+        /// 获取BUVID
+        /// </summary>
+        /// <returns></returns>
         public ApiModel GetBuvid()
         {
             var api = new ApiModel()
@@ -333,6 +351,50 @@ namespace BiliLite.Models.Requests.Api.Live
                 method = RestSharp.Method.Get,
                 baseUrl = "https://api.bilibili.com/x/frontend/finger/spi",
                 need_cookie = true
+            };
+            return api;
+        }
+
+        /// <summary>
+        /// 参与天选抽奖
+        /// </summary>
+        /// <param name="roomId">房间号</param>
+        /// <param name="lottery_id">抽奖Id</param>
+        /// <returns></returns>
+        public ApiModel JoinAnchorLottery(int roomId, int lottery_id, string buvid3)
+        {
+            var csrf = m_cookieService.GetCSRFToken();
+            var api = new ApiModel
+            {
+                method = RestSharp.Method.Post,
+                baseUrl = "https://api.live.bilibili.com/xlive/lottery-interface/v1/Anchor/Join",
+                body = $"room_id={roomId}&id={lottery_id}&platform=pc&csrf={csrf}",
+                need_cookie = true,
+                headers = ApiHelper.GetDefaultHeaders(),
+            };
+            api.ExtraCookies = new Dictionary<string, string>() { { "buvid3", buvid3 } };
+            return api;
+        }
+
+        /// <summary>
+        /// 参与人气红包抽奖
+        /// </summary>
+        /// <param name="uid">用户uid</param>
+        /// <param name="room_id">房间号</param>
+        /// <param name="ruid">主播uid</param>
+        /// <param name="lot_id">抽奖id</param>
+        /// <returns></returns>
+        public ApiModel JoinRedPocketLottery(long uid, int room_id, long ruid, int lot_id)
+        {
+            var csrf = m_cookieService.GetCSRFToken();
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Post,
+                baseUrl = "https://api.live.bilibili.com/xlive/lottery-interface/v1/popularityRedPocket/RedPocketDraw",
+                parameter = $"csrf={csrf}",
+                body = $"uid={uid}&room_id={room_id}&ruid={ruid}&lot_id={lot_id}&ts={TimeExtensions.GetTimestampS()}",
+                need_cookie = true,
+                headers = ApiHelper.GetDefaultHeaders()
             };
             return api;
         }

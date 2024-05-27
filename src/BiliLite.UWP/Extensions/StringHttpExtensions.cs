@@ -208,7 +208,7 @@ namespace BiliLite.Extensions
             return httpResult;
         }
 
-        public static async Task<HttpResults> PostHttpResultsWithCookie(this string url, string body, IDictionary<string, string> headers = null)
+        public static async Task<HttpResults> PostHttpResultsWithCookie(this string url, string body, IDictionary<string, string> headers = null, IDictionary<string, string> extraCookies = null)
         {
             try
             {
@@ -223,6 +223,15 @@ namespace BiliLite.Extensions
                 }
                 cookies = cookieService.Cookies;
                 var cookiesCollection = cookies.ToDictionary(x => x.Name, x => x.Value);
+
+                if (extraCookies != null)
+                {
+                    foreach (var kvp in extraCookies)
+                    {
+                        cookiesCollection.Add(kvp.Key, kvp.Value);
+                    }
+                }
+
                 return await url.PostHttpResultsAsync(body, headers, cookiesCollection);
             }
             catch (Exception ex)

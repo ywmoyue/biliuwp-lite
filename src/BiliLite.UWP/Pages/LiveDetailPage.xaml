@@ -845,7 +845,7 @@
                                         <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">弹幕口令：</Run><Run Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.Danmu,Mode=OneWay}"/></TextBlock>
                                         <TextBlock Margin="0 4" TextWrapping="Wrap" Visibility="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.ShowGift,Mode=OneWay}"><Run Foreground="Gray">赠送礼物：</Run><Run Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.GiftName,Mode=OneWay}"/>x<Run Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.GiftNum,Mode=OneWay}"/></TextBlock>
                                         <TextBlock Margin="0 4" TextWrapping="Wrap"><Run Foreground="Gray">限制条件：</Run><Run Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.RequireText,Mode=OneWay}"/></TextBlock>-->
-                                        <Button x:Name="BtnSendLotteryDanmu" Visibility="{x:Bind Path=m_liveRoomViewModel.ShowAnchorLotteryWinnerList,Mode=OneWay,Converter={StaticResource display}}" Click="BtnSendLotteryDanmu_Click" Margin="0 4 0 0" HorizontalAlignment="Stretch">一键发弹幕</Button>
+                                        <Button x:Name="BtnSendLotteryDanmu" Visibility="{x:Bind Path=m_liveRoomViewModel.ShowAnchorLotteryWinnerList,Mode=OneWay,Converter={StaticResource display}}" Click="BtnSendAnchorLotteryDanmu_Click" Margin="0 4 0 0" HorizontalAlignment="Stretch">一键参与</Button>
                                     </StackPanel>
                                 </Flyout>
                             </Button.Flyout>
