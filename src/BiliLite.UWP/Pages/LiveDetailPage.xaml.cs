@@ -206,7 +206,7 @@ namespace BiliLite.Pages
             }
             try
             {
-                m_danmakuController.AddLiveDanmaku(e.Text, false, e.DanmuColor.StrToColor());
+                m_danmakuController.AddLiveDanmaku(e.Text, (SettingService.Account.Logined && e.Uid.ToInt64() == SettingService.Account.UserID), e.DanmuColor.StrToColor());
             }
             catch (Exception ex)
             {
