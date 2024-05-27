@@ -15,6 +15,7 @@ using BiliLite.Extensions;
 using System.IO.Compression;
 using BiliLite.Models.Common.Live;
 using BiliLite.ViewModels.Live;
+using System.Diagnostics;
 
 /*
 * 参考文档:
@@ -31,12 +32,13 @@ namespace BiliLite.Modules.Live
         public delegate void MessageHandler(MessageType type, object message);
         public event MessageHandler NewMessage;
         ClientWebSocket ws;
+        Stopwatch Stopwatch;
 
-        long PreviousDanmuPackageTimeStamp = 0;
 
         public LiveMessage()
         {
             ws = new ClientWebSocket();
+            Stopwatch = new Stopwatch();
         }
         private static System.Timers.Timer heartBeatTimer;
         public async Task Connect(int roomID, long uid, string token, string buvid, string host, CancellationToken cancellationToken)
@@ -149,12 +151,10 @@ namespace BiliLite.Modules.Live
 
                 // 记录此包中的普通弹幕信息个数
                 var danmuCount = Regex.Matches(text, Regex.Escape("DANMU_MSG"), RegexOptions.IgnoreCase).Count;
-                // 记录时间戳
-                var timeStampNow = (long)0;
                 if (danmuCount > 0)
                 {
-                    timeStampNow = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                    PreviousDanmuPackageTimeStamp = PreviousDanmuPackageTimeStamp == 0 ? timeStampNow : PreviousDanmuPackageTimeStamp;
+                    if (Stopwatch.IsRunning == true) Stopwatch.Stop();
+                    else Stopwatch.Start();
                 }
 
                 //可能有多条数据，做个分割
@@ -163,10 +163,13 @@ namespace BiliLite.Modules.Live
                 foreach (var item in textLines)
                 {
                     // 使用上波弹幕到这波的间隔确定延迟
-                    var danmuDelay = danmuCount > 0 ? ((timeStampNow - PreviousDanmuPackageTimeStamp) / danmuCount  * 1.3) : 0;
+                    var danmuDelay = danmuCount > 0 ? (Stopwatch.Elapsed.TotalMilliseconds / danmuCount  * 1.2) : 0;
+                    // 控制弹幕延迟最小和最大长度
+                    danmuDelay = danmuDelay < 20 ? 20 : danmuDelay;
+                    danmuDelay = danmuDelay > 1000 ? 1000 : danmuDelay;
                     var delay = ParseMessage(item) switch
                     {
-                        MessageDelayType.DanmuMessage => danmuDelay <= 30 ? 30 : danmuDelay, // 常规弹幕类型, 加延迟
+                        MessageDelayType.DanmuMessage => danmuDelay, // 常规弹幕类型, 加延迟
                         MessageDelayType.GiftMessage => 100 / textLines.Length, // 礼物消息类型, 加一点延迟
                         MessageDelayType.SystemMessage => 0.0, // 其他系统消息类型, 无需加延迟
                         _ => 0.0
@@ -182,12 +185,9 @@ namespace BiliLite.Modules.Live
                     }
                 }
 
-                if (danmuCount > 0)
-                {
-                    PreviousDanmuPackageTimeStamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                if (danmuCount > 0) Stopwatch.Restart();
                 }
             }
-        }
 
         private MessageDelayType ParseMessage(string jsonMessage)
         {
