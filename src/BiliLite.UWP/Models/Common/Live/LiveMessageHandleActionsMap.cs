@@ -291,7 +291,7 @@ namespace BiliLite.Models.Common.Live
             {
                 ShowUserFace = Visibility.Collapsed,
                 ShowUserName = Visibility.Collapsed,
-                RichText = (info.UserName + " 被直播间禁言🚫").ToRichTextBlock(null, fontWeight: "SemiBold", fontColor: "White"), // 白色
+                RichText = (info.UserName + " 被直播间禁言🚫").ToRichTextBlock(null, fontWeight: "SemiBold", fontColor: "White", textAlignment: "Center"), 
                 CardColor = new SolidColorBrush(Color.FromArgb(255, 235, 45, 80)), // 一种红色
                 CardHorizontalAlignment = HorizontalAlignment.Center,
             };
@@ -337,7 +337,7 @@ namespace BiliLite.Models.Common.Live
             {
                 ShowUserFace = Visibility.Collapsed,
                 ShowUserName = Visibility.Collapsed,
-                RichText = (text + "\n" + info.Message).ToRichTextBlock(null, fontColor: "White", fontWeight: "SemiBold"), 
+                RichText = (text + "\n" + info.Message).ToRichTextBlock(null, fontColor: "White", fontWeight: "SemiBold", textAlignment: "Center"), 
                 CardColor = cardColor,
                 CardHorizontalAlignment = HorizontalAlignment.Center,
             };
