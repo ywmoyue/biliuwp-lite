@@ -540,7 +540,7 @@ namespace BiliLite.ViewModels.Live
             }
         }
 
-        private async Task<bool> JoinAnchorLotteryRequest(int lotteryId)
+        private async Task<bool> JoinAnchorLotteryRequest(int lottery_id, int gift_id, int gift_num)
         {
             if (!Logined && !await Notify.ShowLoginDialog())
             {
@@ -549,7 +549,7 @@ namespace BiliLite.ViewModels.Live
             }
             try
             {
-                var result = await m_liveRoomApi.JoinAnchorLottery(RoomID, lotteryId, Buvid3).Request();
+                var result = await m_liveRoomApi.JoinAnchorLottery(RoomID, lottery_id, Buvid3, gift_id, gift_num).Request();
                 if (!result.status)
                 {
                     throw new CustomizedErrorException(result.message);
@@ -1259,7 +1259,7 @@ namespace BiliLite.ViewModels.Live
                     return false;
                 }
 
-                return await JoinAnchorLotteryRequest(LotteryViewModel.AnchorLotteryInfo.Id);
+                return await JoinAnchorLotteryRequest(LotteryViewModel.AnchorLotteryInfo.Id, LotteryViewModel.AnchorLotteryInfo.GiftId, LotteryViewModel.AnchorLotteryInfo.GiftNum);
             }
             catch (CustomizedErrorException ex)
             {
