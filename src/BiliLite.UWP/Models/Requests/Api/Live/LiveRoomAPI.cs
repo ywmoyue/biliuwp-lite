@@ -361,7 +361,7 @@ namespace BiliLite.Models.Requests.Api.Live
         /// <param name="roomId">房间号</param>
         /// <param name="lottery_id">抽奖Id</param>
         /// <returns></returns>
-        public ApiModel JoinAnchorLottery(int roomId, int lottery_id, string buvid3, int gift_id = 0, int gift_num = 0)
+        public ApiModel JoinAnchorLottery(int roomId, int lottery_id, string buvid3)
         {
             var csrf = m_cookieService.GetCSRFToken();
             var api = new ApiModel
@@ -372,7 +372,6 @@ namespace BiliLite.Models.Requests.Api.Live
                 need_cookie = true,
                 headers = ApiHelper.GetDefaultHeaders(),
             };
-            if (gift_id != 0 && gift_num != 0) { api.body += $"&gift_id={gift_id}&gift_num={gift_num}"; }
             api.ExtraCookies = new Dictionary<string, string>() { { "buvid3", buvid3 } };
             return api;
         }

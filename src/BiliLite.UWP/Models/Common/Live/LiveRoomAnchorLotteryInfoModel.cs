@@ -36,7 +36,7 @@ namespace BiliLite.Models.Common.Live
         public StackPanel WinnerList => AwardUsers == null ? new StackPanel() : new LiveRoomEndAnchorLotteryInfoModel().GenerateWinnerList(AwardUsers);
 
         /// <summary>
-        /// 需要发礼物才能参与的抽奖中, 已发送的礼物数量
+        /// 未知...
         /// </summary>
         [JsonProperty("cur_gift_num")]
         public int CurGiftNum { get; set; }
@@ -44,13 +44,10 @@ namespace BiliLite.Models.Common.Live
         [JsonProperty("current_time")]
         public long CurrentTime { get; set; }
 
-        /// <summary>
-        /// 抽奖弹幕
-        /// </summary>
         public string Danmu { get; set; }
 
         /// <summary>
-        /// 需要发礼物才能参与的抽奖中, 需要的礼物Id
+        /// 次级礼物信息? 因为有可能是b站礼物所以有id
         /// </summary>
         [JsonProperty("gift_id")]
         public int GiftId { get; set; }
@@ -59,19 +56,19 @@ namespace BiliLite.Models.Common.Live
         public bool ShowGift => GiftId != 0;
 
         /// <summary>
-        /// 参与抽奖需要发送的礼物名字
+        /// 次级礼物名称
         /// </summary>
         [JsonProperty("gift_name")]
         public string GiftName { get; set; }
 
         /// <summary>
-        /// 参与抽奖需要发送的礼物数量
+        /// 次级礼物数量
         /// </summary>
         [JsonProperty("gift_num")]
         public int GiftNum { get; set; }
 
         /// <summary>
-        /// 参与抽奖需要发送的礼物价格
+        /// 次级礼物价格
         /// </summary>
         [JsonProperty("gift_price")]
         public int GiftPrice { get; set; }
@@ -82,14 +79,8 @@ namespace BiliLite.Models.Common.Live
         [JsonProperty("goaway_time")]
         public int GoawayTime { get; set; }
 
-        /// <summary>
-        /// 抽奖Id
-        /// </summary>
         public int Id { get; set; }
 
-        /// <summary>
-        /// 是否已加入, 1为已参与
-        /// </summary>
         [JsonProperty("join_type")]
         public int JoinType { get; set; }
 

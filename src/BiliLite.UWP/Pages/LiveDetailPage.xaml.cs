@@ -204,7 +204,7 @@ namespace BiliLite.Pages
             m_liveRoomViewModel.ShowAnchorLotteryWinnerList = true;
             m_liveRoomViewModel.LoadBag().RunWithoutAwait();
         }
-         
+
         private void LiveRoomViewModelRedPocketLotteryEnd(object sender, LiveRoomEndRedPocketLotteryInfoModel e)
         {
             var winners = e.Winners;
