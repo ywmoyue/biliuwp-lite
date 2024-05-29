@@ -557,7 +557,7 @@
                                             <ComboBoxItem Tag="#000000">黑色</ComboBoxItem>
                                         </ComboBox.Items>
                                     </ComboBox>
-                                    <TextBlock Margin="0 8">边框颜色</TextBlock>
+                                    <TextBlock Margin="0 8">描边颜色</TextBlock>
                                     <ComboBox SelectedIndex="0" x:Name="SubtitleSettingBorderColor">
                                         <ComboBox.Items>
                                             <ComboBoxItem Tag="#000000">黑色</ComboBoxItem>
@@ -566,8 +566,13 @@
                                             <ComboBoxItem Tag="#ff7a45">橙色</ComboBoxItem>
                                             <ComboBoxItem Tag="#9254de">紫色</ComboBoxItem>
                                             <ComboBoxItem Tag="#f5222d">红色</ComboBoxItem>
+                                            <ComboBoxItem Tag="#FFFFFF">白色</ComboBoxItem>
+                                            <ComboBoxItem Tag="#00FFFFFF">透明</ComboBoxItem>
                                         </ComboBox.Items>
                                     </ComboBox>
+                                    <TextBlock Margin="0 8">边框背景</TextBlock>
+                                    <AutoSuggestBox QueryIcon="Accept" x:Name="SubtitleSettingOutsideBorderColor"></AutoSuggestBox>
+
                                     <TextBlock Margin="0 8">字幕多行对齐</TextBlock>
                                     <ComboBox SelectedIndex="0" x:Name="SubtitleSettingAlign">
                                         <ComboBox.Items>

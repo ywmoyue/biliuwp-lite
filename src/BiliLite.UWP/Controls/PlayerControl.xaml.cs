@@ -770,13 +770,20 @@ namespace BiliLite.Controls
                 SettingService.SetValue<double>(SettingConstants.Player.SUBTITLE_SIZE, SubtitleSettingSize.Value);
                 UpdateSubtitle();
             });
-            //字幕边框颜色
+            //字幕描边颜色
             SubtitleSettingBorderColor.SelectedIndex = SettingService.GetValue<int>(SettingConstants.Player.SUBTITLE_BORDER_COLOR, 0);
             SubtitleSettingBorderColor.SelectionChanged += new SelectionChangedEventHandler((e, args) =>
             {
                 SettingService.SetValue<int>(SettingConstants.Player.SUBTITLE_BORDER_COLOR, SubtitleSettingBorderColor.SelectedIndex);
                 UpdateSubtitle();
             });
+            //字幕边框颜色
+            SubtitleSettingOutsideBorderColor.Text = SettingService.GetValue<string>(SettingConstants.Player.SUBTITLE_OUTSIDE_BORDER_COLOR, SettingConstants.Player.DEFAULT_SUBTITLE_OUTSIDE_BORDER_COLOR);
+            SubtitleSettingOutsideBorderColor.QuerySubmitted += (e, args) =>
+            {
+                SettingService.SetValue(SettingConstants.Player.SUBTITLE_OUTSIDE_BORDER_COLOR, SubtitleSettingOutsideBorderColor.Text);
+                UpdateSubtitle();
+            };
             //字幕颜色
             SubtitleSettingColor.SelectedIndex = SettingService.GetValue<int>(SettingConstants.Player.SUBTITLE_COLOR, 0);
             SubtitleSettingColor.SelectionChanged += new SelectionChangedEventHandler((e, args) =>
@@ -1161,6 +1168,7 @@ namespace BiliLite.Controls
         private async void SubtitleTimer_Tick(object sender, object e)
         {
             if (Player.PlayState != PlayState.Playing) return;
+
             if (subtitles == null)
             {
                 return;
@@ -1173,6 +1181,7 @@ namespace BiliLite.Controls
                 if (first.content == currentSubtitleText) return;
                 BorderSubtitle.Visibility = Visibility.Visible;
                 BorderSubtitle.Child = await GenerateSubtitleItem(first.content);
+                BorderSubtitle.Background = new SolidColorBrush(SubtitleSettingOutsideBorderColor.Text.StrToColor());
                 currentSubtitleText = first.content;
             }
             else
