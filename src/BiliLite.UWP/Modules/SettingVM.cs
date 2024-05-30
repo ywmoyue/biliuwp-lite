@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Net.Http;
+using System.Text;
+using Windows.Storage.Pickers;
 using BiliLite.Extensions;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Models.Common;
 using BiliLite.Services;
+using Microsoft.Toolkit.Uwp.Helpers;
 
 namespace BiliLite.Modules
 {
@@ -103,6 +105,19 @@ namespace BiliLite.Modules
             ShieldUsers = SettingService.GetValue<ObservableCollection<string>>(SettingConstants.VideoDanmaku.SHIELD_USER, new ObservableCollection<string>() { });
         }
 
+        public async Task ImportDanmuFilter()
+        {
+            var filePicker = new FileOpenPicker();
+            filePicker.FileTypeFilter.Add(".json");
+            var file = await filePicker.PickSingleFileAsync();
+            if (file == null) return;
+            using var stream = await file.OpenReadAsync();
+            var text = await stream.ReadTextAsync(Encoding.UTF8);
+            var filterList = JsonConvert.DeserializeObject<List<DanmuFilterItem>>(text);
+
+            ImportDanmakuFilterCore(filterList);
+        }
+
         public async Task SyncDanmuFilter()
         {
             try
@@ -117,36 +132,8 @@ namespace BiliLite.Modules
                 if (obj["code"].ToInt32() == 0)
                 {
                     var items = JsonConvert.DeserializeObject<List<DanmuFilterItem>>(obj["data"]["rule"].ToString());
-                    {
-                        var words = items.Where(x => x.type == 0).Select(x => x.filter).ToList();
-                        var ls = ShieldWords.Union(words);
-                        ShieldWords.Clear();
-                        foreach (var item in ls)
-                        {
-                            ShieldWords.Add(item);
-                        }
-                        SettingService.SetValue(SettingConstants.VideoDanmaku.SHIELD_WORD, ShieldWords);
-                    }
-                    {
-                        var users = items.Where(x => x.type == 1).Select(x => x.filter).ToList();
-                        var ls = ShieldRegulars.Union(users);
-                        ShieldRegulars.Clear();
-                        foreach (var item in ls)
-                        {
-                            ShieldRegulars.Add(item);
-                        }
-                        SettingService.SetValue(SettingConstants.VideoDanmaku.SHIELD_REGULAR, ShieldRegulars);
-                    }
-                    {
-                        var users = items.Where(x => x.type == 2).Select(x => x.filter).ToList();
-                        var ls = ShieldUsers.Union(users);
-                        ShieldUsers.Clear();
-                        foreach (var item in ls)
-                        {
-                            ShieldUsers.Add(item);
-                        }
-                        SettingService.SetValue(SettingConstants.VideoDanmaku.SHIELD_USER, ShieldUsers);
-                    }
+
+                    ImportDanmakuFilterCore(items);
                 }
                 else
                 {
@@ -209,6 +196,40 @@ namespace BiliLite.Modules
                 return -1;
             }
 
+        }
+
+        private void ImportDanmakuFilterCore(List<DanmuFilterItem> filterList)
+        {
+            {
+                var words = filterList.Where(x => x.type == 0).Select(x => x.filter).ToList();
+                var ls = ShieldWords.Union(words);
+                ShieldWords.Clear();
+                foreach (var item in ls)
+                {
+                    ShieldWords.Add(item);
+                }
+                SettingService.SetValue(SettingConstants.VideoDanmaku.SHIELD_WORD, ShieldWords);
+            }
+            {
+                var users = filterList.Where(x => x.type == 1).Select(x => x.filter).ToList();
+                var ls = ShieldRegulars.Union(users);
+                ShieldRegulars.Clear();
+                foreach (var item in ls)
+                {
+                    ShieldRegulars.Add(item);
+                }
+                SettingService.SetValue(SettingConstants.VideoDanmaku.SHIELD_REGULAR, ShieldRegulars);
+            }
+            {
+                var users = filterList.Where(x => x.type == 2).Select(x => x.filter).ToList();
+                var ls = ShieldUsers.Union(users);
+                ShieldUsers.Clear();
+                foreach (var item in ls)
+                {
+                    ShieldUsers.Add(item);
+                }
+                SettingService.SetValue(SettingConstants.VideoDanmaku.SHIELD_USER, ShieldUsers);
+            }
         }
 
         //傻逼微软，UWP连个Ping都不支持
