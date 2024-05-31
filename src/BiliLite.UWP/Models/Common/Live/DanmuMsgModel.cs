@@ -39,9 +39,9 @@ namespace BiliLite.Models.Common.Live
             get => _userNameColor ?? 
                 UserCaptain switch
                 {
-                    3 => "#FF23709E",
-                    2 => "#FF7B166F",
-                    1 => "#FFC01039",
+                    UserCaptainType.JianZhang => "#FF23709E",
+                    UserCaptainType.Tidu => "#FF7B166F",
+                    UserCaptainType.Zongdu => "#FFC01039",
                     _ => "#FF808080"
                 }; 
 
@@ -102,11 +102,11 @@ namespace BiliLite.Models.Common.Live
         /// 勋章颜色
         /// </summary>
         public string MedalColor { get; set; }
-        
+
         /// <summary>
-        /// 用户舰队等级
+        /// 用户大航海等级
         /// </summary>
-        public int UserCaptain { get; set; }
+        public UserCaptainType UserCaptain { get; set; }
 
         /// <summary>
         /// 用户上的舰的图片
@@ -115,9 +115,9 @@ namespace BiliLite.Models.Common.Live
         {
              get => UserCaptain switch
                     {
-                        3 => "ms-appx:///Assets/Live/ic_live_guard_3.png", //舰长
-                        2 => "ms-appx:///Assets/Live/ic_live_guard_2.png", //提督
-                        1 => "ms-appx:///Assets/Live/ic_live_guard_1.png", //总督
+                        UserCaptainType.JianZhang => "ms-appx:///Assets/Live/ic_live_guard_3.png", //舰长
+                        UserCaptainType.Tidu => "ms-appx:///Assets/Live/ic_live_guard_2.png", //提督
+                        UserCaptainType.Zongdu => "ms-appx:///Assets/Live/ic_live_guard_1.png", //总督
                         _ => null,
                     };
         }

@@ -448,4 +448,27 @@
         Season = 2,
         Article = 3
     }
+
+    /// <summary>
+    /// 用户大航海等级
+    /// </summary>
+    public enum UserCaptainType
+    {
+        None = 0,
+
+        /// <summary>
+        /// 总督
+        /// </summary>
+        Zongdu = 1,
+
+        /// <summary>
+        /// 提督
+        /// </summary>
+        Tidu = 2,
+
+        /// <summary>
+        /// 舰长
+        /// </summary>
+        JianZhang = 3,
+    }
 }
