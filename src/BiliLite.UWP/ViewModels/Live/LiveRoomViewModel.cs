@@ -118,6 +118,7 @@ namespace BiliLite.ViewModels.Live
         /// <summary>
         /// buvid3 用于防止风控
         /// </summary>
+        [DoNotNotify]
         public string Buvid3 { get; set; }
 
         [DoNotNotify]
@@ -224,6 +225,7 @@ namespace BiliLite.ViewModels.Live
 
         public string ManualPlayUrl { get; set; } = "";
 
+        [DoNotNotify]
         public Dictionary<string, string> LotteryDanmu = new Dictionary<string, string> { { "AnchorLottery", "" }, {"RedPocketLottery", ""} };
 
         /// <summary>
