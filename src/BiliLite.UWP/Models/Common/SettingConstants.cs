@@ -631,10 +631,22 @@ namespace BiliLite.Models.Common
             [SettingKey(typeof(int))]
             public const string SUBTITLE_COLOR = "subtitleColor";
             /// <summary>
-            /// 字幕背景颜色
+            /// 字幕描边颜色
             /// </summary>
             [SettingKey(typeof(int))]
             public const string SUBTITLE_BORDER_COLOR = "subtitleBorderColor";
+
+            /// <summary>
+            /// 字幕边框背景颜色
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string SUBTITLE_OUTSIDE_BORDER_COLOR = "subtitleOutsideBorderColor";
+
+            /// <summary>
+            /// 默认字幕边框背景颜色
+            /// </summary>
+            [SettingDefaultValue] public const string DEFAULT_SUBTITLE_OUTSIDE_BORDER_COLOR = "#00FFFFFF";
+
             /// <summary>
             /// 字幕大小
             /// </summary>

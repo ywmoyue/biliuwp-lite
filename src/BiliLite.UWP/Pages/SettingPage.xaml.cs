@@ -1215,5 +1215,10 @@ namespace BiliLite.Pages
             var exportService = App.ServiceProvider.GetRequiredService<SettingsImportExportService>();
             await exportService.ExportSettingsWithAccount();
         }
+
+        private async void DanmuSettingFilterImport_OnClick(object sender, RoutedEventArgs e)
+        {
+            await settingVM.ImportDanmuFilter();
+        }
     }
 }
