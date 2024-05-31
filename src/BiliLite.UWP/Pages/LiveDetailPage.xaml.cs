@@ -106,12 +106,12 @@ namespace BiliLite.Pages
             m_liveRoomViewModel.RedPocketLotteryEnd += LiveRoomViewModelRedPocketLotteryEnd;
             m_liveRoomViewModel.AnchorLotteryStart += LiveRoomViewModelAnchorLotteryStart;
             m_liveRoomViewModel.SetManualPlayUrl += LiveRoomViewModelSetManualPlayUrl;
-            m_liveRoomViewModel.AddLotteryShieldWord += (_, word) => 
+            m_liveRoomViewModel.AddLotteryShieldWord += (sender, word) => 
             {
                 if (m_liveRoomViewModel.ShowLotteryDanmu) return;
                 AddShieldWord(word);
-                if (_ is LiveRoomAnchorLotteryInfoModel) m_liveRoomViewModel.LotteryDanmu["AnchorLottery"] = (_ as LiveRoomAnchorLotteryInfoModel).Danmu;
-                if (_ is LiveRoomRedPocketLotteryInfoModel) m_liveRoomViewModel.LotteryDanmu["RedPocketLottery"] = (_ as LiveRoomRedPocketLotteryInfoModel).Danmu;
+                if (sender is LiveRoomAnchorLotteryInfoModel) m_liveRoomViewModel.LotteryDanmu["AnchorLottery"] = (_ as LiveRoomAnchorLotteryInfoModel).Danmu;
+                if (sender is LiveRoomRedPocketLotteryInfoModel) m_liveRoomViewModel.LotteryDanmu["RedPocketLottery"] = (_ as LiveRoomRedPocketLotteryInfoModel).Danmu;
             };
             m_liveRoomViewModel.DelShieldWord += (_, word) => DelShieldWord(word);
             m_liveRoomViewModel.SpecialLiveRoomHideElements += (_, e) =>
