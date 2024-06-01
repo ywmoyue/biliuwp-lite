@@ -12,7 +12,7 @@ namespace BiliLite.Models.Common.Live
         public string FaceFrame { get; set; }
 
         [JsonProperty("guard_level")]
-        public int GuardLevel { get; set; }
+        public UserCaptainType GuardLevel { get; set; }
 
         [JsonProperty("user_level")]
         public int UserLevel { get; set; }

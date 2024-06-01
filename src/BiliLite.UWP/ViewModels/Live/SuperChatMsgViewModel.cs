@@ -1,4 +1,5 @@
-﻿using BiliLite.ViewModels.Common;
+﻿using BiliLite.Models.Common;
+using BiliLite.ViewModels.Common;
 using Newtonsoft.Json;
 using PropertyChanged;
 
@@ -61,7 +62,7 @@ namespace BiliLite.ViewModels.Live
 
         [DoNotNotify]
         [JsonProperty("guard_level")]
-        public int GuardLevel { get; set; }
+        public UserCaptainType GuardLevel { get; set; }
 
         [DoNotNotify]
         [JsonProperty("uid")]

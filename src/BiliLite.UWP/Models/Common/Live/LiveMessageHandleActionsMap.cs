@@ -173,7 +173,7 @@ namespace BiliLite.Models.Common.Live
                 UserName = info.Username,
                 UserNameFontWeight = "Semibold",
                 Uid = info.Uid.ToString(),
-                UserCaptain = (UserCaptainType)info.GuardLevel,
+                UserCaptain = info.GuardLevel,
                 ShowCaptain = Visibility.Visible,
                 MedalColor = info.MedalColor,
                 MedalName = info.MedalName,

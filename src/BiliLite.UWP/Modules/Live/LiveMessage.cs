@@ -263,7 +263,7 @@ namespace BiliLite.Modules.Live
                         // 是否为舰长
                         if (obj["info"][7] != null && obj["info"][7].ToString().Length != 0)
                         {
-                            msg.UserCaptain = obj["info"][7].ToInt32();
+                            msg.UserCaptain = (UserCaptainType)obj["info"][7].ToInt32();
                             msg.ShowCaptain = Visibility.Visible;
                         }
 
@@ -399,7 +399,7 @@ namespace BiliLite.Modules.Live
                     msgView.Message = obj["data"]["message"].ToString();
                     msgView.Price = obj["data"]["price"].ToInt32();
                     msgView.Username = obj["data"]["user_info"]["uname"].ToString();
-                    msgView.GuardLevel = obj["data"]["user_info"]["guard_level"].ToInt32();
+                    msgView.GuardLevel = (UserCaptainType)obj["data"]["user_info"]["guard_level"].ToInt32();
                     msgView.Uid = obj["data"]["uid"].ToInt64();
                     
                     if (obj["data"]["medal_info"] != null && obj["data"]["medal_info"].ToArray().Length != 0)
