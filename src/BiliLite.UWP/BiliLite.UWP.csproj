@@ -157,6 +157,7 @@
     </Compile>
     <Compile Include="Extensions\ControlsExtensions.cs" />
     <Compile Include="Extensions\QrCodeExtensions.cs" />
+    <Compile Include="Extensions\RegexExtensions.cs" />
     <Compile Include="Models\Attributes\SettingDefaultValueAttribute.cs" />
     <Compile Include="Models\Attributes\SettingKeyAttribute.cs" />
     <Compile Include="Models\Common\Anime\ISeasonItem.cs" />

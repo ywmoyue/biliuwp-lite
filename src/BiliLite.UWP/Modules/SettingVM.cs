@@ -216,6 +216,11 @@ namespace BiliLite.Modules
                 ShieldRegulars.Clear();
                 foreach (var item in ls)
                 {
+                    if (!item.IsValidRegex())
+                    {
+                        logger.Warn("非法正则表达式: " + item);
+                        continue;
+                    }
                     ShieldRegulars.Add(item);
                 }
                 SettingService.SetValue(SettingConstants.VideoDanmaku.SHIELD_REGULAR, ShieldRegulars);
