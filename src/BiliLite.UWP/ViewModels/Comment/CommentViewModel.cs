@@ -233,6 +233,7 @@ namespace BiliLite.ViewModels.Comment
 
         private async void Seek_Click(string timeText)
         {
+            timeText = timeText.Replace('：', ':');
             var timeSplitCount = timeText.Count(x => x == ':');
             var text = timeText;
             // "mm:ss"格式，补全

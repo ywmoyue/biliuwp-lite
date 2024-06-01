@@ -370,8 +370,8 @@ namespace BiliLite.Extensions
         {
             List<string> keyword = new List<string>();
             List<List<int>> haveHandledOffset = new List<List<int>>();
-            //var pattern = @"\b\d{2}:\d{2}(:\d{2})?\b"; // 正则表达式模式：匹配“mm:ss”和“hh:mm:ss”格式的时间
-            var pattern = @"\b(\d{1,}:\d{2}:\d{2}|\d{1,}:\d{2})\b";
+            // 正则表达式模式：匹配“mm:ss”和“hh:mm:ss”格式的时间
+            var pattern = @"(?<!\d)(\d{1,}:\d{2}:\d{2}|\d{1,}:\d{2}|\d{1,}：\d{2}：\d{2}|\d{1,}：\d{2})(?!\d)";
             // 使用 Regex.Matches 获取所有匹配项
             MatchCollection matches = Regex.Matches(input, pattern);
 
@@ -389,7 +389,7 @@ namespace BiliLite.Extensions
                 var data =
                     @"<InlineUIContainer><HyperlinkButton Command=""{Binding SeekCommand}""  IsEnabled=""True"" Margin=""2 -3 2 -5"" Padding=""0 2 0 0"" " +
                     string.Format(
-                        @" CommandParameter=""{0}"" ><TextBlock>{0}</TextBlock></HyperlinkButton></InlineUIContainer>",
+                        @" CommandParameter=""{0}"" ><TextBlock>⏩{0}</TextBlock></HyperlinkButton></InlineUIContainer>",
                         item.Groups[0].Value);
                 input = input.Remove(item.Index + offset, item.Length);
                 input = input.Insert(item.Index + offset, data);

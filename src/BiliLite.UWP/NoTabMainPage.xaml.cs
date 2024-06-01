@@ -38,6 +38,7 @@ namespace BiliLite
             MessageCenter.ChangeTitleEvent += MessageCenter_ChangeTitleEvent;
             MessageCenter.ViewImageEvent += MessageCenter_ViewImageEvent;
             MessageCenter.MiniWindowEvent += MessageCenter_MiniWindowEvent;
+            MessageCenter.SeekEvent += MessageCenter_SeekEvent;
             Window.Current.Content.PointerPressed += Content_PointerPressed;
 
             Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
@@ -66,6 +67,13 @@ namespace BiliLite
                 Window.Current.SetTitleBar(TitleBar);
             }
         }
+
+        private void MessageCenter_SeekEvent(object sender, double e)
+        {
+            if (!(frame.Content is PlayPage playPage)) return;
+            playPage.Seek(e);
+        }
+
         private void Content_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             var par = e.GetCurrentPoint(sender as Frame).Properties.PointerUpdateKind;
