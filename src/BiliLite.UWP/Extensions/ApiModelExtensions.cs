@@ -36,7 +36,7 @@ namespace BiliLite.Extensions
             {
                 if (api.need_cookie)
                 {
-                    return await api.url.PostHttpResultsWithCookie(api.body, api.headers);
+                    return await api.url.PostHttpResultsWithCookie(api.body, api.headers, api.ExtraCookies);
                 }
 
                 return await api.url.PostHttpResultsAsync(api.body, api.headers);

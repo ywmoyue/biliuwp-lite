@@ -467,6 +467,12 @@ namespace BiliLite.Models.Common
             public const string HIDE_LOTTERY = "LiveHideLottery";
 
             /// <summary>
+            /// 隐藏抽奖弹幕关键字
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string HIDE_LOTTERY_DANMU = "LiveHideLotteryDanmu"; 
+
+            /// <summary>
             /// 直播流默认源
             /// </summary>
             [SettingKey(typeof(string))]
