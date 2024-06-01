@@ -149,7 +149,7 @@ namespace BiliLite.Services
 
         public override void AddLiveDanmaku(string text, bool owner, Color color)
         {
-            m_danmakuControl.AddLiveDanmu(text, false, color);
+            m_danmakuControl.AddLiveDanmu(text, owner, color);
         }
 
         public override void Pause()

@@ -30,10 +30,23 @@ namespace BiliLite.Models.Common.Live
         /// </summary>
         public string UserName { get; set; }
 
+        private string _userNameColor;
         /// <summary>
         /// 用户名颜色, 默认灰色
         /// </summary>
-        public string UserNameColor { get; set; } = "#FF808080";
+        public string UserNameColor 
+        { 
+            get => _userNameColor ?? 
+                UserCaptain switch
+                {
+                    UserCaptainType.JianZhang => "#FF23709E",
+                    UserCaptainType.Tidu => "#FF7B166F",
+                    UserCaptainType.Zongdu => "#FFC01039",
+                    _ => "#FF808080"
+                }; 
+
+            set => _userNameColor = value; 
+        }
 
         /// <summary>
         /// 用户名字重, 默认Normal
@@ -83,17 +96,17 @@ namespace BiliLite.Models.Common.Live
         /// <summary>
         /// 勋章等级
         /// </summary>
-        public string MedalLevel { get; set; }
+        public int MedalLevel { get; set; }
 
         /// <summary>
         /// 勋章颜色
         /// </summary>
         public string MedalColor { get; set; }
-        
+
         /// <summary>
-        /// 用户上的舰的名称
+        /// 用户大航海等级
         /// </summary>
-        public string UserCaptain {  get; set; }
+        public UserCaptainType UserCaptain { get; set; }
 
         /// <summary>
         /// 用户上的舰的图片
@@ -102,9 +115,9 @@ namespace BiliLite.Models.Common.Live
         {
              get => UserCaptain switch
                     {
-                        "舰长" => "ms-appx:///Assets/Live/ic_live_guard_3.png",
-                        "提督" => "ms-appx:///Assets/Live/ic_live_guard_2.png",
-                        "总督" => "ms-appx:///Assets/Live/ic_live_guard_1.png",
+                        UserCaptainType.JianZhang => "ms-appx:///Assets/Live/ic_live_guard_3.png", //舰长
+                        UserCaptainType.Tidu => "ms-appx:///Assets/Live/ic_live_guard_2.png", //提督
+                        UserCaptainType.Zongdu => "ms-appx:///Assets/Live/ic_live_guard_1.png", //总督
                         _ => null,
                     };
         }

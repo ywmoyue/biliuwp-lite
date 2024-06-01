@@ -749,7 +749,7 @@ namespace BiliLite.Pages
                 SettingService.SetValue(SettingConstants.Live.SHOW, LiveDanmuSettingState.IsOn ? Visibility.Visible : Visibility.Collapsed);
             });
             //弹幕关键词
-            LiveDanmuSettingListWords.ItemsSource = settingVM.LiveWords;
+            LiveDanmuSettingListWords.ItemsSource = settingVM.LiveShieldWords;
         }
         private void LoadDownlaod()
         {
@@ -1100,21 +1100,21 @@ namespace BiliLite.Pages
                 Notify.ShowMessageToast("关键字不能为空");
                 return;
             }
-            if (!settingVM.LiveWords.Contains(LiveDanmuSettingTxtWord.Text))
+            if (!settingVM.LiveShieldWords.Contains(LiveDanmuSettingTxtWord.Text))
             {
-                settingVM.LiveWords.Add(LiveDanmuSettingTxtWord.Text);
-                SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, settingVM.LiveWords);
+                settingVM.LiveShieldWords.Add(LiveDanmuSettingTxtWord.Text);
+                SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, settingVM.LiveShieldWords);
             }
 
             DanmuSettingTxtWord.Text = "";
-            SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, settingVM.LiveWords);
+            SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, settingVM.LiveShieldWords);
         }
 
         private void RemoveLiveDanmuWord_Click(object sender, RoutedEventArgs e)
         {
             var word = (sender as AppBarButton).DataContext as string;
-            settingVM.LiveWords.Remove(word);
-            SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, settingVM.LiveWords);
+            settingVM.LiveShieldWords.Remove(word);
+            SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, settingVM.LiveShieldWords);
         }
 
         private async void btnCleanImageCache_Click(object sender, RoutedEventArgs e)

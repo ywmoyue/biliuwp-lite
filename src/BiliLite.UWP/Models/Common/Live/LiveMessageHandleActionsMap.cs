@@ -6,8 +6,9 @@ using BiliLite.ViewModels.Live;
 using Newtonsoft.Json;
 using BiliLite.Extensions;
 using BiliLite.Services;
-using Windows.UI;
 using Windows.UI.Xaml.Media;
+using Color = Windows.UI.Color;
+using System.Text.RegularExpressions;
 
 namespace BiliLite.Models.Common.Live
 {
@@ -28,6 +29,7 @@ namespace BiliLite.Models.Common.Live
                     { MessageType.AnchorLotteryStart, AnchorLotteryStart },
                     { MessageType.AnchorLotteryAward, AnchorLotteryAward },
                     { MessageType.GuardBuy, GuardBuy },
+                    { MessageType.GuardBuyNew, GuardBuyNew},
                     { MessageType.RoomChange, RoomChange },
                     { MessageType.RoomBlock, RoomBlock },
                     { MessageType.WaringOrCutOff, WaringOrCutOff },
@@ -37,7 +39,7 @@ namespace BiliLite.Models.Common.Live
                     { MessageType.RedPocketLotteryWinner, RedPocketLotteryWinner },
                     { MessageType.OnlineRankChange, OnlineRankChange },
                     { MessageType.StopLive, StopLive },
-                    { MessageType.RoomSlient, RoomSlient },
+                    { MessageType.ChatLevelMute, ChatLevelMute },
                 };
         }
 
@@ -50,6 +52,10 @@ namespace BiliLite.Models.Common.Live
         public event EventHandler<LiveRoomEndRedPocketLotteryInfoModel> RedPocketLotteryEnd;
 
         public event EventHandler<LiveAnchorInfoLiveInfoModel> AnchorInfoLiveInfo;
+
+        public event EventHandler<string> AddShieldWord;
+
+        public event EventHandler<string> DelShieldWord;
 
         private void ConnectSuccess(LiveRoomViewModel viewModel, object message)
         {
@@ -71,10 +77,21 @@ namespace BiliLite.Models.Common.Live
         private void Danmu(LiveRoomViewModel viewModel, object message)
         {
             var m = message as DanmuMsgModel;
-            if (viewModel.Messages.Count >= viewModel.CleanCount)
+
+            // 自己的消息和主播的消息特殊处理
+            if (m.Uid == SettingService.Account.UserID.ToString() || m.Uid == viewModel.AnchorUid.ToString())
             {
-                viewModel.Messages.RemoveAt(0);
+                // 暂时借用了直播间标题修改的颜色... 找不到好看的颜色了
+                m.CardColor = new SolidColorBrush(Color.FromArgb(255, 228, 255, 233));
+                m.RichText = m.Text.ToRichTextBlock(m.Emoji, true, fontWeight: "Medium", fontColor: "#ff1e653a");
+                if (m.Uid == viewModel.AnchorUid.ToString())
+                {
+                    m.Role = "主播";
+                    m.ShowAdmin = Visibility.Visible;
+                }
             }
+
+            if (viewModel.Messages.Count >= viewModel.CleanCount) viewModel.Messages.RemoveAt(0);
             viewModel.Messages.Add(m);
             AddNewDanmu?.Invoke(null, m);
         }
@@ -142,21 +159,49 @@ namespace BiliLite.Models.Common.Live
 
         private void SuperChat(LiveRoomViewModel viewModel, object message)
         {
-            viewModel.SuperChats.Add(message as SuperChatMsgViewModel);
+            viewModel.SuperChats.Insert(0, message as SuperChatMsgViewModel); // 新sc总会显示在最前
+
+            // SuperChat也是Chat :)
+            var info = message as SuperChatMsgViewModel;
+            var msg = new DanmuMsgModel
+            {
+                Text = info.Message,
+                DanmuColor = info.FontColor,
+                RichText = info.Message.ToRichTextBlock(null, true, fontWeight: "Medium", fontColor: "White"),
+                CardColor = new SolidColorBrush(info.BackgroundBottomColor.StrToColor()),
+                Face = info.Face,
+                UserName = info.Username,
+                UserNameFontWeight = "Semibold",
+                Uid = info.Uid.ToString(),
+                UserCaptain = info.GuardLevel,
+                ShowCaptain = Visibility.Visible,
+                MedalColor = info.MedalColor,
+                MedalName = info.MedalName,
+                MedalLevel = info.MedalLevel,
+                ShowMedal = (!string.IsNullOrEmpty(info.MedalColor) &&
+                             !string.IsNullOrEmpty(info.MedalName) &&
+                             info.MedalLevel > 0) ? Visibility.Visible : Visibility.Collapsed,
+            };
+
+            Danmu(viewModel, msg);
         }
 
         private void AnchorLotteryStart(LiveRoomViewModel viewModel, object message)
         {
             if (!viewModel.ReceiveLotteryMsg) return;
-            var info = message.ToString();
-            viewModel.LotteryViewModel.SetAnchorLotteryInfo(JsonConvert.DeserializeObject<LiveRoomAnchorLotteryInfoModel>(info));
+            var info = JsonConvert.DeserializeObject<LiveRoomAnchorLotteryInfoModel>(message.ToString());
+            viewModel.LotteryDanmu["AnchorLottery"] = info.Danmu;
+            AddShieldWord?.Invoke(info, info.Danmu);
+            viewModel.LotteryViewModel.SetAnchorLotteryInfo(info);
         }
 
         private void RedPocketLotteryStart(LiveRoomViewModel viewModel, object message) 
         {
             if (!viewModel.ReceiveLotteryMsg) return;
-            var info = message.ToString();
-            viewModel.LotteryViewModel.SetRedPocketLotteryInfo(JsonConvert.DeserializeObject<LiveRoomRedPocketLotteryInfoModel>(info));
+            var info = JsonConvert.DeserializeObject<LiveRoomRedPocketLotteryInfoModel>(message.ToString());
+            viewModel.LotteryDanmu["RedPocketLottery"] = info.Danmu;
+            AddShieldWord?.Invoke(info, info.Danmu);
+            viewModel.LotteryViewModel.SetRedPocketLotteryInfo(info);
 
             viewModel.ShowRedPocketLotteryWinnerList = false;
             viewModel.RedPocketSendDanmuBtnText = viewModel.Attention ? "一键发送弹幕" : "一键关注并发送弹幕";
@@ -167,6 +212,7 @@ namespace BiliLite.Models.Common.Live
             if (!viewModel.ReceiveLotteryMsg) return;
             var info = JsonConvert.DeserializeObject<LiveRoomEndRedPocketLotteryInfoModel>(message.ToString());
             RedPocketLotteryEnd?.Invoke(this, info);
+            DelShieldWord?.Invoke(info, viewModel.LotteryDanmu["RedPocketLottery"]);
         }
 
         private void AnchorLotteryAward(LiveRoomViewModel viewModel, object message)
@@ -174,6 +220,7 @@ namespace BiliLite.Models.Common.Live
             if (!viewModel.ReceiveLotteryMsg) return;
             var info = JsonConvert.DeserializeObject<LiveRoomEndAnchorLotteryInfoModel>(message.ToString());
             AnchorLotteryEnd?.Invoke(this, info);
+            DelShieldWord?.Invoke(info, viewModel.LotteryDanmu["AnchorLottery"]);
         }
 
         private void GuardBuy(LiveRoomViewModel viewModel, object message)
@@ -192,6 +239,36 @@ namespace BiliLite.Models.Common.Live
             viewModel.ReloadGuardList().RunWithoutAwait();
         }
 
+        private void GuardBuyNew(LiveRoomViewModel viewModel, object message)
+        {
+            var info = message as GuardBuyMsgModel;
+
+            var isNewGuard = info.Message.Contains("开通");
+
+            int accompanyDays = -1;
+            var match = Regex.Match(info.Message, @"今天是TA陪伴主播的第(\d+)天");
+            if (match.Success) accompanyDays = match.Groups[1].Value.ToInt32();
+
+            var text = info.UserName + 
+                       (isNewGuard ? "\n新开通了" : "\n续费了") +
+                       $"主播的{info.GiftName}" + 
+                       (info.Num > 1 ? $"×{info.Num}个{info.Unit}" : "") +
+                       "🎉" +
+                       ((match.Success && accompanyDays > 1) ? $"\nTA已陪伴主播{accompanyDays}天💖" : "");
+
+            var msg = new DanmuMsgModel
+            {
+                ShowUserName = Visibility.Collapsed,
+                ShowUserFace = Visibility.Collapsed,
+                RichText = text.ToRichTextBlock(null, fontWeight: "SemiBold", fontColor: info.FontColor, textAlignment: "Center"),
+                CardColor = new SolidColorBrush(info.CardColor),
+                CardHorizontalAlignment = HorizontalAlignment.Center,
+            };
+            
+            viewModel.Messages.Add(msg);
+            if (isNewGuard) viewModel.ReloadGuardList().RunWithoutAwait();
+        }
+
         private void RoomChange(LiveRoomViewModel viewModel, object message)
         {
             var info = message as RoomChangeMsgModel;
@@ -199,7 +276,7 @@ namespace BiliLite.Models.Common.Live
             {
                 ShowUserFace = Visibility.Collapsed,
                 ShowUserName = Visibility.Collapsed,
-                RichText = ($"直播间标题已修改:\n{viewModel.RoomTitle} ➡️ {info.Title}").ToRichTextBlock(null, fontWeight: "SemiBold", fontColor: "#ff1e653a"), //一种绿色
+                RichText = ($"直播间标题已修改:\n{viewModel.RoomTitle}\n🔽\n{info.Title}").ToRichTextBlock(null, fontWeight: "SemiBold", textAlignment:"Center", fontColor: "#ff1e653a"), //一种绿色
                 CardColor = new SolidColorBrush(Color.FromArgb(255, 228, 255, 233)),
                 CardHorizontalAlignment = HorizontalAlignment.Center,
             };
@@ -214,11 +291,30 @@ namespace BiliLite.Models.Common.Live
             {
                 ShowUserFace = Visibility.Collapsed,
                 ShowUserName = Visibility.Collapsed,
-                RichText = (info.UserName + " 被直播间禁言🚫").ToRichTextBlock(null, fontWeight: "SemiBold", fontColor: "White"), // 白色
+                RichText = (info.UserName + " 被直播间禁言🚫").ToRichTextBlock(null, fontWeight: "SemiBold", fontColor: "White", textAlignment: "Center"), 
                 CardColor = new SolidColorBrush(Color.FromArgb(255, 235, 45, 80)), // 一种红色
                 CardHorizontalAlignment = HorizontalAlignment.Center,
             };
 
+            viewModel.Messages.Add(msg);
+
+            var text = info.UserName + " 发言历史:\n";
+            var previousChatList = viewModel.Messages
+                                    .Where(item => item.Uid == info.UserID)                       // 筛选出符合条件的对象
+                                    .OrderByDescending(item => viewModel.Messages.IndexOf(item))  // 根据索引倒序排序
+                                    .Take(3)                                                      // 取前三个
+                                    .Select(item => item.Text);                                   // 提取Text字段
+            if (previousChatList.Count() == 0) return;
+
+            text += string.Join("\n", previousChatList);
+            msg = new DanmuMsgModel()
+            {
+                ShowUserFace = Visibility.Collapsed,
+                ShowUserName = Visibility.Collapsed,
+                RichText = (text).ToRichTextBlock(null, fontWeight: "SemiBold", fontColor: "White", textAlignment: "Center"), 
+                CardColor = new SolidColorBrush(Color.FromArgb(255, 235, 45, 80)), // 一种红色
+                CardHorizontalAlignment = HorizontalAlignment.Center,
+            };
             viewModel.Messages.Add(msg);
         }
 
@@ -241,7 +337,7 @@ namespace BiliLite.Models.Common.Live
             {
                 ShowUserFace = Visibility.Collapsed,
                 ShowUserName = Visibility.Collapsed,
-                RichText = (text + "\n" + info.Message).ToRichTextBlock(null, fontColor: "White", fontWeight: "SemiBold"), 
+                RichText = (text + "\n" + info.Message).ToRichTextBlock(null, fontColor: "White", fontWeight: "SemiBold", textAlignment: "Center"), 
                 CardColor = cardColor,
                 CardHorizontalAlignment = HorizontalAlignment.Center,
             };
@@ -280,7 +376,7 @@ namespace BiliLite.Models.Common.Live
             });
         }
         
-        private void RoomSlient(LiveRoomViewModel viewModel, object level)
+        private void ChatLevelMute(LiveRoomViewModel viewModel, object level)
         {
             viewModel.Messages.Add(new DanmuMsgModel()
             {

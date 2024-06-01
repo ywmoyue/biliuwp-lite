@@ -191,8 +191,8 @@
                             
                             <AppBarButton x:Name="btnChat" Click="btnChat_Click" Label="私信" Icon="Message">
                             </AppBarButton>
-                            
-                            <AppBarButton x:Name="btnLiveRoom" Click="btnLiveRoom_Click" Label="直播间" >
+
+                            <AppBarButton x:Name="btnLiveRoom" Click="btnLiveRoom_Click" Visibility="{x:Bind Path=m_viewModel.HaveLiveRoom,Mode=OneWay}" Label="直播间" >
                                 <AppBarButton.Icon>
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE960;" />
                                 </AppBarButton.Icon>

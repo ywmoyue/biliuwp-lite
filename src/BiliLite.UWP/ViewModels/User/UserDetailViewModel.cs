@@ -49,6 +49,10 @@ namespace BiliLite.ViewModels.User
 
         public UserCenterInfoViewModel UserInfo { get; set; }
 
+        public bool HaveLiveRoom => UserInfo != null && UserInfo.LiveRoom != null;
+
+        public EventHandler LiveStreaming;
+
         #endregion
 
         #region Private Methods
@@ -56,14 +60,17 @@ namespace BiliLite.ViewModels.User
         private async Task GetUserInfoCore()
         {
             var api = await m_userDetailApi.UserInfo(Mid);
-            var result = await api.Request();
 
+            var result = await api.Request();
             if (!result.status) throw new CustomizedErrorException(result.message);
 
             var data = await result.GetData<UserCenterInfoModel>();
             if (!data.success) throw new CustomizedErrorException(data.message);
+
             data.data.Stat = await GetSpaceStat();
             UserInfo = m_mapper.Map<UserCenterInfoViewModel>(data.data);
+
+            if (HaveLiveRoom && UserInfo.LiveRoom.LiveStatus == 1) LiveStreaming?.Invoke(this, null);
         }
 
         private async Task<UserCenterInfoStatModel> GetStatCore()
