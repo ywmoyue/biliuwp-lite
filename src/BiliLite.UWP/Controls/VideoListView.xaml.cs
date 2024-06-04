@@ -39,7 +39,10 @@ namespace BiliLite.Controls
             }
             else
             {
-                var mapSections = m_mapper.Map<List<VideoListSectionViewModel>>(sections);
+                var existSectionIdList = m_viewModel.Sections.Select(x => x.Id).ToList();
+                var mapSections =
+                    m_mapper.Map<List<VideoListSectionViewModel>>(sections.Where(x =>
+                        x.Id == 0 || !existSectionIdList.Contains(x.Id)));
                 m_viewModel.Sections.AddRange(mapSections);
             }
         }

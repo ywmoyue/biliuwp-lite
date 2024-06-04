@@ -214,13 +214,6 @@ namespace BiliLite.Pages
                 Oid = m_viewModel.VideoInfo.Aid
             });
 
-            if (!m_viewModel.VideoInfo.ShowUgcSeason ||
-                (m_videoListView != null && m_loadUgcSeasonData))
-            {
-                flag = false;
-                return;
-            }
-
             InitUgcSeason(id);
 
             flag = false;
@@ -272,6 +265,7 @@ namespace BiliLite.Pages
             {
                 var videoSection = new VideoListSection()
                 {
+                    Id = section.Id,
                     Title = section.Title,
                     Items = new List<VideoListItem>(),
                 };

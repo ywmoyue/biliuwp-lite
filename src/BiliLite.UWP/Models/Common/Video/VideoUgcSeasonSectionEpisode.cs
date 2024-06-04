@@ -9,6 +9,9 @@ namespace BiliLite.Models.Common.Video
 
         public long Id { get; set; }
 
+        [JsonProperty("section_id")]
+        public long SectionId { get; set; }
+
         public string Aid { get; set; }
 
         public string Cid { get; set; }

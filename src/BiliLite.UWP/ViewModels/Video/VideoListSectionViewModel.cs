@@ -6,6 +6,8 @@ namespace BiliLite.ViewModels.Video
 {
     public class VideoListSectionViewModel : BaseViewModel
     {
+        public long Id { get; set; }
+
         public string Title { get; set; }
 
         public bool Selected { get; set; }
