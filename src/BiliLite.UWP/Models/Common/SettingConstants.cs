@@ -160,6 +160,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const double DEFAULT_VIDEO_DETAIL_LIST_EPISODE_DESIRED_WIDTH = 180;
+
+            /// <summary>
+            /// 是否在视频底部显示进度条
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR = "ShowVideoBottomVirtualProgressBar";
+
+            /// <summary>
+            /// 默认不在视频底部显示进度条
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR = false;
         }
 
         public class Account

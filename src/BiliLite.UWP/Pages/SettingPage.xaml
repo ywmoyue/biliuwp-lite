@@ -236,6 +236,11 @@
                                 <TextBlock  Margin="0 8"  FontSize="16">隐藏首页右上角广告按钮</TextBlock>
                                 <ToggleSwitch x:Name="swHideADBtn" ></ToggleSwitch>
                             </StackPanel>
+
+                            <StackPanel  Margin="0 0 0 8">
+                                <TextBlock  Margin="0 8" FontSize="16">是否在视频底部显示进度条</TextBlock>
+                                <ToggleSwitch x:Name="SwShowVideoBottomProgress" ></ToggleSwitch>
+                            </StackPanel>
                         </StackPanel>
                     </StackPanel>
 

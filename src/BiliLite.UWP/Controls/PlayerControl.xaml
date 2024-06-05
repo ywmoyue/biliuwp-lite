@@ -665,6 +665,18 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
                 
+                <Grid x:Name="VirtualProgressBar"
+                      Visibility="{x:Bind m_viewModel.ShowVideoBottomVirtualProgressBar}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <ProgressBar Grid.Row="1" 
+                                 Value="{Binding ElementName=Player,Path=Position,Mode=OneWay}" 
+                                 Maximum="{Binding ElementName=Player,Path=Duration,Mode=OneWay}"></ProgressBar>
+                </Grid>
+
                 <Grid x:Name="control" >
                     <Grid x:Name="StandardControl">
                         <Grid.RowDefinitions>
