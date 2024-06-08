@@ -304,6 +304,16 @@ namespace BiliLite.Pages
                 });
             });
 
+            //显示视频底部进度条
+            SwShowVideoBottomProgress.IsOn = SettingService.GetValue(SettingConstants.UI.SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR, SettingConstants.UI.DEFAULT_SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR);
+            SwShowVideoBottomProgress.Loaded += (sender, e) =>
+            {
+                SwShowVideoBottomProgress.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR, SwShowVideoBottomProgress.IsOn);
+                };
+            };
+
             var navItems = SettingService.GetValue(SettingConstants.UI.HOEM_ORDER, DefaultHomeNavItems.GetDefaultHomeNavItems());
             gridHomeCustom.ItemsSource = new ObservableCollection<HomeNavItem>(navItems);
             ExceptHomeNavItems();
@@ -749,7 +759,7 @@ namespace BiliLite.Pages
                 SettingService.SetValue(SettingConstants.Live.SHOW, LiveDanmuSettingState.IsOn ? Visibility.Visible : Visibility.Collapsed);
             });
             //弹幕关键词
-            LiveDanmuSettingListWords.ItemsSource = settingVM.LiveWords;
+            LiveDanmuSettingListWords.ItemsSource = settingVM.LiveShieldWords;
         }
         private void LoadDownlaod()
         {
@@ -1100,21 +1110,21 @@ namespace BiliLite.Pages
                 Notify.ShowMessageToast("关键字不能为空");
                 return;
             }
-            if (!settingVM.LiveWords.Contains(LiveDanmuSettingTxtWord.Text))
+            if (!settingVM.LiveShieldWords.Contains(LiveDanmuSettingTxtWord.Text))
             {
-                settingVM.LiveWords.Add(LiveDanmuSettingTxtWord.Text);
-                SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, settingVM.LiveWords);
+                settingVM.LiveShieldWords.Add(LiveDanmuSettingTxtWord.Text);
+                SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, settingVM.LiveShieldWords);
             }
 
             DanmuSettingTxtWord.Text = "";
-            SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, settingVM.LiveWords);
+            SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, settingVM.LiveShieldWords);
         }
 
         private void RemoveLiveDanmuWord_Click(object sender, RoutedEventArgs e)
         {
             var word = (sender as AppBarButton).DataContext as string;
-            settingVM.LiveWords.Remove(word);
-            SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, settingVM.LiveWords);
+            settingVM.LiveShieldWords.Remove(word);
+            SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, settingVM.LiveShieldWords);
         }
 
         private async void btnCleanImageCache_Click(object sender, RoutedEventArgs e)
@@ -1214,6 +1224,11 @@ namespace BiliLite.Pages
         {
             var exportService = App.ServiceProvider.GetRequiredService<SettingsImportExportService>();
             await exportService.ExportSettingsWithAccount();
+        }
+
+        private async void DanmuSettingFilterImport_OnClick(object sender, RoutedEventArgs e)
+        {
+            await settingVM.ImportDanmuFilter();
         }
     }
 }

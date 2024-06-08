@@ -19,6 +19,8 @@ namespace BiliLite.Player.SubPlayers
 
         public virtual event EventHandler MediaEnded;
 
+        public virtual event EventHandler BufferingStarted;
+
         public virtual event EventHandler BufferingEnded;
 
         protected void EmitError(PlayerErrorCode errorCode, string description, RetryStrategy retryStrategy = RetryStrategy.NoRetry)

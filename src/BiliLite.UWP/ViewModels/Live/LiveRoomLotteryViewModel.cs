@@ -62,6 +62,8 @@ namespace BiliLite.ViewModels.Live
 
         public event EventHandler<LiveRoomAnchorLotteryInfoModel> AnchorLotteryStart;
 
+        public event EventHandler<string> AddLotteryShieldWord;
+
         #endregion
 
         #region Private Methods
@@ -156,15 +158,16 @@ namespace BiliLite.ViewModels.Live
                     AnchorLotteryStart?.Invoke(this, AnchorLotteryInfo);
                     AnchorLotteryShow = true;
                     AnchorLotteryTimer.Start();
+                    AddLotteryShieldWord?.Invoke(AnchorLotteryInfo, AnchorLotteryInfo.Danmu);
                 }
 
                 if (obj.data["popularity_red_pocket"].ToArray().Length > 0)
                 {
                     var data = JsonConvert.DeserializeObject<ObservableCollection<LiveRoomRedPocketLotteryInfoModel>>(obj.data["popularity_red_pocket"].ToString());
                     RedPocketLotteryInfo = data?[0] ?? throw new CustomizedErrorException("RedPocket lottery data is null");
-
                     RedPocketLotteryShow = true;
                     RedPocketLotteryTimer.Start();
+                    AddLotteryShieldWord?.Invoke(RedPocketLotteryInfo, RedPocketLotteryInfo.Danmu);
                 }
             }
             catch (Exception ex)

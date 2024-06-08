@@ -770,13 +770,20 @@ namespace BiliLite.Controls
                 SettingService.SetValue<double>(SettingConstants.Player.SUBTITLE_SIZE, SubtitleSettingSize.Value);
                 UpdateSubtitle();
             });
-            //字幕边框颜色
+            //字幕描边颜色
             SubtitleSettingBorderColor.SelectedIndex = SettingService.GetValue<int>(SettingConstants.Player.SUBTITLE_BORDER_COLOR, 0);
             SubtitleSettingBorderColor.SelectionChanged += new SelectionChangedEventHandler((e, args) =>
             {
                 SettingService.SetValue<int>(SettingConstants.Player.SUBTITLE_BORDER_COLOR, SubtitleSettingBorderColor.SelectedIndex);
                 UpdateSubtitle();
             });
+            //字幕边框颜色
+            SubtitleSettingOutsideBorderColor.Text = SettingService.GetValue<string>(SettingConstants.Player.SUBTITLE_OUTSIDE_BORDER_COLOR, SettingConstants.Player.DEFAULT_SUBTITLE_OUTSIDE_BORDER_COLOR);
+            SubtitleSettingOutsideBorderColor.QuerySubmitted += (e, args) =>
+            {
+                SettingService.SetValue(SettingConstants.Player.SUBTITLE_OUTSIDE_BORDER_COLOR, SubtitleSettingOutsideBorderColor.Text);
+                UpdateSubtitle();
+            };
             //字幕颜色
             SubtitleSettingColor.SelectedIndex = SettingService.GetValue<int>(SettingConstants.Player.SUBTITLE_COLOR, 0);
             SubtitleSettingColor.SelectionChanged += new SelectionChangedEventHandler((e, args) =>
@@ -844,43 +851,51 @@ namespace BiliLite.Controls
 
         private List<DanmakuItem> FilterFrostDanmaku(IEnumerable<DanmakuItem> danmakus)
         {
-            var needDistinct = DanmuSettingMerge.IsOn;
-            var level = DanmuSettingShieldLevel.Value;
-            var max = Convert.ToInt32(DanmuSettingMaxNum.Value);
-            //云屏蔽
-            danmakus = danmakus.Where(x => x.Weight >= level);
-            //去重
-            danmakus = danmakus.DistinctIf(needDistinct, new CompareDanmakuItem());
-
-            //关键词
-            foreach (var item in settingVM.ShieldWords)
+            try
             {
-                danmakus = danmakus.Where(x => !x.Text.Contains(item));
-            }
-            //用户
-            foreach (var item in settingVM.ShieldUsers)
-            {
-                danmakus = danmakus.Where(x => !x.MidHash.Equals(item));
-            }
-            //正则
-            foreach (var item in settingVM.ShieldRegulars)
-            {
-                danmakus = danmakus.Where(x => !Regex.IsMatch(x.Text, item));
-            }
+                var needDistinct = DanmuSettingMerge.IsOn;
+                var level = DanmuSettingShieldLevel.Value;
+                var max = Convert.ToInt32(DanmuSettingMaxNum.Value);
+                //云屏蔽
+                danmakus = danmakus.Where(x => x.Weight >= level);
+                //去重
+                danmakus = danmakus.DistinctIf(needDistinct, new CompareDanmakuItem());
 
-            // 同屏密度
-            if (max > 0)
-            {
-                // 弹幕按每秒分组，每组取前x项
-                danmakus = danmakus.GroupBy(x => (x.StartMs / 1000) * 1000)
-                    .ToDictionary(x => (int)x.Key, x => x.ToList())
-                    .SelectMany(x => x.Value.Take(max));
+                //关键词
+                foreach (var item in settingVM.ShieldWords)
+                {
+                    danmakus = danmakus.Where(x => !x.Text.Contains(item));
+                }
+                //用户
+                foreach (var item in settingVM.ShieldUsers)
+                {
+                    danmakus = danmakus.Where(x => !x.MidHash.Equals(item));
+                }
+                //正则
+                foreach (var item in settingVM.ShieldRegulars)
+                {
+                    danmakus = danmakus.Where(x => !Regex.IsMatch(x.Text, item));
+                }
+
+                // 同屏密度
+                if (max > 0)
+                {
+                    // 弹幕按每秒分组，每组取前x项
+                    danmakus = danmakus.GroupBy(x => (x.StartMs / 1000) * 1000)
+                        .ToDictionary(x => (int)x.Key, x => x.ToList())
+                        .SelectMany(x => x.Value.Take(max));
+                }
+
+                // 移除当前播放时间之前的弹幕，避免弹幕堆叠
+                danmakus = danmakus.Where(x => x.StartMs > Player.Position * 1000);
+
+                return danmakus.ToList();
             }
-
-            // 移除当前播放时间之前的弹幕，避免弹幕堆叠
-            danmakus = danmakus.Where(x => x.StartMs > Player.Position * 1000);
-
-            return danmakus.ToList();
+            catch (Exception ex)
+            {
+                _logger.Error("弹幕筛选错误:" + ex.Message, ex);
+                return new List<DanmakuItem>();
+            }
         }
 
         private async Task SelectNsDanmakuAndLoad(int position, double level, bool needDistinct, int max)
@@ -922,8 +937,9 @@ namespace BiliLite.Controls
                     data = null;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.Error("弹幕筛选错误:" + ex.Message, ex);
             }
         }
 
@@ -1161,6 +1177,7 @@ namespace BiliLite.Controls
         private async void SubtitleTimer_Tick(object sender, object e)
         {
             if (Player.PlayState != PlayState.Playing) return;
+
             if (subtitles == null)
             {
                 return;
@@ -1173,6 +1190,7 @@ namespace BiliLite.Controls
                 if (first.content == currentSubtitleText) return;
                 BorderSubtitle.Visibility = Visibility.Visible;
                 BorderSubtitle.Child = await GenerateSubtitleItem(first.content);
+                BorderSubtitle.Background = new SolidColorBrush(SubtitleSettingOutsideBorderColor.Text.StrToColor());
                 currentSubtitleText = first.content;
             }
             else
@@ -2683,6 +2701,11 @@ namespace BiliLite.Controls
             {
                 Notify.ShowMessageToast("已经添加到本地，但远程同步失败");
             }
+        }
+
+        public void SetPosition(double position)
+        {
+            Player.SetPosition(position);
         }
 
         public async void Dispose()

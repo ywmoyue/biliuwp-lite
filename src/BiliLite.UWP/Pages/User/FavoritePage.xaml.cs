@@ -5,11 +5,13 @@ using BiliLite.Modules;
 using BiliLite.Services;
 using System;
 using System.Threading.Tasks;
-
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.ViewModels.User;
+using Microsoft.Extensions.DependencyInjection;
+using BiliLite.ViewModels.User.SendDynamic;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -29,14 +31,14 @@ namespace BiliLite.Pages.User
     {
         MyFollowSeasonVM animeVM;
         MyFollowSeasonVM cinemaVM;
-        MyFollowVideoVM videoVM;
+        MyFollowVideoViewModel m_videoViewModel;
         public FavoritePage()
         {
             this.InitializeComponent();
             Title = "我的收藏";
             animeVM = new MyFollowSeasonVM(true);
             cinemaVM = new MyFollowSeasonVM(false);
-            videoVM = new MyFollowVideoVM();
+            m_videoViewModel = App.ServiceProvider.GetRequiredService<MyFollowVideoViewModel>();
         }
         OpenFavoriteType openFavoriteType= OpenFavoriteType.Video;
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -68,11 +70,11 @@ namespace BiliLite.Pages.User
             switch (pivot.SelectedIndex)
             {
                 case 0:
-                    if (videoVM.Loading || videoVM.MyFavorite != null)
+                    if (m_videoViewModel.Loading || m_videoViewModel.MyFavorite != null)
                     {
                         return;
                     }
-                    await videoVM.LoadFavorite();
+                    await m_videoViewModel.LoadFavorite();
                     break;
                 case 1:
                     if (animeVM.Loading||animeVM.Follows!=null)
@@ -122,16 +124,16 @@ namespace BiliLite.Pages.User
 
         private void VideoFavorite_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var data = e.ClickedItem as FavoriteItemModel;
+            var data = e.ClickedItem as FavoriteItemViewModel;
             MessageCenter.NavigateToPage(this, new NavigationInfo()
             {
                 icon = Symbol.OutlineStar,
                 page = typeof(FavoriteDetailPage),
-                title = data.title,
+                title = data.Title,
                 parameters = new FavoriteDetailArgs()
                 {
-                    Id = data.id,
-                    Type=data.type
+                    Id = data.Id,
+                    Type=data.Type
                 } 
             });
         }
@@ -140,32 +142,50 @@ namespace BiliLite.Pages.User
         {
             CreateFavFolderDialog createFavFolderDialog = new CreateFavFolderDialog();
             await createFavFolderDialog.ShowAsync();
-            videoVM.Refresh();
+            m_videoViewModel.Refresh();
         }
 
         private async void btnFavBoxEdit_Click(object sender, RoutedEventArgs e)
         {
-           var data= (sender as MenuFlyoutItem).DataContext as FavoriteItemModel;
-            EditFavFolderDialog editFavFolderDialog = new EditFavFolderDialog(data.id, data.title,data.intro,data.privacy?false:true);
+           var data= (sender as MenuFlyoutItem).DataContext as FavoriteItemViewModel;
+            EditFavFolderDialog editFavFolderDialog = new EditFavFolderDialog(data.Id, data.Title,data.Intro,data.Privacy?false:true);
             await editFavFolderDialog.ShowAsync();
-            videoVM.Refresh();
+            m_videoViewModel.Refresh();
         }
 
         private async void btnFavBoxDel_Click(object sender, RoutedEventArgs e)
         {
-            var data = (sender as MenuFlyoutItem).DataContext as FavoriteItemModel;
-            await videoVM.DelFavorite(data.id);
-            videoVM.Refresh();
+            var data = (sender as MenuFlyoutItem).DataContext as FavoriteItemViewModel;
+            await m_videoViewModel.DelFavorite(data.Id);
+            m_videoViewModel.Refresh();
         }
 
         public async Task Refresh()
         {
-            videoVM.Refresh();
+            m_videoViewModel.Refresh();
         }
 
         private async void VideoFavGridView_OnDragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
         {
-            await videoVM.SortMyFavorite();
+            await m_videoViewModel.SortMyFavorite();
+        }
+
+        private void BtnShowAllCollected_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            MessageCenter.NavigateToPage(this,new NavigationInfo()
+            {
+                dontGoTo = false,
+                icon = Symbol.Favorite,
+                page = typeof(CollectedPage),
+                title = "我的收藏与订阅"
+            });
+        }
+
+        private async void BtnCollectedDel_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is MenuFlyoutItem menuItem)) return;
+            var data = menuItem.DataContext as FavoriteItemViewModel;
+            await m_videoViewModel.CancelCollected(data);
         }
     }
 }

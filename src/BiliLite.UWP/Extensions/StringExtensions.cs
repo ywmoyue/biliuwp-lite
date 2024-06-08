@@ -82,7 +82,9 @@ namespace BiliLite.Extensions
         /// <param name="txt"></param>
         /// <param name="emote"></param>
         /// <returns></returns>
-        public static RichTextBlock ToRichTextBlock(this string txt, JObject emote, bool isLive = false, string fontColor = null, string fontWeight = "Normal",string lowProfilePrefix="")
+        public static RichTextBlock ToRichTextBlock(this string txt, JObject emote, bool isLive = false,
+            string fontColor = null, string fontWeight = "Normal", string lowProfilePrefix = "",
+            string textAlignment = "Left", bool enableVideoSeekTime = false)
         {
             var input = txt;
             try
@@ -100,6 +102,12 @@ namespace BiliLite.Extensions
 
                     //处理链接
                     if (!isLive) { input = HandelUrl(input); }
+
+                    //处理时间坐标
+                    if (enableVideoSeekTime)
+                    {
+                        input = HandleTimeSeek(input);
+                    }
                     
                     //处理表情
                     input = !isLive ? HandelEmoji(input, emote) : HandleLiveEmoji(input, emote);
@@ -116,12 +124,13 @@ namespace BiliLite.Extensions
                     var xaml = string.Format(@"<RichTextBlock HorizontalAlignment=""Stretch"" xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
                                             xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"" xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
                                             xmlns:mc = ""http://schemas.openxmlformats.org/markup-compatibility/2006"" LineHeight=""{1}"" {2} {3}>
-                                            <Paragraph>{4}{0}</Paragraph>
-                                            </RichTextBlock>", input, 
+                                            <Paragraph {5}>{4}{0}</Paragraph>
+                                            </RichTextBlock>",  input, 
                                                                 isLive ? 22 : 20,
                                                                 fontColor == null ? "" : $"Foreground=\"{fontColor}\"",
                                                                 $"FontWeight=\"{fontWeight}\"",
-                                                                lowProfilePrefix);
+                                                                lowProfilePrefix,
+                                                                $"TextAlignment=\"{textAlignment}\"");
                     if (!xaml.IsXmlString())
                     {
                         throw new CustomizedErrorException("不是有效的xml字符串");
@@ -356,6 +365,39 @@ namespace BiliLite.Extensions
         }
 
         #region Private methods
+
+        private static string HandleTimeSeek(string input)
+        {
+            List<string> keyword = new List<string>();
+            List<List<int>> haveHandledOffset = new List<List<int>>();
+            // 正则表达式模式：匹配“mm:ss”和“hh:mm:ss”格式的时间
+            var pattern = @"(?<!\d)(\d{1,}:\d{2}:\d{2}|\d{1,}:\d{2}|\d{1,}：\d{2}：\d{2}|\d{1,}：\d{2})(?!\d)";
+            // 使用 Regex.Matches 获取所有匹配项
+            MatchCollection matches = Regex.Matches(input, pattern);
+
+            var offset = 0;
+            foreach (Match item in matches)
+            {
+                if (keyword.Contains(item.Groups[0].Value) || haveHandledOffset
+                        .Where(index => (item.Index + offset > index[0] && item.Index + offset < index[1])).ToList()
+                        .Count > 0)
+                {
+                    continue;
+                }
+
+                keyword.Add(item.Groups[0].Value);
+                var data =
+                    @"<InlineUIContainer><HyperlinkButton Command=""{Binding SeekCommand}""  IsEnabled=""True"" Margin=""2 -3 2 -5"" Padding=""0 2 0 0"" " +
+                    string.Format(
+                        @" CommandParameter=""{0}"" ><TextBlock>⏩{0}</TextBlock></HyperlinkButton></InlineUIContainer>",
+                        item.Groups[0].Value);
+                input = input.Remove(item.Index + offset, item.Length);
+                input = input.Insert(item.Index + offset, data);
+                haveHandledOffset.Add(new List<int> { item.Index + offset, item.Index + offset + data.Length });
+                offset += data.Length - item.Length;
+            }
+            return input;
+        }
 
         /// <summary>
         /// 处理表情

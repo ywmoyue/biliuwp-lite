@@ -11,7 +11,8 @@
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:convert="using:BiliLite.Converters"
     xmlns:model="using:BiliLite.Modules"
-    xmlns:controls="using:BiliLite.Controls" 
+    xmlns:controls="using:BiliLite.Controls"
+    xmlns:user="using:BiliLite.ViewModels.User"
     Background="Transparent">
     <Page.Resources>
         <SolidColorBrush x:Key="PivotHeaderBackground" Color="{ThemeResource TopPaneBackground}"></SolidColorBrush>
@@ -57,7 +58,7 @@
                 </StackPanel>
             </Grid>
         </DataTemplate>
-        <DataTemplate x:Name="VideoDataTemplate" x:DataType="model:FavoriteItemModel">
+        <DataTemplate x:Name="VideoDataTemplate" x:DataType="user:FavoriteItemViewModel">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -70,14 +71,38 @@
                     </MenuFlyout>
                 </Grid.ContextFlyout>
                 <Border CornerRadius="{StaticResource ImageCornerRadius}">
-                    <toolkit:ImageEx IsCacheEnabled="True" Height="80" Width="120" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png" Stretch="UniformToFill" Source="{x:Bind Path=cover,Converter={StaticResource imageConvert},ConverterParameter='160w'}"></toolkit:ImageEx>
+                    <toolkit:ImageEx IsCacheEnabled="True" Height="80" Width="120" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png" Stretch="UniformToFill" Source="{x:Bind Path=Cover,Converter={StaticResource imageConvert},ConverterParameter='160w'}"></toolkit:ImageEx>
 
                 </Border>
                 <StackPanel Grid.Column="1" Margin="8 0 0 0">
-                    <TextBlock MaxLines="2" Margin="0 0 0 4" TextTrimming="CharacterEllipsis" Text="{x:Bind title}"></TextBlock>
-                    <TextBlock Margin="0 4" FontSize="14" Foreground="Gray">共<Run Text="{x:Bind Path=media_count}"/>个视频</TextBlock>
-                    <TextBlock Margin="0 4" FontSize="14" Foreground="Gray" Visibility="{x:Bind Path=privacy,Converter={StaticResource display}}">公开</TextBlock>
-                    <TextBlock Margin="0 4" FontSize="14" Foreground="Gray" Visibility="{x:Bind Path=privacy}">私密</TextBlock>
+                    <TextBlock MaxLines="2" Margin="0 0 0 4" TextTrimming="CharacterEllipsis" Text="{x:Bind Title}"></TextBlock>
+                    <TextBlock Margin="0 4" FontSize="14" Foreground="Gray">共<Run Text="{x:Bind Path=MediaCount}"/>个视频</TextBlock>
+                    <TextBlock Margin="0 4" FontSize="14" Foreground="Gray" Visibility="{x:Bind Path=Privacy,Converter={StaticResource display}}">公开</TextBlock>
+                    <TextBlock Margin="0 4" FontSize="14" Foreground="Gray" Visibility="{x:Bind Path=Privacy}">私密</TextBlock>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Name="CollectedDataTemplate" x:DataType="user:FavoriteItemViewModel">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem x:Name="BtnCollectedDel" Click="BtnCollectedDel_OnClick">取消订阅</MenuFlyoutItem>
+                    </MenuFlyout>
+                </Grid.ContextFlyout>
+                <Border CornerRadius="{StaticResource ImageCornerRadius}">
+                    <toolkit:ImageEx IsCacheEnabled="True" Height="80" Width="120" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png" Stretch="UniformToFill" Source="{x:Bind Path=Cover,Converter={StaticResource imageConvert},ConverterParameter='160w'}"></toolkit:ImageEx>
+
+                </Border>
+                <StackPanel Grid.Column="1" Margin="8 0 0 0">
+                    <TextBlock MaxLines="2" Margin="0 0 0 4" TextTrimming="CharacterEllipsis" Text="{x:Bind Title}"></TextBlock>
+                    <TextBlock Margin="0 4" FontSize="14" Foreground="Gray">共<Run Text="{x:Bind Path=MediaCount}"/>个视频</TextBlock>
+                    <TextBlock Margin="0 4" FontSize="14" Foreground="Gray" Visibility="{x:Bind Path=Privacy,Converter={StaticResource display}}">公开</TextBlock>
+                    <TextBlock Margin="0 4" FontSize="14" Foreground="Gray" Visibility="{x:Bind Path=Privacy}">私密</TextBlock>
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -101,7 +126,7 @@
                                           DesiredWidth="500"
                                           StretchContentForSingleRow="False"
                                           ItemContainerStyle="{StaticResource SeasonItemStyle}"
-                                          ItemsSource="{x:Bind Path=videoVM.MyFavorite,Mode=TwoWay}"
+                                          ItemsSource="{x:Bind Path=m_videoViewModel.MyFavorite,Mode=TwoWay}"
                                           ItemTemplate="{StaticResource VideoDataTemplate}"
                                           ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                           ItemClick="VideoFavorite_ItemClick"
@@ -121,7 +146,7 @@
                                 </toolkit:AdaptiveGridView.Header>
                                 <toolkit:AdaptiveGridView.Footer>
                                     <Grid>
-                                        <HyperlinkButton Command="{x:Bind Path=videoVM.LoadMoreCommand}" Visibility="{x:Bind Path=videoVM.HasMore,Mode=OneWay}" Foreground="Gray" HorizontalAlignment="Center" >
+                                        <HyperlinkButton Command="{x:Bind Path=m_videoViewModel.LoadMoreCommand}" Visibility="{x:Bind Path=m_videoViewModel.HasMore,Mode=OneWay}" Foreground="Gray" HorizontalAlignment="Center" >
                                             <TextBlock>加载更多</TextBlock>
                                         </HyperlinkButton>
                                     </Grid>
@@ -132,8 +157,8 @@
                                           DesiredWidth="500"
                                           StretchContentForSingleRow="False"
                                           ItemContainerStyle="{StaticResource SeasonItemStyle}"
-                                          ItemsSource="{x:Bind Path=videoVM.CollectFavorite,Mode=OneWay}"
-                                          ItemTemplate="{StaticResource VideoDataTemplate}"
+                                          ItemsSource="{x:Bind Path=m_videoViewModel.CollectFavorite,Mode=OneWay}"
+                                          ItemTemplate="{StaticResource CollectedDataTemplate}"
                                           ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                           ScrollViewer.VerticalScrollMode="Disabled"
                                           ItemClick="VideoFavorite_ItemClick"
@@ -143,13 +168,20 @@
                                         <TextBlock FontSize="18" FontWeight="Bold">我的收藏与订阅</TextBlock>
                                     </Grid>
                                 </toolkit:AdaptiveGridView.Header>
+                                <toolkit:AdaptiveGridView.Footer>
+                                    <Grid Margin="12 8 20 0">
+                                        <HyperlinkButton x:Name="BtnShowAllCollected" 
+                                                         HorizontalAlignment="Right"
+                                                         Tapped="BtnShowAllCollected_OnTapped">查看全部订阅</HyperlinkButton>
+                                    </Grid>
+                                </toolkit:AdaptiveGridView.Footer>
 
                             </toolkit:AdaptiveGridView>
                         </StackPanel>
                     </ScrollViewer>
                    
-                    <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=videoVM.Loading,Mode=OneWay}"></ProgressRing>
-                    <controls:RoundButton  Command="{x:Bind Path=videoVM.RefreshCommand}" Visibility="{x:Bind Path=videoVM.Loading,Mode=OneWay,Converter={StaticResource display}}" VerticalAlignment="Bottom" Padding="12" Margin="12" HorizontalAlignment="Right">
+                    <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_videoViewModel.Loading,Mode=OneWay}"></ProgressRing>
+                    <controls:RoundButton  Command="{x:Bind Path=m_videoViewModel.RefreshCommand}" Visibility="{x:Bind Path=m_videoViewModel.Loading,Mode=OneWay,Converter={StaticResource display}}" VerticalAlignment="Bottom" Padding="12" Margin="12" HorizontalAlignment="Right">
                         <SymbolIcon Symbol="Refresh" Foreground="White"></SymbolIcon>
                     </controls:RoundButton>
                 </Grid>

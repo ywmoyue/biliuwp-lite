@@ -67,5 +67,15 @@ namespace BiliLite.Models.Common.Live
         /// 礼物名称
         /// </summary>
         public string GiftName { get; set; }
+
+        /// <summary>
+        /// 购买的时间单位, 如"月"
+        /// </summary>
+        public string Unit { get; set;}
+
+        /// <summary>
+        /// 庆祝消息正文
+        /// </summary>
+        public string Message { get; set; }
     }
 }

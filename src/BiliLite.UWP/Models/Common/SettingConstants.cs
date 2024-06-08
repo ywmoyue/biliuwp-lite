@@ -160,6 +160,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const double DEFAULT_VIDEO_DETAIL_LIST_EPISODE_DESIRED_WIDTH = 180;
+
+            /// <summary>
+            /// 是否在视频底部显示进度条
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR = "ShowVideoBottomVirtualProgressBar";
+
+            /// <summary>
+            /// 默认不在视频底部显示进度条
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR = false;
         }
 
         public class Account
@@ -467,6 +479,12 @@ namespace BiliLite.Models.Common
             public const string HIDE_LOTTERY = "LiveHideLottery";
 
             /// <summary>
+            /// 隐藏抽奖弹幕关键字
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string HIDE_LOTTERY_DANMU = "LiveHideLotteryDanmu"; 
+
+            /// <summary>
             /// 直播流默认源
             /// </summary>
             [SettingKey(typeof(string))]
@@ -625,10 +643,22 @@ namespace BiliLite.Models.Common
             [SettingKey(typeof(int))]
             public const string SUBTITLE_COLOR = "subtitleColor";
             /// <summary>
-            /// 字幕背景颜色
+            /// 字幕描边颜色
             /// </summary>
             [SettingKey(typeof(int))]
             public const string SUBTITLE_BORDER_COLOR = "subtitleBorderColor";
+
+            /// <summary>
+            /// 字幕边框背景颜色
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string SUBTITLE_OUTSIDE_BORDER_COLOR = "subtitleOutsideBorderColor";
+
+            /// <summary>
+            /// 默认字幕边框背景颜色
+            /// </summary>
+            [SettingDefaultValue] public const string DEFAULT_SUBTITLE_OUTSIDE_BORDER_COLOR = "#00FFFFFF";
+
             /// <summary>
             /// 字幕大小
             /// </summary>

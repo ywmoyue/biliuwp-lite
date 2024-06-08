@@ -33,7 +33,7 @@ namespace BiliLite.ViewModels.Comment
         public string Device { get; set; }
 
         [DependsOn(nameof(Message))]
-        public RichTextBlock Text => Message.ToRichTextBlock(Emote);
+        public RichTextBlock Text => Message.ToRichTextBlock(Emote, enableVideoSeekTime: true);
 
         public JObject Emote { get; set; }
     }

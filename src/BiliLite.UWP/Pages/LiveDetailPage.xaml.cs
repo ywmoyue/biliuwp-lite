@@ -61,8 +61,11 @@ namespace BiliLite.Pages
         SettingVM settingVM;
         DispatcherTimer timer_focus;
         DispatcherTimer controlTimer;
+        DispatcherTimer chatScrollTimer;
 
         private bool changePlayUrlFlag = false;
+        private bool isPointerInChatList = false;
+        private bool isPointerInThisPage = true;
 
         public LiveDetailPage()
         {
@@ -87,10 +90,13 @@ namespace BiliLite.Pages
             dataTransferManager.DataRequested += DataTransferManager_DataRequested;
             //每过2秒就设置焦点
             timer_focus = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(2) };
-
             timer_focus.Tick += Timer_focus_Tick;
             controlTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1) };
             controlTimer.Tick += ControlTimer_Tick;
+            chatScrollTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(3)};
+            chatScrollTimer.Tick += ChatScrollTimer_Tick;
+            chatScrollTimer.Start();
+
             settingVM = new SettingVM();
 
             m_liveRoomViewModel = new LiveRoomViewModel();
@@ -98,9 +104,22 @@ namespace BiliLite.Pages
             m_liveRoomViewModel.AddNewDanmu += LiveRoomViewModelAddNewDanmu;
             m_liveRoomViewModel.AnchorLotteryEnd += LiveRoomViewModelAnchorLotteryEnd;
             m_liveRoomViewModel.RedPocketLotteryEnd += LiveRoomViewModelRedPocketLotteryEnd;
-            m_liveRoomViewModel.ChatScrollToEnd += LiveRoomViewModelChatScrollToEnd;
-            m_liveRoomViewModel.LotteryViewModel.AnchorLotteryStart += LiveRoomViewModelAnchorLotteryStart;
+            m_liveRoomViewModel.AnchorLotteryStart += LiveRoomViewModelAnchorLotteryStart;
             m_liveRoomViewModel.SetManualPlayUrl += LiveRoomViewModelSetManualPlayUrl;
+            m_liveRoomViewModel.AddLotteryShieldWord += (sender, word) => 
+            {
+                if (m_liveRoomViewModel.ShowLotteryDanmu) return;
+                AddShieldWord(word);
+                if (sender is LiveRoomAnchorLotteryInfoModel) m_liveRoomViewModel.LotteryDanmu["AnchorLottery"] = (sender as LiveRoomAnchorLotteryInfoModel).Danmu;
+                if (sender is LiveRoomRedPocketLotteryInfoModel) m_liveRoomViewModel.LotteryDanmu["RedPocketLottery"] = (sender as LiveRoomRedPocketLotteryInfoModel).Danmu;
+            };
+            m_liveRoomViewModel.DelShieldWord += (_, word) => DelShieldWord(word);
+            m_liveRoomViewModel.SpecialLiveRoomHideElements += (_, e) =>
+            {
+                pivot.Items.Remove(pivot_Guard);
+                BottomBtnGiftRow.Visibility = Visibility.Collapsed;
+                BottomGiftBar.Visibility = Visibility.Collapsed;
+            };
             this.Loaded += LiveDetailPage_Loaded;
             this.Unloaded += LiveDetailPage_Unloaded; 
             
@@ -146,6 +165,18 @@ namespace BiliLite.Pages
             }
         }
 
+        private void ChatScrollTimer_Tick(object sender, object e)
+        {
+            ChatScrollToBottom();
+            chatScrollTimer.Stop();
+            chatScrollTimer.Start();
+        }
+
+        private void ChatScrollToBottom()
+        {
+            if (list_chat.Items.Count > 0 && !isPointerInChatList && isPointerInThisPage) list_chat.ScrollIntoView(list_chat.Items[list_chat.Items.Count - 1]);
+        }
+
         private void Timer_focus_Tick(object sender, object e)
         {
             var element = FocusManager.GetFocusedElement();
@@ -166,19 +197,14 @@ namespace BiliLite.Pages
             var str = e.AwardUsers.Aggregate("", (current, item) => current + (item.Uname + "、"));
             str = str.TrimEnd('、');
             var msg = $"天选时刻 开奖信息:\r\n奖品: {e.AwardName} \r\n中奖用户:{str}";
-            foreach(var awardUser in e.AwardUsers)
-            {
-                if (awardUser.Uid == SettingService.Account.UserID)
-                {
-                    msg += $"\r\n你已抽中奖品: {e.AwardName}, 恭喜欧皇~";
-                }
-            }
+            msg += e.AwardUsers.Any(user => user.Uid == SettingService.Account.UserID) ? $"\r\n你已抽中奖品: {e.AwardName}, 恭喜欧皇~" : "";
+
             Notify.ShowMessageToast(msg, new List<MyUICommand>(), 10);
             AnchorLotteryWinnerList.Content = e.WinnerList;
             m_liveRoomViewModel.ShowAnchorLotteryWinnerList = true;
             m_liveRoomViewModel.LoadBag().RunWithoutAwait();
         }
-
+         
         private void LiveRoomViewModelRedPocketLotteryEnd(object sender, LiveRoomEndRedPocketLotteryInfoModel e)
         {
             var winners = e.Winners;
@@ -188,7 +214,8 @@ namespace BiliLite.Pages
             foreach (var winner in winners)
             {
                 if (winner[0] == (SettingService.Account.UserID).ToString()) {
-                    Notify.ShowMessageToast($"你已在人气红包抽中 {awards[winner[3]].AwardName} , 赶快查看吧~");
+                    Notify.ShowMessageToast($"你已在人气红包抽奖中抽中 {awards[winner[3]].AwardName} , 赶快到背包中查看吧~", 5);
+                    break;
                 }
             }
             m_liveRoomViewModel.LoadBag().RunWithoutAwait();
@@ -198,24 +225,19 @@ namespace BiliLite.Pages
         {
             if (m_danmakuController.DanmakuViewModel.IsHide) return;
 
-            if (settingVM.LiveWords != null && settingVM.LiveWords.Count > 0)
+            if (settingVM.LiveShieldWords != null && settingVM.LiveShieldWords.Count > 0)
             {
-                if (settingVM.LiveWords.FirstOrDefault(x => e.Text.Contains(x)) != null) return;
+                if (settingVM.LiveShieldWords.FirstOrDefault(x => e.Text.Contains(x)) != null) return;
             }
             try
             {
-                m_danmakuController.AddLiveDanmaku(e.Text, false, e.DanmuColor.StrToColor());
+                m_danmakuController.AddLiveDanmaku(e.Text, (SettingService.Account.Logined && e.Uid.ToInt64() == SettingService.Account.UserID), e.DanmuColor.StrToColor());
             }
             catch (Exception ex)
             {
                 //记录错误，不弹出通知
                 logger.Log(ex.Message, LogType.Error, ex);
             }
-        }
-
-        private void LiveRoomViewModelChatScrollToEnd(object sender, EventArgs e)
-        {
-            list_chat.ScrollIntoView(list_chat.Items[list_chat.Items.Count - 1]);
         }
 
         #region 页面生命周期
@@ -706,10 +728,19 @@ namespace BiliLite.Pages
             //屏蔽抽奖信息
             LiveSettingDotReceiveLotteryMsg.IsOn = SettingService.GetValue<bool>(SettingConstants.Live.HIDE_LOTTERY, false);
             m_liveRoomViewModel.ReceiveLotteryMsg = !LiveSettingDotReceiveLotteryMsg.IsOn;
-            LiveSettingDotReceiveWelcomeMsg.Toggled += new RoutedEventHandler((e, args) =>
+            LiveSettingDotReceiveLotteryMsg.Toggled += new RoutedEventHandler((e, args) =>
             {
                 m_liveRoomViewModel.ReceiveLotteryMsg = !LiveSettingDotReceiveLotteryMsg.IsOn;
                 SettingService.SetValue<bool>(SettingConstants.Live.HIDE_LOTTERY, LiveSettingDotReceiveLotteryMsg.IsOn);
+            });
+
+            //屏蔽抽奖弹幕关键字
+            LiveSettingDotShowLotteryDanmu.IsOn = SettingService.GetValue<bool>(SettingConstants.Live.HIDE_LOTTERY_DANMU, false);
+            m_liveRoomViewModel.ShowLotteryDanmu = !LiveSettingDotShowLotteryDanmu.IsOn;
+            LiveSettingDotShowLotteryDanmu.Toggled += new RoutedEventHandler((e, args) =>
+            {
+                m_liveRoomViewModel.ShowLotteryDanmu = !LiveSettingDotShowLotteryDanmu.IsOn;
+                SettingService.SetValue<bool>(SettingConstants.Live.HIDE_LOTTERY_DANMU, LiveSettingDotShowLotteryDanmu.IsOn);
             });
 
             // 显示底部礼物栏
@@ -1017,41 +1048,39 @@ namespace BiliLite.Pages
             });
         }
 
-        private async void BtnSendLotteryDanmu_Click(object sender, RoutedEventArgs e)
+        private async void BtnSendAnchorLotteryDanmu_Click(object sender, RoutedEventArgs e)
         {
-            if (m_liveRoomViewModel.LotteryViewModel != null &&
-                m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo != null &&
-                !string.IsNullOrEmpty(m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.Danmu))
+            if (!await m_liveRoomViewModel.JoinAnchorLottery()) return;
+            FlyoutLottery.Hide();
+
+            var msg = "";
+            msg += "弹幕发送成功";
+
+            if(m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.RequireText.Contains("关注主播") && !m_liveRoomViewModel.Attention)
             {
-                var result = await m_liveRoomViewModel.SendDanmu(m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.Danmu);
-                if (result)
-                {
-                    Notify.ShowMessageToast("弹幕发送成功");
-                    FlyoutLottery.Hide();
-                }
+                // 参与天选会自动关注, 无须手动关注
+                m_liveRoomViewModel.Attention = true;
+                msg += ", 关注主播成功";
             }
+
+            Notify.ShowMessageToast(msg);
         }
 
         private async void BtnSendRedPocketLotteryDanmu_Click(object sender, RoutedEventArgs e)
         {
-            if (m_liveRoomViewModel.LotteryViewModel == null ||
-                m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryInfo == null ||
-                string.IsNullOrEmpty(m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryInfo.Danmu)) return;
-            var msg = "";
-            var result = await m_liveRoomViewModel.SendDanmu(m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryInfo.Danmu);
-            if (result)
-            {
-                FlyoutRedPocketLottery.Hide();
-                msg += "弹幕发送成功";
-            }
+            if (!await m_liveRoomViewModel.JoinRedPocketLottery()) return;
+            FlyoutRedPocketLottery.Hide();
 
+            var msg = "";
+            msg += "弹幕发送成功";
             if (!m_liveRoomViewModel.Attention)
             {
-                BtnAttention_Click(sender, e);
+                // 参与红包会自动关注, 无须手动关注
+                m_liveRoomViewModel.Attention = true;
                 msg += ", 关注主播成功";
             }
 
-            Notify.ShowMessageToast(msg, 4);
+            Notify.ShowMessageToast(msg);
         }
 
         private void BottomBtnMiniWindows_Click(object sender, RoutedEventArgs e)
@@ -1108,28 +1137,37 @@ namespace BiliLite.Pages
             MessageCenter.SetMiniWindow(mini);
         }
 
-        private void btnRemoveWords_Click(object sender, RoutedEventArgs e)
+        private void btnRemoveShieldWord_Click(object sender, RoutedEventArgs e)
         {
             var word = (sender as HyperlinkButton).DataContext as string;
-            settingVM.LiveWords.Remove(word);
-            SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, settingVM.LiveWords);
-
+            DelShieldWord(word);
         }
 
-        private void DanmuSettingAddWord_Click(object sender, RoutedEventArgs e)
+        private void btnAddShieldWord_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(DanmuSettingTxtWord.Text))
             {
                 Notify.ShowMessageToast("关键字不能为空");
                 return;
             }
-            if (!settingVM.LiveWords.Contains(DanmuSettingTxtWord.Text))
-            {
-                settingVM.LiveWords.Add(DanmuSettingTxtWord.Text);
-                SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, settingVM.LiveWords);
-            }
+            AddShieldWord(DanmuSettingTxtWord.Text);
 
             DanmuSettingTxtWord.Text = "";
+        }
+
+        private void AddShieldWord(string word)
+        {
+            if (!settingVM.LiveShieldWords.Contains(word))
+            {
+                settingVM.LiveShieldWords.Add(word);
+                SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, settingVM.LiveShieldWords);
+            }
+        }
+
+        private void DelShieldWord(string word)
+        {
+            settingVM.LiveShieldWords.Remove(word);
+            SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, settingVM.LiveShieldWords);
         }
 
         #region 播放器手势
@@ -1377,5 +1415,22 @@ namespace BiliLite.Pages
             }
             // 这里可以做个重启播放器的功能...就不需要用户手动重启了
         }
+
+        private void ChatList_PointerEntered(object sender, PointerRoutedEventArgs e) => isPointerInChatList = true;
+
+        private void ChatList_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            isPointerInChatList = false;
+            chatScrollTimer.Stop();
+            chatScrollTimer.Start();
+        }
+
+        private void RootGrid_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            isPointerInThisPage = true;
+            ChatScrollToBottom();
+        }
+
+        private void RootGrid_PointerExited(object sender, PointerRoutedEventArgs e) => isPointerInThisPage = false;
     }
 }

@@ -24,6 +24,7 @@ using BiliLite.ViewModels.Video;
 using BiliLite.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using BiliLite.ViewModels.Download;
+using BiliLite.ViewModels.User;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -213,8 +214,7 @@ namespace BiliLite.Pages
                 Oid = m_viewModel.VideoInfo.Aid
             });
 
-            if (!m_viewModel.VideoInfo.ShowUgcSeason ||
-                (m_videoListView != null && m_loadUgcSeasonData))
+            if (!m_viewModel.VideoInfo.ShowUgcSeason)
             {
                 flag = false;
                 return;
@@ -271,6 +271,7 @@ namespace BiliLite.Pages
             {
                 var videoSection = new VideoListSection()
                 {
+                    Id = section.Id,
                     Title = section.Title,
                     Items = new List<VideoListItem>(),
                 };
@@ -523,13 +524,13 @@ namespace BiliLite.Pages
 
         private void listAddFavorite_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var item = e.ClickedItem as FavoriteItemModel;
-            m_viewModel.DoFavorite(new List<string>() { item.id }, avid);
+            var item = e.ClickedItem as FavoriteItemViewModel;
+            m_viewModel.DoFavorite(new List<string>() { item.Id }, avid);
         }
 
         private void BtnAddFavorite_Click(object sender, RoutedEventArgs e)
         {
-            m_viewModel.DoFavorite(m_viewModel.MyFavorite.Where(x => x.is_fav).Select(x => x.id).ToList(), avid);
+            m_viewModel.DoFavorite(m_viewModel.MyFavorite.Where(x => x.IsFav).Select(x => x.Id).ToList(), avid);
         }
 
         private async void btnOpenWeb_Click(object sender, RoutedEventArgs e)
@@ -623,6 +624,40 @@ namespace BiliLite.Pages
                     State = state
                 });
                 i++;
+            }
+
+
+            if (m_viewModel.VideoInfo.ShowUgcSeason)
+            {
+                foreach (var ugcSeasonSection in m_viewModel.VideoInfo.UgcSeason.Sections)
+                {
+                    foreach (var episode in ugcSeasonSection.Episodes)
+                    {
+                        //检查正在下载及下载完成是否存在此视频
+                        int state = 0;
+                        var downloadViewModel = App.ServiceProvider.GetRequiredService<DownloadPageViewModel>();
+                        if (downloadViewModel.Downloadings.FirstOrDefault(x => x.EpisodeID == episode.Cid) != null)
+                        {
+                            state = 2;
+                        }
+                        if (downloadViewModel.DownloadedViewModels.FirstOrDefault(x => x.Epsidoes.FirstOrDefault(y => y.CID == episode.Cid) != null) != null)
+                        {
+                            state = 3;
+                        }
+                        //如果正在下载state=2,下载完成state=3
+                        downloadItem.Episodes.Add(new DownloadEpisodeItem()
+                        {
+                            AVID = episode.Aid,
+                            BVID = episode.Bvid,
+                            CID = episode.Cid,
+                            EpisodeID = "",
+                            Index = i,
+                            Title = episode.Title,
+                            State = state
+                        });
+                        i++;
+                    }
+                }
             }
 
             DownloadDialog downloadDialog = new DownloadDialog(downloadItem);

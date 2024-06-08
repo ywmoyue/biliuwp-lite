@@ -557,7 +557,7 @@
                                             <ComboBoxItem Tag="#000000">黑色</ComboBoxItem>
                                         </ComboBox.Items>
                                     </ComboBox>
-                                    <TextBlock Margin="0 8">边框颜色</TextBlock>
+                                    <TextBlock Margin="0 8">描边颜色</TextBlock>
                                     <ComboBox SelectedIndex="0" x:Name="SubtitleSettingBorderColor">
                                         <ComboBox.Items>
                                             <ComboBoxItem Tag="#000000">黑色</ComboBoxItem>
@@ -566,8 +566,13 @@
                                             <ComboBoxItem Tag="#ff7a45">橙色</ComboBoxItem>
                                             <ComboBoxItem Tag="#9254de">紫色</ComboBoxItem>
                                             <ComboBoxItem Tag="#f5222d">红色</ComboBoxItem>
+                                            <ComboBoxItem Tag="#FFFFFF">白色</ComboBoxItem>
+                                            <ComboBoxItem Tag="#00FFFFFF">透明</ComboBoxItem>
                                         </ComboBox.Items>
                                     </ComboBox>
+                                    <TextBlock Margin="0 8">边框背景</TextBlock>
+                                    <AutoSuggestBox QueryIcon="Accept" x:Name="SubtitleSettingOutsideBorderColor"></AutoSuggestBox>
+
                                     <TextBlock Margin="0 8">字幕多行对齐</TextBlock>
                                     <ComboBox SelectedIndex="0" x:Name="SubtitleSettingAlign">
                                         <ComboBox.Items>
@@ -600,7 +605,7 @@
                 <local:Player x:Name="Player"  PlayStateChanged="Player_PlayStateChanged" PlayMediaEnded="Player_PlayMediaEnded" PlayMediaError="Player_PlayMediaError" ChangeEngine="Player_ChangeEngine" PlayMediaOpened="Player_PlayMediaOpened"/>
                
                 <!--字幕-->
-                <Border x:Name="BorderSubtitle" Visibility="Collapsed" Opacity="{Binding ElementName=SubtitleSettingOpacity,Path=Value,Mode=OneWay}" Padding="8 4" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0 0 0 24">
+                <Border x:Name="BorderSubtitle" Visibility="Collapsed" Opacity="{Binding ElementName=SubtitleSettingOpacity,Path=Value,Mode=OneWay}" Padding="3 4 8 4" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0 0 0 24">
                    
                 </Border>
                 <!--弹幕-->
@@ -660,6 +665,18 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
                 
+                <Grid x:Name="VirtualProgressBar"
+                      Visibility="{x:Bind m_viewModel.ShowVideoBottomVirtualProgressBar}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <ProgressBar Grid.Row="1" 
+                                 Value="{Binding ElementName=Player,Path=Position,Mode=OneWay}" 
+                                 Maximum="{Binding ElementName=Player,Path=Duration,Mode=OneWay}"></ProgressBar>
+                </Grid>
+
                 <Grid x:Name="control" >
                     <Grid x:Name="StandardControl">
                         <Grid.RowDefinitions>

@@ -150,6 +150,7 @@ namespace BiliLite.Services
         public override void Add(BiliDanmakuItem danmakuItem, bool owner)
         {
             var realDanmakuItem = m_mapper.Map<DanmakuItem>(danmakuItem);
+            if (owner) realDanmakuItem.HasBorder = true;
             m_danmakuMaster.AddRealtimeDanmaku(realDanmakuItem, false);
         }
 

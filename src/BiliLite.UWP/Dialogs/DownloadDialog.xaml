@@ -64,7 +64,11 @@
                     CornerRadius="2"
                     Margin="0 4"
                     BorderThickness="{ThemeResource ComboBoxBorderThemeThickness}">
-                <ListView x:Name="listView" ItemsSource="{x:Bind Path=downloadItem.Episodes,Mode=OneWay}"  SelectionMode="Multiple" Height="200">
+                <ListView x:Name="listView" 
+                          ItemsSource="{x:Bind Path=downloadItem.Episodes,Mode=OneWay}"  
+                          SelectionMode="Multiple" 
+                          IsMultiSelectCheckBoxEnabled="True"
+                          Height="200">
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="download:DownloadEpisodeItemViewModel">
                             <Grid >
@@ -91,6 +95,36 @@
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListViewItem">
+                                        <ListViewItemPresenter 
+                                            CheckBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                                            ContentMargin="{TemplateBinding Padding}" 
+                                            CheckMode="Inline" 
+                                            ContentTransitions="{TemplateBinding ContentTransitions}" 
+                                            CheckBoxBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}" 
+                                            DragForeground="{ThemeResource ListViewItemDragForegroundThemeBrush}" 
+                                            DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}" 
+                                            DragBackground="{ThemeResource ListViewItemDragBackgroundThemeBrush}" 
+                                            DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}" 
+                                            FocusBorderBrush="{ThemeResource SystemControlForegroundAltHighBrush}" 
+                                            FocusSecondaryBorderBrush="{ThemeResource SystemControlForegroundBaseHighBrush}" 
+                                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                            PointerOverForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}" 
+                                            PressedBackground="{ThemeResource SystemControlHighlightListMediumBrush}" 
+                                            PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}" 
+                                            PointerOverBackground="{ThemeResource SystemControlHighlightListLowBrush}" 
+                                            ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}" 
+                                            SelectedPressedBackground="{ThemeResource SystemControlHighlightListAccentHighBrush}" 
+                                            SelectionCheckMarkVisualEnabled="True" 
+                                            SelectedForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}" 
+                                            SelectedPointerOverBackground="{ThemeResource SystemControlHighlightListAccentMediumBrush}" 
+                                            SelectedBackground="{ThemeResource SystemControlHighlightListAccentLowBrush}" 
+                                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
                         </Style>
                     </ListView.ItemContainerStyle>
                    

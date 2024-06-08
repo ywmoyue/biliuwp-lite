@@ -65,6 +65,7 @@ namespace BiliLite.Player
 
         public override event EventHandler MediaOpened;
         public override event EventHandler MediaEnded;
+        public override event EventHandler BufferingStarted;
         public override event EventHandler BufferingEnded;
 
         private void InitPlayerEvent()
@@ -127,6 +128,7 @@ namespace BiliLite.Player
 
         private void PlaybackSession_BufferingStarted(MediaPlaybackSession sender, object args)
         {
+            BufferingStarted?.Invoke(this, EventArgs.Empty);
         }
 
         private void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)

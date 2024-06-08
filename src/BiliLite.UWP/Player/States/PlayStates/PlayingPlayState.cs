@@ -22,5 +22,11 @@ namespace BiliLite.Player.States.PlayStates
             m_stateHandler.ChangeToFault();
             await m_playerController.Player.Fault();
         }
+
+        public override async Task Buff()
+        {
+            m_stateHandler.ChangeToBuffering();
+            await m_playerController.Player.Buff();
+        }
     }
 }
