@@ -66,14 +66,17 @@
                         <Button Holding="btnLike_Holding" 
                                   RightTapped="btnLike_RightTapped"
                                   Command="{x:Bind Path=m_viewModel.LikeCommand}" 
-                                  Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Like,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}" 
                                   ToolTipService.ToolTip="右击或长按可以一键三连哦"
                                   Background="Transparent"
                                   Margin="0 0 4 0"
                                   Width="56">
                             <StackPanel>
-                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE6C6;" />
-                                <TextBlock FontSize="12" TextAlignment="Center" Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Like,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"></TextBlock>
+                                <FontIcon 
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Like,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}" 
+                                    FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE6C6;" />
+                                <TextBlock 
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Like,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}" 
+                                    FontSize="12" TextAlignment="Center" Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Like,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"></TextBlock>
                                 <!--<fa:FontAwesome Icon="Solid_ThumbsUp"></fa:FontAwesome>-->
                             </StackPanel>
 
@@ -81,20 +84,27 @@
                         <Button Command="{x:Bind Path=m_viewModel.DislikeCommand}" 
                                 Background="Transparent"
                                 Margin="0 0 4 0"
-                                Width="56"
-                                Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Dislike,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}">
+                                Width="56">
                             <StackPanel>
-                                <FontIcon Margin="0 -2 0 2" FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE6C5;" />
-                                <TextBlock  FontSize="12" TextAlignment="Center" Text="不喜欢"></TextBlock>
+                                <FontIcon
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Dislike,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}"
+                                    Margin="0 -2 0 2" FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE6C5;" />
+                                <TextBlock 
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Dislike,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}"
+                                    FontSize="12" TextAlignment="Center" Text="不喜欢"></TextBlock>
                             </StackPanel>
                         </Button>
                         <Button Background="Transparent"
+                                x:Name="BtnFav"
                                 Margin="0 0 4 0"
-                                Width="56"
-                                Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Favorite,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}">
+                                Width="56">
                             <StackPanel>
-                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE673;" />
-                                <TextBlock FontSize="12" TextAlignment="Center" Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Favorite,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"></TextBlock>
+                                <FontIcon 
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Favorite,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}"
+                                    FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE673;" />
+                                <TextBlock 
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Favorite,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}"
+                                    FontSize="12" TextAlignment="Center" Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Favorite,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"></TextBlock>
                             </StackPanel>
                             <Button.Flyout>
                                 <Flyout>
@@ -142,11 +152,14 @@
                         </Button>
                         <Button Background="Transparent"
                                 Margin="0"
-                                Width="56" 
-                                Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Coin,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}">
+                                Width="56" >
                             <StackPanel>
-                                <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE670;" />
-                                <TextBlock FontSize="12" TextAlignment="Center" Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Coin,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"></TextBlock>
+                                <FontIcon
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Coin,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}"
+                                    FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE670;" />
+                                <TextBlock
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Coin,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}"
+                                    FontSize="12" TextAlignment="Center" Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Coin,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"></TextBlock>
                             </StackPanel>
                             <Button.Flyout>
                                 <MenuFlyout>

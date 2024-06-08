@@ -175,10 +175,12 @@
                 <Button
                 Command="{x:Bind Path=ViewModel.Parent.LikeCommand,Mode=OneWay}" 
                 CommandParameter="{x:Bind Path=ViewModel,Mode=OneWay}"
-                Visibility="{x:Bind Path=ViewModel.Liked,Mode=OneWay}" Foreground="{ThemeResource HighLightColor}">
+                Visibility="{x:Bind Path=ViewModel.Liked,Mode=OneWay}">
                     <StackPanel Orientation="Horizontal">
-                        <fontAwesome5:FontAwesome Icon="Regular_ThumbsUp" Margin="0 2 0 0" FontSize="14"></fontAwesome5:FontAwesome>
-                        <TextBlock Margin="8 0" 
+                        <fontAwesome5:FontAwesome Icon="Regular_ThumbsUp"  Foreground="{ThemeResource HighLightColor}"
+                                                  Margin="0 2 0 0" FontSize="14"></fontAwesome5:FontAwesome>
+                        <TextBlock Margin="8 0"  
+                                   Foreground="{ThemeResource HighLightColor}"
                                Text="{x:Bind Path=ViewModel.LikeCount,Mode=OneWay,Converter={StaticResource countConvert},ConverterParameter='点赞'}"></TextBlock>
                     </StackPanel>
                 </Button>
