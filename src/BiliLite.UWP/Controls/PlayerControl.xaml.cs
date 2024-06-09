@@ -1809,9 +1809,9 @@ namespace BiliLite.Controls
         #region 全屏处理
         public void FullScreen(bool fullScreen)
         {
-
             ApplicationView view = ApplicationView.GetForCurrentView();
             FullScreenEvent?.Invoke(this, fullScreen);
+            m_danmakuController.SetFullscreen(fullScreen);
             if (fullScreen)
             {
                 BottomBtnExitFull.Visibility = Visibility.Visible;

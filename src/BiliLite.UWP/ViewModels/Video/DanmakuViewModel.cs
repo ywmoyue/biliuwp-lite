@@ -24,6 +24,9 @@ namespace BiliLite.ViewModels.Video
 
         public double MarginTop { get; set; }
 
+        [DoNotNotify]
+        public bool Fullscreen { get; set; }
+
         public int Density { get; set; }
 
         public int BolderStyle { get; set; }
