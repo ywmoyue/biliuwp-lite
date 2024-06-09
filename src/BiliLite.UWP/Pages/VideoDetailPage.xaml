@@ -112,6 +112,7 @@
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition></RowDefinition>
+                                            <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
                                         <Grid Padding="4 0">
                                             <TextBlock FontWeight="Bold" VerticalAlignment="Center">选择收藏夹</TextBlock>
@@ -119,7 +120,10 @@
                                                 <TextBlock>创建</TextBlock>
                                             </HyperlinkButton>
                                         </Grid>
-                                        <ListView Grid.Row="1" Margin="0 8 0 0" ItemClick="listAddFavorite_ItemClick" ItemsSource="{x:Bind Path=m_viewModel.MyFavorite,Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="True">
+                                        <ListView Grid.Row="1" 
+                                                  Margin="0 8 0 0"  
+                                                  ItemsSource="{x:Bind Path=m_viewModel.MyFavorite,Mode=OneWay}" 
+                                                  SelectionMode="None">
                                             <ListView.ItemContainerStyle>
                                                 <Style TargetType="ListViewItem">
                                                     <Setter Property="Padding" Value="4"></Setter>
@@ -130,22 +134,33 @@
 
                                             <ListView.ItemTemplate>
                                                 <DataTemplate x:DataType="user:FavoriteItemViewModel">
-                                                    <!--<CheckBox IsChecked="{x:Bind Path=is_fav,Mode=TwoWay}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
-                                                    
-                                                </CheckBox>-->
-                                                    <Grid>
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition/>
-                                                            <ColumnDefinition Width="Auto"/>
-                                                        </Grid.ColumnDefinitions>
-                                                        <TextBlock  Text="{x:Bind Title}"></TextBlock>
-                                                        <TextBlock  Margin="0 4" Grid.Column="1" FontSize="14" Foreground="Gray" Visibility="{x:Bind Path=Privacy,Converter={StaticResource display}}">公开</TextBlock>
-                                                        <TextBlock  Margin="0 4"  Grid.Column="1" FontSize="14" Foreground="Gray" Visibility="{x:Bind Path=Privacy}">私密</TextBlock>
-                                                    </Grid>
+                                                    <CheckBox IsChecked="{x:Bind IsFav,Mode=TwoWay}" 
+                                                              HorizontalAlignment="Stretch" 
+                                                              HorizontalContentAlignment="Stretch">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition></ColumnDefinition>
+                                                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <TextBlock Grid.Column="0" Text="{x:Bind Title}"></TextBlock>
+                                                            <TextBlock Grid.Column="1" Margin="0 4" 
+                                                                       HorizontalAlignment="Right"
+                                                                       FontSize="14" 
+                                                                       Foreground="Gray" 
+                                                                       Visibility="{x:Bind Path=Privacy,Converter={StaticResource display}}">公开</TextBlock>
+                                                            <TextBlock Grid.Column="1"  Margin="0 4" 
+                                                                       FontSize="14" 
+                                                                       HorizontalTextAlignment="Right"
+                                                                       HorizontalAlignment="Right"
+                                                                       Foreground="Gray" 
+                                                                       Visibility="{x:Bind Path=Privacy}">私密</TextBlock>
+                                                        </Grid>
+                                                    </CheckBox>
                                                 </DataTemplate>
                                             </ListView.ItemTemplate>
                                         </ListView>
-
+                                        <Button Grid.Row="2" HorizontalAlignment="Right" x:Name="SaveFavList" Click="SaveFavList_OnClick">保存</Button>
                                     </Grid>
                                 </Flyout>
                             </Button.Flyout>

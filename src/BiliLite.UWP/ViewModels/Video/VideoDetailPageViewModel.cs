@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.UI.Xaml;
@@ -90,6 +91,9 @@ namespace BiliLite.Modules
         public bool ShowMoreStaff { get; set; }
 
         public ObservableCollection<FavoriteItemViewModel> MyFavorite { get; set; }
+
+        [DoNotNotify]
+        public List<string> ExistFavIdList { get; set; }
 
         public double BottomActionBarHeight { get; set; }
 
@@ -214,6 +218,7 @@ namespace BiliLite.Modules
                     {
                         var myFavorite = await data.data["list"].ToString().DeserializeJson<List<FavoriteItemModel>>();
                         MyFavorite = m_mapper.Map<ObservableCollection<FavoriteItemViewModel>>(myFavorite);
+                        ExistFavIdList = myFavorite.Where(x => x.FavState == 1).Select(x=>x.Id).ToList();
                     }
                     else
                     {
@@ -541,52 +546,6 @@ namespace BiliLite.Modules
                 var handel = HandelError<object>(ex);
                 Notify.ShowMessageToast(handel.message);
             }
-
-
-
-        }
-        public async void DoFavorite(List<string> fav_ids, string avid)
-        {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
-            {
-                Notify.ShowMessageToast("请先登录后再操作");
-                return;
-            }
-
-            try
-            {
-                var results = await favoriteAPI.AddFavorite(fav_ids, avid).Request();
-                if (!results.status)
-                    throw new CustomizedErrorException(results.message);
-                var data = await results.GetJson<ApiDataModel<JObject>>();
-                if (!data.success)
-                    throw new CustomizedErrorException(data.message);
-                if (fav_ids.Count != 0 && VideoInfo.ReqUser.Favorite==0)
-                {
-                    VideoInfo.ReqUser.Favorite = 1;
-                    VideoInfo.Stat.Favorite += 1;
-                }
-                else if(VideoInfo.ReqUser.Favorite == 1 && fav_ids.Count == 0)
-                {
-                    VideoInfo.ReqUser.Favorite = 0;
-                    VideoInfo.Stat.Favorite -= 1;
-                }
-
-                if (!string.IsNullOrEmpty(data.data["toast"]?.ToString()))
-                    throw new CustomizedErrorException(data.data["toast"].ToString());
-                Notify.ShowMessageToast("操作成功");
-                await LoadFavorite(avid);
-            }
-            catch (CustomizedErrorException ex)
-            {
-                _logger.Error(ex.Message, ex);
-                Notify.ShowMessageToast(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                var handel = HandelError<object>(ex);
-                Notify.ShowMessageToast(handel.message);
-            }
         }
 
         public async Task GetAttentionUp()
@@ -645,6 +604,56 @@ namespace BiliLite.Modules
                 var handel = HandelError<object>(ex);
                 Notify.ShowMessageToast(handel.message);
                 return false;
+            }
+        }
+
+        public async Task UpdateFav(string avid)
+        {
+            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            {
+                Notify.ShowMessageToast("请先登录后再操作");
+                return;
+            }
+
+            try
+            {
+                var newIdList = MyFavorite.Where(x => x.IsFav).Select(x => x.Id).ToList();
+
+                var delIdList = ExistFavIdList.Except(newIdList).ToList();
+                var addIdList = newIdList.Except(ExistFavIdList).ToList();
+                var results = await favoriteAPI.UpdateFavorite(addIdList, delIdList, avid).Request();
+                if (!results.status)
+                    throw new CustomizedErrorException(results.message);
+                var data = await results.GetJson<ApiDataModel<JObject>>();
+                if (!data.success)
+                    throw new CustomizedErrorException(data.message);
+                if (newIdList.Count != 0 && VideoInfo.ReqUser.Favorite == 0)
+                {
+                    VideoInfo.ReqUser.Favorite = 1;
+                    VideoInfo.Stat.Favorite += 1;
+                }
+                else if (VideoInfo.ReqUser.Favorite == 1 && newIdList.Count == 0)
+                {
+                    VideoInfo.ReqUser.Favorite = 0;
+                    VideoInfo.Stat.Favorite -= 1;
+                }
+
+                if (!string.IsNullOrEmpty(data.data["toast"]?.ToString()))
+                    throw new CustomizedErrorException(data.data["toast"].ToString());
+                Notify.ShowMessageToast("操作成功");
+                //立即刷新可能导致取到旧数据
+                await Task.Delay(500);
+                await LoadFavorite(avid);
+            }
+            catch (CustomizedErrorException ex)
+            {
+                _logger.Error(ex.Message, ex);
+                Notify.ShowMessageToast(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                var handel = HandelError<object>(ex);
+                Notify.ShowMessageToast(handel.message);
             }
         }
 

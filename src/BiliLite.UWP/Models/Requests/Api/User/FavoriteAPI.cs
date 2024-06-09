@@ -74,6 +74,34 @@ namespace BiliLite.Models.Requests.Api.User
         }
 
         /// <summary>
+        /// 更新到收藏夹
+        /// </summary>
+        /// <returns></returns>
+        public ApiModel UpdateFavorite(List<string> addFavIds,List<string> delFavIds, string avid)
+        {
+            var addIds = "";
+            foreach (var item in addFavIds)
+            {
+                addIds += item + ",";
+            }
+            addIds = Uri.EscapeDataString(addIds.TrimEnd(','));
+            var delIds = "";
+            foreach (var item in delFavIds)
+            {
+                delIds += item + ",";
+            }
+            delIds = Uri.EscapeDataString(delIds.TrimEnd(','));
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Post,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/medialist/gateway/coll/resource/deal",
+                body = ApiHelper.MustParameter(AppKey, true) + $"&add_media_ids={addIds}&del_media_ids={delIds}&rid={avid}&type=2"
+            };
+            api.body += ApiHelper.GetSign(api.body, AppKey);
+            return api;
+        }
+
+        /// <summary>
         /// 收藏收藏夹
         /// </summary>
         /// <returns></returns>
