@@ -6,6 +6,9 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Models.Common.Rank;
+using BiliLite.ViewModels.Rank;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -16,13 +19,14 @@ namespace BiliLite.Pages
     /// </summary>
     public sealed partial class RankPage : BasePage
     {
-        readonly RankVM rankVM;
+        readonly RankViewModel m_viewModel;
         public RankPage()
         {
+            m_viewModel = App.ServiceProvider.GetRequiredService<RankViewModel>();
             this.InitializeComponent();
             Title = "排行榜";
-            rankVM = new RankVM();
         }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -33,7 +37,7 @@ namespace BiliLite.Pages
                 {
                     rid = e.Parameter.ToInt32();
                 }
-                rankVM.LoadRankRegion(rid);
+                m_viewModel.LoadRankRegion(rid);
             }
         }
 
@@ -43,10 +47,10 @@ namespace BiliLite.Pages
             {
                 return;
             }
-            var data = pivot.SelectedItem as RankRegionModel;
+            var data = pivot.SelectedItem as RankRegionViewModel;
             if (data.Items == null || data.Items.Count == 0)
             {
-                await rankVM.LoadRankDetail(data);
+                await m_viewModel.LoadRankDetail(data);
             }
         }
 
@@ -63,8 +67,8 @@ namespace BiliLite.Pages
             {
                 icon = Symbol.Play,
                 page = typeof(VideoDetailPage),
-                title = item.title,
-                parameters = item.aid,
+                title = item.Title,
+                parameters = item.Aid,
                 dontGoTo = dontGoTo
             });
         }
@@ -80,7 +84,7 @@ namespace BiliLite.Pages
         private void AddToWatchLater_Click(object sender, RoutedEventArgs e)
         {
             var data = (sender as MenuFlyoutItem).DataContext as RankItemModel;
-            Modules.User.WatchLaterVM.Instance.AddToWatchlater(data.aid);
+            Modules.User.WatchLaterVM.Instance.AddToWatchlater(data.Aid);
         }
     }
 }

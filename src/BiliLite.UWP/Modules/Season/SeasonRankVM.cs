@@ -102,7 +102,7 @@ namespace BiliLite.Modules.Season
             }
             catch (Exception ex)
             {
-                var handel = HandelError<ApiDataModel<List<RankRegionModel>>>(ex);
+                var handel = HandelError<SeasonRankVM>(ex);
                 Notify.ShowMessageToast(handel.message);
             }
             finally

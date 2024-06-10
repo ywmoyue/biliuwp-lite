@@ -177,6 +177,10 @@
     <Compile Include="Models\Functions\IShortcutFunction.cs" />
     <Compile Include="Models\Functions\RefreshShortcutFunction.cs" />
     <Compile Include="Models\Common\User\FavoriteItemModel.cs" />
+    <Compile Include="Models\Common\Rank\RankItemModel.cs" />
+    <Compile Include="Models\Common\Rank\RankItemOwnerModel.cs" />
+    <Compile Include="Models\Common\Rank\RankItemStatModel.cs" />
+    <Compile Include="ViewModels\Rank\RankRegionViewModel.cs" />
     <Compile Include="ViewModels\User\FavoriteItemViewModel.cs" />
     <Compile Include="Pages\Home\UserDynamicPage.xaml.cs">
       <DependentUpon>UserDynamicPage.xaml</DependentUpon>
@@ -694,7 +698,7 @@
     <Compile Include="ViewModels\User\HistoryViewModel.cs" />
     <Compile Include="Modules\User\MyFollowSeasonVM.cs" />
     <Compile Include="Modules\Player\PlayerVM.cs" />
-    <Compile Include="Modules\RankVM.cs" />
+    <Compile Include="ViewModels\Rank\RankViewModel.cs" />
     <Compile Include="ViewModels\Home\RecommendPageViewModel.cs" />
     <Compile Include="Modules\RelayCommand.cs" />
     <Compile Include="ViewModels\Season\SeasonDetailPageViewModel.cs" />
