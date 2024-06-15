@@ -66,6 +66,14 @@
                                         </Grid>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
+                                <ListView.Footer>
+                                    <HyperlinkButton x:Name="BtnLoadMore" 
+                                                     Tapped="BtnLoadMore_OnTapped"
+                                                     HorizontalAlignment="Center"
+                                                     Visibility="{x:Bind IsLazyOnlineList,Mode=OneWay}">
+                                        加载更多
+                                    </HyperlinkButton>
+                                </ListView.Footer>
                             </ListView>
                         </muxc:Expander.Content>
                     </muxc:Expander>

@@ -9,6 +9,7 @@ using Windows.UI.Xaml.Input;
 using AutoMapper;
 using BiliLite.Extensions;
 using BiliLite.Models.Common.Video;
+using BiliLite.Services.Biz;
 using BiliLite.ViewModels.Video;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
@@ -19,12 +20,14 @@ namespace BiliLite.Controls
     {
         private readonly VideoListViewModel m_viewModel;
         private readonly IMapper m_mapper;
+        private readonly MediaListService m_mediaListService;
         private object m_flyoutContextElement;
 
-        public VideoListView(VideoListViewModel viewModel, IMapper mapper)
+        public VideoListView(VideoListViewModel viewModel, IMapper mapper, MediaListService mediaListService)
         {
             m_viewModel = viewModel;
             m_mapper = mapper;
+            m_mediaListService = mediaListService;
             this.InitializeComponent();
         }
 
@@ -113,6 +116,17 @@ namespace BiliLite.Controls
             {
                 m_viewModel.Sections.Remove(section);
             }
+        }
+
+        private async void BtnLoadMore_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (!(sender is HyperlinkButton btnLoadMore))
+            {
+                return;
+            }
+
+            if (!(btnLoadMore.DataContext is VideoListSectionViewModel section)) return;
+            await m_mediaListService.LoadMoreMediaList(section);
         }
     }
 }

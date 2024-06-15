@@ -13,5 +13,9 @@ namespace BiliLite.Models.Common.Video
         public List<VideoListItem> Items { get; set; }
 
         public VideoListItem SelectedItem { get; set; }
+
+        public bool IsLazyOnlineList { get; set; }
+
+        public string OnlineListId { get; set; }
     }
 }
