@@ -152,6 +152,9 @@
     <Compile Include="Controls\VideoListView.xaml.cs">
       <DependentUpon>VideoListView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\EditPlaySpeedMenuDialog.xaml.cs">
+      <DependentUpon>EditPlaySpeedMenuDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\SendDynamicV2Dialog.xaml.cs">
       <DependentUpon>SendDynamicV2Dialog.xaml</DependentUpon>
     </Compile>
@@ -165,6 +168,7 @@
     <Compile Include="Models\Common\Comment\HotReply.cs" />
     <Compile Include="Models\Common\Danmaku\BiliDanmakuItem.cs" />
     <Compile Include="Models\Common\Dynamic\DynamicUgcSeasonCardModel.cs" />
+    <Compile Include="Models\Common\Player\PlaySpeedMenu.cs" />
     <Compile Include="Models\Common\UserDynamic\DynLiveInfo.cs" />
     <Compile Include="Models\Common\UserDynamic\IUserDynamicCommands.cs" />
     <Compile Include="Models\Common\UserDynamic\NavDynArticle.cs" />
@@ -183,7 +187,9 @@
     <Compile Include="Models\Common\Rank\RankItemOwnerModel.cs" />
     <Compile Include="Models\Common\Rank\RankItemStatModel.cs" />
     <Compile Include="Services\Biz\MediaListService.cs" />
+    <Compile Include="Services\PlaySpeedMenuService.cs" />
     <Compile Include="ViewModels\Rank\RankRegionViewModel.cs" />
+    <Compile Include="ViewModels\Settings\EditPlaySpeedMenuViewModel.cs" />
     <Compile Include="ViewModels\User\FavoriteItemViewModel.cs" />
     <Compile Include="Pages\Home\UserDynamicPage.xaml.cs">
       <DependentUpon>UserDynamicPage.xaml</DependentUpon>
@@ -1009,6 +1015,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\VideoListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\EditPlaySpeedMenuDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

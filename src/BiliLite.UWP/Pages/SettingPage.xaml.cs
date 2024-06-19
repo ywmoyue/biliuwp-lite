@@ -21,6 +21,7 @@ using BiliLite.ViewModels.Download;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
+using BiliLite.Dialogs;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -1229,6 +1230,12 @@ namespace BiliLite.Pages
         private async void DanmuSettingFilterImport_OnClick(object sender, RoutedEventArgs e)
         {
             await settingVM.ImportDanmuFilter();
+        }
+
+        private async void BtnEditPlaySpeedMenu_OnClick(object sender, RoutedEventArgs e)
+        {
+            var dialog = App.ServiceProvider.GetRequiredService<EditPlaySpeedMenuDialog>();
+            await dialog.ShowAsync();
         }
     }
 }

@@ -55,6 +55,7 @@ namespace BiliLite.Controls
         private readonly IDanmakuController m_danmakuController;
         private readonly PlayControlViewModel m_viewModel;
         private readonly PlayerToastService m_playerToastService;
+        private readonly PlaySpeedMenuService m_playSpeedMenuService;
         public event PropertyChangedEventHandler PropertyChanged;
         private GestureRecognizer gestureRecognizer;
         private void DoPropertyChanged(string name)
@@ -129,6 +130,7 @@ namespace BiliLite.Controls
         public PlayerControl()
         {
             m_viewModel = new PlayControlViewModel();
+            m_playSpeedMenuService = App.ServiceProvider.GetRequiredService<PlaySpeedMenuService>();
             m_playerToastService = App.ServiceProvider.GetRequiredService<PlayerToastService>();
             m_playerToastService.Init(this);
             this.InitializeComponent();
@@ -725,12 +727,16 @@ namespace BiliLite.Controls
                 Player.SetRatioMode(PlayerSettingRatio.SelectedIndex);
             });
             // 播放倍数
-            BottomCBSpeed.SelectedIndex = SettingConstants.Player.VideoSpeed.IndexOf(SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d));
+            var speeds = m_playSpeedMenuService.MenuItems
+                .Select(x => x.Value)
+                .ToList();
+            BottomCBSpeed.SelectedIndex = speeds
+                .IndexOf(SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d));
             Player.SetRate(SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d));
             BottomCBSpeed.SelectionChanged += new SelectionChangedEventHandler((e, args) =>
             {
-                SettingService.SetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, SettingConstants.Player.VideoSpeed[BottomCBSpeed.SelectedIndex]);
-                Player.SetRate(SettingConstants.Player.VideoSpeed[BottomCBSpeed.SelectedIndex]);
+                SettingService.SetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, speeds[BottomCBSpeed.SelectedIndex]);
+                Player.SetRate(speeds[BottomCBSpeed.SelectedIndex]);
             });
 
             _autoPlay = SettingService.GetValue<bool>(SettingConstants.Player.AUTO_PLAY, false);

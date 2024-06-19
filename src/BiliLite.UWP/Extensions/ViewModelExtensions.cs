@@ -4,6 +4,7 @@ using BiliLite.ViewModels.Download;
 using BiliLite.ViewModels.Home;
 using BiliLite.ViewModels.Live;
 using BiliLite.ViewModels.Rank;
+using BiliLite.ViewModels.Settings;
 using BiliLite.ViewModels.User;
 using BiliLite.ViewModels.User.SendDynamic;
 using BiliLite.ViewModels.UserDynamic;
@@ -42,6 +43,7 @@ namespace BiliLite.Extensions
             services.AddTransient<MyFollowVideoViewModel>();
             services.AddTransient<CollectedPageViewModel>();
             services.AddTransient<RankViewModel>();
+            services.AddTransient<EditPlaySpeedMenuViewModel>();
             return services;
         }
     }

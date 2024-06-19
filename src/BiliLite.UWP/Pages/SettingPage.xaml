@@ -339,6 +339,9 @@
                         <TextBlock  Margin="0 16 0 8" FontSize="16">锁定播放器亮度设置（播放器内修改亮度时不写设置）</TextBlock>
                         <ToggleSwitch x:Name="SwLockPlayerBrightness" ></ToggleSwitch>
 
+                        <TextBlock  Margin="0 16 0 8" FontSize="16">播放速度菜单</TextBlock>
+                        <Button x:Name="BtnEditPlaySpeedMenu" Click="BtnEditPlaySpeedMenu_OnClick">编辑播放速度菜单</Button>
+
                         <TextBlock  Margin="0 16 0 8" FontSize="16">自动打开AI字幕</TextBlock>
                         <ToggleSwitch  x:Name="swPlayerSettingAutoOpenAISubtitle"></ToggleSwitch>
                         <TextBlock>部分自动生成的AI字幕会与视频自带字幕冲突</TextBlock>

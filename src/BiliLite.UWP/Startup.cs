@@ -20,6 +20,7 @@ namespace BiliLite
             services.AddTransient<SettingsImportExportService>();
             services.AddQrCodeService();
             services.AddBizServices();
+            services.AddSingleton<PlaySpeedMenuService>();
             
             services.AddSingleton<GrpcService>();
         }
