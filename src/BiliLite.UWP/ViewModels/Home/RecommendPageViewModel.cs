@@ -64,7 +64,16 @@ namespace BiliLite.ViewModels.Home
                 {
                     return;
                 }
-                await GetRecommend(Items.LastOrDefault().Idx);
+
+                var idx = Items.LastOrDefault()?.Idx;
+
+                if (string.IsNullOrEmpty(idx))
+                {
+                    await GetRecommend();
+                    return;
+                }
+
+                await GetRecommend(idx);
             }
             catch (Exception ex)
             {
