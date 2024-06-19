@@ -13,9 +13,6 @@ namespace BiliLite.Controls.DataTemplateSelectors
 
         static UserDynamicItemV2DataTemplateSelector()
         {
-            DataTemplate SelectRowTemplate(UserDynamicItemDataTemplateSelector selector,
-                UserDynamicItemDisplayViewModel _) => selector.OneRowTemplate;
-
             _dynamicTypeTemplateSelectFuncs =
                 new Dictionary<string, Func<UserDynamicItemV2DataTemplateSelector,
                     DynamicV2ItemViewModel, DataTemplate>>()
