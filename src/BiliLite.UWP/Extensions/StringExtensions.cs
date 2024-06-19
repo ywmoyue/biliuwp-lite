@@ -461,7 +461,7 @@ namespace BiliLite.Extensions
                 offset = 0;
                 foreach (Match item in bv)
                 {
-                    if (keyword.Contains(item.Groups[0].Value) || haveHandledOffset.Where(index => (item.Index > index[0] && item.Index < index[1])).ToList().Count > 0)
+                    if (keyword.Contains(item.Groups[0].Value) || haveHandledOffset.Where(index => (item.Index + offset > index[0] && item.Index + offset < index[1])).ToList().Count > 0)
                     {
                         continue;
                     }
@@ -482,7 +482,7 @@ namespace BiliLite.Extensions
                 MatchCollection av = Regex.Matches(input, @"[aA][vV](\d+)"); 
                 foreach (Match item in av)
                 {
-                    if (keyword.Contains(item.Groups[0].Value) || haveHandledOffset.Where(index => (item.Index > index[0] && item.Index < index[1])).ToList().Count > 0)
+                    if (keyword.Contains(item.Groups[0].Value) || haveHandledOffset.Where(index => (item.Index + offset > index[0] && item.Index + offset < index[1])).ToList().Count > 0 || item.Groups[1].Value.ToInt64() < 2)
                     {
                         continue;
                     }
