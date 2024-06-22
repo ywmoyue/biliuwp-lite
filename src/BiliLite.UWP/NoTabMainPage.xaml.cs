@@ -277,8 +277,7 @@ namespace BiliLite
 
             //跳转页面
             (this.Children.Last() as Frame).Navigate(sourcePageType, parameter);
-
-
+            
             return true;
         }
         public bool CanGoBack

@@ -442,7 +442,7 @@
                         <PivotItem.Header>
                             <TextBlock Text="推荐" FontSize="18"></TextBlock>
                         </PivotItem.Header>
-                        <ListView Padding="12 0" SelectionMode="None"  ItemClick="listRelates_ItemClick" ItemsSource="{x:Bind Path=m_viewModel.VideoInfo.Relates,Mode=OneWay}" IsItemClickEnabled="True">
+                        <ListView AllowFocusOnInteraction="False" Padding="12 0" SelectionMode="None"  ItemClick="listRelates_ItemClick" ItemsSource="{x:Bind Path=m_viewModel.VideoInfo.Relates,Mode=OneWay}" IsItemClickEnabled="True">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="Padding" Value="0"></Setter>
