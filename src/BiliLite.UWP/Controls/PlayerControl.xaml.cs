@@ -293,33 +293,6 @@ namespace BiliLite.Controls
             args.Handled = true;
             switch (args.VirtualKey)
             {
-                //case Windows.System.VirtualKey.Space:
-                //    if (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.End)
-                //    {
-                //        Pause();
-                //    }
-                //    else
-                //    {
-                //        Player.Play();
-                //    }
-                //    break;
-                case Windows.System.VirtualKey.Left:
-                    {
-                        if (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.Pause)
-                        {
-                            var _position = Player.Position - 3;
-                            if (_position < 0)
-                            {
-                                _position = 0;
-                            }
-                            Player.Position = _position;
-
-                            m_playerToastService.Show(
-                                PlayerToastService.PROGRESS_KEY, "进度:" + TimeSpan.FromSeconds(Player.Position).ToString(@"hh\:mm\:ss"));
-                        }
-                    }
-
-                    break;
                 case Windows.System.VirtualKey.Right:
                     {
                         if (m_playerKeyRightAction == PlayerKeyRightAction.AcceleratePlay)
@@ -340,23 +313,7 @@ namespace BiliLite.Controls
                         }
                     }
                     break;
-                case Windows.System.VirtualKey.Up:
-                    Player.Volume += 0.1;
-                    m_playerToastService.Show(PlayerToastService.VOLUME_KEY, "音量:" + Player.Volume.ToString("P"));
-                    break;
 
-                case Windows.System.VirtualKey.Down:
-                    Player.Volume -= 0.1;
-                    var txtToolTipText = "静音";
-                    if (Player.Volume > 0)
-                    {
-                        txtToolTipText = "音量:" + Player.Volume.ToString("P");
-                    }
-                    m_playerToastService.Show(PlayerToastService.VOLUME_KEY, txtToolTipText);
-                    break;
-                case Windows.System.VirtualKey.Escape:
-                    IsFullScreen = false;
-                    break;
                 case Windows.System.VirtualKey.F8:
                 case Windows.System.VirtualKey.T:
                     //小窗播放
@@ -2866,7 +2823,44 @@ namespace BiliLite.Controls
         {
             m_danmakuController.Pause();
             Player.Pause();
+        }
 
+        public void PositionBack()
+        {
+            if (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.Pause)
+            {
+                var _position = Player.Position - 3;
+                if (_position < 0)
+                {
+                    _position = 0;
+                }
+                Player.Position = _position;
+
+                m_playerToastService.Show(
+                    PlayerToastService.PROGRESS_KEY, "进度:" + TimeSpan.FromSeconds(Player.Position).ToString(@"hh\:mm\:ss"));
+            }
+        }
+
+        public void AddVolume()
+        {
+            Player.Volume += 0.1;
+            m_playerToastService.Show(PlayerToastService.VOLUME_KEY, "音量:" + Player.Volume.ToString("P"));
+        }
+
+        public void MinusVolume()
+        {
+            Player.Volume -= 0.1;
+            var txtToolTipText = "静音";
+            if (Player.Volume > 0)
+            {
+                txtToolTipText = "音量:" + Player.Volume.ToString("P");
+            }
+            m_playerToastService.Show(PlayerToastService.VOLUME_KEY, txtToolTipText);
+        }
+
+        public void CancelFullscreen()
+        {
+            IsFullScreen = false;
         }
 
         public void PlayerSettingABPlaySetPointA_Click(object sender, RoutedEventArgs e)

@@ -40,6 +40,25 @@ namespace BiliLite.Pages
             Player.PlayerInstance.Play();
         }
 
+        public void PositionBack()
+        {
+            Player.PositionBack();
+        }
+        public void AddVolume()
+        {
+            Player.AddVolume();
+        }
+
+        public void MinusVolume()
+        {
+            Player.MinusVolume();
+        }
+
+        public void CancelFullscreen()
+        {
+            Player.CancelFullscreen();
+        }
+
         public void DisposePlayer()
         {
             Player?.Dispose();

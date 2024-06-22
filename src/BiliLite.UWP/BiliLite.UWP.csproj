@@ -180,8 +180,12 @@
     <Compile Include="Models\Common\User\SendDynamic\UploadImagesModel.cs" />
     <Compile Include="Models\Common\User\SendDynamic\RcmdTopicModel.cs" />
     <Compile Include="Models\Common\Video\MediaListResources.cs" />
+    <Compile Include="Models\Functions\CancelFullscreenFunction.cs" />
+    <Compile Include="Models\Functions\MinusVolumeFunction.cs" />
+    <Compile Include="Models\Functions\AddVolumeFunction.cs" />
     <Compile Include="Models\Functions\IShortcutFunction.cs" />
     <Compile Include="Models\Functions\PlayPauseFunction.cs" />
+    <Compile Include="Models\Functions\PositionBackFunction.cs" />
     <Compile Include="Models\Functions\RefreshShortcutFunction.cs" />
     <Compile Include="Models\Common\User\FavoriteItemModel.cs" />
     <Compile Include="Models\Common\Rank\RankItemModel.cs" />
