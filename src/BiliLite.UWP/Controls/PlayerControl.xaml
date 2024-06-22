@@ -12,6 +12,7 @@
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     xmlns:fa="using:FontAwesome5" xmlns:player="using:BiliLite.Modules.Player"
     xmlns:common="using:BiliLite.Models.Common"
+    xmlns:player1="using:BiliLite.Models.Common.Player"
     d:DesignHeight="800"
     d:DesignWidth="1000">
     <UserControl.Resources>
@@ -845,15 +846,20 @@
                                     <ComboBox x:Name="BottomCBQuality"   DisplayMemberPath="QualityName" ToolTipService.ToolTip="清晰度" HorizontalContentAlignment="Center" Style="{StaticResource PlayerComboBoxStyle}" Foreground="White" BorderThickness="0" FontSize="18" VerticalAlignment="Center" Background="Transparent">
 
                                     </ComboBox>
-                                    <ComboBox x:Name="BottomCBSpeed" ToolTipService.ToolTip="倍速" HorizontalContentAlignment="Center" Style="{StaticResource PlayerComboBoxStyle}" Foreground="White" BorderThickness="0" FontSize="18" VerticalAlignment="Center" Background="Transparent">
-                                        <ComboBox.Items>
-                                            <ComboBoxItem Content="2.0x" ></ComboBoxItem>
-                                            <ComboBoxItem Content="1.5x" ></ComboBoxItem>
-                                            <ComboBoxItem Content="1.25x" ></ComboBoxItem>
-                                            <ComboBoxItem Content="1.0x" ></ComboBoxItem>
-                                            <ComboBoxItem Content="0.75x" ></ComboBoxItem>
-                                            <ComboBoxItem Content="0.5x" ></ComboBoxItem>
-                                        </ComboBox.Items>
+                                    <ComboBox x:Name="BottomCBSpeed" ToolTipService.ToolTip="倍速" 
+                                              HorizontalContentAlignment="Center" 
+                                              Style="{StaticResource PlayerComboBoxStyle}" 
+                                              Foreground="White" BorderThickness="0" 
+                                              FontSize="18" VerticalAlignment="Center" 
+                                              SelectedValuePath="Value"
+                                              DisplayMemberPath="Content"
+                                              ItemsSource="{x:Bind m_playSpeedMenuService.MenuItems}"
+                                              Background="Transparent">
+                                        <!--<ComboBox.ItemTemplate>
+                                            <DataTemplate x:DataType="player1:PlaySpeedMenuItem">
+                                                <ComboBoxItem Content="{x:Bind Content}"></ComboBoxItem>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>-->
                                     </ComboBox>
 
                                     <Button x:Name="BottomBtnList" Click="BottomBtnList_Click" Visibility="{x:Bind ShowPlaylistButton,Mode=OneWay}" ToolTipService.ToolTip="选集" Background="Transparent" Foreground="White" Padding="12" Height="48">

@@ -120,6 +120,8 @@ namespace BiliLite.Pages
                         Selected = true,
                         Title = videoPlaylist.Title,
                         Items = new List<VideoListItem>(),
+                        IsLazyOnlineList = videoPlaylist.IsOnlineMediaList,
+                        OnlineListId = videoPlaylist.MediaListId,
                     });
                     foreach (var videoPlaylistItem in videoPlaylist.Playlist)
                     {
@@ -522,17 +524,6 @@ namespace BiliLite.Pages
             }
         }
 
-        private void listAddFavorite_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            var item = e.ClickedItem as FavoriteItemViewModel;
-            m_viewModel.DoFavorite(new List<string>() { item.Id }, avid);
-        }
-
-        private void BtnAddFavorite_Click(object sender, RoutedEventArgs e)
-        {
-            m_viewModel.DoFavorite(m_viewModel.MyFavorite.Where(x => x.IsFav).Select(x => x.Id).ToList(), avid);
-        }
-
         private async void btnOpenWeb_Click(object sender, RoutedEventArgs e)
         {
             await Launcher.LaunchUriAsync(new Uri(m_viewModel.VideoInfo.ShortLink));
@@ -730,6 +721,11 @@ namespace BiliLite.Pages
             {
                 m_viewModel.PageHeight = e.NewSize.Height;
             }
+        }
+
+        private async void SaveFavList_OnClick(object sender, RoutedEventArgs e)
+        {
+            await m_viewModel.UpdateFav(m_viewModel.VideoInfo.Aid);
         }
     }
 }

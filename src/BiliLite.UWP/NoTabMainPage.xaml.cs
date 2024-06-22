@@ -5,6 +5,7 @@ using BiliLite.Pages;
 using BiliLite.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
@@ -24,6 +25,7 @@ namespace BiliLite
     public sealed partial class NoTabMainPage : Page, IMainPage
     {
         private readonly ShortcutKeyService m_shortcutKeyService;
+        private readonly Stack<string> m_titleStack = new Stack<string>();
 
         public NoTabMainPage()
         {
@@ -92,6 +94,7 @@ namespace BiliLite
                 {
                     this.frame.GoBack();
                     e.Handled = true;
+                    BackTitle();
                 }
 
             }
@@ -103,9 +106,10 @@ namespace BiliLite
             {
                 txtTitle.Text = "哔哩哔哩 UWP";
             }
-            if (e.Content is Pages.BasePage)
+            if (e.Content is Pages.BasePage && e.NavigationMode!=NavigationMode.Back)
             {
-                txtTitle.Text = (e.Content as BasePage).Title;
+                var title = (e.Content as BasePage).Title;
+                PushTitle(title);
             }
 
             if (frame.CanGoBack)
@@ -141,7 +145,7 @@ namespace BiliLite
         {
             if (mode == 1)
             {
-                txtTitle.Text = e;
+                ChangeTitle(e);
             }
         }
 
@@ -149,10 +153,9 @@ namespace BiliLite
         {
             if (mode == 1)
             {
-                txtTitle.Text = e.title;
+                //PushTitle(e.title);
                 frame.Navigate(e.page, e.parameters);
                 (frame.Content as Page).NavigationCacheMode = NavigationCacheMode.Required;
-
             }
             else
             {
@@ -165,6 +168,7 @@ namespace BiliLite
             if (frame.CanGoBack)
             {
                 frame.GoBack();
+                BackTitle();
             }
         }
 
@@ -201,6 +205,29 @@ namespace BiliLite
                 imgViewer.ClearImage();
                 gridViewer.Visibility = Visibility.Collapsed;
             }
+        }
+
+        private void BackTitle()
+        {
+            if (m_titleStack.Count == 0)
+            {
+                txtTitle.Text = "哔哩哔哩 UWP";
+                return;
+            }
+
+            var title = m_titleStack.Pop();
+            txtTitle.Text = title;
+        }
+
+        private void PushTitle(string title)
+        {
+            m_titleStack.Push(txtTitle.Text);
+            txtTitle.Text = title;
+        }
+
+        private void ChangeTitle(string title)
+        {
+            txtTitle.Text = title;
         }
     }
 
@@ -250,8 +277,7 @@ namespace BiliLite
 
             //跳转页面
             (this.Children.Last() as Frame).Navigate(sourcePageType, parameter);
-
-
+            
             return true;
         }
         public bool CanGoBack

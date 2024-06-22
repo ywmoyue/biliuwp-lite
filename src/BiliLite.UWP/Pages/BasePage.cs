@@ -28,6 +28,9 @@ namespace BiliLite.Pages
     public class PlayPage : BasePage
     {
         public PlayerControl Player { get; set; }
+
+        public bool IsPlaying => Player.IsPlaying;
+
         public void Pause()
         {
             Player.PlayerInstance.Pause();
@@ -35,6 +38,25 @@ namespace BiliLite.Pages
         public void Play()
         {
             Player.PlayerInstance.Play();
+        }
+
+        public void PositionBack()
+        {
+            Player.PositionBack();
+        }
+        public void AddVolume()
+        {
+            Player.AddVolume();
+        }
+
+        public void MinusVolume()
+        {
+            Player.MinusVolume();
+        }
+
+        public void CancelFullscreen()
+        {
+            Player.CancelFullscreen();
         }
 
         public void DisposePlayer()

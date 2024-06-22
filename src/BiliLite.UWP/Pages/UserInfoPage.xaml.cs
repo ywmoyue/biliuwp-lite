@@ -14,8 +14,8 @@ using BiliLite.ViewModels.User;
 using BiliLite.ViewModels.UserDynamic;
 using Microsoft.Extensions.DependencyInjection;
 using BiliLite.Models.Common.Video;
-using BiliLite.Modules;
 using System.Collections.Generic;
+using BiliLite.Services.Biz;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -41,6 +41,7 @@ namespace BiliLite.Pages
     /// </summary>
     public sealed partial class UserInfoPage : BasePage, IRefreshablePage
     {
+        private readonly MediaListService m_mediaListService;
         readonly UserDynamicViewModel m_userDynamicViewModel;
         UserDetailViewModel m_viewModel;
         UserSubmitVideoViewModel m_userSubmitVideoViewModel;
@@ -54,6 +55,7 @@ namespace BiliLite.Pages
         public UserInfoPage()
         {
             m_viewModel = App.ServiceProvider.GetRequiredService<UserDetailViewModel>();
+            m_mediaListService = App.ServiceProvider.GetRequiredService<MediaListService>();
             this.InitializeComponent();
             Title = "用户中心";
             m_userSubmitVideoViewModel = App.ServiceProvider.GetService<UserSubmitVideoViewModel>();
@@ -417,19 +419,25 @@ namespace BiliLite.Pages
             throw new System.NotImplementedException();
         }
 
-        private void BtnPlayAll_OnTapped(object sender, TappedRoutedEventArgs e)
+        private async void BtnPlayAll_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             var items = new List<VideoPlaylistItem>();
-            foreach (var item in m_userSubmitVideoViewModel.SubmitVideoItems)
+            var mediaList = await m_mediaListService.GetMediaList(m_userSubmitVideoViewModel.PlayAllMediaListId);
+
+            if (mediaList == null)
+            {
+                return;
+            }
+
+            foreach (var item in mediaList)
             {
                 items.Add(new VideoPlaylistItem()
                 {
-                    Cover = item.Pic,
-                    Author = item.Author,
-                    Id = item.Aid,
+                    Cover = item.Cover,
+                    Author = item.Upper.Name,
+                    Id = item.Id.ToString(),
                     Title = item.Title
                 });
-
             }
 
             MessageCenter.NavigateToPage(this, new NavigationInfo()
@@ -442,6 +450,8 @@ namespace BiliLite.Pages
                     Index = 0,
                     Playlist = items,
                     Title = $"{m_viewModel.UserInfo.Name}:全部视频",
+                    MediaListId = m_userSubmitVideoViewModel.PlayAllMediaListId,
+                    IsOnlineMediaList = true,
                 }
             });
         }

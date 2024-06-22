@@ -66,6 +66,10 @@ namespace BiliLite.Extensions
                 expression.CreateMap<VideoListSection, VideoListSectionViewModel>();
                 expression.CreateMap<VideoPlaylistItem,VideoListItem>();
                 expression.CreateMap<FavoriteItemModel, FavoriteItemViewModel>();
+                expression.CreateMap<MediaListItem, VideoListItem>()
+                    .ForMember(dest => dest.Author,
+                        opt => opt.MapFrom(src =>
+                            src.Upper.Name));
 
                 var danmakuModeConvertDic = new Dictionary<DanmakuLocation, DanmakuMode>()
                 {

@@ -112,6 +112,15 @@ namespace BiliLite.Services.Interfaces
         }
 
         /// <summary>
+        /// 设置全屏
+        /// </summary>
+        /// <param name="fullscreen"></param>
+        public virtual void SetFullscreen(bool fullscreen)
+        {
+            DanmakuViewModel.Fullscreen = fullscreen;
+        }
+
+        /// <summary>
         /// 设置透明度
         /// </summary>
         public virtual void SetOpacity(double opacity)

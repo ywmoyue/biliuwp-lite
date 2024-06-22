@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using BiliLite.Models.Common.Video;
 using BiliLite.ViewModels.Common;
+using PropertyChanged;
 
 namespace BiliLite.ViewModels.Video
 {
@@ -15,5 +16,10 @@ namespace BiliLite.ViewModels.Video
         public ObservableCollection<VideoListItem> Items { get; set; }
 
         public VideoListItem SelectedItem { get; set; }
+
+        public bool IsLazyOnlineList { get; set; }
+
+        [DoNotNotify]
+        public string OnlineListId { get; set; }
     }
 }

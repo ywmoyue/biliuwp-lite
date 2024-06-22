@@ -35,6 +35,11 @@ namespace BiliLite.Services
 
         public async void KeepStart(string key, string msg)
         {
+            if (m_showPlayerToasts.TryGetValue(key, out var toast))
+            {
+                return;
+            }
+
             var newToast = m_serviceProvider.GetRequiredService<PlayerToast>();
             newToast.Height = 80;
             newToast.Width = 200;
@@ -45,6 +50,7 @@ namespace BiliLite.Services
             {
                 await Task.Delay(500);
             }
+
             Canvas.SetTop(newToast, m_playerControl.ActualHeight - distanceFromBottom);
 
             m_showPlayerToasts.Add(key, newToast);

@@ -845,6 +845,7 @@ namespace BiliLite.Pages
 
         private async void SetFullScreen(bool e)
         {
+            m_danmakuController.SetFullscreen(e);
             if (e)
             {
                 await m_playerController.ScreenState.Fullscreen();

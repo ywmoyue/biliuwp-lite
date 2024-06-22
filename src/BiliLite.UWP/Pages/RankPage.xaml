@@ -11,7 +11,9 @@
     xmlns:modules="using:BiliLite.Modules" 
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls" 
     xmlns:winui="using:Microsoft.UI.Xaml.Controls" 
-    xmlns:fa="using:FontAwesome5" 
+    xmlns:fa="using:FontAwesome5"
+    xmlns:rank="using:BiliLite.Models.Common.Rank"
+    xmlns:rank1="using:BiliLite.ViewModels.Rank"
     Background="Transparent">
     <Page.Resources>
         <SolidColorBrush x:Key="PivotHeaderBackground" Color="{ThemeResource TopPaneBackground}"></SolidColorBrush>
@@ -20,7 +22,7 @@
         <convert:ProgressToTimeConverter x:Key="progressToTimeConverter"></convert:ProgressToTimeConverter>
     </Page.Resources>
     <Grid>
-        <Pivot ItemsSource="{x:Bind Path=rankVM.RegionItems,Mode=OneWay}" SelectedItem="{x:Bind Path=rankVM.Current,Mode=TwoWay}" x:Name="pivot" SelectionChanged="pivot_SelectionChanged">
+        <Pivot ItemsSource="{x:Bind Path=m_viewModel.RegionItems,Mode=OneWay}" SelectedItem="{x:Bind Path=m_viewModel.Current,Mode=TwoWay}" x:Name="pivot" SelectionChanged="pivot_SelectionChanged">
             <Pivot.RightHeader>
                 <Grid Visibility="Collapsed" Background="{ThemeResource PivotHeaderBackground}" >
                     <ComboBox x:Name="cbType" Margin="8" SelectedIndex="0" >
@@ -30,8 +32,8 @@
                 </Grid>
             </Pivot.RightHeader>
             <Pivot.HeaderTemplate>
-                <DataTemplate x:DataType="modules:RankRegionModel">
-                    <TextBlock FontSize="15" Text="{x:Bind Path=name}"></TextBlock>
+                <DataTemplate x:DataType="rank1:RankRegionViewModel">
+                    <TextBlock FontSize="15" Text="{x:Bind Path=Name}"></TextBlock>
                 </DataTemplate>
             </Pivot.HeaderTemplate>
             <Pivot.ItemContainerStyle>
@@ -40,7 +42,7 @@
                 </Style>
             </Pivot.ItemContainerStyle>
             <Pivot.ItemTemplate>
-                <DataTemplate x:DataType="modules:RankRegionModel">
+                <DataTemplate x:DataType="rank1:RankRegionViewModel">
                     <toolkit:AdaptiveGridView 
                     OneRowModeEnabled="False"
                         ItemClick="AdaptiveGridView_ItemClick"
@@ -66,7 +68,7 @@
                             </Grid>
                         </toolkit:AdaptiveGridView.Header>
                         <toolkit:AdaptiveGridView.ItemTemplate>
-                            <DataTemplate x:DataType="modules:RankItemModel">
+                            <DataTemplate x:DataType="rank:RankItemModel">
                                 <Grid Background="#00FFFFFF">
                                     <Grid.ContextFlyout>
                                         <MenuFlyout>
@@ -79,20 +81,20 @@
                                     </Grid.ColumnDefinitions>
                                     <Border Margin="4" CornerRadius="{StaticResource ImageCornerRadius}">
                                         <Grid>
-                                            <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=pic,Converter={StaticResource imageConvert},ConverterParameter='120h'}"></toolkit:ImageEx>
+                                            <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=Pic,Converter={StaticResource imageConvert},ConverterParameter='120h'}"></toolkit:ImageEx>
                                             <Border CornerRadius="4" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="4" Padding="4 2" Background="#99000000">
-                                                <TextBlock Foreground="White" FontSize="12" Text="{x:Bind Path=duration,Converter={StaticResource progressToTimeConverter}}"></TextBlock>
+                                                <TextBlock Foreground="White" FontSize="12" Text="{x:Bind Path=Duration,Converter={StaticResource progressToTimeConverter}}"></TextBlock>
                                             </Border>
-                                            <Border Padding="12 2" Background="{x:Bind Path=rank,Converter={StaticResource RankConvert}}" Opacity="0.8" CornerRadius="0 0 4 0" VerticalAlignment="Top" HorizontalAlignment="Left">
-                                                <TextBlock Foreground="White" Text="{x:Bind Path=rank}" FontWeight="Bold" ></TextBlock>
+                                            <Border Padding="12 2" Background="{x:Bind Path=Rank,Converter={StaticResource RankConvert}}" Opacity="0.8" CornerRadius="0 0 4 0" VerticalAlignment="Top" HorizontalAlignment="Left">
+                                                <TextBlock Foreground="White" Text="{x:Bind Path=Rank}" FontWeight="Bold" ></TextBlock>
                                             </Border>
                                         </Grid>
                                     </Border>
                                     <StackPanel Grid.Column="1" Margin="4 0 0 0" >
-                                        <TextBlock TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=title}"></TextBlock>
-                                        <TextBlock Foreground="Gray" Margin="0 8 0 0">观看:<Run Text="{x:Bind Path=stat.view,Converter={StaticResource numberToStringConvert}}"/> 弹幕:<Run Text="{x:Bind Path=stat.danmaku,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
+                                        <TextBlock TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=Title}"></TextBlock>
+                                        <TextBlock Foreground="Gray" Margin="0 8 0 0">观看:<Run Text="{x:Bind Path=Stat.View,Converter={StaticResource numberToStringConvert}}"/> 弹幕:<Run Text="{x:Bind Path=Stat.Danmaku,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
 
-                                        <TextBlock Margin="0 2 0 0" Foreground="Gray" VerticalAlignment="Center" >UP:<Run Text="{x:Bind Path=owner.name}"/></TextBlock>
+                                        <TextBlock Margin="0 2 0 0" Foreground="Gray" VerticalAlignment="Center" >UP:<Run Text="{x:Bind Path=Owner.Name}"/></TextBlock>
 
                                        
                                     </StackPanel>
@@ -103,6 +105,6 @@
                 </DataTemplate>
             </Pivot.ItemTemplate>
         </Pivot>
-        <ProgressRing IsActive="True" Visibility="{x:Bind Path=rankVM.Loading,Mode=OneWay}"  VerticalAlignment="Center" HorizontalAlignment="Center"></ProgressRing>
+        <ProgressRing IsActive="True" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"  VerticalAlignment="Center" HorizontalAlignment="Center"></ProgressRing>
     </Grid>
 </local:BasePage>

@@ -54,15 +54,32 @@ namespace BiliLite.ViewModels.Home
 
         private async void LoadMore()
         {
-            if (Items == null || Items.Count == 0)
+            try
             {
-                return;
+                if (Items == null || Items.Count == 0)
+                {
+                    return;
+                }
+                if (Loading)
+                {
+                    return;
+                }
+
+                var idx = Items.LastOrDefault()?.Idx;
+
+                if (string.IsNullOrEmpty(idx))
+                {
+                    await GetRecommend();
+                    return;
+                }
+
+                await GetRecommend(idx);
             }
-            if (Loading)
+            catch (Exception ex)
             {
-                return;
+                _logger.Error(ex.Message, ex);
+                Notify.ShowMessageToast(ex.Message);
             }
-            await GetRecommend(Items.LastOrDefault().Idx);
         }
 
         private void LoadBanner(RecommendItemModel banner)

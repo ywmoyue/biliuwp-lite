@@ -195,7 +195,7 @@ namespace BiliLite.Modules.Live
             {
                 var obj = JObject.Parse(jsonMessage);
                 var cmd = obj["cmd"].ToString();
-                if (cmd == ("DANMU_MSG"))
+                if (cmd.StartsWith("DANMU_MSG"))
                 {
                     var msg = new DanmuMsgModel();
                     if (obj["info"] != null && obj["info"].ToArray().Length != 0)

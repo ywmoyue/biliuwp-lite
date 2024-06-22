@@ -471,4 +471,23 @@
         /// </summary>
         JianZhang = 3,
     }
+
+    /// <summary>
+    /// 排行榜分区类型
+    /// </summary>
+    public enum RankRegionType
+    {
+        /// <summary>
+        /// 全部
+        /// </summary>
+        All,
+        /// <summary>
+        /// 原创
+        /// </summary>
+        Origin,
+        /// <summary>
+        /// 新人
+        /// </summary>
+        Rookie
+    }
 }

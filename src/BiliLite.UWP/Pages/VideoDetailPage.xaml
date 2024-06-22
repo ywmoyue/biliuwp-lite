@@ -66,14 +66,17 @@
                         <Button Holding="btnLike_Holding" 
                                   RightTapped="btnLike_RightTapped"
                                   Command="{x:Bind Path=m_viewModel.LikeCommand}" 
-                                  Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Like,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}" 
                                   ToolTipService.ToolTip="右击或长按可以一键三连哦"
                                   Background="Transparent"
                                   Margin="0 0 4 0"
                                   Width="56">
                             <StackPanel>
-                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE6C6;" />
-                                <TextBlock FontSize="12" TextAlignment="Center" Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Like,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"></TextBlock>
+                                <FontIcon 
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Like,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}" 
+                                    FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE6C6;" />
+                                <TextBlock 
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Like,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}" 
+                                    FontSize="12" TextAlignment="Center" Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Like,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"></TextBlock>
                                 <!--<fa:FontAwesome Icon="Solid_ThumbsUp"></fa:FontAwesome>-->
                             </StackPanel>
 
@@ -81,20 +84,27 @@
                         <Button Command="{x:Bind Path=m_viewModel.DislikeCommand}" 
                                 Background="Transparent"
                                 Margin="0 0 4 0"
-                                Width="56"
-                                Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Dislike,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}">
+                                Width="56">
                             <StackPanel>
-                                <FontIcon Margin="0 -2 0 2" FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE6C5;" />
-                                <TextBlock  FontSize="12" TextAlignment="Center" Text="不喜欢"></TextBlock>
+                                <FontIcon
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Dislike,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}"
+                                    Margin="0 -2 0 2" FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE6C5;" />
+                                <TextBlock 
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Dislike,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}"
+                                    FontSize="12" TextAlignment="Center" Text="不喜欢"></TextBlock>
                             </StackPanel>
                         </Button>
                         <Button Background="Transparent"
+                                x:Name="BtnFav"
                                 Margin="0 0 4 0"
-                                Width="56"
-                                Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Favorite,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}">
+                                Width="56">
                             <StackPanel>
-                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE673;" />
-                                <TextBlock FontSize="12" TextAlignment="Center" Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Favorite,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"></TextBlock>
+                                <FontIcon 
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Favorite,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}"
+                                    FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE673;" />
+                                <TextBlock 
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Favorite,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}"
+                                    FontSize="12" TextAlignment="Center" Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Favorite,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"></TextBlock>
                             </StackPanel>
                             <Button.Flyout>
                                 <Flyout>
@@ -102,6 +112,7 @@
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition></RowDefinition>
+                                            <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
                                         <Grid Padding="4 0">
                                             <TextBlock FontWeight="Bold" VerticalAlignment="Center">选择收藏夹</TextBlock>
@@ -109,7 +120,10 @@
                                                 <TextBlock>创建</TextBlock>
                                             </HyperlinkButton>
                                         </Grid>
-                                        <ListView Grid.Row="1" Margin="0 8 0 0" ItemClick="listAddFavorite_ItemClick" ItemsSource="{x:Bind Path=m_viewModel.MyFavorite,Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="True">
+                                        <ListView Grid.Row="1" 
+                                                  Margin="0 8 0 0"  
+                                                  ItemsSource="{x:Bind Path=m_viewModel.MyFavorite,Mode=OneWay}" 
+                                                  SelectionMode="None">
                                             <ListView.ItemContainerStyle>
                                                 <Style TargetType="ListViewItem">
                                                     <Setter Property="Padding" Value="4"></Setter>
@@ -120,33 +134,47 @@
 
                                             <ListView.ItemTemplate>
                                                 <DataTemplate x:DataType="user:FavoriteItemViewModel">
-                                                    <!--<CheckBox IsChecked="{x:Bind Path=is_fav,Mode=TwoWay}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
-                                                    
-                                                </CheckBox>-->
-                                                    <Grid>
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition/>
-                                                            <ColumnDefinition Width="Auto"/>
-                                                        </Grid.ColumnDefinitions>
-                                                        <TextBlock  Text="{x:Bind Title}"></TextBlock>
-                                                        <TextBlock  Margin="0 4" Grid.Column="1" FontSize="14" Foreground="Gray" Visibility="{x:Bind Path=Privacy,Converter={StaticResource display}}">公开</TextBlock>
-                                                        <TextBlock  Margin="0 4"  Grid.Column="1" FontSize="14" Foreground="Gray" Visibility="{x:Bind Path=Privacy}">私密</TextBlock>
-                                                    </Grid>
+                                                    <CheckBox IsChecked="{x:Bind IsFav,Mode=TwoWay}" 
+                                                              HorizontalAlignment="Stretch" 
+                                                              HorizontalContentAlignment="Stretch">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition></ColumnDefinition>
+                                                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <TextBlock Grid.Column="0" Text="{x:Bind Title}"></TextBlock>
+                                                            <TextBlock Grid.Column="1" Margin="0 4" 
+                                                                       HorizontalAlignment="Right"
+                                                                       FontSize="14" 
+                                                                       Foreground="Gray" 
+                                                                       Visibility="{x:Bind Path=Privacy,Converter={StaticResource display}}">公开</TextBlock>
+                                                            <TextBlock Grid.Column="1"  Margin="0 4" 
+                                                                       FontSize="14" 
+                                                                       HorizontalTextAlignment="Right"
+                                                                       HorizontalAlignment="Right"
+                                                                       Foreground="Gray" 
+                                                                       Visibility="{x:Bind Path=Privacy}">私密</TextBlock>
+                                                        </Grid>
+                                                    </CheckBox>
                                                 </DataTemplate>
                                             </ListView.ItemTemplate>
                                         </ListView>
-
+                                        <Button Grid.Row="2" HorizontalAlignment="Right" x:Name="SaveFavList" Click="SaveFavList_OnClick">保存</Button>
                                     </Grid>
                                 </Flyout>
                             </Button.Flyout>
                         </Button>
                         <Button Background="Transparent"
                                 Margin="0"
-                                Width="56" 
-                                Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Coin,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}">
+                                Width="56" >
                             <StackPanel>
-                                <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE670;" />
-                                <TextBlock FontSize="12" TextAlignment="Center" Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Coin,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"></TextBlock>
+                                <FontIcon
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Coin,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}"
+                                    FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE670;" />
+                                <TextBlock
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Coin,Mode=OneWay,Converter={StaticResource colorSelct},ConverterParameter=1}"
+                                    FontSize="12" TextAlignment="Center" Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Coin,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"></TextBlock>
                             </StackPanel>
                             <Button.Flyout>
                                 <MenuFlyout>
@@ -414,7 +442,7 @@
                         <PivotItem.Header>
                             <TextBlock Text="推荐" FontSize="18"></TextBlock>
                         </PivotItem.Header>
-                        <ListView Padding="12 0" SelectionMode="None"  ItemClick="listRelates_ItemClick" ItemsSource="{x:Bind Path=m_viewModel.VideoInfo.Relates,Mode=OneWay}" IsItemClickEnabled="True">
+                        <ListView AllowFocusOnInteraction="False" Padding="12 0" SelectionMode="None"  ItemClick="listRelates_ItemClick" ItemsSource="{x:Bind Path=m_viewModel.VideoInfo.Relates,Mode=OneWay}" IsItemClickEnabled="True">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="Padding" Value="0"></Setter>

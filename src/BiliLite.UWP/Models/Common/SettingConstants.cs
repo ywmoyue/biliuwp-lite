@@ -773,6 +773,9 @@ namespace BiliLite.Models.Common
 
             [SettingDefaultValue]
             public const bool DEFAULT_REPORT_HISTORY_ZERO_WHEN_VIDEO_END = false;
+
+            [SettingKey(typeof(string))]
+            public const string PLAY_SPEED_MENU = "PlaySpeedMenu";
         }
 
         public class Roaming

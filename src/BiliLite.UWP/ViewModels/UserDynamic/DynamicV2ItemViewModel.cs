@@ -140,6 +140,25 @@ namespace BiliLite.ViewModels.UserDynamic
             {
                 try
                 {
+                    if (Extend.OpusSummary != null && Extend.OpusSummary.Summary.Text != null)
+                    {
+                        var text = "";
+                        if (Extend.OpusSummary.Title != null)
+                        {
+                            var title = Extend.OpusSummary.Title.Text.Nodes
+                                .Aggregate("", (current, textNode) => current + textNode.RawText);
+                            text = title + "\n";
+                        }
+
+                        text += Extend.OpusSummary.Summary.Text.Nodes
+                            .Aggregate("", (current, textNode) => current + textNode.RawText);
+
+                        return
+                            text.UserDynamicStringToRichText(
+                                Extend.DynIdStr, wordNodes: Extend.OpusSummary?.Summary?.Text?.Nodes?.ToList(),
+                                bindingCommands: nameof(Parent));
+                    }
+
                     if (Desc != null)
                     {
                         return
@@ -151,6 +170,7 @@ namespace BiliLite.ViewModels.UserDynamic
                     if (OpusSummary != null)
                     {
                         var text = OpusSummary.Summary.Text.Nodes.Aggregate("", (current, textNode) => current + textNode.RawText);
+
                         return
                             text.UserDynamicStringToRichText(
                                 Extend.DynIdStr, wordNodes: Extend.OpusSummary?.Summary?.Text?.Nodes?.ToList(),

@@ -19,6 +19,8 @@ namespace BiliLite
             services.AddTransient<PlayerToastService>();
             services.AddTransient<SettingsImportExportService>();
             services.AddQrCodeService();
+            services.AddBizServices();
+            services.AddSingleton<PlaySpeedMenuService>();
             
             services.AddSingleton<GrpcService>();
         }

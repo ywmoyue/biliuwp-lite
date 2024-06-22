@@ -55,6 +55,7 @@ namespace BiliLite.Controls
         private readonly IDanmakuController m_danmakuController;
         private readonly PlayControlViewModel m_viewModel;
         private readonly PlayerToastService m_playerToastService;
+        private readonly PlaySpeedMenuService m_playSpeedMenuService;
         public event PropertyChangedEventHandler PropertyChanged;
         private GestureRecognizer gestureRecognizer;
         private void DoPropertyChanged(string name)
@@ -91,6 +92,9 @@ namespace BiliLite.Controls
         /// 当前播放
         /// </summary>
         public int CurrentPlayIndex { get; set; }
+
+        public bool IsPlaying => Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.End;
+
         /// <summary>
         /// 当前播放
         /// </summary>
@@ -129,6 +133,7 @@ namespace BiliLite.Controls
         public PlayerControl()
         {
             m_viewModel = new PlayControlViewModel();
+            m_playSpeedMenuService = App.ServiceProvider.GetRequiredService<PlaySpeedMenuService>();
             m_playerToastService = App.ServiceProvider.GetRequiredService<PlayerToastService>();
             m_playerToastService.Init(this);
             this.InitializeComponent();
@@ -288,33 +293,6 @@ namespace BiliLite.Controls
             args.Handled = true;
             switch (args.VirtualKey)
             {
-                case Windows.System.VirtualKey.Space:
-                    if (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.End)
-                    {
-                        Pause();
-                    }
-                    else
-                    {
-                        Player.Play();
-                    }
-                    break;
-                case Windows.System.VirtualKey.Left:
-                    {
-                        if (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.Pause)
-                        {
-                            var _position = Player.Position - 3;
-                            if (_position < 0)
-                            {
-                                _position = 0;
-                            }
-                            Player.Position = _position;
-
-                            m_playerToastService.Show(
-                                PlayerToastService.PROGRESS_KEY, "进度:" + TimeSpan.FromSeconds(Player.Position).ToString(@"hh\:mm\:ss"));
-                        }
-                    }
-
-                    break;
                 case Windows.System.VirtualKey.Right:
                     {
                         if (m_playerKeyRightAction == PlayerKeyRightAction.AcceleratePlay)
@@ -335,23 +313,7 @@ namespace BiliLite.Controls
                         }
                     }
                     break;
-                case Windows.System.VirtualKey.Up:
-                    Player.Volume += 0.1;
-                    m_playerToastService.Show(PlayerToastService.VOLUME_KEY, "音量:" + Player.Volume.ToString("P"));
-                    break;
 
-                case Windows.System.VirtualKey.Down:
-                    Player.Volume -= 0.1;
-                    var txtToolTipText = "静音";
-                    if (Player.Volume > 0)
-                    {
-                        txtToolTipText = "音量:" + Player.Volume.ToString("P");
-                    }
-                    m_playerToastService.Show(PlayerToastService.VOLUME_KEY, txtToolTipText);
-                    break;
-                case Windows.System.VirtualKey.Escape:
-                    IsFullScreen = false;
-                    break;
                 case Windows.System.VirtualKey.F8:
                 case Windows.System.VirtualKey.T:
                     //小窗播放
@@ -725,12 +687,16 @@ namespace BiliLite.Controls
                 Player.SetRatioMode(PlayerSettingRatio.SelectedIndex);
             });
             // 播放倍数
-            BottomCBSpeed.SelectedIndex = SettingConstants.Player.VideoSpeed.IndexOf(SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d));
+            var speeds = m_playSpeedMenuService.MenuItems
+                .Select(x => x.Value)
+                .ToList();
+            BottomCBSpeed.SelectedIndex = speeds
+                .IndexOf(SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d));
             Player.SetRate(SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d));
             BottomCBSpeed.SelectionChanged += new SelectionChangedEventHandler((e, args) =>
             {
-                SettingService.SetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, SettingConstants.Player.VideoSpeed[BottomCBSpeed.SelectedIndex]);
-                Player.SetRate(SettingConstants.Player.VideoSpeed[BottomCBSpeed.SelectedIndex]);
+                SettingService.SetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, speeds[BottomCBSpeed.SelectedIndex]);
+                Player.SetRate(speeds[BottomCBSpeed.SelectedIndex]);
             });
 
             _autoPlay = SettingService.GetValue<bool>(SettingConstants.Player.AUTO_PLAY, false);
@@ -1809,9 +1775,9 @@ namespace BiliLite.Controls
         #region 全屏处理
         public void FullScreen(bool fullScreen)
         {
-
             ApplicationView view = ApplicationView.GetForCurrentView();
             FullScreenEvent?.Invoke(this, fullScreen);
+            m_danmakuController.SetFullscreen(fullScreen);
             if (fullScreen)
             {
                 BottomBtnExitFull.Visibility = Visibility.Visible;
@@ -2118,6 +2084,7 @@ namespace BiliLite.Controls
                 if (SettingService.GetValue(SettingConstants.UI.MOUSE_MIDDLE_ACTION, (int)MouseMiddleActions.Back) == (int)MouseMiddleActions.Back
                 && par == Windows.UI.Input.PointerUpdateKind.XButton1Pressed || par == Windows.UI.Input.PointerUpdateKind.MiddleButtonPressed)
                 {
+                    Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
                     MessageCenter.GoBack(this);
                     return;
                 }
@@ -2856,7 +2823,44 @@ namespace BiliLite.Controls
         {
             m_danmakuController.Pause();
             Player.Pause();
+        }
 
+        public void PositionBack()
+        {
+            if (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.Pause)
+            {
+                var _position = Player.Position - 3;
+                if (_position < 0)
+                {
+                    _position = 0;
+                }
+                Player.Position = _position;
+
+                m_playerToastService.Show(
+                    PlayerToastService.PROGRESS_KEY, "进度:" + TimeSpan.FromSeconds(Player.Position).ToString(@"hh\:mm\:ss"));
+            }
+        }
+
+        public void AddVolume()
+        {
+            Player.Volume += 0.1;
+            m_playerToastService.Show(PlayerToastService.VOLUME_KEY, "音量:" + Player.Volume.ToString("P"));
+        }
+
+        public void MinusVolume()
+        {
+            Player.Volume -= 0.1;
+            var txtToolTipText = "静音";
+            if (Player.Volume > 0)
+            {
+                txtToolTipText = "音量:" + Player.Volume.ToString("P");
+            }
+            m_playerToastService.Show(PlayerToastService.VOLUME_KEY, txtToolTipText);
+        }
+
+        public void CancelFullscreen()
+        {
+            IsFullScreen = false;
         }
 
         public void PlayerSettingABPlaySetPointA_Click(object sender, RoutedEventArgs e)
