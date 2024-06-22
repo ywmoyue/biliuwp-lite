@@ -28,6 +28,9 @@ namespace BiliLite.Pages
     public class PlayPage : BasePage
     {
         public PlayerControl Player { get; set; }
+
+        public bool IsPlaying => Player.IsPlaying;
+
         public void Pause()
         {
             Player.PlayerInstance.Pause();

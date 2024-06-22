@@ -92,6 +92,9 @@ namespace BiliLite.Controls
         /// 当前播放
         /// </summary>
         public int CurrentPlayIndex { get; set; }
+
+        public bool IsPlaying => Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.End;
+
         /// <summary>
         /// 当前播放
         /// </summary>
@@ -290,16 +293,16 @@ namespace BiliLite.Controls
             args.Handled = true;
             switch (args.VirtualKey)
             {
-                case Windows.System.VirtualKey.Space:
-                    if (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.End)
-                    {
-                        Pause();
-                    }
-                    else
-                    {
-                        Player.Play();
-                    }
-                    break;
+                //case Windows.System.VirtualKey.Space:
+                //    if (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.End)
+                //    {
+                //        Pause();
+                //    }
+                //    else
+                //    {
+                //        Player.Play();
+                //    }
+                //    break;
                 case Windows.System.VirtualKey.Left:
                     {
                         if (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.Pause)

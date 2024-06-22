@@ -19,6 +19,7 @@ namespace BiliLite.Services
             // TODO: 读取设置
             m_shortcutKeyMaps.Add(new RefreshShortcutFunction(), new List<VirtualKey>() { VirtualKey.Control, VirtualKey.R });
             m_shortcutKeyMaps.Add(new RefreshShortcutFunction(), new List<VirtualKey>() { VirtualKey.F5 });
+            m_shortcutKeyMaps.Add(new PlayPauseFunction(), new List<VirtualKey>() { VirtualKey.Space });
         }
 
         public void SetMainPage(IMainPage mainPage)
