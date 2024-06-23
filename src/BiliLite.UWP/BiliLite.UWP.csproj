@@ -191,6 +191,8 @@
     <Compile Include="Models\Common\Rank\RankItemModel.cs" />
     <Compile Include="Models\Common\Rank\RankItemOwnerModel.cs" />
     <Compile Include="Models\Common\Rank\RankItemStatModel.cs" />
+    <Compile Include="Models\Functions\SaveFunction.cs" />
+    <Compile Include="Pages\ISavablePage.cs" />
     <Compile Include="Services\Biz\MediaListService.cs" />
     <Compile Include="Services\PlaySpeedMenuService.cs" />
     <Compile Include="ViewModels\Rank\RankRegionViewModel.cs" />
