@@ -50,7 +50,7 @@ namespace BiliLite.ViewModels.UserDynamic
             m_dynamicApi = new DynamicAPI();
             m_watchLaterVm = new WatchLaterVM();
             LoadMoreCommand = new RelayCommand(LoadMore);
-            UserCommand = new RelayCommand<DynamicV2ItemViewModel>(OpenUser);
+            UserCommand = new RelayCommand<object>(OpenUser);
             DetailCommand = new RelayCommand<string>(OpenDetail);
             ImageCommand = new RelayCommand<object>(OpenImage);
             WebDetailCommand = new RelayCommand<string>(OpenWebDetail);
@@ -109,35 +109,9 @@ namespace BiliLite.ViewModels.UserDynamic
 
         #region Private Methods
 
-        private void OpenUser(DynamicV2ItemViewModel dynamicItem)
+        private void OpenUser(object parameter)
         {
-            if (dynamicItem.CardType == Constants.DynamicTypes.PGC)
-            {
-                var url = dynamicItem.Dynamic.DynPgc != null
-                    ? dynamicItem.Dynamic.DynPgc.Uri
-                    : dynamicItem.Dynamic.DynArchive.Uri;
-                LaunchUrl(url);
-                return;
-            }
-
-            long userId = 0;
-
-            if (dynamicItem.Author != null)
-            {
-                userId = dynamicItem.Author.Author.Mid;
-            }
-            else if (dynamicItem.AuthorForward != null)
-            {
-                userId = dynamicItem.AuthorForward.Uid;
-            }
-
-            MessageCenter.NavigateToPage(this, new NavigationInfo()
-            {
-                icon = Symbol.Contact,
-                page = typeof(UserInfoPage),
-                title = "用户中心",
-                parameters = userId
-            });
+            this.OpenUserEx(parameter);
         }
 
         private void OpenComment(DynamicV2ItemViewModel data)
@@ -191,11 +165,7 @@ namespace BiliLite.ViewModels.UserDynamic
 
         private async void LaunchUrl(string url)
         {
-            var result = await MessageCenter.HandelUrl(url);
-            if (!result)
-            {
-                Notify.ShowMessageToast("无法打开Url");
-            }
+            await this.LaunchUrlEx(url);
         }
 
         private async Task DoLikeCore(DynamicV2ItemViewModel item)

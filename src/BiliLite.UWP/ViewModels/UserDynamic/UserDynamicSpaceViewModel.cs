@@ -109,15 +109,9 @@ namespace BiliLite.ViewModels.UserDynamic
 
         #region Private Methods
 
-        private void OpenUser(object userId)
+        private void OpenUser(object parameter)
         {
-            MessageCenter.NavigateToPage(this, new NavigationInfo()
-            {
-                icon = Symbol.Contact,
-                page = typeof(UserInfoPage),
-                title = "用户中心",
-                parameters = userId
-            });
+            this.OpenUserEx(parameter);
         }
 
         private void OpenComment(DynamicV2ItemViewModel data)
@@ -188,11 +182,7 @@ namespace BiliLite.ViewModels.UserDynamic
 
         private async void LaunchUrl(string url)
         {
-            var result = await MessageCenter.HandelUrl(url);
-            if (!result)
-            {
-                Notify.ShowMessageToast("无法打开Url");
-            }
+            await this.LaunchUrlEx(url);
         }
 
         private async Task DoLikeCore(DynamicV2ItemViewModel item)

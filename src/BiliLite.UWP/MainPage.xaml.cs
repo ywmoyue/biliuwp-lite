@@ -174,7 +174,6 @@ namespace BiliLite
             {
                 GoBack();
                 e.Handled = true;
-
             }
         }
 
