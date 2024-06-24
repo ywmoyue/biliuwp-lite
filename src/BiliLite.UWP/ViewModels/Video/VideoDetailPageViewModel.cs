@@ -420,7 +420,8 @@ namespace BiliLite.Modules
 
 
                         }
-                        if (!string.IsNullOrEmpty(data.data["toast"]?.ToString()))
+                        if(data.data==null){}
+                        else if (!string.IsNullOrEmpty(data.data["toast"]?.ToString()))
                         {
                             Notify.ShowMessageToast(data.data["toast"].ToString());
                         }
