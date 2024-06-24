@@ -736,5 +736,13 @@ namespace BiliLite.Pages
                 BtnFav.Flyout.Hide();
             }
         }
+
+        private async void FavList_OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            if (e.IsUseMiddleButton(sender))
+            {
+                await Save();
+            }
+        }
     }
 }

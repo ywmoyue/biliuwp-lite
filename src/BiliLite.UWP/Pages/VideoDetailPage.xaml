@@ -108,7 +108,7 @@
                             </StackPanel>
                             <Button.Flyout>
                                 <Flyout>
-                                    <Grid Width="240">
+                                    <Grid Width="240" PointerPressed="FavList_OnPointerPressed">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition></RowDefinition>
@@ -116,12 +116,20 @@
                                         </Grid.RowDefinitions>
                                         <Grid Padding="4 0">
                                             <TextBlock FontWeight="Bold" VerticalAlignment="Center">选择收藏夹</TextBlock>
-                                            <HyperlinkButton x:Name="btnCreateFavBox" Click="btnCreateFavBox_Click" HorizontalAlignment="Right">
-                                                <TextBlock>创建</TextBlock>
+                                            <HyperlinkButton x:Name="btnCreateFavBox" 
+                                                             Click="btnCreateFavBox_Click" 
+                                                             Margin="0 0 -5 0"
+                                                             HorizontalAlignment="Right">
+                                                <TextBlock>
+                                                    <Span>
+                                                        <Bold>创建</Bold>
+                                                    </Span>
+                                                </TextBlock>
                                             </HyperlinkButton>
                                         </Grid>
                                         <ScrollViewer  Grid.Row="1" 
                                                        Margin="0 8 0 0"  
+                                                       Padding="0 0 8 0"
                                                        MaxHeight="480"
                                         >
                                             <ListView
@@ -164,7 +172,12 @@
                                                 </ListView.ItemTemplate>
                                             </ListView>
                                         </ScrollViewer>
-                                        <Button Grid.Row="2" HorizontalAlignment="Right" x:Name="SaveFavList" Click="SaveFavList_OnClick">保存</Button>
+                                        <Button Grid.Row="2" 
+                                                HorizontalAlignment="Right" 
+                                                x:Name="SaveFavList" 
+                                                Click="SaveFavList_OnClick">
+                                            <TextBlock><Span><Bold>保存</Bold></Span></TextBlock>
+                                        </Button>
                                     </Grid>
                                 </Flyout>
                             </Button.Flyout>
