@@ -385,14 +385,14 @@ namespace BiliLite.Controls
                 case Windows.System.VirtualKey.F1:
                 case (Windows.System.VirtualKey)186:
                     //慢速播放
-                    if (BottomCBSpeed.SelectedIndex == 5)
+                    if (BottomCBSpeed.SelectedIndex == m_playSpeedMenuService.MenuItems.Count - 1)
                     {
                         Notify.ShowMessageToast("不能再慢啦");
                         return;
                     }
 
                     BottomCBSpeed.SelectedIndex += 1;
-                    m_playerToastService.Show(PlayerToastService.SPEED_KEY,(BottomCBSpeed.SelectedItem as ComboBoxItem).Content.ToString());
+                    m_playerToastService.Show(PlayerToastService.SPEED_KEY,(BottomCBSpeed.SelectedItem as PlaySpeedMenuItem).Content);
                     break;
                 case Windows.System.VirtualKey.F2:
                 case (Windows.System.VirtualKey)222:
@@ -403,7 +403,7 @@ namespace BiliLite.Controls
                         return;
                     }
                     BottomCBSpeed.SelectedIndex -= 1;
-                    m_playerToastService.Show(PlayerToastService.SPEED_KEY, (BottomCBSpeed.SelectedItem as ComboBoxItem).Content.ToString());
+                    m_playerToastService.Show(PlayerToastService.SPEED_KEY, (BottomCBSpeed.SelectedItem as PlaySpeedMenuItem).Content);
                     break;
                 case Windows.System.VirtualKey.F3:
                 case Windows.System.VirtualKey.V:
