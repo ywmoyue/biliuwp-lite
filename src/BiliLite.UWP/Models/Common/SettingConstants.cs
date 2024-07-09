@@ -778,6 +778,18 @@ namespace BiliLite.Models.Common
             public const string PLAY_SPEED_MENU = "PlaySpeedMenu";
         }
 
+        public class Filter
+        {
+            [SettingKey(typeof(object))]
+            public const string RECOMMEND_FILTER_RULE = "RecommendFilterRule";
+
+            [SettingKey(typeof(object))]
+            public const string SEARCH_FILTER_RULE = "SearchFilterRule";
+
+            [SettingKey(typeof(object))]
+            public const string DYNAMIC_FILTER_RULE = "DynamicFilterRule";
+        }
+
         public class Roaming
         {
             /// <summary>

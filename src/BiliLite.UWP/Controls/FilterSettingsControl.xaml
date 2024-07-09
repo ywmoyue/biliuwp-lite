@@ -1,0 +1,156 @@
+﻿<UserControl
+    x:Class="BiliLite.Controls.FilterSettingsControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BiliLite.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:settings="using:BiliLite.ViewModels.Settings"
+    xmlns:models="using:BiliLite.Models.Common.Settings"
+    xmlns:converters="using:BiliLite.Converters"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:FilterRuleTypeConverter x:Key="FilterRuleTypeConverter"></converters:FilterRuleTypeConverter>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <StackPanel x:Name="FilterSettingsControlGrid" Orientation="Vertical">
+        <ListView ItemsSource="{x:Bind m_viewModel.RecommendFilterRules,Mode=OneWay}"
+                  x:Name="RecommendFilterRuleListView">
+            <ListView.Header>
+                <Grid Margin="16 0">
+                    <TextBlock VerticalAlignment="Center">推荐页过滤</TextBlock>
+                    <Button HorizontalAlignment="Right" x:Name="BtnAddRecommendFilterRule" Click="BtnAddRecommendFilterRule_OnClick">添加规则</Button>
+                </Grid>
+            </ListView.Header>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="settings:FilterRuleViewModel">
+                    <controls:SettingsExpander Header="{x:Bind Rule,Mode=OneWay}">
+                        <ToggleSwitch IsOn="{x:Bind Enable,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Toggled="OnFilterRuleChanged"></ToggleSwitch>
+                        <controls:SettingsExpander.Items>
+                            <controls:SettingsCard Header="过滤值"
+                                                   Description="{x:Bind RuleDesc,Mode=OneWay}">
+                                <TextBox Text="{x:Bind Rule,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" TextChanged="OnFilterRuleChanged"></TextBox>
+                            </controls:SettingsCard>
+                            <controls:SettingsCard Header="规则类型"
+                                                   Description="{x:Bind FilterTypeDesc}">
+                                <ComboBox ItemsSource="{x:Bind models:FilterRuleTypes.FilterTypeOptions}"
+                                          Padding="8 0 0 0"
+                                          SelectedItem="{x:Bind FilterType,Mode=TwoWay,Converter={StaticResource FilterRuleTypeConverter}}"
+                                          SelectionChanged="OnFilterRuleChanged"
+                                          DisplayMemberPath="Text">
+                                </ComboBox>
+                            </controls:SettingsCard>
+                            <controls:SettingsCard Header="过滤目标"
+                                                   Description="{x:Bind FilterContentTypeDesc}">
+                                <ComboBox ItemsSource="{x:Bind models:FilterRuleTypes.FilterTargetOptions}"
+                                          Padding="8 0 0 0"
+                                          SelectedItem="{x:Bind ContentType,Mode=TwoWay,Converter={StaticResource FilterRuleTypeConverter}}"
+                                          SelectionChanged="OnFilterRuleChanged"
+                                          DisplayMemberPath="Text">
+                                </ComboBox>
+                            </controls:SettingsCard>
+                            <controls:SettingsCard Header="删除规则">
+                                <Button Click="BtnDeleteFilterRule_OnClick">确认删除</Button>
+                            </controls:SettingsCard>
+                        </controls:SettingsExpander.Items>
+                    </controls:SettingsExpander>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <ListView ItemsSource="{x:Bind m_viewModel.SearchFilterRules,Mode=OneWay}"
+                  Margin="0 16 0 0"
+                  x:Name="SearchFilterRuleListView">
+            <ListView.Header>
+                <Grid Margin="16 0">
+                    <TextBlock VerticalAlignment="Center">搜索页过滤</TextBlock>
+                    <Button HorizontalAlignment="Right" x:Name="BtnAddSearchFilterRule" Click="BtnAddSearchFilterRule_OnClick">添加规则</Button>
+                </Grid>
+            </ListView.Header>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="settings:FilterRuleViewModel">
+                    <controls:SettingsExpander Header="{x:Bind Rule,Mode=OneWay}">
+                        <ToggleSwitch IsOn="{x:Bind Enable,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Toggled="OnFilterRuleChanged"></ToggleSwitch>
+                        <controls:SettingsExpander.Items>
+                            <controls:SettingsCard Header="过滤值"
+                                                   Description="{x:Bind RuleDesc,Mode=OneWay}">
+                                <TextBox Text="{x:Bind Rule,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" TextChanged="OnFilterRuleChanged"></TextBox>
+                            </controls:SettingsCard>
+                            <controls:SettingsCard Header="规则类型"
+                                                   Description="{x:Bind FilterTypeDesc}">
+                                <ComboBox ItemsSource="{x:Bind models:FilterRuleTypes.FilterTypeOptions}"
+                                          Padding="8 0 0 0"
+                                          SelectedItem="{x:Bind FilterType,Mode=TwoWay,Converter={StaticResource FilterRuleTypeConverter}}"
+                                          SelectionChanged="OnFilterRuleChanged"
+                                          DisplayMemberPath="Text">
+                                </ComboBox>
+                            </controls:SettingsCard>
+                            <controls:SettingsCard Header="过滤目标"
+                                                   Description="{x:Bind FilterContentTypeDesc}">
+                                <ComboBox ItemsSource="{x:Bind models:FilterRuleTypes.FilterTargetOptions}"
+                                          Padding="8 0 0 0"
+                                          SelectedItem="{x:Bind ContentType,Mode=TwoWay,Converter={StaticResource FilterRuleTypeConverter}}"
+                                          SelectionChanged="OnFilterRuleChanged"
+                                          DisplayMemberPath="Text">
+                                </ComboBox>
+                            </controls:SettingsCard>
+                            <controls:SettingsCard Header="删除规则">
+                                <Button Click="BtnDeleteFilterRule_OnClick">确认删除</Button>
+                            </controls:SettingsCard>
+                        </controls:SettingsExpander.Items>
+                    </controls:SettingsExpander>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <ListView ItemsSource="{x:Bind m_viewModel.DynamicFilterRules,Mode=OneWay}"
+                  Margin="0 16 0 0"
+                  x:Name="DynamicFilterRuleListView">
+            <ListView.Header>
+                <Grid Margin="16 0">
+                    <TextBlock VerticalAlignment="Center">动态页过滤</TextBlock>
+                    <Button HorizontalAlignment="Right" x:Name="BtnAddDynamicFilterRule" Click="BtnAddDynamicFilterRule_OnClick">添加规则</Button>
+                </Grid>
+            </ListView.Header>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="settings:FilterRuleViewModel">
+                    <controls:SettingsExpander Header="{x:Bind Rule,Mode=OneWay}">
+                        <ToggleSwitch IsOn="{x:Bind Enable,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Toggled="OnFilterRuleChanged"></ToggleSwitch>
+                        <controls:SettingsExpander.Items>
+                            <controls:SettingsCard Header="过滤值"
+                                                   Description="{x:Bind RuleDesc,Mode=OneWay}">
+                                <TextBox Text="{x:Bind Rule,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" TextChanged="OnFilterRuleChanged"></TextBox>
+                            </controls:SettingsCard>
+                            <controls:SettingsCard Header="规则类型"
+                                                   Description="{x:Bind FilterTypeDesc}">
+                                <ComboBox ItemsSource="{x:Bind models:FilterRuleTypes.FilterTypeOptions}"
+                                          Padding="8 0 0 0"
+                                          SelectedItem="{x:Bind FilterType,Mode=TwoWay,Converter={StaticResource FilterRuleTypeConverter}}"
+                                          SelectionChanged="OnFilterRuleChanged"
+                                          DisplayMemberPath="Text">
+                                </ComboBox>
+                            </controls:SettingsCard>
+                            <controls:SettingsCard Header="过滤目标"
+                                                   Description="{x:Bind FilterContentTypeDesc}">
+                                <ComboBox ItemsSource="{x:Bind models:FilterRuleTypes.FilterTargetOptions}"
+                                          Padding="8 0 0 0"
+                                          SelectedItem="{x:Bind ContentType,Mode=TwoWay,Converter={StaticResource FilterRuleTypeConverter}}"
+                                          SelectionChanged="OnFilterRuleChanged"
+                                          DisplayMemberPath="Text">
+                                </ComboBox>
+                            </controls:SettingsCard>
+                            <controls:SettingsCard Header="删除规则">
+                                <Button Click="BtnDeleteFilterRule_OnClick">确认删除</Button>
+                            </controls:SettingsCard>
+                        </controls:SettingsExpander.Items>
+                    </controls:SettingsExpander>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackPanel>
+</UserControl>

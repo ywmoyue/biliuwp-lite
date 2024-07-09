@@ -34,6 +34,7 @@ namespace BiliLite.ViewModels.UserDynamic
         private readonly IMapper m_mapper;
         private readonly DynamicAPI m_dynamicApi;
         private readonly WatchLaterVM m_watchLaterVm;
+        private readonly ContentFilterService m_contentFilterService;
         private int m_page = 1;
         private string m_offset = null;
         private string m_baseline = null;
@@ -43,10 +44,11 @@ namespace BiliLite.ViewModels.UserDynamic
 
         #region Constructors
 
-        public UserDynamicAllViewModel(GrpcService grpcService, IMapper mapper)
+        public UserDynamicAllViewModel(GrpcService grpcService, IMapper mapper, ContentFilterService contentFilterService)
         {
             m_grpcService = grpcService;
             m_mapper = mapper;
+            m_contentFilterService = contentFilterService;
             m_dynamicApi = new DynamicAPI();
             m_watchLaterVm = new WatchLaterVM();
             LoadMoreCommand = new RelayCommand(LoadMore);
@@ -238,6 +240,9 @@ namespace BiliLite.ViewModels.UserDynamic
             m_offset = results.DynamicList.HistoryOffset;
             var items = m_mapper.Map<List<DynamicV2ItemViewModel>>(results.DynamicList.List
                 .Where(x => x.CardType != DynamicType.Banner).ToList());
+
+            items = m_contentFilterService.FilterDynamicItems(items);
+
             foreach (var item in items)
             {
                 item.Parent = this;

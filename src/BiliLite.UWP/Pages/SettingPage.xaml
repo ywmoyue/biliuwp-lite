@@ -11,6 +11,7 @@
     xmlns:covert="using:BiliLite.Converters" xmlns:controls="using:Microsoft.UI.Xaml.Controls" xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:common="using:BiliLite.Models.Common"
     xmlns:home="using:BiliLite.Models.Common.Home"
+    xmlns:controls2="using:BiliLite.Controls"
     Background="Transparent">
     <Page.Resources>
         <SolidColorBrush x:Key="PivotHeaderBackground" Color="{ThemeResource TopPaneBackground}"></SolidColorBrush>
@@ -612,6 +613,14 @@
                         <TextBlock  Margin="0 8 0 0"  FontSize="16">下载完成发送通知</TextBlock>
                         <ToggleSwitch  x:Name="swDownloadSendToast"></ToggleSwitch>
                     </StackPanel>
+                </ScrollViewer>
+            </PivotItem>
+            <PivotItem Margin="0">
+                <PivotItem.Header>
+                    <TextBlock FontSize="15">过滤</TextBlock>
+                </PivotItem.Header>
+                <ScrollViewer Padding="12 0" VerticalScrollBarVisibility="Auto" VerticalAlignment="Top">
+                    <controls2:FilterSettingsControl></controls2:FilterSettingsControl>
                 </ScrollViewer>
             </PivotItem>
             <PivotItem Margin="0">

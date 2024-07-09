@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using BiliLite.Pages;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite.Modules
 {
@@ -178,9 +179,11 @@ namespace BiliLite.Modules
     public class SearchVideoVM : ISearchVM
     {
         ILogger _logger = GlobalLogger.FromCurrentType();
+        private readonly ContentFilterService m_contentFilterService;
 
         public SearchVideoVM()
         {
+            m_contentFilterService = App.ServiceProvider.GetRequiredService<ContentFilterService>();
             OrderFilters = new List<SearchFilterItem>() {
                 new SearchFilterItem("综合排序",""),
                 new SearchFilterItem("最多点击","click"),
@@ -260,7 +263,10 @@ namespace BiliLite.Modules
                 {
                     throw new CustomizedErrorException(data.message);
                 }
-                var result = JsonConvert.DeserializeObject<ObservableCollection<SearchVideoItem>>(data.data["result"]?.ToString() ?? "[]");
+                var searchVideoItems = JsonConvert.DeserializeObject<List<SearchVideoItem>>(data.data["result"]?.ToString() ?? "[]");
+                searchVideoItems = m_contentFilterService.FilterSearchItems(searchVideoItems);
+                var result = new ObservableCollection<SearchVideoItem>(searchVideoItems);
+                
                 if (Page == 1)
                 {
                     if (result == null || result.Count == 0)

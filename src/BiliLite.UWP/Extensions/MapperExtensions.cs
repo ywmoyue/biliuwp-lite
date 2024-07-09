@@ -13,6 +13,7 @@ using BiliLite.Models.Common.Download;
 using BiliLite.Models.Common.Dynamic;
 using BiliLite.Models.Common.Home;
 using BiliLite.Models.Common.Season;
+using BiliLite.Models.Common.Settings;
 using BiliLite.Models.Common.User;
 using BiliLite.Models.Common.User.UserDetails;
 using BiliLite.Models.Common.UserDynamic;
@@ -26,6 +27,7 @@ using BiliLite.ViewModels.Comment;
 using BiliLite.ViewModels.Download;
 using BiliLite.ViewModels.Home;
 using BiliLite.ViewModels.Season;
+using BiliLite.ViewModels.Settings;
 using BiliLite.ViewModels.User;
 using BiliLite.ViewModels.UserDynamic;
 using BiliLite.ViewModels.Video;
@@ -70,6 +72,7 @@ namespace BiliLite.Extensions
                     .ForMember(dest => dest.Author,
                         opt => opt.MapFrom(src =>
                             src.Upper.Name));
+                expression.CreateMap<FilterRule, FilterRuleViewModel>().ReverseMap();
 
                 var danmakuModeConvertDic = new Dictionary<DanmakuLocation, DanmakuMode>()
                 {

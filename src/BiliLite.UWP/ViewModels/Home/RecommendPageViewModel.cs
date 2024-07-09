@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,13 +22,15 @@ namespace BiliLite.ViewModels.Home
 
         private readonly RecommendAPI m_recommendApi;
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+        private readonly ContentFilterService m_contentFilterService;
 
         #endregion
 
         #region Constructors
 
-        public RecommendPageViewModel()
+        public RecommendPageViewModel(ContentFilterService contentFilterService)
         {
+            m_contentFilterService = contentFilterService;
             m_recommendApi = new RecommendAPI();
             Banner = new ObservableCollection<RecommendBannerItemModel>();
             RefreshCommand = new RelayCommand(Refresh);
@@ -125,22 +128,23 @@ namespace BiliLite.ViewModels.Home
                     throw new CustomizedErrorException(obj["message"].ToString());
                 }
 
-                var items = JsonConvert.DeserializeObject<ObservableCollection<RecommendItemModel>>(obj["data"]["items"].ToString().Replace("left_bottom_rcmd_reason_style", "rcmd_reason_style"));
-                var banner = items.FirstOrDefault(x => x.CardGoto == "banner");
+                var recommendItems = JsonConvert.DeserializeObject<List<RecommendItemModel>>(obj["data"]["items"].ToString().Replace("left_bottom_rcmd_reason_style", "rcmd_reason_style"));
+
+                var banner = recommendItems.FirstOrDefault(x => x.CardGoto == "banner");
                 if (banner != null)
                 {
                     //处理banner
                     LoadBanner(banner);
-                    items.Remove(banner);
+                    recommendItems.Remove(banner);
                 }
-                for (var i = items.Count - 1; i >= 0; i--)
+                for (var i = recommendItems.Count - 1; i >= 0; i--)
                 {
-                    if (items[i].ShowAd)
+                    if (recommendItems[i].ShowAd)
                     {
-                        items.Remove(items[i]);
+                        recommendItems.Remove(recommendItems[i]);
                         continue;
                     }
-                    var item = items[i];
+                    var item = recommendItems[i];
                     if (item.ThreePointV2 != null && item.ThreePointV2.Count > 0 && item.CardGoto == "av")
                     {
                         item.ThreePointV2.Insert(1, new RecommendThreePointV2ItemModel()
@@ -152,6 +156,9 @@ namespace BiliLite.ViewModels.Home
                         });
                     }
                 }
+
+                recommendItems = m_contentFilterService.FilterRecommendItems(recommendItems);
+                var items = new ObservableCollection<RecommendItemModel>(recommendItems);
 
                 if (Items == null)
                 {

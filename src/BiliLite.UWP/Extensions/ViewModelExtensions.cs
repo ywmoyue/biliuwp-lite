@@ -45,6 +45,7 @@ namespace BiliLite.Extensions
             services.AddTransient<RankViewModel>();
             services.AddTransient<EditPlaySpeedMenuViewModel>();
             services.AddTransient<SendCommentDialogViewModel>();
+            services.AddTransient<FilterSettingsViewModel>();
             return services;
         }
     }

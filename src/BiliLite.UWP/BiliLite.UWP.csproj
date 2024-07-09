@@ -143,6 +143,9 @@
     <Compile Include="Controls\Dynamic\DynamicItemV2Control.xaml.cs">
       <DependentUpon>DynamicItemV2Control.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\FilterSettingsControl.xaml.cs">
+      <DependentUpon>FilterSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PlayerToast.xaml.cs">
       <DependentUpon>PlayerToast.xaml</DependentUpon>
     </Compile>
@@ -152,6 +155,7 @@
     <Compile Include="Controls\VideoListView.xaml.cs">
       <DependentUpon>VideoListView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\FilterRuleTypeConverter.cs" />
     <Compile Include="Dialogs\EditPlaySpeedMenuDialog.xaml.cs">
       <DependentUpon>EditPlaySpeedMenuDialog.xaml</DependentUpon>
     </Compile>
@@ -170,6 +174,8 @@
     <Compile Include="Models\Common\Danmaku\BiliDanmakuItem.cs" />
     <Compile Include="Models\Common\Dynamic\DynamicUgcSeasonCardModel.cs" />
     <Compile Include="Models\Common\Player\PlaySpeedMenu.cs" />
+    <Compile Include="Models\Common\Settings\FilterRule.cs" />
+    <Compile Include="Models\Common\Settings\FilterRuleTypes.cs" />
     <Compile Include="Models\Common\UploadFileInfo.cs" />
     <Compile Include="Models\Common\UserDynamic\DynamicPicture.cs" />
     <Compile Include="Models\Common\UserDynamic\DynLiveInfo.cs" />
@@ -197,10 +203,13 @@
     <Compile Include="Models\Functions\SaveFunction.cs" />
     <Compile Include="Pages\ISavablePage.cs" />
     <Compile Include="Services\Biz\MediaListService.cs" />
+    <Compile Include="Services\ContentFilterService.cs" />
     <Compile Include="Services\PlaySpeedMenuService.cs" />
     <Compile Include="ViewModels\Comment\SendCommentDialogViewModel.cs" />
     <Compile Include="ViewModels\Rank\RankRegionViewModel.cs" />
     <Compile Include="ViewModels\Settings\EditPlaySpeedMenuViewModel.cs" />
+    <Compile Include="ViewModels\Settings\FilterRuleViewModel.cs" />
+    <Compile Include="ViewModels\Settings\FilterSettingsViewModel.cs" />
     <Compile Include="ViewModels\User\FavoriteItemViewModel.cs" />
     <Compile Include="Pages\Home\UserDynamicPage.xaml.cs">
       <DependentUpon>UserDynamicPage.xaml</DependentUpon>
@@ -1017,6 +1026,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\FilterSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\PlayerToast.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1309,6 +1322,9 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper">
       <Version>10.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Uwp.Controls.SettingsControls">
+      <Version>8.0.240109</Version>
     </PackageReference>
     <PackageReference Include="DanmakuFrostMaster.muyan">
       <Version>1.0.2</Version>

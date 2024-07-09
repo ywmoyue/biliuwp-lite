@@ -490,4 +490,29 @@
         /// </summary>
         Rookie
     }
+
+    public enum FilterRuleType
+    {
+        Recommend,
+        Search,
+        Dynamic,
+    }
+
+    public enum FilterType
+    {
+        /// <summary>
+        /// 关键词
+        /// </summary>
+        Word,
+        /// <summary>
+        /// 正则
+        /// </summary>
+        Regular,
+    }
+
+    public enum FilterContentType
+    {
+        Title,
+        User,
+    }
 }
