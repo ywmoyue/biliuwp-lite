@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
-namespace BiliLite.Controls
+namespace BiliLite.Controls.Settings
 {
     public sealed partial class FilterSettingsControl : UserControl
     {

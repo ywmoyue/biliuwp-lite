@@ -46,6 +46,9 @@ namespace BiliLite.Extensions
             services.AddTransient<EditPlaySpeedMenuViewModel>();
             services.AddTransient<SendCommentDialogViewModel>();
             services.AddTransient<FilterSettingsViewModel>();
+            services.AddTransient<LiveSettingsControlViewModel>();
+            services.AddTransient<PlaySettingsControlViewModel>();
+            services.AddTransient<VideoDanmakuSettingsControlViewModel>();
             return services;
         }
     }

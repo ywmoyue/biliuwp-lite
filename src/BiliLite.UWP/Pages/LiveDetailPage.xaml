@@ -522,7 +522,7 @@
                                                                 <Button x:Name="DanmuSettingAddWord" Click="btnAddShieldWord_Click" Grid.Column="1"  Margin="8 0 0 0">添加</Button>
                                                                 <Button x:Name="DanmuSettingSyncWords" Visibility="Collapsed"  Grid.Column="2"  Margin="8 0 0 0">同步</Button>
                                                             </Grid>
-                                                            <ItemsControl Margin="0 8 0 0" x:Name="DanmuSettingWords" ItemsSource="{x:Bind Path=settingVM.LiveShieldWords,Mode=OneWay}">
+                                                            <ItemsControl Margin="0 8 0 0" x:Name="DanmuSettingWords" ItemsSource="{x:Bind Path=m_liveSettingsControlViewModel.LiveShieldWords,Mode=OneWay}">
                                                                 <ItemsControl.ItemsPanel>
                                                                     <ItemsPanelTemplate>
                                                                         <toolkit:WrapPanel VerticalSpacing="4" />

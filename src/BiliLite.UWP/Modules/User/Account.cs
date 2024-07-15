@@ -27,14 +27,12 @@ namespace BiliLite.Modules
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
 
         private readonly CookieService m_cookieService;
-        private SettingVM settingVM;
         public AccountApi accountApi;
         string guid = "";
         public Account()
         {
             m_cookieService = App.ServiceProvider.GetRequiredService<CookieService>();
             accountApi = new AccountApi();
-            settingVM = new SettingVM();
             guid = Guid.NewGuid().ToString();
         }
         public async Task<string> EncryptedPassword(string passWord)
