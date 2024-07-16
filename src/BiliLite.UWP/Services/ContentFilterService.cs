@@ -168,6 +168,12 @@ namespace BiliLite.Services
                         FilterType.Regular => current.Where(x => !new Regex(rule.Rule).IsMatch(x.author)),
                         _ => current
                     },
+                    FilterContentType.Desc => rule.FilterType switch
+                    {
+                        FilterType.Word => current.Where(x => !x.Description.Contains(rule.Rule)),
+                        FilterType.Regular => current.Where(x => !new Regex(rule.Rule).IsMatch(x.Description)),
+                        _ => current
+                    },
                     _ => current
                 });
 
@@ -196,6 +202,18 @@ namespace BiliLite.Services
                     {
                         FilterType.Word => current.Where(x => !(x.Author != null && x.Author.Author.Name.Contains(rule.Rule))),
                         FilterType.Regular => current.Where(x => !(x.Author != null && new Regex(rule.Rule).IsMatch(x.Author.Author.Name))),
+                        _ => current
+                    },
+                    FilterContentType.Desc => rule.FilterType switch
+                    {
+                        FilterType.Word => current.Where(x => !(x.ContentStr != null && x.ContentStr.Contains(rule.Rule))),
+                        FilterType.Regular => current.Where(x => !(x.ContentStr != null && new Regex(rule.Rule).IsMatch(x.ContentStr))),
+                        _ => current
+                    },
+                    FilterContentType.Title => rule.FilterType switch
+                    {
+                        FilterType.Word => current.Where(x => !(x.ManuscriptTitle.Contains(rule.Rule))),
+                        FilterType.Regular => current.Where(x => !(new Regex(rule.Rule).IsMatch(x.ManuscriptTitle))),
                         _ => current
                     },
                     _ => current

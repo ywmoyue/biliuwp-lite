@@ -13,6 +13,7 @@ namespace BiliLite.Models.Common.Settings
         {
             new FilterTargetOption(FilterContentType.Title, "标题"),
             new FilterTargetOption(FilterContentType.User, "用户"),
+            new FilterTargetOption(FilterContentType.Desc, "详情"),
         };
     }
 

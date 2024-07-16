@@ -43,7 +43,11 @@ namespace BiliLite.ViewModels.Settings
                 var desc = "选择过滤目标对象属性";
                 if (FilterRuleType == FilterRuleType.Dynamic)
                 {
-                    return desc + "(动态不支持过滤标题)";
+                    return desc + "(动态项过滤标题指过滤投稿标题)";
+                }
+                if (FilterRuleType == FilterRuleType.Recommend)
+                {
+                    return desc + "(推荐项不支持过滤详情)";
                 }
 
                 return desc;

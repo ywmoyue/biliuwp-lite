@@ -852,6 +852,7 @@ namespace BiliLite.Modules
             set { _pic = "https:" + value; }
         }
 
+        public string Description { get; set; }
     }
     public class SearchAnimeItem
     {
