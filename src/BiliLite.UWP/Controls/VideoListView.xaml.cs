@@ -11,6 +11,7 @@ using BiliLite.Extensions;
 using BiliLite.Models.Common.Video;
 using BiliLite.Services.Biz;
 using BiliLite.ViewModels.Video;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -100,8 +101,47 @@ namespace BiliLite.Controls
 
         private void ScrollToItem(VideoListItem item)
         {
-            //TODO: 实现滚动到指定item
-            //SectionListView.ScrollIntoView();
+            var offset = GetItemOffsetHeight(item);
+            VideoListScrollViewer.ScrollToVerticalOffset(offset);
+        }
+
+        private double GetItemOffsetHeight(VideoListItem item)
+        {
+            var offset = 0d;
+            var expanders = this.FindChildrenByType<Expander>().ToList();
+            if (!expanders.Any()) return 0;
+            var expanderHeaderHeight = (expanders.First().Header as FrameworkElement).ActualHeight;
+            var videoListItemGridHeight = 87;
+            foreach (var section in m_viewModel.Sections)
+            {
+                if (section.SelectedItem != item && !section.Selected)
+                {
+                    offset += expanderHeaderHeight;
+                }
+                else if (section.SelectedItem != item && section.Selected)
+                {
+                    offset += expanderHeaderHeight;
+
+                    offset += (section.Items.Count * videoListItemGridHeight);
+                }
+                else if (section.SelectedItem == item)
+                {
+                    section.Selected = true;
+                    var expander = expanders.FirstOrDefault(x => x.DataContext == section);
+                    expander.IsExpanded = true;
+
+                    foreach (var videoItem in section.Items)
+                    {
+                        offset += videoListItemGridHeight;
+                        if (videoItem == item)
+                        {
+                            return offset;
+                        }
+                    }
+                }
+            }
+
+            return offset;
         }
 
         private void UIElement_OnContextRequested(UIElement sender, ContextRequestedEventArgs args)
@@ -127,6 +167,21 @@ namespace BiliLite.Controls
 
             if (!(btnLoadMore.DataContext is VideoListSectionViewModel section)) return;
             await m_mediaListService.LoadMoreMediaList(section);
+        }
+
+        private void OnScrollToCurrentBtnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            ScrollToItem(CurrentItem());
+        }
+
+        private void OnUpToTopBtnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            VideoListScrollViewer.ScrollToVerticalOffset(0);
+        }
+
+        private void OnDownToBottomBtnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            VideoListScrollViewer.ScrollToVerticalOffset(SectionListView.ActualHeight);
         }
     }
 }

@@ -139,6 +139,9 @@
     <Compile Include="Controls\AttentionButton.xaml.cs">
       <DependentUpon>AttentionButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Common\PieControl.xaml.cs">
+      <DependentUpon>PieControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DataTemplateSelectors\UserDynamicItemV2DataTemplateSelector.cs" />
     <Compile Include="Controls\Dynamic\DynamicItemV2Control.xaml.cs">
       <DependentUpon>DynamicItemV2Control.xaml</DependentUpon>
@@ -226,6 +229,7 @@
     <Compile Include="Models\Common\Rank\RankItemStatModel.cs" />
     <Compile Include="Models\Functions\SaveFunction.cs" />
     <Compile Include="Models\Common\Danmaku\DanmuFilterItem.cs" />
+    <Compile Include="ViewModels\Common\PieControlViewModel.cs" />
     <Compile Include="ViewModels\Settings\CDNServerItemViewModel.cs" />
     <Compile Include="Pages\ISavablePage.cs" />
     <Compile Include="Services\Biz\MediaListService.cs" />
@@ -1043,6 +1047,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\CommentControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Common\PieControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
