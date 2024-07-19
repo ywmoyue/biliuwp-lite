@@ -14,8 +14,11 @@
     <Color x:Key="DefaultTextColor">#CC000000</Color>
     <Color x:Key="SystemColorHighLightColor">#ec407a</Color>
     <Color x:Key="LinkTextColor">#008ac5</Color>
-    <Color x:Key="LowProfileTextColor">Gray</Color>
+    <Color x:Key="LowProfileTextColor">#989898</Color>
+    <Color x:Key="SeparatorColor">Gray</Color>
     <Color x:Key="HalfTransparentBackground">#805C5C5C</Color>
+    <Color x:Key="PieControlColor">#f8f8f8</Color>
+    <Color x:Key="PieControlIconColor">#FF808080</Color>
 
     <SolidColorBrush x:Key="NavigationViewTopPaneBackground" Color="{ThemeResource TopPaneBackground}" />
     <Color x:Key="NoTapGridBackground">#FFF9F9F9</Color>

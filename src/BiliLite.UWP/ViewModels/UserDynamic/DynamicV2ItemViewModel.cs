@@ -25,6 +25,46 @@ namespace BiliLite.ViewModels.UserDynamic
             m_mapper = App.ServiceProvider.GetRequiredService<IMapper>();
         }
 
+        [DoNotNotify]
+        public string ManuscriptTitle
+        {
+            get
+            {
+                // Dynamic.DynArchive.Title
+                if (Dynamic is { DynArchive: { }})
+                {
+                    return Dynamic.DynArchive.Title;
+                }
+                // Extend.OrigDesc[0].Text
+                if (Extend is { OrigDesc: { } } && Extend.OrigDesc.Count > 0)
+                {
+                    return Extend.OrigDesc[0].Text;
+                }
+                // LiveInfo.PlayInfo.Title
+                if (LiveInfo is { PlayInfo: { } })
+                {
+                    return LiveInfo.PlayInfo.Title;
+                }
+                // Dynamic.DynCourBatchUp.Title
+                if (Dynamic is { DynCourBatchUp: { } })
+                {
+                    return Dynamic.DynCourBatchUp.Title;
+                }
+                // Season.Title
+                if (Season is { })
+                {
+                    return Season.Title;
+                }
+                // CustomArticle.Title
+                if (CustomArticle is { })
+                {
+                    return CustomArticle.Title;
+                }
+
+                return "";
+            }
+        }
+
         public IUserDynamicCommands Parent { get; set; }
 
         public string CardType { get; set; }
@@ -132,6 +172,45 @@ namespace BiliLite.ViewModels.UserDynamic
         public Extend Extend { get; set; }
 
         [DependsOn(nameof(Content))] public bool ShowContent => Desc != null || OpusSummary != null;
+
+        [DoNotNotify]
+        public string ContentStr
+        {
+            get
+            {
+                if (Extend.OpusSummary != null && Extend.OpusSummary.Summary.Text != null)
+                {
+                    var text = "";
+                    if (Extend.OpusSummary.Title != null)
+                    {
+                        var title = Extend.OpusSummary.Title.Text.Nodes
+                            .Aggregate("", (current, textNode) => current + textNode.RawText);
+                        text = title + "\n";
+                    }
+
+                    text += Extend.OpusSummary.Summary.Text.Nodes
+                        .Aggregate("", (current, textNode) => current + textNode.RawText);
+
+                    return text;
+                }
+
+                if (Desc != null)
+                {
+                    return
+                        Desc.Text;
+                }
+
+                if (OpusSummary != null)
+                {
+                    var text = OpusSummary.Summary.Text.Nodes.Aggregate("", (current, textNode) => current + textNode.RawText);
+
+                    return
+                        text;
+                }
+
+                return "";
+            }
+        }
 
         [DependsOn(nameof(Desc),nameof(OpusSummary))]
         public RichTextBlock Content

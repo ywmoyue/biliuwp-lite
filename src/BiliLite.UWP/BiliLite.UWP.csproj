@@ -128,7 +128,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
@@ -139,12 +139,42 @@
     <Compile Include="Controls\AttentionButton.xaml.cs">
       <DependentUpon>AttentionButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Common\PieControl.xaml.cs">
+      <DependentUpon>PieControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DataTemplateSelectors\UserDynamicItemV2DataTemplateSelector.cs" />
     <Compile Include="Controls\Dynamic\DynamicItemV2Control.xaml.cs">
       <DependentUpon>DynamicItemV2Control.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Settings\AboutSettingsControl.xaml.cs">
+      <DependentUpon>AboutSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\DevSettingsControl.xaml.cs">
+      <DependentUpon>DevSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\DownloadSettingsControl.xaml.cs">
+      <DependentUpon>DownloadSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\FilterSettingsControl.xaml.cs">
+      <DependentUpon>FilterSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PlayerToast.xaml.cs">
       <DependentUpon>PlayerToast.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\LiveSettingsControl.xaml.cs">
+      <DependentUpon>LiveSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\PlaySettingsControl.xaml.cs">
+      <DependentUpon>PlaySettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\ProxySettingsControl.xaml.cs">
+      <DependentUpon>ProxySettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\UISettingsControl.xaml.cs">
+      <DependentUpon>UISettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\VideoDanmakuSettingsControl.xaml.cs">
+      <DependentUpon>VideoDanmakuSettingsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\UserFollowingTagsFlyout.xaml.cs">
       <DependentUpon>UserFollowingTagsFlyout.xaml</DependentUpon>
@@ -152,6 +182,7 @@
     <Compile Include="Controls\VideoListView.xaml.cs">
       <DependentUpon>VideoListView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\FilterRuleTypeConverter.cs" />
     <Compile Include="Dialogs\EditPlaySpeedMenuDialog.xaml.cs">
       <DependentUpon>EditPlaySpeedMenuDialog.xaml</DependentUpon>
     </Compile>
@@ -162,6 +193,7 @@
     <Compile Include="Extensions\ControlsExtensions.cs" />
     <Compile Include="Extensions\QrCodeExtensions.cs" />
     <Compile Include="Extensions\RegexExtensions.cs" />
+    <Compile Include="Extensions\DynamicExtensions.cs" />
     <Compile Include="Models\Attributes\SettingDefaultValueAttribute.cs" />
     <Compile Include="Models\Attributes\SettingKeyAttribute.cs" />
     <Compile Include="Models\Common\Anime\ISeasonItem.cs" />
@@ -169,6 +201,10 @@
     <Compile Include="Models\Common\Danmaku\BiliDanmakuItem.cs" />
     <Compile Include="Models\Common\Dynamic\DynamicUgcSeasonCardModel.cs" />
     <Compile Include="Models\Common\Player\PlaySpeedMenu.cs" />
+    <Compile Include="Models\Common\Settings\FilterRule.cs" />
+    <Compile Include="Models\Common\Settings\FilterRuleTypes.cs" />
+    <Compile Include="Models\Common\UploadFileInfo.cs" />
+    <Compile Include="Models\Common\UserDynamic\DynamicPicture.cs" />
     <Compile Include="Models\Common\UserDynamic\DynLiveInfo.cs" />
     <Compile Include="Models\Common\UserDynamic\IUserDynamicCommands.cs" />
     <Compile Include="Models\Common\UserDynamic\NavDynArticle.cs" />
@@ -191,10 +227,22 @@
     <Compile Include="Models\Common\Rank\RankItemModel.cs" />
     <Compile Include="Models\Common\Rank\RankItemOwnerModel.cs" />
     <Compile Include="Models\Common\Rank\RankItemStatModel.cs" />
+    <Compile Include="Models\Functions\SaveFunction.cs" />
+    <Compile Include="Models\Common\Danmaku\DanmuFilterItem.cs" />
+    <Compile Include="ViewModels\Common\PieControlViewModel.cs" />
+    <Compile Include="ViewModels\Settings\CDNServerItemViewModel.cs" />
+    <Compile Include="Pages\ISavablePage.cs" />
     <Compile Include="Services\Biz\MediaListService.cs" />
+    <Compile Include="Services\ContentFilterService.cs" />
     <Compile Include="Services\PlaySpeedMenuService.cs" />
+    <Compile Include="ViewModels\Comment\SendCommentDialogViewModel.cs" />
     <Compile Include="ViewModels\Rank\RankRegionViewModel.cs" />
     <Compile Include="ViewModels\Settings\EditPlaySpeedMenuViewModel.cs" />
+    <Compile Include="ViewModels\Settings\FilterRuleViewModel.cs" />
+    <Compile Include="ViewModels\Settings\FilterSettingsViewModel.cs" />
+    <Compile Include="ViewModels\Settings\LiveSettingsControlViewModel.cs" />
+    <Compile Include="ViewModels\Settings\PlaySettingsControlViewModel.cs" />
+    <Compile Include="ViewModels\Settings\VideoDanmakuSettingsControlViewModel.cs" />
     <Compile Include="ViewModels\User\FavoriteItemViewModel.cs" />
     <Compile Include="Pages\Home\UserDynamicPage.xaml.cs">
       <DependentUpon>UserDynamicPage.xaml</DependentUpon>
@@ -717,7 +765,6 @@
     <Compile Include="Modules\RelayCommand.cs" />
     <Compile Include="ViewModels\Season\SeasonDetailPageViewModel.cs" />
     <Compile Include="Modules\Season\SeasonIndexVM.cs" />
-    <Compile Include="Modules\SettingVM.cs" />
     <Compile Include="ViewModels\Video\VideoDetailPageViewModel.cs" />
     <Compile Include="ViewModels\User\MyFollowVideoViewModel.cs" />
     <Compile Include="ViewModels\User\SendDynamic\SendDynamicViewModel.cs" />
@@ -1003,6 +1050,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Common\PieControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Dynamic\DynamicItemV2Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1011,7 +1062,43 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\Settings\AboutSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\DevSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\DownloadSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\FilterSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\PlayerToast.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\LiveSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\PlaySettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\ProxySettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\UISettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\VideoDanmakuSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1303,6 +1390,9 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper">
       <Version>10.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Uwp.Controls.SettingsControls">
+      <Version>8.0.240109</Version>
     </PackageReference>
     <PackageReference Include="DanmakuFrostMaster.muyan">
       <Version>1.0.2</Version>

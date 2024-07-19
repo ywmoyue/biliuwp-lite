@@ -42,6 +42,7 @@ using BiliLite.Models.Common.Player;
 using BiliLite.Models.Common.Video.PlayUrlInfos;
 using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels;
+using BiliLite.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
@@ -53,6 +54,7 @@ namespace BiliLite.Controls
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly bool m_useNsDanmaku = true;
         private readonly IDanmakuController m_danmakuController;
+        private readonly VideoDanmakuSettingsControlViewModel m_danmakuSettingsControlViewModel;
         private readonly PlayControlViewModel m_viewModel;
         private readonly PlayerToastService m_playerToastService;
         private readonly PlaySpeedMenuService m_playSpeedMenuService;
@@ -118,7 +120,6 @@ namespace BiliLite.Controls
         /// </summary>
         IDictionary<int, List<NSDanmaku.Model.DanmakuModel>> danmakuPool = new Dictionary<int, List<NSDanmaku.Model.DanmakuModel>>();
         List<int> danmakuLoadedSegment;
-        SettingVM settingVM;
         DisplayRequest dispRequest;
         SystemMediaTransportControls _systemMediaTransportControls;
         DispatcherTimer timer_focus;
@@ -139,7 +140,7 @@ namespace BiliLite.Controls
             this.InitializeComponent();
             dispRequest = new DisplayRequest();
             playerHelper = new PlayerVM();
-            settingVM = new SettingVM();
+            m_danmakuSettingsControlViewModel = App.ServiceProvider.GetRequiredService<VideoDanmakuSettingsControlViewModel>();
 
             danmakuParse = new NSDanmaku.Helper.DanmakuParse();
             //每过2秒就设置焦点
@@ -385,14 +386,14 @@ namespace BiliLite.Controls
                 case Windows.System.VirtualKey.F1:
                 case (Windows.System.VirtualKey)186:
                     //慢速播放
-                    if (BottomCBSpeed.SelectedIndex == 5)
+                    if (BottomCBSpeed.SelectedIndex == m_playSpeedMenuService.MenuItems.Count - 1)
                     {
                         Notify.ShowMessageToast("不能再慢啦");
                         return;
                     }
 
                     BottomCBSpeed.SelectedIndex += 1;
-                    m_playerToastService.Show(PlayerToastService.SPEED_KEY,(BottomCBSpeed.SelectedItem as ComboBoxItem).Content.ToString());
+                    m_playerToastService.Show(PlayerToastService.SPEED_KEY,(BottomCBSpeed.SelectedItem as PlaySpeedMenuItem).Content);
                     break;
                 case Windows.System.VirtualKey.F2:
                 case (Windows.System.VirtualKey)222:
@@ -403,7 +404,7 @@ namespace BiliLite.Controls
                         return;
                     }
                     BottomCBSpeed.SelectedIndex -= 1;
-                    m_playerToastService.Show(PlayerToastService.SPEED_KEY, (BottomCBSpeed.SelectedItem as ComboBoxItem).Content.ToString());
+                    m_playerToastService.Show(PlayerToastService.SPEED_KEY, (BottomCBSpeed.SelectedItem as PlaySpeedMenuItem).Content);
                     break;
                 case Windows.System.VirtualKey.F3:
                 case Windows.System.VirtualKey.V:
@@ -627,7 +628,7 @@ namespace BiliLite.Controls
             {
                 m_danmakuController.Hide();
             }
-            DanmuSettingWords.ItemsSource = settingVM.ShieldWords;
+            DanmuSettingWords.ItemsSource = m_danmakuSettingsControlViewModel.ShieldWords;
         }
         private void LoadPlayerSetting()
         {
@@ -828,17 +829,17 @@ namespace BiliLite.Controls
                 danmakus = danmakus.DistinctIf(needDistinct, new CompareDanmakuItem());
 
                 //关键词
-                foreach (var item in settingVM.ShieldWords)
+                foreach (var item in m_danmakuSettingsControlViewModel.ShieldWords)
                 {
                     danmakus = danmakus.Where(x => !x.Text.Contains(item));
                 }
                 //用户
-                foreach (var item in settingVM.ShieldUsers)
+                foreach (var item in m_danmakuSettingsControlViewModel.ShieldUsers)
                 {
                     danmakus = danmakus.Where(x => !x.MidHash.Equals(item));
                 }
                 //正则
-                foreach (var item in settingVM.ShieldRegulars)
+                foreach (var item in m_danmakuSettingsControlViewModel.ShieldRegulars)
                 {
                     danmakus = danmakus.Where(x => !Regex.IsMatch(x.Text, item));
                 }
@@ -880,17 +881,17 @@ namespace BiliLite.Controls
                         data = data.Distinct(new CompareDanmakuModel());
                     }
                     //关键词
-                    foreach (var item in settingVM.ShieldWords)
+                    foreach (var item in m_danmakuSettingsControlViewModel.ShieldWords)
                     {
                         data = data.Where(x => !x.text.Contains(item));
                     }
                     //用户
-                    foreach (var item in settingVM.ShieldUsers)
+                    foreach (var item in m_danmakuSettingsControlViewModel.ShieldUsers)
                     {
                         data = data.Where(x => !x.sendID.Equals(item));
                     }
                     //正则
-                    foreach (var item in settingVM.ShieldRegulars)
+                    foreach (var item in m_danmakuSettingsControlViewModel.ShieldRegulars)
                     {
                         data = data.Where(x => !Regex.IsMatch(x.text, item));
                     }
@@ -2650,7 +2651,7 @@ namespace BiliLite.Controls
 
         private async void DanmuSettingSyncWords_Click(object sender, RoutedEventArgs e)
         {
-            await settingVM.SyncDanmuFilter();
+            await m_danmakuSettingsControlViewModel.SyncDanmuFilter();
         }
 
         private async void DanmuSettingAddWord_Click(object sender, RoutedEventArgs e)
@@ -2660,9 +2661,9 @@ namespace BiliLite.Controls
                 Notify.ShowMessageToast("关键词不能为空");
                 return;
             }
-            settingVM.ShieldWords.Add(DanmuSettingTxtWord.Text);
-            SettingService.SetValue(SettingConstants.VideoDanmaku.SHIELD_WORD, settingVM.ShieldWords);
-            var result = await settingVM.AddDanmuFilterItem(DanmuSettingTxtWord.Text, 0);
+            m_danmakuSettingsControlViewModel.ShieldWords.Add(DanmuSettingTxtWord.Text);
+            SettingService.SetValue(SettingConstants.VideoDanmaku.SHIELD_WORD, m_danmakuSettingsControlViewModel.ShieldWords);
+            var result = await m_danmakuSettingsControlViewModel.AddDanmuFilterItem(DanmuSettingTxtWord.Text, 0);
             DanmuSettingTxtWord.Text = "";
             if (!result)
             {

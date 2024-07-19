@@ -16,6 +16,7 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using BiliLite.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite.Services
@@ -60,7 +61,7 @@ namespace BiliLite.Services
         {
             LoginedEvent?.Invoke(null, null);
             //同步弹幕屏蔽信息
-            await new Modules.SettingVM().SyncDanmuFilter();
+            await App.ServiceProvider.GetRequiredService<VideoDanmakuSettingsControlViewModel>().SyncDanmuFilter();
         }
         /// <summary>
         /// 发送注销事件

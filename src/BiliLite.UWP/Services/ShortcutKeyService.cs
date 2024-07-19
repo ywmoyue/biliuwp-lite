@@ -24,6 +24,7 @@ namespace BiliLite.Services
             m_shortcutKeyMaps.Add(new AddVolumeFunction(), new List<VirtualKey>() { VirtualKey.Up });
             m_shortcutKeyMaps.Add(new MinusVolumeFunction(), new List<VirtualKey>() { VirtualKey.Down });
             m_shortcutKeyMaps.Add(new CancelFullscreenFunction(), new List<VirtualKey>() { VirtualKey.Escape });
+            m_shortcutKeyMaps.Add(new SaveFunction(), new List<VirtualKey>() { VirtualKey.Control, VirtualKey.S });
         }
 
         public void SetMainPage(IMainPage mainPage)

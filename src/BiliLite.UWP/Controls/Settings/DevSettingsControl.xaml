@@ -1,0 +1,126 @@
+﻿<UserControl
+    x:Class="BiliLite.Controls.Settings.DevSettingsControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BiliLite.Controls.Settings"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
+    xmlns:common="using:BiliLite.Models.Common"
+    xmlns:font="using:FontAwesome5"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <StackPanel Orientation="Vertical"
+                MaxWidth="1200">
+        <controls:SettingsCard>
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Broom"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <controls:SettingsCard.Header>
+                <Button Click="BtnOpenLogFolder_OnClick">打开日志文件夹</Button>
+            </controls:SettingsCard.Header>
+        </controls:SettingsCard>
+
+        <controls:SettingsCard Header="自动清理日志文件"
+                               Description="建议开启">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Broom"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch x:Name="swAutoClearLogFile"></ToggleSwitch>
+        </controls:SettingsCard>
+
+        <controls:SettingsCard Header="自动清理几天前的日志"
+                               Description="自动清理日志文件开启时使用">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Broom"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <controls1:NumberBox x:Name="numAutoClearLogDay" Minimum="0" Margin="0 0 0 8" Width="200" HorizontalAlignment="Left" Value="0" SpinButtonPlacementMode="Compact" SmallChange="2" ></controls1:NumberBox>
+        </controls:SettingsCard>
+
+        <controls:SettingsCard Header="保护日志中敏感信息"
+                               Description="替换日志中的访问令牌">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_UserShield"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch x:Name="swProtectLogInfo"></ToggleSwitch>
+        </controls:SettingsCard>
+
+        <controls:SettingsCard Header="日志级别"
+                               Description="需要定位问题时，请设置为Trace级别">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_FileMedical"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <ComboBox x:Name="cbLogLevel" Margin="0 8"  MinWidth="200">
+                <ComboBox.Items>
+                    <ComboBoxItem>Trace</ComboBoxItem>
+                    <ComboBoxItem>Debug</ComboBoxItem>
+                    <ComboBoxItem>Info</ComboBoxItem>
+                    <ComboBoxItem>Warn</ComboBoxItem>
+                    <ComboBoxItem>Error</ComboBoxItem>
+                    <ComboBoxItem>Fatal</ComboBoxItem>
+                </ComboBox.Items>
+            </ComboBox>
+        </controls:SettingsCard>
+
+        <controls:SettingsCard Header="优先使用Grpc请求动态"
+                               Description="建议开启，旧版接口已被风控">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Star"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch x:Name="swFirstGrpcRequestDynamic"></ToggleSwitch>
+        </controls:SettingsCard>
+
+        <controls:SettingsCard Header="发起请求时使用的build值"
+                               Description="B站App版本号标识">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_CodeBranch"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="RequestBuildTextBox" PlaceholderText="请输入要使用的build值" Width="200"></TextBox>
+                <Button x:Name="RequestBuildSaveBtn" Click="RequestBuildSaveBtn_OnClick" Margin="4 0">保存</Button>
+                <Button x:Name="RequestBuildDefaultBtn" Click="RequestBuildDefaultBtn_OnClick"  Margin="4 0">恢复默认</Button>
+            </StackPanel>
+        </controls:SettingsCard>
+
+        <controls:SettingsCard Header="BiliLite-WebApi"
+                               Description="用于处理UWP无法完成的事项">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Wrench"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <AutoSuggestBox Margin="0 8" x:Name="BiliLiteWebApiTextBox" QueryIcon="Accept" HorizontalAlignment="Left" PlaceholderText="https://example.com/"></AutoSuggestBox>
+        </controls:SettingsCard>
+
+        <controls:SettingsCard>
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Cog"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <controls:SettingsCard.Header>
+                <StackPanel Orientation="Horizontal" Margin="0 8" >
+                    <Button x:Name="BtnExportSettings" Click="BtnExportSettings_OnClick" Margin="0 0 8 0">导出设置</Button>
+                    <Button x:Name="BtnExportSettingsWithAccount" Click="BtnExportSettingsWithAccount_OnClick" Margin="0 0 8 0">导出设置与登录信息</Button>
+                    <Button x:Name="BtnImportSettings" Click="BtnImportSettings_OnClick" Margin="0 0 0 0">导入设置</Button>
+                </StackPanel>
+            </controls:SettingsCard.Header>
+        </controls:SettingsCard>
+
+        <controls:SettingsCard Header="更新json请求地址">
+            <controls:SettingsCard.Description>
+                <StackPanel>
+                    <TextBlock>用于解决github在国内访问不佳的问题</TextBlock>
+                    <TextBlock x:Name="mirrorDonateText"><Hyperlink x:Name="mirrorDonateUrl">第三方公益镜像捐赠地址-赠人玫瑰, 手有余香.</Hyperlink></TextBlock>
+                </StackPanel>
+            </controls:SettingsCard.Description>
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Wrench"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <ComboBox x:Name="updateJsonAddress" Margin="0 8"  MinWidth="200"
+                      ItemsSource="{x:Bind common:UpdateJsonAddressOptions.Options}" 
+                      SelectedValuePath="Value"
+                      DisplayMemberPath="Name">
+            </ComboBox>
+        </controls:SettingsCard>
+    </StackPanel>
+</UserControl>

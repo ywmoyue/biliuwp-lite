@@ -21,7 +21,8 @@ namespace BiliLite
             services.AddQrCodeService();
             services.AddBizServices();
             services.AddSingleton<PlaySpeedMenuService>();
-            
+            services.AddSingleton<ContentFilterService>();
+
             services.AddSingleton<GrpcService>();
         }
     }

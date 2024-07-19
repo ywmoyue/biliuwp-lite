@@ -596,6 +596,11 @@ namespace BiliLite.Controls
             }
         }
 
+        private void MenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         #region Public Methods

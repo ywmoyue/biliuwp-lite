@@ -30,7 +30,7 @@ using BiliLite.ViewModels.User;
 
 namespace BiliLite.Pages
 {
-    public sealed partial class VideoDetailPage : PlayPage, IRefreshablePage
+    public sealed partial class VideoDetailPage : PlayPage, IRefreshablePage, ISavablePage
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
 
@@ -725,7 +725,24 @@ namespace BiliLite.Pages
 
         private async void SaveFavList_OnClick(object sender, RoutedEventArgs e)
         {
-            await m_viewModel.UpdateFav(m_viewModel.VideoInfo.Aid);
+            await Save();
+        }
+
+        public async Task Save()
+        {
+            if (BtnFav.Flyout.IsOpen)
+            {
+                await m_viewModel.UpdateFav(m_viewModel.VideoInfo.Aid);
+                BtnFav.Flyout.Hide();
+            }
+        }
+
+        private async void FavList_OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            if (e.IsUseMiddleButton(sender))
+            {
+                await Save();
+            }
         }
     }
 }

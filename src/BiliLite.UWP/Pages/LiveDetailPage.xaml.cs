@@ -35,6 +35,7 @@ using BiliLite.ViewModels.Live;
 using Windows.UI.Xaml.Documents;
 using System.Text.RegularExpressions;
 using BiliLite.Services.Interfaces;
+using BiliLite.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -55,10 +56,10 @@ namespace BiliLite.Pages
         private readonly LiveDetailPageViewModel m_viewModel;
         private readonly bool m_useNsDanmaku = true;
         private readonly IDanmakuController m_danmakuController;
+        private readonly LiveSettingsControlViewModel m_liveSettingsControlViewModel;
 
         DisplayRequest dispRequest;
         LiveRoomViewModel m_liveRoomViewModel;
-        SettingVM settingVM;
         DispatcherTimer timer_focus;
         DispatcherTimer controlTimer;
         DispatcherTimer chatScrollTimer;
@@ -97,7 +98,7 @@ namespace BiliLite.Pages
             chatScrollTimer.Tick += ChatScrollTimer_Tick;
             chatScrollTimer.Start();
 
-            settingVM = new SettingVM();
+            m_liveSettingsControlViewModel = App.ServiceProvider.GetRequiredService<LiveSettingsControlViewModel>();
 
             m_liveRoomViewModel = new LiveRoomViewModel();
             m_liveRoomViewModel.ChangedPlayUrl += LiveRoomViewModelChangedPlayUrl;
@@ -225,9 +226,9 @@ namespace BiliLite.Pages
         {
             if (m_danmakuController.DanmakuViewModel.IsHide) return;
 
-            if (settingVM.LiveShieldWords != null && settingVM.LiveShieldWords.Count > 0)
+            if (m_liveSettingsControlViewModel.LiveShieldWords != null && m_liveSettingsControlViewModel.LiveShieldWords.Count > 0)
             {
-                if (settingVM.LiveShieldWords.FirstOrDefault(x => e.Text.Contains(x)) != null) return;
+                if (m_liveSettingsControlViewModel.LiveShieldWords.FirstOrDefault(x => e.Text.Contains(x)) != null) return;
             }
             try
             {
@@ -1158,17 +1159,17 @@ namespace BiliLite.Pages
 
         private void AddShieldWord(string word)
         {
-            if (!settingVM.LiveShieldWords.Contains(word))
+            if (!m_liveSettingsControlViewModel.LiveShieldWords.Contains(word))
             {
-                settingVM.LiveShieldWords.Add(word);
-                SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, settingVM.LiveShieldWords);
+                m_liveSettingsControlViewModel.LiveShieldWords.Add(word);
+                SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, m_liveSettingsControlViewModel.LiveShieldWords);
             }
         }
 
         private void DelShieldWord(string word)
         {
-            settingVM.LiveShieldWords.Remove(word);
-            SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, settingVM.LiveShieldWords);
+            m_liveSettingsControlViewModel.LiveShieldWords.Remove(word);
+            SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, m_liveSettingsControlViewModel.LiveShieldWords);
         }
 
         #region 播放器手势

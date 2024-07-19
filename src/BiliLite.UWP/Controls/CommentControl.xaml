@@ -77,8 +77,8 @@
         </Flyout>
 
         <MenuFlyout x:Key="menu">
-            <MenuFlyoutItem  Click="BtnDeleteComment_Click" Visibility="{Binding showDelete}">删除</MenuFlyoutItem>
-            <MenuFlyoutItem>举报</MenuFlyoutItem>
+            <MenuFlyoutItem  Click="BtnDeleteComment_Click" Visibility="{Binding ShowDelete}">删除</MenuFlyoutItem>
+            <MenuFlyoutItem Click="MenuFlyoutItem_OnClick">举报</MenuFlyoutItem>
         </MenuFlyout>
         <DataTemplate x:Key="commentTemplate" x:DataType="comment:CommentViewModel">
             <Grid>
@@ -135,7 +135,7 @@
                     </Border>
                 </Grid>
 
-                <StackPanel Orientation="Horizontal" Margin="4 0" Grid.Column="1" >
+                <StackPanel ContextFlyout="{StaticResource menu}" Orientation="Horizontal" Margin="4 0" Grid.Column="1" >
                     <TextBlock VerticalAlignment="Center" Visibility="{x:Bind ShowTop}" FontSize="14" Margin="0 0 8 0" Foreground="DeepPink">[置顶]</TextBlock>
                     <TextBlock  Text="{x:Bind Path=Member.Uname}" 
                                 Foreground="{x:Bind Path=Member.Vip.VipType,Converter={StaticResource colorSelct},ConverterParameter=2}" VerticalAlignment="Center"></TextBlock>
@@ -183,7 +183,6 @@
                                    Text="{x:Bind Path=Member.UserSailing.Cardbg.Fan.NumDesc,Mode=OneWay}"></TextBlock>
                         </StackPanel>
                     </StackPanel>
-                    <AppBarButton Visibility="Collapsed" Style="{StaticResource AppBarButtonNoChevronStyle}" Flyout="{StaticResource ResourceKey=menu}" HorizontalAlignment="Right" Icon="More"  Width="48" ></AppBarButton>
                 </StackPanel>
 
                 <TextBlock Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" FontSize="12" Foreground="Gray" Margin="4 0" VerticalAlignment="Top" ToolTipService.ToolTip="{x:Bind Path=Ctime,Converter={StaticResource Datetime}}">

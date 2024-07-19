@@ -1,0 +1,83 @@
+﻿<UserControl
+    x:Class="BiliLite.Controls.Settings.LiveSettingsControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BiliLite.Controls.Settings"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:common="using:BiliLite.Models.Common"
+    xmlns:font="using:FontAwesome5"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <UserControl.Resources>
+        <Style x:Key="DanmuFilterStyle" TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Vertical"
+                MaxWidth="1200">
+        <controls:SettingsCard Header="弹幕引擎"
+                               Description="不同弹幕引擎支持的设置项不同，支持的相同设置项表现也不同，详细设置项请在播放视频时调整">
+            <controls:SettingsCard.HeaderIcon>
+                <FontIcon  FontFamily="Segoe MDL2 Assets" Glyph="&#xE8FD;"></FontIcon>
+            </controls:SettingsCard.HeaderIcon>
+            <ComboBox x:Name="cbLiveDanmakuEngine" SelectedIndex="0" MinWidth="200" SelectedValuePath="Value">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Text}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+                <ComboBox.Items>
+                    <common:ComboBoxItemData Text="NSDanmaku" Value="0"></common:ComboBoxItemData>
+                    <common:ComboBoxItemData Text="寒霜弹幕使" Value="1"></common:ComboBoxItemData>
+                </ComboBox.Items>
+            </ComboBox>
+        </controls:SettingsCard>
+        <controls:SettingsCard Header="默认弹幕状态"
+                               Description="播放视频时默认弹幕状态">
+            <controls:SettingsCard.HeaderIcon>
+                <FontIcon  FontFamily="Segoe MDL2 Assets" Glyph="&#xEC87;"></FontIcon>
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch x:Name="LiveDanmuSettingState" OnContent="打开" OffContent="关闭"></ToggleSwitch>
+        </controls:SettingsCard>
+
+        <controls:SettingsExpander Header="弹幕屏蔽"
+                                   Description="关键词屏蔽"
+                                   IsExpanded="True">
+            <controls:SettingsExpander.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Filter"></font:FontAwesome>
+            </controls:SettingsExpander.HeaderIcon>
+
+            <controls:SettingsExpander.Items>
+                <controls:SettingsCard>
+                    <controls:SettingsCard.Header>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox x:Name="LiveDanmuSettingTxtWord" PlaceholderText="请输入关键词" Width="200"></TextBox>
+                                <Button x:Name="LiveDanmuSettingAddWord" Click="LiveDanmuSettingAddWord_Click" Margin="4 0">添加</Button>
+                            </StackPanel>
+                            <ListView x:Name="LiveDanmuSettingListWords" ItemContainerStyle="{StaticResource DanmuFilterStyle}" Margin="0 8 0 0" SelectionMode="None" IsItemClickEnabled="False" Width="320" Height="160" HorizontalAlignment="Left" Background="{ThemeResource TopPaneBackground}">
+
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock VerticalAlignment="Center" Text="{Binding}"></TextBlock>
+                                            <AppBarButton Click="RemoveLiveDanmuWord_Click" Grid.Column="1" Height="40" Width="40" Icon="Delete"></AppBarButton>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                    </controls:SettingsCard.Header>
+                </controls:SettingsCard>
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>
+    </StackPanel>
+</UserControl>

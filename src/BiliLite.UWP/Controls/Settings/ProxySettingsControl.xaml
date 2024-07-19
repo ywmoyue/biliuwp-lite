@@ -1,0 +1,73 @@
+﻿<UserControl
+    x:Class="BiliLite.Controls.Settings.ProxySettingsControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BiliLite.Controls.Settings"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:font="using:FontAwesome5"
+    xmlns:common="using:BiliLite.Models.Common"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <StackPanel Orientation="Vertical"
+                MaxWidth="1200">
+
+        <controls:SettingsCard Header="首选代理服务器">
+            <controls:SettingsCard.Description>
+                <StackPanel>
+                    <RichTextBlock Margin="0 8 0 0">
+                        <Paragraph>
+                            默认服务器不稳定，建议自定义服务器
+                            <Hyperlink NavigateUri="https://github.com/yujincheng08/BiliRoaming/wiki/%E5%85%AC%E5%85%B1%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1%E5%99%A8">查看公共服务器</Hyperlink>
+                        </Paragraph>
+                    </RichTextBlock>
+                    <TextBlock>部分解析服务器需要登录后才能使用，请选择自己信任的服务器</TextBlock>
+                </StackPanel>
+            </controls:SettingsCard.Description>
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_PaperPlane"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <StackPanel Orientation="Horizontal">
+                <AutoSuggestBox x:Name="RoamingSettingCustomServer" QueryIcon="Accept"  Width="260" HorizontalAlignment="Left" PlaceholderText="https://example.com/"></AutoSuggestBox>
+                <Button Margin="8 0 0 0" x:Name="RoamingSettingSetDefault">恢复默认</Button>
+            </StackPanel>
+        </controls:SettingsCard>
+
+        <controls:SettingsCard Header="自定义香港代理服务器"
+                               Description="自定义香港代理服务器">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_PaperPlane"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <AutoSuggestBox x:Name="RoamingSettingCustomServerHK" QueryIcon="Accept"  Width="260" HorizontalAlignment="Left" PlaceholderText="https://example.com/"></AutoSuggestBox>
+        </controls:SettingsCard>
+
+        <controls:SettingsCard Header="自定义台湾代理服务器"
+                               Description="自定义台湾代理服务器">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_PaperPlane"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <AutoSuggestBox x:Name="RoamingSettingCustomServerTW" QueryIcon="Accept"  Width="260" HorizontalAlignment="Left" PlaceholderText="https://example.com/"></AutoSuggestBox>
+        </controls:SettingsCard>
+
+        <controls:SettingsCard Header="自定义大陆代理服务器"
+                               Description="自定义大陆代理服务器">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_PaperPlane"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <AutoSuggestBox x:Name="RoamingSettingCustomServerCN" QueryIcon="Accept"  Width="260" HorizontalAlignment="Left" PlaceholderText="https://example.com/"></AutoSuggestBox>
+        </controls:SettingsCard>
+
+        <controls:SettingsCard Header="繁体字幕转简体"
+                               Description="繁体字幕转简体">
+            <controls:SettingsCard.HeaderIcon>
+                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8D2;"/>
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch x:Name="RoamingSettingToSimplified" OnContent="打开" OffContent="关闭" ></ToggleSwitch>
+        </controls:SettingsCard>
+
+        <TextBlock Margin="16 16 0 8">如播放港澳台视频卡顿，建议到「播放」设置中打开替换CDN选项，并且选择延迟较低的CDN服务器</TextBlock>
+    </StackPanel>
+</UserControl>
