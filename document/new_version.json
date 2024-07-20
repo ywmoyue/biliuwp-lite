@@ -1,7 +1,7 @@
 {
-    "version": "4.6.33",
-    "version_num": 40633,
-    "version_desc": "更新内容:\r\n\r\n- 设置中可自定义播放倍速菜单列表 \r\n\r\n- 现有的视频详情页收藏菜单中收藏夹列表改为多选列表 \r\n\r\n- 点赞收藏投币按钮颜色错误  \r\n\r\n- 修复在推荐页刷视频时可能出现空引用错误导致程序闪退  \r\n\r\n- 修复单窗口模式在已经播放一个视频下的情况下播放下一个视频导致的错误  \r\n\r\n- 修复单窗口模式全屏弹幕显示错误   \r\n\r\n- 修复播放视频时侧键关闭页面后鼠标消失 \r\n\r\n- 处理排行榜接口可能被风控 \r\n\r\n- 修复用户空间页点击一键播放全部视频只显示页面中加载出的视频  \r\n\r\n- 修复部分动态只显示标题不显示内容  \r\n\r\n- 修复使用方向键倍速播放时报错 \r\n\r\n- 直播间兼容部分特殊规则弹幕  \r\n\r\n- 修复在bv号大量 堆积情况下不能正确转换为按钮的问题 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+    "version": "4.7.0",
+    "version_num": 40700,
+    "version_desc": "更新内容:\r\n\r\n- 视频详情页播放列表功能补全：滚动到顶部、滚动到底部、滚动到当前视频 \r\n\r\n- 支持发送带图片评论，自己发送的评论点右键可删除  \r\n\r\n- 支持设置推荐页、搜索页、动态页内容过滤  \r\n\r\n- 调整视频详情页收藏菜单样式、支持鼠标中键侧键和Ctrl+S快捷关闭保存收藏选项 \r\n\r\n- 设置页设置项改用WinUI设置控件   \r\n\r\n- 修复动态中用户链接打开错误  \r\n\r\n- 修复视频点不喜欢报错  \r\n\r\n- 修复快捷键设置倍速报错  \r\n\r\n- 关闭X64架构的nativeToolchain编译选项，尝试修复二维码登录时打开应用就闪退问题  \r\n\r\n- 日志中错误信息内含敏感信息修复 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
     "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
     "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
