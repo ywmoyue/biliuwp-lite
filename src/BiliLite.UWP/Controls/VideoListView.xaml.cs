@@ -128,6 +128,7 @@ namespace BiliLite.Controls
                 {
                     section.Selected = true;
                     var expander = expanders.FirstOrDefault(x => x.DataContext == section);
+                    if (expander == null) return 0;
                     expander.IsExpanded = true;
 
                     foreach (var videoItem in section.Items)
