@@ -175,7 +175,7 @@ jobs:
       if: github.event.inputs.enableX64 == 'true'
 
     - name: Update x64 native release asset
-      id: upload-release-asset-x64
+      id: upload-release-asset-x64-native
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN  }}
