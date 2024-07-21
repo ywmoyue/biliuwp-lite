@@ -38,6 +38,8 @@ jobs:
       Solution_Path: .\BiliLite.sln
       AppName: BiliLite.Packages
       UWP_Project_Directory: src\BiliLite.Packages
+      UWP_Project_Path: src\BiliLite.UWP\BiliLite.UWP.csproj
+      UWP_X64_Native_Project_Path: src\BiliLite.UWP\BiliLite.UWP.csproj.native
       Win32_Project_Path: src\BiliLite.Win32Tools\BiliLite.Win32Tools.csproj
       GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN  }}
       Webdav_addr: ${{ secrets.WEBDAV_ADDR }}
@@ -139,6 +141,51 @@ jobs:
         asset_path: C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x64.zip
         asset_name: ${{env.AppName}}_${{github.event.inputs.version}}_x64.zip
         asset_content_type: application/zip
+
+        
+        
+    - name: Set x64 native
+      run: |
+        rm $env:UWP_Project_Path
+        cp $env:UWP_X64_Native_Project_Path $env:UWP_Project_Path
+      if: github.event.inputs.enableX64 == 'true'
+        
+    - name: Build x64 native
+      run: |
+        msbuild $env:UWP_Project_Directory /p:Platform=x64 /p:Configuration=Release /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=$env:SigningCertificatePasswd  /restore
+      env:
+        BuildMode: SideloadOnly
+        Configuration: Release
+      if: github.event.inputs.enableX64 == 'true'
+
+    - name: copy x64 native document 
+      run: cp C:\Package\安装教程.pdf ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x64_Test\安装教程.pdf
+      if: github.event.inputs.enableX64 == 'true'
+
+    - name: Remove x64 native useless files
+      run: |
+        cd ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x64_Test
+        rm -r -fo *.appxsym
+        cd Dependencies
+        rm -r -fo arm,arm64,x86
+      if: github.event.inputs.enableX64 == 'true'
+
+    - name: Create x64 native archive
+      run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x64_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x64.zip
+      if: github.event.inputs.enableX64 == 'true'
+
+    - name: Update x64 native release asset
+      id: upload-release-asset-x64
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN  }}
+      if: github.event.inputs.enableX64 == 'true'
+      with:
+        upload_url: ${{ steps.release-drafter.outputs.upload_url }}
+        asset_path: C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x64.zip
+        asset_name: ${{env.AppName}}_${{github.event.inputs.version}}_x64.zip
+        asset_content_type: application/zip
+
 
     - name: Build x86
       run: msbuild $env:UWP_Project_Directory /p:Platform=x86 /p:Configuration=Release /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=$env:SigningCertificatePasswd  /restore
