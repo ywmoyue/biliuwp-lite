@@ -12,10 +12,15 @@ on:
         required: true
         default: true
         type: boolean
+      enableX64Native:
+        description: '启用x64Native'
+        required: true
+        default: true
+        type: boolean
       enableX86:
         description: '启用x86'
         required: true
-        default: true
+        default: false
         type: boolean
       enableArm64:
         description: '启用Arm64'
@@ -148,7 +153,7 @@ jobs:
       run: |
         rm $env:UWP_Project_Path
         cp $env:UWP_X64_Native_Project_Path $env:UWP_Project_Path
-      if: github.event.inputs.enableX64 == 'true'
+      if: github.event.inputs.enableX64Native == 'true'
         
     - name: Build x64 native
       run: |
@@ -156,11 +161,11 @@ jobs:
       env:
         BuildMode: SideloadOnly
         Configuration: Release
-      if: github.event.inputs.enableX64 == 'true'
+      if: github.event.inputs.enableX64Native == 'true'
 
     - name: copy x64 native document 
       run: cp C:\Package\安装教程.pdf ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x64_Test\安装教程.pdf
-      if: github.event.inputs.enableX64 == 'true'
+      if: github.event.inputs.enableX64Native == 'true'
 
     - name: Remove x64 native useless files
       run: |
@@ -168,18 +173,18 @@ jobs:
         rm -r -fo *.appxsym
         cd Dependencies
         rm -r -fo arm,arm64,x86
-      if: github.event.inputs.enableX64 == 'true'
+      if: github.event.inputs.enableX64Native == 'true'
 
     - name: Create x64 native archive
       run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x64_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x64_native.zip
-      if: github.event.inputs.enableX64 == 'true'
+      if: github.event.inputs.enableX64Native == 'true'
 
     - name: Update x64 native release asset
       id: upload-release-asset-x64-native
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN  }}
-      if: github.event.inputs.enableX64 == 'true'
+      if: github.event.inputs.enableX64Native == 'true'
       with:
         upload_url: ${{ steps.release-drafter.outputs.upload_url }}
         asset_path: C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x64_native.zip
