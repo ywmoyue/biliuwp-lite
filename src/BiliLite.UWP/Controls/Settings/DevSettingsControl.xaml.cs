@@ -14,6 +14,8 @@ namespace BiliLite.Controls.Settings
 {
     public sealed partial class DevSettingsControl : UserControl
     {
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+
         public DevSettingsControl()
         {
             this.InitializeComponent();
@@ -51,17 +53,20 @@ namespace BiliLite.Controls.Settings
             };
 
             // 优先使用Grpc请求动态
-            swFirstGrpcRequestDynamic.IsOn = SettingService.GetValue<bool>(SettingConstants.Other.FIRST_GRPC_REQUEST_DYNAMIC, true);
+            swFirstGrpcRequestDynamic.IsOn =
+                SettingService.GetValue<bool>(SettingConstants.Other.FIRST_GRPC_REQUEST_DYNAMIC, true);
             swFirstGrpcRequestDynamic.Toggled += ((e, args) =>
             {
-                SettingService.SetValue(SettingConstants.Other.FIRST_GRPC_REQUEST_DYNAMIC, swFirstGrpcRequestDynamic.IsOn);
+                SettingService.SetValue(SettingConstants.Other.FIRST_GRPC_REQUEST_DYNAMIC,
+                    swFirstGrpcRequestDynamic.IsOn);
             });
 
             RequestBuildTextBox.Text = SettingService.GetValue(SettingConstants.Other.REQUEST_BUILD,
                 SettingConstants.Other.DEFAULT_REQUEST_BUILD);
 
             // BiliLiteWebApi
-            BiliLiteWebApiTextBox.Text = SettingService.GetValue(SettingConstants.Other.BILI_LITE_WEB_API_BASE_URL, ApiConstants.BILI_LITE_WEB_API_DEFAULT_BASE_URL);
+            BiliLiteWebApiTextBox.Text = SettingService.GetValue(SettingConstants.Other.BILI_LITE_WEB_API_BASE_URL,
+                ApiConstants.BILI_LITE_WEB_API_DEFAULT_BASE_URL);
             BiliLiteWebApiTextBox.Loaded += (sender, e) =>
             {
                 BiliLiteWebApiTextBox.QuerySubmitted += (sender2, args) =>
@@ -73,12 +78,14 @@ namespace BiliLite.Controls.Settings
                         SettingService.SetValue(SettingConstants.Other.BILI_LITE_WEB_API_BASE_URL, "");
                         return;
                     }
+
                     if (!text.EndsWith("/")) text += "/";
                     if (!Uri.IsWellFormedUriString(text, UriKind.Absolute))
                     {
                         Notify.ShowMessageToast("地址格式错误");
                         return;
                     }
+
                     SettingService.SetValue(SettingConstants.Other.BILI_LITE_WEB_API_BASE_URL, text);
                     sender2.Text = text;
                     Notify.ShowMessageToast("保存成功");
@@ -86,7 +93,8 @@ namespace BiliLite.Controls.Settings
             };
 
             // 更新json来源
-            var selectedValue = SettingService.GetValue(SettingConstants.Other.UPDATE_JSON_ADDRESS, UpdateJsonAddressOptions.DEFAULT_UPDATE_JSON_ADDRESS);
+            var selectedValue = SettingService.GetValue(SettingConstants.Other.UPDATE_JSON_ADDRESS,
+                UpdateJsonAddressOptions.DEFAULT_UPDATE_JSON_ADDRESS);
             selectedValue = selectedValue.Replace("\"", ""); // 解决取出的值有奇怪的转义符
             updateJsonAddress.SelectedItem = UpdateJsonAddressOptions.GetOption(selectedValue);
             mirrorComboboxSelectAction(selectedValue);
@@ -94,7 +102,8 @@ namespace BiliLite.Controls.Settings
             {
                 updateJsonAddress.SelectionChanged += (obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.Other.UPDATE_JSON_ADDRESS, updateJsonAddress.SelectedValue);
+                    SettingService.SetValue(SettingConstants.Other.UPDATE_JSON_ADDRESS,
+                        updateJsonAddress.SelectedValue);
                     mirrorComboboxSelectAction(updateJsonAddress.SelectedValue);
                 };
             };
@@ -126,32 +135,42 @@ namespace BiliLite.Controls.Settings
             switch (selectedValue)
             {
                 case ApiHelper.GHPROXY_GIT_RAW_URL:
-                {
-                    mirrorDonateText.Visibility = Visibility.Visible;
-                    mirrorDonateUrl.NavigateUri = new Uri("https://mirror.ghproxy.com/donate");
-                    break;
-                }
+                    {
+                        mirrorDonateText.Visibility = Visibility.Visible;
+                        mirrorDonateUrl.NavigateUri = new Uri("https://mirror.ghproxy.com/donate");
+                        break;
+                    }
                 case ApiHelper.KGITHUB_GIT_RAW_URL:
-                {
-                    mirrorDonateText.Visibility = Visibility.Visible;
-                    mirrorDonateUrl.NavigateUri = new Uri("https://help.kkgithub.com/donate");
-                    break;
-                }
+                    {
+                        mirrorDonateText.Visibility = Visibility.Visible;
+                        mirrorDonateUrl.NavigateUri = new Uri("https://help.kkgithub.com/donate");
+                        break;
+                    }
                 case ApiHelper.GIT_RAW_URL:
-                {
-                    mirrorDonateText.Visibility = Visibility.Collapsed; break;
-                }
+                    {
+                        mirrorDonateText.Visibility = Visibility.Collapsed;
+                        break;
+                    }
                 default:
-                {
-                    mirrorDonateText.Visibility = Visibility.Collapsed; break;
-                }
+                    {
+                        mirrorDonateText.Visibility = Visibility.Collapsed;
+                        break;
+                    }
             }
         }
 
         private async void BtnExportSettings_OnClick(object sender, RoutedEventArgs e)
         {
-            var exportService = App.ServiceProvider.GetRequiredService<SettingsImportExportService>();
-            await exportService.ExportSettings();
+            try
+            {
+                var exportService = App.ServiceProvider.GetRequiredService<SettingsImportExportService>();
+                await exportService.ExportSettings();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("导出失败", ex);
+                Notify.ShowMessageToast("导出失败，已记录错误");
+            }
         }
 
         private async void BtnImportSettings_OnClick(object sender, RoutedEventArgs e)
@@ -161,6 +180,7 @@ namespace BiliLite.Controls.Settings
             {
                 return;
             }
+
             Notify.ShowMessageToast("导入成功，正在重启应用");
             // 等用户看提示
             await Task.Delay(3000);
@@ -174,8 +194,16 @@ namespace BiliLite.Controls.Settings
 
         private async void BtnExportSettingsWithAccount_OnClick(object sender, RoutedEventArgs e)
         {
-            var exportService = App.ServiceProvider.GetRequiredService<SettingsImportExportService>();
-            await exportService.ExportSettingsWithAccount();
+            try
+            {
+                var exportService = App.ServiceProvider.GetRequiredService<SettingsImportExportService>();
+                await exportService.ExportSettingsWithAccount();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("导出失败", ex);
+                Notify.ShowMessageToast("导出失败，已记录错误");
+            }
         }
 
         private async void BtnOpenLogFolder_OnClick(object sender, RoutedEventArgs e)
