@@ -171,7 +171,7 @@ jobs:
       if: github.event.inputs.enableX64 == 'true'
 
     - name: Create x64 native archive
-      run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x64_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x64.zip
+      run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x64_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x64_native.zip
       if: github.event.inputs.enableX64 == 'true'
 
     - name: Update x64 native release asset
@@ -182,8 +182,8 @@ jobs:
       if: github.event.inputs.enableX64 == 'true'
       with:
         upload_url: ${{ steps.release-drafter.outputs.upload_url }}
-        asset_path: C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x64.zip
-        asset_name: ${{env.AppName}}_${{github.event.inputs.version}}_x64.zip
+        asset_path: C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x64_native.zip
+        asset_name: ${{env.AppName}}_${{github.event.inputs.version}}_x64_native.zip
         asset_content_type: application/zip
 
 
