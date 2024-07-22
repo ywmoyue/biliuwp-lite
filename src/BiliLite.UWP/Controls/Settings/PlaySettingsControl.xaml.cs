@@ -6,6 +6,7 @@ using Windows.UI.Xaml.Controls;
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using BiliLite.ViewModels.Settings;
+using System.Linq;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -14,10 +15,12 @@ namespace BiliLite.Controls.Settings
     public sealed partial class PlaySettingsControl : UserControl
     {
         private readonly PlaySettingsControlViewModel m_viewModel;
+        private readonly PlaySpeedMenuService m_playSpeedMenuService;
 
         public PlaySettingsControl()
         {
             m_viewModel = App.ServiceProvider.GetRequiredService<PlaySettingsControlViewModel>();
+            m_playSpeedMenuService = App.ServiceProvider.GetRequiredService<PlaySpeedMenuService>();
             this.InitializeComponent();
             LoadPlayer();
         }
@@ -32,14 +35,18 @@ namespace BiliLite.Controls.Settings
                 SettingService.SetValue(SettingConstants.Player.DEFAULT_VIDEO_TYPE, (int)cbVideoType.SelectedValue);
             };
             //视频倍速
-            //cbVideoSpeed.SelectedIndex = SettingConstants.Player.VideoSpeed.IndexOf(SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d));
-            //cbVideoSpeed.Loaded += new RoutedEventHandler((sender, e) =>
-            //{
-            //    cbVideoSpeed.SelectionChanged += new SelectionChangedEventHandler((obj, args) =>
-            //    {
-            //        SettingService.SetValue(SettingConstants.Player.DEFAULT_VIDEO_SPEED, SettingConstants.Player.VideoSpeed[cbVideoSpeed.SelectedIndex]);
-            //    });
-            //});
+            var speeds = m_playSpeedMenuService.MenuItems
+                .Select(x => x.Value)
+                .ToList();
+            cbVideoSpeed.SelectedIndex = speeds
+                .IndexOf(SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d));
+            cbVideoSpeed.Loaded += (sender, e) =>
+            {
+                cbVideoSpeed.SelectionChanged += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.DEFAULT_VIDEO_SPEED, speeds[cbVideoSpeed.SelectedIndex]);
+                };
+            };
 
             //硬解视频
             //swHardwareDecode.IsOn = SettingService.GetValue<bool>(SettingConstants.Player.HARDWARE_DECODING, true);

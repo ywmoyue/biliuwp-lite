@@ -48,22 +48,17 @@
         <TextBlock  Margin="0 16 0 8" FontSize="16" Visibility="Collapsed">使用FFmpeg播放时硬解视频</TextBlock>
         <ToggleSwitch x:Name="swHardwareDecode" Visibility="Collapsed"></ToggleSwitch>-->
 
-        <!--<controls:SettingsCard Header="视频默认倍速"
+        <controls:SettingsCard Header="视频默认倍速"
                                Description="视频默认倍速">
             <controls:SettingsCard.HeaderIcon>
                 <font:FontAwesome Icon="Solid_AngleDoubleRight"></font:FontAwesome>
             </controls:SettingsCard.HeaderIcon>
-            <ComboBox x:Name="cbVideoSpeed" SelectedIndex="0" MinWidth="200">
-                <ComboBox.Items>
-                    <ComboBoxItem Content="2.0x" ></ComboBoxItem>
-                    <ComboBoxItem Content="1.5x" ></ComboBoxItem>
-                    <ComboBoxItem Content="1.25x" ></ComboBoxItem>
-                    <ComboBoxItem Content="1.0x"></ComboBoxItem>
-                    <ComboBoxItem Content="0.75x" ></ComboBoxItem>
-                    <ComboBoxItem Content="0.5x" ></ComboBoxItem>
-                </ComboBox.Items>
+            <ComboBox x:Name="cbVideoSpeed" SelectedIndex="0" MinWidth="200"
+                      SelectedValuePath="Value"
+                      DisplayMemberPath="Content"
+                      ItemsSource="{x:Bind m_playSpeedMenuService.MenuItems}">
             </ComboBox>
-        </controls:SettingsCard>-->
+        </controls:SettingsCard>
 
         <controls:SettingsCard Header="播放完成自动切换下一P"
                                Description="播放完成自动切换下一P">
