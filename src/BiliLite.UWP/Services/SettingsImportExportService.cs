@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -148,11 +149,21 @@ namespace BiliLite.Services
             return bin;
         }
 
+        private async Task<StorageFile> GetExportFile()
+        {
+            var savePicker = new FileSavePicker();
+            savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            savePicker.FileTypeChoices.Add("bililite设置文件", new List<string>() { ".bililiteSettings" });
+            var fileName = $"{DateTime.Now.ToString("yyyy-M-d-HH_mm_ss")}";
+            savePicker.SuggestedFileName = fileName;
+            var file = await savePicker.PickSaveFileAsync();
+            return file;
+        }
+
         public async Task<bool> ExportSettings()
         {
-            var folder = await new FolderPicker().PickSingleFolderAsync();
-            if (folder == null) return false;
-            var file = await folder.CreateFileAsync($"{DateTime.Now.ToString("yyyy-M-d-HH_mm_ss")}.bililiteSettings");
+            var file = await GetExportFile();
+            if (file == null) return false;
 
             try
             {
@@ -185,9 +196,8 @@ namespace BiliLite.Services
 
         public async Task<bool> ExportSettingsWithAccount()
         {
-            var folder = await new FolderPicker().PickSingleFolderAsync();
-            if (folder == null) return false;
-            var file = await folder.CreateFileAsync($"{DateTime.Now.ToString("yyyy-M-d-HH_mm_ss")}.bililiteSettings");
+            var file = await GetExportFile();
+            if (file == null) return false;
 
             try
             {
