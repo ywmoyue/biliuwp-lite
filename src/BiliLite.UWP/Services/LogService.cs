@@ -99,14 +99,16 @@ namespace BiliLite.Services
             if ((int)type < LogLowestLevel) return;
             if (IsProtectLogInfo)
                 message = message.ProtectValues("access_key", "csrf", "access_token", "sign");
+
+            var logEvent = new LogEventInfo(LogLevel.Info, null, message);
+
             var exception = "";
             if (ex != null && IsProtectLogInfo)
             {
                 exception = ex.Message.ProtectValues("access_key", "csrf", "access_token", "sign") + "\n"
                     + ex.StackTrace.ProtectValues("access_key", "csrf", "access_token", "sign");
+                logEvent.Properties["exception"] = exception;
             }
-            
-            var logEvent = new LogEventInfo(LogLevel.Info, null, message);
             switch (type)
             {
                 case LogType.Trace:
@@ -120,15 +122,12 @@ namespace BiliLite.Services
                     break;
                 case LogType.Warn:
                     logEvent.Level = LogLevel.Warn;
-                    logEvent.Properties["exception"] = exception;
                     break;
                 case LogType.Error:
                     logEvent.Level = LogLevel.Error;
-                    logEvent.Properties["exception"] = exception;
                     break;
                 case LogType.Fatal:
                     logEvent.Level = LogLevel.Fatal;
-                    logEvent.Properties["exception"] = exception;
                     break;
                 case LogType.Necessary:
                     logEvent.Level = LogLevel.Info;
@@ -136,6 +135,7 @@ namespace BiliLite.Services
                 default:
                     break;
             }
+
             logEvent.Properties["type"] = typeName;
             logEvent.Properties["method"] = methodName;
             logger.Log(logEvent);
