@@ -1,4 +1,5 @@
-﻿using BiliLite.Extensions;
+﻿using System.Threading.Tasks;
+using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using Windows.UI.Xaml;
@@ -16,7 +17,7 @@ namespace BiliLite.Pages.Home
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class DynamicPage : Page
+    public sealed partial class DynamicPage : Page, IRefreshablePage
     {
         private readonly DynamicPageViewModel m_viewModel;
 
@@ -38,9 +39,14 @@ namespace BiliLite.Pages.Home
             }
         }
 
-        private void RefreshContainer_RefreshRequested(Microsoft.UI.Xaml.Controls.RefreshContainer sender, Microsoft.UI.Xaml.Controls.RefreshRequestedEventArgs args)
+        public async Task Refresh()
         {
             m_viewModel.Refresh();
+        }
+
+        private async void RefreshContainer_RefreshRequested(Microsoft.UI.Xaml.Controls.RefreshContainer sender, Microsoft.UI.Xaml.Controls.RefreshRequestedEventArgs args)
+        {
+            await Refresh();
         }
 
         private void AdaptiveGridView_ItemClick(object sender, ItemClickEventArgs e)
@@ -61,6 +67,17 @@ namespace BiliLite.Pages.Home
                     page = typeof(SeasonDetailPage),
                     parameters = item.Season.Season.SeasonId,
                     title = item.Season.Season.Title,
+                    dontGoTo = dontGoTo
+                });
+            }
+            else if (item.Desc.Type == 4310)
+            {
+                MessageCenter.NavigateToPage(this, new NavigationInfo()
+                {
+                    icon = Symbol.Play,
+                    page = typeof(VideoDetailPage),
+                    parameters = item.UgcSeason.Aid,
+                    title = item.UgcSeason.Title,
                     dontGoTo = dontGoTo
                 });
             }

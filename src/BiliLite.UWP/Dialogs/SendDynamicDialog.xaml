@@ -6,13 +6,14 @@
     xmlns:modules="using:BiliLite.Modules"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="using:BiliLite.ViewModels"
     mc:Ignorable="d">
     <ContentDialog.Resources>
         <Flyout  x:Key="FaceFlyout" x:Name="FaceFlyout">
             <Grid Width="320">
                 <Pivot x:Name="pivot_face" ItemsSource="{x:Bind Path=emoteVM.Packages,Mode=OneWay}">
                     <Pivot.HeaderTemplate>
-                        <DataTemplate x:DataType="modules:EmotePackageModel">
+                        <DataTemplate x:DataType="viewModels:EmotePackageModel">
                             <TextBlock FontSize="18" Text="{x:Bind text}"></TextBlock>
                         </DataTemplate>
                     </Pivot.HeaderTemplate>
@@ -30,7 +31,7 @@
                                     <DataTemplate>
                                         <StackPanel >
                                             <Image Visibility="{Binding Path=showImage}"  Source="{Binding url}" Width="36" Margin="4 0"></Image>
-                                            <TextBlock Width="90" TextAlignment="Center" Visibility="{Binding Path=showImage,Converter={StaticResource display}}" FontSize="12" HorizontalAlignment="Center" Text="{Binding text}"></TextBlock>
+                                            <TextBlock Width="90" TextAlignment="Center" Visibility="{Binding Path=showImage,Converter={StaticResource display}}" FontSize="12" HorizontalAlignment="Center" Text="{Binding Text}"></TextBlock>
 
 
                                         </StackPanel>
@@ -99,13 +100,25 @@
     <Grid>
 
         <StackPanel x:Name="st" Width="440">
-            <TextBlock Visibility="{x:Bind Path=sendDynamicVM.IsRepost,Mode=OneWay}" Margin="4 0">转发动态</TextBlock>
-            <TextBlock Visibility="{x:Bind Path=sendDynamicVM.IsRepost,Mode=OneWay,Converter={StaticResource display}}" Margin="4 0">发表动态</TextBlock>
+            <TextBlock Visibility="{x:Bind Path=m_viewModel.IsRepost,Mode=OneWay}" Margin="4 0">转发动态</TextBlock>
+            <TextBlock Visibility="{x:Bind Path=m_viewModel.IsRepost,Mode=OneWay,Converter={StaticResource display}}" Margin="4 0">发表动态</TextBlock>
             <TextBox x:Name="txtContent" TextChanged="txtContent_TextChanged" MinHeight="120"  Margin="0 4 0 0" TextWrapping="Wrap" MaxLength="233"  AcceptsReturn="True" PlaceholderText="说点什么吧..."></TextBox>
 
-            <StackPanel Visibility="{x:Bind Path=sendDynamicVM.IsRepost,Mode=OneWay}" Margin="0 8" Padding="8" Background="#33808080">
-                <TextBlock MaxLines="1" TextTrimming="CharacterEllipsis">@<Run Text="{x:Bind Path=sendDynamicVM.RepostInfo.UserName,Mode=OneWay}"></Run></TextBlock>
-                <TextBlock Text="{x:Bind Path=sendDynamicVM.RepostInfo.ContentStr,Mode=OneWay}" MaxLines="1" TextTrimming="CharacterEllipsis" FontSize="14" Foreground="Gray"></TextBlock>
+            <StackPanel Visibility="{x:Bind Path=m_viewModel.IsRepost,Mode=OneWay}" Margin="0 8" Padding="8" Background="#33808080">
+                <TextBlock 
+                    MaxLines="1" 
+                    TextTrimming="CharacterEllipsis"
+                    Visibility="{x:Bind Path=m_viewModel.IsRepost,Mode=OneWay}" >
+                    @
+                    <Run Text="{x:Bind Path=m_viewModel.RepostInfo.UserName,Mode=OneWay}"></Run>
+                </TextBlock>
+                <TextBlock 
+                    Visibility="{x:Bind Path=m_viewModel.IsRepost,Mode=OneWay}"
+                    Text="{x:Bind Path=m_viewModel.RepostInfo.ContentStr,Mode=OneWay}" 
+                    MaxLines="1" 
+                    TextTrimming="CharacterEllipsis" 
+                    FontSize="14" 
+                    Foreground="Gray"></TextBlock>
             </StackPanel>
 
             <Grid Margin="0 4 0 0">
@@ -121,7 +134,7 @@
                             <FontIcon FontFamily="Segoe MDL2 Assets" FontSize="14"  Glyph="&#xE1E9;" />
                         </StackPanel>
                     </Button>-->
-                    <Button x:Name="btnImage" Click="btnImage_Click" Visibility="{x:Bind Path=sendDynamicVM.IsRepost,Mode=OneWay,Converter={StaticResource display}}" ToolTipService.ToolTip="上传图片"  Width="36" Height="36"  Margin="4 0 0 0" >
+                    <Button x:Name="btnImage" Click="btnImage_Click" Visibility="{x:Bind Path=m_viewModel.IsRepost,Mode=OneWay,Converter={StaticResource display}}" ToolTipService.ToolTip="上传图片"  Width="36" Height="36"  Margin="4 0 0 0" >
                         <StackPanel Orientation="Horizontal">
                             <FontIcon FontFamily="Segoe MDL2 Assets" FontSize="14"  Glyph="&#xEB9F;" />
 
@@ -133,7 +146,7 @@
                         </StackPanel>
                        
                     </Button>
-                    <Button x:Name="btnTopic" Click="btnTopic_Click"  Visibility="{x:Bind Path=sendDynamicVM.IsRepost,Mode=OneWay,Converter={StaticResource display}}" Width="36" Height="36"    Margin="4 0 0 0"   ToolTipService.ToolTip="话题" >
+                    <Button x:Name="btnTopic" Click="btnTopic_Click"  Visibility="{x:Bind Path=m_viewModel.IsRepost,Mode=OneWay,Converter={StaticResource display}}" Width="36" Height="36"    Margin="4 0 0 0"   ToolTipService.ToolTip="话题" >
                         <StackPanel Orientation="Horizontal">
                             <TextBlock  FontSize="18" Text="#" />
                         </StackPanel>
@@ -151,19 +164,19 @@
                     <Button  x:Name="btnSend" Click="btnSend_Click" Width="64" Foreground="White" Background="{ThemeResource SystemAccentColor}" >发表</Button>
                 </StackPanel>
             </Grid>
-            <StackPanel x:Name="pr_Upload" Margin="0 4" Visibility="{x:Bind Path=sendDynamicVM.Uploading,Mode=OneWay}">
+            <StackPanel x:Name="pr_Upload" Margin="0 4" Visibility="{x:Bind Path=m_viewModel.Uploading,Mode=OneWay}">
                 <ProgressBar Background="#00000000" IsIndeterminate="True" ></ProgressBar>
                 <TextBlock FontSize="14" Foreground="Gray" Margin="4 0" VerticalAlignment="Center">图片上传中...</TextBlock>
             </StackPanel>
 
-            <StackPanel x:Name="pics" Visibility="{x:Bind Path=sendDynamicVM.ShowImage,Mode=OneWay}" Margin="0 4" Padding="4" Background="#33808080">
-                <TextBlock Margin="0 4"><Run Text="{x:Bind Path=sendDynamicVM.Images.Count,Mode=OneWay}"></Run>/9张图片</TextBlock>
-                <GridView x:Name="gv_Pics" ItemsSource="{x:Bind Path=sendDynamicVM.Images,Mode=OneWay}" HorizontalAlignment="Center" SelectionMode="None" IsItemClickEnabled="True" MaxHeight="200" Margin="0 4 0 0">
+            <StackPanel x:Name="pics" Visibility="{x:Bind Path=m_viewModel.ShowImage,Mode=OneWay}" Margin="0 4" Padding="4" Background="#33808080">
+                <TextBlock Margin="0 4"><Run Text="{x:Bind Path=m_viewModel.Images.Count,Mode=OneWay}"></Run>/9张图片</TextBlock>
+                <GridView x:Name="gv_Pics" ItemsSource="{x:Bind Path=m_viewModel.Images,Mode=OneWay}" HorizontalAlignment="Center" SelectionMode="None" IsItemClickEnabled="True" MaxHeight="200" Margin="0 4 0 0">
 
                     <GridView.ItemTemplate>
                         <DataTemplate>
                             <Grid>
-                                <Image Width="100" Source="{Binding image}" Stretch="UniformToFill"></Image>
+                                <Image Width="100" Source="{Binding Image}" Stretch="UniformToFill"></Image>
                                 <Button  Click="btn_RemovePic_Click" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Top" BorderThickness="0" Width="24" Height="24" Padding="0" Background="#33000000">
                                     <FontIcon FontFamily="Segoe MDL2 Assets" FontSize="14" Glyph="&#xE947;" />
                                 </Button>

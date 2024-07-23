@@ -5,8 +5,12 @@ using BiliLite.Services;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.Web.WebView2.Core;
+using Windows.Storage;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 
@@ -50,9 +54,17 @@ namespace BiliLite.Dialogs
             loginVM.ValidateLogin(JObject.Parse(e));
 
         }
-        private void LoginVM_OpenWebView(object sender, Uri e)
+
+        private async void LoginVM_OpenWebView(object sender, Uri e)
         {
-            webView.Source = e;
+            await InitWebView2();
+            var templateText = await FileIO.ReadTextAsync(
+                await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/GeeTest/bili_gt.cshtml")));
+
+            var result = templateText.Replace("@Model.Url", e.AbsoluteUri);
+
+            //webView.Source = e;
+            webView.NavigateToString(result);
         }
 
         private void SMSLoginDialog_Loaded(object sender, RoutedEventArgs e)
@@ -77,6 +89,11 @@ namespace BiliLite.Dialogs
         }
 
 
+        private async Task InitWebView2()
+        {
+            await webView.EnsureCoreWebView2Async();
+        }
+
 
         private void txt_Password_GotFocus(object sender, RoutedEventArgs e)
         {
@@ -88,20 +105,20 @@ namespace BiliLite.Dialogs
             hide.Visibility = Visibility.Collapsed;
         }
 
-        private async void webView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
+        private async void WebView_OnNavigationStarting(WebView2 sender, CoreWebView2NavigationStartingEventArgs args)
         {
-            if (args.Uri.AbsoluteUri.Contains("access_key="))
+            if (args.Uri.Contains("access_key="))
             {
-                var access = Regex.Match(args.Uri.AbsoluteUri, "access_key=(.*?)&").Groups[1].Value;
-                var mid = Regex.Match(args.Uri.AbsoluteUri, "mid=(.*?)&").Groups[1].Value;
+                var access = Regex.Match(args.Uri, "access_key=(.*?)&").Groups[1].Value;
+                var mid = Regex.Match(args.Uri, "mid=(.*?)&").Groups[1].Value;
                 var appKey = SettingConstants.Account.DefaultLoginAppKeySecret;
                 await loginVM.account.SaveLogin(access, "", 0, long.Parse(mid), null, null, appKey);
                 this.Hide();
                 return;
             }
-            if (args.Uri.AbsoluteUri.Contains("geetest.result"))
+            if (args.Uri.Contains("geetest.result"))
             {
-                var success = (Regex.Match(args.Uri.AbsoluteUri, @"success=(\d)&").Groups[1].Value).ToInt32();
+                var success = (Regex.Match(args.Uri, @"success=(\d)&").Groups[1].Value).ToInt32();
                 if (success == 0)
                 {
                     //验证失败
@@ -112,10 +129,10 @@ namespace BiliLite.Dialogs
                 {
                     webView.Visibility = Visibility.Collapsed;
                     //验证成功
-                    var challenge = Regex.Match(args.Uri.AbsoluteUri, "geetest_challenge=(.*?)&").Groups[1].Value;
-                    var validate = Regex.Match(args.Uri.AbsoluteUri, "geetest_validate=(.*?)&").Groups[1].Value;
-                    var seccode = Regex.Match(args.Uri.AbsoluteUri, "geetest_seccode=(.*?)&").Groups[1].Value;
-                    var recaptcha_token = Regex.Match(args.Uri.AbsoluteUri, "recaptcha_token=(.*?)&").Groups[1].Value;
+                    var challenge = Regex.Match(args.Uri, "geetest_challenge=(.*?)&").Groups[1].Value;
+                    var validate = Regex.Match(args.Uri, "geetest_validate=(.*?)&").Groups[1].Value;
+                    var seccode = Regex.Match(args.Uri, "geetest_seccode=(.*?)&").Groups[1].Value;
+                    var recaptcha_token = Regex.Match(args.Uri, "recaptcha_token=(.*?)&").Groups[1].Value;
                     loginVM.HandleGeetestSuccess(seccode, validate, challenge, recaptcha_token);
                 }
                 else if (success == 2)
@@ -129,8 +146,8 @@ namespace BiliLite.Dialogs
             }
             try
             {
-                this.webView.AddWebAllowedObject("biliapp", _biliapp);
-                this.webView.AddWebAllowedObject("secure", _secure);
+                //this.webView.AddWebAllowedObject("biliapp", _biliapp);
+                //this.webView.AddWebAllowedObject("secure", _secure);
             }
             catch (Exception ex)
             {
@@ -138,15 +155,15 @@ namespace BiliLite.Dialogs
             }
         }
 
-        private async void WebView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
+        private async void WebView_OnNavigationCompleted(WebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
         {
-            if (args.Uri.AbsoluteUri == "https://passport.bilibili.com/ajax/miniLogin/redirect" || args.Uri.AbsoluteUri == "https://www.bilibili.com/")
+            if (sender.Source.AbsoluteUri == "https://passport.bilibili.com/ajax/miniLogin/redirect" || sender.Source.AbsoluteUri == "https://www.bilibili.com/")
             {
                 var results = await $"https://passport.bilibili.com/login/app/third?appkey=&api=http%3A%2F%2Flink.acg.tv%2Fforum.php&sign=67ec798004373253d60114caaad89a8c".GetString();
                 var obj = JObject.Parse(results);
                 if (obj["code"].ToInt32() == 0)
                 {
-                    webView.Navigate(new Uri(obj["data"]["confirm_uri"].ToString()));
+                    webView.Source = new Uri(obj["data"]["confirm_uri"].ToString());
                 }
                 else
                 {

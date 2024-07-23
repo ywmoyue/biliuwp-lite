@@ -15,6 +15,7 @@ using BiliLite.Extensions;
 using System.IO.Compression;
 using BiliLite.Models.Common.Live;
 using BiliLite.ViewModels.Live;
+using System.Diagnostics;
 
 /*
 * 参考文档:
@@ -31,13 +32,16 @@ namespace BiliLite.Modules.Live
         public delegate void MessageHandler(MessageType type, object message);
         public event MessageHandler NewMessage;
         ClientWebSocket ws;
+        Stopwatch Stopwatch;
+
 
         public LiveMessage()
         {
             ws = new ClientWebSocket();
+            Stopwatch = new Stopwatch();
         }
         private static System.Timers.Timer heartBeatTimer;
-        public async Task Connect(int roomID, int uid, string token, string buvid, string host, CancellationToken cancellationToken)
+        public async Task Connect(int roomID, long uid, string token, string buvid, string host, CancellationToken cancellationToken)
         {
             ws.Options.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.69");
             //连接
@@ -89,7 +93,7 @@ namespace BiliLite.Modules.Live
         /// </summary>
         /// <param name="roomId"></param>
         /// <returns></returns>
-        private async Task JoinRoomAsync(int roomId, string buvid, string token, int uid = 0)
+        private async Task JoinRoomAsync(int roomId, string buvid, string token, long uid = 0)
         {
             if (ws.State == WebSocketState.Open)
             {
@@ -143,33 +147,47 @@ namespace BiliLite.Modules.Live
             else if (operation == 5)
             {
                 body = DecompressData(protocolVersion, body);
-
                 var text = Encoding.UTF8.GetString(body);
+
+                // 记录此包中的普通弹幕信息个数
+                var danmuCount = Regex.Matches(text, Regex.Escape("DANMU_MSG"), RegexOptions.IgnoreCase).Count;
+                if (danmuCount > 0)
+                {
+                    if (Stopwatch.IsRunning == true) Stopwatch.Stop();
+                    else Stopwatch.Start();
+                }
+
                 //可能有多条数据，做个分割
                 var textLines = Regex.Split(text, "[\x00-\x1f]+").Where(x => x.Length > 2 && x[0] == '{').ToArray();
 
                 foreach (var item in textLines)
                 {
-                    // 每波弹幕大约2.5秒, 使用2.3秒避免弹幕延迟
+                    // 使用上波弹幕到这波的间隔确定延迟
+                    var danmuDelay = danmuCount > 0 ? (Stopwatch.Elapsed.TotalMilliseconds / danmuCount  * 1.2) : 0;
+                    // 控制弹幕延迟最小和最大长度
+                    danmuDelay = danmuDelay < 20 ? 20 : danmuDelay;
+                    danmuDelay = danmuDelay > 1000 ? 1000 : danmuDelay;
                     var delay = ParseMessage(item) switch
                     {
-                        MessageDelayType.DanmuMessage => 2.3 / textLines.Length, // 常规弹幕类型, 加延迟
-                        MessageDelayType.GiftMessage => 0.1 / textLines.Length, // 礼物消息类型, 加一点延迟
+                        MessageDelayType.DanmuMessage => danmuDelay, // 常规弹幕类型, 加延迟
+                        MessageDelayType.GiftMessage => 100 / textLines.Length, // 礼物消息类型, 加一点延迟
                         MessageDelayType.SystemMessage => 0.0, // 其他系统消息类型, 无需加延迟
                         _ => 0.0
                     };
 
                     if (delay > 0.0)
                     {
-                        await Task.Delay(TimeSpan.FromSeconds(delay));
+                        await Task.Delay(TimeSpan.FromMilliseconds(delay));
                     }
                     else
                     {
                         continue;
                     }
                 }
+
+                if (danmuCount > 0) Stopwatch.Restart();
+                }
             }
-        }
 
         private MessageDelayType ParseMessage(string jsonMessage)
         {
@@ -177,7 +195,7 @@ namespace BiliLite.Modules.Live
             {
                 var obj = JObject.Parse(jsonMessage);
                 var cmd = obj["cmd"].ToString();
-                if (cmd == ("DANMU_MSG"))
+                if (cmd.StartsWith("DANMU_MSG"))
                 {
                     var msg = new DanmuMsgModel();
                     if (obj["info"] != null && obj["info"].ToArray().Length != 0)
@@ -243,24 +261,9 @@ namespace BiliLite.Modules.Live
                         }
 
                         // 是否为舰长
-                        if (obj["info"][3] != null && obj["info"][3].ToArray().Length != 0 &&
-                            obj["info"][3][10] != null && Convert.ToInt32(obj["info"][3][10].ToString()) != 0)
+                        if (obj["info"][7] != null && obj["info"][7].ToString().Length != 0)
                         {
-                            switch (Convert.ToInt32(obj["info"][3][10].ToString()))
-                            {
-                                case 3:
-                                    msg.UserCaptain = "舰长";
-                                    msg.UserNameColor = "#FF23709E";
-                                    break;
-                                case 2:
-                                    msg.UserCaptain = "提督";
-                                    msg.UserNameColor = "#FF7B166F";
-                                    break;
-                                case 1:
-                                    msg.UserCaptain = "总督";
-                                    msg.UserNameColor = "#FFC01039";
-                                    break;
-                            }
+                            msg.UserCaptain = (UserCaptainType)obj["info"][7].ToInt32();
                             msg.ShowCaptain = Visibility.Visible;
                         }
 
@@ -268,7 +271,7 @@ namespace BiliLite.Modules.Live
                         if (obj["info"][3] != null && obj["info"][3].ToArray().Length != 0)
                         {
                             msg.MedalName = obj["info"][3][1].ToString();
-                            msg.MedalLevel = obj["info"][3][0].ToString();
+                            msg.MedalLevel = obj["info"][3][0].ToInt32();
                             msg.MedalColor = obj["info"][3][4].ToString();
                             msg.ShowMedal = Visibility.Visible;
                         }
@@ -332,7 +335,7 @@ namespace BiliLite.Modules.Live
                         if (obj["data"]["fans_medal"]["medal_level"].ToInt32() != 0)
                         {
                             w.MedalName = obj["data"]["fans_medal"]["medal_name"].ToString();
-                            w.MedalLevel = obj["data"]["fans_medal"]["medal_level"].ToString();
+                            w.MedalLevel = obj["data"]["fans_medal"]["medal_level"].ToInt32();
                             w.MedalColor = obj["data"]["fans_medal"]["medal_color"].ToString();
                             w.ShowMedal = Visibility.Visible;
                         }
@@ -396,6 +399,15 @@ namespace BiliLite.Modules.Live
                     msgView.Message = obj["data"]["message"].ToString();
                     msgView.Price = obj["data"]["price"].ToInt32();
                     msgView.Username = obj["data"]["user_info"]["uname"].ToString();
+                    msgView.GuardLevel = (UserCaptainType)obj["data"]["user_info"]["guard_level"].ToInt32();
+                    msgView.Uid = obj["data"]["uid"].ToInt64();
+                    
+                    if (obj["data"]["medal_info"] != null && obj["data"]["medal_info"].ToArray().Length != 0)
+                    {
+                        msgView.MedalLevel = obj["data"]["medal_info"]["medal_level"].ToInt32();
+                        msgView.MedalName = obj["data"]["medal_info"]["medal_name"].ToString();
+                        msgView.MedalColor = obj["data"]["medal_info"]["medal_color"].ToString();
+                    }
                     NewMessage?.Invoke(MessageType.SuperChat, msgView);
                     return MessageDelayType.SystemMessage;
                 }
@@ -414,19 +426,38 @@ namespace BiliLite.Modules.Live
                     }
                     return MessageDelayType.SystemMessage;
                 }
-                else if (cmd == "GUARD_BUY")
+                //else if (cmd == "GUARD_BUY")
+                //{
+                //    if (obj["data"] != null)
+                //    {
+                //        NewMessage?.Invoke(MessageType.GuardBuy, new GuardBuyMsgModel()
+                //        {
+                //            GiftId = obj["data"]["gift_id"].ToInt32(),
+                //            GiftName = obj["data"]["gift_name"].ToString(),
+                //            Num = obj["data"]["num"].ToInt32(),
+                //            Price = obj["data"]["price"].ToInt32(),
+                //            UserName = obj["data"]["username"].ToString(),
+                //            UserID = obj["data"]["uid"].ToString(),
+                //            GuardLevel = obj["data"]["guard_level"].ToInt32(),
+                //        });
+                //    }
+                //    return MessageDelayType.SystemMessage;
+                //}
+                else if (cmd == "USER_TOAST_MSG")
                 {
                     if (obj["data"] != null)
                     {
-                        NewMessage?.Invoke(MessageType.GuardBuy, new GuardBuyMsgModel()
+                        NewMessage?.Invoke(MessageType.GuardBuyNew, new GuardBuyMsgModel() 
                         {
                             GiftId = obj["data"]["gift_id"].ToInt32(),
-                            GiftName = obj["data"]["gift_name"].ToString(),
+                            GiftName = obj["data"]["role_name"].ToString(),
                             Num = obj["data"]["num"].ToInt32(),
                             Price = obj["data"]["price"].ToInt32(),
                             UserName = obj["data"]["username"].ToString(),
                             UserID = obj["data"]["uid"].ToString(),
                             GuardLevel = obj["data"]["guard_level"].ToInt32(),
+                            Unit = obj["data"]["unit"].ToString(),
+                            Message = obj["data"]["toast_msg"].ToString(),
                         });
                     }
                     return MessageDelayType.SystemMessage;
@@ -495,7 +526,7 @@ namespace BiliLite.Modules.Live
                 {
                     if (obj["data"] != null)
                     {
-                        NewMessage?.Invoke(MessageType.RoomSlient, obj["data"]["level"].ToInt32());
+                        NewMessage?.Invoke(MessageType.ChatLevelMute, obj["data"]["level"].ToInt32());
                     }
                     return MessageDelayType.SystemMessage;
                 }

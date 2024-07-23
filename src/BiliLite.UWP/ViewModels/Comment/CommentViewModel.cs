@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
@@ -22,6 +24,7 @@ namespace BiliLite.ViewModels.Comment
         public CommentViewModel()
         {
             LaunchUrlCommand = new RelayCommand<object>(LaunchUrl_Click);
+            SeekCommand = new RelayCommand<string>(Seek_Click);
             CommentExpandCommand = new RelayCommand(CommentExpand_Click);
             m_commentShrinkLength = SettingService.GetValue(SettingConstants.UI.COMMENT_SHRINK_LENGTH,
                 SettingConstants.UI.COMMENT_SHRINK_DEFAULT_LENGTH);
@@ -151,6 +154,18 @@ namespace BiliLite.ViewModels.Comment
 
         public ObservableCollection<CommentViewModel> Replies { get; set; }
 
+        public List<HotReply> HotReplies { get; set; }
+
+        [DependsOn(nameof(ShowReplies))]
+        public bool ShowHotReplies
+        {
+            get
+            {
+                if (!SettingService.GetValue(SettingConstants.UI.SHOW_HOT_REPLIES, SettingConstants.UI.DEFAULT_SHOW_HOT_REPLIES)) return false;
+                return !ShowReplies;
+            }
+        }
+
         //public ObservableCollection<CommentModel> replies { get; set; }
 
         public bool ShowReplies { get; set; } = false;
@@ -188,6 +203,8 @@ namespace BiliLite.ViewModels.Comment
 
         public RelayCommand<object> LaunchUrlCommand { get; private set; }
 
+        public RelayCommand<string> SeekCommand { get; private set; }
+
         public bool ShowPics => Content.Pictures.Count > 0;
 
         public bool IsContentNeedExpand => m_enableCommentShrink && Content.Message.CalculateCommentTextLength() > m_commentShrinkLength;
@@ -199,7 +216,8 @@ namespace BiliLite.ViewModels.Comment
             {
                 if (!IsContentNeedExpand || IsContentNeedExpand && IsExpanded)
                     return Content.Text;
-                return $"{Content.Message.SubstringCommentText(m_commentShrinkLength)}...".ToRichTextBlock(Content.Emote);
+                return $"{Content.Message.SubstringCommentText(m_commentShrinkLength)}...".ToRichTextBlock(
+                    Content.Emote, enableVideoSeekTime: true);
             }
         }
 
@@ -211,6 +229,26 @@ namespace BiliLite.ViewModels.Comment
         private async void LaunchUrl_Click(object paramenter)
         {
             await MessageCenter.HandelUrl(paramenter.ToString());
+        }
+
+        private async void Seek_Click(string timeText)
+        {
+            timeText = timeText.Replace('：', ':');
+            var timeSplitCount = timeText.Count(x => x == ':');
+            var text = timeText;
+            // "mm:ss"格式，补全
+            if (timeSplitCount == 1)
+            {
+                text = "00:" + timeText;
+            }
+            // 不是"hh:mm:ss"格式，不继续执行
+            else if (timeSplitCount != 2)
+            {
+                return;
+            }
+
+            var time = TimeSpan.Parse(text);
+            MessageCenter.HandleSeek(time.TotalSeconds);
         }
 
         private void CommentExpand_Click()

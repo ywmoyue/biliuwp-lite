@@ -25,6 +25,11 @@ namespace BiliLite.Services
             storageHelper.Save<T>(key, value);
         }
 
+        public static bool HasValue(string key)
+        {
+            return storageHelper.KeyExists(key);
+        }
+
         public class UI
         {
             private static bool? _loadOriginalImage = null;
@@ -53,7 +58,7 @@ namespace BiliLite.Services
 
             public static string AccessKey => GetValue(SettingConstants.Account.ACCESS_KEY, "");
 
-            public static int UserID => GetValue(SettingConstants.Account.USER_ID, 0);
+            public static long UserID => GetValue<long>(SettingConstants.Account.USER_ID, 0);
 
             public static ApiKeyInfo GetLoginAppKeySecret()
             {

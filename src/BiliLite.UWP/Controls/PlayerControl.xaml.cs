@@ -41,6 +41,9 @@ using BiliLite.Models.Common.Danmaku;
 using BiliLite.Models.Common.Player;
 using BiliLite.Models.Common.Video.PlayUrlInfos;
 using BiliLite.Services.Interfaces;
+using BiliLite.ViewModels;
+using BiliLite.ViewModels.Settings;
+using Microsoft.Extensions.DependencyInjection;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -51,13 +54,21 @@ namespace BiliLite.Controls
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly bool m_useNsDanmaku = true;
         private readonly IDanmakuController m_danmakuController;
+        private readonly VideoDanmakuSettingsControlViewModel m_danmakuSettingsControlViewModel;
+        private readonly PlayControlViewModel m_viewModel;
+        private readonly PlayerToastService m_playerToastService;
+        private readonly PlaySpeedMenuService m_playSpeedMenuService;
         public event PropertyChangedEventHandler PropertyChanged;
         private GestureRecognizer gestureRecognizer;
         private void DoPropertyChanged(string name)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+
         InteractionVideoVM interactionVideoVM;
+
+        public Canvas PlayerToastContainer => ToolTipContainer;
+
         /// <summary>
         /// 铺满窗口事件
         /// </summary>
@@ -83,6 +94,9 @@ namespace BiliLite.Controls
         /// 当前播放
         /// </summary>
         public int CurrentPlayIndex { get; set; }
+
+        public bool IsPlaying => Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.End;
+
         /// <summary>
         /// 当前播放
         /// </summary>
@@ -106,7 +120,6 @@ namespace BiliLite.Controls
         /// </summary>
         IDictionary<int, List<NSDanmaku.Model.DanmakuModel>> danmakuPool = new Dictionary<int, List<NSDanmaku.Model.DanmakuModel>>();
         List<int> danmakuLoadedSegment;
-        SettingVM settingVM;
         DisplayRequest dispRequest;
         SystemMediaTransportControls _systemMediaTransportControls;
         DispatcherTimer timer_focus;
@@ -120,10 +133,14 @@ namespace BiliLite.Controls
 
         public PlayerControl()
         {
+            m_viewModel = new PlayControlViewModel();
+            m_playSpeedMenuService = App.ServiceProvider.GetRequiredService<PlaySpeedMenuService>();
+            m_playerToastService = App.ServiceProvider.GetRequiredService<PlayerToastService>();
+            m_playerToastService.Init(this);
             this.InitializeComponent();
             dispRequest = new DisplayRequest();
             playerHelper = new PlayerVM();
-            settingVM = new SettingVM();
+            m_danmakuSettingsControlViewModel = App.ServiceProvider.GetRequiredService<VideoDanmakuSettingsControlViewModel>();
 
             danmakuParse = new NSDanmaku.Helper.DanmakuParse();
             //每过2秒就设置焦点
@@ -143,12 +160,12 @@ namespace BiliLite.Controls
                 (int)SettingConstants.VideoDanmaku.DEFAULT_DANMAKU_ENGINE) == DanmakuEngineType.NSDanmaku;
             if (m_useNsDanmaku)
             {
-                m_danmakuController = new NsDanmakuController();
+                m_danmakuController = App.ServiceProvider.GetRequiredService<NsDanmakuController>();
                 m_danmakuController.Init(DanmuControl);
             }
             else
             {
-                m_danmakuController = new FrostMasterDanmakuController();
+                m_danmakuController = App.ServiceProvider.GetRequiredService<FrostMasterDanmakuController>();
                 m_danmakuController.Init(DanmakuCanvas);
             }
         }
@@ -202,7 +219,8 @@ namespace BiliLite.Controls
             }
             timer_focus.Stop();
         }
-        private void PlayerControl_Loaded(object sender, RoutedEventArgs e)
+
+        private async void PlayerControl_Loaded(object sender, RoutedEventArgs e)
         {
             m_danmakuController.Clear();
             Window.Current.CoreWindow.KeyDown += PlayerControl_KeyDown;
@@ -218,6 +236,7 @@ namespace BiliLite.Controls
                 updater.VideoProperties.Title = CurrentPlayItem.title;
                 updater.Update();
             }
+
             _systemMediaTransportControls.ButtonPressed += _systemMediaTransportControls_ButtonPressed;
 
             LoadPlayerSetting();
@@ -275,34 +294,6 @@ namespace BiliLite.Controls
             args.Handled = true;
             switch (args.VirtualKey)
             {
-                case Windows.System.VirtualKey.Space:
-                    if (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.End)
-                    {
-                        Pause();
-                    }
-                    else
-                    {
-                        Player.Play();
-                    }
-                    break;
-                case Windows.System.VirtualKey.Left:
-                    {
-                        if (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.Pause)
-                        {
-                            var _position = Player.ViewModel.Position - 3;
-                            if (_position < 0)
-                            {
-                                _position = 0;
-                            }
-                            Player.SetPosition(_position);
-                            TxtToolTip.Text = "进度:" + TimeSpan.FromSeconds(Player.ViewModel.Position).ToString(@"hh\:mm\:ss");
-                            ToolTip.Visibility = Visibility.Visible;
-                            await Task.Delay(2000);
-                            ToolTip.Visibility = Visibility.Collapsed;
-                        }
-                    }
-
-                    break;
                 case Windows.System.VirtualKey.Right:
                     {
                         if (m_playerKeyRightAction == PlayerKeyRightAction.AcceleratePlay)
@@ -316,39 +307,14 @@ namespace BiliLite.Controls
                             {
                                 _position = Player.ViewModel.Duration;
                             }
-                            Player.SetPosition(_position);
-                            TxtToolTip.Text = "进度:" + TimeSpan.FromSeconds(Player.ViewModel.Position).ToString(@"hh\:mm\:ss");
-                            ToolTip.Visibility = Visibility.Visible;
-                            await Task.Delay(2000);
-                            ToolTip.Visibility = Visibility.Collapsed;
+                            Player.Position = _position;
+
+                            m_playerToastService.Show(
+                                PlayerToastService.PROGRESS_KEY, "进度:" + TimeSpan.FromSeconds(Player.Position).ToString(@"hh\:mm\:ss"));
                         }
                     }
                     break;
-                case Windows.System.VirtualKey.Up:
-                    Player.ViewModel.Volume += 0.1;
-                    TxtToolTip.Text = "音量:" + Player.ViewModel.Volume.ToString("P");
-                    ToolTip.Visibility = Visibility.Visible;
-                    await Task.Delay(2000);
-                    ToolTip.Visibility = Visibility.Collapsed;
-                    break;
 
-                case Windows.System.VirtualKey.Down:
-                    Player.ViewModel.Volume -= 0.1;
-                    if (Player.ViewModel.Volume == 0)
-                    {
-                        TxtToolTip.Text = "静音";
-                    }
-                    else
-                    {
-                        TxtToolTip.Text = "音量:" + Player.ViewModel.Volume.ToString("P");
-                    }
-                    ToolTip.Visibility = Visibility.Visible;
-                    await Task.Delay(2000);
-                    ToolTip.Visibility = Visibility.Collapsed;
-                    break;
-                case Windows.System.VirtualKey.Escape:
-                    IsFullScreen = false;
-                    break;
                 case Windows.System.VirtualKey.F8:
                 case Windows.System.VirtualKey.T:
                     //小窗播放
@@ -376,11 +342,9 @@ namespace BiliLite.Controls
                             {
                                 _position = Player.ViewModel.Duration;
                             }
-                            Player.SetPosition(_position);
-                            TxtToolTip.Text = "跳过OP(快进90秒)";
-                            ToolTip.Visibility = Visibility.Visible;
-                            await Task.Delay(2000);
-                            ToolTip.Visibility = Visibility.Collapsed;
+                            Player.Position = _position;
+
+                            m_playerToastService.Show(PlayerToastService.MSG_KEY, "跳过OP(快进90秒)");
                         }
                     }
                     break;
@@ -422,14 +386,14 @@ namespace BiliLite.Controls
                 case Windows.System.VirtualKey.F1:
                 case (Windows.System.VirtualKey)186:
                     //慢速播放
-                    if (BottomCBSpeed.SelectedIndex == 5)
+                    if (BottomCBSpeed.SelectedIndex == m_playSpeedMenuService.MenuItems.Count - 1)
                     {
                         Notify.ShowMessageToast("不能再慢啦");
                         return;
                     }
 
                     BottomCBSpeed.SelectedIndex += 1;
-
+                    m_playerToastService.Show(PlayerToastService.SPEED_KEY, (BottomCBSpeed.SelectedItem as PlaySpeedMenuItem).Content);
                     break;
                 case Windows.System.VirtualKey.F2:
                 case (Windows.System.VirtualKey)222:
@@ -440,6 +404,7 @@ namespace BiliLite.Controls
                         return;
                     }
                     BottomCBSpeed.SelectedIndex -= 1;
+                    m_playerToastService.Show(PlayerToastService.SPEED_KEY, (BottomCBSpeed.SelectedItem as PlaySpeedMenuItem).Content);
                     break;
                 case Windows.System.VirtualKey.F3:
                 case Windows.System.VirtualKey.V:
@@ -458,6 +423,29 @@ namespace BiliLite.Controls
             }
         }
 
+        /// <summary>
+        /// 检查音量和亮度是否偏低
+        /// </summary>
+        private void CheckVolumeAndBrightnessLower()
+        {
+            // 检查音量是否偏低
+            if (Player.Volume > 0.95) return;
+            var toolTipText = "";
+            if (Player.Volume == 0)
+            {
+                toolTipText = "静音";
+            }
+            else
+            {
+                toolTipText = "音量:" + Player.Volume.ToString("P");
+            }
+
+            m_playerToastService.Show(PlayerToastService.VOLUME_KEY, toolTipText);
+
+            // 检查亮度是否偏低
+            if (Math.Abs(Brightness - 1) > 0.8) return;
+            m_playerToastService.Show(PlayerToastService.BRIGHTNESS_KEY, "亮度:" + Math.Abs(Brightness - 1).ToString("P"));
+        }
 
         private void LoadDanmuSetting()
         {
@@ -601,6 +589,17 @@ namespace BiliLite.Controls
                     SettingService.SetValue<int>(SettingConstants.VideoDanmaku.BORDER_STYLE, DanmuSettingStyle.SelectedIndex);
                 }
             });
+
+            //弹幕字体
+            var fontFamily =
+                SettingService.GetValue<string>(SettingConstants.VideoDanmaku.DANMAKU_FONT_FAMILY, string.Empty);
+            m_danmakuController.SetFont(fontFamily);
+            DanmuSettingFont.Text = fontFamily;
+            DanmuSettingFont.QuerySubmitted += (e, args) =>
+            {
+                m_danmakuController.SetFont(DanmuSettingFont.Text);
+                SettingService.SetValue(SettingConstants.VideoDanmaku.DANMAKU_FONT_FAMILY, DanmuSettingFont.Text);
+            };
             //合并弹幕
             DanmuSettingMerge.IsOn = SettingService.GetValue<bool>(SettingConstants.VideoDanmaku.MERGE, false);
             DanmuSettingMerge.Toggled += async (e, args) =>
@@ -629,20 +628,26 @@ namespace BiliLite.Controls
             {
                 m_danmakuController.Hide();
             }
-            DanmuSettingWords.ItemsSource = settingVM.ShieldWords;
+            DanmuSettingWords.ItemsSource = m_danmakuSettingsControlViewModel.ShieldWords;
         }
         private void LoadPlayerSetting()
         {
-
             //音量
-            Player.ViewModel.Volume = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_VOLUME, 1.0);
-            SliderVolume.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
+            //Player.ViewModel.Volume = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_VOLUME, 1.0);
+            Player.Volume = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_VOLUME, SettingConstants.Player.DEFAULT_PLAYER_VOLUME);
+
+            var lockPlayerVolume = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_VOLUME, SettingConstants.Player.DEFAULT_LOCK_PLAYER_VOLUME);
+            if (!lockPlayerVolume)
             {
-                SettingService.SetValue<double>(SettingConstants.Player.PLAYER_VOLUME, SliderVolume.Value);
-            });
+                SliderVolume.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
+                {
+                    SettingService.SetValue<double>(SettingConstants.Player.PLAYER_VOLUME, SliderVolume.Value);
+                });
+            }
             //亮度
-            //_brightness = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_BRIGHTNESS, 0);
-            //BrightnessShield.Opacity = _brightness;
+            lockBrightness = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_BRIGHTNESS, SettingConstants.Player.DEFAULT_LOCK_PLAYER_BRIGHTNESS);
+            _brightness = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_BRIGHTNESS, SettingConstants.Player.DEFAULT_PLAYER_BRIGHTNESS);
+            BrightnessShield.Opacity = _brightness;
 
             //播放模式
             var selectedValue = (PlayUrlCodecMode)SettingService.GetValue(SettingConstants.Player.DEFAULT_VIDEO_TYPE, (int)DefaultVideoTypeOptions.DEFAULT_VIDEO_TYPE);
@@ -686,12 +691,16 @@ namespace BiliLite.Controls
                 Player.SetRatioMode(selectedRatio);
             };
             // 播放倍数
-            BottomCBSpeed.SelectedIndex = SettingConstants.Player.VideoSpeed.IndexOf(SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d));
+            var speeds = m_playSpeedMenuService.MenuItems
+                .Select(x => x.Value)
+                .ToList();
+            BottomCBSpeed.SelectedIndex = speeds
+                .IndexOf(SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d));
             Player.SetRate(SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d));
             BottomCBSpeed.SelectionChanged += new SelectionChangedEventHandler((e, args) =>
             {
-                SettingService.SetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, SettingConstants.Player.VideoSpeed[BottomCBSpeed.SelectedIndex]);
-                Player.SetRate(SettingConstants.Player.VideoSpeed[BottomCBSpeed.SelectedIndex]);
+                SettingService.SetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, speeds[BottomCBSpeed.SelectedIndex]);
+                Player.SetRate(speeds[BottomCBSpeed.SelectedIndex]);
             });
 
             _autoPlay = SettingService.GetValue<bool>(SettingConstants.Player.AUTO_PLAY, false);
@@ -731,13 +740,20 @@ namespace BiliLite.Controls
                 SettingService.SetValue<double>(SettingConstants.Player.SUBTITLE_SIZE, SubtitleSettingSize.Value);
                 UpdateSubtitle();
             });
-            //字幕边框颜色
+            //字幕描边颜色
             SubtitleSettingBorderColor.SelectedIndex = SettingService.GetValue<int>(SettingConstants.Player.SUBTITLE_BORDER_COLOR, 0);
             SubtitleSettingBorderColor.SelectionChanged += new SelectionChangedEventHandler((e, args) =>
             {
                 SettingService.SetValue<int>(SettingConstants.Player.SUBTITLE_BORDER_COLOR, SubtitleSettingBorderColor.SelectedIndex);
                 UpdateSubtitle();
             });
+            //字幕边框颜色
+            SubtitleSettingOutsideBorderColor.Text = SettingService.GetValue<string>(SettingConstants.Player.SUBTITLE_OUTSIDE_BORDER_COLOR, SettingConstants.Player.DEFAULT_SUBTITLE_OUTSIDE_BORDER_COLOR);
+            SubtitleSettingOutsideBorderColor.QuerySubmitted += (e, args) =>
+            {
+                SettingService.SetValue(SettingConstants.Player.SUBTITLE_OUTSIDE_BORDER_COLOR, SubtitleSettingOutsideBorderColor.Text);
+                UpdateSubtitle();
+            };
             //字幕颜色
             SubtitleSettingColor.SelectedIndex = SettingService.GetValue<int>(SettingConstants.Player.SUBTITLE_COLOR, 0);
             SubtitleSettingColor.SelectionChanged += new SelectionChangedEventHandler((e, args) =>
@@ -805,40 +821,51 @@ namespace BiliLite.Controls
 
         private List<DanmakuItem> FilterFrostDanmaku(IEnumerable<DanmakuItem> danmakus)
         {
-            var needDistinct = DanmuSettingMerge.IsOn;
-            var level = DanmuSettingShieldLevel.Value;
-            var max = Convert.ToInt32(DanmuSettingMaxNum.Value);
-            //云屏蔽
-            danmakus = danmakus.Where(x => x.Weight >= level);
-            //去重
-            danmakus = danmakus.DistinctIf(needDistinct, new CompareDanmakuItem());
+            try
+            {
+                var needDistinct = DanmuSettingMerge.IsOn;
+                var level = DanmuSettingShieldLevel.Value;
+                var max = Convert.ToInt32(DanmuSettingMaxNum.Value);
+                //云屏蔽
+                danmakus = danmakus.Where(x => x.Weight >= level);
+                //去重
+                danmakus = danmakus.DistinctIf(needDistinct, new CompareDanmakuItem());
 
-            //关键词
-            foreach (var item in settingVM.ShieldWords)
-            {
-                danmakus = danmakus.Where(x => !x.Text.Contains(item));
-            }
-            //用户
-            foreach (var item in settingVM.ShieldUsers)
-            {
-                danmakus = danmakus.Where(x => !x.MidHash.Equals(item));
-            }
-            //正则
-            foreach (var item in settingVM.ShieldRegulars)
-            {
-                danmakus = danmakus.Where(x => !Regex.IsMatch(x.Text, item));
-            }
+                //关键词
+                foreach (var item in m_danmakuSettingsControlViewModel.ShieldWords)
+                {
+                    danmakus = danmakus.Where(x => !x.Text.Contains(item));
+                }
+                //用户
+                foreach (var item in m_danmakuSettingsControlViewModel.ShieldUsers)
+                {
+                    danmakus = danmakus.Where(x => !x.MidHash.Equals(item));
+                }
+                //正则
+                foreach (var item in m_danmakuSettingsControlViewModel.ShieldRegulars)
+                {
+                    danmakus = danmakus.Where(x => !Regex.IsMatch(x.Text, item));
+                }
 
-            // 同屏密度
-            if (max > 0)
-            {
-                // 弹幕按每秒分组，每组取前x项
-                danmakus = danmakus.GroupBy(x => (x.StartMs / 1000) * 1000)
-                    .ToDictionary(x => (int)x.Key, x => x.ToList())
-                    .SelectMany(x => x.Value.Take(max));
-            }
+                // 同屏密度
+                if (max > 0)
+                {
+                    // 弹幕按每秒分组，每组取前x项
+                    danmakus = danmakus.GroupBy(x => (x.StartMs / 1000) * 1000)
+                        .ToDictionary(x => (int)x.Key, x => x.ToList())
+                        .SelectMany(x => x.Value.Take(max));
+                }
 
-            return danmakus.ToList();
+                // 移除当前播放时间之前的弹幕，避免弹幕堆叠
+                danmakus = danmakus.Where(x => x.StartMs > Player.Position * 1000);
+
+                return danmakus.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("弹幕筛选错误:" + ex.Message, ex);
+                return new List<DanmakuItem>();
+            }
         }
 
         private async Task SelectNsDanmakuAndLoad(int position, double level, bool needDistinct, int max)
@@ -857,17 +884,17 @@ namespace BiliLite.Controls
                         data = data.Distinct(new CompareDanmakuModel());
                     }
                     //关键词
-                    foreach (var item in settingVM.ShieldWords)
+                    foreach (var item in m_danmakuSettingsControlViewModel.ShieldWords)
                     {
                         data = data.Where(x => !x.text.Contains(item));
                     }
                     //用户
-                    foreach (var item in settingVM.ShieldUsers)
+                    foreach (var item in m_danmakuSettingsControlViewModel.ShieldUsers)
                     {
                         data = data.Where(x => !x.sendID.Equals(item));
                     }
                     //正则
-                    foreach (var item in settingVM.ShieldRegulars)
+                    foreach (var item in m_danmakuSettingsControlViewModel.ShieldRegulars)
                     {
                         data = data.Where(x => !Regex.IsMatch(x.text, item));
                     }
@@ -880,8 +907,9 @@ namespace BiliLite.Controls
                     data = null;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.Error("弹幕筛选错误:" + ex.Message, ex);
             }
         }
 
@@ -913,6 +941,11 @@ namespace BiliLite.Controls
             {
                 await LoadDanmaku(segIndex);
             }
+            else if (position < m_danmakuController.Position && !m_useNsDanmaku)
+            {
+                await LoadDanmaku(segIndex);
+            }
+
             if (Buffering)
             {
                 return;
@@ -1003,7 +1036,7 @@ namespace BiliLite.Controls
                 _postion = 0;
             }
             _logger.Trace("SetPlayItem,上报进度");
-            await playerHelper.ReportHistory(CurrentPlayItem, 0);
+            await ReportHistory(0);
             await SetDanmaku();
 
             if (!await CheckDownloaded())
@@ -1022,6 +1055,8 @@ namespace BiliLite.Controls
             }
 
             await GetPlayerInfo();
+
+            CheckVolumeAndBrightnessLower();
 
             Player.ABPlay = VideoPlayHistoryHelper.FindABPlayHistory(CurrentPlayItem);
             if (Player.ABPlay == null)
@@ -1112,6 +1147,7 @@ namespace BiliLite.Controls
         private async void SubtitleTimer_Tick(object sender, object e)
         {
             if (Player.PlayState != PlayState.Playing) return;
+
             if (subtitles == null)
             {
                 return;
@@ -1124,6 +1160,7 @@ namespace BiliLite.Controls
                 if (first.content == currentSubtitleText) return;
                 BorderSubtitle.Visibility = Visibility.Visible;
                 BorderSubtitle.Child = await GenerateSubtitleItem(first.content);
+                BorderSubtitle.Background = new SolidColorBrush(SubtitleSettingOutsideBorderColor.Text.StrToColor());
                 currentSubtitleText = first.content;
             }
             else
@@ -1264,6 +1301,7 @@ namespace BiliLite.Controls
             CurrentPlayItem.cid = cid;
 
             await interactionVideoVM.GetNodes(node_id);
+            m_viewModel.Questions = interactionVideoVM.Info.edges.questions;
 
             TopTitle.Text = interactionVideoVM.Select.title;
             //if ((interactionVideoVM.Info.edges?.questions?.Count ?? 0) <= 0)
@@ -1326,13 +1364,16 @@ namespace BiliLite.Controls
                 }
                 else
                 {
-                    var segIndex = Math.Ceiling(Player.ViewModel.Position / (60 * 6d));
                     if (update)
                     {
+                        var segIndex = Math.Ceiling(Player.Position / (60 * 6d));
                         await LoadDanmaku(segIndex.ToInt32());
                         Notify.ShowMessageToast($"已更新弹幕");
                     }
-                    await LoadDanmaku(1);
+                    else
+                    {
+                        await LoadDanmaku(1);
+                    }
                     //var danmuList = (await danmakuParse.ParseBiliBili(Convert.ToInt64(CurrentPlayItem.cid)));
                     ////await playerHelper.GetDanmaku(CurrentPlayItem.cid, 1) ;
                     //danmakuPool = danmuList.GroupBy(x=>x.time_s).ToDictionary(x => x.Key, x => x.ToList());
@@ -1590,9 +1631,9 @@ namespace BiliLite.Controls
                 {
                     interactionVideoVM = new InteractionVideoVM(CurrentPlayItem.avid, player_info.interaction.graph_version);
                     NodeList.DataContext = interactionVideoVM;
-                    InteractionChoices.DataContext = interactionVideoVM;
                     ShowPlaylistButton = false;
                     await interactionVideoVM.GetNodes();
+                    m_viewModel.Questions = interactionVideoVM.Info.edges.questions;
                     TopTitle.Text = interactionVideoVM.Select.title;
                 }
             }
@@ -1601,9 +1642,17 @@ namespace BiliLite.Controls
 
         }
 
-        public async Task ReportHistory()
+        public async Task ReportHistory(double progress = double.NaN)
         {
-            await playerHelper.ReportHistory(CurrentPlayItem, Player.ViewModel.Position);
+            if (!(SettingService.GetValue(SettingConstants.Player.REPORT_HISTORY,
+                    SettingConstants.Player.DEFAULT_REPORT_HISTORY)))
+                return;
+            if (double.IsNaN(progress))
+            {
+                progress = Player.Position;
+            }
+
+            await playerHelper.ReportHistory(CurrentPlayItem, progress);
         }
 
         BiliPlayUrlInfo current_quality_info = null;
@@ -1747,9 +1796,9 @@ namespace BiliLite.Controls
         #region 全屏处理
         public void FullScreen(bool fullScreen)
         {
-
             ApplicationView view = ApplicationView.GetForCurrentView();
             FullScreenEvent?.Invoke(this, fullScreen);
+            m_danmakuController.SetFullscreen(fullScreen);
             if (fullScreen)
             {
                 BottomBtnExitFull.Visibility = Visibility.Visible;
@@ -1902,6 +1951,7 @@ namespace BiliLite.Controls
         double ssValue = 0;
         bool ManipulatingBrightness = false;
         double _brightness = 0;
+        private bool lockBrightness = true;
         PlayerHoldingAction m_playerHoldingAction;
         double Brightness
         {
@@ -1910,8 +1960,8 @@ namespace BiliLite.Controls
             {
                 _brightness = value;
                 BrightnessShield.Opacity = value;
-                //SettingHelper.SetValue<double>(SettingHelper.Player.PLAYER_BRIGHTNESS, _brightness);
-                //}
+                if (!lockBrightness)
+                    SettingService.SetValue<double>(SettingConstants.Player.PLAYER_BRIGHTNESS, _brightness);
             }
         }
         private void InitializeGesture()
@@ -1966,23 +2016,20 @@ namespace BiliLite.Controls
 
         private void StartHighRateSpeedPlay()
         {
-            TxtToolTip.Text = "倍速播放中";
-            ToolTip.Visibility = Visibility.Visible;
+            m_playerToastService.KeepStart(PlayerToastService.ACCELERATING_KEY, "倍速播放中");
             var highRatePlaySpeed = SettingService.GetValue(SettingConstants.Player.HIGH_RATE_PLAY_SPEED, 2.0d);
             Player.SetRate(highRatePlaySpeed);
         }
 
         private void StopHighRateSpeedPlay()
         {
-            ToolTip.Visibility = Visibility.Collapsed;
+            m_playerToastService.KeepClose(PlayerToastService.ACCELERATING_KEY);
             Player.SetRate(SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d));
         }
 
         private void OnManipulationStarted(object sender, ManipulationStartedEventArgs e)
         {
             ssValue = 0;
-            //TxtToolTip.Text = "";
-            ToolTip.Visibility = Visibility.Visible;
 
             if (e.Position.X < this.ActualWidth / 2)
                 ManipulatingBrightness = true;
@@ -2048,7 +2095,6 @@ namespace BiliLite.Controls
             {
                 Player.SetPosition(Player.ViewModel.Position + ssValue);
             }
-            ToolTip.Visibility = Visibility.Collapsed;
         }
 
         private void Grid_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -2059,6 +2105,7 @@ namespace BiliLite.Controls
                 if (SettingService.GetValue(SettingConstants.UI.MOUSE_MIDDLE_ACTION, (int)MouseMiddleActions.Back) == (int)MouseMiddleActions.Back
                 && par == Windows.UI.Input.PointerUpdateKind.XButton1Pressed || par == Windows.UI.Input.PointerUpdateKind.MiddleButtonPressed)
                 {
+                    Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
                     MessageCenter.GoBack(this);
                     return;
                 }
@@ -2184,8 +2231,7 @@ namespace BiliLite.Controls
                 pos = Player.ViewModel.Duration;
             //txt_Post.Text = ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00") + ":" + ts.Seconds.ToString("00") + "/" + mediaElement.MediaPlayer.PlaybackSession.NaturalDuration.TimeSpan.Hours.ToString("00") + ":" + mediaElement.MediaPlayer.PlaybackSession.NaturalDuration.TimeSpan.Minutes.ToString("00") + ":" + mediaElement.MediaPlayer.PlaybackSession.NaturalDuration.TimeSpan.Seconds.ToString("00");
 
-            TxtToolTip.Text = TimeSpan.FromSeconds(pos).ToString(@"hh\:mm\:ss");
-            //Notify.ShowMessageToast(ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00") + ":" + ts.Seconds.ToString("00"), 3000);
+            m_playerToastService.Show(PlayerToastService.PROGRESS_KEY, TimeSpan.FromSeconds(pos).ToString(@"hh\:mm\:ss"));
         }
 
         private void HandleSlideVolumeDelta(double delta)
@@ -2206,8 +2252,7 @@ namespace BiliLite.Controls
                 Player.ViewModel.Volume = volume;
                 //slider_V.Value += d;
             }
-            TxtToolTip.Text = "音量:" + Player.ViewModel.Volume.ToString("P");
-            //Notify.ShowMessageToast("音量:" +  mediaElement.MediaPlayer.Volume.ToString("P"), 3000);
+            m_playerToastService.Show(PlayerToastService.VOLUME_KEY, "音量:" + Player.Volume.ToString("P"));
         }
         private void HandleSlideBrightnessDelta(double delta)
         {
@@ -2220,7 +2265,7 @@ namespace BiliLite.Controls
             {
                 Brightness = Math.Max(Brightness - dd, 0);
             }
-            TxtToolTip.Text = "亮度:" + Math.Abs(Brightness - 1).ToString("P");
+            m_playerToastService.Show(PlayerToastService.BRIGHTNESS_KEY, "亮度:" + Math.Abs(Brightness - 1).ToString("P"));
         }
         #endregion
         private void BottomBtnList_Click(object sender, RoutedEventArgs e)
@@ -2424,7 +2469,7 @@ namespace BiliLite.Controls
             m_danmakuController.Resume();
         }
 
-        private void Player_PlayMediaEnded(object sender, EventArgs e)
+        private async void Player_PlayMediaEnded(object sender, EventArgs e)
         {
             if (CurrentPlayItem.is_interaction)
             {
@@ -2439,7 +2484,14 @@ namespace BiliLite.Controls
             }
             _logger.Debug("视频结束，上报进度");
 
-            playerHelper.ReportHistory(CurrentPlayItem, Player.ViewModel.Duration).RunWithoutAwait();
+            await ReportHistory(Player.Duration);
+
+            if (SettingService.GetValue(SettingConstants.Player.REPORT_HISTORY_ZERO_WHEN_VIDEO_END,
+                    SettingConstants.Player.DEFAULT_REPORT_HISTORY_ZERO_WHEN_VIDEO_END))
+            {
+                _logger.Debug("进度归0");
+                await ReportHistory(0);
+            }
             //列表顺序播放
             if (PlayerSettingPlayMode.SelectedIndex == 0)
             {
@@ -2605,13 +2657,13 @@ namespace BiliLite.Controls
             SendDanmakuDialog sendDanmakuDialog = new SendDanmakuDialog(CurrentPlayItem.avid, CurrentPlayItem.cid, Player.ViewModel.Position);
             sendDanmakuDialog.DanmakuSended += new EventHandler<SendDanmakuModel>((obj, arg) =>
             {
-                m_danmakuController.Add(new DanmakuModel()
+                m_danmakuController.Add(new BiliDanmakuItem()
                 {
-                    color = NSDanmaku.Utils.ToColor(arg.color),
-                    text = arg.text,
-                    location = (DanmakuLocation)arg.location,
-                    size = 25,
-                    time = Player.ViewModel.Position
+                    Color = NSDanmaku.Utils.ToColor(arg.color),
+                    Text = arg.text,
+                    Location = (DanmakuLocation)arg.location,
+                    Size = 25,
+                    Time = Player.Position
                 }, true);
             });
             await sendDanmakuDialog.ShowAsync();
@@ -2620,7 +2672,7 @@ namespace BiliLite.Controls
 
         private async void DanmuSettingSyncWords_Click(object sender, RoutedEventArgs e)
         {
-            await settingVM.SyncDanmuFilter();
+            await m_danmakuSettingsControlViewModel.SyncDanmuFilter();
         }
 
         private async void DanmuSettingAddWord_Click(object sender, RoutedEventArgs e)
@@ -2630,14 +2682,19 @@ namespace BiliLite.Controls
                 Notify.ShowMessageToast("关键词不能为空");
                 return;
             }
-            settingVM.ShieldWords.Add(DanmuSettingTxtWord.Text);
-            SettingService.SetValue(SettingConstants.VideoDanmaku.SHIELD_WORD, settingVM.ShieldWords);
-            var result = await settingVM.AddDanmuFilterItem(DanmuSettingTxtWord.Text, 0);
+            m_danmakuSettingsControlViewModel.ShieldWords.Add(DanmuSettingTxtWord.Text);
+            SettingService.SetValue(SettingConstants.VideoDanmaku.SHIELD_WORD, m_danmakuSettingsControlViewModel.ShieldWords);
+            var result = await m_danmakuSettingsControlViewModel.AddDanmuFilterItem(DanmuSettingTxtWord.Text, 0);
             DanmuSettingTxtWord.Text = "";
             if (!result)
             {
                 Notify.ShowMessageToast("已经添加到本地，但远程同步失败");
             }
+        }
+
+        public void SetPosition(double position)
+        {
+            Player.SetPosition(position);
         }
 
         public async void Dispose()
@@ -2648,7 +2705,7 @@ namespace BiliLite.Controls
                 SettingService.SetValue<double>(CurrentPlayItem.season_id != 0 ? "ep" + CurrentPlayItem.ep_id : CurrentPlayItem.cid, Player.ViewModel.Position);
                 //当视频播放结束的话，Position为0
                 if (Player.PlayState != PlayState.End)
-                    await playerHelper.ReportHistory(CurrentPlayItem, Player.ViewModel.Position);
+                    await ReportHistory(Player.Position);
             }
 
             Player.PlayStateChanged -= Player_PlayStateChanged;
@@ -2712,13 +2769,13 @@ namespace BiliLite.Controls
             var result = await playerHelper.SendDanmaku(CurrentPlayItem.avid, CurrentPlayItem.cid, SendDanmakuTextBox.Text, Convert.ToInt32(Player.ViewModel.Position), modeInt, color);
             if (result)
             {
-                m_danmakuController.Add(new DanmakuModel()
+                m_danmakuController.Add(new BiliDanmakuItem()
                 {
-                    color = NSDanmaku.Utils.ToColor(color),
-                    text = SendDanmakuTextBox.Text,
-                    location = location,
-                    size = 25,
-                    time = Player.ViewModel.Position
+                    Color = NSDanmaku.Utils.ToColor(color),
+                    Text = SendDanmakuTextBox.Text,
+                    Location = location,
+                    Size = 25,
+                    Time = Player.Position
                 }, true);
                 SendDanmakuTextBox.Text = "";
             }
@@ -2788,7 +2845,44 @@ namespace BiliLite.Controls
         {
             m_danmakuController.Pause();
             Player.Pause();
+        }
 
+        public void PositionBack()
+        {
+            if (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.Pause)
+            {
+                var _position = Player.Position - 3;
+                if (_position < 0)
+                {
+                    _position = 0;
+                }
+                Player.Position = _position;
+
+                m_playerToastService.Show(
+                    PlayerToastService.PROGRESS_KEY, "进度:" + TimeSpan.FromSeconds(Player.Position).ToString(@"hh\:mm\:ss"));
+            }
+        }
+
+        public void AddVolume()
+        {
+            Player.Volume += 0.1;
+            m_playerToastService.Show(PlayerToastService.VOLUME_KEY, "音量:" + Player.Volume.ToString("P"));
+        }
+
+        public void MinusVolume()
+        {
+            Player.Volume -= 0.1;
+            var txtToolTipText = "静音";
+            if (Player.Volume > 0)
+            {
+                txtToolTipText = "音量:" + Player.Volume.ToString("P");
+            }
+            m_playerToastService.Show(PlayerToastService.VOLUME_KEY, txtToolTipText);
+        }
+
+        public void CancelFullscreen()
+        {
+            IsFullScreen = false;
         }
 
         public void PlayerSettingABPlaySetPointA_Click(object sender, RoutedEventArgs e)

@@ -340,8 +340,9 @@ namespace BiliLite.Modules.User
             try
             {
                 var appKey = SettingConstants.Account.DefaultLoginAppKeySecret;
-                var results = await accountApi.SendSMSWithCaptcha(CurrentCountry.country_code, Phone, sessionId,
-                    seccode, validate, challenge, recaptcha_token, appKey).Request();
+                var request = accountApi.SendSMSWithCaptcha(CurrentCountry.country_code, Phone, sessionId,
+                    seccode, validate, challenge, recaptcha_token, appKey);
+                var results = await request.Request();
                 if (!results.status)
                 {
                     throw new CustomizedErrorWithDataException(results.message, results);
@@ -409,7 +410,7 @@ namespace BiliLite.Modules.User
                     SettingService.SetValue(SettingConstants.Account.IS_WEB_LOGIN, false);
                     var data = await results.GetData<LoginResultModel>();
                     var result = await HandelLoginResult(data.code, data.message, data.data, appKey);
-                    HnadelResult(result);
+                    HandleResult(result);
                 }
                 else
                 {
@@ -476,7 +477,7 @@ namespace BiliLite.Modules.User
                     var data = await results.GetData<LoginResultModel>();
                     var result = await HandelLoginResult(data.code, data.message, data.data, appKey);
 
-                    HnadelResult(result);
+                    HandleResult(result);
                 }
                 else
                 {
@@ -523,7 +524,7 @@ namespace BiliLite.Modules.User
 
                 var code = obj["data"]["code"].ToString();
                 var result = await PasswordLoginFetchCookie(code);
-                HnadelResult(result);
+                HandleResult(result);
             }
             catch (CustomizedErrorWithDataException ex)
             {
@@ -694,11 +695,12 @@ namespace BiliLite.Modules.User
         {
             if (gee_req != null)
             {
+                // 验证完成后的 gee_challenge 值可能与之前获取的不同，此处只做提示
                 if (gee_req.gee_challenge != challenge)
                 {
                     Notify.ShowMessageToast("验证码失效");
-                    return;
                 }
+                gee_req.gee_challenge = challenge;
                 gee_req.gee_validate = validate;
                 gee_req.gee_seccode = seccode;
             }
@@ -832,7 +834,7 @@ namespace BiliLite.Modules.User
             }
 
         }
-        private void HnadelResult(LoginCallbackModel result)
+        private void HandleResult(LoginCallbackModel result)
         {
             switch (result.status)
             {
@@ -847,6 +849,15 @@ namespace BiliLite.Modules.User
                 case LoginStatus.NeedCaptcha:
                     var uri = new Uri(result.url);
                     SetWebViewVisibility?.Invoke(this, true);
+                    var query = HttpUtility.ParseQueryString(uri.Query);
+                    gee_req = new GeetestRequestModel()
+                    {
+                        gee_challenge = query.Get("gee_challenge"),
+                        gee_gt = query.Get("gee_gt"),
+                        recaptcha_token = query.Get("recaptcha_token"),
+                    };
+                    // TODO: 密码登录验证需要获取tmp_code
+                    gee_tmp_token = "";
                     //验证码重定向
                     //源码:https://github.com/xiaoyaocz/some_web
                     OpenWebView?.Invoke(this, new Uri("ms-appx-web:///Assets/GeeTest/bili_gt.html" + uri.Query + "&app=uwp"));

@@ -19,29 +19,18 @@ using BiliLite.Services;
 using Windows.UI.Xaml.Controls.Primitives;
 using BiliLite.Models.Common.Comment;
 using BiliLite.Models.Common.Video;
-using BiliLite.Models.Common.Video.Detail;
 using BiliLite.Models.Download;
 using BiliLite.ViewModels.Video;
 using BiliLite.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using BiliLite.ViewModels.Download;
+using BiliLite.ViewModels.User;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
 namespace BiliLite.Pages
 {
-    public class VideoPlaylist
-    {
-        public int Index { get; set; }
-        public List<VideoPlaylistItem> Playlist { get; set; }
-    }
-    public class VideoPlaylistItem
-    {
-        public string ID { get; set; }
-        public string Author { get; set; }
-        public string Cover { get; set; }
-        public string Title { get; set; }
-    }
-    public sealed partial class VideoDetailPage : PlayPage
+    public sealed partial class VideoDetailPage : PlayPage, IRefreshablePage, ISavablePage
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
 
@@ -50,6 +39,8 @@ namespace BiliLite.Pages
         string bvid = "";
         bool is_bvid = false;
         private bool isFirstUgcSeasonVideo = false;
+        private VideoListView m_videoListView;
+        private bool m_loadUgcSeasonData = false;
 
         public VideoDetailPage()
         {
@@ -104,7 +95,6 @@ namespace BiliLite.Pages
             request.Data.Properties.Title = m_viewModel.VideoInfo.Title;
             request.Data.SetWebLink(new Uri(m_viewModel.VideoInfo.ShortLink));
         }
-        VideoPlaylist playlist;
         bool flag = false;
         string _id = "";
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -122,17 +112,38 @@ namespace BiliLite.Pages
                     player.IsFullWindow = SettingService.GetValue<bool>(SettingConstants.Player.AUTO_FULL_WINDOW, false);
                 }
                 pivot.SelectedIndex = SettingService.GetValue<int>(SettingConstants.UI.DETAIL_DISPLAY, 0);
-                if (e.Parameter is VideoPlaylist)
+                if (e.Parameter is VideoPlaylist videoPlaylist)
                 {
-                    playlist = e.Parameter as VideoPlaylist;
+                    var videoSections = new List<VideoListSection>();
+                    videoSections.Add(new VideoListSection()
+                    {
+                        Selected = true,
+                        Title = videoPlaylist.Title,
+                        Items = new List<VideoListItem>(),
+                        IsLazyOnlineList = videoPlaylist.IsOnlineMediaList,
+                        OnlineListId = videoPlaylist.MediaListId,
+                    });
+                    foreach (var videoPlaylistItem in videoPlaylist.Playlist)
+                    {
+                        videoSections.First().Items.Add(new VideoListItem()
+                        {
+                            Id = videoPlaylistItem.Id,
+                            Title = videoPlaylistItem.Title,
+                            Author = videoPlaylistItem.Author,
+                            Cover = videoPlaylistItem.Cover,
+                        });
+                    }
 
+                    videoSections.First().SelectedItem = videoSections.First().Items.ElementAt(videoPlaylist.Index);
+                    m_videoListView = App.ServiceProvider.GetRequiredService<VideoListView>();
+                    m_videoListView.LoadData(videoSections);
+                    var pivotItem = PlayListTpl.GetElement(new Windows.UI.Xaml.ElementFactoryGetArgs()) as PivotItem;
+                    pivotItem.Content = m_videoListView;
+                    m_videoListView.OnSelectionChanged += VideoListView_SelectionChanged;
 
-                    var element = PlayListTpl.GetElement(new Windows.UI.Xaml.ElementFactoryGetArgs()) as PivotItem;
-                    element.DataContext = playlist;
-
-                    pivot.Items.Insert(0, element);
+                    pivot.Items.Insert(0, pivotItem);
                     pivot.SelectedIndex = 0;
-                    await InitializeVideo(playlist.Playlist[playlist.Index].ID);
+                    await InitializeVideo(videoSections.First().SelectedItem.Id);
                 }
                 else
                 {
@@ -153,7 +164,7 @@ namespace BiliLite.Pages
             _id = id;
             if (flag) return;
             flag = true;
-            if (int.TryParse(id, out var aid))
+            if (long.TryParse(id, out var aid))
             {
                 avid = id;
                 is_bvid = false;
@@ -205,11 +216,12 @@ namespace BiliLite.Pages
                 Oid = m_viewModel.VideoInfo.Aid
             });
 
-            if (playlist != null || !m_viewModel.VideoInfo.ShowUgcSeason)
+            if (!m_viewModel.VideoInfo.ShowUgcSeason)
             {
                 flag = false;
                 return;
             }
+
             InitUgcSeason(id);
 
             flag = false;
@@ -230,6 +242,8 @@ namespace BiliLite.Pages
                     order = i,
                     play_mode = VideoPlayType.Video,
                     title = "P" + item.Page + " " + item.Part,
+                    TitlePage = "P"+item.Page,
+                    TitlePart = item.Part.TrimStart(' '),
                     area = m_viewModel.VideoInfo.Title.ParseArea(m_viewModel.VideoInfo.Owner.Mid)
                 });
                 i++;
@@ -250,31 +264,53 @@ namespace BiliLite.Pages
 
         private void InitUgcSeason(string id)
         {
-            isFirstUgcSeasonVideo = true;
-            playlist = new VideoPlaylist()
-            {
-                Playlist = new List<VideoPlaylistItem>()
-            };
+            m_loadUgcSeasonData = true;
+            VideoListSection currentSeasonSection = null;
+            VideoListItem currentSeasonItem = null;
+
+            var videoSections = new List<VideoListSection>();
             foreach (var section in m_viewModel.VideoInfo.UgcSeason.Sections)
             {
+                var videoSection = new VideoListSection()
+                {
+                    Id = section.Id,
+                    Title = section.Title,
+                    Items = new List<VideoListItem>(),
+                };
                 foreach (var item in section.Episodes)
                 {
-                    playlist.Playlist.Add(new VideoPlaylistItem()
+                    var videoItem = new VideoListItem()
                     {
-                        ID = item.Aid,
                         Title = item.Title,
-                        Author = item?.Author?.Name,
-                        Cover = item.Cover
-                    });
+                        Author = item.AuthorDesc,
+                        Cover = item.Cover,
+                        Id = item.Aid,
+                    };
+                    if (item.Aid == m_viewModel.VideoInfo.Aid)
+                    {
+                        currentSeasonSection = videoSection;
+                        currentSeasonItem = videoItem;
+                    }
+                    videoSection.Items.Add(videoItem);
                 }
+                videoSections.Add(videoSection);
             }
-            var episodeIndex = playlist.Playlist.FindIndex(x => x.ID == id);
-            var element = PlayListTpl.GetElement(new Windows.UI.Xaml.ElementFactoryGetArgs()) as PivotItem;
 
-            element.DataContext = playlist;
-            var listView = element.Content as ListView;
-            listView.SelectedIndex = episodeIndex;
-            pivot.Items.Insert(0, element);
+            if (m_videoListView == null)
+            {
+                currentSeasonSection.Selected = true;
+                currentSeasonSection.SelectedItem = currentSeasonItem;
+                m_videoListView = App.ServiceProvider.GetRequiredService<VideoListView>();
+                m_videoListView.LoadData(videoSections);
+                m_videoListView.OnSelectionChanged += VideoListView_SelectionChanged;
+                var pivotItem = PlayListTpl.GetElement(new Windows.UI.Xaml.ElementFactoryGetArgs()) as PivotItem;
+                pivotItem.Content = m_videoListView;
+                pivot.Items.Insert(0, pivotItem);
+            }
+            else
+            {
+                m_videoListView.LoadData(videoSections);
+            }
         }
 
         private async Task CreateQR()
@@ -353,25 +389,6 @@ namespace BiliLite.Pages
             }
         }
 
-        private async void btnAttention_Click(object sender, RoutedEventArgs e)
-        {
-            var data = (sender as Button).DataContext as VideoDetailStaffViewModel;
-            var result = await m_viewModel.AttentionUP(data.Mid, data.Attention == 1 ? 2 : 1);
-            if (result)
-            {
-                if (data.Attention == 1)
-                {
-                    data.Attention = 0;
-                }
-                else
-                {
-                    data.Attention = 1;
-                }
-            }
-
-        }
-
-
         private void listRelates_ItemClick(object sender, ItemClickEventArgs e)
         {
             var data = e.ClickedItem as VideoDetailRelatesViewModel;
@@ -401,7 +418,7 @@ namespace BiliLite.Pages
 
         private void btnTagItem_Click(object sender, RoutedEventArgs e)
         {
-            var item = (sender as HyperlinkButton).DataContext as VideoDetailTagModel;
+            var item = (sender as HyperlinkButton).DataContext as BiliVideoTag;
             MessageCenter.NavigateToPage(this, new NavigationInfo()
             {
                 icon = Symbol.Find,
@@ -507,17 +524,6 @@ namespace BiliLite.Pages
             }
         }
 
-        private void listAddFavorite_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            var item = e.ClickedItem as FavoriteItemModel;
-            m_viewModel.DoFavorite(new List<string>() { item.id }, avid);
-        }
-
-        private void BtnAddFavorite_Click(object sender, RoutedEventArgs e)
-        {
-            m_viewModel.DoFavorite(m_viewModel.MyFavorite.Where(x => x.is_fav).Select(x => x.id).ToList(), avid);
-        }
-
         private async void btnOpenWeb_Click(object sender, RoutedEventArgs e)
         {
             await Launcher.LaunchUriAsync(new Uri(m_viewModel.VideoInfo.ShortLink));
@@ -555,33 +561,19 @@ namespace BiliLite.Pages
             Modules.User.WatchLaterVM.Instance.AddToWatchlater(avid);
         }
 
-        private async void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void VideoListView_SelectionChanged(object sender,VideoListItem item)
         {
-            if (isFirstUgcSeasonVideo)
-            {
-                isFirstUgcSeasonVideo = false;
-                return;
-            }
-            var liveView = sender as ListView;
-            if (liveView.SelectedItem == null) return;
-            var item = liveView.SelectedItem as VideoPlaylistItem;
-
-            playlist.Index = playlist.Playlist.IndexOf(item);
-            await InitializeVideo(item.ID);
-
+            await InitializeVideo(item.Id);
         }
 
         private void player_AllMediaEndEvent(object sender, EventArgs e)
         {
+            if (m_videoListView == null || m_videoListView.IsLast(m_viewModel.VideoInfo.Aid)) return;
 
-            if (playlist == null || playlist.Index == playlist.Playlist.Count - 1)
-            {
-                Notify.ShowMessageToast("播放完毕");
-                return;
-            }
-            var listView = (pivot.Items[0] as PivotItem).Content as ListView;
+            // 切换到播放列表Tab使播放列表控件被渲染事件能触发
+            pivot.SelectedIndex = 0;
 
-            listView.SelectedIndex = playlist.Index + 1;
+            m_videoListView.Next(m_viewModel.VideoInfo.Aid);
         }
 
         private async void btnDownload_Click(object sender, RoutedEventArgs e)
@@ -595,18 +587,19 @@ namespace BiliLite.Pages
                 Subtitle = m_viewModel.VideoInfo.Bvid,
                 Title = m_viewModel.VideoInfo.Title,
                 Type = DownloadType.Video,
-                UpMid = m_viewModel.VideoInfo.Owner.Mid.ToInt32(),
+                UpMid = m_viewModel.VideoInfo.Owner.Mid.ToInt64(),
             };
             int i = 0;
             foreach (var item in m_viewModel.VideoInfo.Pages)
             {
                 //检查正在下载及下载完成是否存在此视频
                 int state = 0;
-                if (DownloadVM.Instance.Downloadings.FirstOrDefault(x => x.EpisodeID == item.Cid) != null)
+                var downloadViewModel = App.ServiceProvider.GetRequiredService<DownloadPageViewModel>();
+                if (downloadViewModel.Downloadings.FirstOrDefault(x => x.EpisodeID == item.Cid) != null)
                 {
                     state = 2;
                 }
-                if (DownloadVM.Instance.Downloadeds.FirstOrDefault(x => x.Epsidoes.FirstOrDefault(y => y.CID == item.Cid) != null) != null)
+                if (downloadViewModel.DownloadedViewModels.FirstOrDefault(x => x.Epsidoes.FirstOrDefault(y => y.CID == item.Cid) != null) != null)
                 {
                     state = 3;
                 }
@@ -624,14 +617,53 @@ namespace BiliLite.Pages
                 i++;
             }
 
+
+            if (m_viewModel.VideoInfo.ShowUgcSeason)
+            {
+                foreach (var ugcSeasonSection in m_viewModel.VideoInfo.UgcSeason.Sections)
+                {
+                    foreach (var episode in ugcSeasonSection.Episodes)
+                    {
+                        //检查正在下载及下载完成是否存在此视频
+                        int state = 0;
+                        var downloadViewModel = App.ServiceProvider.GetRequiredService<DownloadPageViewModel>();
+                        if (downloadViewModel.Downloadings.FirstOrDefault(x => x.EpisodeID == episode.Cid) != null)
+                        {
+                            state = 2;
+                        }
+                        if (downloadViewModel.DownloadedViewModels.FirstOrDefault(x => x.Epsidoes.FirstOrDefault(y => y.CID == episode.Cid) != null) != null)
+                        {
+                            state = 3;
+                        }
+                        //如果正在下载state=2,下载完成state=3
+                        downloadItem.Episodes.Add(new DownloadEpisodeItem()
+                        {
+                            AVID = episode.Aid,
+                            BVID = episode.Bvid,
+                            CID = episode.Cid,
+                            EpisodeID = "",
+                            Index = i,
+                            Title = episode.Title,
+                            State = state
+                        });
+                        i++;
+                    }
+                }
+            }
+
             DownloadDialog downloadDialog = new DownloadDialog(downloadItem);
             await downloadDialog.ShowAsync();
         }
 
-        private async void btnRefresh_Click(object sender, RoutedEventArgs e)
+        public async Task Refresh()
         {
             if (m_viewModel.Loading) return;
             await InitializeVideo(_id);
+        }
+
+        private async void btnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            await Refresh();
         }
 
         private void btnOpenQR_Click(object sender, RoutedEventArgs e)
@@ -688,6 +720,28 @@ namespace BiliLite.Pages
             if (e.NewSize.Height != e.PreviousSize.Height)
             {
                 m_viewModel.PageHeight = e.NewSize.Height;
+            }
+        }
+
+        private async void SaveFavList_OnClick(object sender, RoutedEventArgs e)
+        {
+            await Save();
+        }
+
+        public async Task Save()
+        {
+            if (BtnFav.Flyout.IsOpen)
+            {
+                await m_viewModel.UpdateFav(m_viewModel.VideoInfo.Aid);
+                BtnFav.Flyout.Hide();
+            }
+        }
+
+        private async void FavList_OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            if (e.IsUseMiddleButton(sender))
+            {
+                await Save();
             }
         }
     }

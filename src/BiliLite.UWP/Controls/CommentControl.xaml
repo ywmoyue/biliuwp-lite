@@ -11,6 +11,7 @@
     xmlns:convert="using:BiliLite.Converters" xmlns:modules="using:BiliLite.Modules"
     xmlns:comment="using:BiliLite.ViewModels.Comment"
     xmlns:common="using:BiliLite.Models.Common"
+    xmlns:viewModels="using:BiliLite.ViewModels"
     d:DesignHeight="300"
     d:DesignWidth="400"
     x:Name="CommentControlContent"
@@ -30,13 +31,20 @@
             <Setter Property="BorderBrush" Value="#33808080"></Setter>
             <Setter Property="Padding" Value="0"></Setter>
         </Style>
+
+        <Style TargetType="ListViewItem" x:Key="hotReplyStyle">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+            <Setter Property="BorderThickness" Value="0 1 0 1"></Setter>
+            <Setter Property="BorderBrush" Value="#33808080"></Setter>
+            <Setter Property="Padding" Value="0"></Setter>
+        </Style>
         <convert:ColorSelecteConvert x:Key="colorSelct" ></convert:ColorSelecteConvert>
         <convert:ColorConvert x:Key="colorConvert" ></convert:ColorConvert>
         <Flyout  x:Key="FaceFlyout" x:Name="FaceFlyout">
             <Grid Width="320">
                 <Pivot x:Name="PivotFace" ItemsSource="{x:Bind Path=emoteVM.Packages,Mode=OneWay}">
                     <Pivot.HeaderTemplate>
-                        <DataTemplate x:DataType="modules:EmotePackageModel">
+                        <DataTemplate x:DataType="viewModels:EmotePackageModel">
                             <TextBlock FontSize="18" Text="{x:Bind text}"></TextBlock>
                         </DataTemplate>
                     </Pivot.HeaderTemplate>
@@ -69,8 +77,8 @@
         </Flyout>
 
         <MenuFlyout x:Key="menu">
-            <MenuFlyoutItem  Click="BtnDeleteComment_Click" Visibility="{Binding showDelete}">删除</MenuFlyoutItem>
-            <MenuFlyoutItem>举报</MenuFlyoutItem>
+            <MenuFlyoutItem  Click="BtnDeleteComment_Click" Visibility="{Binding ShowDelete}">删除</MenuFlyoutItem>
+            <MenuFlyoutItem Click="MenuFlyoutItem_OnClick">举报</MenuFlyoutItem>
         </MenuFlyout>
         <DataTemplate x:Key="commentTemplate" x:DataType="comment:CommentViewModel">
             <Grid>
@@ -127,7 +135,7 @@
                     </Border>
                 </Grid>
 
-                <StackPanel Orientation="Horizontal" Margin="4 0" Grid.Column="1" >
+                <StackPanel ContextFlyout="{StaticResource menu}" Orientation="Horizontal" Margin="4 0" Grid.Column="1" >
                     <TextBlock VerticalAlignment="Center" Visibility="{x:Bind ShowTop}" FontSize="14" Margin="0 0 8 0" Foreground="DeepPink">[置顶]</TextBlock>
                     <TextBlock  Text="{x:Bind Path=Member.Uname}" 
                                 Foreground="{x:Bind Path=Member.Vip.VipType,Converter={StaticResource colorSelct},ConverterParameter=2}" VerticalAlignment="Center"></TextBlock>
@@ -175,7 +183,6 @@
                                    Text="{x:Bind Path=Member.UserSailing.Cardbg.Fan.NumDesc,Mode=OneWay}"></TextBlock>
                         </StackPanel>
                     </StackPanel>
-                    <AppBarButton Visibility="Collapsed" Style="{StaticResource AppBarButtonNoChevronStyle}" Flyout="{StaticResource ResourceKey=menu}" HorizontalAlignment="Right" Icon="More"  Width="48" ></AppBarButton>
                 </StackPanel>
 
                 <TextBlock Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" FontSize="12" Foreground="Gray" Margin="4 0" VerticalAlignment="Top" ToolTipService.ToolTip="{x:Bind Path=Ctime,Converter={StaticResource Datetime}}">
@@ -185,11 +192,18 @@
                     <Run Text="{x:Bind Path=ReplyControl.Location}"></Run>
                 </TextBlock>
 
-                <StackPanel Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" Visibility="{Binding ElementName=CommentControlContent,Path=DataContext.IsNarrowMode,Mode=OneWay,Converter={StaticResource BoolToVisibilityConverter}}">
+                <StackPanel Grid.Column="0" 
+                            Grid.ColumnSpan="3" 
+                            Grid.Row="2" 
+                            Margin="8 0 0 0"
+                            Visibility="{Binding ElementName=CommentControlContent,Path=DataContext.IsNarrowMode,Mode=OneWay,Converter={StaticResource BoolToVisibilityConverter}}">
                     <ContentPresenter Content="{x:Bind Mode=OneWay}" ContentTemplate="{StaticResource CommentContentTemplate}"></ContentPresenter>
                 </StackPanel>
 
-                <StackPanel Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="2" Visibility="{Binding ElementName=CommentControlContent,Path=DataContext.IsWideMode,Mode=OneWay,Converter={StaticResource BoolToVisibilityConverter}}">
+                <StackPanel Grid.Column="1" 
+                            Grid.ColumnSpan="2" 
+                            Grid.Row="2" 
+                            Visibility="{Binding ElementName=CommentControlContent,Path=DataContext.IsWideMode,Mode=OneWay,Converter={StaticResource BoolToVisibilityConverter}}">
                     <ContentPresenter Content="{x:Bind Mode=OneWay}" ContentTemplate="{StaticResource CommentContentTemplate}"></ContentPresenter>
                 </StackPanel>
             </Grid>
@@ -198,6 +212,7 @@
         <DataTemplate x:Key="CommentContentTemplate" x:DataType="comment:CommentViewModel">
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
@@ -268,8 +283,6 @@
                             <TextBlock FontSize="10" Margin="8 8" Foreground="Gray">UP主觉得很赞</TextBlock>
                         </Border>
                     </StackPanel>
-
-
                 </Grid>
 
                 <StackPanel Grid.Row="4" Margin="0 4" Background="#19AAAAAA" Padding="8" Visibility="{x:Bind Path=ShowReplies,Mode=OneWay}">
@@ -388,6 +401,30 @@
                     </StackPanel>
 
                 </StackPanel>
+
+                <ListView  
+                    Grid.Row="6"
+                    Visibility="{x:Bind ShowHotReplies,Mode=OneWay}"
+                    ItemsSource="{x:Bind HotReplies,Mode=OneWay}" 
+                    ItemContainerStyle="{StaticResource hotReplyStyle}"  
+                    Background="{ThemeResource CardColor}"
+                    Margin="0 0 8 0"
+                    SelectionMode="None" 
+                    IsItemClickEnabled="False" 
+                    ScrollViewer.VerticalScrollMode="Disabled" 
+                    ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <ContentControl
+                                    Margin="4 0"
+                                    FontSize="12" Content="{Binding Path=Content,Mode=OneWay}" Visibility="Visible">
+                                </ContentControl>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
             </Grid>
         </DataTemplate>
     </UserControl.Resources>

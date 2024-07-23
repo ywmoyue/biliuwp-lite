@@ -81,5 +81,40 @@
             /// </summary>
             public const string MY_ICON_IMAGE = "ms-appx:///Assets/Icon/我的.png";
         }
+
+        public static class DynamicTypes
+        {
+            public const string AV = "Av";
+
+            public const string PGC = "Pgc";
+
+            public const string WORD = "Word";
+
+            public const string DRAW = "Draw";
+
+            public const string MUSIC = "Music";
+
+            public const string ARTICLE = "Article";
+
+            public const string FORWARD = "Forward";
+
+            public const string COMMON_SQUARE = "CommonSquare";
+
+            public const string LIVE_RCMD = "LiveRcmd";
+
+            public const string LIVE = "Live";
+
+            public const string UGC_SEASON = "UgcSeason";
+
+            public const string FOLD = "Fold";
+
+            public const string COUR_UP = "CourUp";
+
+            public const string BANNER = "Banner";
+
+            public const string CUSTOM_SEASON = "CustomSeason";
+
+            public const string CUSTOM_ARTICLE = "CustomArticle";
+        }
     }
 }

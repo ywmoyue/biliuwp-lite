@@ -46,7 +46,8 @@ namespace BiliLite.Models.Requests.Api.User
             //使用Web的API
             if (SettingService.Account.Logined)
             {
-                api.parameter += $"&access_key={SettingService.Account.AccessKey}";
+                api.parameter += "&";
+                api.parameter += ApiHelper.MustParameter(AppKey, true);
             }
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
@@ -63,7 +64,9 @@ namespace BiliLite.Models.Requests.Api.User
             //使用Web的API
             if (SettingService.Account.Logined)
             {
-                api.parameter += $"&access_key={SettingService.Account.AccessKey}";
+                api.parameter += "&";
+                api.parameter += ApiHelper.MustParameter(AppKey, true);
+                api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             }
 
             return api;
@@ -113,7 +116,8 @@ namespace BiliLite.Models.Requests.Api.User
             };//使用Web的API
             if (SettingService.Account.Logined)
             {
-                api.parameter += $"&access_key={SettingService.Account.AccessKey}";
+                api.parameter += "&";
+                api.parameter += ApiHelper.MustParameter(AppKey, true);
             }
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
@@ -129,11 +133,44 @@ namespace BiliLite.Models.Requests.Api.User
             };
             if (SettingService.Account.Logined)
             {
-                api.parameter += $"&access_key={SettingService.Account.AccessKey}";
+                api.parameter += ApiHelper.MustParameter(AppKey, true);
+                api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             }
 
             return api;
         }
+
+        public ApiModel SpaceHistoryV2(string mid, string offset = "")
+        {
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Get,
+                baseUrl = $"https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space",
+                parameter = $"offset={offset}&host_mid={mid}",
+                need_cookie = true,
+            };
+            //if (SettingService.Account.Logined)
+            //{
+            //    api.parameter += ApiHelper.MustParameter(AppKey, true);
+            //    api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
+            //}
+
+            return api;
+        }
+
+        public ApiModel Article(string updateBaseline,string type="article")
+        {
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Get,
+                baseUrl = $"https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/nav",
+                parameter = $"type={type}&update_baseline={updateBaseline}",
+                need_cookie = true,
+            };
+
+            return api;
+        }
+
         /// <summary>
         /// 推荐话题
         /// </summary>
@@ -154,8 +191,6 @@ namespace BiliLite.Models.Requests.Api.User
         /// <summary>
         /// 发表图片动态
         /// </summary>
-        /// <param name="mid">用户ID</param>
-        /// <param name="mode">1为关注，2为取消关注</param>
         /// <returns></returns>
         public ApiModel CreateDynamicPhoto(string imgs, string content, string at_uids, string at_control)
         {
@@ -173,8 +208,6 @@ namespace BiliLite.Models.Requests.Api.User
         /// <summary>
         /// 发表文本动态
         /// </summary>
-        /// <param name="mid">用户ID</param>
-        /// <param name="mode">1为关注，2为取消关注</param>
         /// <returns></returns>
         public ApiModel CreateDynamicText(string content, string at_uids, string at_control)
         {
@@ -192,8 +225,6 @@ namespace BiliLite.Models.Requests.Api.User
         /// <summary>
         /// 转发动态
         /// </summary>
-        /// <param name="mid">用户ID</param>
-        /// <param name="mode">1为关注，2为取消关注</param>
         /// <returns></returns>
         public ApiModel RepostDynamic(string dynamic_id, string content, string at_uids, string at_control)
         {

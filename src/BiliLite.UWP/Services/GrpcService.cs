@@ -18,9 +18,12 @@ namespace BiliLite.Services
                 Pn = page,
                 Ps = pageSize,
             };
-            var accessKey = SettingService.Account.AccessKey;
+            var requestUserInfo = new GrpcBiliUserInfo(
+                SettingService.Account.AccessKey, 
+                SettingService.Account.UserID,
+                SettingService.Account.GetLoginAppKeySecret().Appkey);
 
-            var result = await GrpcRequest.Instance.SendMessage("https://grpc.biliapi.net:443/bilibili.app.interface.v1.Space/SearchArchive", message, accessKey);
+            var result = await GrpcRequest.Instance.SendMessage("https://grpc.biliapi.net:443/bilibili.app.interface.v1.Space/SearchArchive", message, requestUserInfo);
             if (result.status)
             {
                 var reply = SearchArchiveReply.Parser.ParseFrom(result.results);
@@ -37,18 +40,55 @@ namespace BiliLite.Services
             }
         }
 
-        public async Task<DynAllReply> GetDynAll(int page = 1)
+        public async Task<DynAllReply> GetDynAll(int page = 1, string offset = null)
         {
             var message = new DynAllReq()
             {
-                Page = page
+                Page = page,
             };
-            var accessKey = SettingService.Account.AccessKey;
+            if (offset != null)
+            {
+                message.Offset = offset;
+                message.RefreshType = Refresh.History;
+            }
+            var requestUserInfo = new GrpcBiliUserInfo(
+                SettingService.Account.AccessKey,
+                SettingService.Account.UserID,
+                SettingService.Account.GetLoginAppKeySecret().Appkey);
 
-            var result = await GrpcRequest.Instance.SendMessage("https://grpc.biliapi.net:443/bilibili.app.dynamic.v2.Dynamic/DynAll", message, accessKey);
+            var result = await GrpcRequest.Instance.SendMessage("https://grpc.biliapi.net:443/bilibili.app.dynamic.v2.Dynamic/DynAll", message, requestUserInfo);
             if (result.status)
             {
                 var reply = DynAllReply.Parser.ParseFrom(result.results);
+                return reply;
+            }
+            else
+            {
+                throw new Exception(result.message);
+            }
+        }
+
+        public async Task<DynSpaceRsp> GetDynSpace(long mid,string from = "space", int page = 1,string offset = null)
+        {
+            var message = new DynSpaceReq()
+            {
+                Page = page,
+                From = from,
+                HostUid = mid
+            };
+            if (offset != null)
+            {
+                message.HistoryOffset = offset;
+            }
+            var requestUserInfo = new GrpcBiliUserInfo(
+                SettingService.Account.AccessKey,
+                SettingService.Account.UserID,
+                SettingService.Account.GetLoginAppKeySecret().Appkey);
+
+            var result = await GrpcRequest.Instance.SendMessage("https://grpc.biliapi.net:443/bilibili.app.dynamic.v2.Dynamic/DynSpace", message, requestUserInfo);
+            if (result.status)
+            {
+                var reply = DynSpaceRsp.Parser.ParseFrom(result.results);
                 return reply;
             }
             else
@@ -70,9 +110,12 @@ namespace BiliLite.Services
                 message.Page = page;
                 message.RefreshType = Refresh.History;
             }
-            var accessKey = SettingService.Account.AccessKey;
+            var requestUserInfo = new GrpcBiliUserInfo(
+                SettingService.Account.AccessKey,
+                SettingService.Account.UserID,
+                SettingService.Account.GetLoginAppKeySecret().Appkey);
 
-            var result = await GrpcRequest.Instance.SendMessage("https://grpc.biliapi.net:443/bilibili.app.dynamic.v2.Dynamic/DynVideo", message, accessKey);
+            var result = await GrpcRequest.Instance.SendMessage("https://grpc.biliapi.net:443/bilibili.app.dynamic.v2.Dynamic/DynVideo", message, requestUserInfo);
             if (result.status)
             {
                 var reply = DynVideoReply.Parser.ParseFrom(result.results);

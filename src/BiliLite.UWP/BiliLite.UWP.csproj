@@ -128,7 +128,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
@@ -136,13 +136,136 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Controls\AttentionButton.xaml.cs">
+      <DependentUpon>AttentionButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Common\PieControl.xaml.cs">
+      <DependentUpon>PieControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DataTemplateSelectors\UserDynamicItemV2DataTemplateSelector.cs" />
+    <Compile Include="Controls\Dynamic\DynamicItemV2Control.xaml.cs">
+      <DependentUpon>DynamicItemV2Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\AboutSettingsControl.xaml.cs">
+      <DependentUpon>AboutSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\DevSettingsControl.xaml.cs">
+      <DependentUpon>DevSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\DownloadSettingsControl.xaml.cs">
+      <DependentUpon>DownloadSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\FilterSettingsControl.xaml.cs">
+      <DependentUpon>FilterSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PlayerToast.xaml.cs">
+      <DependentUpon>PlayerToast.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\LiveSettingsControl.xaml.cs">
+      <DependentUpon>LiveSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\PlaySettingsControl.xaml.cs">
+      <DependentUpon>PlaySettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\ProxySettingsControl.xaml.cs">
+      <DependentUpon>ProxySettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\UISettingsControl.xaml.cs">
+      <DependentUpon>UISettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\VideoDanmakuSettingsControl.xaml.cs">
+      <DependentUpon>VideoDanmakuSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\UserFollowingTagsFlyout.xaml.cs">
+      <DependentUpon>UserFollowingTagsFlyout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\VideoListView.xaml.cs">
+      <DependentUpon>VideoListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\FilterRuleTypeConverter.cs" />
+    <Compile Include="Dialogs\EditPlaySpeedMenuDialog.xaml.cs">
+      <DependentUpon>EditPlaySpeedMenuDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\SendDynamicV2Dialog.xaml.cs">
+      <DependentUpon>SendDynamicV2Dialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Extensions\BizServicesExtensions.cs" />
+    <Compile Include="Extensions\ControlsExtensions.cs" />
     <Compile Include="Extensions\QrCodeExtensions.cs" />
+    <Compile Include="Extensions\RegexExtensions.cs" />
+    <Compile Include="Extensions\DynamicExtensions.cs" />
+    <Compile Include="Models\Attributes\SettingDefaultValueAttribute.cs" />
+    <Compile Include="Models\Attributes\SettingKeyAttribute.cs" />
     <Compile Include="Models\Common\Anime\ISeasonItem.cs" />
     <Compile Include="Controls\IPlayer.cs" />
     <Compile Include="Controls\Player2.xaml.cs">
       <DependentUpon>Player2.xaml</DependentUpon>
     </Compile>
     <Compile Include="Extensions\PlayerExtensions.cs" />
+    <Compile Include="Models\Common\Comment\HotReply.cs" />
+    <Compile Include="Models\Common\Danmaku\BiliDanmakuItem.cs" />
+    <Compile Include="Models\Common\Dynamic\DynamicUgcSeasonCardModel.cs" />
+    <Compile Include="Models\Common\Player\PlaySpeedMenu.cs" />
+    <Compile Include="Models\Common\Settings\FilterRule.cs" />
+    <Compile Include="Models\Common\Settings\FilterRuleTypes.cs" />
+    <Compile Include="Models\Common\UploadFileInfo.cs" />
+    <Compile Include="Models\Common\UserDynamic\DynamicPicture.cs" />
+    <Compile Include="Models\Common\UserDynamic\DynLiveInfo.cs" />
+    <Compile Include="Models\Common\UserDynamic\IUserDynamicCommands.cs" />
+    <Compile Include="Models\Common\UserDynamic\NavDynArticle.cs" />
+    <Compile Include="Models\Common\UserDynamic\NavDynArticles.cs" />
+    <Compile Include="Models\Common\UserDynamic\UserDynamicSeasonInfo.cs" />
+    <Compile Include="Models\Common\User\SendDynamic\AtDisplayModel.cs" />
+    <Compile Include="Models\Common\User\SendDynamic\AtModel.cs" />
+    <Compile Include="Models\Common\User\SendDynamic\SendImagesModel.cs" />
+    <Compile Include="Models\Common\User\SendDynamic\UploadImagesModel.cs" />
+    <Compile Include="Models\Common\User\SendDynamic\RcmdTopicModel.cs" />
+    <Compile Include="Models\Common\Video\MediaListResources.cs" />
+    <Compile Include="Models\Functions\CancelFullscreenFunction.cs" />
+    <Compile Include="Models\Functions\MinusVolumeFunction.cs" />
+    <Compile Include="Models\Functions\AddVolumeFunction.cs" />
+    <Compile Include="Models\Functions\IShortcutFunction.cs" />
+    <Compile Include="Models\Functions\PlayPauseFunction.cs" />
+    <Compile Include="Models\Functions\PositionBackFunction.cs" />
+    <Compile Include="Models\Functions\RefreshShortcutFunction.cs" />
+    <Compile Include="Models\Common\User\FavoriteItemModel.cs" />
+    <Compile Include="Models\Common\Rank\RankItemModel.cs" />
+    <Compile Include="Models\Common\Rank\RankItemOwnerModel.cs" />
+    <Compile Include="Models\Common\Rank\RankItemStatModel.cs" />
+    <Compile Include="Models\Functions\SaveFunction.cs" />
+    <Compile Include="Models\Common\Danmaku\DanmuFilterItem.cs" />
+    <Compile Include="ViewModels\Common\PieControlViewModel.cs" />
+    <Compile Include="ViewModels\Settings\CDNServerItemViewModel.cs" />
+    <Compile Include="Pages\ISavablePage.cs" />
+    <Compile Include="Services\Biz\MediaListService.cs" />
+    <Compile Include="Services\ContentFilterService.cs" />
+    <Compile Include="Services\PlaySpeedMenuService.cs" />
+    <Compile Include="ViewModels\Comment\SendCommentDialogViewModel.cs" />
+    <Compile Include="ViewModels\Rank\RankRegionViewModel.cs" />
+    <Compile Include="ViewModels\Settings\EditPlaySpeedMenuViewModel.cs" />
+    <Compile Include="ViewModels\Settings\FilterRuleViewModel.cs" />
+    <Compile Include="ViewModels\Settings\FilterSettingsViewModel.cs" />
+    <Compile Include="ViewModels\Settings\LiveSettingsControlViewModel.cs" />
+    <Compile Include="ViewModels\Settings\PlaySettingsControlViewModel.cs" />
+    <Compile Include="ViewModels\Settings\VideoDanmakuSettingsControlViewModel.cs" />
+    <Compile Include="ViewModels\User\FavoriteItemViewModel.cs" />
+    <Compile Include="Pages\Home\UserDynamicPage.xaml.cs">
+      <DependentUpon>UserDynamicPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\IMainPage.cs" />
+    <Compile Include="Pages\IRefreshablePage.cs" />
+    <Compile Include="Models\Common\Video\VideoPlaylist.cs" />
+    <Compile Include="Models\Common\Video\VideoPlaylistItem.cs" />
+    <Compile Include="Pages\User\CollectedPage.xaml.cs">
+      <DependentUpon>CollectedPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Player\MediaInfos\FFMpegInteropMssCollectInfoData.cs" />
+    <Compile Include="Services\PlayerToastService.cs" />
+    <Compile Include="Services\SettingsImportExportService.cs" />
+    <Compile Include="Services\ShortcutKeyService.cs" />
+    <Compile Include="ViewModels\PlayerToastViewModel.cs" />
+    <Compile Include="ViewModels\UserDynamic\DynamicV2ItemViewModel.cs" />
+    <Compile Include="Models\Common\Home\DefaultHomeNavItems.cs" />
     <Compile Include="Models\Common\Live\DefaultPlayUrlSourceOptions.cs" />
     <Compile Include="Models\Common\Live\InteractWordModel.cs" />
     <Compile Include="Models\Common\Live\LiveMessageHandleActionsMap.cs" />
@@ -192,7 +315,20 @@
     <Compile Include="Models\Common\Live\GiftMsgModel.cs" />
     <Compile Include="Models\Common\Live\GuardBuyMsgModel.cs" />
     <Compile Include="Models\Common\Live\RoomChangeMsgModel.cs" />
+    <Compile Include="Models\Common\User\SearchHistoryData.cs" />
     <Compile Include="Models\Common\User\SubmitCollectionItemModel.cs" />
+    <Compile Include="Pages\User\DynamicSpacePage.xaml.cs">
+      <DependentUpon>DynamicSpacePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\UserDynamic\UserDynamicAllViewModel.cs" />
+    <Compile Include="ViewModels\UserDynamic\UserDynamicSpaceViewModel.cs" />
+    <Compile Include="Models\Common\User\SendDynamic\AtUserModel.cs" />
+    <Compile Include="ViewModels\User\CollectedPageViewModel.cs" />
+    <Compile Include="ViewModels\User\SendDynamic\SendDynamicV2ViewModel.cs" />
+    <Compile Include="ViewModels\User\UserAttentionButtonViewModel.cs" />
+    <Compile Include="ViewModels\User\UserFollowingTagsFlyoutViewModel.cs" />
+    <Compile Include="ViewModels\User\UserRelationFollowingTagViewModel.cs" />
+    <Compile Include="Models\Common\Video\BiliVideoTag.cs" />
     <Compile Include="Models\Common\WbiKey.cs" />
     <Compile Include="Models\Exceptions\NotFoundException.cs" />
     <Compile Include="Models\Exceptions\CustomizedErrorWithDataException.cs" />
@@ -241,10 +377,27 @@
     <Compile Include="LibPlayers\States\PlayStates\PlayingPlayState.cs" />
     <Compile Include="LibPlayers\States\PlayStates\PlayStateHandler.cs" />
     <Compile Include="LibPlayers\States\PlayStates\StopPlayState.cs" />
+    <Compile Include="Models\Common\Download\DownloadedItem.cs" />
+    <Compile Include="Models\Common\Download\DownloadedSubItem.cs" />
+    <Compile Include="Models\Common\Home\HomeNavItem.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoLiveRoomModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoNameplateModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoOfficialModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoPendantModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoStatModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoVipLabelModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoVipModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterSpaceStatModel.cs" />
+    <Compile Include="Models\Common\User\UserDetails\UserCenterInfoModel.cs" />
+    <Compile Include="ViewModels\User\UserCenterInfoViewModel.cs" />
+    <Compile Include="ViewModels\Home\HomeNavItemViewModel.cs" />
+    <Compile Include="ViewModels\Download\DownloadingItemViewModel.cs" />
     <Compile Include="Services\Interfaces\IQrCodeService.cs" />
     <Compile Include="Services\QrCoderQrCodeService.cs" />
     <Compile Include="Services\WbiKeyService.cs" />
     <Compile Include="Services\ZXingQrCodeService.cs" />
+    <Compile Include="ViewModels\Download\DownloadingSubItemViewModel.cs" />
+    <Compile Include="ViewModels\Download\DownloadPageViewModel.cs" />
     <Compile Include="ViewModels\Live\LiveDetailPageViewModel.cs" />
     <Compile Include="ViewModels\Live\LiveRoomLotteryViewModel.cs" />
     <Compile Include="ViewModels\Live\SuperChatMsgViewModel.cs" />
@@ -270,6 +423,7 @@
     <Compile Include="Models\Common\Live\LiveTitleModel.cs" />
     <Compile Include="Models\Common\Live\LiveWalletInfo.cs" />
     <Compile Include="ViewModels\Player\PlayerViewModel.cs" />
+    <Compile Include="ViewModels\PlayControlViewModel.cs" />
     <Compile Include="ViewModels\UserDynamic\UserDynamicItemDisplayViewModel.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicItemDisplayOneRowInfo.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicItemDisplayImageInfo.cs" />
@@ -584,8 +738,7 @@
     <Compile Include="Models\ReturnModel.cs" />
     <Compile Include="Models\UserModels.cs" />
     <Compile Include="Modules\Detail\FavoriteDetailVM.cs" />
-    <Compile Include="Modules\DownloadVM.cs" />
-    <Compile Include="Modules\EmoteVM.cs" />
+    <Compile Include="ViewModels\EmoteViewModel.cs" />
     <Compile Include="Modules\Home\RegionVM.cs" />
     <Compile Include="Modules\Live\LiveAreaDetailVM.cs" />
     <Compile Include="Modules\Live\LiveAreaVM.cs" />
@@ -609,7 +762,7 @@
     <Compile Include="ViewModels\Home\AnimePageViewModel.cs" />
     <Compile Include="Modules\Home\CinemaVM.cs" />
     <Compile Include="ViewModels\Home\DynamicPageViewModel.cs" />
-    <Compile Include="Modules\Home\HomeVM.cs" />
+    <Compile Include="ViewModels\Home\HomeViewModel.cs" />
     <Compile Include="Modules\Home\HotVM.cs" />
     <Compile Include="Modules\IModules.cs" />
     <Compile Include="ViewModels\Live\LiveRoomViewModel.cs" />
@@ -617,21 +770,20 @@
     <Compile Include="ViewModels\UserDynamic\UserDynamicRepostViewModel.cs" />
     <Compile Include="ViewModels\UserDynamic\UserDynamicViewModel.cs" />
     <Compile Include="Modules\User\LoginVM.cs" />
-    <Compile Include="Modules\User\SendDynamic\AtVM.cs" />
-    <Compile Include="Modules\User\HistoryVM.cs" />
+    <Compile Include="ViewModels\User\SendDynamic\AtViewModel.cs" />
+    <Compile Include="ViewModels\User\HistoryViewModel.cs" />
     <Compile Include="Modules\User\MyFollowSeasonVM.cs" />
     <Compile Include="Modules\Player\PlayerVM.cs" />
-    <Compile Include="Modules\RankVM.cs" />
+    <Compile Include="ViewModels\Rank\RankViewModel.cs" />
     <Compile Include="ViewModels\Home\RecommendPageViewModel.cs" />
     <Compile Include="Modules\RelayCommand.cs" />
     <Compile Include="ViewModels\Season\SeasonDetailPageViewModel.cs" />
     <Compile Include="Modules\Season\SeasonIndexVM.cs" />
-    <Compile Include="Modules\SettingVM.cs" />
     <Compile Include="ViewModels\Video\VideoDetailPageViewModel.cs" />
-    <Compile Include="Modules\User\MyFollowVideoVM.cs" />
-    <Compile Include="Modules\User\SendDynamic\SendDynamicVM.cs" />
-    <Compile Include="Modules\User\SendDynamic\TopicVM.cs" />
-    <Compile Include="Modules\User\UserDetail\UserDetailVM.cs" />
+    <Compile Include="ViewModels\User\MyFollowVideoViewModel.cs" />
+    <Compile Include="ViewModels\User\SendDynamic\SendDynamicViewModel.cs" />
+    <Compile Include="ViewModels\User\SendDynamic\TopicViewModel.cs" />
+    <Compile Include="ViewModels\User\UserDetailViewModel.cs" />
     <Compile Include="Modules\User\UserDetail\UserFavlistVM.cs" />
     <Compile Include="Modules\User\UserDetail\UserFollowVM.cs" />
     <Compile Include="Modules\User\UserDetail\UserSubmitArticleVM.cs" />
@@ -682,9 +834,6 @@
     </Compile>
     <Compile Include="Pages\Home\RecommendPage.xaml.cs">
       <DependentUpon>RecommendPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\Home\UserDynamicPage.xaml.cs">
-      <DependentUpon>UserDynamicPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\LiveDetailPage.xaml.cs">
       <DependentUpon>LiveDetailPage.xaml</DependentUpon>
@@ -763,6 +912,10 @@
     <Compile Include="Services\SearchService.cs" />
     <Compile Include="ViewModels\Common\BaseViewModel.cs" />
     <Compile Include="ViewModels\Download\DownloadDialogViewModel.cs" />
+    <Compile Include="Models\Common\Video\VideoListItem.cs" />
+    <Compile Include="Models\Common\Video\VideoListSection.cs" />
+    <Compile Include="ViewModels\Video\VideoListSectionViewModel.cs" />
+    <Compile Include="ViewModels\Video\VideoListViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\GeeTest\bili_gt.html" />
@@ -879,6 +1032,7 @@
     <Content Include="Assets\Fonts\vanfont.otf" />
     <Content Include="Assets\Fonts\FansNum.otf" />
     <Content Include="Assets\Fonts\biliicon.ttf" />
+    <Content Include="Assets\GeeTest\bili_gt.cshtml" />
     <None Include="Assets\Text\new_version.json" />
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
@@ -898,6 +1052,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\AttentionButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Carousel\Carousel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -907,6 +1065,86 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Player2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Common\PieControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dynamic\DynamicItemV2Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dynamic\DynamicV2Template.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Settings\AboutSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\DevSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\DownloadSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\FilterSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PlayerToast.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\LiveSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\PlaySettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\ProxySettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\UISettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\VideoDanmakuSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\UserFollowingTagsFlyout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\VideoListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\EditPlaySpeedMenuDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\SendDynamicV2Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\Home\UserDynamicPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\User\CollectedPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\User\DynamicSpacePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1058,10 +1296,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\Home\UserDynamicPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Pages\LiveDetailPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1175,6 +1409,9 @@
     <PackageReference Include="AutoMapper">
       <Version>10.1.1</Version>
     </PackageReference>
+    <PackageReference Include="CommunityToolkit.Uwp.Controls.SettingsControls">
+      <Version>8.0.240109</Version>
+    </PackageReference>
     <PackageReference Include="DanmakuFrostMaster.muyan">
       <Version>1.0.2</Version>
     </PackageReference>
@@ -1262,8 +1499,14 @@
     <PackageReference Include="RestSharp">
       <Version>107.3.0</Version>
     </PackageReference>
+    <PackageReference Include="Simple.AES">
+      <Version>2.0.2</Version>
+    </PackageReference>
     <PackageReference Include="SYEngine.uwp">
       <Version>1.0.7</Version>
+    </PackageReference>
+    <PackageReference Include="Tomlyn">
+      <Version>0.17.0</Version>
     </PackageReference>
     <PackageReference Include="ZXing.Net">
       <Version>0.16.8</Version>
@@ -1289,6 +1532,7 @@
   <ItemGroup>
     <Folder Include="Assets\Tools\" />
     <Folder Include="Models\Requests\Api\Grpc\" />
+    <Folder Include="Modules\User\SendDynamic\" />
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="WindowsDesktop, Version=10.0.17763.0">

@@ -32,10 +32,10 @@ namespace BiliLite.Models.Dynamic
         public string rid_str { get; set; }
         public int r_type { get; set; }
         public string bvid { get; set; }
-        public int view { get; set; }
-        public int repost { get; set; }
-        public int comment { get; set; }
-        public int like { get; set; }
+        public long view { get; set; }
+        public long repost { get; set; }
+        public long comment { get; set; }
+        public long like { get; set; }
         public int is_liked { get; set; }
         public long timestamp { get; set; }
         public string pre_dy_id { get; set; }

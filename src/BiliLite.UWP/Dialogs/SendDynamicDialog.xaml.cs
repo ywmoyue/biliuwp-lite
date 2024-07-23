@@ -1,12 +1,12 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models.Requests.Api;
-using BiliLite.Modules;
-using BiliLite.Modules.User;
-using BiliLite.Modules.User.SendDynamic;
 using System;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using BiliLite.Models.Common.User.SendDynamic;
+using BiliLite.ViewModels;
+using BiliLite.ViewModels.User.SendDynamic;
 using BiliLite.ViewModels.UserDynamic;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
@@ -15,25 +15,22 @@ namespace BiliLite.Dialogs
 {
     public sealed partial class SendDynamicDialog : ContentDialog
     {
-        readonly EmoteVM emoteVM;
-        readonly AtVM atVM;
-        readonly SendDynamicVM sendDynamicVM;
-        readonly TopicVM topicVM;
-        public SendDynamicDialog()
+        readonly EmoteViewModel emoteVM;
+        readonly AtViewModel atVM;
+        readonly SendDynamicViewModel m_viewModel;
+        readonly TopicViewModel topicVM;
+        public SendDynamicDialog(SendDynamicViewModel sendDynamicViewModel, EmoteViewModel emoteViewModel, AtViewModel atViewModel, TopicViewModel topicVm)
         {
+            m_viewModel = sendDynamicViewModel;
+            emoteVM = emoteViewModel;
+            atVM = atViewModel;
+            topicVM = topicVm;
             this.InitializeComponent();
-            emoteVM = new EmoteVM();
-            atVM = new AtVM();
-            sendDynamicVM = new SendDynamicVM();
-            topicVM = new TopicVM();
         }
-        public SendDynamicDialog(UserDynamicItemDisplayViewModel userDynamicItem)
+
+        public void SetRepost(UserDynamicItemDisplayViewModel userDynamicItem)
         {
-            this.InitializeComponent();
-            emoteVM = new EmoteVM();
-            atVM = new AtVM();
-            topicVM = new TopicVM();
-            sendDynamicVM = new SendDynamicVM(userDynamicItem);
+            m_viewModel.SetRepost(userDynamicItem);
         }
 
         private void btn_Close_Click(object sender, RoutedEventArgs e)
@@ -72,12 +69,12 @@ namespace BiliLite.Dialogs
             var at = "[@" + data.UserName + "]";
             txtContent.Text += at;
 
-            sendDynamicVM.AtDisplaylist.Add(new AtDisplayModel()
+            m_viewModel.AddAtItem(new AtDisplayModel()
             {
-                data = data.ID,
-                text = at,
-                location = location,
-                length = at.Length
+                Data = data.ID,
+                Text = at,
+                Location = location,
+                Length = at.Length
             });
         }
 
@@ -113,13 +110,13 @@ namespace BiliLite.Dialogs
 
         private void btn_RemovePic_Click(object sender, RoutedEventArgs e)
         {
-            sendDynamicVM.Images.Remove((sender as Button).DataContext as UploadImagesModel);
-            sendDynamicVM.ShowImage = gv_Pics.Items.Count > 0;
+            m_viewModel.Images.Remove((sender as Button).DataContext as UploadImagesModel);
+            m_viewModel.ShowImage = gv_Pics.Items.Count > 0;
         }
 
         private async void btnImage_Click(object sender, RoutedEventArgs e)
         {
-            if (sendDynamicVM.Images.Count == 9)
+            if (m_viewModel.Images.Count == 9)
             {
                 Notify.ShowMessageToast("只能上传9张图片哦");
                 return;
@@ -135,22 +132,22 @@ namespace BiliLite.Dialogs
             Windows.Storage.StorageFile file = await picker.PickSingleFileAsync();
             if (file != null)
             {
-                sendDynamicVM.UploadImage(file);
+                m_viewModel.UploadImage(file);
             }
         }
 
         private async void btnSend_Click(object sender, RoutedEventArgs e)
         {
-            sendDynamicVM.Content = txtContent.Text;
+            m_viewModel.Content = txtContent.Text;
             bool result = false;
             btnSend.IsEnabled = false;
-            if (sendDynamicVM.IsRepost)
+            if (m_viewModel.IsRepost)
             {
-                result = await sendDynamicVM.SendRepost();
+                result = await m_viewModel.SendRepost();
             }
             else
             {
-                result = await sendDynamicVM.SendDynamic();
+                result = await m_viewModel.SendDynamic();
             }
             if (result)
             {

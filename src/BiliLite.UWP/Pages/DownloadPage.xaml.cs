@@ -1,25 +1,22 @@
-﻿using BiliLite.Modules;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using BiliLite.Extensions;
 using BiliLite.Services;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Download;
 using BiliLite.Models.Common.Video;
 using BiliLite.Models.Common.Video.PlayUrlInfos;
+using BiliLite.ViewModels.Download;
+using Microsoft.Extensions.DependencyInjection;
+using System.Text.RegularExpressions;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -28,14 +25,14 @@ namespace BiliLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class DownloadPage : BasePage
+    public sealed partial class DownloadPage : BasePage, IRefreshablePage
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
+        private readonly DownloadPageViewModel m_viewModel;
 
-        DownloadVM downloadVM;
         public DownloadPage()
         {
-            downloadVM = DownloadVM.Instance;
+            m_viewModel = App.ServiceProvider.GetRequiredService<DownloadPageViewModel>();
             this.InitializeComponent();
             Title = "下载";
         }
@@ -44,9 +41,15 @@ namespace BiliLite.Pages
             base.OnNavigatedTo(e);
             if (e.NavigationMode == NavigationMode.New)
             {
-                downloadVM.RefreshDownloaded();
+                m_viewModel.RefreshDownloaded();
             }
         }
+
+        public async Task Refresh()
+        {
+            m_viewModel.RefreshDownloaded();
+        }
+
         private void listDowned_ItemClick(object sender, ItemClickEventArgs e)
         {
             var data = e.ClickedItem as DownloadedItem;
@@ -231,7 +234,7 @@ namespace BiliLite.Pages
             {
                 var folder = await StorageFolder.GetFolderFromPathAsync(data.Path);
                 await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
-                downloadVM.Downloadeds.Remove(data);
+                m_viewModel.DownloadedViewModels.Remove(data);
             }
             catch (Exception ex)
             {
@@ -304,7 +307,8 @@ namespace BiliLite.Pages
             savePicker.SuggestedStartLocation =
                 Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary;
             savePicker.FileTypeChoices.Add("MP4", new List<string>() { ".mp4" });
-            savePicker.SuggestedFileName = "导出的视频";
+            var fileName = Regex.Replace(data.Title + "-" + item.Title, "[<>/\\\\|:\":?*]", "");
+            savePicker.SuggestedFileName = fileName;
             var file = await savePicker.PickSaveFileAsync();
             if (file == null)
                 return;
@@ -312,5 +316,11 @@ namespace BiliLite.Pages
         }
 
 
+        private void SearchBox_OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            var keyword = sender.Text;
+            m_viewModel.SearchDownloaded(keyword);
+            DownloadPivot.SelectedIndex = 1;
+        }
     }
 }

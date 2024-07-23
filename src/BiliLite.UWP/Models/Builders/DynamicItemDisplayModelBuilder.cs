@@ -82,7 +82,7 @@ namespace BiliLite.Models.Builders
                         m_displayViewModel.ImagesInfo = imgs;
                         break;
                     }
-                case UserDynamicDisplayType.Repost when card.ContainsKey("origin_user"):
+                case UserDynamicDisplayType.Repost when card.ContainsKey("origin_user") && card["origin_user"].ToString() != string.Empty:
                     {
                         var originUser = JsonConvert.DeserializeObject<DynamicCardDescUserProfileModel>(card["origin_user"].ToString());
                         var model = new DynamicCardModel
@@ -191,7 +191,10 @@ namespace BiliLite.Models.Builders
             if (!string.IsNullOrEmpty(content))
             {
                 m_displayViewModel.ContentStr = content;
-                m_displayViewModel.Content = content.UserDynamicStringToRichText(m_cardModel.desc.dynamic_id, m_cardModel.display?.emoji_info?.emoji_details, extendJson);
+                m_displayViewModel.Content = content.UserDynamicStringToRichText(
+                    m_cardModel.desc.dynamic_id,
+                    emote: m_cardModel.display?.emoji_info?.emoji_details,
+                    extend_json: extendJson);
             }
             else
             {

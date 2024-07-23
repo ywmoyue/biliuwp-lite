@@ -16,7 +16,7 @@ namespace BiliLite.Pages.Home
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class HotPage : Page
+    public sealed partial class HotPage : Page, IRefreshablePage
     {
         HotVM hotVM;
         public HotPage()
@@ -99,6 +99,11 @@ namespace BiliLite.Pages.Home
         {
             var data = (sender as MenuFlyoutItem).DataContext as HotDataItemModel;
             WatchLaterVM.Instance.AddToWatchlater(data.Param);
+        }
+
+        public async Task Refresh()
+        {
+            hotVM.Refresh();
         }
     }
 }

@@ -23,6 +23,7 @@
             VerticalContentAlignment="Stretch" 
             Loaded="tabView_Loaded" 
             IsAddTabButtonVisible="True" 
+            PreviewKeyDown="TabView_OnPreviewKeyDown"
             TabCloseRequested="TabView_TabCloseRequested" 
             AddTabButtonClick="TabView_AddTabButtonClick">
             <winui:TabView.KeyboardAccelerators>

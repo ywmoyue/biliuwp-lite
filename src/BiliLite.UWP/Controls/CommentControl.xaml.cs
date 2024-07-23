@@ -8,7 +8,6 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using BiliLite.Pages;
 using static BiliLite.Models.Requests.Api.CommentApi;
-using BiliLite.Modules;
 using BiliLite.Dialogs;
 using BiliLite.Extensions;
 using BiliLite.Models.Common;
@@ -16,6 +15,7 @@ using BiliLite.Models.Common.Comment;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Services;
+using BiliLite.ViewModels;
 using BiliLite.ViewModels.Comment;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI.Controls;
@@ -30,7 +30,7 @@ namespace BiliLite.Controls
         #region Fields
 
         private readonly CommentApi m_commentApi;
-        EmoteVM emoteVM;
+        EmoteViewModel emoteVM;
         private bool m_disableShowPicture = false;
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private CommentCursor m_nextCursor;
@@ -50,10 +50,10 @@ namespace BiliLite.Controls
         {
             m_mapper = App.ServiceProvider.GetService<IMapper>();
             m_viewModel = App.ServiceProvider.GetService<CommentControlViewModel>();
+            emoteVM = App.ServiceProvider.GetService<EmoteViewModel>();
             DataContext = m_viewModel;
             this.InitializeComponent();
             m_commentApi = new CommentApi();
-            emoteVM = new EmoteVM();
             Unloaded += CommentControl_Unloaded;
         }
 
@@ -104,6 +104,7 @@ namespace BiliLite.Controls
                     result = await m_commentApi.CommentV2(m_loadCommentInfo.Oid, m_loadCommentInfo.CommentSort, m_page,
                         m_loadCommentInfo.CommentMode, offsetStr: m_nextCursor?.PaginationReply?.NextOffset).Request();
                 }
+
                 if (!result.status)
                 {
                     throw new CustomizedErrorException("加载评论失败");
@@ -593,6 +594,11 @@ namespace BiliLite.Controls
             {
                 m_viewModel.Width = e.NewSize.Width;
             }
+        }
+
+        private void MenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

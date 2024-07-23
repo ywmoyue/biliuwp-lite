@@ -4,9 +4,13 @@ using BiliLite.Modules;
 using BiliLite.Services;
 using Microsoft.Toolkit.Uwp.Connectivity;
 using System;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.ViewModels.Download;
+using BiliLite.ViewModels.Home;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -15,12 +19,12 @@ namespace BiliLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class HomePage : Page
+    public sealed partial class HomePage : Page, IRefreshablePage
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
 
-        DownloadVM downloadVM;
-        readonly HomeVM homeVM;
+        private readonly DownloadPageViewModel m_downloadPageViewModel;
+        private readonly HomeViewModel m_viewModel;
         readonly Account account;
 
         public HomePage()
@@ -28,11 +32,20 @@ namespace BiliLite.Pages
             this.InitializeComponent();
             MessageCenter.LoginedEvent += MessageCenter_LoginedEvent;
             MessageCenter.LogoutedEvent += MessageCenter_LogoutedEvent;
-            homeVM = new HomeVM();
+            m_viewModel = new HomeViewModel();
             account = new Account();
-            downloadVM = DownloadVM.Instance;
-            this.DataContext = homeVM;
+            m_downloadPageViewModel = App.ServiceProvider.GetRequiredService<DownloadPageViewModel>();
+            this.DataContext = m_viewModel;
         }
+
+        public async Task Refresh()
+        {
+            if (frame.Content is IRefreshablePage page)
+            {
+                await page.Refresh();
+            }
+        }
+
         private void MessageCenter_LogoutedEvent(object sender, EventArgs e)
         {
             LaodUserStatus();
@@ -45,7 +58,7 @@ namespace BiliLite.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.NavigationMode == NavigationMode.New && homeVM.IsLogin && homeVM.Profile == null)
+            if (e.NavigationMode == NavigationMode.New && m_viewModel.IsLogin && m_viewModel.Profile == null)
             {
                 CheckLoginStatus();
                 //await homeVM.LoginUserCard();
@@ -65,14 +78,14 @@ namespace BiliLite.Pages
                     if (await account.CheckLoginState())
                     {
                         await account.CheckUpdateCookies();
-                        await homeVM.LoginUserCard();
+                        await m_viewModel.LoginUserCard();
                     }
                     else
                     {
                         var result = await account.RefreshToken();
                         if (!result)
                         {
-                            homeVM.IsLogin = false;
+                            m_viewModel.IsLogin = false;
                             MessageCenter.SendLogout();
                             Notify.ShowMessageToast("登录过期，请重新登录");
                             await Notify.ShowLoginDialog();
@@ -81,7 +94,7 @@ namespace BiliLite.Pages
                 }
                 catch (Exception ex)
                 {
-                    homeVM.IsLogin = false;
+                    m_viewModel.IsLogin = false;
                     logger.Log("读取access_key信息失败", LogType.Info, ex);
                     Notify.ShowMessageToast("读取登录信息失败，请重新登录");
                     //throw;
@@ -95,17 +108,17 @@ namespace BiliLite.Pages
         {
             if (SettingService.Account.Logined)
             {
-                homeVM.IsLogin = true;
-                await homeVM.LoginUserCard();
-                foreach (var item in homeVM.HomeNavItems)
+                m_viewModel.IsLogin = true;
+                await m_viewModel.LoginUserCard();
+                foreach (var item in m_viewModel.HomeNavItems)
                 {
                     if (!item.Show && item.NeedLogin) item.Show = true;
                 }
             }
             else
             {
-                homeVM.IsLogin = false;
-                foreach (var item in homeVM.HomeNavItems)
+                m_viewModel.IsLogin = false;
+                foreach (var item in m_viewModel.HomeNavItems)
                 {
                     if (item.Show && item.NeedLogin) item.Show = false;
                 }
@@ -124,7 +137,7 @@ namespace BiliLite.Pages
 
         private void navView_SelectionChanged(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs args)
         {
-            var item = args.SelectedItem as HomeNavItem;
+            var item = args.SelectedItem as HomeNavItemViewModel;
             frame.Navigate(item.Page, item.Parameters);
             this.UpdateLayout();
         }
@@ -314,14 +327,16 @@ namespace BiliLite.Pages
         {
             if (args.Reason != AutoSuggestionBoxTextChangeReason.UserInput) return;
             var text = sender.Text;
+            text = text.TrimEnd();
+            if (string.IsNullOrWhiteSpace(text)) return;
             var suggestSearchContents = await new SearchService().GetSearchSuggestContents(text);
-            if (homeVM.SuggestSearchContents == null)
+            if (m_viewModel.SuggestSearchContents == null)
             {
-                homeVM.SuggestSearchContents = new System.Collections.ObjectModel.ObservableCollection<string>(suggestSearchContents);
+                m_viewModel.SuggestSearchContents = new System.Collections.ObjectModel.ObservableCollection<string>(suggestSearchContents);
             }
             else
             {
-                homeVM.SuggestSearchContents.ReplaceRange(suggestSearchContents);
+                m_viewModel.SuggestSearchContents.ReplaceRange(suggestSearchContents);
             }
         }
     }

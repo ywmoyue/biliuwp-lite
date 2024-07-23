@@ -1,7 +1,7 @@
 {
-    "version": "4.6.25",
-    "version_num": 40625,
-    "version_desc": "更新内容:\r\n\r\n- 修复无法播放港澳台番剧 \r\n\r\n- 修复个人主页搜索视频为空时的报错反馈 \r\n\r\n- 修复番剧详情页样式错误\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+    "version": "4.7.0",
+    "version_num": 40700,
+    "version_desc": "更新内容:\r\n\r\n- 视频详情页播放列表功能补全：滚动到顶部、滚动到底部、滚动到当前视频 \r\n\r\n- 支持发送带图片评论，自己发送的评论点右键可删除  \r\n\r\n- 支持设置推荐页、搜索页、动态页内容过滤  \r\n\r\n- 调整视频详情页收藏菜单样式、支持鼠标中键侧键和Ctrl+S快捷关闭保存收藏选项 \r\n\r\n- 设置页设置项改用WinUI设置控件   \r\n\r\n- 修复动态中用户链接打开错误  \r\n\r\n- 修复视频点不喜欢报错  \r\n\r\n- 修复快捷键设置倍速报错  \r\n\r\n- 关闭X64架构的nativeToolchain编译选项，尝试修复二维码登录时打开应用就闪退问题  \r\n\r\n- 日志中错误信息内含敏感信息修复 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
     "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
     "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }

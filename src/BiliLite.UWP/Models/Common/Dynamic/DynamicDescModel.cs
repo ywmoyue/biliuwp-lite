@@ -8,17 +8,17 @@ namespace BiliLite.Models.Common.Dynamic
         public string Uid { get; set; }
 
         /// <summary>
-        /// 8=视频，512=番剧
+        /// 8=视频，512=番剧， 4310=合集
         /// </summary>
         public int Type { get; set; }
 
         public string Rid { get; set; }
 
-        public int View { get; set; }
+        public long View { get; set; }
 
-        public int Like { get; set; }
+        public long Like { get; set; }
 
-        public int Comment { get; set; }
+        public long Comment { get; set; }
 
         [JsonProperty("is_liked")]
         public int IsLiked { get; set; }

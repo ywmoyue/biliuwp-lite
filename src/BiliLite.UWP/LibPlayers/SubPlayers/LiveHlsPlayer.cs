@@ -8,6 +8,8 @@ using BiliLite.Models.Common.Player;
 using BiliLite.Player.SubPlayers;
 using BiliLite.Player.MediaInfos;
 using System.Linq;
+using BiliLite.Models.Common;
+using BiliLite.Services;
 
 namespace BiliLite.Player
 {
@@ -34,6 +36,25 @@ namespace BiliLite.Player
             m_config.FFmpegOptions.Add("reconnect_streamed", 1);
             m_config.FFmpegOptions.Add("reconnect_on_http_error", "404"); //刚开播时会404, 但一会就好了
             m_config.FFmpegOptions.Add("reconnect_delay_max", 10);
+
+            if (SettingService.GetValue(SettingConstants.Live.LOW_DELAY_MODE, false))
+            {
+                m_config.FFmpegOptions.Add("flags", "low_delay");
+                m_config.FFmpegOptions.Add("fflags", "nobuffer");
+                m_config.FFmpegOptions.Add("tune", "zerolatency");
+                m_config.FFmpegOptions.Add("preset", "ultrafast");
+                //m_config.FFmpegOptions.Add("analyzeduration", 1);
+                m_config.FFmpegOptions.Add("strict", "experimental");
+                m_config.FFmpegOptions.Add("framedrop", "");
+                m_config.FFmpegOptions.Add("max_delay", 0);
+
+                //m_config.FFmpegOptions.Add("use_wallclock_as_timestamps", 1);
+                //m_config.FFmpegOptions.Add("avioflags", "direct");
+                m_config.DefaultBufferTimeUri = TimeSpan.FromMilliseconds(1); //低延迟模式测试
+                m_config.FastSeek = true;
+                m_config.FastSeekCleanAudio = true;
+                m_config.FastSeekSmartStreamSwitching = true;
+            }
         }
 
         public override double Volume
@@ -47,6 +68,7 @@ namespace BiliLite.Player
 
         public override event EventHandler MediaOpened;
         public override event EventHandler MediaEnded;
+        public override event EventHandler BufferingStarted;
         public override event EventHandler BufferingEnded;
 
         private void InitPlayerEvent()
@@ -109,6 +131,7 @@ namespace BiliLite.Player
 
         private void PlaybackSession_BufferingStarted(MediaPlaybackSession sender, object args)
         {
+            BufferingStarted?.Invoke(this, EventArgs.Empty);
         }
 
         private void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
@@ -137,7 +160,11 @@ namespace BiliLite.Player
         {
             return new CollectInfo()
             {
-                Data = m_fFmpegMediaSource,
+                Data = new FFMpegInteropMssCollectInfoData()
+                {
+                    FFMpegInteropMss = m_fFmpegMediaSource,
+                    MediaPlayer = m_mediaPlayer,
+                },
                 RealPlayInfo = m_realPlayInfo,
                 Type = "LiveHls",
                 Url = m_url,
@@ -155,17 +182,25 @@ namespace BiliLite.Player
 
             var defaultPlayerMode = m_playerConfig.PlayMode;
             var selectRouteLine = m_playerConfig.SelectedRouteLine;
-            string url;
+            var url = "";
+            var manualUrl = m_realPlayInfo.ManualPlayUrl;
 
-            if (defaultPlayerMode == LivePlayerMode.Hls)
+            if (!string.IsNullOrEmpty(manualUrl) && SettingService.GetValue(SettingConstants.Live.LOW_DELAY_MODE, SettingConstants.Live.DEFAULT_LOW_DELAY_MODE))
             {
-                url = (urls.HlsUrls != null && selectRouteLine < urls.HlsUrls.Count) ? urls.HlsUrls[selectRouteLine].Url : urls.FlvUrls[selectRouteLine].Url;
+                url = manualUrl;
             }
             else
             {
-                url = (urls.FlvUrls != null && selectRouteLine < urls.FlvUrls.Count) ? urls.FlvUrls[selectRouteLine].Url : urls.HlsUrls[selectRouteLine].Url;
+                if (defaultPlayerMode == LivePlayerMode.Hls)
+                {
+                    url = (urls.HlsUrls != null && selectRouteLine < urls.HlsUrls.Count) ? urls.HlsUrls[selectRouteLine].Url : urls.FlvUrls[selectRouteLine].Url;
+                }
+                else
+                {
+                    url = (urls.FlvUrls != null && selectRouteLine < urls.FlvUrls.Count) ? urls.FlvUrls[selectRouteLine].Url : urls.HlsUrls[selectRouteLine].Url;
+                }
+                url ??= urls.FlvUrls.FirstOrDefault(x => x.Url != null).Url; // 不论如何是有flv流的
             }
-            url ??= urls.FlvUrls.FirstOrDefault(x => x.Url != null).Url; // 不论如何是有flv流的
 
             m_url = url;
 

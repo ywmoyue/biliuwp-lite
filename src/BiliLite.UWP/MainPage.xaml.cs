@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation.Collections;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -11,6 +12,7 @@ using BiliLite.Controls;
 using BiliLite.Models.Common;
 using BiliLite.Extensions;
 using BiliLite.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -19,12 +21,15 @@ namespace BiliLite
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class MainPage : Windows.UI.Xaml.Controls.Page
+    public sealed partial class MainPage : Windows.UI.Xaml.Controls.Page, IMainPage
     {
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+        private readonly ShortcutKeyService m_shortcutKeyService;
 
         public MainPage()
         {
+            m_shortcutKeyService = App.ServiceProvider.GetRequiredService<ShortcutKeyService>();
+            m_shortcutKeyService.SetMainPage(this);
             this.InitializeComponent();
             // 处理标题栏
             var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
@@ -38,9 +43,30 @@ namespace BiliLite
             MessageCenter.ViewImageEvent += MessageCenter_ViewImageEvent;
             MessageCenter.MiniWindowEvent += MessageCenter_MiniWindowEvent;
             MessageCenter.GoBackEvent += MessageCenter_GoBackEvent;
+            MessageCenter.SeekEvent += MessageCenter_SeekEvent;
 
             App.Current.Suspending += Current_Suspending;
             // Window.Current.Content.PointerPressed += Content_PointerPressed;
+
+            Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
+        }
+
+        public object CurrentPage
+        {
+            get
+            {
+                if (!(tabView.SelectedItem is TabViewItem tabItem)) return null;
+                if (!(tabItem.Content is Frame frame)) return null;
+                return frame.Content;
+            }
+        }
+
+        private void Dispatcher_AcceleratorKeyActivated(Windows.UI.Core.CoreDispatcher sender, Windows.UI.Core.AcceleratorKeyEventArgs args)
+        {
+            if (args.EventType.ToString().Contains("Down"))
+            {
+                m_shortcutKeyService.HandleKeyDown(args.VirtualKey);
+            }
         }
 
         private async void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
@@ -55,6 +81,14 @@ namespace BiliLite
                 if(!(page is PlayPage playPage)) continue;
                 await playPage.ReportHistory();
             }
+        }
+
+        private void MessageCenter_SeekEvent(object sender, double e)
+        {
+            if (!(tabView.SelectedItem is TabViewItem tabItem)) return;
+            if (!(tabItem.Content is Frame frame)) return;
+            if (!(frame.Content is PlayPage playPage)) return;
+            playPage.Seek(e);
         }
 
         private void MessageCenter_GoBackEvent(object sender, EventArgs e)
@@ -140,7 +174,6 @@ namespace BiliLite
             {
                 GoBack();
                 e.Handled = true;
-
             }
         }
 
@@ -258,12 +291,17 @@ namespace BiliLite
                 ClosePage((TabViewItem)tabView.SelectedItem);
             }
             args.Handled = true;
-
         }
 
         private void tabView_TabItemsChanged(TabView sender, IVectorChangedEventArgs args)
         {
 
+        }
+
+        private void TabView_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if(e.Key == VirtualKey.Space && e.OriginalSource.GetType()!= typeof(TextBox))
+                e.Handled = true;
         }
     }
 }

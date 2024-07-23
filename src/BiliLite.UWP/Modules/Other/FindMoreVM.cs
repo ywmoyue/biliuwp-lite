@@ -45,7 +45,7 @@ namespace BiliLite.Modules.Other
             }
             catch (Exception ex)
             {
-                var handel = HandelError<List<RankRegionModel>>(ex);
+                var handel = HandelError<FindMoreVM> (ex);
                 Notify.ShowMessageToast(handel.message);
             }
             finally

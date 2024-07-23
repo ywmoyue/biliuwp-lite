@@ -1,0 +1,49 @@
+﻿using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using BiliLite.ViewModels.User;
+using Microsoft.Extensions.DependencyInjection;
+
+//https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
+
+namespace BiliLite.Controls
+{
+    public sealed partial class UserFollowingTagsFlyout : UserControl
+    {
+        private readonly UserFollowingTagsFlyoutViewModel m_viewModel;
+
+        public UserFollowingTagsFlyout()
+        {
+            m_viewModel = App.ServiceProvider.GetRequiredService<UserFollowingTagsFlyoutViewModel>();
+            this.InitializeComponent();
+        }
+
+        public bool HasInit { get; set; }
+
+        private void FollowingTagFlyout_OnClosed(object sender, object e)
+        {
+            m_viewModel.CancelSaveFollowingTagUser();
+        }
+
+        private async void SaveFollowingTagUser_OnClick(object sender, RoutedEventArgs e)
+        {
+            await m_viewModel.SaveFollowingTagUser();
+            FollowingTagFlyout.Hide();
+        }
+
+        public async Task Init(string userId)
+        {
+            await m_viewModel.Init(userId);
+            HasInit = true;
+        }
+
+        public void ShowAt(DependencyObject target)
+        {
+            ContextFlyout.ShowAt(target, new FlyoutShowOptions()
+            {
+                Placement = FlyoutPlacementMode.Bottom
+            });
+        }
+    }
+}

@@ -10,9 +10,13 @@ namespace BiliLite.Controls.DataTemplateSelectors
 
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
-            if (item is DynamicItemModel card && card.Desc.Type == 8)
+            if (item is DynamicItemModel videoCard && videoCard.Desc.Type == 8)
             {
                 return Resource["DynamicVideo"] as DataTemplate;
+            }
+            else if(item is DynamicItemModel ugcSeasonCard && ugcSeasonCard.Desc.Type == 4310)
+            {
+                return Resource["DynamicUgcSeason"] as DataTemplate;
             }
             else
             {

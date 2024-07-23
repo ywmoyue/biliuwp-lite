@@ -23,6 +23,8 @@ namespace BiliLite.Player.SubPlayers
 
         public virtual event EventHandler MediaEnded;
 
+        public virtual event EventHandler BufferingStarted;
+
         public virtual event EventHandler BufferingEnded;
 
         public virtual event EventHandler<double> PositionChanged;

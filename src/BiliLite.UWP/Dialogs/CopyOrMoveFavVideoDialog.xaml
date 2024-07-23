@@ -5,6 +5,7 @@
     xmlns:local="using:BiliLite.Dialogs"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:modules="using:BiliLite.Modules"
+    xmlns:user="using:BiliLite.ViewModels.User"
     mc:Ignorable="d"
     Title="复制到"
     PrimaryButtonText="提交"
@@ -20,15 +21,15 @@
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="modules:FavoriteItemModel">
+                <DataTemplate x:DataType="user:FavoriteItemViewModel">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Bind Path=title}"></TextBlock>
-                        <TextBlock Foreground="Gray" Grid.Column="1" Visibility="{x:Bind Path=privacy,Converter={StaticResource display}}">公开</TextBlock>
-                        <TextBlock Foreground="Gray" Grid.Column="1" Visibility="{x:Bind Path=privacy}">私密</TextBlock>
+                        <TextBlock Text="{x:Bind Path=Title}"></TextBlock>
+                        <TextBlock Foreground="Gray" Grid.Column="1" Visibility="{x:Bind Path=Privacy,Converter={StaticResource display}}">公开</TextBlock>
+                        <TextBlock Foreground="Gray" Grid.Column="1" Visibility="{x:Bind Path=Privacy}">私密</TextBlock>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>

@@ -116,6 +116,7 @@ namespace BiliLite.Models.Requests.Api
             api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
         }
+
         /// <summary>
         /// 关注
         /// </summary>
@@ -134,6 +135,29 @@ namespace BiliLite.Models.Requests.Api
             return api;
         }
 
+        public ApiModel Tags(string aid)
+        {
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Get,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/tag/archive/tags",
+                parameter = $"&aid={aid}",
+                need_cookie = true,
+            };
+            return api;
+        }
 
+        public ApiModel GetMediaList(string medisListId, string lastAid, int pagesize = 20)
+        {
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Get,
+                baseUrl = $"https://api.bilibili.com/x/v2/medialist/resource/list",
+                parameter =
+                    $"{ApiHelper.MustParameter(AppKey, true)}&type=1&biz_id={medisListId}&oid={lastAid}&otype=2&ps={pagesize}&direction=false&desc=true&sort_field=1&tid=0&with_current=false",
+            };
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
+            return api;
+        }
     }
 }

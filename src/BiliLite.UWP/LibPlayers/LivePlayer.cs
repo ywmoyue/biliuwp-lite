@@ -42,7 +42,13 @@ namespace BiliLite.Player
             subPlayer.PlayerErrorOccurred += SubPlayerOnPlayerErrorOccurred;
             subPlayer.MediaOpened += SubPlayer_MediaOpened;
             subPlayer.MediaEnded += SubPlayer_MediaEnded;
+            subPlayer.BufferingStarted += SubPlayer_BufferingStarted;
             subPlayer.BufferingEnded += SubPlayer_BufferingEnded;
+        }
+
+        private async void SubPlayer_BufferingStarted(object sender, EventArgs e)
+        {
+            await m_playerController.PlayState.Buff();
         }
 
         private async void SubPlayer_BufferingEnded(object sender, EventArgs e)

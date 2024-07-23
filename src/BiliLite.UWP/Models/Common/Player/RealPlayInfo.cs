@@ -11,6 +11,7 @@ namespace BiliLite.Models.Common.Player
         public int Width { get; set; }
 
         public int Height { get; set; }
+        public string ManualPlayUrl { get; set; }
     }
 
     public class RealPlayUrls

@@ -180,13 +180,13 @@ namespace BiliLite.Modules.User.UserDetail
     }
     public class SubmitArticleStatsModel
     {
-        public int view { get; set; }
-        public int favorite { get; set; }
-        public int like { get; set; }
-        public int reply { get; set; }
-        public int share { get; set; }
-        public int coin { get; set; }
-        public int dynamic { get; set; }
+        public long view { get; set; }
+        public long favorite { get; set; }
+        public long like { get; set; }
+        public long reply { get; set; }
+        public long share { get; set; }
+        public long coin { get; set; }
+        public long dynamic { get; set; }
     }
     public class SubmitArticleCategoryModel
     {

@@ -46,7 +46,12 @@ namespace BiliLite.Services
                 Name = "logfile",
                 CreateDirs = true,
                 FileName = storageFolder.Path + @"\log\" + DateTime.Now.ToString("yyyyMMdd") + ".log",
-                Layout = "${longdate}|${level:uppercase=true}|${threadid}|${event-properties:item=type}.${event-properties:item=method}|${message}|${exception:format=Message,StackTrace}"
+                Layout = "${longdate}" +
+                         "|${level:uppercase=true}" +
+                         "|${threadid}" +
+                         "|${event-properties:item=type}.${event-properties:item=method}" +
+                         "|${message}" +
+                         "|${event-properties:item=exception}"
             };
             config.AddRule(LogLevel.Trace, LogLevel.Trace, logfile);
             config.AddRule(LogLevel.Debug, LogLevel.Debug, logfile);
@@ -94,8 +99,16 @@ namespace BiliLite.Services
             if ((int)type < LogLowestLevel) return;
             if (IsProtectLogInfo)
                 message = message.ProtectValues("access_key", "csrf", "access_token", "sign");
-            
+
             var logEvent = new LogEventInfo(LogLevel.Info, null, message);
+
+            var exception = "";
+            if (ex != null && IsProtectLogInfo)
+            {
+                exception = ex.Message.ProtectValues("access_key", "csrf", "access_token", "sign") + "\n"
+                    + ex.StackTrace.ProtectValues("access_key", "csrf", "access_token", "sign");
+                logEvent.Properties["exception"] = exception;
+            }
             switch (type)
             {
                 case LogType.Trace:
@@ -109,15 +122,12 @@ namespace BiliLite.Services
                     break;
                 case LogType.Warn:
                     logEvent.Level = LogLevel.Warn;
-                    logEvent.Exception = ex;
                     break;
                 case LogType.Error:
                     logEvent.Level = LogLevel.Error;
-                    logEvent.Exception = ex;
                     break;
                 case LogType.Fatal:
                     logEvent.Level = LogLevel.Fatal;
-                    logEvent.Exception = ex;
                     break;
                 case LogType.Necessary:
                     logEvent.Level = LogLevel.Info;
@@ -125,6 +135,7 @@ namespace BiliLite.Services
                 default:
                     break;
             }
+
             logEvent.Properties["type"] = typeName;
             logEvent.Properties["method"] = methodName;
             logger.Log(logEvent);

@@ -1,7 +1,6 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Models.Events;
-using BiliLite.Modules;
 using BiliLite.Services;
 using FFmpegInteropX;
 using Microsoft.Extensions.Hosting;
@@ -18,6 +17,8 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.ViewModels.Download;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite
 {
@@ -37,7 +38,10 @@ namespace BiliLite
         /// </summary>
         public App()
         {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException; ;
             App.Current.UnhandledException += App_UnhandledException;
+            // RegisterExceptionHandlingSynchronizationContext();
             FFmpegInteropLogging.SetLogLevel(LogLevel.Info);
             FFmpegInteropLogging.SetLogProvider(this);
             SqlHelper.InitDB();
@@ -47,6 +51,24 @@ namespace BiliLite
             this.Suspending += OnSuspending;
             this.InitializeComponent();
         }
+
+        private void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+        {
+            logger.Log("错误发生", LogType.Trace, e.Exception);
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
+        {
+            if (e.ExceptionObject is Exception ex)
+            {
+                logger.Log("程序运行出现错误", LogType.Error, ex);
+            }
+            else
+            {
+                logger.Log("程序运行出现错误:"+e.ExceptionObject, LogType.Error);
+            }
+        }
+
         private void RegisterExceptionHandlingSynchronizationContext()
         {
             ExceptionHandlingSynchronizationContext
@@ -59,8 +81,16 @@ namespace BiliLite
             e.Handled = true;
             try
             {
-                logger.Log("程序运行出现错误", LogType.Error, e.Exception);
-                Notify.ShowMessageToast("程序出现一个错误，已记录");
+                if (e.Exception is NotImplementedException)
+                {
+                    logger.Log("功能未实现", LogType.Error, e.Exception);
+                    Notify.ShowMessageToast("功能未实现");
+                }
+                else
+                {
+                    logger.Log("程序运行出现错误", LogType.Error, e.Exception);
+                    Notify.ShowMessageToast("程序出现一个错误，已记录");
+                }
             }
             catch (Exception)
             {
@@ -71,8 +101,16 @@ namespace BiliLite
             e.Handled = true;
             try
             {
-                logger.Log("程序运行出现错误", LogType.Error, e.Exception);
-                Notify.ShowMessageToast("程序出现一个错误，已记录");
+                if (e.Exception is NotImplementedException)
+                {
+                    logger.Log("功能未实现", LogType.Error, e.Exception);
+                    Notify.ShowMessageToast("功能未实现");
+                }
+                else
+                {
+                    logger.Log("程序运行出现错误", LogType.Error, e.Exception);
+                    Notify.ShowMessageToast("程序出现一个错误，已记录");
+                }
             }
             catch (Exception)
             {
@@ -181,8 +219,9 @@ namespace BiliLite
             //圆角
             App.Current.Resources["ImageCornerRadius"] = new CornerRadius(SettingService.GetValue<double>(SettingConstants.UI.IMAGE_CORNER_RADIUS, 0));
             await AppHelper.SetRegions();
-            DownloadVM.Instance.LoadDownloading();
-            DownloadVM.Instance.LoadDownloaded();
+            var downloadViewModel = ServiceProvider.GetRequiredService<DownloadPageViewModel>();
+            downloadViewModel.LoadDownloading();
+            downloadViewModel.LoadDownloaded();
             VideoPlayHistoryHelper.LoadABPlayHistories(true);
         }
 

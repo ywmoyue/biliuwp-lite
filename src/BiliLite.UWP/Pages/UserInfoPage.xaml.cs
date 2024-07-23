@@ -1,17 +1,21 @@
-﻿using BiliLite.Extensions;
+﻿using System.Threading.Tasks;
+using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Models.Requests.Api;
-using BiliLite.Modules.User;
 using BiliLite.Modules.User.UserDetail;
 using BiliLite.Pages.User;
 using BiliLite.Services;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using BiliLite.Models.Common.User;
 using BiliLite.ViewModels.User;
 using BiliLite.ViewModels.UserDynamic;
 using Microsoft.Extensions.DependencyInjection;
+using BiliLite.Models.Common.Video;
+using System.Collections.Generic;
+using BiliLite.Services.Biz;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -35,10 +39,11 @@ namespace BiliLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class UserInfoPage : BasePage
+    public sealed partial class UserInfoPage : BasePage, IRefreshablePage
     {
+        private readonly MediaListService m_mediaListService;
         readonly UserDynamicViewModel m_userDynamicViewModel;
-        UserDetailVM userDetailVM;
+        UserDetailViewModel m_viewModel;
         UserSubmitVideoViewModel m_userSubmitVideoViewModel;
         UserSubmitCollectionViewModel m_userSubmitCollectionViewModel;
         UserSubmitArticleVM userSubmitArticleVM;
@@ -49,9 +54,10 @@ namespace BiliLite.Pages
         bool isSelf = false;
         public UserInfoPage()
         {
+            m_viewModel = App.ServiceProvider.GetRequiredService<UserDetailViewModel>();
+            m_mediaListService = App.ServiceProvider.GetRequiredService<MediaListService>();
             this.InitializeComponent();
             Title = "用户中心";
-            userDetailVM = new Modules.User.UserDetailVM();
             m_userSubmitVideoViewModel = App.ServiceProvider.GetService<UserSubmitVideoViewModel>();
             m_userSubmitCollectionViewModel = App.ServiceProvider.GetService<UserSubmitCollectionViewModel>();
             userSubmitArticleVM = new UserSubmitArticleVM();
@@ -61,6 +67,7 @@ namespace BiliLite.Pages
             followVM = new UserFollowVM(false);
             m_userDynamicViewModel.OpenCommentEvent += UserDynamicViewModelOpenCommentEvent;
             splitView.PaneClosed += SplitView_PaneClosed;
+            m_viewModel.LiveStreaming += (_, e) => btnLiveRoom.Label = "正在直播";
         }
         private void SplitView_PaneClosed(SplitView sender, object args)
         {
@@ -116,10 +123,10 @@ namespace BiliLite.Pages
             //    Oid = id
             //});
         }
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            SetStaggered();
+            //SetStaggered();
             if (e.NavigationMode == NavigationMode.New)
             {
                 var mid = "";
@@ -134,14 +141,14 @@ namespace BiliLite.Pages
                 {
                     mid = e.Parameter.ToString();
                 }
-                userDetailVM.mid = mid;
+                m_viewModel.Mid = mid;
                 m_userSubmitVideoViewModel.Mid = mid;
                 m_userSubmitCollectionViewModel.Mid = mid;
                 userSubmitArticleVM.mid = mid;
                 userFavlistVM.mid = mid;
                 fansVM.mid = mid;
                 followVM.mid = mid;
-                if (userDetailVM.mid == SettingService.Account.UserID.ToString())
+                if (m_viewModel.Mid == SettingService.Account.UserID.ToString())
                 {
                     isSelf = true;
                     appBar.Visibility = Visibility.Collapsed;
@@ -154,13 +161,12 @@ namespace BiliLite.Pages
                 }
                 m_userDynamicViewModel.DynamicType = DynamicType.Space;
                 m_userDynamicViewModel.Uid = mid;
-                userDetailVM.GetUserInfo();
-
+                m_viewModel.GetUserInfo();
+                await UserFollowingTagsFlyout.Init(mid);
                 if (tabIndex != 0)
                 {
                     pivot.SelectedIndex = tabIndex;
                 }
-
             }
         }
 
@@ -190,13 +196,13 @@ namespace BiliLite.Pages
 
         private void btnLiveRoom_Click(object sender, RoutedEventArgs e)
         {
-            if (userDetailVM.UserInfo == null) return;
+            if (!m_viewModel.HaveLiveRoom) return;
             MessageCenter.NavigateToPage(this, new NavigationInfo()
             {
                 icon = Symbol.Video,
                 page = typeof(LiveDetailPage),
-                title = userDetailVM.UserInfo.name + "的直播间",
-                parameters = userDetailVM.UserInfo.live_room.roomid
+                title = m_viewModel.UserInfo.Name + "的直播间",
+                parameters = m_viewModel.UserInfo.LiveRoom.RoomId
             });
         }
 
@@ -207,7 +213,7 @@ namespace BiliLite.Pages
                 icon = Symbol.Message,
                 title = "消息中心",
                 page = typeof(WebPage),
-                parameters = $"https://message.bilibili.com/#whisper/mid{userDetailVM.mid}"
+                parameters = $"https://message.bilibili.com/#whisper/mid{m_viewModel.Mid}"
             });
         }
 
@@ -239,49 +245,49 @@ namespace BiliLite.Pages
             }
         }
 
-        void SetStaggered()
-        {
-            var staggered = SettingService.GetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 0) == 1;
-            if (staggered != IsStaggered)
-            {
-                IsStaggered = staggered;
-                if (staggered)
-                {
-                    btnGrid_Click(this, null);
-                }
-                else
-                {
-                    btnList_Click(this, null);
-                }
-            }
-        }
+        //void SetStaggered()
+        //{
+        //    var staggered = SettingService.GetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 0) == 1;
+        //    if (staggered != IsStaggered)
+        //    {
+        //        IsStaggered = staggered;
+        //        if (staggered)
+        //        {
+        //            btnGrid_Click(this, null);
+        //        }
+        //        else
+        //        {
+        //            btnList_Click(this, null);
+        //        }
+        //    }
+        //}
 
-        private void btnGrid_Click(object sender, RoutedEventArgs e)
-        {
-            SettingService.SetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 1);
-            IsStaggered = true;
-            btnGrid.Visibility = Visibility.Collapsed;
-            btnList.Visibility = Visibility.Visible;
-            //XAML
-            list.ItemsPanel = (ItemsPanelTemplate)this.Resources["GridPanel"];
-        }
+        //private void btnGrid_Click(object sender, RoutedEventArgs e)
+        //{
+        //    SettingService.SetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 1);
+        //    IsStaggered = true;
+        //    btnGrid.Visibility = Visibility.Collapsed;
+        //    btnList.Visibility = Visibility.Visible;
+        //    //XAML
+        //    list.ItemsPanel = (ItemsPanelTemplate)this.Resources["GridPanel"];
+        //}
 
-        private void btnList_Click(object sender, RoutedEventArgs e)
-        {
-            IsStaggered = false;
-            //右下角按钮
-            btnGrid.Visibility = Visibility.Visible;
-            btnList.Visibility = Visibility.Collapsed;
-            //设置
-            SettingService.SetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 0);
-            //XAML
-            list.ItemsPanel = (ItemsPanelTemplate)this.Resources["ListPanel"];
-        }
+        //private void btnList_Click(object sender, RoutedEventArgs e)
+        //{
+        //    IsStaggered = false;
+        //    //右下角按钮
+        //    btnGrid.Visibility = Visibility.Visible;
+        //    btnList.Visibility = Visibility.Collapsed;
+        //    //设置
+        //    SettingService.SetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 0);
+        //    //XAML
+        //    list.ItemsPanel = (ItemsPanelTemplate)this.Resources["ListPanel"];
+        //}
 
-        private void btnTop_Click(object sender, RoutedEventArgs e)
-        {
-            list.ScrollIntoView(list.Items[0]);
-        }
+        //private void btnTop_Click(object sender, RoutedEventArgs e)
+        //{
+        //    list.ScrollIntoView(list.Items[0]);
+        //}
 
         private async void pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -289,9 +295,10 @@ namespace BiliLite.Pages
             {
                 await m_userSubmitVideoViewModel.GetSubmitVideo();
             }
-            if (pivot.SelectedIndex == 1 && m_userDynamicViewModel.Items == null)
+            if (pivot.SelectedIndex == 1 && DynamicSpaceFrame.Content==null)
             {
-                await m_userDynamicViewModel.GetDynamicItems();
+                DynamicSpaceFrame.Navigate(typeof(DynamicSpacePage), m_viewModel.Mid);
+                //await m_userDynamicViewModel.GetDynamicItems();
             }
             if (pivot.SelectedIndex == 2 && userSubmitArticleVM.SubmitArticleItems == null)
             {
@@ -383,9 +390,9 @@ namespace BiliLite.Pages
 
         private void ComboBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
         {
-            if (followVM != null && followVM.CurrentTid != followVM.SelectTid.tagid)
+            if (followVM != null && followVM.CurrentTid != followVM.SelectTid.TagId)
             {
-                if (followVM.SelectTid.tagid == -1)
+                if (followVM.SelectTid.TagId == -1)
                 {
                     searchFollow.Visibility = Visibility.Visible;
                 }
@@ -395,12 +402,58 @@ namespace BiliLite.Pages
                 }
                 followVM.Refresh();
             }
-
         }
 
         private void searchFollow_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             followVM.Refresh();
+        }
+
+        private void BtnFollowingTag_OnClick(object sender, RoutedEventArgs e)
+        {
+            UserFollowingTagsFlyout.ShowAt(sender as DependencyObject);
+        }
+
+        public async Task Refresh()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private async void BtnPlayAll_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            var items = new List<VideoPlaylistItem>();
+            var mediaList = await m_mediaListService.GetMediaList(m_userSubmitVideoViewModel.PlayAllMediaListId);
+
+            if (mediaList == null)
+            {
+                return;
+            }
+
+            foreach (var item in mediaList)
+            {
+                items.Add(new VideoPlaylistItem()
+                {
+                    Cover = item.Cover,
+                    Author = item.Upper.Name,
+                    Id = item.Id.ToString(),
+                    Title = item.Title
+                });
+            }
+
+            MessageCenter.NavigateToPage(this, new NavigationInfo()
+            {
+                icon = Symbol.Play,
+                page = typeof(VideoDetailPage),
+                title = "视频播放",
+                parameters = new VideoPlaylist()
+                {
+                    Index = 0,
+                    Playlist = items,
+                    Title = $"{m_viewModel.UserInfo.Name}:全部视频",
+                    MediaListId = m_userSubmitVideoViewModel.PlayAllMediaListId,
+                    IsOnlineMediaList = true,
+                }
+            });
         }
     }
 }

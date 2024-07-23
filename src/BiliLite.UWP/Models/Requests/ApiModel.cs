@@ -48,5 +48,7 @@ namespace BiliLite.Models.Requests
                 return baseUrl + "?" + parameter;
             }
         }
+
+        public Dictionary<string, object> FormData { get; set; }
     }
 }

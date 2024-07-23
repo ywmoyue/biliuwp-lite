@@ -11,10 +11,18 @@ namespace BiliLite
         {
             services.AddMapper();
             services.AddViewModels();
+            services.AddControls();
+            services.AddDanmakuController();
 
             services.AddSingleton<CookieService>();
+            services.AddSingleton<ShortcutKeyService>();
+            services.AddTransient<PlayerToastService>();
+            services.AddTransient<SettingsImportExportService>();
             services.AddQrCodeService();
-            
+            services.AddBizServices();
+            services.AddSingleton<PlaySpeedMenuService>();
+            services.AddSingleton<ContentFilterService>();
+
             services.AddSingleton<GrpcService>();
         }
     }

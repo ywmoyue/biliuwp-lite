@@ -1,12 +1,21 @@
 ﻿using Atelier39;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Net;
+using BiliLite.Services;
 
 namespace BiliLite.Extensions
 {
     public static class DanmakuExtensions
     {
+        public static IServiceCollection AddDanmakuController(this IServiceCollection services)
+        {
+            services.AddTransient<NsDanmakuController>();
+            services.AddTransient<FrostMasterDanmakuController>();
+            return services;
+        }
+
         public static void ParseAdvanceDanmaku(this DanmakuItem danmakuItem)
         {
             var content = danmakuItem.Text;

@@ -12,7 +12,7 @@ namespace BiliLite.Models.Common.Live
 
         public string MedalName { get; set; }
 
-        public string MedalLevel { get; set; }
+        public int MedalLevel { get; set; }
 
         public string MedalColor { get; set; }
 

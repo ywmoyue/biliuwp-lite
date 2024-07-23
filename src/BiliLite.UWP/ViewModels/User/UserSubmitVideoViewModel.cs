@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using AutoMapper;
@@ -14,6 +15,7 @@ using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using PropertyChanged;
 
 namespace BiliLite.ViewModels.User
 {
@@ -85,6 +87,9 @@ namespace BiliLite.ViewModels.User
 
         public string Keyword { get; set; } = "";
 
+        [DoNotNotify]
+        public string PlayAllMediaListId { get; set; }
+
         #endregion
 
         #region Private Methods
@@ -96,6 +101,21 @@ namespace BiliLite.ViewModels.User
             var items = m_mapper.Map<List<SubmitVideoItemModel>>(cursorItems);
             AttachSubmitVideoItems(items, count);
             m_lastAid = cursorItems?.LastOrDefault()?.Aid;
+            GetPlayAllMediaListId(data);
+        }
+
+        private void GetPlayAllMediaListId(JObject data)
+        {
+            if (data["data"]["episodic_button"] == null) return;
+            if (data["data"]["episodic_button"]["uri"] == null) return;
+            var playAllMediaListUrl = data["data"]["episodic_button"]["uri"].ToString();
+            var mediaListUrl = new Uri(playAllMediaListUrl);
+            var regex = new Regex("/playlist/spacepage/(\\d+)");
+            var match = regex.Match(mediaListUrl.AbsolutePath);
+            if (match.Success)
+            {
+                PlayAllMediaListId = match.Groups[1]?.Value;
+            }
         }
 
         private void AttachSubmitVideoItems(List<SubmitVideoItemModel> submitVideoItems, int count)

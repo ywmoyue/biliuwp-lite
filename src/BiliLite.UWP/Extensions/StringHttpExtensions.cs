@@ -92,7 +92,7 @@ namespace BiliLite.Extensions
         /// <param name="headers"></param>
         /// <param name="cookies"></param>
         /// <returns></returns>
-        public static async Task<HttpResults> GetHttpResultsWithWebCookie(this string url, IDictionary<string, string> headers = null, IDictionary<string,string> extraCookies = null)
+        public static async Task<HttpResults> GetHttpResultsWithWebCookie(this string url, IDictionary<string, string> headers = null, IDictionary<string, string> extraCookies = null)
         {
             try
             {
@@ -100,7 +100,7 @@ namespace BiliLite.Extensions
 
                 if (extraCookies != null)
                 {
-                    foreach(var kvp in extraCookies.ToList())
+                    foreach (var kvp in extraCookies.ToList())
                     {
                         cookies.Add(kvp.Key, kvp.Value);
                     }
@@ -196,19 +196,19 @@ namespace BiliLite.Extensions
         /// <param name="cookie"></param>
         /// <param name="contentType"></param>
         /// <returns></returns>
-        public static async Task<HttpResults> PostHttpResultsAsync(this string url, string body, IDictionary<string, string> headers = null, IDictionary<string, string> cookies = null)
+        public static async Task<HttpResults> PostHttpResultsAsync(this string url, string body, Dictionary<string, object> formBody, IDictionary<string, string> headers = null, IDictionary<string, string> cookies = null)
         {
             Debug.WriteLine("POST:" + url + "\r\nBODY:" + body);
             var biliRequestBuilder = new BiliRequestBuilder(url)
                 .SetHeaders(headers)
                 .SetCookies(cookies)
-                .SetPostBody(body);
+                .SetPostBody(body, formBody);
             var biliRequest = biliRequestBuilder.Build();
             var httpResult = await biliRequest.Send();
             return httpResult;
         }
 
-        public static async Task<HttpResults> PostHttpResultsWithCookie(this string url, string body, IDictionary<string, string> headers = null)
+        public static async Task<HttpResults> PostHttpResultsWithCookie(this string url, string body, Dictionary<string, object> formBody, IDictionary<string, string> headers = null, IDictionary<string, string> extraCookies = null)
         {
             try
             {
@@ -218,12 +218,21 @@ namespace BiliLite.Extensions
                 if (cookies == null || cookies.Count == 0)
                 {
                     //访问一遍bilibili.com
-                    var getCookieResult = await Constants.BILIBILI_DOMAIN.GetHttpResultsAsync(); 
+                    var getCookieResult = await Constants.BILIBILI_DOMAIN.GetHttpResultsAsync();
                     cookieService.Cookies = getCookieResult.cookies;
                 }
                 cookies = cookieService.Cookies;
                 var cookiesCollection = cookies.ToDictionary(x => x.Name, x => x.Value);
-                return await url.PostHttpResultsAsync(body, headers, cookiesCollection);
+
+                if (extraCookies != null)
+                {
+                    foreach (var kvp in extraCookies)
+                    {
+                        cookiesCollection.Add(kvp.Key, kvp.Value);
+                    }
+                }
+
+                return await url.PostHttpResultsAsync(body, formBody, headers, cookiesCollection);
             }
             catch (Exception ex)
             {

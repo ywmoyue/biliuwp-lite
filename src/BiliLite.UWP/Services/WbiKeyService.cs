@@ -36,7 +36,7 @@ namespace BiliLite.Services
 
         public async Task<WbiKey> GetWbiKeys()
         {
-            var lastKeySaveTimestamp = SettingService.GetValue(SettingConstants.Account.WBI_KEY_TIME, 0);
+            var lastKeySaveTimestamp = SettingService.GetValue<long>(SettingConstants.Account.WBI_KEY_TIME, 0);
             if (lastKeySaveTimestamp <= 0) return await GetNewWbiKeys();
             var lastKeySaveTime = DateTimeOffset.FromUnixTimeSeconds(lastKeySaveTimestamp);
             if ((DateTimeOffset.Now - lastKeySaveTime) >=

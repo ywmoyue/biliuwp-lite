@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using BiliLite.Modules.Home;
 using System.Windows.Input;
 using BiliLite.Extensions;
 using BiliLite.Models;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Services;
+using BiliLite.ViewModels.Rank;
 
 namespace BiliLite.Modules
 {
@@ -157,7 +156,7 @@ namespace BiliLite.Modules
             }
             catch (Exception ex)
             {
-                var handel = HandelError<ApiDataModel<List<RankRegionModel>>>(ex);
+                var handel = HandelError<ApiDataModel<List<RankRegionViewModel>>>(ex);
                 Notify.ShowMessageToast(handel.message);
             }
             finally
@@ -311,7 +310,7 @@ namespace BiliLite.Modules
             }
             catch (Exception ex)
             {
-                var handel = HandelError<ApiDataModel<List<RankRegionModel>>>(ex);
+                var handel = HandelError<ApiDataModel<List<RankRegionViewModel>>>(ex);
                 Notify.ShowMessageToast(handel.message);
             }
             finally
@@ -359,7 +358,7 @@ namespace BiliLite.Modules
             }
             catch (Exception ex)
             {
-                var handel = HandelError<ApiDataModel<List<RankRegionModel>>>(ex);
+                var handel = HandelError<ApiDataModel<List<RankRegionViewModel>>>(ex);
                 Notify.ShowMessageToast(handel.message);
             }
             finally

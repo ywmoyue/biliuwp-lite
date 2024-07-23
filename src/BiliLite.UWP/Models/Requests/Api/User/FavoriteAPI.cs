@@ -55,10 +55,10 @@ namespace BiliLite.Models.Requests.Api.User
         /// 添加到收藏夹
         /// </summary>
         /// <returns></returns>
-        public ApiModel AddFavorite(List<string> fav_ids, string avid)
+        public ApiModel AddFavorite(List<string> favIds, string avid)
         {
             var ids = "";
-            foreach (var item in fav_ids)
+            foreach (var item in favIds)
             {
                 ids += item + ",";
             }
@@ -68,6 +68,34 @@ namespace BiliLite.Models.Requests.Api.User
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/medialist/gateway/coll/resource/deal",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&add_media_ids={ids}&rid={avid}&type=2"
+            };
+            api.body += ApiHelper.GetSign(api.body, AppKey);
+            return api;
+        }
+
+        /// <summary>
+        /// 更新到收藏夹
+        /// </summary>
+        /// <returns></returns>
+        public ApiModel UpdateFavorite(List<string> addFavIds,List<string> delFavIds, string avid)
+        {
+            var addIds = "";
+            foreach (var item in addFavIds)
+            {
+                addIds += item + ",";
+            }
+            addIds = Uri.EscapeDataString(addIds.TrimEnd(','));
+            var delIds = "";
+            foreach (var item in delFavIds)
+            {
+                delIds += item + ",";
+            }
+            delIds = Uri.EscapeDataString(delIds.TrimEnd(','));
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Post,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/medialist/gateway/coll/resource/deal",
+                body = ApiHelper.MustParameter(AppKey, true) + $"&add_media_ids={addIds}&del_media_ids={delIds}&rid={avid}&type=2"
             };
             api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
@@ -261,6 +289,59 @@ namespace BiliLite.Models.Requests.Api.User
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/resource/clean",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&media_id={media_id}"
+            };
+            api.body += ApiHelper.GetSign(api.body, AppKey);
+            return api;
+        }
+
+        public ApiModel Sort(List<string> favIdList)
+        {
+            var sort = string.Join(',', favIdList);
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Post,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/sort",
+                body = ApiHelper.MustParameter(AppKey, true) + $"&sort={sort}"
+            };
+            api.body += ApiHelper.GetSign(api.body, AppKey);
+            return api;
+        }
+
+        public ApiModel SortResource(string mediaId, string sourceId, string targetId)
+        {
+            // 0:0:{sourceId}:2 将sourceId的视频移动到第一位
+            // {targetId}:2:{sourceId}:2 将sourceId的视频移动到targetId的视频之后
+            var sort = "";
+            sort = string.IsNullOrEmpty(targetId) ? $"0:0:{sourceId}:2" : $"{targetId}:2:{sourceId}:2";
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Post,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/resource/sort",
+                body = ApiHelper.MustParameter(AppKey, true) + $"&media_id={mediaId}&sort={sort}"
+            };
+            api.body += ApiHelper.GetSign(api.body, AppKey);
+            return api;
+        }
+
+        public ApiModel GetCollected(int page=1,int pageCount=20)
+        {
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Get,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/collected/list",
+                parameter = $"up_mid={SettingService.Account.UserID}&pn={page}&ps={pageCount}&platform=web",
+                need_cookie = true,
+            };
+            return api;
+        }
+
+        public ApiModel UnFavCollected(string seasonId)
+        {
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Post,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/season/unfav",
+                body = ApiHelper.MustParameter(AppKey, true) + $"&season_id={seasonId}"
             };
             api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;

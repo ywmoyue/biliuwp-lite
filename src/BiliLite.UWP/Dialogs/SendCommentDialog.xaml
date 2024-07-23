@@ -8,6 +8,10 @@
     mc:Ignorable="d"
     Title="发表评论"
     xmlns:modules="using:BiliLite.Modules"
+    xmlns:fa="using:FontAwesome5"
+    xmlns:viewModels="using:BiliLite.ViewModels"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:userDynamic="using:BiliLite.Models.Common.UserDynamic"
     PrimaryButtonText="发送"
     SecondaryButtonText="取消"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
@@ -17,7 +21,7 @@
             <Grid Width="320">
                 <Pivot x:Name="pivot_face" ItemsSource="{x:Bind Path=emoteVM.Packages,Mode=OneWay}">
                     <Pivot.HeaderTemplate>
-                        <DataTemplate x:DataType="modules:EmotePackageModel">
+                        <DataTemplate x:DataType="viewModels:EmotePackageModel">
                             <TextBlock FontSize="18" Text="{x:Bind text}"></TextBlock>
                         </DataTemplate>
                     </Pivot.HeaderTemplate>
@@ -50,12 +54,49 @@
         </Flyout>
     </ContentDialog.Resources>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
         <TextBox MinHeight="120" Padding="8 8 8 36" TextWrapping="Wrap" x:Name="txt_Comment" AcceptsReturn="True" PlaceholderText="说点什么吧..."></TextBox>
-        <Button x:Name="btnOpenFace" Click="btnOpenFace_Click" Width="36" VerticalAlignment="Bottom" Background="Transparent" Height="36"   Foreground="Gray">
-            <StackPanel Orientation="Horizontal">
-                <FontIcon FontFamily="Segoe MDL2 Assets" FontSize="14"  Glyph="&#xE170;" />
-
-            </StackPanel>
-        </Button>
+        <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal">
+            <Button x:Name="btnOpenFace" Click="btnOpenFace_Click" Width="36" VerticalAlignment="Bottom" Background="Transparent" Height="36"   Foreground="Gray">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon FontFamily="Segoe MDL2 Assets" FontSize="14"  Glyph="&#xE170;" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="BtnUploadDraw" Click="BtnUploadDraw_OnClick" Width="36" VerticalAlignment="Bottom" Background="Transparent" Height="36"   Foreground="Gray">
+                <StackPanel Orientation="Horizontal">
+                    <fa:FontAwesome Icon="Regular_FileImage" FontSize="14"></fa:FontAwesome>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+        <StackPanel Grid.Row="1"
+                    Visibility="{x:Bind m_viewModel.ShowPictures,Mode=OneWay}">
+            <toolkit:AdaptiveGridView
+                StretchContentForSingleRow="False"
+                OneRowModeEnabled="True"
+                ItemHeight="80"
+                ItemsSource="{x:Bind Path=m_viewModel.Pictures,Mode=OneWay}"
+                SelectionMode="None"
+                IsItemClickEnabled="False">
+                <toolkit:AdaptiveGridView.ItemTemplate>
+                    <DataTemplate x:DataType="userDynamic:DynamicPicture">
+                        <Grid
+                            Background="Transparent">
+                            <toolkit:ImageEx
+                                Source="{x:Bind ImageUrl}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"></toolkit:ImageEx>
+                            <Button HorizontalAlignment="Right" 
+                                    VerticalAlignment="Top"
+                                    x:Name="BtnRemovePicture"
+                                    Click="BtnRemovePicture_OnClick">x</Button>
+                        </Grid>
+                    </DataTemplate>
+                </toolkit:AdaptiveGridView.ItemTemplate>
+            </toolkit:AdaptiveGridView>
+        </StackPanel>
     </Grid>
 </ContentDialog>

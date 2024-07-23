@@ -18,6 +18,6 @@ namespace BiliLite.Models.Common.Recommend
 
         public string Rname { get; set; }
 
-        public int Aid { get; set; }
+        public long Aid { get; set; }
     }
 }

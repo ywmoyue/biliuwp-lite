@@ -3,7 +3,9 @@ using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Pages;
 using BiliLite.Services;
+using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
@@ -20,10 +22,15 @@ namespace BiliLite
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class NoTabMainPage : Page
+    public sealed partial class NoTabMainPage : Page, IMainPage
     {
+        private readonly ShortcutKeyService m_shortcutKeyService;
+        private readonly Stack<string> m_titleStack = new Stack<string>();
+
         public NoTabMainPage()
         {
+            m_shortcutKeyService = App.ServiceProvider.GetRequiredService<ShortcutKeyService>();
+            m_shortcutKeyService.SetMainPage(this);
             this.InitializeComponent();
             var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             mode = SettingService.GetValue<int>(SettingConstants.UI.DISPLAY_MODE, 0);
@@ -33,8 +40,22 @@ namespace BiliLite
             MessageCenter.ChangeTitleEvent += MessageCenter_ChangeTitleEvent;
             MessageCenter.ViewImageEvent += MessageCenter_ViewImageEvent;
             MessageCenter.MiniWindowEvent += MessageCenter_MiniWindowEvent;
+            MessageCenter.SeekEvent += MessageCenter_SeekEvent;
             Window.Current.Content.PointerPressed += Content_PointerPressed;
+
+            Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
         }
+
+        public object CurrentPage => frame.Content;
+
+        private void Dispatcher_AcceleratorKeyActivated(Windows.UI.Core.CoreDispatcher sender, Windows.UI.Core.AcceleratorKeyEventArgs args)
+        {
+            if (args.EventType.ToString().Contains("Down"))
+            {
+                m_shortcutKeyService.HandleKeyDown(args.VirtualKey);
+            }
+        }
+
         private void MessageCenter_MiniWindowEvent(object sender, bool e)
         {
             if (e)
@@ -48,6 +69,13 @@ namespace BiliLite
                 Window.Current.SetTitleBar(TitleBar);
             }
         }
+
+        private void MessageCenter_SeekEvent(object sender, double e)
+        {
+            if (!(frame.Content is PlayPage playPage)) return;
+            playPage.Seek(e);
+        }
+
         private void Content_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             var par = e.GetCurrentPoint(sender as Frame).Properties.PointerUpdateKind;
@@ -66,6 +94,7 @@ namespace BiliLite
                 {
                     this.frame.GoBack();
                     e.Handled = true;
+                    BackTitle();
                 }
 
             }
@@ -77,9 +106,10 @@ namespace BiliLite
             {
                 txtTitle.Text = "哔哩哔哩 UWP";
             }
-            if (e.Content is Pages.BasePage)
+            if (e.Content is Pages.BasePage && e.NavigationMode!=NavigationMode.Back)
             {
-                txtTitle.Text = (e.Content as BasePage).Title;
+                var title = (e.Content as BasePage).Title;
+                PushTitle(title);
             }
 
             if (frame.CanGoBack)
@@ -115,7 +145,7 @@ namespace BiliLite
         {
             if (mode == 1)
             {
-                txtTitle.Text = e;
+                ChangeTitle(e);
             }
         }
 
@@ -123,10 +153,9 @@ namespace BiliLite
         {
             if (mode == 1)
             {
-                txtTitle.Text = e.title;
+                //PushTitle(e.title);
                 frame.Navigate(e.page, e.parameters);
                 (frame.Content as Page).NavigationCacheMode = NavigationCacheMode.Required;
-
             }
             else
             {
@@ -139,6 +168,7 @@ namespace BiliLite
             if (frame.CanGoBack)
             {
                 frame.GoBack();
+                BackTitle();
             }
         }
 
@@ -175,6 +205,29 @@ namespace BiliLite
                 imgViewer.ClearImage();
                 gridViewer.Visibility = Visibility.Collapsed;
             }
+        }
+
+        private void BackTitle()
+        {
+            if (m_titleStack.Count == 0)
+            {
+                txtTitle.Text = "哔哩哔哩 UWP";
+                return;
+            }
+
+            var title = m_titleStack.Pop();
+            txtTitle.Text = title;
+        }
+
+        private void PushTitle(string title)
+        {
+            m_titleStack.Push(txtTitle.Text);
+            txtTitle.Text = title;
+        }
+
+        private void ChangeTitle(string title)
+        {
+            txtTitle.Text = title;
         }
     }
 
@@ -224,8 +277,7 @@ namespace BiliLite
 
             //跳转页面
             (this.Children.Last() as Frame).Navigate(sourcePageType, parameter);
-
-
+            
             return true;
         }
         public bool CanGoBack

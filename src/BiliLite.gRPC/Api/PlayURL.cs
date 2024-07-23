@@ -16,7 +16,7 @@ namespace BiliLite.gRPC.Api
         /// <param name="codeType">编码，支持h264及h265</param>
         /// <param name="access_key">登录后access_key</param>
         /// <returns></returns>
-        public async Task<PlayViewReply> VideoPlayView(long aid, long cid,int qn,int fnval , CodeType codeType, string access_key="")
+        public async Task<PlayViewReply> VideoPlayView(long aid, long cid,int qn,int fnval , CodeType codeType, GrpcBiliUserInfo userInfo)
         {
             var message = new PlayViewReq() { 
                 Aid= aid,
@@ -26,7 +26,7 @@ namespace BiliLite.gRPC.Api
                 Fourk=true,
                 PreferCodecType= codeType
             };
-            var result=await  GrpcRequest.Instance.SendMessage("https://app.bilibili.com/bilibili.app.playurl.v1.PlayURL/PlayView", message, access_key);
+            var result=await  GrpcRequest.Instance.SendMessage("https://app.bilibili.com/bilibili.app.playurl.v1.PlayURL/PlayView", message, userInfo);
             if (result.status)
             {
                 return PlayViewReply.Parser.ParseFrom(result.results);
@@ -46,7 +46,7 @@ namespace BiliLite.gRPC.Api
         /// <param name="codeType">编码，支持h264及h265</param>
         /// <param name="access_key">登录后access_key</param>
         /// <returns></returns>
-        public async Task<PlayViewReply> BangumiPlayView(long epid, long cid, int qn, int fnval, CodeType codeType, string access_key = "")
+        public async Task<PlayViewReply> BangumiPlayView(long epid, long cid, int qn, int fnval, CodeType codeType, GrpcBiliUserInfo userInfo)
         {
             var message = new PlayViewReq()
             {
@@ -57,7 +57,7 @@ namespace BiliLite.gRPC.Api
                 Fourk = true,
                 PreferCodecType = codeType
             };
-            var result = await GrpcRequest.Instance.SendMessage("https://app.bilibili.com/bilibili.pgc.gateway.player.v1.PlayURL/PlayView", message, access_key);
+            var result = await GrpcRequest.Instance.SendMessage("https://app.bilibili.com/bilibili.pgc.gateway.player.v1.PlayURL/PlayView", message, userInfo);
             if (result.status)
             {
                 return PlayViewReply.Parser.ParseFrom(result.results);

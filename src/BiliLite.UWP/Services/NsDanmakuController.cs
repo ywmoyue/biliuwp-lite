@@ -2,22 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using Windows.Foundation;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using AutoMapper;
+using BiliLite.Models.Common.Danmaku;
 using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels.Video;
 using NSDanmaku.Controls;
 using NSDanmaku.Model;
+using BiliLite.Models.Common;
 
 namespace BiliLite.Services
 {
     public class NsDanmakuController : IDanmakuController
     {
+        private readonly IMapper m_mapper;
         private Danmaku m_danmakuControl;
 
-        public NsDanmakuController()
+        public NsDanmakuController(IMapper mapper)
         {
+            m_mapper = mapper;
             DanmakuViewModel = new DanmakuViewModel()
             {
                 ShowAreaControl = true,
@@ -79,6 +85,12 @@ namespace BiliLite.Services
             m_danmakuControl.ShowDanmaku(DanmakuLocation.Scroll);
         }
 
+        public override void SetFont(string fontName)
+        {
+            if (string.IsNullOrEmpty(fontName)) return;
+            m_danmakuControl.FontFamily = new FontFamily(fontName);
+        }
+
         public override void SetFontZoom(double fontZoom)
         {
             base.SetFontZoom(fontZoom);
@@ -100,7 +112,23 @@ namespace BiliLite.Services
         public override void SetTopMargin(double topMargin)
         {
             base.SetTopMargin(topMargin);
-            m_danmakuControl.Margin = new Thickness(0, topMargin, 0, 0);
+            if (SettingService.GetValue(SettingConstants.UI.DISPLAY_MODE, 0) > 0)
+            {
+                m_danmakuControl.Margin = DanmakuViewModel.Fullscreen ? new Thickness(0, DanmakuViewModel.MarginTop + 16, 0, 0) : new Thickness(0, DanmakuViewModel.MarginTop, 0, 0);
+            }
+            else
+            {
+                m_danmakuControl.Margin = new Thickness(0, topMargin, 0, 0);
+            }
+        }
+
+        public override void SetFullscreen(bool fullscreen)
+        {
+            base.SetFullscreen(fullscreen);
+            if (SettingService.GetValue(SettingConstants.UI.DISPLAY_MODE, 0) > 0)
+            {
+                m_danmakuControl.Margin = fullscreen ? new Thickness(0, DanmakuViewModel.MarginTop + 16, 0, 0) : new Thickness(0, DanmakuViewModel.MarginTop, 0, 0);
+            }
         }
 
         public override void SetOpacity(double opacity)
@@ -130,10 +158,15 @@ namespace BiliLite.Services
             }
         }
 
-        public override void Add(object danmakuItem,bool owner)
+        public override void Add(BiliDanmakuItem danmakuItem,bool owner)
         {
-            var realDanmakuItem = danmakuItem as DanmakuModel;
+            var realDanmakuItem = m_mapper.Map<DanmakuModel>(danmakuItem);
             m_danmakuControl.AddDanmu(realDanmakuItem, owner);
+        }
+
+        public override void AddLiveDanmaku(string text, bool owner, Color color)
+        {
+            m_danmakuControl.AddLiveDanmu(text, owner, color);
         }
 
         public override void Pause()

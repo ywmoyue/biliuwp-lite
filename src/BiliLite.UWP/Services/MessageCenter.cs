@@ -16,6 +16,7 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using BiliLite.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite.Services
@@ -33,6 +34,7 @@ namespace BiliLite.Services
         public static event EventHandler<object> LoginedEvent;
         public static event EventHandler<ImageViewerParameter> ViewImageEvent;
         public static event EventHandler GoBackEvent;
+        public static event EventHandler<double> SeekEvent;
         public static event EventHandler LogoutedEvent;
         public static void NavigateToPage(object sender, NavigationInfo navigationInfo)
         {
@@ -59,7 +61,7 @@ namespace BiliLite.Services
         {
             LoginedEvent?.Invoke(null, null);
             //同步弹幕屏蔽信息
-            await new Modules.SettingVM().SyncDanmuFilter();
+            await App.ServiceProvider.GetRequiredService<VideoDanmakuSettingsControlViewModel>().SyncDanmuFilter();
         }
         /// <summary>
         /// 发送注销事件
@@ -94,6 +96,13 @@ namespace BiliLite.Services
         /// <param name="par"></param>
         public static async Task<bool> HandelUrl(string url, bool dontGoTo = false)
         {
+            var uriHref = "";
+            if (url.IsUrl())
+            {
+                var uri = new Uri(url);
+                uriHref = uri.GetLeftPart(UriPartial.Path);
+            }
+
             _logger.Debug($"处理链接：{url}");
             if (url.First() == '@')
             {
@@ -104,6 +113,74 @@ namespace BiliLite.Services
             {
                 url = await BiliExtensions.GetShortLinkLocation(url);
             }
+
+
+
+            /*
+             * 直播
+             * http://live.bilibili.com/live/5619438.html
+             * http://live.bilibili.com/h5/5619438
+             * http://live.bilibili.com/5619438
+             * bilibili://live/5619438
+             */
+
+            var live = StringExtensions.RegexMatch(uriHref.Replace("h5", "live").Replace("live.bilibili.com", "live").Replace("/", ""), @"live(\d+)");
+            if (live != "")
+            {
+                NavigateToPage(null, new NavigationInfo()
+                {
+                    icon = Symbol.Video,
+                    page = typeof(LiveDetailPage),
+                    title = "直播间加载中...",
+                    parameters = live,
+                    dontGoTo = dontGoTo,
+                });
+                return true;
+            }
+
+            /*
+             * 番剧/影视
+             * https://bangumi.bilibili.com/anime/21680
+             * https://www.bilibili.com/bangumi/play/ss21715
+             * https://www.bilibili.com/bangumi/play/ep150706
+             * https://m.bilibili.com/bangumi/play/ep150706
+             * http://m.bilibili.com/bangumi/play/ss21715
+             * bilibili://bangumi/season/21715
+             * https://bangumi.bilibili.com/movie/12364
+             */
+            if (uriHref.Contains("bangumi"))
+            {
+                var bangumi = StringExtensions.RegexMatch(url.Replace("movie", "ss").Replace("anime", "ss").Replace("season", "ss").Replace("/", ""), @"ss(\d{4,})");
+                if (bangumi != "")
+                {
+                    NavigateToPage(null, new NavigationInfo()
+                    {
+                        icon = Symbol.Play,
+                        page = typeof(SeasonDetailPage),
+                        title = "剧集加载中...",
+                        parameters = bangumi,
+                        dontGoTo = dontGoTo,
+                    });
+                    return true;
+                }
+                bangumi = StringExtensions.RegexMatch(url, @"ep(\d+)");
+                if (bangumi != "")
+                {
+                    NavigateToPage(null, new NavigationInfo()
+                    {
+                        icon = Symbol.Play,
+                        page = typeof(SeasonDetailPage),
+                        title = "剧集加载中...",
+                        dontGoTo = dontGoTo,
+                        parameters = new object[] {
+                            await BiliExtensions.BangumiEpidToSid(bangumi),
+                            bangumi
+                        }
+                    });
+                    return true;
+                }
+            }
+
             /*
              * 视频
              * https://www.bilibili.com/video/av3905642
@@ -206,47 +283,6 @@ namespace BiliLite.Services
                 return true;
             }
 
-            /* 
-             * 番剧/影视
-             * https://bangumi.bilibili.com/anime/21680
-             * https://www.bilibili.com/bangumi/play/ss21715
-             * https://www.bilibili.com/bangumi/play/ep150706
-             * https://m.bilibili.com/bangumi/play/ep150706
-             * http://m.bilibili.com/bangumi/play/ss21715
-             * bilibili://bangumi/season/21715
-             * https://bangumi.bilibili.com/movie/12364
-             */
-
-            var bangumi = StringExtensions.RegexMatch(url.Replace("movie", "ss").Replace("anime", "ss").Replace("season", "ss").Replace("/", ""), @"ss(\d{4,})");
-            if (bangumi != "")
-            {
-                NavigateToPage(null, new NavigationInfo()
-                {
-                    icon = Symbol.Play,
-                    page = typeof(SeasonDetailPage),
-                    title = "剧集加载中...",
-                    parameters = bangumi,
-                    dontGoTo = dontGoTo,
-                });
-                return true;
-            }
-            bangumi = StringExtensions.RegexMatch(url, @"ep(\d+)");
-            if (bangumi != "")
-            {
-                NavigateToPage(null, new NavigationInfo()
-                {
-                    icon = Symbol.Play,
-                    page = typeof(SeasonDetailPage),
-                    title = "剧集加载中...",
-                    dontGoTo = dontGoTo,
-                    parameters = new object[] {
-                        await BiliExtensions.BangumiEpidToSid(bangumi),
-                            bangumi
-                    }
-                });
-                return true;
-            }
-
 
             /*
              * 点评
@@ -264,28 +300,6 @@ namespace BiliLite.Services
             //}
 
 
-
-            /*
-            * 直播
-            * http://live.bilibili.com/live/5619438.html
-            * http://live.bilibili.com/h5/5619438
-            * http://live.bilibili.com/5619438
-            * bilibili://live/5619438
-            */
-
-            var live = StringExtensions.RegexMatch(url.Replace("h5", "live").Replace("live.bilibili.com", "live").Replace("/", ""), @"live(\d+)");
-            if (live != "")
-            {
-                NavigateToPage(null, new NavigationInfo()
-                {
-                    icon = Symbol.Video,
-                    page = typeof(LiveDetailPage),
-                    title = "直播间加载中...",
-                    parameters = live,
-                    dontGoTo = dontGoTo,
-                });
-                return true;
-            }
 
             ///*
             // * 小视频
@@ -374,8 +388,16 @@ namespace BiliLite.Services
              * bilibili://album/2403422
              * https://t.bilibili.com/84935538081511530
              * bilibili://following/detail/314560419758546547
+             * bilibili://opus/detail/922046211927572500
              */
-            var album = StringExtensions.RegexMatch(url.Replace("bilibili://following/detail/", "album").Replace("h.bilibili.com/ywh/h5/", "album").Replace("h.bilibili.com", "album").Replace("t.bilibili.com", "album").Replace("/", ""), @"album(\d+)");
+            var album = StringExtensions
+                .RegexMatch(url
+                    .Replace("bilibili://opus/detail/", "album")
+                    .Replace("bilibili://following/detail/", "album")
+                    .Replace("h.bilibili.com/ywh/h5/", "album")
+                    .Replace("h.bilibili.com", "album")
+                    .Replace("t.bilibili.com", "album")
+                    .Replace("/", ""), @"album(\d+)");
             if (album != "")
             {
                 NavigateToPage(null, new NavigationInfo()
@@ -558,6 +580,11 @@ namespace BiliLite.Services
 
             return false;
 
+        }
+
+        public static void HandleSeek(double position)
+        {
+            SeekEvent?.Invoke(null, position);
         }
 
         public async static Task<string> HandelSeasonID(string url)
