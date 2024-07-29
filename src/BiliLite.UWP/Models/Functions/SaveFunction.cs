@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 
 namespace BiliLite.Models.Functions
 {
-    public class SaveFunction : IShortcutFunction
+    public class SaveFunction : BaseShortcutFunction
     {
-        public string Name { get; } = "保存操作";
+        public override string Name { get; } = "保存操作";
 
-        public async Task Action(object param)
+        public override async Task Action(object param)
         {
             if (!(param is ISavablePage page)) return;
             await page.Save();

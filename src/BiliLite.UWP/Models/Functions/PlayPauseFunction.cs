@@ -3,11 +3,11 @@ using BiliLite.Pages;
 
 namespace BiliLite.Models.Functions
 {
-    public class PlayPauseFunction : IShortcutFunction
+    public class PlayPauseFunction : BaseShortcutFunction
     {
-        public string Name { get; } = "播放/暂停";
+        public override string Name { get; } = "播放/暂停";
 
-        public async Task Action(object param)
+        public override async Task Action(object param)
         {
             if (!(param is PlayPage page)) return;
             if (page.IsPlaying)

@@ -40,10 +40,26 @@ namespace BiliLite.Pages
             Player.PlayerInstance.Play();
         }
 
+        public void StartHighRateSpeedPlay()
+        {
+            Player.StartHighRateSpeedPlay();
+        }
+
+        public void StopHighRateSpeedPlay()
+        {
+            Player.StopHighRateSpeedPlay();
+        }
+
         public void PositionBack()
         {
             Player.PositionBack();
         }
+
+        public void PositionForward()
+        {
+            Player.PositionForward();
+        }
+
         public void AddVolume()
         {
             Player.AddVolume();

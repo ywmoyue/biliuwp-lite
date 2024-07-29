@@ -3,11 +3,11 @@ using BiliLite.Pages;
 
 namespace BiliLite.Models.Functions
 {
-    public class MinusVolumeFunction : IShortcutFunction
+    public class MinusVolumeFunction : BaseShortcutFunction
     {
-        public string Name { get; } = "音量-";
+        public override string Name { get; } = "音量-";
 
-        public async Task Action(object param)
+        public override async Task Action(object param)
         {
             if (!(param is PlayPage page)) return;
             page.MinusVolume();

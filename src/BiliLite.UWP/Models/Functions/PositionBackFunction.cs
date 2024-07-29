@@ -3,11 +3,11 @@ using BiliLite.Pages;
 
 namespace BiliLite.Models.Functions
 {
-    public class PositionBackFunction : IShortcutFunction
+    public class PositionBackFunction : BaseShortcutFunction
     {
-        public string Name { get; } = "回退3秒";
+        public override string Name { get; } = "回退3秒";
 
-        public async Task Action(object param)
+        public override async Task Action(object param)
         {
             if (!(param is PlayPage page)) return;
             page.PositionBack();

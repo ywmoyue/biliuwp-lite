@@ -295,24 +295,24 @@ namespace BiliLite.Controls
             switch (args.VirtualKey)
             {
                 case Windows.System.VirtualKey.Right:
-                    {
-                        if (m_playerKeyRightAction == PlayerKeyRightAction.AcceleratePlay)
-                        {
-                            StartHighRateSpeedPlay();
-                        }
-                        if (m_playerKeyRightAction == PlayerKeyRightAction.ControlProgress && (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.Pause))
-                        {
-                            var _position = Player.Position + 3;
-                            if (_position > Player.Duration)
-                            {
-                                _position = Player.Duration;
-                            }
-                            Player.Position = _position;
+                    //{
+                    //    if (m_playerKeyRightAction == PlayerKeyRightAction.AcceleratePlay)
+                    //    {
+                    //        StartHighRateSpeedPlay();
+                    //    }
+                    //    if (m_playerKeyRightAction == PlayerKeyRightAction.ControlProgress && (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.Pause))
+                    //    {
+                    //        var _position = Player.Position + 3;
+                    //        if (_position > Player.Duration)
+                    //        {
+                    //            _position = Player.Duration;
+                    //        }
+                    //        Player.Position = _position;
 
-                            m_playerToastService.Show(
-                                PlayerToastService.PROGRESS_KEY, "进度:" + TimeSpan.FromSeconds(Player.Position).ToString(@"hh\:mm\:ss"));
-                        }
-                    }
+                    //        m_playerToastService.Show(
+                    //            PlayerToastService.PROGRESS_KEY, "进度:" + TimeSpan.FromSeconds(Player.Position).ToString(@"hh\:mm\:ss"));
+                    //    }
+                    //}
                     break;
 
                 case Windows.System.VirtualKey.F8:
@@ -1994,14 +1994,14 @@ namespace BiliLite.Controls
             StopHighRateSpeedPlay();
         }
 
-        private void StartHighRateSpeedPlay()
+        public void StartHighRateSpeedPlay()
         {
             m_playerToastService.KeepStart(PlayerToastService.ACCELERATING_KEY, "倍速播放中");
             var highRatePlaySpeed = SettingService.GetValue(SettingConstants.Player.HIGH_RATE_PLAY_SPEED, 2.0d);
             Player.SetRate(highRatePlaySpeed);
         }
 
-        private void StopHighRateSpeedPlay()
+        public void StopHighRateSpeedPlay()
         {
             m_playerToastService.KeepClose(PlayerToastService.ACCELERATING_KEY);
             Player.SetRate(SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d));
@@ -2834,6 +2834,22 @@ namespace BiliLite.Controls
                 if (_position < 0)
                 {
                     _position = 0;
+                }
+                Player.Position = _position;
+
+                m_playerToastService.Show(
+                    PlayerToastService.PROGRESS_KEY, "进度:" + TimeSpan.FromSeconds(Player.Position).ToString(@"hh\:mm\:ss"));
+            }
+        }
+
+        public void PositionForward()
+        {
+            if (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.Pause)
+            {
+                var _position = Player.Position + 3;
+                if (_position > Player.Duration)
+                {
+                    _position = Player.Duration;
                 }
                 Player.Position = _position;
 

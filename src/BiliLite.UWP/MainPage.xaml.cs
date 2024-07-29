@@ -67,6 +67,10 @@ namespace BiliLite
             {
                 m_shortcutKeyService.HandleKeyDown(args.VirtualKey);
             }
+            if (args.EventType.ToString().Contains("Up"))
+            {
+                m_shortcutKeyService.HandleKeyUp(args.VirtualKey);
+            }
         }
 
         private async void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
