@@ -880,6 +880,21 @@ namespace BiliLite.Models.Common
         }
 
         /// <summary>
+        /// 快捷键
+        /// </summary>
+        public class ShortcutKey
+        {
+            [SettingKey(typeof(int))]
+            public const string PRESS_ACTION_DELAY_TIME = "PressActionDelayTime";
+
+            [SettingDefaultValue]
+            public const int DEFAULT_PRESS_ACTION_DELAY_TIME = 200;
+
+            [SettingKey(typeof(object))] 
+            public const string SHORTCUT_KEY_FUNCTIONS = "ShortcutKeyFunctions";
+        }
+
+        /// <summary>
         /// 开发者选项
         /// </summary>
         public class Other

@@ -1,0 +1,49 @@
+﻿<UserControl
+    x:Class="BiliLite.Controls.Settings.ShortcutKeySettingsControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BiliLite.Controls.Settings"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:functions="using:BiliLite.Models.Functions"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:settings="using:BiliLite.ViewModels.Settings"
+    xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <StackPanel Orientation="Vertical"
+                MaxWidth="1200">
+        <ListView SelectionMode="None"
+                  ItemsSource="{x:Bind m_viewModel.ShortcutFunctions,Mode=OneWay}">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="settings:ShortcutFunctionViewModel">
+                    <controls:SettingsExpander Header="{x:Bind Name}">
+                        <Button MinWidth="120" Click="BtnRecordKeys_OnClick">
+                            <TextBlock Text="{x:Bind KeysString,Mode=OneWay}"></TextBlock>
+                        </Button>
+                        <controls:SettingsExpander.Items>
+                            <controls:SettingsCard Header="是否松开按键执行">
+                                <ToggleSwitch IsOn="{x:Bind NeedKeyUp,Mode=TwoWay}"
+                                              Toggled="ShortcutFunctionViewModel_Changed"></ToggleSwitch>
+                            </controls:SettingsCard>
+                            <controls:SettingsCard Header="删除">
+                                <Button>确认删除</Button>
+                            </controls:SettingsCard>
+                        </controls:SettingsExpander.Items>
+                    </controls:SettingsExpander>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <controls:SettingsCard Header="按住执行延迟时间" 
+                               Description="仅对按住行为有效，过短将导致相同触发按键点击行为无效">
+            <controls1:NumberBox 
+                Text="{x:Bind m_viewModel.PressActionDelayTime,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                ValueChanged="NumberBoxPressActionDelayTime_OnValueChanged">
+
+            </controls1:NumberBox>
+        </controls:SettingsCard>
+    </StackPanel>
+</UserControl>

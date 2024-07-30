@@ -21,6 +21,7 @@ using BiliLite.Models.Common.Video;
 using BiliLite.Models.Common.Video.Detail;
 using BiliLite.Models.Download;
 using BiliLite.Models.Dynamic;
+using BiliLite.Models.Functions;
 using BiliLite.Modules.User.UserDetail;
 using BiliLite.Services;
 using BiliLite.ViewModels.Comment;
@@ -165,6 +166,9 @@ namespace BiliLite.Extensions
 
                 expression.CreateMap<NewEP, UserDynamicSeasonNewEpInfo>();
                 expression.CreateMap<FollowListItem, UserDynamicSeasonInfo>();
+                expression.CreateMap<BaseShortcutFunction, ShortcutFunctionViewModel>();
+                expression.CreateMap<BaseShortcutFunction, ShortcutFunctionModel>();
+                expression.CreateMap<ShortcutFunctionViewModel, ShortcutFunctionModel>();
             }));
 
             services.AddSingleton<IMapper>(mapper);

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.System;
 
@@ -9,6 +7,15 @@ namespace BiliLite.Models.Functions
 {
     public abstract class BaseShortcutFunction : IShortcutFunction
     {
+        public BaseShortcutFunction()
+        {
+            TypeName = GetType().ToString();
+        }
+
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+
+        public string TypeName { get; }
+
         public abstract string Name { get; }
 
         public abstract Task Action(object param);
@@ -18,8 +25,6 @@ namespace BiliLite.Models.Functions
         public bool Canceled { get; set; }
 
         public List<VirtualKey> Keys { get; set; }
-
-        public double DelayTime { get; set; }
 
         public virtual IShortcutFunction ReleaseFunction { get; } = null;
     }
@@ -70,7 +75,6 @@ namespace BiliLite.Models.Functions
                 new StartHighRateSpeedPlayShortcutFunction()
                 {
                     Keys = new List<VirtualKey>() { VirtualKey.Right },
-                    DelayTime = 200,
                 },
             };
         }

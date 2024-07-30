@@ -170,6 +170,9 @@
     <Compile Include="Controls\Settings\ProxySettingsControl.xaml.cs">
       <DependentUpon>ProxySettingsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Settings\ShortcutKeySettingsControl.xaml.cs">
+      <DependentUpon>ShortcutKeySettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Settings\UISettingsControl.xaml.cs">
       <DependentUpon>UISettingsControl.xaml</DependentUpon>
     </Compile>
@@ -232,6 +235,8 @@
     <Compile Include="Models\Common\Rank\RankItemStatModel.cs" />
     <Compile Include="Models\Functions\SaveFunction.cs" />
     <Compile Include="Models\Common\Danmaku\DanmuFilterItem.cs" />
+    <Compile Include="Models\Functions\ShortcutFunctionFactory.cs" />
+    <Compile Include="Models\Functions\ShortcutFunctionModel.cs" />
     <Compile Include="ViewModels\Common\PieControlViewModel.cs" />
     <Compile Include="ViewModels\Settings\CDNServerItemViewModel.cs" />
     <Compile Include="Pages\ISavablePage.cs" />
@@ -245,6 +250,8 @@
     <Compile Include="ViewModels\Settings\FilterSettingsViewModel.cs" />
     <Compile Include="ViewModels\Settings\LiveSettingsControlViewModel.cs" />
     <Compile Include="ViewModels\Settings\PlaySettingsControlViewModel.cs" />
+    <Compile Include="ViewModels\Settings\ShortcutFunctionViewModel.cs" />
+    <Compile Include="ViewModels\Settings\ShortcutKeySettingsControlViewModel.cs" />
     <Compile Include="ViewModels\Settings\VideoDanmakuSettingsControlViewModel.cs" />
     <Compile Include="ViewModels\User\FavoriteItemViewModel.cs" />
     <Compile Include="Pages\Home\UserDynamicPage.xaml.cs">
@@ -1094,6 +1101,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Settings\ProxySettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\ShortcutKeySettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
