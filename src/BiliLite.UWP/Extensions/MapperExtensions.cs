@@ -166,7 +166,10 @@ namespace BiliLite.Extensions
 
                 expression.CreateMap<NewEP, UserDynamicSeasonNewEpInfo>();
                 expression.CreateMap<FollowListItem, UserDynamicSeasonInfo>();
-                expression.CreateMap<BaseShortcutFunction, ShortcutFunctionViewModel>();
+                expression.CreateMap<BaseShortcutFunction, ShortcutFunctionViewModel>()
+                    .ForMember(dest => dest.IsPressAction,
+                        opt => opt.MapFrom(src =>
+                            src.ReleaseFunction != null));
                 expression.CreateMap<BaseShortcutFunction, ShortcutFunctionModel>();
                 expression.CreateMap<ShortcutFunctionViewModel, ShortcutFunctionModel>();
             }));

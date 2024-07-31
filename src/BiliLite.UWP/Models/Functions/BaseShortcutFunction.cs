@@ -18,6 +18,8 @@ namespace BiliLite.Models.Functions
 
         public abstract string Name { get; }
 
+        public bool Enable { get; set; } = true;
+
         public abstract Task Action(object param);
 
         public bool NeedKeyUp { get; set; } = false;
@@ -51,6 +53,24 @@ namespace BiliLite.Models.Functions
                 {
                     Keys = new List<VirtualKey>() { VirtualKey.Left }
                 },
+                new PositionBackPressShortcutFunction()
+                {
+                    Keys = new List<VirtualKey>() { VirtualKey.Left }
+                },
+                new PositionForwardShortcutFunction()
+                {
+                    Keys = new List<VirtualKey>() {  VirtualKey.Right },
+                    NeedKeyUp = true,
+                },
+                new PositionForwardPressShortcutFunction()
+                {
+                    Keys = new List<VirtualKey>() {  VirtualKey.Right },
+                    Enable = false,
+                },
+                new StartHighRateSpeedPlayShortcutFunction()
+                {
+                    Keys = new List<VirtualKey>() { VirtualKey.Right },
+                },
                 new AddVolumeFunction()
                 {
                     Keys = new List<VirtualKey>() { VirtualKey.Up }
@@ -66,15 +86,6 @@ namespace BiliLite.Models.Functions
                 new SaveFunction()
                 {
                     Keys = new List<VirtualKey>() { VirtualKey.Control, VirtualKey.S }
-                },
-                new PositionForwardShortcutFunction()
-                {
-                    Keys = new List<VirtualKey>() {  VirtualKey.Right },
-                    NeedKeyUp = true,
-                },
-                new StartHighRateSpeedPlayShortcutFunction()
-                {
-                    Keys = new List<VirtualKey>() { VirtualKey.Right },
                 },
             };
         }

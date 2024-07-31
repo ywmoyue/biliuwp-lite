@@ -109,16 +109,16 @@
         </controls:SettingsCard>
 
         <controls:SettingsCard Header="播放器方向键右键行为"
-                               Description="设置播放器方向键右键行为">
+                               Description="已弃用，请前往快捷键设置页进行设置">
             <controls:SettingsCard.HeaderIcon>
                 <font:FontAwesome Icon="Solid_ArrowRight"></font:FontAwesome>
             </controls:SettingsCard.HeaderIcon>
-            <ComboBox x:Name="cbPlayerKeyRightAction" SelectedIndex="0" MinWidth="200">
+            <!--<ComboBox x:Name="cbPlayerKeyRightAction" SelectedIndex="0" MinWidth="200">
                 <ComboBox.Items>
                     <ComboBoxItem Content="操作进度条" ></ComboBoxItem>
                     <ComboBoxItem Content="倍速播放" ></ComboBoxItem>
                 </ComboBox.Items>
-            </ComboBox>
+            </ComboBox>-->
         </controls:SettingsCard>
 
         <controls:SettingsExpander Header="播放器按住手势行为"

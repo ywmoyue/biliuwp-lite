@@ -105,8 +105,8 @@ namespace BiliLite.Services
             var exception = "";
             if (ex != null && IsProtectLogInfo)
             {
-                exception = ex.Message.ProtectValues("access_key", "csrf", "access_token", "sign") + "\n"
-                    + ex.StackTrace.ProtectValues("access_key", "csrf", "access_token", "sign");
+                exception = ex.Message + "\n" + ex.StackTrace;
+                exception = exception.ProtectValues("access_key", "csrf", "access_token", "sign");
                 logEvent.Properties["exception"] = exception;
             }
             switch (type)

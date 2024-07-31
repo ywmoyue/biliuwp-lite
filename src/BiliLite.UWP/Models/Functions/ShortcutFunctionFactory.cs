@@ -12,6 +12,7 @@ namespace BiliLite.Models.Functions
             {
                 shortcutFunction.Keys = model.Keys;
                 shortcutFunction.NeedKeyUp = model.NeedKeyUp;
+                shortcutFunction.Enable = model.Enable;
                 return shortcutFunction;
             }
 

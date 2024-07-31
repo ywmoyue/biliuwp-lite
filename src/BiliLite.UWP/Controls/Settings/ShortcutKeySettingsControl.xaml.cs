@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -62,12 +63,34 @@ namespace BiliLite.Controls.Settings
             m_shortcutKeyService.PressActionDelayTime = (int)sender.Value;
         }
 
-        private void ShortcutFunctionViewModel_Changed<T>(object sender, T e)
+        private async void ShortcutFunctionViewModel_Changed<T>(object sender, T e)
         {
+            // 等ViewModel实际更新
+            await Task.Delay(50);
             if (sender is FrameworkElement { DataContext: ShortcutFunctionViewModel viewModel })
             {
                 UpdateShortcutFunctions(viewModel);
             }
+        }
+
+        private void BtnDeleteShortcutFunction_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement { DataContext: ShortcutFunctionViewModel viewModel })
+            {
+                m_viewModel.ShortcutFunctions.Remove(viewModel);
+                m_shortcutKeyService.RemoveShortcutFunction(viewModel.Id);
+            }
+        }
+
+        private void BtnSetDefault_OnClick(object sender, RoutedEventArgs e)
+        {
+            m_shortcutKeyService.SetDefault(); 
+            m_viewModel.ShortcutFunctions = m_mapper.Map<ObservableCollection<ShortcutFunctionViewModel>>(m_shortcutKeyService.ShortcutFunctions);
+        }
+
+        private void BtnAddAction_OnClick(object sender, RoutedEventArgs e)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

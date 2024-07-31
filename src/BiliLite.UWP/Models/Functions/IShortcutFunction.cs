@@ -14,6 +14,8 @@ namespace BiliLite.Models.Functions
 
         public bool NeedKeyUp { get; set; }
 
+        public bool Enable { get; set; }
+
         public bool Canceled { get; set; }
 
         public List<VirtualKey> Keys { get; set; }

@@ -72,7 +72,7 @@ namespace BiliLite.Services
                 return;
             }
 
-            foreach (var shortcutKeyFunction in m_shortcutKeys.Where(x => !x.NeedKeyUp))
+            foreach (var shortcutKeyFunction in m_shortcutKeys.Where(x => !x.NeedKeyUp && x.Enable))
             {
                 var shortcutKeyCodes = shortcutKeyFunction.Keys;
                 if (shortcutKeyCodes.LastOrDefault() != key) continue;
@@ -92,7 +92,7 @@ namespace BiliLite.Services
                         {
                             try
                             {
-                                await Task.Delay(m_pressActionDelayTime+1);
+                                await Task.Delay(m_pressActionDelayTime + 1);
                                 if (!shortcutKeyFunction.Canceled)
                                 {
                                     var page = m_mainPage.CurrentPage;
@@ -107,7 +107,7 @@ namespace BiliLite.Services
                             }
                             finally
                             {
-                                m_releaseMapsCache.Remove(shortcutKeyFunction);
+                                // m_releaseMapsCache.Remove(shortcutKeyFunction);
                             }
                         };
                     }
@@ -139,7 +139,7 @@ namespace BiliLite.Services
             var now = DateTimeOffset.Now;
             if (now - keyDownTime < TimeSpan.FromMilliseconds(m_pressActionDelayTime))
             {
-                foreach (var shortcutKeyFunction in m_shortcutKeys.Where(x => x.NeedKeyUp))
+                foreach (var shortcutKeyFunction in m_shortcutKeys.Where(x => x.NeedKeyUp && x.Enable))
                 {
                     var shortcutKeyCodes = shortcutKeyFunction.Keys;
                     if (shortcutKeyCodes.LastOrDefault() != key) continue;
@@ -183,6 +183,22 @@ namespace BiliLite.Services
             }
         }
 
+        public void SetDefault()
+        {
+            m_shortcutKeys = DefaultShortcuts.GetDefaultShortcutFunctions();
+        }
+
+        public void RemoveShortcutFunction(string id)
+        {
+            var shortcutFunction = m_shortcutKeys.FirstOrDefault(x => x.Id == id);
+            if (shortcutFunction == null) return;
+            m_shortcutKeys.Remove(shortcutFunction);
+
+            var shortcutFunctionModels = m_mapper.Map<List<ShortcutFunctionModel>>(m_shortcutKeys);
+
+            SettingService.SetValue(SettingConstants.ShortcutKey.SHORTCUT_KEY_FUNCTIONS, shortcutFunctionModels);
+        }
+
         public void UpdateShortcutFunction(ShortcutFunctionModel shortcutFunctionModel)
         {
             var shortcutFunction = m_shortcutKeys.FirstOrDefault(x => x.Id == shortcutFunctionModel.Id);
@@ -190,6 +206,7 @@ namespace BiliLite.Services
             {
                 shortcutFunction.Keys = shortcutFunctionModel.Keys;
                 shortcutFunction.NeedKeyUp = shortcutFunctionModel.NeedKeyUp;
+                shortcutFunction.Enable = shortcutFunctionModel.Enable;
             }
 
             var shortcutFunctionModels = m_mapper.Map<List<ShortcutFunctionModel>>(m_shortcutKeys);
@@ -206,7 +223,7 @@ namespace BiliLite.Services
                 var shortcutFunctionModels = SettingService.GetValue<List<ShortcutFunctionModel>>(SettingConstants.ShortcutKey.SHORTCUT_KEY_FUNCTIONS, null);
                 if (shortcutFunctionModels == null)
                 {
-                    m_shortcutKeys = DefaultShortcuts.GetDefaultShortcutFunctions();
+                    SetDefault();
                     return;
                 }
                 var shortcutFunctions = shortcutFunctionModels
@@ -216,7 +233,7 @@ namespace BiliLite.Services
             }
             catch (Exception ex)
             {
-                m_shortcutKeys = DefaultShortcuts.GetDefaultShortcutFunctions();
+                SetDefault();
             }
         }
     }

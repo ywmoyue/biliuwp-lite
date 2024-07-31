@@ -222,6 +222,8 @@
     <Compile Include="Models\Functions\BaseShortcutFunction.cs" />
     <Compile Include="Models\Functions\CancelFullscreenFunction.cs" />
     <Compile Include="Models\Functions\HighRateSpeedPlayShortcutFunction.cs" />
+    <Compile Include="Models\Functions\PositionBackPressShortcutFunction.cs" />
+    <Compile Include="Models\Functions\PositionForwardPressShortcutFunction.cs" />
     <Compile Include="Models\Functions\PositionForwardShortcutFunction.cs" />
     <Compile Include="Models\Functions\MinusVolumeFunction.cs" />
     <Compile Include="Models\Functions\AddVolumeFunction.cs" />

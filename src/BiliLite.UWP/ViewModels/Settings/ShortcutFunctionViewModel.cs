@@ -16,6 +16,12 @@ namespace BiliLite.ViewModels.Settings
 
         public string Name { get; set; }
 
+        public bool IsPressAction { get; set; }
+
+        public string Description => IsPressAction ? "按住行为" : "点击行为";
+
+        public bool Enable { get; set; }
+
         public bool NeedKeyUp { get; set; } = false;
 
         public ObservableCollection<VirtualKey> Keys { get; set; }

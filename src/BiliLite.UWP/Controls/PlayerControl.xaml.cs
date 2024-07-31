@@ -294,27 +294,6 @@ namespace BiliLite.Controls
             args.Handled = true;
             switch (args.VirtualKey)
             {
-                case Windows.System.VirtualKey.Right:
-                    //{
-                    //    if (m_playerKeyRightAction == PlayerKeyRightAction.AcceleratePlay)
-                    //    {
-                    //        StartHighRateSpeedPlay();
-                    //    }
-                    //    if (m_playerKeyRightAction == PlayerKeyRightAction.ControlProgress && (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.Pause))
-                    //    {
-                    //        var _position = Player.Position + 3;
-                    //        if (_position > Player.Duration)
-                    //        {
-                    //            _position = Player.Duration;
-                    //        }
-                    //        Player.Position = _position;
-
-                    //        m_playerToastService.Show(
-                    //            PlayerToastService.PROGRESS_KEY, "进度:" + TimeSpan.FromSeconds(Player.Position).ToString(@"hh\:mm\:ss"));
-                    //    }
-                    //}
-                    break;
-
                 case Windows.System.VirtualKey.F8:
                 case Windows.System.VirtualKey.T:
                     //小窗播放
