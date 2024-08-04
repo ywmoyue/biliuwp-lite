@@ -37,17 +37,49 @@ namespace BiliLite.Models.Functions
         {
             return new List<IShortcutFunction>()
             {
-                new RefreshShortcutFunction()
-                {
-                    Keys = new List<VirtualKey>() { VirtualKey.Control, VirtualKey.R}
-                },
-                new RefreshShortcutFunction()
-                {
-                    Keys = new List<VirtualKey>() { VirtualKey.F5 }
-                },
                 new PlayPauseFunction()
                 {
                     Keys = new List<VirtualKey>() { VirtualKey.Space }
+                },
+                new ToggleFullscreenShortcutFunction()
+                {
+                    Keys = new List<VirtualKey>() { VirtualKey.F11 }
+                },
+                new ToggleFullscreenShortcutFunction()
+                {
+                    Keys = new List<VirtualKey>() { VirtualKey.F }
+                },
+                new ToggleFullscreenShortcutFunction()
+                {
+                    Keys = new List<VirtualKey>() { VirtualKey.Enter }
+                },
+                new CancelFullscreenFunction()
+                {
+                    Keys = new List<VirtualKey>() { VirtualKey.Escape }
+                },
+                new ToggleFullWindowShortcutFunction()
+                {
+                    Keys = new List<VirtualKey>() { VirtualKey.F12 }
+                },
+                new ToggleFullWindowShortcutFunction()
+                {
+                    Keys = new List<VirtualKey>() { VirtualKey.W }
+                },
+                new LargePositionForwardShortcutFunction()
+                {
+                    Keys = new List<VirtualKey>() { VirtualKey.O }
+                },
+                new LargePositionForwardShortcutFunction()
+                {
+                    Keys = new List<VirtualKey>() { VirtualKey.P }
+                },
+                new AddVolumeFunction()
+                {
+                    Keys = new List<VirtualKey>() { VirtualKey.Up }
+                },
+                new MinusVolumeFunction()
+                {
+                    Keys = new List<VirtualKey>() { VirtualKey.Down }
                 },
                 new PositionBackFunction()
                 {
@@ -71,17 +103,73 @@ namespace BiliLite.Models.Functions
                 {
                     Keys = new List<VirtualKey>() { VirtualKey.Right },
                 },
-                new AddVolumeFunction()
+                new CaptureVideoShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.Up }
+                    Keys = new List<VirtualKey>() { VirtualKey.F10 }
                 },
-                new MinusVolumeFunction()
+                new ToggleDanmakuDisplayShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.Down }
+                    Keys = new List<VirtualKey>() { VirtualKey.F9 }
                 },
-                new CancelFullscreenFunction()
+                new GotoLastVideoFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.Escape }
+                    Keys = new List<VirtualKey>() { VirtualKey.Z }
+                },
+                new GotoLastVideoFunction()
+                {
+                    Keys = new List<VirtualKey>() { VirtualKey.N }
+                },
+                new GotoLastVideoFunction()
+                {
+                    Keys = new List<VirtualKey>() { (VirtualKey)188 }
+                },
+                new GotoNextVideoFunction()
+                {
+                    Keys = new List<VirtualKey>() { VirtualKey.X }
+                },
+                new GotoNextVideoFunction()
+                {
+                    Keys = new List<VirtualKey>() { VirtualKey.M }
+                },
+                new GotoNextVideoFunction()
+                {
+                    Keys = new List<VirtualKey>() { (VirtualKey)190 }
+                },
+                new ToggleDanmakuDisplayShortcutFunction()
+                {
+                    Keys = new List<VirtualKey>() { VirtualKey.D }
+                },
+                new SlowDownShortcutFunction()
+                {
+                    Keys = new List<VirtualKey>() { VirtualKey.F1 }
+                },
+                new SlowDownShortcutFunction()
+                {
+                    Keys = new List<VirtualKey>() { (VirtualKey)186 }
+                },
+                new FastUpShortcutFunction()
+                {
+                    Keys = new List<VirtualKey>() { VirtualKey.F2 }
+                },
+                new FastUpShortcutFunction()
+                {
+                    Keys = new List<VirtualKey>() { (VirtualKey)222 }
+                },
+                new RefreshShortcutFunction()
+                {
+                    Keys = new List<VirtualKey>() { VirtualKey.Control, VirtualKey.R}
+                },
+                new RefreshShortcutFunction()
+                {
+                    Keys = new List<VirtualKey>() { VirtualKey.F5 }
+                },
+                new ToggleMiniWindowShortcutFunction()
+                {
+                    Keys = new List<VirtualKey>() { VirtualKey.F8 }
+                },
+                new ToggleMiniWindowShortcutFunction()
+                {
+                    Keys = new List<VirtualKey>() { VirtualKey.T }
                 },
                 new SaveFunction()
                 {

@@ -9,6 +9,9 @@ namespace BiliLite
     {
         public void ConfigureServices(HostBuilderContext context, IServiceCollection services)
         {
+            services.AddDbContext<BiliLiteDbContext>();
+            services.AddSingleton<SettingSqlService>();
+
             services.AddMapper();
             services.AddViewModels();
             services.AddControls();

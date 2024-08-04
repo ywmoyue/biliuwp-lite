@@ -40,6 +40,31 @@ namespace BiliLite.Pages
             Player.PlayerInstance.Play();
         }
 
+        public void GotoLastVideo()
+        {
+            Player.GotoLastVideo();
+        }
+
+        public void GotoNextVideo()
+        {
+            Player.GotoNextVideo();
+        }
+
+        public void SlowDown()
+        {
+            Player.SlowDown();
+        }
+
+        public void FastUp()
+        {
+            Player.FastUp();
+        }
+
+        public void ToggleMute()
+        {
+            Player.ToggleMute();
+        }
+
         public void StartHighRateSpeedPlay()
         {
             Player.StartHighRateSpeedPlay();
@@ -55,9 +80,34 @@ namespace BiliLite.Pages
             Player.PositionBack();
         }
 
-        public void PositionForward()
+        public void PositionForward(double progress = 3)
         {
-            Player.PositionForward();
+            Player.PositionForward(progress);
+        }
+
+        public void ToggleMiniWindows()
+        {
+            Player.ToggleMiniWindows();
+        }
+
+        public void ToggleFullWindow()
+        {
+            Player.ToggleFullWindow();
+        }
+
+        public void ToggleFullscreen()
+        {
+            Player.ToggleFullscreen();
+        }
+
+        public async Task CaptureVideo()
+        {
+            await Player.CaptureVideo();
+        }
+
+        public void ToggleDanmakuDisplay()
+        {
+            Player.ToggleDanmakuDisplay();
         }
 
         public void AddVolume()

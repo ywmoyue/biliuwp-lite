@@ -44,7 +44,7 @@ namespace BiliLite
             // RegisterExceptionHandlingSynchronizationContext();
             FFmpegInteropLogging.SetLogLevel(LogLevel.Info);
             FFmpegInteropLogging.SetLogProvider(this);
-            SqlHelper.InitDB();
+            // SqlHelper.InitDB();
             LogService.Init();
             RegisterService();
             OpenCCNET.ZhConverter.Initialize();

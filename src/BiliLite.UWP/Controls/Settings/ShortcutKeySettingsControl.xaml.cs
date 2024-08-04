@@ -65,6 +65,9 @@ namespace BiliLite.Controls.Settings
 
         private async void ShortcutFunctionViewModel_Changed<T>(object sender, T e)
         {
+            //TODO:  恢复默认过程中也应该停止写入设置
+            if (!IsLoaded) return;
+
             // 等ViewModel实际更新
             await Task.Delay(50);
             if (sender is FrameworkElement { DataContext: ShortcutFunctionViewModel viewModel })
@@ -84,7 +87,7 @@ namespace BiliLite.Controls.Settings
 
         private void BtnSetDefault_OnClick(object sender, RoutedEventArgs e)
         {
-            m_shortcutKeyService.SetDefault(); 
+            m_shortcutKeyService.SetDefault();
             m_viewModel.ShortcutFunctions = m_mapper.Map<ObservableCollection<ShortcutFunctionViewModel>>(m_shortcutKeyService.ShortcutFunctions);
         }
 

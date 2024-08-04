@@ -7,6 +7,7 @@ using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using AutoMapper;
+using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Pages;
 
@@ -22,10 +23,12 @@ namespace BiliLite.Services
         private bool m_recording = false;
         private readonly IMapper m_mapper;
         private int m_pressActionDelayTime = 200;
+        private readonly SettingSqlService m_settingSqlService;
 
-        public ShortcutKeyService(IMapper mapper)
+        public ShortcutKeyService(IMapper mapper, SettingSqlService settingSqlService)
         {
             m_mapper = mapper;
+            m_settingSqlService = settingSqlService;
             m_keyDownTimeCache = new Dictionary<VirtualKey, DateTimeOffset>();
             m_releaseMapsCache = new List<IShortcutFunction>();
             LoadShortcutFunctions();
@@ -53,16 +56,20 @@ namespace BiliLite.Services
 
         public void StartRecord()
         {
+            Notify.ShowMessageToast("按键录制开始，在录制结束前请勿离开当前页面");
             m_recording = true;
         }
 
         public void StopRecord()
         {
+            Notify.ShowMessageToast("按键录制结束");
             m_recording = false;
         }
 
         public async void HandleKeyDown(VirtualKey key)
         {
+            //TODO: 当前焦点处于输入框中时不应执行快捷键行为？
+
             _logger.Trace("key: " + key);
             if (!m_keyDownTimeCache.TryAdd(key, DateTimeOffset.Now)) return;
 
@@ -196,7 +203,7 @@ namespace BiliLite.Services
 
             var shortcutFunctionModels = m_mapper.Map<List<ShortcutFunctionModel>>(m_shortcutKeys);
 
-            SettingService.SetValue(SettingConstants.ShortcutKey.SHORTCUT_KEY_FUNCTIONS, shortcutFunctionModels);
+            m_settingSqlService.SetValue(SettingConstants.ShortcutKey.SHORTCUT_KEY_FUNCTIONS, shortcutFunctionModels);
         }
 
         public void UpdateShortcutFunction(ShortcutFunctionModel shortcutFunctionModel)
@@ -211,7 +218,7 @@ namespace BiliLite.Services
 
             var shortcutFunctionModels = m_mapper.Map<List<ShortcutFunctionModel>>(m_shortcutKeys);
 
-            SettingService.SetValue(SettingConstants.ShortcutKey.SHORTCUT_KEY_FUNCTIONS, shortcutFunctionModels);
+            m_settingSqlService.SetValue(SettingConstants.ShortcutKey.SHORTCUT_KEY_FUNCTIONS, shortcutFunctionModels);
         }
 
         private void LoadShortcutFunctions()
@@ -220,7 +227,8 @@ namespace BiliLite.Services
                 SettingConstants.ShortcutKey.DEFAULT_PRESS_ACTION_DELAY_TIME);
             try
             {
-                var shortcutFunctionModels = SettingService.GetValue<List<ShortcutFunctionModel>>(SettingConstants.ShortcutKey.SHORTCUT_KEY_FUNCTIONS, null);
+                var shortcutFunctionModels = m_settingSqlService.GetValue<List<ShortcutFunctionModel>>(SettingConstants.ShortcutKey.SHORTCUT_KEY_FUNCTIONS, null);
+
                 if (shortcutFunctionModels == null)
                 {
                     SetDefault();

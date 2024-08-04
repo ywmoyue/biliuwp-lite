@@ -366,7 +366,7 @@ namespace BiliLite.Models.Common
             /// <summary>
             /// 弹幕字体
             /// </summary>
-            [SettingKey(typeof(string))] 
+            [SettingKey(typeof(string))]
             public const string DANMAKU_FONT_FAMILY = "VideoDanmuFontFamily";
         }
 
@@ -482,7 +482,7 @@ namespace BiliLite.Models.Common
             /// 隐藏抽奖弹幕关键字
             /// </summary>
             [SettingKey(typeof(bool))]
-            public const string HIDE_LOTTERY_DANMU = "LiveHideLotteryDanmu"; 
+            public const string HIDE_LOTTERY_DANMU = "LiveHideLotteryDanmu";
 
             /// <summary>
             /// 直播流默认源
@@ -890,7 +890,7 @@ namespace BiliLite.Models.Common
             [SettingDefaultValue]
             public const int DEFAULT_PRESS_ACTION_DELAY_TIME = 200;
 
-            [SettingKey(typeof(object))] 
+            [SettingKey(typeof(object), useSqlDb: true)]
             public const string SHORTCUT_KEY_FUNCTIONS = "ShortcutKeyFunctions";
         }
 

@@ -15,7 +15,7 @@
 
     <StackPanel
         MaxWidth="1200">
-        <controls:SettingsCard Header="优先视频编码"
+        <controls:SettingsCard Header="应用程序主题"
                                Description="选择要显示的应用主题">
             <controls:SettingsCard.HeaderIcon>
                 <font:FontAwesome Icon="Solid_FillDrip"></font:FontAwesome>
