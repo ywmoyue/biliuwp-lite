@@ -174,6 +174,16 @@ namespace BiliLite.Controls.Settings
                 });
             });
 
+            // 快速收藏
+            SwitchQuickDoFav.IsOn = SettingService.GetValue(SettingConstants.UI.QUICK_DO_FAV, SettingConstants.UI.DEFAULT_QUICK_DO_FAV);
+            SwitchQuickDoFav.Loaded += (sender, e) =>
+            {
+                SwitchQuickDoFav.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.QUICK_DO_FAV, SwitchQuickDoFav.IsOn);
+                };
+            };
+
             //动态显示
             cbDetailDisplay.SelectedIndex = SettingService.GetValue<int>(SettingConstants.UI.DETAIL_DISPLAY, 0);
             cbDetailDisplay.Loaded += new RoutedEventHandler((sender, e) =>

@@ -104,6 +104,19 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(int))]
             public const string MOUSE_MIDDLE_ACTION = "MouseMiddleAction";
+
+            /// <summary>
+            /// 快速收藏
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string QUICK_DO_FAV = "QuickDoFav";
+
+            /// <summary>
+            /// 默认快速收藏
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_QUICK_DO_FAV = true;
+
             /// <summary>
             /// 隐藏赞助按钮
             /// </summary>

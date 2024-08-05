@@ -96,6 +96,7 @@
                         </Button>
                         <Button Background="Transparent"
                                 x:Name="BtnFav"
+                                Click="BtnFav_OnClick"
                                 Margin="0 0 4 0"
                                 Width="56">
                             <StackPanel>

@@ -283,6 +283,15 @@
             </ComboBox>
         </controls:SettingsCard>
 
+        <controls:SettingsCard Header="快速收藏"
+                               Description="点击收藏按钮直接收藏视频到默认收藏夹">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Heart"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch x:Name="SwitchQuickDoFav" >
+            </ToggleSwitch>
+        </controls:SettingsCard>
+
         <controls:SettingsCard Header="使用浏览器打开无法处理的链接"
                                Description="比如B站以外的链接">
             <controls:SettingsCard.HeaderIcon>
