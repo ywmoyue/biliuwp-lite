@@ -793,13 +793,13 @@ namespace BiliLite.Models.Common
 
         public class Filter
         {
-            [SettingKey(typeof(object))]
+            [SettingKey(typeof(object), useSqlDb: true)]
             public const string RECOMMEND_FILTER_RULE = "RecommendFilterRule";
 
-            [SettingKey(typeof(object))]
+            [SettingKey(typeof(object), useSqlDb: true)]
             public const string SEARCH_FILTER_RULE = "SearchFilterRule";
 
-            [SettingKey(typeof(object))]
+            [SettingKey(typeof(object), useSqlDb: true)]
             public const string DYNAMIC_FILTER_RULE = "DynamicFilterRule";
         }
 

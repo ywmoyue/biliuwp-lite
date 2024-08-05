@@ -12,6 +12,7 @@ namespace BiliLite.Services
     public class ContentFilterService
     {
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+        private readonly SettingSqlService m_settingSqlService;
 
         public List<FilterRule> RecommendFilterRules { get; set; }
 
@@ -19,19 +20,20 @@ namespace BiliLite.Services
 
         public List<FilterRule> DynamicFilterRules { get; set; }
 
-        public ContentFilterService()
+        public ContentFilterService(SettingSqlService settingSqlService)
         {
+            m_settingSqlService = settingSqlService;
             LoadFilterRules();
         }
 
         private void LoadFilterRules()
         {
             RecommendFilterRules =
-                SettingService.GetValue(SettingConstants.Filter.RECOMMEND_FILTER_RULE, new List<FilterRule>());
+                m_settingSqlService.GetValue(SettingConstants.Filter.RECOMMEND_FILTER_RULE, new List<FilterRule>());
             SearchFilterRules =
-                SettingService.GetValue(SettingConstants.Filter.SEARCH_FILTER_RULE, new List<FilterRule>());
+                m_settingSqlService.GetValue(SettingConstants.Filter.SEARCH_FILTER_RULE, new List<FilterRule>());
             DynamicFilterRules =
-                SettingService.GetValue(SettingConstants.Filter.DYNAMIC_FILTER_RULE, new List<FilterRule>());
+                m_settingSqlService.GetValue(SettingConstants.Filter.DYNAMIC_FILTER_RULE, new List<FilterRule>());
         }
 
         private void UpdateFilterRule(FilterRule target, FilterRule source)
@@ -45,19 +47,19 @@ namespace BiliLite.Services
         public void AddRecommendFilterRule(FilterRule filterRule)
         {
             RecommendFilterRules.Add(filterRule);
-            SettingService.SetValue(SettingConstants.Filter.RECOMMEND_FILTER_RULE, RecommendFilterRules);
+            m_settingSqlService.SetValue(SettingConstants.Filter.RECOMMEND_FILTER_RULE, RecommendFilterRules);
         }
 
         public void AddSearchFilterRule(FilterRule filterRule)
         {
             SearchFilterRules.Add(filterRule);
-            SettingService.SetValue(SettingConstants.Filter.SEARCH_FILTER_RULE, SearchFilterRules);
+            m_settingSqlService.SetValue(SettingConstants.Filter.SEARCH_FILTER_RULE, SearchFilterRules);
         }
 
         public void AddDynamicFilterRule(FilterRule filterRule)
         {
             DynamicFilterRules.Add(filterRule);
-            SettingService.SetValue(SettingConstants.Filter.DYNAMIC_FILTER_RULE, DynamicFilterRules);
+            m_settingSqlService.SetValue(SettingConstants.Filter.DYNAMIC_FILTER_RULE, DynamicFilterRules);
         }
 
         public void DeleteFilterRule(FilterRule filterRule)
@@ -66,21 +68,21 @@ namespace BiliLite.Services
             if (recommendFilterRule != null)
             {
                 RecommendFilterRules.Remove(recommendFilterRule);
-                SettingService.SetValue(SettingConstants.Filter.RECOMMEND_FILTER_RULE, RecommendFilterRules);
+                m_settingSqlService.SetValue(SettingConstants.Filter.RECOMMEND_FILTER_RULE, RecommendFilterRules);
                 return;
             }
             var searchFilterRule = SearchFilterRules.FirstOrDefault(x => x.Id == filterRule.Id);
             if (searchFilterRule != null)
             {
                 SearchFilterRules.Remove(searchFilterRule);
-                SettingService.SetValue(SettingConstants.Filter.SEARCH_FILTER_RULE, SearchFilterRules);
+                m_settingSqlService.SetValue(SettingConstants.Filter.SEARCH_FILTER_RULE, SearchFilterRules);
                 return;
             }
             var dynamicFilterRule = DynamicFilterRules.FirstOrDefault(x => x.Id == filterRule.Id);
             if (dynamicFilterRule != null)
             {
                 DynamicFilterRules.Remove(dynamicFilterRule);
-                SettingService.SetValue(SettingConstants.Filter.DYNAMIC_FILTER_RULE, DynamicFilterRules);
+                m_settingSqlService.SetValue(SettingConstants.Filter.DYNAMIC_FILTER_RULE, DynamicFilterRules);
                 return;
             }
         }
@@ -91,21 +93,21 @@ namespace BiliLite.Services
             if (recommendFilterRule != null)
             {
                 UpdateFilterRule(recommendFilterRule,filterRule);
-                SettingService.SetValue(SettingConstants.Filter.RECOMMEND_FILTER_RULE, RecommendFilterRules);
+                m_settingSqlService.SetValue(SettingConstants.Filter.RECOMMEND_FILTER_RULE, RecommendFilterRules);
                 return;
             }
             var searchFilterRule = SearchFilterRules.FirstOrDefault(x => x.Id == filterRule.Id);
             if (searchFilterRule != null)
             {
                 UpdateFilterRule(searchFilterRule, filterRule);
-                SettingService.SetValue(SettingConstants.Filter.SEARCH_FILTER_RULE, SearchFilterRules);
+                m_settingSqlService.SetValue(SettingConstants.Filter.SEARCH_FILTER_RULE, SearchFilterRules);
                 return;
             }
             var dynamicFilterRule = DynamicFilterRules.FirstOrDefault(x => x.Id == filterRule.Id);
             if (dynamicFilterRule != null)
             {
                 UpdateFilterRule(dynamicFilterRule, filterRule);
-                SettingService.SetValue(SettingConstants.Filter.DYNAMIC_FILTER_RULE, DynamicFilterRules);
+                m_settingSqlService.SetValue(SettingConstants.Filter.DYNAMIC_FILTER_RULE, DynamicFilterRules);
                 return;
             }
         }
