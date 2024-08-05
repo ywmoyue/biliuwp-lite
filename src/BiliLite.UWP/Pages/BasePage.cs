@@ -25,7 +25,7 @@ namespace BiliLite.Pages
         }
     }
 
-    public class PlayPage : BasePage
+    public class PlayPage : BasePage, IPlayPage
     {
         public PlayerControl Player { get; set; }
 
@@ -152,4 +152,28 @@ namespace BiliLite.Pages
         }
     }
 
+    public interface IPlayPage
+    {
+        public bool IsPlaying { get; }
+
+        public void Pause();
+
+        public void Play();
+
+        public void AddVolume();
+
+        public void MinusVolume();
+
+        public void CancelFullscreen();
+
+        public Task CaptureVideo();
+
+        public void ToggleDanmakuDisplay();
+
+        public void ToggleFullscreen();
+
+        public void ToggleFullWindow();
+
+        public void ToggleMiniWindows();
+    }
 }

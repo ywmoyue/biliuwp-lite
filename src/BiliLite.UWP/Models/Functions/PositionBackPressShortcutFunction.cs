@@ -2,6 +2,7 @@
 using System.Timers;
 using Windows.UI.Core;
 using BiliLite.Pages;
+using BiliLite.Extensions;
 
 namespace BiliLite.Models.Functions
 {
@@ -12,6 +13,7 @@ namespace BiliLite.Models.Functions
         public override async Task Action(object param)
         {
             if (!(param is PlayPage page)) return;
+            if (ControlsExtensions.CheckFocusTextBoxNow()) return;
             var timer = new Timer(100);
             timer.Elapsed += (sender, e) =>
             {

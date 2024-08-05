@@ -9,7 +9,7 @@ namespace BiliLite.Models.Functions
 
         public override async Task Action(object param)
         {
-            if (!(param is PlayPage page)) return;
+            if (!(param is IPlayPage page)) return;
             page.ToggleFullWindow();
         }
     }

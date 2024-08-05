@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace BiliLite.Extensions
 {
@@ -57,6 +59,12 @@ namespace BiliLite.Extensions
                     yield return descendant;
                 }
             }
+        }
+
+        public static bool CheckFocusTextBoxNow()
+        {
+            var elent = FocusManager.GetFocusedElement();
+            return elent is TextBox || elent is AutoSuggestBox;
         }
     }
 }

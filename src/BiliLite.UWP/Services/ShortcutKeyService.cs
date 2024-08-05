@@ -68,8 +68,6 @@ namespace BiliLite.Services
 
         public async void HandleKeyDown(VirtualKey key)
         {
-            //TODO: 当前焦点处于输入框中时不应执行快捷键行为？
-
             _logger.Trace("key: " + key);
             if (!m_keyDownTimeCache.TryAdd(key, DateTimeOffset.Now)) return;
 
