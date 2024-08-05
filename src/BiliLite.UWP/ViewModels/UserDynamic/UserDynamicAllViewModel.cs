@@ -259,7 +259,7 @@ namespace BiliLite.ViewModels.UserDynamic
         {
             CanLoadMore = false;
             var seasonItems = m_mapper.Map<List<UserDynamicSeasonInfo>>(results.VideoFollowList.List.ToList());
-            var dynamicItems = seasonItems.Select(x => x.ToDynamicItem()).ToList();
+            var dynamicItems = seasonItems.Select(x => x.ToDynamicItem(this)).ToList();
             DynamicItems = new ObservableCollection<DynamicV2ItemViewModel>(dynamicItems);
         }
 
@@ -310,7 +310,7 @@ namespace BiliLite.ViewModels.UserDynamic
             CanLoadMore = results.HasMore;
             m_offset = results.Offset;
             m_baseline = results.UpdateBaseline;
-            var dynamicItems = results.Items.Select(x => x.ToDynamicItem()).ToList();
+            var dynamicItems = results.Items.Select(x => x.ToDynamicItem(this)).ToList();
             DynamicItems = new ObservableCollection<DynamicV2ItemViewModel>(dynamicItems);
         }
 
