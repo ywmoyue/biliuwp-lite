@@ -61,7 +61,7 @@
         </controls:SettingsCard>
 
         <controls:SettingsCard Header="播放完成自动切换下一P"
-                               Description="播放完成自动切换下一P">
+                               Description="分P视频播放完成自动切换下一P">
             <controls:SettingsCard.HeaderIcon>
                 <font:FontAwesome Icon="Solid_StepForward"></font:FontAwesome>
             </controls:SettingsCard.HeaderIcon>
