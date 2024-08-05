@@ -2312,6 +2312,11 @@ namespace BiliLite.Controls
                 _logger.Debug("进度归0");
                 await ReportHistory(0);
             }
+            // 播完停止
+            if (PlayerSettingPlayMode.SelectedIndex == 3)
+            {
+                return;
+            }
             //列表顺序播放
             if (PlayerSettingPlayMode.SelectedIndex == 0)
             {

@@ -512,6 +512,7 @@
                                             <ComboBoxItem>顺序播放</ComboBoxItem>
                                             <ComboBoxItem>单集循环</ComboBoxItem>
                                             <ComboBoxItem>列表循环</ComboBoxItem>
+                                            <ComboBoxItem>播完停止</ComboBoxItem>
                                         </ComboBox.Items>
                                     </ComboBox>
                                     <TextBlock Margin="0 8" >画面尺寸</TextBlock>
