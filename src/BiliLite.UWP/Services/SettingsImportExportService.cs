@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -23,9 +24,11 @@ namespace BiliLite.Services
         private const string SETTINGS_EXPORT_IV = "ABxrLAWa7MrKg6w1xxtZmw==";
         private readonly RijndaelMessageEncryptor m_encryptor;
         private readonly RijndaelMessageDecryptor m_decryptor;
+        private readonly SettingSqlService m_settingSqlService;
 
-        public SettingsImportExportService()
+        public SettingsImportExportService(SettingSqlService settingSqlService)
         {
+            m_settingSqlService = settingSqlService;
             var config = new SimpleAesEncryptionConfiguration()
             {
                 CipherMode = CipherMode.CBC,
@@ -46,37 +49,153 @@ namespace BiliLite.Services
                 if (!(keyAttribute is SettingKeyAttribute settingKeyAttribute)) continue;
                 var key = field.GetRawConstantValue().ToString();
 
-                if (!SettingService.HasValue(key)) continue;
-
                 object value = null;
-                if (settingKeyAttribute.Type == typeof(string))
+
+                if (settingKeyAttribute.UseSqlDb)
                 {
-                    value = SettingService.GetValue<string>(key, "");
+                    if (!m_settingSqlService.HasValue(key)) continue;
+
+                    value = GetSettingSqlValueCore(settingKeyAttribute, key);
                 }
-                else if (settingKeyAttribute.Type == typeof(int))
+                else
                 {
-                    value = SettingService.GetValue<int>(key, 0);
-                }
-                else if (settingKeyAttribute.Type == typeof(long))
-                {
-                    value = SettingService.GetValue<long>(key, 0);
-                }
-                else if (settingKeyAttribute.Type == typeof(double))
-                {
-                    value = SettingService.GetValue<double>(key, 0);
-                }
-                else if (settingKeyAttribute.Type == typeof(object))
-                {
-                    value = SettingService.GetValue<object>(key, null);
-                    value = JsonConvert.SerializeObject(value);
-                }
-                else if (settingKeyAttribute.Type == typeof(bool))
-                {
-                    value = SettingService.GetValue<bool>(key, false);
+                    if (!SettingService.HasValue(key)) continue;
+
+                    value = GetSettingValueCore(settingKeyAttribute, key);
                 }
 
                 model[key] = value;
             }
+        }
+
+        private object GetSettingSqlValueCore(SettingKeyAttribute settingKeyAttribute, string key)
+        {
+            object value = null;
+            if (settingKeyAttribute.Type == typeof(string))
+            {
+                value = m_settingSqlService.GetValue<string>(key, "");
+            }
+            else if (settingKeyAttribute.Type == typeof(int))
+            {
+                value = m_settingSqlService.GetValue<int>(key, 0);
+            }
+            else if (settingKeyAttribute.Type == typeof(long))
+            {
+                value = m_settingSqlService.GetValue<long>(key, 0);
+            }
+            else if (settingKeyAttribute.Type == typeof(double))
+            {
+                value = m_settingSqlService.GetValue<double>(key, 0);
+            }
+            else if (settingKeyAttribute.Type == typeof(object))
+            {
+                value = m_settingSqlService.GetValue<object>(key, null);
+                value = JsonConvert.SerializeObject(value);
+            }
+            else if (settingKeyAttribute.Type == typeof(bool))
+            {
+                value = m_settingSqlService.GetValue<bool>(key, false);
+            }
+
+            return value;
+        }
+
+        private void SetSettingValueSqlCore(SettingKeyAttribute settingKeyAttribute, string key, TomlTable model)
+        {
+            if (settingKeyAttribute.Type == typeof(object))
+            {
+                var value = JsonConvert.DeserializeObject(model[key].ToString());
+                m_settingSqlService.SetValue(key, value);
+            }
+            else if (settingKeyAttribute.Type == typeof(string))
+            {
+                var value = model[key].ToString();
+                m_settingSqlService.SetValue(key, value);
+            }
+            else if (settingKeyAttribute.Type == typeof(int))
+            {
+                var value = model[key].ToInt32();
+                m_settingSqlService.SetValue(key, value);
+            }
+            else if (settingKeyAttribute.Type == typeof(long))
+            {
+                var value = model[key].ToInt64();
+                m_settingSqlService.SetValue(key, value);
+            }
+            else if (settingKeyAttribute.Type == typeof(double))
+            {
+                var value = (double)model[key];
+                m_settingSqlService.SetValue(key, value);
+            }
+            else
+            {
+                m_settingSqlService.SetValue(key, model[key]);
+            }
+        }
+
+        private void SetSettingValueCore(SettingKeyAttribute settingKeyAttribute, string key, TomlTable model)
+        {
+            if (settingKeyAttribute.Type == typeof(object))
+            {
+                var value = JsonConvert.DeserializeObject(model[key].ToString());
+                SettingService.SetValue(key, value);
+            }
+            else if (settingKeyAttribute.Type == typeof(string))
+            {
+                var value = model[key].ToString();
+                SettingService.SetValue(key, value);
+            }
+            else if (settingKeyAttribute.Type == typeof(int))
+            {
+                var value = model[key].ToInt32();
+                SettingService.SetValue(key, value);
+            }
+            else if (settingKeyAttribute.Type == typeof(long))
+            {
+                var value = model[key].ToInt64();
+                SettingService.SetValue(key, value);
+            }
+            else if (settingKeyAttribute.Type == typeof(double))
+            {
+                var value = (double)model[key];
+                SettingService.SetValue(key, value);
+            }
+            else
+            {
+                SettingService.SetValue(key, model[key]);
+            }
+        }
+
+        private object GetSettingValueCore(SettingKeyAttribute settingKeyAttribute, string key)
+        {
+            object value = null;
+            if (settingKeyAttribute.Type == typeof(string))
+            {
+                value = SettingService.GetValue<string>(key, "");
+            }
+            else if (settingKeyAttribute.Type == typeof(int))
+            {
+                value = SettingService.GetValue<int>(key, 0);
+            }
+            else if (settingKeyAttribute.Type == typeof(long))
+            {
+                value = SettingService.GetValue<long>(key, 0);
+            }
+            else if (settingKeyAttribute.Type == typeof(double))
+            {
+                value = SettingService.GetValue<double>(key, 0);
+            }
+            else if (settingKeyAttribute.Type == typeof(object))
+            {
+                value = SettingService.GetValue<object>(key, null);
+                value = JsonConvert.SerializeObject(value);
+            }
+            else if (settingKeyAttribute.Type == typeof(bool))
+            {
+                value = SettingService.GetValue<bool>(key, false);
+            }
+
+            return value;
         }
 
         private void ImportSettingsCore(TomlTable model, Type settingsType)
@@ -91,34 +210,13 @@ namespace BiliLite.Services
 
                 if (!model.ContainsKey(key)) continue;
 
-                if (settingKeyAttribute.Type == typeof(object))
+                if (settingKeyAttribute.UseSqlDb)
                 {
-                    var value = JsonConvert.DeserializeObject(model[key].ToString());
-                    SettingService.SetValue(key, value);
-                }
-                else if (settingKeyAttribute.Type == typeof(string))
-                {
-                    var value = model[key].ToString();
-                    SettingService.SetValue(key, value);
-                }
-                else if (settingKeyAttribute.Type == typeof(int))
-                {
-                    var value = model[key].ToInt32();
-                    SettingService.SetValue(key, value);
-                }
-                else if (settingKeyAttribute.Type == typeof(long))
-                {
-                    var value = model[key].ToInt64();
-                    SettingService.SetValue(key, value);
-                }
-                else if (settingKeyAttribute.Type == typeof(double))
-                {
-                    var value = (double)model[key];
-                    SettingService.SetValue(key, value);
+                    SetSettingValueSqlCore(settingKeyAttribute, key, model);
                 }
                 else
                 {
-                    SettingService.SetValue(key, model[key]);
+                    SetSettingValueCore(settingKeyAttribute, key, model);
                 }
             }
         }
@@ -148,11 +246,21 @@ namespace BiliLite.Services
             return bin;
         }
 
+        private async Task<StorageFile> GetExportFile()
+        {
+            var savePicker = new FileSavePicker();
+            savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            savePicker.FileTypeChoices.Add("bililite设置文件", new List<string>() { ".bililiteSettings" });
+            var fileName = $"{DateTime.Now.ToString("yyyy-M-d-HH_mm_ss")}";
+            savePicker.SuggestedFileName = fileName;
+            var file = await savePicker.PickSaveFileAsync();
+            return file;
+        }
+
         public async Task<bool> ExportSettings()
         {
-            var folder = await new FolderPicker().PickSingleFolderAsync();
-            if (folder == null) return false;
-            var file = await folder.CreateFileAsync($"{DateTime.Now.ToString("yyyy-M-d-HH_mm_ss")}.bililiteSettings");
+            var file = await GetExportFile();
+            if (file == null) return false;
 
             try
             {
@@ -185,9 +293,8 @@ namespace BiliLite.Services
 
         public async Task<bool> ExportSettingsWithAccount()
         {
-            var folder = await new FolderPicker().PickSingleFolderAsync();
-            if (folder == null) return false;
-            var file = await folder.CreateFileAsync($"{DateTime.Now.ToString("yyyy-M-d-HH_mm_ss")}.bililiteSettings");
+            var file = await GetExportFile();
+            if (file == null) return false;
 
             try
             {

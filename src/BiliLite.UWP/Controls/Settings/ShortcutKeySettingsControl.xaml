@@ -1,0 +1,67 @@
+﻿<UserControl
+    x:Class="BiliLite.Controls.Settings.ShortcutKeySettingsControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BiliLite.Controls.Settings"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:functions="using:BiliLite.Models.Functions"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:settings="using:BiliLite.ViewModels.Settings"
+    xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <StackPanel Orientation="Vertical"
+                MaxWidth="1200"
+                Margin="0 0 0 8">
+        <Grid Margin="8 0">
+            <TextBlock VerticalAlignment="Center">快捷键自定义</TextBlock>
+            <StackPanel  HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button Click="BtnAddAction_OnClick">添加行为</Button>
+                <Button Click="BtnSetDefault_OnClick">恢复默认</Button>
+            </StackPanel>
+        </Grid>
+        <ListView SelectionMode="None"
+                  Padding="-16 0"
+                  Margin="0"
+                  ItemsSource="{x:Bind m_viewModel.ShortcutFunctions,Mode=OneWay}">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="settings:ShortcutFunctionViewModel">
+                    <controls:SettingsExpander Header="{x:Bind Name}"
+                                               Description="{x:Bind Description}">
+                        <StackPanel Orientation="Horizontal">
+                            <Button MinWidth="120" Click="BtnRecordKeys_OnClick">
+                                <TextBlock Text="{x:Bind KeysString,Mode=OneWay}"></TextBlock>
+                            </Button>
+                            <ToggleSwitch IsOn="{x:Bind Enable,Mode=TwoWay}"
+                                          Margin="16 0 0 0"
+                                          Toggled="ShortcutFunctionViewModel_Changed"></ToggleSwitch>
+                        </StackPanel>
+                        <controls:SettingsExpander.Items>
+                            <controls:SettingsCard Header="是否松开按键执行">
+                                <ToggleSwitch IsOn="{x:Bind NeedKeyUp,Mode=TwoWay}"
+                                              Toggled="ShortcutFunctionViewModel_Changed"></ToggleSwitch>
+                            </controls:SettingsCard>
+                            <controls:SettingsCard Header="删除">
+                                <Button Click="BtnDeleteShortcutFunction_OnClick">确认删除</Button>
+                            </controls:SettingsCard>
+                        </controls:SettingsExpander.Items>
+                    </controls:SettingsExpander>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <TextBlock Margin="8 8">其他设置</TextBlock>
+        <controls:SettingsCard Header="按住执行延迟时间" 
+                               Description="单位毫秒。仅对按住行为有效，过短将导致相同触发按键点击行为无效">
+            <controls1:NumberBox 
+                Text="{x:Bind m_viewModel.PressActionDelayTime,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                ValueChanged="NumberBoxPressActionDelayTime_OnValueChanged"
+                Minimum="0">
+
+            </controls1:NumberBox>
+        </controls:SettingsCard>
+    </StackPanel>
+</UserControl>

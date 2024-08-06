@@ -91,6 +91,17 @@ namespace BiliLite.Controls.Settings
                 });
             });
 
+            // 显示推荐页横幅
+            SwitchDisplayRecommendBanner.IsOn = SettingService.GetValue(SettingConstants.UI.DISPLAY_RECOMMEND_BANNER, SettingConstants.UI.DEFAULT_DISPLAY_RECOMMEND_BANNER);
+            SwitchDisplayRecommendBanner.Loaded += (sender, e) =>
+            {
+                SwitchDisplayRecommendBanner.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.DISPLAY_RECOMMEND_BANNER, SwitchDisplayRecommendBanner.IsOn);
+
+                };
+            };
+
             //右侧详情宽度
             numRightWidth.Value = SettingService.GetValue<double>(SettingConstants.UI.RIGHT_DETAIL_WIDTH, 320);
             numRightWidth.Loaded += new RoutedEventHandler((sender, e) =>
@@ -173,6 +184,16 @@ namespace BiliLite.Controls.Settings
                     SettingService.SetValue(SettingConstants.UI.MOUSE_MIDDLE_ACTION, cbMouseMiddleAction.SelectedIndex);
                 });
             });
+
+            // 快速收藏
+            SwitchQuickDoFav.IsOn = SettingService.GetValue(SettingConstants.UI.QUICK_DO_FAV, SettingConstants.UI.DEFAULT_QUICK_DO_FAV);
+            SwitchQuickDoFav.Loaded += (sender, e) =>
+            {
+                SwitchQuickDoFav.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.QUICK_DO_FAV, SwitchQuickDoFav.IsOn);
+                };
+            };
 
             //动态显示
             cbDetailDisplay.SelectedIndex = SettingService.GetValue<int>(SettingConstants.UI.DETAIL_DISPLAY, 0);

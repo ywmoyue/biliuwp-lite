@@ -170,6 +170,9 @@
     <Compile Include="Controls\Settings\ProxySettingsControl.xaml.cs">
       <DependentUpon>ProxySettingsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Settings\ShortcutKeySettingsControl.xaml.cs">
+      <DependentUpon>ShortcutKeySettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Settings\UISettingsControl.xaml.cs">
       <DependentUpon>UISettingsControl.xaml</DependentUpon>
     </Compile>
@@ -216,7 +219,18 @@
     <Compile Include="Models\Common\User\SendDynamic\UploadImagesModel.cs" />
     <Compile Include="Models\Common\User\SendDynamic\RcmdTopicModel.cs" />
     <Compile Include="Models\Common\Video\MediaListResources.cs" />
+    <Compile Include="Models\Databases\SettingItem.cs" />
+    <Compile Include="Models\Functions\BaseShortcutFunction.cs" />
     <Compile Include="Models\Functions\CancelFullscreenFunction.cs" />
+    <Compile Include="Models\Functions\CloseTapFunction.cs" />
+    <Compile Include="Models\Functions\GotoNextVideoFunction.cs" />
+    <Compile Include="Models\Functions\HighRateSpeedPlayShortcutFunction.cs" />
+    <Compile Include="Models\Functions\InputKey.cs" />
+    <Compile Include="Models\Functions\NewTapFunction.cs" />
+    <Compile Include="Models\Functions\PositionBackPressShortcutFunction.cs" />
+    <Compile Include="Models\Functions\PositionForwardPressShortcutFunction.cs" />
+    <Compile Include="Models\Functions\LargePositionForwardShortcutFunction.cs" />
+    <Compile Include="Models\Functions\PositionForwardShortcutFunction.cs" />
     <Compile Include="Models\Functions\MinusVolumeFunction.cs" />
     <Compile Include="Models\Functions\AddVolumeFunction.cs" />
     <Compile Include="Models\Functions\IShortcutFunction.cs" />
@@ -229,6 +243,18 @@
     <Compile Include="Models\Common\Rank\RankItemStatModel.cs" />
     <Compile Include="Models\Functions\SaveFunction.cs" />
     <Compile Include="Models\Common\Danmaku\DanmuFilterItem.cs" />
+    <Compile Include="Models\Functions\ShortcutFunctionFactory.cs" />
+    <Compile Include="Models\Functions\ShortcutFunctionModel.cs" />
+    <Compile Include="Models\Functions\CaptureVideoShortcutFunction.cs" />
+    <Compile Include="Models\Functions\FastUpShortcutFunction.cs" />
+    <Compile Include="Models\Functions\GotoLastVideoFunction.cs" />
+    <Compile Include="Models\Functions\SlowDownShortcutFunction.cs" />
+    <Compile Include="Models\Functions\ToggleMuteShortcutFunction.cs" />
+    <Compile Include="Models\Functions\ToggleDanmakuDisplayShortcutFunction.cs" />
+    <Compile Include="Models\Functions\ToggleFullscreenShortcutFunction.cs" />
+    <Compile Include="Models\Functions\ToggleFullWindowShortcutFunction.cs" />
+    <Compile Include="Models\Functions\ToggleMiniWindowShortcutFunction.cs" />
+    <Compile Include="Services\BiliLiteDbContext.cs" />
     <Compile Include="ViewModels\Common\PieControlViewModel.cs" />
     <Compile Include="ViewModels\Settings\CDNServerItemViewModel.cs" />
     <Compile Include="Pages\ISavablePage.cs" />
@@ -242,6 +268,8 @@
     <Compile Include="ViewModels\Settings\FilterSettingsViewModel.cs" />
     <Compile Include="ViewModels\Settings\LiveSettingsControlViewModel.cs" />
     <Compile Include="ViewModels\Settings\PlaySettingsControlViewModel.cs" />
+    <Compile Include="ViewModels\Settings\ShortcutFunctionViewModel.cs" />
+    <Compile Include="ViewModels\Settings\ShortcutKeySettingsControlViewModel.cs" />
     <Compile Include="ViewModels\Settings\VideoDanmakuSettingsControlViewModel.cs" />
     <Compile Include="ViewModels\User\FavoriteItemViewModel.cs" />
     <Compile Include="Pages\Home\UserDynamicPage.xaml.cs">
@@ -1094,6 +1122,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Settings\ShortcutKeySettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Settings\UISettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1420,6 +1452,12 @@
     </PackageReference>
     <PackageReference Include="log4net">
       <Version>2.0.15</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore">
+      <Version>3.1.32</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite">
+      <Version>3.1.32</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection">
       <Version>7.0.0</Version>

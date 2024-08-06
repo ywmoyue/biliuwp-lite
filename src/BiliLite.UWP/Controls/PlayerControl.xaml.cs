@@ -209,8 +209,6 @@ namespace BiliLite.Controls
         private void PlayerControl_Unloaded(object sender, RoutedEventArgs e)
         {
             Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
-            Window.Current.CoreWindow.KeyDown -= PlayerControl_KeyDown;
-            Window.Current.CoreWindow.KeyUp -= PlayerControl_KeyUp;
             if (_systemMediaTransportControls != null)
             {
                 _systemMediaTransportControls.DisplayUpdater.ClearAll();
@@ -223,8 +221,6 @@ namespace BiliLite.Controls
         private async void PlayerControl_Loaded(object sender, RoutedEventArgs e)
         {
             m_danmakuController.Clear();
-            Window.Current.CoreWindow.KeyDown += PlayerControl_KeyDown;
-            Window.Current.CoreWindow.KeyUp += PlayerControl_KeyUp;
             BtnFoucs.Focus(FocusState.Programmatic);
             _systemMediaTransportControls = SystemMediaTransportControls.GetForCurrentView();
             _systemMediaTransportControls.IsPlayEnabled = true;
@@ -262,161 +258,6 @@ namespace BiliLite.Controls
                     {
                         Pause();
                     });
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void PlayerControl_KeyUp(CoreWindow sender, KeyEventArgs args)
-        {
-            switch (args.VirtualKey)
-            {
-                case Windows.System.VirtualKey.Right:
-                    {
-                        if (m_playerKeyRightAction == PlayerKeyRightAction.AcceleratePlay)
-                        {
-                            StopHighRateSpeedPlay();
-                        }
-                    }
-                    break;
-            }
-        }
-
-        private async void PlayerControl_KeyDown(CoreWindow sender, KeyEventArgs args)
-        {
-            var elent = FocusManager.GetFocusedElement();
-            if (elent is TextBox || elent is AutoSuggestBox)
-            {
-                args.Handled = false;
-                return;
-            }
-            args.Handled = true;
-            switch (args.VirtualKey)
-            {
-                case Windows.System.VirtualKey.Right:
-                    {
-                        if (m_playerKeyRightAction == PlayerKeyRightAction.AcceleratePlay)
-                        {
-                            StartHighRateSpeedPlay();
-                        }
-                        if (m_playerKeyRightAction == PlayerKeyRightAction.ControlProgress && (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.Pause))
-                        {
-                            var _position = Player.Position + 3;
-                            if (_position > Player.Duration)
-                            {
-                                _position = Player.Duration;
-                            }
-                            Player.Position = _position;
-
-                            m_playerToastService.Show(
-                                PlayerToastService.PROGRESS_KEY, "进度:" + TimeSpan.FromSeconds(Player.Position).ToString(@"hh\:mm\:ss"));
-                        }
-                    }
-                    break;
-
-                case Windows.System.VirtualKey.F8:
-                case Windows.System.VirtualKey.T:
-                    //小窗播放
-                    MiniWidnows(!miniWin);
-                    break;
-                case Windows.System.VirtualKey.F12:
-                case Windows.System.VirtualKey.W:
-                    IsFullWindow = !IsFullWindow;
-                    break;
-                case Windows.System.VirtualKey.F11:
-                case Windows.System.VirtualKey.F:
-                case Windows.System.VirtualKey.Enter:
-                    IsFullScreen = !IsFullScreen;
-                    break;
-                case Windows.System.VirtualKey.F10:
-                    await CaptureVideo();
-                    break;
-                case Windows.System.VirtualKey.O:
-                case Windows.System.VirtualKey.P:
-                    {
-                        if (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.Pause)
-                        {
-                            var _position = Player.Position + 90;
-                            if (_position > Player.Duration)
-                            {
-                                _position = Player.Duration;
-                            }
-                            Player.Position = _position;
-
-                            m_playerToastService.Show(PlayerToastService.MSG_KEY, "跳过OP(快进90秒)");
-                        }
-                    }
-                    break;
-                case Windows.System.VirtualKey.F9:
-                case Windows.System.VirtualKey.D:
-                    if (!m_danmakuController.DanmakuViewModel.IsHide)
-                    {
-                        m_danmakuController.Hide();
-                    }
-                    else
-                    {
-                        m_danmakuController.Show();
-                    }
-                    break;
-                case Windows.System.VirtualKey.Z:
-                case Windows.System.VirtualKey.N:
-                case (Windows.System.VirtualKey)188:
-                    if (EpisodeList.SelectedIndex == 0)
-                    {
-                        Notify.ShowMessageToast("已经是第一P了");
-                    }
-                    else
-                    {
-                        EpisodeList.SelectedIndex = EpisodeList.SelectedIndex - 1;
-                    }
-                    break;
-                case Windows.System.VirtualKey.X:
-                case Windows.System.VirtualKey.M:
-                case (Windows.System.VirtualKey)190:
-                    if (EpisodeList.SelectedIndex == EpisodeList.Items.Count - 1)
-                    {
-                        Notify.ShowMessageToast("已经是最后一P了");
-                    }
-                    else
-                    {
-                        EpisodeList.SelectedIndex = EpisodeList.SelectedIndex + 1;
-                    }
-                    break;
-                case Windows.System.VirtualKey.F1:
-                case (Windows.System.VirtualKey)186:
-                    //慢速播放
-                    if (BottomCBSpeed.SelectedIndex == m_playSpeedMenuService.MenuItems.Count - 1)
-                    {
-                        Notify.ShowMessageToast("不能再慢啦");
-                        return;
-                    }
-
-                    BottomCBSpeed.SelectedIndex += 1;
-                    m_playerToastService.Show(PlayerToastService.SPEED_KEY,(BottomCBSpeed.SelectedItem as PlaySpeedMenuItem).Content);
-                    break;
-                case Windows.System.VirtualKey.F2:
-                case (Windows.System.VirtualKey)222:
-                    //加速播放
-                    if (BottomCBSpeed.SelectedIndex == 0)
-                    {
-                        Notify.ShowMessageToast("不能再快啦");
-                        return;
-                    }
-                    BottomCBSpeed.SelectedIndex -= 1;
-                    m_playerToastService.Show(PlayerToastService.SPEED_KEY, (BottomCBSpeed.SelectedItem as PlaySpeedMenuItem).Content);
-                    break;
-                case Windows.System.VirtualKey.F3:
-                case Windows.System.VirtualKey.V:
-                    //静音
-                    if (Player.Volume >= 0)
-                    {
-                        Player.Volume = 0;
-                    }
-                    else
-                    {
-                        Player.Volume = 1;
-                    }
                     break;
                 default:
                     break;
@@ -1994,14 +1835,14 @@ namespace BiliLite.Controls
             StopHighRateSpeedPlay();
         }
 
-        private void StartHighRateSpeedPlay()
+        public void StartHighRateSpeedPlay()
         {
             m_playerToastService.KeepStart(PlayerToastService.ACCELERATING_KEY, "倍速播放中");
             var highRatePlaySpeed = SettingService.GetValue(SettingConstants.Player.HIGH_RATE_PLAY_SPEED, 2.0d);
             Player.SetRate(highRatePlaySpeed);
         }
 
-        private void StopHighRateSpeedPlay()
+        public void StopHighRateSpeedPlay()
         {
             m_playerToastService.KeepClose(PlayerToastService.ACCELERATING_KEY);
             Player.SetRate(SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d));
@@ -2471,6 +2312,11 @@ namespace BiliLite.Controls
                 _logger.Debug("进度归0");
                 await ReportHistory(0);
             }
+            // 播完停止
+            if (PlayerSettingPlayMode.SelectedIndex == 3)
+            {
+                return;
+            }
             //列表顺序播放
             if (PlayerSettingPlayMode.SelectedIndex == 0)
             {
@@ -2552,10 +2398,10 @@ namespace BiliLite.Controls
 
         private async void TopBtnScreenshot_Click(object sender, RoutedEventArgs e)
         {
-            await CaptureVideo();
+            await CaptureVideoCore();
         }
 
-        private async Task CaptureVideo()
+        private async Task CaptureVideoCore()
         {
             try
             {
@@ -2820,20 +2666,131 @@ namespace BiliLite.Controls
             MessageCenter.SetMiniWindow(mini);
         }
 
+        public void ToggleMiniWindows()
+        {
+            MiniWidnows(!miniWin);
+        }
+
+        public void ToggleFullWindow()
+        {
+            IsFullWindow = !IsFullWindow;
+        }
+
+        public void ToggleFullscreen()
+        {
+            IsFullScreen = !IsFullScreen;
+        }
+
+        public async Task CaptureVideo()
+        {
+            await CaptureVideoCore();
+        }
+
+        // 减速播放
+        public void SlowDown()
+        {
+            if (BottomCBSpeed.SelectedIndex == m_playSpeedMenuService.MenuItems.Count - 1)
+            {
+                Notify.ShowMessageToast("不能再慢啦");
+                return;
+            }
+
+            BottomCBSpeed.SelectedIndex += 1;
+            m_playerToastService.Show(PlayerToastService.SPEED_KEY, (BottomCBSpeed.SelectedItem as PlaySpeedMenuItem).Content);
+        }
+
+        // 加速播放
+        public void FastUp()
+        {
+            if (BottomCBSpeed.SelectedIndex == 0)
+            {
+                Notify.ShowMessageToast("不能再快啦");
+                return;
+            }
+            BottomCBSpeed.SelectedIndex -= 1;
+            m_playerToastService.Show(PlayerToastService.SPEED_KEY, (BottomCBSpeed.SelectedItem as PlaySpeedMenuItem).Content);
+        }
+
+        public void GotoLastVideo()
+        {
+            if (EpisodeList.SelectedIndex == 0)
+            {
+                Notify.ShowMessageToast("已经是第一P了");
+            }
+            else
+            {
+                EpisodeList.SelectedIndex = EpisodeList.SelectedIndex - 1;
+            }
+        }
+
+        public void GotoNextVideo()
+        {
+            if (EpisodeList.SelectedIndex == EpisodeList.Items.Count - 1)
+            {
+                Notify.ShowMessageToast("已经是最后一P了");
+            }
+            else
+            {
+                EpisodeList.SelectedIndex = EpisodeList.SelectedIndex + 1;
+            }
+        }
+
+        public void ToggleMute()
+        {
+            if (Player.Volume >= 0)
+            {
+                Player.Volume = 0;
+            }
+            else
+            {
+                Player.Volume = 1;
+            }
+        }
+
+        public void ToggleDanmakuDisplay()
+        {
+            if (!m_danmakuController.DanmakuViewModel.IsHide)
+            {
+                m_danmakuController.Hide();
+            }
+            else
+            {
+                m_danmakuController.Show();
+            }
+        }
+
         public void Pause()
         {
             m_danmakuController.Pause();
             Player.Pause();
         }
 
-        public void PositionBack()
+        public void PositionBack(double progress = 3)
         {
             if (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.Pause)
             {
-                var _position = Player.Position - 3;
+                var _position = Player.Position - progress;
                 if (_position < 0)
                 {
                     _position = 0;
+                }
+
+                Player.Position = _position;
+
+                m_playerToastService.Show(
+                    PlayerToastService.PROGRESS_KEY,
+                    "进度:" + TimeSpan.FromSeconds(Player.Position).ToString(@"hh\:mm\:ss"));
+            }
+        }
+
+        public void PositionForward(double progress = 3)
+        {
+            if (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.Pause)
+            {
+                var _position = Player.Position + progress;
+                if (_position > Player.Duration)
+                {
+                    _position = Player.Duration;
                 }
                 Player.Position = _position;
 

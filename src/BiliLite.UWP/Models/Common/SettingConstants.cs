@@ -45,6 +45,18 @@ namespace BiliLite.Models.Common
             public const string HOEM_ORDER = "homePageOrder";
 
             /// <summary>
+            /// 显示推荐页横幅
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string DISPLAY_RECOMMEND_BANNER = "DisplayRecommendBanner";
+
+            /// <summary>
+            /// 默认显示推荐页横幅
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_DISPLAY_RECOMMEND_BANNER = true;
+
+            /// <summary>
             /// 右侧详情宽度
             /// </summary>
             [SettingKey(typeof(double))]
@@ -104,6 +116,19 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(int))]
             public const string MOUSE_MIDDLE_ACTION = "MouseMiddleAction";
+
+            /// <summary>
+            /// 快速收藏
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string QUICK_DO_FAV = "QuickDoFav";
+
+            /// <summary>
+            /// 默认快速收藏
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_QUICK_DO_FAV = true;
+
             /// <summary>
             /// 隐藏赞助按钮
             /// </summary>
@@ -366,7 +391,7 @@ namespace BiliLite.Models.Common
             /// <summary>
             /// 弹幕字体
             /// </summary>
-            [SettingKey(typeof(string))] 
+            [SettingKey(typeof(string))]
             public const string DANMAKU_FONT_FAMILY = "VideoDanmuFontFamily";
         }
 
@@ -482,7 +507,7 @@ namespace BiliLite.Models.Common
             /// 隐藏抽奖弹幕关键字
             /// </summary>
             [SettingKey(typeof(bool))]
-            public const string HIDE_LOTTERY_DANMU = "LiveHideLotteryDanmu"; 
+            public const string HIDE_LOTTERY_DANMU = "LiveHideLotteryDanmu";
 
             /// <summary>
             /// 直播流默认源
@@ -780,13 +805,13 @@ namespace BiliLite.Models.Common
 
         public class Filter
         {
-            [SettingKey(typeof(object))]
+            [SettingKey(typeof(object), useSqlDb: true)]
             public const string RECOMMEND_FILTER_RULE = "RecommendFilterRule";
 
-            [SettingKey(typeof(object))]
+            [SettingKey(typeof(object), useSqlDb: true)]
             public const string SEARCH_FILTER_RULE = "SearchFilterRule";
 
-            [SettingKey(typeof(object))]
+            [SettingKey(typeof(object), useSqlDb: true)]
             public const string DYNAMIC_FILTER_RULE = "DynamicFilterRule";
         }
 
@@ -877,6 +902,21 @@ namespace BiliLite.Models.Common
             [SettingKey(typeof(int))]
             public const string DEFAULT_VIDEO_TYPE = "DownloadDefaultVideoType";
 
+        }
+
+        /// <summary>
+        /// 快捷键
+        /// </summary>
+        public class ShortcutKey
+        {
+            [SettingKey(typeof(int))]
+            public const string PRESS_ACTION_DELAY_TIME = "PressActionDelayTime";
+
+            [SettingDefaultValue]
+            public const int DEFAULT_PRESS_ACTION_DELAY_TIME = 200;
+
+            [SettingKey(typeof(object), useSqlDb: true)]
+            public const string SHORTCUT_KEY_FUNCTIONS = "ShortcutKeyFunctions";
         }
 
         /// <summary>

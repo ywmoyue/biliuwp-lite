@@ -45,7 +45,7 @@ namespace BiliLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class LiveDetailPage : BasePage
+    public sealed partial class LiveDetailPage : BasePage, IPlayPage
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
 
@@ -137,6 +137,8 @@ namespace BiliLite.Pages
                 m_danmakuController.Init(DanmakuCanvas);
             }
         }
+
+        public bool IsPlaying => m_viewModel.PlayState.IsPlaying;
 
         private void LiveRoomViewModelSetManualPlayUrl(object sender, object e)
         {
@@ -245,14 +247,12 @@ namespace BiliLite.Pages
 
         private void LiveDetailPage_Unloaded(object sender, RoutedEventArgs e)
         {
-            Window.Current.CoreWindow.KeyDown -= CoreWindow_KeyDown;
             timer_focus.Stop();
             controlTimer.Stop();
         }
 
         private void LiveDetailPage_Loaded(object sender, RoutedEventArgs e)
         {
-            Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
             BtnFoucs.Focus(FocusState.Programmatic);
             m_danmakuController.Clear();
             if (this.Parent is MyFrame frame)
@@ -439,104 +439,6 @@ namespace BiliLite.Pages
 
             BottomCBQuality.SelectedItem = m_liveRoomViewModel.CurrentQn;
             changePlayUrlFlag = false;
-        }
-
-        private async void CoreWindow_KeyDown(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs args)
-        {
-            var elent = FocusManager.GetFocusedElement();
-            if (elent is TextBox || elent is AutoSuggestBox)
-            {
-                args.Handled = false;
-                return;
-            }
-            args.Handled = true;
-            switch (args.VirtualKey)
-            {
-                case Windows.System.VirtualKey.Space:
-                    if (m_playerController.PauseState.IsPaused)
-                    {
-                        await m_playerController.PauseState.Resume();
-                    }
-                    else
-                    {
-                        await m_playerController.PauseState.Pause();
-                    }
-                    break;
-
-                case Windows.System.VirtualKey.Up:
-                    if (SliderVolume.Value + 0.1 > 1)
-                    {
-                        SliderVolume.Value = 1;
-                    }
-                    else
-                    {
-                        SliderVolume.Value += 0.1;
-                    }
-
-                    TxtToolTip.Text = "音量:" + SliderVolume.Value.ToString("P");
-                    ToolTip.Visibility = Visibility.Visible;
-                    await Task.Delay(2000);
-                    ToolTip.Visibility = Visibility.Collapsed;
-                    break;
-
-                case Windows.System.VirtualKey.Down:
-
-                    if (SliderVolume.Value - 0.1 < 0)
-                    {
-                        SliderVolume.Value = 0;
-                    }
-                    else
-                    {
-                        SliderVolume.Value -= 0.1;
-                    }
-                    if (SliderVolume.Value == 0)
-                    {
-                        TxtToolTip.Text = "静音";
-                    }
-                    else
-                    {
-                        TxtToolTip.Text = "音量:" + SliderVolume.Value.ToString("P");
-                    }
-                    ToolTip.Visibility = Visibility.Visible;
-                    await Task.Delay(2000);
-                    ToolTip.Visibility = Visibility.Collapsed;
-                    break;
-                case Windows.System.VirtualKey.Escape:
-                    SetFullScreen(false);
-
-                    break;
-                case Windows.System.VirtualKey.F8:
-                case Windows.System.VirtualKey.T:
-                    //小窗播放
-                    MiniWidnows(BottomBtnMiniWindows.Visibility == Visibility.Visible);
-
-                    break;
-                case Windows.System.VirtualKey.F12:
-                case Windows.System.VirtualKey.W:
-                    SetFullWindow(!m_playerController.ContentState.IsFullWindow);
-                    break;
-                case Windows.System.VirtualKey.F11:
-                case Windows.System.VirtualKey.F:
-                case Windows.System.VirtualKey.Enter:
-                    SetFullScreen(!m_playerController.ScreenState.IsFullscreen);
-                    break;
-                case Windows.System.VirtualKey.F10:
-                    await CaptureVideo();
-                    break;
-                case Windows.System.VirtualKey.F9:
-                case Windows.System.VirtualKey.D:
-                    if (!m_danmakuController.DanmakuViewModel.IsHide)
-                    {
-                        m_danmakuController.Hide();
-                    }
-                    else
-                    {
-                        m_danmakuController.Show();
-                    }
-                    break;
-                default:
-                    break;
-            }
         }
 
         private async Task StopPlay()
@@ -882,6 +784,93 @@ namespace BiliLite.Pages
         private async void TopBtnScreenshot_Click(object sender, RoutedEventArgs e)
         {
             await CaptureVideo();
+        }
+
+        public async void Pause()
+        {
+            await m_playerController.PauseState.Pause();
+        }
+
+        public async void Play()
+        {
+            await m_playerController.PauseState.Resume();
+        }
+
+        public async void AddVolume()
+        {
+            if (SliderVolume.Value + 0.1 > 1)
+            {
+                SliderVolume.Value = 1;
+            }
+            else
+            {
+                SliderVolume.Value += 0.1;
+            }
+
+            TxtToolTip.Text = "音量:" + SliderVolume.Value.ToString("P");
+            ToolTip.Visibility = Visibility.Visible;
+            await Task.Delay(2000);
+            ToolTip.Visibility = Visibility.Collapsed;
+        }
+
+        public async void MinusVolume()
+        {
+            if (SliderVolume.Value - 0.1 < 0)
+            {
+                SliderVolume.Value = 0;
+            }
+            else
+            {
+                SliderVolume.Value -= 0.1;
+            }
+            if (SliderVolume.Value == 0)
+            {
+                TxtToolTip.Text = "静音";
+            }
+            else
+            {
+                TxtToolTip.Text = "音量:" + SliderVolume.Value.ToString("P");
+            }
+            ToolTip.Visibility = Visibility.Visible;
+            await Task.Delay(2000);
+            ToolTip.Visibility = Visibility.Collapsed;
+        }
+
+        public void CancelFullscreen()
+        {
+            SetFullScreen(false);
+        }
+        
+        Task IPlayPage.CaptureVideo()
+        {
+            return CaptureVideo();
+        }
+
+        public void ToggleDanmakuDisplay()
+        {
+            if (!m_danmakuController.DanmakuViewModel.IsHide)
+            {
+                m_danmakuController.Hide();
+            }
+            else
+            {
+                m_danmakuController.Show();
+            }
+        }
+
+        public void ToggleFullscreen()
+        {
+            SetFullScreen(!m_playerController.ScreenState.IsFullscreen);
+        }
+
+        public void ToggleFullWindow()
+        {
+            SetFullWindow(!m_playerController.ContentState.IsFullWindow);
+        }
+
+        public void ToggleMiniWindows()
+        {
+            MiniWidnows(BottomBtnMiniWindows.Visibility == Visibility.Visible);
         }
 
         private async Task CaptureVideo()

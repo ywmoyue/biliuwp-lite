@@ -1,7 +1,6 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Models.Events;
-using BiliLite.Modules;
 using BiliLite.Services;
 using FFmpegInteropX;
 using Microsoft.Extensions.Hosting;
@@ -39,16 +38,37 @@ namespace BiliLite
         /// </summary>
         public App()
         {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException; ;
             App.Current.UnhandledException += App_UnhandledException;
+            // RegisterExceptionHandlingSynchronizationContext();
             FFmpegInteropLogging.SetLogLevel(LogLevel.Info);
             FFmpegInteropLogging.SetLogProvider(this);
-            SqlHelper.InitDB();
+            // SqlHelper.InitDB();
             LogService.Init();
             RegisterService();
             OpenCCNET.ZhConverter.Initialize();
             this.Suspending += OnSuspending;
             this.InitializeComponent();
         }
+
+        private void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+        {
+            logger.Log("错误发生", LogType.Trace, e.Exception);
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
+        {
+            if (e.ExceptionObject is Exception ex)
+            {
+                logger.Log("程序运行出现错误", LogType.Error, ex);
+            }
+            else
+            {
+                logger.Log("程序运行出现错误:"+e.ExceptionObject, LogType.Error);
+            }
+        }
+
         private void RegisterExceptionHandlingSynchronizationContext()
         {
             ExceptionHandlingSynchronizationContext

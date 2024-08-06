@@ -1,6 +1,9 @@
-﻿using BiliLite.Models;
+﻿using System.Linq;
+using BiliLite.Models;
 using BiliLite.Models.Common;
+using BiliLite.Models.Databases;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Newtonsoft.Json;
 
 namespace BiliLite.Services
 {
@@ -98,6 +101,50 @@ namespace BiliLite.Services
                 SetValue(SettingConstants.Account.LOGIN_APP_KEY_SECRET, keySecretPair);
                 _loginAppKey = appKeySecret;
             }
+        }
+    }
+
+    public class SettingSqlService
+    {
+        private readonly BiliLiteDbContext m_biliLiteDbContext;
+
+        public SettingSqlService(BiliLiteDbContext biliLiteDbContext)
+        {
+            m_biliLiteDbContext = biliLiteDbContext;
+        }
+
+        public T GetValue<T>(string key, T _default)
+        {
+            var settingItem = m_biliLiteDbContext.SettingItems.Find(key);
+            if (settingItem == null) return _default;
+
+            var result = JsonConvert.DeserializeObject<T>(settingItem.Value);
+
+            return result;
+        }
+
+        public void SetValue<T>(string key, T value)
+        {
+            var settingItem = m_biliLiteDbContext.SettingItems.Find(key);
+            if (settingItem == null)
+            {
+                m_biliLiteDbContext.SettingItems.Add(new SettingItem()
+                {
+                    Key = key,
+                    Value = JsonConvert.SerializeObject(value),
+                });
+            }
+            else
+            {
+                settingItem.Value = JsonConvert.SerializeObject(value);
+            }
+
+            m_biliLiteDbContext.SaveChanges();
+        }
+
+        public bool HasValue(string key)
+        {
+            return m_biliLiteDbContext.SettingItems.Any(x => x.Key == key);
         }
     }
 }

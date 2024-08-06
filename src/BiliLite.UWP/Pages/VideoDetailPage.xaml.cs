@@ -744,5 +744,13 @@ namespace BiliLite.Pages
                 await Save();
             }
         }
+
+        private async void BtnFav_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (m_viewModel.VideoInfo.ReqUser.Favorite != 1)
+            {
+                await m_viewModel.UpdateFav(m_viewModel.VideoInfo.Aid, true);
+            }
+        }
     }
 }

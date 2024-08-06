@@ -25,7 +25,7 @@ namespace BiliLite.Pages
         }
     }
 
-    public class PlayPage : BasePage
+    public class PlayPage : BasePage, IPlayPage
     {
         public PlayerControl Player { get; set; }
 
@@ -40,10 +40,76 @@ namespace BiliLite.Pages
             Player.PlayerInstance.Play();
         }
 
+        public void GotoLastVideo()
+        {
+            Player.GotoLastVideo();
+        }
+
+        public void GotoNextVideo()
+        {
+            Player.GotoNextVideo();
+        }
+
+        public void SlowDown()
+        {
+            Player.SlowDown();
+        }
+
+        public void FastUp()
+        {
+            Player.FastUp();
+        }
+
+        public void ToggleMute()
+        {
+            Player.ToggleMute();
+        }
+
+        public void StartHighRateSpeedPlay()
+        {
+            Player.StartHighRateSpeedPlay();
+        }
+
+        public void StopHighRateSpeedPlay()
+        {
+            Player.StopHighRateSpeedPlay();
+        }
+
         public void PositionBack()
         {
             Player.PositionBack();
         }
+
+        public void PositionForward(double progress = 3)
+        {
+            Player.PositionForward(progress);
+        }
+
+        public void ToggleMiniWindows()
+        {
+            Player.ToggleMiniWindows();
+        }
+
+        public void ToggleFullWindow()
+        {
+            Player.ToggleFullWindow();
+        }
+
+        public void ToggleFullscreen()
+        {
+            Player.ToggleFullscreen();
+        }
+
+        public async Task CaptureVideo()
+        {
+            await Player.CaptureVideo();
+        }
+
+        public void ToggleDanmakuDisplay()
+        {
+            Player.ToggleDanmakuDisplay();
+        }
+
         public void AddVolume()
         {
             Player.AddVolume();
@@ -86,4 +152,28 @@ namespace BiliLite.Pages
         }
     }
 
+    public interface IPlayPage
+    {
+        public bool IsPlaying { get; }
+
+        public void Pause();
+
+        public void Play();
+
+        public void AddVolume();
+
+        public void MinusVolume();
+
+        public void CancelFullscreen();
+
+        public Task CaptureVideo();
+
+        public void ToggleDanmakuDisplay();
+
+        public void ToggleFullscreen();
+
+        public void ToggleFullWindow();
+
+        public void ToggleMiniWindows();
+    }
 }

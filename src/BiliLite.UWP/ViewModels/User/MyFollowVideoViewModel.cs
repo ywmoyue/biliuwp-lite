@@ -237,11 +237,11 @@ namespace BiliLite.ViewModels.User
                 var result = await m_favoriteApi.Sort(favIds).Request();
                 if (!result.status)
                 {
-                    throw new CustomizedErrorException(result.message);
+                    throw new CustomizedErrorException(result.code + ":" + result.message);
                 }
 
                 var data = await result.GetData<object>();
-                if (!data.success) throw new CustomizedErrorException(result.message);
+                if (!data.success) throw new CustomizedErrorException(data.code + ":" + data.message);
                 Notify.ShowMessageToast("排序成功");
             }
             catch (Exception ex)

@@ -48,25 +48,20 @@
         <TextBlock  Margin="0 16 0 8" FontSize="16" Visibility="Collapsed">使用FFmpeg播放时硬解视频</TextBlock>
         <ToggleSwitch x:Name="swHardwareDecode" Visibility="Collapsed"></ToggleSwitch>-->
 
-        <!--<controls:SettingsCard Header="视频默认倍速"
+        <controls:SettingsCard Header="视频默认倍速"
                                Description="视频默认倍速">
             <controls:SettingsCard.HeaderIcon>
                 <font:FontAwesome Icon="Solid_AngleDoubleRight"></font:FontAwesome>
             </controls:SettingsCard.HeaderIcon>
-            <ComboBox x:Name="cbVideoSpeed" SelectedIndex="0" MinWidth="200">
-                <ComboBox.Items>
-                    <ComboBoxItem Content="2.0x" ></ComboBoxItem>
-                    <ComboBoxItem Content="1.5x" ></ComboBoxItem>
-                    <ComboBoxItem Content="1.25x" ></ComboBoxItem>
-                    <ComboBoxItem Content="1.0x"></ComboBoxItem>
-                    <ComboBoxItem Content="0.75x" ></ComboBoxItem>
-                    <ComboBoxItem Content="0.5x" ></ComboBoxItem>
-                </ComboBox.Items>
+            <ComboBox x:Name="cbVideoSpeed" SelectedIndex="0" MinWidth="200"
+                      SelectedValuePath="Value"
+                      DisplayMemberPath="Content"
+                      ItemsSource="{x:Bind m_playSpeedMenuService.MenuItems}">
             </ComboBox>
-        </controls:SettingsCard>-->
+        </controls:SettingsCard>
 
         <controls:SettingsCard Header="播放完成自动切换下一P"
-                               Description="播放完成自动切换下一P">
+                               Description="分P视频播放完成自动切换下一P">
             <controls:SettingsCard.HeaderIcon>
                 <font:FontAwesome Icon="Solid_StepForward"></font:FontAwesome>
             </controls:SettingsCard.HeaderIcon>
@@ -114,16 +109,16 @@
         </controls:SettingsCard>
 
         <controls:SettingsCard Header="播放器方向键右键行为"
-                               Description="设置播放器方向键右键行为">
+                               Description="已弃用，请前往快捷键设置页进行设置">
             <controls:SettingsCard.HeaderIcon>
                 <font:FontAwesome Icon="Solid_ArrowRight"></font:FontAwesome>
             </controls:SettingsCard.HeaderIcon>
-            <ComboBox x:Name="cbPlayerKeyRightAction" SelectedIndex="0" MinWidth="200">
+            <!--<ComboBox x:Name="cbPlayerKeyRightAction" SelectedIndex="0" MinWidth="200">
                 <ComboBox.Items>
                     <ComboBoxItem Content="操作进度条" ></ComboBoxItem>
                     <ComboBoxItem Content="倍速播放" ></ComboBoxItem>
                 </ComboBox.Items>
-            </ComboBox>
+            </ComboBox>-->
         </controls:SettingsCard>
 
         <controls:SettingsExpander Header="播放器按住手势行为"

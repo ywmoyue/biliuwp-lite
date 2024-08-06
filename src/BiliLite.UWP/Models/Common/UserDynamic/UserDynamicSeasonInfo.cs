@@ -16,12 +16,13 @@ namespace BiliLite.Models.Common.UserDynamic
 
         public UserDynamicSeasonNewEpInfo NewEp { get; set; }
 
-        public DynamicV2ItemViewModel ToDynamicItem()
+        public DynamicV2ItemViewModel ToDynamicItem(IUserDynamicCommands parent)
         {
             var item = new DynamicV2ItemViewModel()
             {
                 CardType = Constants.DynamicTypes.CUSTOM_SEASON,
-                Season = this
+                Season = this,
+                Parent = parent,
             };
             return item;
         }

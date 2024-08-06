@@ -21,7 +21,13 @@
     <StackPanel x:Name="FilterSettingsControlGrid" Orientation="Vertical"
                 MaxWidth="1200">
         <ListView ItemsSource="{x:Bind m_viewModel.RecommendFilterRules,Mode=OneWay}"
-                  x:Name="RecommendFilterRuleListView">
+                  x:Name="RecommendFilterRuleListView"
+                  SelectionMode="None">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.Header>
                 <Grid Margin="16 0">
                     <TextBlock VerticalAlignment="Center">推荐页过滤</TextBlock>
@@ -30,7 +36,7 @@
             </ListView.Header>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="settings:FilterRuleViewModel">
-                    <controls:SettingsExpander Header="{x:Bind Rule,Mode=OneWay}">
+                    <controls:SettingsExpander Header="{x:Bind Rule,Mode=OneWay}" >
                         <ToggleSwitch IsOn="{x:Bind Enable,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Toggled="OnFilterRuleChanged"></ToggleSwitch>
                         <controls:SettingsExpander.Items>
                             <controls:SettingsCard Header="过滤值"
@@ -69,7 +75,13 @@
                   BorderBrush="{ThemeResource SeparatorColor}"
                   Margin="0 16 0 0"
                   Padding="0 8 0 0"
-                  x:Name="SearchFilterRuleListView">
+                  x:Name="SearchFilterRuleListView"
+                  SelectionMode="None">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.Header>
                 <Grid Margin="16 0">
                     <TextBlock VerticalAlignment="Center">搜索页过滤</TextBlock>
@@ -117,7 +129,13 @@
                   BorderBrush="{ThemeResource SeparatorColor}"
                   Margin="0 16 0 0"
                   Padding="0 8 0 0"
-                  x:Name="DynamicFilterRuleListView">
+                  x:Name="DynamicFilterRuleListView"
+                  SelectionMode="None">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.Header>
                 <Grid Margin="16 0">
                     <TextBlock VerticalAlignment="Center">动态页过滤</TextBlock>

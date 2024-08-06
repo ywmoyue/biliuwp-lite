@@ -15,7 +15,7 @@
 
     <StackPanel
         MaxWidth="1200">
-        <controls:SettingsCard Header="优先视频编码"
+        <controls:SettingsCard Header="应用程序主题"
                                Description="选择要显示的应用主题">
             <controls:SettingsCard.HeaderIcon>
                 <font:FontAwesome Icon="Solid_FillDrip"></font:FontAwesome>
@@ -138,6 +138,14 @@
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
+
+        <controls:SettingsCard Header="显示推荐页横幅"
+                               Description="是否显示推荐页横幅">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_AlignRight"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch x:Name="SwitchDisplayRecommendBanner"></ToggleSwitch>
+        </controls:SettingsCard>
 
         <controls:SettingsExpander Header="右侧视频详情"
                                    Description="自定义视频详情页右侧视频详情样式"
@@ -281,6 +289,15 @@
                     <ComboBoxItem>无操作</ComboBoxItem>
                 </ComboBox.Items>
             </ComboBox>
+        </controls:SettingsCard>
+
+        <controls:SettingsCard Header="快速收藏"
+                               Description="点击收藏按钮直接收藏视频到默认收藏夹">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Heart"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch x:Name="SwitchQuickDoFav" >
+            </ToggleSwitch>
         </controls:SettingsCard>
 
         <controls:SettingsCard Header="使用浏览器打开无法处理的链接"

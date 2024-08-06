@@ -9,11 +9,14 @@ namespace BiliLite.Models.Attributes
             Type = typeof(string);
         }
 
-        public SettingKeyAttribute(Type type)
+        public SettingKeyAttribute(Type type, bool useSqlDb = false)
         {
             Type = type;
+            UseSqlDb = useSqlDb;
         }
 
         public Type Type { get; set; }
+
+        public bool UseSqlDb { get; set; }
     }
 }

@@ -25,7 +25,7 @@ namespace BiliLite.Models.Common.UserDynamic
 
         public NavDynArticleAuthor Author { get; set; }
 
-        public DynamicV2ItemViewModel ToDynamicItem()
+        public DynamicV2ItemViewModel ToDynamicItem(IUserDynamicCommands parent)
         {
             var item = new DynamicV2ItemViewModel()
             {
@@ -52,7 +52,8 @@ namespace BiliLite.Models.Common.UserDynamic
                 Extend = new Extend()
                 {
                     DynIdStr = Id
-                }
+                },
+                Parent = parent,
             };
             return item;
         }

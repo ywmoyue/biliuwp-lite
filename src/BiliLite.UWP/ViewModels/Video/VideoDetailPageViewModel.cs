@@ -608,7 +608,7 @@ namespace BiliLite.Modules
             }
         }
 
-        public async Task UpdateFav(string avid)
+        public async Task UpdateFav(string avid, bool favDefault = false)
         {
             if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
             {
@@ -618,7 +618,12 @@ namespace BiliLite.Modules
 
             try
             {
-                var newIdList = MyFavorite.Where(x => x.IsFav).Select(x => x.Id).ToList();
+                var newIdList = new List<string>();
+
+                if (!favDefault)
+                    newIdList = MyFavorite.Where(x => x.IsFav).Select(x => x.Id).ToList();
+                else
+                    newIdList.Add(MyFavorite.First(x => x.Title == "默认收藏夹").Id);
 
                 var delIdList = ExistFavIdList.Except(newIdList).ToList();
                 var addIdList = newIdList.Except(ExistFavIdList).ToList();

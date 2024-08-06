@@ -3,11 +3,11 @@ using BiliLite.Pages;
 
 namespace BiliLite.Models.Functions
 {
-    public class RefreshShortcutFunction : IShortcutFunction
+    public class RefreshShortcutFunction : BaseShortcutFunction
     {
-        public string Name { get; } = "刷新";
+        public override string Name { get; } = "刷新";
 
-        public async Task Action(object param)
+        public override async Task Action(object param)
         {
             if (!(param is IRefreshablePage page)) return;
             await page.Refresh();
