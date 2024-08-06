@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.System;
 
 namespace BiliLite.Models.Functions
 {
@@ -18,7 +17,7 @@ namespace BiliLite.Models.Functions
 
         public bool Canceled { get; set; }
 
-        public List<VirtualKey> Keys { get; set; }
+        public List<InputKey> Keys { get; set; }
 
         public Task Action(object param);
 

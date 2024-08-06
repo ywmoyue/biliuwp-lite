@@ -26,7 +26,7 @@ namespace BiliLite.Models.Functions
 
         public bool Canceled { get; set; }
 
-        public List<VirtualKey> Keys { get; set; }
+        public List<InputKey> Keys { get; set; }
 
         public virtual IShortcutFunction ReleaseFunction { get; } = null;
     }
@@ -39,141 +39,149 @@ namespace BiliLite.Models.Functions
             {
                 new PlayPauseFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.Space }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.Space) }
                 },
                 new ToggleFullscreenShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.F11 }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.F11) }
                 },
                 new ToggleFullscreenShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.F }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.F) }
                 },
                 new ToggleFullscreenShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.Enter }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.Enter) }
                 },
                 new CancelFullscreenFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.Escape }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.Escape) }
                 },
                 new ToggleFullWindowShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.F12 }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.F12) }
                 },
                 new ToggleFullWindowShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.W }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.W) }
                 },
                 new LargePositionForwardShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.O }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.O) }
                 },
                 new LargePositionForwardShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.P }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.P) }
                 },
                 new AddVolumeFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.Up }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.Up) }
                 },
                 new MinusVolumeFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.Down }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.Down) }
                 },
                 new PositionBackFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.Left }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.Left) }
                 },
                 new PositionBackPressShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.Left }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.Left) }
                 },
                 new PositionForwardShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() {  VirtualKey.Right },
+                    Keys = new List<InputKey>() {  new InputKey(VirtualKey.Right) },
                     NeedKeyUp = true,
                 },
                 new PositionForwardPressShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() {  VirtualKey.Right },
+                    Keys = new List<InputKey>() {  new InputKey(VirtualKey.Right) },
                     Enable = false,
                 },
                 new StartHighRateSpeedPlayShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.Right },
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.Right) },
                 },
                 new CaptureVideoShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.F10 }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.F10) }
                 },
                 new ToggleDanmakuDisplayShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.F9 }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.F9) }
                 },
                 new GotoLastVideoFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.Z }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.Z) }
                 },
                 new GotoLastVideoFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.N }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.N) }
                 },
                 new GotoLastVideoFunction()
                 {
-                    Keys = new List<VirtualKey>() { (VirtualKey)188 }
+                    Keys = new List<InputKey>() { new InputKey((VirtualKey)188) }
                 },
                 new GotoNextVideoFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.X }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.X) }
                 },
                 new GotoNextVideoFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.M }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.M) }
                 },
                 new GotoNextVideoFunction()
                 {
-                    Keys = new List<VirtualKey>() { (VirtualKey)190 }
+                    Keys = new List<InputKey>() { new InputKey((VirtualKey)190) }
                 },
                 new ToggleDanmakuDisplayShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.D }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.D) }
                 },
                 new SlowDownShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.F1 }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.F1) }
                 },
                 new SlowDownShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() { (VirtualKey)186 }
+                    Keys = new List<InputKey>() { new InputKey((VirtualKey)186) }
                 },
                 new FastUpShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.F2 }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.F2) }
                 },
                 new FastUpShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() { (VirtualKey)222 }
+                    Keys = new List<InputKey>() { new InputKey((VirtualKey)222) }
                 },
                 new RefreshShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.Control, VirtualKey.R}
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.Control), new InputKey(VirtualKey.R) }
                 },
                 new RefreshShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.F5 }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.F5) }
                 },
                 new ToggleMiniWindowShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.F8 }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.F8) }
                 },
                 new ToggleMiniWindowShortcutFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.T }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.T) }
                 },
                 new SaveFunction()
                 {
-                    Keys = new List<VirtualKey>() { VirtualKey.Control, VirtualKey.S }
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.Control), new InputKey(VirtualKey.S) }
+                },
+                new NewTapFunction()
+                {
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.Control), new InputKey(VirtualKey.T) }
+                },
+                new CloseTapFunction()
+                {
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.Control), new InputKey(VirtualKey.W) }
                 },
             };
         }

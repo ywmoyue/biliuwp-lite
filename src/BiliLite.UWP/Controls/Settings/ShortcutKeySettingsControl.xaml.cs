@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using AutoMapper;
@@ -20,6 +19,7 @@ namespace BiliLite.Controls.Settings
         private readonly ShortcutKeyService m_shortcutKeyService;
         private readonly IMapper m_mapper;
         private ShortcutFunctionViewModel m_recordingKeysShortcutFunction;
+        private bool m_isRecording;
 
         public ShortcutKeySettingsControl()
         {
@@ -31,6 +31,14 @@ namespace BiliLite.Controls.Settings
             this.InitializeComponent();
 
             m_shortcutKeyService.OnRecordKeyDown += ShortcutKeyService_OnRecordKeyDown;
+            m_shortcutKeyService.OnRecordStoped += ShortcutKeyService_OnRecordStoped; ;
+        }
+
+        private async void ShortcutKeyService_OnRecordStoped(object sender, System.EventArgs e)
+        {
+            // 延迟一段时间避免重复进入录制
+            await Task.Delay(50);
+            m_isRecording = false;
         }
 
         private void UpdateShortcutFunctions(ShortcutFunctionViewModel viewModel)
@@ -39,7 +47,7 @@ namespace BiliLite.Controls.Settings
             m_shortcutKeyService.UpdateShortcutFunction(shortcutFunction);
         }
 
-        private void ShortcutKeyService_OnRecordKeyDown(object sender, Windows.System.VirtualKey e)
+        private void ShortcutKeyService_OnRecordKeyDown(object sender, InputKey e)
         {
             m_recordingKeysShortcutFunction.Keys.Add(e);
             m_recordingKeysShortcutFunction.UpdateKeysString();
@@ -48,14 +56,16 @@ namespace BiliLite.Controls.Settings
 
         private void BtnRecordKeys_OnClick(object sender, RoutedEventArgs e)
         {
+            if (m_isRecording) return;
             if (!(sender is Button { DataContext: ShortcutFunctionViewModel shortcutFunction }))
             {
                 return;
             }
 
             m_recordingKeysShortcutFunction = shortcutFunction;
-            m_recordingKeysShortcutFunction.Keys = new ObservableCollection<VirtualKey>();
+            m_recordingKeysShortcutFunction.Keys = new ObservableCollection<InputKey>();
             m_shortcutKeyService.StartRecord();
+            m_isRecording = true;
         }
 
         private void NumberBoxPressActionDelayTime_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)

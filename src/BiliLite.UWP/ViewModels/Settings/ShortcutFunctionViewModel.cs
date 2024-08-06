@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
 using BiliLite.ViewModels.Common;
-using Windows.System;
+using BiliLite.Models.Functions;
 using PropertyChanged;
 
 namespace BiliLite.ViewModels.Settings
@@ -24,7 +24,7 @@ namespace BiliLite.ViewModels.Settings
 
         public bool NeedKeyUp { get; set; } = false;
 
-        public ObservableCollection<VirtualKey> Keys { get; set; }
+        public ObservableCollection<InputKey> Keys { get; set; }
 
         [DependsOn(nameof(Keys))]
         public string KeysString

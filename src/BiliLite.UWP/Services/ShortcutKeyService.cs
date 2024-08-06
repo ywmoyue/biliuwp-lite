@@ -18,7 +18,7 @@ namespace BiliLite.Services
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private List<IShortcutFunction> m_shortcutKeys;
         private List<IShortcutFunction> m_releaseMapsCache;
-        private readonly Dictionary<VirtualKey, DateTimeOffset> m_keyDownTimeCache;
+        private readonly Dictionary<string, DateTimeOffset> m_keyDownTimeCache;
         private IMainPage m_mainPage;
         private bool m_recording = false;
         private readonly IMapper m_mapper;
@@ -29,12 +29,14 @@ namespace BiliLite.Services
         {
             m_mapper = mapper;
             m_settingSqlService = settingSqlService;
-            m_keyDownTimeCache = new Dictionary<VirtualKey, DateTimeOffset>();
+            m_keyDownTimeCache = new Dictionary<string, DateTimeOffset>();
             m_releaseMapsCache = new List<IShortcutFunction>();
             LoadShortcutFunctions();
         }
 
-        public event EventHandler<VirtualKey> OnRecordKeyDown;
+        public event EventHandler<InputKey> OnRecordKeyDown;
+
+        public event EventHandler OnRecordStoped;
 
         public List<IShortcutFunction> ShortcutFunctions => m_shortcutKeys;
 
@@ -64,12 +66,14 @@ namespace BiliLite.Services
         {
             Notify.ShowMessageToast("按键录制结束");
             m_recording = false;
+            OnRecordStoped?.Invoke(this,EventArgs.Empty);
         }
 
-        public async void HandleKeyDown(VirtualKey key)
+        public async void HandleKeyDown(VirtualKey virtualKey)
         {
-            _logger.Trace("key: " + key);
-            if (!m_keyDownTimeCache.TryAdd(key, DateTimeOffset.Now)) return;
+            var key = new InputKey(virtualKey);
+            _logger.Trace("key down: " + key);
+            if (!m_keyDownTimeCache.TryAdd(key.ToString(), DateTimeOffset.Now)) return;
 
             if (m_recording)
             {
@@ -80,9 +84,9 @@ namespace BiliLite.Services
             foreach (var shortcutKeyFunction in m_shortcutKeys.Where(x => !x.NeedKeyUp && x.Enable))
             {
                 var shortcutKeyCodes = shortcutKeyFunction.Keys;
-                if (shortcutKeyCodes.LastOrDefault() != key) continue;
+                if (!shortcutKeyCodes.LastOrDefault().Equals(key)) continue;
                 if (shortcutKeyCodes
-                        .Select(keyCode => Window.Current.CoreWindow.GetKeyState(keyCode))
+                        .Select(keyCode => Window.Current.CoreWindow.GetKeyState(key.BoardKey))
                         .Any(keyState => !keyState.HasFlag(CoreVirtualKeyStates.Down)))
                 {
                     continue;
@@ -126,11 +130,12 @@ namespace BiliLite.Services
             }
         }
 
-        public void HandleKeyUp(VirtualKey key)
+        public void HandleKeyUp(VirtualKey virtualKey)
         {
-            _logger.Trace("key: " + key);
-            if (!m_keyDownTimeCache.TryGetValue(key, out var keyDownTime)) return;
-            m_keyDownTimeCache.Remove(key);
+            var key = new InputKey(virtualKey);
+            _logger.Trace("key up: " + key);
+            if (!m_keyDownTimeCache.TryGetValue(key.ToString(), out var keyDownTime)) return;
+            m_keyDownTimeCache.Remove(key.ToString());
 
             if (m_recording)
             {
@@ -147,10 +152,10 @@ namespace BiliLite.Services
                 foreach (var shortcutKeyFunction in m_shortcutKeys.Where(x => x.NeedKeyUp && x.Enable))
                 {
                     var shortcutKeyCodes = shortcutKeyFunction.Keys;
-                    if (shortcutKeyCodes.LastOrDefault() != key) continue;
+                    if (!shortcutKeyCodes.LastOrDefault().Equals(key)) continue;
 
                     if (shortcutKeyCodes.Take(shortcutKeyCodes.Count - 1)
-                        .Select(keyCode => Window.Current.CoreWindow.GetKeyState(keyCode))
+                        .Select(keyCode => Window.Current.CoreWindow.GetKeyState(keyCode.BoardKey))
                         .Any(keyState => !keyState.HasFlag(CoreVirtualKeyStates.Down)))
                     {
                         continue;

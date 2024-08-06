@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Windows.System;
 
 namespace BiliLite.Models.Functions
 {
@@ -15,6 +14,6 @@ namespace BiliLite.Models.Functions
 
         public bool NeedKeyUp { get; set; } = false;
 
-        public List<VirtualKey> Keys { get; set; }
+        public List<InputKey> Keys { get; set; }
     }
 }

@@ -222,8 +222,11 @@
     <Compile Include="Models\Databases\SettingItem.cs" />
     <Compile Include="Models\Functions\BaseShortcutFunction.cs" />
     <Compile Include="Models\Functions\CancelFullscreenFunction.cs" />
+    <Compile Include="Models\Functions\CloseTapFunction.cs" />
     <Compile Include="Models\Functions\GotoNextVideoFunction.cs" />
     <Compile Include="Models\Functions\HighRateSpeedPlayShortcutFunction.cs" />
+    <Compile Include="Models\Functions\InputKey.cs" />
+    <Compile Include="Models\Functions\NewTapFunction.cs" />
     <Compile Include="Models\Functions\PositionBackPressShortcutFunction.cs" />
     <Compile Include="Models\Functions\PositionForwardPressShortcutFunction.cs" />
     <Compile Include="Models\Functions\LargePositionForwardShortcutFunction.cs" />
