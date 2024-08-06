@@ -45,6 +45,18 @@ namespace BiliLite.Models.Common
             public const string HOEM_ORDER = "homePageOrder";
 
             /// <summary>
+            /// 显示推荐页横幅
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string DISPLAY_RECOMMEND_BANNER = "DisplayRecommendBanner";
+
+            /// <summary>
+            /// 默认显示推荐页横幅
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_DISPLAY_RECOMMEND_BANNER = true;
+
+            /// <summary>
             /// 右侧详情宽度
             /// </summary>
             [SettingKey(typeof(double))]

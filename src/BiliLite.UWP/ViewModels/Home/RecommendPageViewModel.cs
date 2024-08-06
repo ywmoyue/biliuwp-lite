@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using BiliLite.Extensions;
+using BiliLite.Models.Common;
 using BiliLite.Models.Common.Recommend;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests;
@@ -13,6 +14,7 @@ using BiliLite.Modules;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using Newtonsoft.Json;
+using PropertyChanged;
 
 namespace BiliLite.ViewModels.Home
 {
@@ -50,6 +52,20 @@ namespace BiliLite.ViewModels.Home
         public ObservableCollection<RecommendBannerItemModel> Banner { get; set; }
 
         public ObservableCollection<RecommendItemModel> Items { get; set; }
+
+        [DependsOn(nameof(Banner))]
+        public bool ShowBanner
+        {
+            get
+            {
+                if (!SettingService.GetValue(SettingConstants.UI.DISPLAY_RECOMMEND_BANNER,
+                        SettingConstants.UI.DEFAULT_DISPLAY_RECOMMEND_BANNER))
+                {
+                    return false;
+                }
+                return Banner != null && Banner.Any();
+            }
+        }
 
         #endregion
 
@@ -89,7 +105,7 @@ namespace BiliLite.ViewModels.Home
         {
             try
             {
-                if (Banner == null && Banner.Count != 0) return;
+                if (Banner.Any()) return;
                 foreach (var item in banner.BannerItem)
                 {
                     if (item["type"].ToString() == "static")
@@ -101,6 +117,7 @@ namespace BiliLite.ViewModels.Home
                         Banner.Add(JsonConvert.DeserializeObject<RecommendBannerItemModel>(item["ad_banner"].ToString()));
                     }
                 }
+                Set(nameof(ShowBanner));
             }
             catch (Exception ex)
             {
@@ -197,7 +214,7 @@ namespace BiliLite.ViewModels.Home
                 Notify.ShowMessageToast("正在加载中....");
                 return;
             }
-            Banner = null;
+            // Banner = null;
             Items = null;
             await GetRecommend();
         }

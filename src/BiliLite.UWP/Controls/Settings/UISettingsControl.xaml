@@ -139,6 +139,14 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
+        <controls:SettingsCard Header="显示推荐页横幅"
+                               Description="是否显示推荐页横幅">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_AlignRight"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch x:Name="SwitchDisplayRecommendBanner"></ToggleSwitch>
+        </controls:SettingsCard>
+
         <controls:SettingsExpander Header="右侧视频详情"
                                    Description="自定义视频详情页右侧视频详情样式"
                                    IsExpanded="True">

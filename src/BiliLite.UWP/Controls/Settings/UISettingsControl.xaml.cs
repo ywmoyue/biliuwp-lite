@@ -91,6 +91,17 @@ namespace BiliLite.Controls.Settings
                 });
             });
 
+            // 显示推荐页横幅
+            SwitchDisplayRecommendBanner.IsOn = SettingService.GetValue(SettingConstants.UI.DISPLAY_RECOMMEND_BANNER, SettingConstants.UI.DEFAULT_DISPLAY_RECOMMEND_BANNER);
+            SwitchDisplayRecommendBanner.Loaded += (sender, e) =>
+            {
+                SwitchDisplayRecommendBanner.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.DISPLAY_RECOMMEND_BANNER, SwitchDisplayRecommendBanner.IsOn);
+
+                };
+            };
+
             //右侧详情宽度
             numRightWidth.Value = SettingService.GetValue<double>(SettingConstants.UI.RIGHT_DETAIL_WIDTH, 320);
             numRightWidth.Loaded += new RoutedEventHandler((sender, e) =>
