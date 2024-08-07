@@ -1,7 +1,7 @@
 {
-    "version": "4.7.0",
-    "version_num": 40700,
-    "version_desc": "更新内容:\r\n\r\n- 视频详情页播放列表功能补全：滚动到顶部、滚动到底部、滚动到当前视频 \r\n\r\n- 支持发送带图片评论，自己发送的评论点右键可删除  \r\n\r\n- 支持设置推荐页、搜索页、动态页内容过滤  \r\n\r\n- 调整视频详情页收藏菜单样式、支持鼠标中键侧键和Ctrl+S快捷关闭保存收藏选项 \r\n\r\n- 设置页设置项改用WinUI设置控件   \r\n\r\n- 修复动态中用户链接打开错误  \r\n\r\n- 修复视频点不喜欢报错  \r\n\r\n- 修复快捷键设置倍速报错  \r\n\r\n- 关闭X64架构的nativeToolchain编译选项，尝试修复二维码登录时打开应用就闪退问题  \r\n\r\n- 日志中错误信息内含敏感信息修复 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+    "version": "4.7.1",
+    "version_num": 40701,
+    "version_desc": "更新内容:\r\n\r\n- 播放器设置中播放模式增加播完暂停选项  \r\n\r\n- 支持按键快捷键自定义，支持区分设置按键点击行为和按住行为  \r\n\r\n- 添加 关闭推荐页顶部横版推广条 的选项  \r\n\r\n- 增加快速收藏设置项，默认启用快速收藏 \r\n\r\n- 引入SQLite数据库保存uwp无法保存的较大的数据 \r\n\r\n- 修复内容过滤设置规则项在Win10中样式错误 \r\n\r\n- 修复带播放列表的视频未打开过播放列表时播放结束闪退    \r\n\r\n- 修复在部分版本系统中导出设置功能无效 \r\n\r\n- 修复动态页专栏动态tab和追番追剧tab动态无法点击 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
     "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
     "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
