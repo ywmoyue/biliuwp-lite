@@ -94,9 +94,9 @@ namespace BiliLite.Services
 
                 if (shortcutKeyFunction.ReleaseFunction != null)
                 {
-                    shortcutKeyFunction.Canceled = false;
                     if (!m_releaseMapsCache.Contains(shortcutKeyFunction))
                     {
+                        shortcutKeyFunction.Canceled = false;
                         m_releaseMapsCache.Add(shortcutKeyFunction);
                         {
                             try
