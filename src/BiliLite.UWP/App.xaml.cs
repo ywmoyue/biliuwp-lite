@@ -17,6 +17,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Pages;
 using BiliLite.ViewModels.Download;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -65,7 +66,7 @@ namespace BiliLite
             }
             else
             {
-                logger.Log("程序运行出现错误:"+e.ExceptionObject, LogType.Error);
+                logger.Log("程序运行出现错误:" + e.ExceptionObject, LogType.Error);
             }
         }
 
@@ -176,27 +177,12 @@ namespace BiliLite
             {
                 if (rootFrame.Content == null)
                 {
-                    // 当导航堆栈尚未还原时，导航到第一页，
-                    // 并通过将所需信息作为导航参数传入来配置
-                    // 参数
-
-                    var mode = SettingService.GetValue<int>(SettingConstants.UI.DISPLAY_MODE, 0);
-                    if (mode == 0)
-                    {
-                        rootFrame.Navigate(typeof(MainPage), arguments);
-                    }
-                    else
-                    {
-                        rootFrame.Navigate(typeof(NoTabMainPage), arguments);
-                    }
+                    var mainPage = ServiceProvider.GetRequiredService<IMainPage>();
+                    rootFrame.Content = mainPage;
                 }
-                else
+                if (arguments != null && !string.IsNullOrEmpty(arguments.ToString()))
                 {
-                    if (arguments != null && !string.IsNullOrEmpty(arguments.ToString()))
-                    {
-                        await MessageCenter.HandelUrl(arguments.ToString());
-                    }
-
+                    await MessageCenter.HandelUrl(arguments.ToString());
                 }
                 // 确保当前窗口处于活动状态
                 Window.Current.Activate();
@@ -296,7 +282,7 @@ namespace BiliLite
             }
             catch (Exception ex)
             {
-                logger.Error("Start Host Error",ex);
+                logger.Error("Start Host Error", ex);
             }
         }
     }
