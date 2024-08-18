@@ -211,8 +211,32 @@
                                 <TextBlock FontSize="15">视频<Run Foreground="Gray" FontSize="12" Text="{x:Bind Path=m_viewModel.UserInfo.Stat.Video,Mode=OneWay}"/></TextBlock>
                             </PivotItem.Header>
                             <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                </Grid.RowDefinitions>
+
+                                <Grid Margin="16 8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Orientation="Horizontal">
+                                        <ComboBox DisplayMemberPath="Name" ItemsSource="{x:Bind Path=m_userSubmitVideoViewModel.Tlist,Mode=OneWay}" SelectionChanged="ComboBox_SelectionChanged" SelectedItem="{x:Bind Path=m_userSubmitVideoViewModel.SelectTid,Mode=TwoWay}">
+
+                                        </ComboBox>
+                                        <ComboBox x:Name="comVideoOrder" SelectionChanged="comVideoOrder_SelectionChanged" Margin="8 0"  SelectedIndex="{x:Bind Path=m_userSubmitVideoViewModel.SelectOrder,Mode=TwoWay}">
+                                            <ComboBoxItem>最新发布</ComboBoxItem>
+                                            <ComboBoxItem>最多播放</ComboBoxItem>
+                                        </ComboBox>
+                                    </StackPanel>
+                                    <Button Grid.Column="1" Margin="0 0 8 0" x:Name="BtnPlayAll" Tapped="BtnPlayAll_OnTapped">全部播放</Button>
+                                    <AutoSuggestBox Grid.Column="2" Text="{x:Bind Path=m_userSubmitVideoViewModel.Keyword,Mode=TwoWay}" x:Name="searchVideo" QuerySubmitted="searchVideo_QuerySubmitted" QueryIcon="Find" PlaceholderText="搜索视频" Width="160" HorizontalAlignment="Right"></AutoSuggestBox>
+                                </Grid>
                                 <control:MyAdaptiveGridView
                                     Padding="12 8" 
+                                    Grid.Row="1"
                                     ItemHeight="100" 
                                     DesiredWidth="600" 
                                     StretchContentForSingleRow="False" 
@@ -224,26 +248,6 @@
                                     ItemsSource="{x:Bind Path=m_userSubmitVideoViewModel.SubmitVideoItems,Mode=OneWay}"
                                     ItemClick="SubmitVideo_ItemClick"
                                     OneRowModeEnabled="False">
-                                    <toolkit:AdaptiveGridView.Header>
-                                        <Grid Margin="4 8">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                                                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                                            </Grid.ColumnDefinitions>
-                                            <StackPanel Orientation="Horizontal">
-                                                <ComboBox DisplayMemberPath="Name" ItemsSource="{x:Bind Path=m_userSubmitVideoViewModel.Tlist,Mode=OneWay}" SelectionChanged="ComboBox_SelectionChanged" SelectedItem="{x:Bind Path=m_userSubmitVideoViewModel.SelectTid,Mode=TwoWay}">
-
-                                                </ComboBox>
-                                                <ComboBox x:Name="comVideoOrder" SelectionChanged="comVideoOrder_SelectionChanged" Margin="8 0"  SelectedIndex="{x:Bind Path=m_userSubmitVideoViewModel.SelectOrder,Mode=TwoWay}">
-                                                    <ComboBoxItem>最新发布</ComboBoxItem>
-                                                    <ComboBoxItem>最多播放</ComboBoxItem>
-                                                </ComboBox>
-                                            </StackPanel>
-                                            <Button Grid.Column="1" Margin="0 0 8 0" x:Name="BtnPlayAll" Tapped="BtnPlayAll_OnTapped">全部播放</Button>
-                                            <AutoSuggestBox Grid.Column="2" Text="{x:Bind Path=m_userSubmitVideoViewModel.Keyword,Mode=TwoWay}" x:Name="searchVideo" QuerySubmitted="searchVideo_QuerySubmitted" QueryIcon="Find" PlaceholderText="搜索视频" Width="160" HorizontalAlignment="Right"></AutoSuggestBox>
-                                        </Grid>
-                                    </toolkit:AdaptiveGridView.Header>
                                     <toolkit:AdaptiveGridView.ItemContainerStyle>
                                         <Style TargetType="GridViewItem">
                                             <Setter Property="Margin" Value="4"></Setter>
@@ -288,8 +292,10 @@
                                         </StackPanel>
                                     </toolkit:AdaptiveGridView.Footer>
                                 </control:MyAdaptiveGridView>
-                                <TextBlock Visibility="{x:Bind Path=m_userSubmitVideoViewModel.Nothing,Mode=OneWay}" Text="这里什么都没有呢..." Foreground="Gray" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
-                                <control:RoundButton x:Name="btnRefresh" Command="{x:Bind Path=m_userSubmitVideoViewModel.RefreshSubmitVideoCommand}"  VerticalAlignment="Bottom" Padding="12" Margin="12" HorizontalAlignment="Right">
+                                <TextBlock
+                                    Grid.Row="1" Visibility="{x:Bind Path=m_userSubmitVideoViewModel.Nothing,Mode=OneWay}" Text="这里什么都没有呢..." Foreground="Gray" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                                <control:RoundButton
+                                    Grid.Row="1" x:Name="btnRefresh" Command="{x:Bind Path=m_userSubmitVideoViewModel.RefreshSubmitVideoCommand}"  VerticalAlignment="Bottom" Padding="12" Margin="12" HorizontalAlignment="Right">
                                     <SymbolIcon Symbol="Refresh" Foreground="White"></SymbolIcon>
                                 </control:RoundButton>
                             </Grid>
@@ -516,8 +522,25 @@
                                 <TextBlock FontSize="15">关注<Run Foreground="Gray" FontSize="12" Text="{x:Bind Path=m_viewModel.UserInfo.Stat.Attention,Mode=OneWay}"/></TextBlock>
                             </PivotItem.Header>
                             <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid Margin="16 8" x:Name="followHeader">
+                                    <StackPanel Orientation="Horizontal">
+                                        <ComboBox DisplayMemberPath="Name" ItemsSource="{x:Bind Path=followVM.Tlist,Mode=OneWay}" SelectionChanged="ComboBox_SelectionChanged_1" SelectedItem="{x:Bind Path=followVM.SelectTid,Mode=TwoWay}">
+
+                                        </ComboBox>
+                                        <ComboBox x:Name="comFollowOrder" SelectionChanged="comFollowOrder_SelectionChanged" Margin="8 0"  SelectedIndex="{x:Bind Path=followVM.SelectOrder,Mode=TwoWay}">
+                                            <ComboBoxItem>关注时间</ComboBoxItem>
+                                            <ComboBoxItem>最常访问</ComboBoxItem>
+                                        </ComboBox>
+                                    </StackPanel>
+                                    <AutoSuggestBox Text="{x:Bind Path=followVM.Keyword,Mode=TwoWay}" x:Name="searchFollow"  QuerySubmitted="searchFollow_QuerySubmitted" QueryIcon="Find" PlaceholderText="搜索关注的人" Width="160" HorizontalAlignment="Right"></AutoSuggestBox>
+                                </Grid>
                                 <control:MyAdaptiveGridView
-                                    Padding="12 8" 
+                                    Padding="12 8"
+                                    Grid.Row="1"
                                     DesiredWidth="600" 
                                     StretchContentForSingleRow="False" 
                                     SelectionMode="None" 
@@ -529,22 +552,6 @@
                                     ItemClick="UserList_ItemClick"
                                     ItemTemplate="{StaticResource UserTpl}"
                                     OneRowModeEnabled="False">
-                                    <toolkit:AdaptiveGridView.Header>
-                                        <Grid Margin="4 8" x:Name="followHeader">
-                                            <StackPanel Orientation="Horizontal">
-                                                <ComboBox DisplayMemberPath="Name" ItemsSource="{x:Bind Path=followVM.Tlist,Mode=OneWay}" SelectionChanged="ComboBox_SelectionChanged_1" SelectedItem="{x:Bind Path=followVM.SelectTid,Mode=TwoWay}">
-
-                                                </ComboBox>
-                                                <ComboBox x:Name="comFollowOrder" SelectionChanged="comFollowOrder_SelectionChanged" Margin="8 0"  SelectedIndex="{x:Bind Path=followVM.SelectOrder,Mode=TwoWay}">
-                                                    <ComboBoxItem>关注时间</ComboBoxItem>
-                                                    <ComboBoxItem>最常访问</ComboBoxItem>
-                                                 
-
-                                                </ComboBox>
-                                            </StackPanel>
-                                            <AutoSuggestBox Text="{x:Bind Path=followVM.Keyword,Mode=TwoWay}" x:Name="searchFollow"  QuerySubmitted="searchFollow_QuerySubmitted" QueryIcon="Find" PlaceholderText="搜索关注的人" Width="160" HorizontalAlignment="Right"></AutoSuggestBox>
-                                        </Grid>
-                                    </toolkit:AdaptiveGridView.Header>
                                     <toolkit:AdaptiveGridView.ItemContainerStyle>
                                         <Style TargetType="GridViewItem">
                                             <Setter Property="Margin" Value="4"></Setter>
@@ -560,8 +567,10 @@
                                         </StackPanel>
                                     </toolkit:AdaptiveGridView.Footer>
                                 </control:MyAdaptiveGridView>
-                                <TextBlock Visibility="{x:Bind Path=followVM.Nothing,Mode=OneWay}" Text="这里什么都没有呢..." Foreground="Gray" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
-                                <control:RoundButton  Command="{x:Bind Path=followVM.RefreshCommand}"  VerticalAlignment="Bottom" Padding="12" Margin="12" HorizontalAlignment="Right">
+                                <TextBlock
+                                    Grid.Row="1" Visibility="{x:Bind Path=followVM.Nothing,Mode=OneWay}" Text="这里什么都没有呢..." Foreground="Gray" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                                <control:RoundButton
+                                    Grid.Row="1"  Command="{x:Bind Path=followVM.RefreshCommand}"  VerticalAlignment="Bottom" Padding="12" Margin="12" HorizontalAlignment="Right">
                                     <SymbolIcon Symbol="Refresh" Foreground="White"></SymbolIcon>
                                 </control:RoundButton>
                             </Grid>
