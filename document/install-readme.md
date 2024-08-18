@@ -2,10 +2,10 @@
 
 
 # Biliuwp-lite安装教程
-- [Windows10 安装教程](#Windows10)
-- [Windows11 安装教程](#Windows11)
-- [常见问题](#其他问题)
-  - [网络/代理问题](#网络/代理问题)
+- [Windows10 安装教程](Windows10)
+- [Windows11 安装教程](Windows11)
+- [常见问题](其他问题)
+  - [网络/代理问题](网络/代理问题)
 ## 安装要求系统版本信息
 
 - Windows10 1903及以上
