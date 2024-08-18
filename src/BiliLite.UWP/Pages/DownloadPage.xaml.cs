@@ -173,7 +173,7 @@ namespace BiliLite.Pages
             }
             try
             {
-                var folder = await StorageFolder.GetFolderFromPathAsync(item.Path);
+                var folder = await StorageFolder.GetFolderFromPathAsync(item.FilePath);
                 await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
                 data.Epsidoes.Remove(item);
             }
@@ -187,7 +187,7 @@ namespace BiliLite.Pages
         private async void btnEpisodesFolder_Click(object sender, RoutedEventArgs e)
         {
             var item = (sender as AppBarButton).DataContext as DownloadedSubItem;
-            await Launcher.LaunchFolderPathAsync(item.Path);
+            await Launcher.LaunchFolderPathAsync(item.FilePath);
         }
 
         private void btnMenuPlay_Click(object sender, RoutedEventArgs e)
@@ -284,11 +284,11 @@ namespace BiliLite.Pages
                 try
                 {
                     var toSimplified = SettingService.GetValue<bool>(SettingConstants.Roaming.TO_SIMPLIFIED, true);
-                    var folder = await StorageFolder.GetFolderFromPathAsync(item.Path);
+                    var folder = await StorageFolder.GetFolderFromPathAsync(item.FilePath);
                     foreach (var subtitle in item.SubtitlePath)
                     {
                         var outSrtFile = await folder.CreateFileAsync(subtitle.Name + ".srt", CreationCollisionOption.ReplaceExisting);
-                        var subtitleFile = await StorageFile.GetFileFromPathAsync(Path.Combine(item.Path, subtitle.Url));
+                        var subtitleFile = await StorageFile.GetFileFromPathAsync(Path.Combine(item.FilePath, subtitle.Url));
                         var content = await FileIO.ReadTextAsync(subtitleFile);
                         var result = content.CcConvertToSrt(toSimplified && subtitle.Name.Contains("繁体"));
                         await FileIO.WriteTextAsync(outSrtFile, result);
