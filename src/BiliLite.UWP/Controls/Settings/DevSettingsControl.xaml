@@ -15,9 +15,10 @@
 
     <StackPanel Orientation="Vertical"
                 MaxWidth="1200">
-        <controls:SettingsCard>
+        <controls:SettingsCard
+            Description="需要定位闪退问题时，请将日志级别设置为Trace">
             <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Broom"></font:FontAwesome>
+                <font:FontAwesome Icon="Solid_FileCode"></font:FontAwesome>
             </controls:SettingsCard.HeaderIcon>
             <controls:SettingsCard.Header>
                 <Button Click="BtnOpenLogFolder_OnClick">打开日志文件夹</Button>
@@ -49,7 +50,7 @@
         </controls:SettingsCard>
 
         <controls:SettingsCard Header="日志级别"
-                               Description="需要定位问题时，请设置为Trace级别">
+                               Description="需要定位闪退问题时，请设置为Trace级别">
             <controls:SettingsCard.HeaderIcon>
                 <font:FontAwesome Icon="Solid_FileMedical"></font:FontAwesome>
             </controls:SettingsCard.HeaderIcon>
