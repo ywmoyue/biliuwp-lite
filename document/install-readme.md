@@ -72,13 +72,13 @@
 
 ![](./_img/install-msix.drawio.png)
 
-##其他问题：
+## 其他问题：
 ### 网络/代理问题
 1. 脚本安装后无法在 Clash For Windows<sup>1</sup> 中解除对此UWP应用的联网限制
    - 可尝试再脚本安装后再使用`.msix`安装包包 Reinstall 一遍（此解决方案仅限 Windows11, WIndows10 未经测试）
    - 如有更好解决方案可[点此前往 Github](https://github.com/ywmoyue/biliuwp-lite/issues/new/choose)提交 issue
   
 ---
-  ####注1: [Clash For Windows](https://github.com/Z-Siqi/Clash-for-Windows_Chinese) 是一款基于Clash核心的图形界面代理软件，它通过提供一个友好的界面来帮助你简单配置和管理网络代理，让你可以更自由、灵活地浏览全球互联网内容。
+  #### 注1: [Clash For Windows](https://github.com/Z-Siqi/Clash-for-Windows_Chinese) 是一款基于Clash核心的图形界面代理软件，它通过提供一个友好的界面来帮助你简单配置和管理网络代理，让你可以更自由、灵活地浏览全球互联网内容。
 
 
