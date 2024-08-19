@@ -1,5 +1,5 @@
-<link rel="stylesheet" href="[/css/glyphs/glyphs.css?v=N9jMfMIoO_s7OATN0j5LYqmO9MCqHDjfpaUV2RuaEy8](https://support.microsoft.com/css/glyphs/glyphs.css?v=N9jMfMIoO_s7OATN0j5LYqmO9MCqHDjfpaUV2RuaEy8)"> <!-- <p>先别删这行，在测试显示windowslogo</p> -->
-
+<link rel="stylesheet" href="https://support.microsoft.com/css/glyphs/glyphs.css?v=N9jMfMIoO_s7OATN0j5LYqmO9MCqHDjfpaUV2RuaEy8"/> <!-- <p>先别删这行，在测试显示windowslogo</p> -->
+<link rel="stylesheet" href="https://support.microsoft.com/css/fonts/site-fonts.css?v=4M_1wOASateOs9zdphCtIqMvtKo366Gf6pkOjDqzkYo">
 
 # Biliuwp-lite安装教程
 - [Windows10 安装教程](Windows10)
@@ -17,7 +17,7 @@
 
 ### 启用开发者模式
 
-1. 点<kbd>Windows</kbd><span class="icon-fluent icon-windowslogo" aria-hidden="true"></span>+<kbd>I</kbd>键打开 `Windows设置` 按图所示操作
+1. 点<kbd>Windows</kbd><span class="icon-fluent icon-windowslogo" aria-hidden="true"></span>+<kbd>I</kbd>键打开 `Windows设置` 按图所示操作
 ![](./_img/win10-developer-mode-01.drawio.png)
 ![](./_img/win10-developer-mode-02.drawio.png)
 
@@ -37,7 +37,7 @@
 
 ### 检查脚本执行权限
 
-1. 点<kbd>Windows</kbd><span class="icon-fluent icon-windowslogo" aria-hidden="true"></span>+<kbd>X</kbd>键并选择以管理员身份启动 终端/powershell
+1. 点<kbd>Windows</kbd>+<kbd>X</kbd>键并选择以管理员身份启动 终端/PowerShell
 
 ![](./_img/check-ps1-permission-01.drawio.png)
 
@@ -74,7 +74,7 @@
 
 ##其他问题：
 ### 网络/代理问题
-1. 脚本安装后无法在 <a href=/#注1>Clash For Windows</a><sup>1</sup> 中解除对此UWP应用的联网限制
+1. 脚本安装后无法在 Clash For Windows<sup>1</sup> 中解除对此UWP应用的联网限制
    - 可尝试再脚本安装后再使用`.msix`安装包包 Reinstall 一遍（此解决方案仅限 Windows11, WIndows10 未经测试）
    - 如有更好解决方案可[点此前往 Github](https://github.com/ywmoyue/biliuwp-lite/issues/new/choose)提交 issue
   
