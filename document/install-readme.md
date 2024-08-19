@@ -2,10 +2,10 @@
 <link rel="stylesheet" href="https://support.microsoft.com/css/fonts/site-fonts.css?v=4M_1wOASateOs9zdphCtIqMvtKo366Gf6pkOjDqzkYo">
 
 # Biliuwp-lite安装教程
-- [Windows10 安装教程](install-readme.md/Windows10)
-- [Windows11 安装教程](install-readme.md/Windows11)
-- [常见问题](install-readme.md/其他问题)
-  - [网络/代理问题](install-readme.md/网络代理问题)
+- [Windows10 安装教程](install-readme.md#Windows10)
+- [Windows11 安装教程](install-readme.md#Windows11)
+- [常见问题](install-readme.md#其他问题)
+  - [网络/代理问题](install-readme.md#网络/代理问题)
 ## 安装要求系统版本信息
 
 - Windows10 1903及以上
@@ -73,7 +73,7 @@
 ![](./_img/install-msix.drawio.png)
 
 ##其他问题：
-### 网络代理问题
+### 网络/代理问题
 1. 脚本安装后无法在 Clash For Windows<sup>1</sup> 中解除对此UWP应用的联网限制
    - 可尝试再脚本安装后再使用`.msix`安装包包 Reinstall 一遍（此解决方案仅限 Windows11, WIndows10 未经测试）
    - 如有更好解决方案可[点此前往 Github](https://github.com/ywmoyue/biliuwp-lite/issues/new/choose)提交 issue
