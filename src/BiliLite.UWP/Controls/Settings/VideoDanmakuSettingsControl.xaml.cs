@@ -152,5 +152,10 @@ namespace BiliLite.Controls.Settings
                 Notify.ShowMessageToast("已经添加到本地，但远程同步失败");
             }
         }
+
+        private async void BtnExportDanmuFilter_OnClick(object sender, RoutedEventArgs e)
+        {
+            await m_viewModel.ExportDanmuFilter();
+        }
     }
 }
