@@ -54,6 +54,10 @@ namespace BiliLite
             {
                 m_shortcutKeyService.HandleKeyDown(args.VirtualKey);
             }
+            if (args.EventType.ToString().Contains("Up"))
+            {
+                m_shortcutKeyService.HandleKeyUp(args.VirtualKey);
+            }
         }
 
         private void MessageCenter_MiniWindowEvent(object sender, bool e)
