@@ -197,6 +197,30 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const bool DEFAULT_SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR = false;
+
+            [SettingKey(typeof(bool))]
+            public const string ENABLE_TAB_ITEM_FIXED_WIDTH = "EnableTabItemFixedWidth";
+
+            [SettingDefaultValue]
+            public const bool DEFAULT_ENABLE_TAB_ITEM_FIXED_WIDTH = true;
+
+            [SettingKey(typeof(double))]
+            public const string TAB_ITEM_FIXED_WIDTH = "TabItemFixedWidth";
+
+            [SettingDefaultValue]
+            public const double DEFAULT_TAB_ITEM_FIXED_WIDTH = 224;
+
+            [SettingKey(typeof(double))]
+            public const string TAB_ITEM_MAX_WIDTH = "TabItemMaxWidth";
+
+            [SettingDefaultValue]
+            public const double DEFAULT_TAB_ITEM_MAX_WIDTH = 240;
+
+            [SettingKey(typeof(double))]
+            public const string TAB_ITEM_MIN_WIDTH = "TabItemMinWidth";
+
+            [SettingDefaultValue]
+            public const double DEFAULT_TAB_ITEM_MIN_WIDTH = 192;
         }
 
         public class Account

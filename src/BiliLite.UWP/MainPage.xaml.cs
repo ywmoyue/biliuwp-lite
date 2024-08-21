@@ -1,6 +1,7 @@
 ﻿using BiliLite.Pages;
 using Microsoft.UI.Xaml.Controls;
 using System;
+using System.Linq;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation.Collections;
 using Windows.System;
@@ -12,6 +13,7 @@ using BiliLite.Controls;
 using BiliLite.Models.Common;
 using BiliLite.Extensions;
 using BiliLite.Services;
+using BiliLite.ViewModels.Common;
 using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
@@ -25,11 +27,16 @@ namespace BiliLite
     {
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly ShortcutKeyService m_shortcutKeyService;
+        private readonly MainPageViewModel m_viewModel;
 
         public MainPage()
         {
+            m_viewModel = App.ServiceProvider.GetRequiredService<MainPageViewModel>();
             m_shortcutKeyService = App.ServiceProvider.GetRequiredService<ShortcutKeyService>();
             m_shortcutKeyService.SetMainPage(this);
+
+            InitTabViewStyle();
+
             this.InitializeComponent();
             // 处理标题栏
             var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
@@ -306,6 +313,18 @@ namespace BiliLite
         {
             if(e.Key == VirtualKey.Space && e.OriginalSource.GetType()!= typeof(TextBox))
                 e.Handled = true;
+        }
+
+        private void InitTabViewStyle()
+        {
+            var resources = Application.Current.Resources;
+            var dict = resources.MergedDictionaries.FirstOrDefault(x => x.Source.AbsoluteUri.Contains("TabViewStyle"));
+
+            var styleKvp = dict.FirstOrDefault(x => x.Key.ToString().Contains("TabViewItem"));
+
+            if (!(styleKvp.Value is Style style)) return;
+            style.Setters.Add(new Setter(TabViewItem.MinWidthProperty, m_viewModel.TabItemMinWidth));
+            style.Setters.Add(new Setter(TabViewItem.MaxWidthProperty, m_viewModel.TabItemMaxWidth));
         }
     }
 }

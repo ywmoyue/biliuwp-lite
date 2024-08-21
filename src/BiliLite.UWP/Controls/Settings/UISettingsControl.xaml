@@ -308,6 +308,28 @@
             <ToggleSwitch x:Name="swOpenUrlWithBrowser" ></ToggleSwitch>
         </controls:SettingsCard>
 
+        <controls:SettingsExpander Header="标签页"
+                                   Description="标签页样式自定义"
+                                   IsExpanded="True">
+            <controls:SettingsExpander.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Tablet"></font:FontAwesome>
+            </controls:SettingsExpander.HeaderIcon>
+
+            <controls:SettingsExpander.Items>
+                <controls:SettingsCard Header="固定标签宽度"
+                                       Description="是否固定标签页宽度（下次打开应用生效）">
+                    <ToggleSwitch x:Name="SwitchTabItemFixedWidth" >
+                    </ToggleSwitch>
+                </controls:SettingsCard>
+
+                <controls:SettingsCard Header="固定标签宽度大小"
+                                       Description="固定标签宽度时宽度值（下次打开应用生效）">
+                    <controls1:NumberBox x:Name="NumTabItemFixedWidth"
+                                         Minimum="20"></controls1:NumberBox>
+                </controls:SettingsCard>
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>
+
         <controls:SettingsCard Header="视频底部显示进度条"
                                Description="是否在视频底部实时显示进度条">
             <controls:SettingsCard.HeaderIcon>
