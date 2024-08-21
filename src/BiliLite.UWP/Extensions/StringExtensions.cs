@@ -16,6 +16,7 @@ using Windows.Security.Cryptography;
 using Windows.Storage.Streams;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Xml;
 using BiliLite.Models.Exceptions;
 
@@ -362,6 +363,13 @@ namespace BiliLite.Extensions
             {
                 return false;
             }
+        }
+
+        public static IBuffer StrToBuffer(this string text)
+        {
+            var data = System.Text.Encoding.UTF8.GetBytes(text);
+            var buffer = data.AsBuffer();
+            return buffer;
         }
 
         #region Private methods

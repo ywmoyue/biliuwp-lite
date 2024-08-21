@@ -13,6 +13,9 @@ using BiliLite.Models.Requests.Api;
 using BiliLite.Services;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json;
+using System.Text.RegularExpressions;
+using Windows.Storage;
+using Newtonsoft.Json.Serialization;
 
 namespace BiliLite.ViewModels.Settings
 {
@@ -44,6 +47,7 @@ namespace BiliLite.ViewModels.Settings
             //用户
             ShieldUsers = SettingService.GetValue<ObservableCollection<string>>(SettingConstants.VideoDanmaku.SHIELD_USER, new ObservableCollection<string>() { });
         }
+
         public async Task ImportDanmuFilter()
         {
             var filePicker = new FileOpenPicker();
@@ -55,6 +59,21 @@ namespace BiliLite.ViewModels.Settings
             var filterList = JsonConvert.DeserializeObject<List<DanmuFilterItem>>(text);
 
             ImportDanmakuFilterCore(filterList);
+        }
+
+        public async Task ExportDanmuFilter()
+        {
+            var file = await FileExtensions.GetExportFile("Json", ".json", "bilibili.block");
+            if (file == null) return;
+            await FileIO.WriteTextAsync(file, String.Empty);
+
+            var danmakuFilter = ExportDanmakuFilterCore();
+            var text = JsonConvert.SerializeObject(danmakuFilter,new JsonSerializerSettings()
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
+            using var stream = await file.OpenAsync(FileAccessMode.ReadWrite);
+            await stream.WriteAsync(text.StrToBuffer());
         }
 
         public async Task SyncDanmuFilter()
@@ -102,6 +121,45 @@ namespace BiliLite.ViewModels.Settings
                 _logger.Log("添加弹幕屏蔽词失败", LogType.Error, ex);
                 return false;
             }
+        }
+
+        private List<DanmuFilterItem> ExportDanmakuFilterCore()
+        {
+            var filterList = new List<DanmuFilterItem>();
+
+            // 获取屏蔽词
+            var shieldWords = SettingService.GetValue<List<string>>(SettingConstants.VideoDanmaku.SHIELD_WORD, null);
+            if (shieldWords != null)
+            {
+                filterList.AddRange(shieldWords.Select(word => new DanmuFilterItem { Type = 0, Filter = word }));
+            }
+
+            // 获取屏蔽正则表达式
+            var shieldRegulars =
+                SettingService.GetValue<List<string>>(SettingConstants.VideoDanmaku.SHIELD_REGULAR, null);
+            if (shieldRegulars != null)
+            {
+                foreach (var regular in shieldRegulars)
+                {
+                    if (Regex.IsMatch(regular, @"^(?:\w+(?:-\w+)?\s*)+$")) // 验证正则表达式是否合法
+                    {
+                        filterList.Add(new DanmuFilterItem { Type = 1, Filter = regular });
+                    }
+                    else
+                    {
+                        _logger.Warn("非法正则表达式: " + regular);
+                    }
+                }
+            }
+
+            // 获取屏蔽用户列表
+            var shieldUsers = SettingService.GetValue<List<string>>(SettingConstants.VideoDanmaku.SHIELD_USER, null);
+            if (shieldUsers != null)
+            {
+                filterList.AddRange(shieldUsers.Select(user => new DanmuFilterItem { Type = 2, Filter = user }));
+            }
+
+            return filterList;
         }
 
         private void ImportDanmakuFilterCore(List<DanmuFilterItem> filterList)

@@ -66,5 +66,15 @@ namespace BiliLite.Controls.Settings
             m_viewModel.LiveShieldWords.Remove(word);
             SettingService.SetValue(SettingConstants.Live.SHIELD_WORD, m_viewModel.LiveShieldWords);
         }
+
+        private async void DanmuSettingFilterImport_OnClick(object sender, RoutedEventArgs e)
+        {
+            await m_viewModel.ImportDanmuFilter();
+        }
+
+        private async void BtnExportDanmuFilter_OnClick(object sender, RoutedEventArgs e)
+        {
+            await m_viewModel.ExportDanmuFilter();
+        }
     }
 }

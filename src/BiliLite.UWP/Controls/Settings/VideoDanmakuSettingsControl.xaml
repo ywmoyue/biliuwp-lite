@@ -70,8 +70,9 @@
             </controls:SettingsExpander.HeaderIcon>
 
             <StackPanel Orientation="Horizontal">
-                <Button x:Name="DanmuSettingSyncWords" Click="DanmuSettingSyncWords_Click" Margin="0 16 0 0">同步弹幕屏蔽</Button>
-                <Button x:Name="DanmuSettingFilterImport" Click="DanmuSettingFilterImport_OnClick" Margin="0 16 0 0">导入弹幕屏蔽</Button>
+                <Button x:Name="DanmuSettingSyncWords" Click="DanmuSettingSyncWords_Click">同步弹幕屏蔽</Button>
+                <Button x:Name="DanmuSettingFilterImport" Click="DanmuSettingFilterImport_OnClick">导入</Button>
+                <Button Click="BtnExportDanmuFilter_OnClick">导出</Button>
             </StackPanel>
 
             <controls:SettingsExpander.Items>

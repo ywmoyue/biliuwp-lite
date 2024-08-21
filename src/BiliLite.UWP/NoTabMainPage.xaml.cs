@@ -54,6 +54,10 @@ namespace BiliLite
             {
                 m_shortcutKeyService.HandleKeyDown(args.VirtualKey);
             }
+            if (args.EventType.ToString().Contains("Up"))
+            {
+                m_shortcutKeyService.HandleKeyUp(args.VirtualKey);
+            }
         }
 
         private void MessageCenter_MiniWindowEvent(object sender, bool e)
@@ -127,7 +131,6 @@ namespace BiliLite
         {
             base.OnNavigatedTo(e);
 
-            frame.Navigate(typeof(Pages.HomePage));
             if (e.NavigationMode == NavigationMode.New && e.Parameter != null && !string.IsNullOrEmpty(e.Parameter.ToString()))
             {
                 var result = await MessageCenter.HandelUrl(e.Parameter.ToString());
@@ -228,6 +231,11 @@ namespace BiliLite
         private void ChangeTitle(string title)
         {
             txtTitle.Text = title;
+        }
+
+        private void NoTabMainPage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            frame.Navigate(typeof(Pages.HomePage));
         }
     }
 

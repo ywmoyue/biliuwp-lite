@@ -51,6 +51,11 @@
                 <font:FontAwesome Icon="Solid_Filter"></font:FontAwesome>
             </controls:SettingsExpander.HeaderIcon>
 
+            <StackPanel Orientation="Horizontal">
+                <Button Click="DanmuSettingFilterImport_OnClick">导入</Button>
+                <Button Click="BtnExportDanmuFilter_OnClick" >导出</Button>
+            </StackPanel>
+
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard>
                     <controls:SettingsCard.Header>

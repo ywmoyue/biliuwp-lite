@@ -107,7 +107,7 @@ jobs:
         git clone https://github.com/ywmoyue/OnlinePageToPDF-Node.git
         cd OnlinePageToPDF-Node
         npm install
-        node index.js --waitTime=35000 --pageUrl="http://markdown.muyan233.top:352/?fileUrl=https%3A%2F%2Fraw.githubusercontent.com%2Fywmoyue%2Fbiliuwp-lite%2Fmaster%2Fdocument%2Finstall-readme.md" --pdfFilePath="安装教程.pdf"
+        node index.js --waitTime=35000 --pageUrl="http://markdown.muyan233.top:352/?fileUrl=https%3A%2F%2Fraw.githubusercontent.com%2Fywmoyue%2Fbiliuwp-lite%2Fdev%2Fdocument%2Finstall-readme.md" --pdfFilePath="安装教程.pdf"
         cd ..
         cp ./OnlinePageToPDF-Node/安装教程.pdf C:\Package\安装教程.pdf
         

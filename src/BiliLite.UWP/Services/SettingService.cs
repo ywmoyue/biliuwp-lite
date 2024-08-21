@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using BiliLite.Models;
 using BiliLite.Models.Common;
 using BiliLite.Models.Databases;
@@ -106,15 +107,53 @@ namespace BiliLite.Services
 
     public class SettingSqlService
     {
+        private static bool _supportSql = true;
         private readonly BiliLiteDbContext m_biliLiteDbContext;
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+        private const string TEST_SUPPORT = "TEST_SUPPORT_000";
 
         public SettingSqlService(BiliLiteDbContext biliLiteDbContext)
         {
             m_biliLiteDbContext = biliLiteDbContext;
+            CheckSupportSql();
+        }
+
+        private void CheckSupportSql()
+        {
+            try
+            {
+                // 测试数据库是否支持
+                var testSupport = m_biliLiteDbContext.SettingItems.Find(TEST_SUPPORT);
+                if (testSupport == null)
+                {
+                    testSupport = new SettingItem()
+                    {
+                        Key = TEST_SUPPORT,
+                        Value = DateTimeOffset.Now.ToUnixTimeMilliseconds() + ""
+                    };
+                    m_biliLiteDbContext.SettingItems.Add(testSupport);
+                }
+                else
+                {
+                    testSupport.Value = DateTimeOffset.Now.ToUnixTimeMilliseconds() + "";
+                }
+
+                m_biliLiteDbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                _supportSql = false;
+                _logger.Error("检查到sql存储不支持", ex);
+            }
         }
 
         public T GetValue<T>(string key, T _default)
         {
+            if (!_supportSql)
+            {
+                return _default;
+            }
+
             var settingItem = m_biliLiteDbContext.SettingItems.Find(key);
             if (settingItem == null) return _default;
 
@@ -125,6 +164,10 @@ namespace BiliLite.Services
 
         public void SetValue<T>(string key, T value)
         {
+            if (!_supportSql)
+            {
+                return;
+            }
             var settingItem = m_biliLiteDbContext.SettingItems.Find(key);
             if (settingItem == null)
             {
@@ -144,6 +187,10 @@ namespace BiliLite.Services
 
         public bool HasValue(string key)
         {
+            if (!_supportSql)
+            {
+                return false;
+            }
             return m_biliLiteDbContext.SettingItems.Any(x => x.Key == key);
         }
     }

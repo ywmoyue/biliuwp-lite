@@ -6,6 +6,9 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using BiliLite.Pages;
+using BiliLite.Models.Common;
+using BiliLite.Services;
 
 namespace BiliLite.Extensions
 {
@@ -13,6 +16,15 @@ namespace BiliLite.Extensions
     {
         public static IServiceCollection AddControls(this IServiceCollection services)
         {
+            var mode = SettingService.GetValue<int>(SettingConstants.UI.DISPLAY_MODE, 0);
+            if (mode == 0)
+            {
+                services.AddSingleton<IMainPage, MainPage>();
+            }
+            else
+            {
+                services.AddSingleton<IMainPage, NoTabMainPage>();
+            }
             services.AddTransient<SendDynamicDialog>();
             services.AddTransient<SendDynamicV2Dialog>();
             services.AddTransient<EditPlaySpeedMenuDialog>();

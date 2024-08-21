@@ -633,7 +633,7 @@ namespace BiliLite.ViewModels.Download
                             Paths = new List<string>(),
                             Title = episodeInfo["title"].ToString(),
                             SubtitlePath = new List<DownloadSubtitleInfo>(),
-                            Path = episodeItem.Path
+                            FilePath = episodeItem.Path
                         };
                         //设置视频
                         foreach (var file in files)

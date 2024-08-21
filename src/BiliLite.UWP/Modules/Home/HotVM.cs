@@ -8,14 +8,19 @@ using System.Windows.Input;
 using BiliLite.Extensions;
 using BiliLite.Models.Common.Recommend;
 using BiliLite.Models.Requests.Api.Home;
+using BiliLite.Pages;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite.Modules
 {
     public class HotVM : IModules
     {
         readonly HotAPI hotAPI;
+        private readonly IMainPage m_mainPage;
+
         public HotVM()
         {
+            m_mainPage = App.ServiceProvider.GetRequiredService<IMainPage>();
             hotAPI = new HotAPI();
             RefreshCommand = new RelayCommand(Refresh);
             LoadMoreCommand = new RelayCommand(LoadMore);
@@ -113,6 +118,8 @@ namespace BiliLite.Modules
         }
         public async void LoadMore()
         {
+            // 当前不在首页，不应继续加载
+            if (!(m_mainPage.CurrentPage is HomePage)) return;
             if (Loading)
             {
                 return;

@@ -12,12 +12,21 @@ namespace BiliLite.Services
 {
     public class BiliLiteDbContext : DbContext
     {
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private static readonly string _dbPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "bililite.db3");
 
         public BiliLiteDbContext()
         {
-            SQLitePCL.Batteries.Init();
-            Database.EnsureCreated();
+            try
+            {
+                SQLitePCL.Batteries.Init();
+                Database.EnsureCreated();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("初始化sqlite失败", ex);
+                throw ex;
+            }
         }
 
         public DbSet<SettingItem> SettingItems { get; set; }

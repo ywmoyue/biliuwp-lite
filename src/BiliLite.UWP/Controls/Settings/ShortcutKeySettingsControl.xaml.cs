@@ -20,6 +20,7 @@ namespace BiliLite.Controls.Settings
         private readonly IMapper m_mapper;
         private ShortcutFunctionViewModel m_recordingKeysShortcutFunction;
         private bool m_isRecording;
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
 
         public ShortcutKeySettingsControl()
         {
@@ -49,6 +50,17 @@ namespace BiliLite.Controls.Settings
 
         private void ShortcutKeyService_OnRecordKeyDown(object sender, InputKey e)
         {
+            if (m_recordingKeysShortcutFunction == null)
+            {
+                _logger.Warn("m_recordingKeysShortcutFunction is null");
+                return;
+            }
+
+            if (m_recordingKeysShortcutFunction.Keys == null)
+            {
+                _logger.Warn("m_recordingKeysShortcutFunction.Keys is null");
+                m_recordingKeysShortcutFunction.Keys = new ObservableCollection<InputKey>();
+            }
             m_recordingKeysShortcutFunction.Keys.Add(e);
             m_recordingKeysShortcutFunction.UpdateKeysString();
             UpdateShortcutFunctions(m_recordingKeysShortcutFunction);
