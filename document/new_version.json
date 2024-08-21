@@ -1,7 +1,7 @@
 {
-    "version": "4.7.1",
-    "version_num": 40701,
-    "version_desc": "更新内容:\r\n\r\n- 播放器设置中播放模式增加播完暂停选项  \r\n\r\n- 支持按键快捷键自定义，支持区分设置按键点击行为和按住行为  \r\n\r\n- 添加 关闭推荐页顶部横版推广条 的选项  \r\n\r\n- 增加快速收藏设置项，默认启用快速收藏 \r\n\r\n- 引入SQLite数据库保存uwp无法保存的较大的数据 \r\n\r\n- 修复内容过滤设置规则项在Win10中样式错误 \r\n\r\n- 修复带播放列表的视频未打开过播放列表时播放结束闪退    \r\n\r\n- 修复在部分版本系统中导出设置功能无效 \r\n\r\n- 修复动态页专栏动态tab和追番追剧tab动态无法点击 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+    "version": "4.7.2",
+    "version_num": 40702,
+    "version_desc": "更新内容:\r\n\r\n- 用户页视频Tab、关注Tab的筛选栏与列表分离  \r\n\r\n- 标签页标签宽度默认固定，支持设置  \r\n\r\n- 支持单独导入导出视频和直播的弹幕屏蔽规则  \r\n\r\n- 更新安装教程  \r\n\r\n- 修复播放器中输入弹幕时会触发快捷键问题  \r\n\r\n- 修复下载的分p视频点击打开路径报错  \r\n\r\n- 修复快捷键长按判定错误  \r\n\r\n- 修复单窗口模式快捷键错误 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
     "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
     "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
