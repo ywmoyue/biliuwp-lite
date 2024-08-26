@@ -16,7 +16,11 @@ namespace BiliLite.Models.Functions
             { 220, "\\" },
             { 221, "]" }, 
             { 219, "[" },
-            { 192, "`" }
+            { 192, "`" },
+            { 37, "←" },
+            { 39, "→" },
+            { 38, "↑" },
+            { 40, "↓" }
         };
 
         public VirtualKey BoardKey { get; set; }
