@@ -218,8 +218,8 @@ namespace BiliLite.Modules.Player.Playurl
             if (audios.Any())
             {
                 var audioQuality = info.AudioQualites.FirstOrDefault(x => x.QualityID == soundQualityId);
-                var defaultAudio = qn > 64 ? audios.LastOrDefault() : audios.FirstOrDefault();
-                info.CurrentAudioQuality = audioQuality ?? info.AudioQualites.FirstOrDefault(x => x.QualityID == defaultAudio.id);
+                var defaultAudio = SoundQualityConstants.GetDefaultAudio(info.AudioQualites);
+                info.CurrentAudioQuality = audioQuality ?? defaultAudio;
                 currentAudio = info.CurrentAudioQuality.Audio;
             }
             return currentAudio;

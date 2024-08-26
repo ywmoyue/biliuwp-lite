@@ -607,6 +607,18 @@ namespace BiliLite.Models.Common
             public const string DEFAULT_SOUND_QUALITY = "PlayerDefaultSoundQuality";
 
             /// <summary>
+            /// 启用默认最大音质
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string ENABLE_DEFAULT_MAX_SOUND_QUALITY = "PlayerEnableDefaultMaxSoundQuality";
+
+            /// <summary>
+            /// 默认不启用默认最大音质
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_ENABLE_DEFAULT_MAX_SOUND_QUALITY = false;
+
+            /// <summary>
             /// 比例 int
             /// </summary>
             [SettingKey(typeof(int))]

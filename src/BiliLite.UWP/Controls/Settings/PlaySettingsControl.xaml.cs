@@ -103,6 +103,16 @@ namespace BiliLite.Controls.Settings
                     SettingService.SetValue(SettingConstants.Player.AUTO_FULL_WINDOW, swPlayerSettingAutoFullWindows.IsOn);
                 });
             });
+            //默认最大音质
+            SwitchEnableDefaultMaxSoundQuality.IsOn = SettingService.GetValue(SettingConstants.Player.ENABLE_DEFAULT_MAX_SOUND_QUALITY, 
+                SettingConstants.Player.DEFAULT_ENABLE_DEFAULT_MAX_SOUND_QUALITY);
+            SwitchEnableDefaultMaxSoundQuality.Loaded += (sender, e) =>
+            {
+                SwitchEnableDefaultMaxSoundQuality.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.ENABLE_DEFAULT_MAX_SOUND_QUALITY, SwitchEnableDefaultMaxSoundQuality.IsOn);
+                };
+            };
             //自动全屏
             swPlayerSettingAutoFullScreen.IsOn = SettingService.GetValue<bool>(SettingConstants.Player.AUTO_FULL_SCREEN, false);
             swPlayerSettingAutoFullScreen.Loaded += new RoutedEventHandler((sender, e) =>
