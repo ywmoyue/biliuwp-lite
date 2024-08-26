@@ -295,7 +295,8 @@
             </Grid>
 
             <Grid Grid.Column="1"  Background="{ThemeResource ApplicationBackground}" VerticalAlignment="Top" Height="{x:Bind m_viewModel.RightInfoHeight,Mode=OneWay}">
-                <Pivot x:Name="pivot" >
+                <Pivot x:Name="pivot" 
+                       AllowFocusOnInteraction="False">
                     <PivotItem Margin="0">
                         <PivotItem.Header>
                             <TextBlock Text="详情" FontSize="18"></TextBlock>
