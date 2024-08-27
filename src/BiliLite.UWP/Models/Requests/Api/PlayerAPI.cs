@@ -24,7 +24,7 @@ namespace BiliLite.Models.Requests.Api
                 need_cookie = true,
             };
             api.parameter += "&fourk=1&fnver=0&fnval=4048";
-            
+
             if (proxy)
             {
                 api.parameter += $"&area={area}";
@@ -49,7 +49,7 @@ namespace BiliLite.Models.Requests.Api
             {
                 api.parameter += $"&access_key={SettingService.Account.AccessKey}&mid={SettingService.Account.Profile.mid}";
             }
-            api.parameter += "&fourk=1&fnver=0&fnval=4048";
+            api.parameter += "&fourk=1&fnver=0&fnval=12240";
             
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             if (proxy)
