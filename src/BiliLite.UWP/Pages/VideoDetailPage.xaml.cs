@@ -752,5 +752,12 @@ namespace BiliLite.Pages
                 await m_viewModel.UpdateFav(m_viewModel.VideoInfo.Aid, true);
             }
         }
+
+        private void Pivot_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if ((e.Key == VirtualKey.Right || e.Key == VirtualKey.Left) &&
+                e.OriginalSource.GetType() != typeof(TextBox))
+                e.Handled = true;
+        }
     }
 }
