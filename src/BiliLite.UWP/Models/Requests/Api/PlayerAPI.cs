@@ -55,6 +55,10 @@ namespace BiliLite.Models.Requests.Api
             if (proxy)
             {
                 api.parameter += $"&area={area}";
+                api.headers = new Dictionary<string, string>()
+                {
+                    {"referer","https://www.bilibili.com"}
+                };
             }
             return api;
         }
