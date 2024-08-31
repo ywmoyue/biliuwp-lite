@@ -747,7 +747,8 @@ namespace BiliLite.Pages
 
         private async void BtnFav_OnClick(object sender, RoutedEventArgs e)
         {
-            if (m_viewModel.VideoInfo.ReqUser.Favorite != 1)
+            if (SettingService.GetValue(SettingConstants.UI.QUICK_DO_FAV, SettingConstants.UI.DEFAULT_QUICK_DO_FAV) &&
+                m_viewModel.VideoInfo.ReqUser.Favorite != 1)
             {
                 await m_viewModel.UpdateFav(m_viewModel.VideoInfo.Aid, true);
             }
