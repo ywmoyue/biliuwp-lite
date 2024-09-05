@@ -164,48 +164,50 @@
     <Grid>
         <winui:RefreshContainer RefreshRequested="RefreshContainer_RefreshRequested">
             <Grid >
-                <controls:MyAdaptiveGridView x:Name="RecommendGridView"
-                                          ItemClick="RecommendGridView_ItemClick"
-                                          ItemsSource="{x:Bind Path=m_viewModel.Items,Mode=OneWay}"
-                                          OneRowModeEnabled="False"
-                                          ItemHeight="240"
-                                          DesiredWidth="260"
-                                          Padding="8"
+                <ScrollViewer>
+                    <controls:MyAdaptiveGridView x:Name="RecommendGridView"
+                                             ItemClick="RecommendGridView_ItemClick"
+                                             ItemsSource="{x:Bind Path=m_viewModel.Items,Mode=OneWay}"
+                                             OneRowModeEnabled="False"
+                                             ItemHeight="240"
+                                             DesiredWidth="260"
+                                             Padding="8"
                                          
-                                          SelectionMode="None"
-                                          LoadMoreBottomOffset="0"
-                                          LoadMoreCommand="{x:Bind Path=m_viewModel.LoadMoreCommand}"
-                                          CanLoadMore="True"
-                                          Loading="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"
-                                          IsItemClickEnabled="True">
-                    <toolkit:AdaptiveGridView.ItemContainerStyle>
-                        <Style TargetType="GridViewItem">
-                            <Setter Property="Margin" Value="12"></Setter>
+                                             SelectionMode="None"
+                                             LoadMoreBottomOffset="0"
+                                             LoadMoreCommand="{x:Bind Path=m_viewModel.LoadMoreCommand}"
+                                             CanLoadMore="True"
+                                             Loading="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"
+                                             IsItemClickEnabled="True">
+                        <toolkit:AdaptiveGridView.ItemContainerStyle>
+                            <Style TargetType="GridViewItem">
+                                <Setter Property="Margin" Value="12"></Setter>
 
-                        </Style>
-                    </toolkit:AdaptiveGridView.ItemContainerStyle>
-                    <controls:MyAdaptiveGridView.Header>
-                        <controls:Carousel x:Name="control" Visibility="{x:Bind m_viewModel.ShowBanner,Mode=OneWay}" Margin="12 0" ItemsSource="{x:Bind Path=m_viewModel.Banner,Mode=OneWay}" MaxItems="1" SlideInterval="0" AspectRatio="1.77"  MaxHeight="240">
-                            <controls:Carousel.ContentTemplate>
-                                <DataTemplate x:DataType="recommend:RecommendBannerItemModel">
-                                    <HyperlinkButton Margin="12 0" Padding="0" Click="BannerItem_Click">
-                                        <Border CornerRadius="{StaticResource ImageCornerRadius}">
-                                            <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"   Source="{x:Bind Path=Image,Converter={StaticResource imageConvert},ConverterParameter='240h'}"></toolkit:ImageEx>
-                                        </Border>
-                                    </HyperlinkButton>
-                                </DataTemplate>
-                            </controls:Carousel.ContentTemplate>
-                        </controls:Carousel>
-                    </controls:MyAdaptiveGridView.Header>
-                    <controls:MyAdaptiveGridView.Footer>
-                        <Grid>
-                            <HyperlinkButton Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay,Converter={StaticResource display}}" Foreground="Gray" HorizontalAlignment="Center"  Command="{x:Bind Path=m_viewModel.LoadMoreCommand}">
-                                <TextBlock>加载更多</TextBlock>
-                            </HyperlinkButton>
-                            <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"></ProgressRing>
-                        </Grid>
-                    </controls:MyAdaptiveGridView.Footer>
-                </controls:MyAdaptiveGridView>
+                            </Style>
+                        </toolkit:AdaptiveGridView.ItemContainerStyle>
+                        <controls:MyAdaptiveGridView.Header>
+                            <controls:Carousel x:Name="control" Visibility="{x:Bind m_viewModel.ShowBanner,Mode=OneWay}" Margin="12 0" ItemsSource="{x:Bind Path=m_viewModel.Banner,Mode=OneWay}" MaxItems="1" SlideInterval="0" AspectRatio="1.77"  MaxHeight="240">
+                                <controls:Carousel.ContentTemplate>
+                                    <DataTemplate x:DataType="recommend:RecommendBannerItemModel">
+                                        <HyperlinkButton Margin="12 0" Padding="0" Click="BannerItem_Click">
+                                            <Border CornerRadius="{StaticResource ImageCornerRadius}">
+                                                <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"   Source="{x:Bind Path=Image,Converter={StaticResource imageConvert},ConverterParameter='240h'}"></toolkit:ImageEx>
+                                            </Border>
+                                        </HyperlinkButton>
+                                    </DataTemplate>
+                                </controls:Carousel.ContentTemplate>
+                            </controls:Carousel>
+                        </controls:MyAdaptiveGridView.Header>
+                        <controls:MyAdaptiveGridView.Footer>
+                            <Grid>
+                                <HyperlinkButton Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay,Converter={StaticResource display}}" Foreground="Gray" HorizontalAlignment="Center"  Command="{x:Bind Path=m_viewModel.LoadMoreCommand}">
+                                    <TextBlock>加载更多</TextBlock>
+                                </HyperlinkButton>
+                                <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"></ProgressRing>
+                            </Grid>
+                        </controls:MyAdaptiveGridView.Footer>
+                    </controls:MyAdaptiveGridView>
+                </ScrollViewer>
             </Grid>
         </winui:RefreshContainer>
         <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" Margin="20 12" HorizontalAlignment="Right">

@@ -122,36 +122,38 @@
     </Page.Resources>
     <Grid>
         <winui:RefreshContainer  RefreshRequested="RefreshContainer_RefreshRequested">
-            <controls:MyAdaptiveGridView 
-                Padding="12 8" 
-                ItemHeight="100" 
-                DesiredWidth="600" 
-                StretchContentForSingleRow="False" 
-                LoadMoreCommand="{x:Bind Path=m_viewModel.LoadMoreCommand,Mode=OneWay}"
-                CanLoadMore="True"
-                SelectionMode="None" 
-                IsItemClickEnabled="True" 
-                ItemsSource="{x:Bind Path=m_viewModel.Items,Mode=OneWay}"
-                ItemClick="AdaptiveGridView_ItemClick"
-                PointerPressed="AdaptiveGridView_PointerPressed"
-                ItemTemplateSelector="{x:Bind Path=m_viewModel.DynamicItemDataTemplateSelector,Mode=OneWay}"
-                Loading="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"
-                OneRowModeEnabled="False">
-                <controls:MyAdaptiveGridView.ItemContainerStyle>
-                    <Style TargetType="GridViewItem">
-                        <Setter Property="Margin" Value="12"></Setter>
-                    </Style>
-                </controls:MyAdaptiveGridView.ItemContainerStyle>
+            <ScrollViewer>
+                <controls:MyAdaptiveGridView 
+                    Padding="12 8" 
+                    ItemHeight="100" 
+                    DesiredWidth="600" 
+                    StretchContentForSingleRow="False" 
+                    LoadMoreCommand="{x:Bind Path=m_viewModel.LoadMoreCommand,Mode=OneWay}"
+                    CanLoadMore="True"
+                    SelectionMode="None" 
+                    IsItemClickEnabled="True" 
+                    ItemsSource="{x:Bind Path=m_viewModel.Items,Mode=OneWay}"
+                    ItemClick="AdaptiveGridView_ItemClick"
+                    PointerPressed="AdaptiveGridView_PointerPressed"
+                    ItemTemplateSelector="{x:Bind Path=m_viewModel.DynamicItemDataTemplateSelector,Mode=OneWay}"
+                    Loading="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"
+                    OneRowModeEnabled="False">
+                    <controls:MyAdaptiveGridView.ItemContainerStyle>
+                        <Style TargetType="GridViewItem">
+                            <Setter Property="Margin" Value="12"></Setter>
+                        </Style>
+                    </controls:MyAdaptiveGridView.ItemContainerStyle>
 
-                <toolkit:AdaptiveGridView.Footer>
-                    <StackPanel>
-                        <HyperlinkButton  Command="{x:Bind Path=m_viewModel.LoadMoreCommand}" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay,Converter={StaticResource display}}" Foreground="Gray" HorizontalAlignment="Center" x:Name="BtnLoadMore">
-                            <TextBlock>加载更多</TextBlock>
-                        </HyperlinkButton>
-                        <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"></ProgressRing>
-                    </StackPanel>
-                </toolkit:AdaptiveGridView.Footer>
-            </controls:MyAdaptiveGridView>
+                    <toolkit:AdaptiveGridView.Footer>
+                        <StackPanel>
+                            <HyperlinkButton  Command="{x:Bind Path=m_viewModel.LoadMoreCommand}" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay,Converter={StaticResource display}}" Foreground="Gray" HorizontalAlignment="Center" x:Name="BtnLoadMore">
+                                <TextBlock>加载更多</TextBlock>
+                            </HyperlinkButton>
+                            <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"></ProgressRing>
+                        </StackPanel>
+                    </toolkit:AdaptiveGridView.Footer>
+                </controls:MyAdaptiveGridView>
+            </ScrollViewer>
         </winui:RefreshContainer>
         <controls:RoundButton x:Name="BtnRefresh" Command="{x:Bind Path=m_viewModel.RefreshCommand}"  VerticalAlignment="Bottom" Padding="12" Margin="12" HorizontalAlignment="Right">
             <SymbolIcon Symbol="Refresh" Foreground="White"></SymbolIcon>
