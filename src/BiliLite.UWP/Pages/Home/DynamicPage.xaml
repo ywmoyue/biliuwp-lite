@@ -122,8 +122,7 @@
     </Page.Resources>
     <Grid>
         <winui:RefreshContainer  RefreshRequested="RefreshContainer_RefreshRequested">
-            <ScrollViewer>
-                <controls:MyAdaptiveGridView 
+            <controls:MyAdaptiveGridView 
                     Padding="12 8" 
                     ItemHeight="100" 
                     DesiredWidth="600" 
@@ -138,22 +137,21 @@
                     ItemTemplateSelector="{x:Bind Path=m_viewModel.DynamicItemDataTemplateSelector,Mode=OneWay}"
                     Loading="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"
                     OneRowModeEnabled="False">
-                    <controls:MyAdaptiveGridView.ItemContainerStyle>
-                        <Style TargetType="GridViewItem">
-                            <Setter Property="Margin" Value="12"></Setter>
-                        </Style>
-                    </controls:MyAdaptiveGridView.ItemContainerStyle>
+                <controls:MyAdaptiveGridView.ItemContainerStyle>
+                    <Style TargetType="GridViewItem">
+                        <Setter Property="Margin" Value="12"></Setter>
+                    </Style>
+                </controls:MyAdaptiveGridView.ItemContainerStyle>
 
-                    <toolkit:AdaptiveGridView.Footer>
-                        <StackPanel>
-                            <HyperlinkButton  Command="{x:Bind Path=m_viewModel.LoadMoreCommand}" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay,Converter={StaticResource display}}" Foreground="Gray" HorizontalAlignment="Center" x:Name="BtnLoadMore">
-                                <TextBlock>加载更多</TextBlock>
-                            </HyperlinkButton>
-                            <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"></ProgressRing>
-                        </StackPanel>
-                    </toolkit:AdaptiveGridView.Footer>
-                </controls:MyAdaptiveGridView>
-            </ScrollViewer>
+                <toolkit:AdaptiveGridView.Footer>
+                    <StackPanel>
+                        <HyperlinkButton  Command="{x:Bind Path=m_viewModel.LoadMoreCommand}" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay,Converter={StaticResource display}}" Foreground="Gray" HorizontalAlignment="Center" x:Name="BtnLoadMore">
+                            <TextBlock>加载更多</TextBlock>
+                        </HyperlinkButton>
+                        <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"></ProgressRing>
+                    </StackPanel>
+                </toolkit:AdaptiveGridView.Footer>
+            </controls:MyAdaptiveGridView>
         </winui:RefreshContainer>
         <controls:RoundButton x:Name="BtnRefresh" Command="{x:Bind Path=m_viewModel.RefreshCommand}"  VerticalAlignment="Bottom" Padding="12" Margin="12" HorizontalAlignment="Right">
             <SymbolIcon Symbol="Refresh" Foreground="White"></SymbolIcon>
