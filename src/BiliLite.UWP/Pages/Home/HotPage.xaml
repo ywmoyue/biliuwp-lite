@@ -17,6 +17,7 @@
     </Page.Resources>
     <Grid>
         <controls:MyAdaptiveGridView 
+                    x:Name="HotGridView"
                     ItemClick="gridHot_ItemClick"
                     PointerPressed="gridHot_ItemPressed"
                     OneRowModeEnabled="False"

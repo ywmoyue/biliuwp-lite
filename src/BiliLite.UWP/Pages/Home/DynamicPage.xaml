@@ -132,6 +132,7 @@
                     SelectionMode="None" 
                     IsItemClickEnabled="True" 
                     ItemsSource="{x:Bind Path=m_viewModel.Items,Mode=OneWay}"
+                    x:Name="DynGridView"
                     ItemClick="AdaptiveGridView_ItemClick"
                     PointerPressed="AdaptiveGridView_PointerPressed"
                     ItemTemplateSelector="{x:Bind Path=m_viewModel.DynamicItemDataTemplateSelector,Mode=OneWay}"

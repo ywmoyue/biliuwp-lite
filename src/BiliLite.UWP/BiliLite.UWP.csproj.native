@@ -256,6 +256,7 @@
     <Compile Include="Models\Functions\ToggleFullscreenShortcutFunction.cs" />
     <Compile Include="Models\Functions\ToggleFullWindowShortcutFunction.cs" />
     <Compile Include="Models\Functions\ToggleMiniWindowShortcutFunction.cs" />
+    <Compile Include="Pages\IScrollRecorablePage.cs" />
     <Compile Include="Services\BiliLiteDbContext.cs" />
     <Compile Include="ViewModels\Common\PieControlViewModel.cs" />
     <Compile Include="ViewModels\Settings\CDNServerItemViewModel.cs" />

@@ -19,7 +19,7 @@ namespace BiliLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class HomePage : Page, IRefreshablePage
+    public sealed partial class HomePage : Page, IRefreshablePage, IScrollRecoverablePage
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
 
@@ -337,6 +337,14 @@ namespace BiliLite.Pages
             else
             {
                 m_viewModel.SuggestSearchContents.ReplaceRange(suggestSearchContents);
+            }
+        }
+
+        public void ScrollRecover()
+        {
+            if (frame.Content is IScrollRecoverablePage page)
+            {
+                page.ScrollRecover();
             }
         }
     }
