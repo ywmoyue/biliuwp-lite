@@ -130,6 +130,18 @@ namespace BiliLite.Models.Common
             public const bool DEFAULT_QUICK_DO_FAV = true;
 
             /// <summary>
+            /// 默认收藏夹
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string DEFAULT_USE_FAV = "DefaultUseFav";
+
+            /// <summary>
+            /// 默认收藏夹值
+            /// </summary>
+            [SettingDefaultValue]
+            public const string DEFAULT_USE_FAV_VALUE = "默认收藏夹";
+
+            /// <summary>
             /// 隐藏赞助按钮
             /// </summary>
             public const string HIDE_SPONSOR = "HideSponsor";
