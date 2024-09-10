@@ -26,7 +26,8 @@ namespace BiliLite.Models.Requests.Api.User
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/space/wbi/acc/info",
-                parameter = ApiHelper.MustParameter(AppKey, needAccesskey: true) + $"&mid={mid}",
+                parameter = $"mid={mid}",
+                need_cookie = true
             };
             api.parameter = await ApiHelper.GetWbiSign(api.parameter);
             return api;
