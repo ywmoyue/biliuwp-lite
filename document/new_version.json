@@ -1,7 +1,7 @@
 {
-    "version": "4.7.2",
-    "version_num": 40702,
-    "version_desc": "更新内容:\r\n\r\n- 用户页视频Tab、关注Tab的筛选栏与列表分离  \r\n\r\n- 标签页标签宽度默认固定，支持设置  \r\n\r\n- 支持单独导入导出视频和直播的弹幕屏蔽规则  \r\n\r\n- 更新安装教程  \r\n\r\n- 修复播放器中输入弹幕时会触发快捷键问题  \r\n\r\n- 修复下载的分p视频点击打开路径报错  \r\n\r\n- 修复快捷键长按判定错误  \r\n\r\n- 修复单窗口模式快捷键错误 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+    "version": "4.7.3",
+    "version_num": 40703,
+    "version_desc": "更新内容:\r\n\r\n- 快捷键设置页方向键显示改为对应方向字符 \r\n\r\n- 支持设置默认最大音质，未找到指定音质时默认音质改为192K  \r\n\r\n- 播放视频中左右快进可能使右侧页面左右滚动  \r\n\r\n- 修复互动视频的cid长度越界int类型  \r\n\r\n- 移除会导致异常的首页推荐项，该问题会导致闪退发生  \r\n\r\n- 超过100分p视频播放器中列表显示不全  \r\n\r\n- 单窗口模式滚动定位问题处理   \r\n\r\n- 修复读取个人资料被风控导致失败  \r\n\r\n- 修复快速收藏设置项不生效 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
     "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
     "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
