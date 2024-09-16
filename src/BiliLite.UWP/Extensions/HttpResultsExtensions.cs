@@ -4,11 +4,14 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Threading.Tasks;
+using BiliLite.Services;
 
 namespace BiliLite.Extensions
 {
     public static class HttpResultsExtensions
     {
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+
         public static async Task<T> GetJson<T>(this HttpResults httpResults)
         {
             return await Task.Run<T>(() =>
@@ -36,8 +39,9 @@ namespace BiliLite.Extensions
             {
                 return await GetJson<ApiDataModel<T>>(httpResults);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.Error(ex.Message, ex);
                 return null;
             }
         }

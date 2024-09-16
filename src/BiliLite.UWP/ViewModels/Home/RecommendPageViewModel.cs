@@ -161,6 +161,13 @@ namespace BiliLite.ViewModels.Home
                         recommendItems.Remove(recommendItems[i]);
                         continue;
                     }
+
+                    if (recommendItems[i].AdInfo != null && recommendItems[i].AdInfo.CreativeContent == null)
+                    {
+                        recommendItems.Remove(recommendItems[i]);
+                        continue;
+                    }
+
                     var item = recommendItems[i];
                     if (item.ThreePointV2 != null && item.ThreePointV2.Count > 0 && item.CardGoto == "av")
                     {

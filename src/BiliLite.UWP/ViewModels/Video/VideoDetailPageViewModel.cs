@@ -620,10 +620,12 @@ namespace BiliLite.Modules
             {
                 var newIdList = new List<string>();
 
+                var defaultUseFav = SettingService.GetValue(SettingConstants.UI.DEFAULT_USE_FAV,
+                    SettingConstants.UI.DEFAULT_USE_FAV_VALUE);
                 if (!favDefault)
                     newIdList = MyFavorite.Where(x => x.IsFav).Select(x => x.Id).ToList();
                 else
-                    newIdList.Add(MyFavorite.First(x => x.Title == "默认收藏夹").Id);
+                    newIdList.Add(MyFavorite.First(x => x.Title == defaultUseFav).Id);
 
                 var delIdList = ExistFavIdList.Except(newIdList).ToList();
                 var addIdList = newIdList.Except(ExistFavIdList).ToList();

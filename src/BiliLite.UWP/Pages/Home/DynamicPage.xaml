@@ -123,20 +123,21 @@
     <Grid>
         <winui:RefreshContainer  RefreshRequested="RefreshContainer_RefreshRequested">
             <controls:MyAdaptiveGridView 
-                Padding="12 8" 
-                ItemHeight="100" 
-                DesiredWidth="600" 
-                StretchContentForSingleRow="False" 
-                LoadMoreCommand="{x:Bind Path=m_viewModel.LoadMoreCommand,Mode=OneWay}"
-                CanLoadMore="True"
-                SelectionMode="None" 
-                IsItemClickEnabled="True" 
-                ItemsSource="{x:Bind Path=m_viewModel.Items,Mode=OneWay}"
-                ItemClick="AdaptiveGridView_ItemClick"
-                PointerPressed="AdaptiveGridView_PointerPressed"
-                ItemTemplateSelector="{x:Bind Path=m_viewModel.DynamicItemDataTemplateSelector,Mode=OneWay}"
-                Loading="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"
-                OneRowModeEnabled="False">
+                    Padding="12 8" 
+                    ItemHeight="100" 
+                    DesiredWidth="600" 
+                    StretchContentForSingleRow="False" 
+                    LoadMoreCommand="{x:Bind Path=m_viewModel.LoadMoreCommand,Mode=OneWay}"
+                    CanLoadMore="True"
+                    SelectionMode="None" 
+                    IsItemClickEnabled="True" 
+                    ItemsSource="{x:Bind Path=m_viewModel.Items,Mode=OneWay}"
+                    x:Name="DynGridView"
+                    ItemClick="AdaptiveGridView_ItemClick"
+                    PointerPressed="AdaptiveGridView_PointerPressed"
+                    ItemTemplateSelector="{x:Bind Path=m_viewModel.DynamicItemDataTemplateSelector,Mode=OneWay}"
+                    Loading="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"
+                    OneRowModeEnabled="False">
                 <controls:MyAdaptiveGridView.ItemContainerStyle>
                     <Style TargetType="GridViewItem">
                         <Setter Property="Margin" Value="12"></Setter>

@@ -16,7 +16,7 @@ namespace BiliLite.Pages.Home
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class HotPage : Page, IRefreshablePage
+    public sealed partial class HotPage : Page, IRefreshablePage, IScrollRecoverablePage
     {
         HotVM hotVM;
         public HotPage()
@@ -104,6 +104,11 @@ namespace BiliLite.Pages.Home
         public async Task Refresh()
         {
             hotVM.Refresh();
+        }
+
+        public async void ScrollRecover()
+        {
+            await HotGridView.ScrollRecover();
         }
     }
 }

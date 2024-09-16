@@ -115,7 +115,7 @@ namespace BiliLite.Modules.Player
         public int node_id { get; set; }
         public int edge_id { get; set; }
         public string title { get; set; }
-        public int cid { get; set; }
+        public long cid { get; set; }
         public int start_pos { get; set; }
         public string cover { get; set; }
         public int cursor { get; set; }
@@ -129,7 +129,7 @@ namespace BiliLite.Modules.Player
         public string platform_action { get; set; }
         public string native_action { get; set; }
         public string condition { get; set; }
-        public int cid { get; set; }
+        public long cid { get; set; }
         public string option { get; set; }
         public int is_default { get; set; }
         public string cover { get; set; }

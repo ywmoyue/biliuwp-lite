@@ -195,6 +195,16 @@ namespace BiliLite.Controls.Settings
                 };
             };
 
+            // 默认收藏夹
+            DefaultUseFav.Text = SettingService.GetValue(SettingConstants.UI.DEFAULT_USE_FAV, SettingConstants.UI.DEFAULT_USE_FAV_VALUE);
+            DefaultUseFav.Loaded += (sender, e) =>
+            {
+                DefaultUseFav.TextChanged += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.DEFAULT_USE_FAV, DefaultUseFav.Text);
+                };
+            };
+
             //动态显示
             cbDetailDisplay.SelectedIndex = SettingService.GetValue<int>(SettingConstants.UI.DETAIL_DISPLAY, 0);
             cbDetailDisplay.Loaded += new RoutedEventHandler((sender, e) =>

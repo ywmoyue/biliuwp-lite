@@ -17,6 +17,7 @@
     </Page.Resources>
     <Grid>
         <controls:MyAdaptiveGridView 
+                    x:Name="HotGridView"
                     ItemClick="gridHot_ItemClick"
                     PointerPressed="gridHot_ItemPressed"
                     OneRowModeEnabled="False"
@@ -86,7 +87,7 @@
                     <GridView.ItemContainerStyle>
                         <Style TargetType="GridViewItem">
                             <Setter Property="Width" Value="100"></Setter>
-                           
+
                         </Style>
                     </GridView.ItemContainerStyle>
                 </GridView>

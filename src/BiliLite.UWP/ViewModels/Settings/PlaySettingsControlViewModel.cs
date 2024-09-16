@@ -44,17 +44,28 @@ namespace BiliLite.ViewModels.Settings
             //随便整个链接
             var testUrl = $"https://{server}/upgcxcode/76/62/729206276/729206276_nb2-1-30112.m4s";
 
+            Stopwatch sw = Stopwatch.StartNew();
             try
             {
-                Stopwatch sw = Stopwatch.StartNew();
-                var res = await testUrl.WithTimeout(2).GetAsync();
-                sw.Stop();
-                return sw.ElapsedMilliseconds;
+                var res = await testUrl.WithHeader(
+                        "user-agent",
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36")
+                    .WithTimeout(2).GetAsync();
             }
-            catch (Exception)
+            catch (FlurlHttpException ex)
+            {
+                if (ex.StatusCode != 959 && ex.StatusCode != 403)
+                {
+                    return -1;
+                }
+            }
+            catch (Exception ex)
             {
                 return -1;
             }
+
+            sw.Stop();
+            return sw.ElapsedMilliseconds;
         }
 
         // UWP不支持ping，后续更新WindowsAppSDK再考虑启用

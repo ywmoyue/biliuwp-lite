@@ -17,7 +17,7 @@ namespace BiliLite.Pages.Home
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class DynamicPage : Page, IRefreshablePage
+    public sealed partial class DynamicPage : Page, IRefreshablePage, IScrollRecoverablePage
     {
         private readonly DynamicPageViewModel m_viewModel;
 
@@ -117,6 +117,11 @@ namespace BiliLite.Pages.Home
         {
             var data = (sender as MenuFlyoutItem).DataContext as DynamicItemModel;
             Modules.User.WatchLaterVM.Instance.AddToWatchlater(data.Video.Aid);
+        }
+
+        public async void ScrollRecover()
+        {
+            await DynGridView.ScrollRecover();
         }
     }
 }

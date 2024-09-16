@@ -172,6 +172,10 @@ namespace BiliLite
             {
                 frame.GoBack();
                 BackTitle();
+                if (frame.Content is IScrollRecoverablePage page)
+                {
+                    page.ScrollRecover();
+                }
             }
         }
 

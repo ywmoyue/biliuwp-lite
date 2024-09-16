@@ -130,6 +130,18 @@ namespace BiliLite.Models.Common
             public const bool DEFAULT_QUICK_DO_FAV = true;
 
             /// <summary>
+            /// 默认收藏夹
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string DEFAULT_USE_FAV = "DefaultUseFav";
+
+            /// <summary>
+            /// 默认收藏夹值
+            /// </summary>
+            [SettingDefaultValue]
+            public const string DEFAULT_USE_FAV_VALUE = "默认收藏夹";
+
+            /// <summary>
             /// 隐藏赞助按钮
             /// </summary>
             public const string HIDE_SPONSOR = "HideSponsor";
@@ -605,6 +617,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(int))]
             public const string DEFAULT_SOUND_QUALITY = "PlayerDefaultSoundQuality";
+
+            /// <summary>
+            /// 启用默认最大音质
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string ENABLE_DEFAULT_MAX_SOUND_QUALITY = "PlayerEnableDefaultMaxSoundQuality";
+
+            /// <summary>
+            /// 默认不启用默认最大音质
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_ENABLE_DEFAULT_MAX_SOUND_QUALITY = false;
 
             /// <summary>
             /// 比例 int

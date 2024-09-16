@@ -165,19 +165,19 @@
         <winui:RefreshContainer RefreshRequested="RefreshContainer_RefreshRequested">
             <Grid >
                 <controls:MyAdaptiveGridView x:Name="RecommendGridView"
-                                          ItemClick="RecommendGridView_ItemClick"
-                                          ItemsSource="{x:Bind Path=m_viewModel.Items,Mode=OneWay}"
-                                          OneRowModeEnabled="False"
-                                          ItemHeight="240"
-                                          DesiredWidth="260"
-                                          Padding="8"
+                                             ItemClick="RecommendGridView_ItemClick"
+                                             ItemsSource="{x:Bind Path=m_viewModel.Items,Mode=OneWay}"
+                                             OneRowModeEnabled="False"
+                                             ItemHeight="240"
+                                             DesiredWidth="260"
+                                             Padding="8"
                                          
-                                          SelectionMode="None"
-                                          LoadMoreBottomOffset="0"
-                                          LoadMoreCommand="{x:Bind Path=m_viewModel.LoadMoreCommand}"
-                                          CanLoadMore="True"
-                                          Loading="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"
-                                          IsItemClickEnabled="True">
+                                             SelectionMode="None"
+                                             LoadMoreBottomOffset="0"
+                                             LoadMoreCommand="{x:Bind Path=m_viewModel.LoadMoreCommand}"
+                                             CanLoadMore="True"
+                                             Loading="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"
+                                             IsItemClickEnabled="True">
                     <toolkit:AdaptiveGridView.ItemContainerStyle>
                         <Style TargetType="GridViewItem">
                             <Setter Property="Margin" Value="12"></Setter>

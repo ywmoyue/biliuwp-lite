@@ -2,14 +2,15 @@
 <link rel="stylesheet" href="https://support.microsoft.com/css/fonts/site-fonts.css?v=4M_1wOASateOs9zdphCtIqMvtKo366Gf6pkOjDqzkYo">
 
 # Biliuwp-lite安装教程
-- [Windows10 安装教程](install-readme.md#Windows10)
-- [Windows11 安装教程](install-readme.md#Windows11)
+- [Windows10 安装教程（脚本安装方式）](install-readme.md#Windows10)
+- [Windows11 安装教程（Appx直接安装方式/不推荐）](install-readme.md#Windows11)
 - [常见问题](install-readme.md#其他问题)
   - [网络/代理问题](install-readme.md#网络代理问题)
 ## 安装要求系统版本信息
 
 - Windows10 1903及以上
-
+- 4.6.x 版本更新 4.7.x， 需要卸载并重启系统后使用脚本方式安装
+- 4.7.x第一次安装需要使用脚本方式安装
 
 ## Windows10
 

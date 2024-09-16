@@ -100,6 +100,14 @@
             <ToggleSwitch x:Name="swPlayerSettingAutoFullWindows" ></ToggleSwitch>
         </controls:SettingsCard>
 
+        <controls:SettingsCard Header="默认最大音质"
+                               Description="不指定音质或找不到指定音质时，默认使用最大音质">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Music"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch x:Name="SwitchEnableDefaultMaxSoundQuality" ></ToggleSwitch>
+        </controls:SettingsCard>
+
         <controls:SettingsCard Header="双击播放器全屏"
                                Description="默认双击暂停">
             <controls:SettingsCard.HeaderIcon>
