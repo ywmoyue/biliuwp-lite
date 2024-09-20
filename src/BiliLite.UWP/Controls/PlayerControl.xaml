@@ -302,7 +302,7 @@
                                             <StackPanel>
                                                 <Grid Visibility="{Binding ShowTitlePart}">
                                                     <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition MinWidth="25"></ColumnDefinition>
+                                                        <ColumnDefinition MinWidth="25" Width="Auto"></ColumnDefinition>
                                                         <ColumnDefinition Width="*"></ColumnDefinition>
                                                     </Grid.ColumnDefinitions>
                                                     <TextBlock Text="{Binding TitlePage}" 
