@@ -1,5 +1,7 @@
 ﻿//https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
+using BiliLite.Models.Common.Season;
+
 namespace BiliLite.Models.Common.Video
 {
     public class PlayInfo
@@ -62,5 +64,7 @@ namespace BiliLite.Models.Common.Video
         public string TitlePart { get; set; }
 
         public bool ShowTitlePart => TitlePage != null;
+
+        public EpisodeSkip EpisodeSkip { get; set; }
     }
 }

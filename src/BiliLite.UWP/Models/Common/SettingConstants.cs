@@ -849,6 +849,18 @@ namespace BiliLite.Models.Common
 
             [SettingKey(typeof(string))]
             public const string PLAY_SPEED_MENU = "PlaySpeedMenu";
+
+            /// <summary>
+            /// 自动跳过OP/ED
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string AUTO_SKIP_OP_ED = "AutoSkipOpEd";
+
+            /// <summary>
+            /// 默认不自动跳过OP/ED
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_AUTO_SKIP_OP_ED = false;
         }
 
         public class Filter

@@ -186,7 +186,8 @@ namespace BiliLite.Pages
                     order = i,
                     play_mode = VideoPlayType.Season,
                     title = item.Title + " " + item.LongTitle,
-                    area = m_viewModel.Detail.Title.ParseArea(m_viewModel.Detail.UpInfo?.Mid ?? 0)
+                    area = m_viewModel.Detail.Title.ParseArea(m_viewModel.Detail.UpInfo?.Mid ?? 0),
+                    EpisodeSkip = item.Skip,
                 });
                 i++;
             }

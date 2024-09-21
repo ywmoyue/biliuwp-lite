@@ -76,6 +76,14 @@
             <ToggleSwitch  x:Name="swAutoPlay"></ToggleSwitch>
         </controls:SettingsCard>
 
+        <controls:SettingsCard Header="番剧自动跳过OP/ED"
+                               Description="自动跳过片头/片尾">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Music"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch  x:Name="SwSkipOpEd"></ToggleSwitch>
+        </controls:SettingsCard>
+
         <controls:SettingsCard Header="自动跳转至上次观看进度"
                                Description="自动跳转至上次观看进度">
             <controls:SettingsCard.HeaderIcon>

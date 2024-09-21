@@ -66,6 +66,15 @@ namespace BiliLite.Controls.Settings
                     SettingService.SetValue(SettingConstants.Player.AUTO_PLAY, swAutoPlay.IsOn);
                 });
             });
+            //自动跳过OP/ED
+            SwSkipOpEd.IsOn = SettingService.GetValue(SettingConstants.Player.AUTO_SKIP_OP_ED, SettingConstants.Player.DEFAULT_AUTO_SKIP_OP_ED);
+            SwSkipOpEd.Loaded += (sender, e) =>
+            {
+                SwSkipOpEd.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.AUTO_SKIP_OP_ED, SwSkipOpEd.IsOn);
+                };
+            };
             //自动跳转下一P
             swAutoNext.IsOn = SettingService.GetValue<bool>(SettingConstants.Player.AUTO_NEXT, true);
             swAutoNext.Loaded += new RoutedEventHandler((sender, e) =>

@@ -114,6 +114,8 @@ namespace BiliLite.Controls
             set { _playUrlInfo = value; DoPropertyChanged("playUrlInfo"); }
         }
 
+        private readonly bool m_autoSkipOpEdFlag = false;
+        private DispatcherTimer m_positionTimer;
         DispatcherTimer danmuTimer;
         /// <summary>
         /// 弹幕信息
@@ -149,6 +151,12 @@ namespace BiliLite.Controls
             danmuTimer = new DispatcherTimer();
             danmuTimer.Interval = TimeSpan.FromSeconds(1);
             danmuTimer.Tick += DanmuTimer_Tick;
+
+            m_positionTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1) };
+            m_positionTimer.Tick += PositionTimer_Tick;
+            m_autoSkipOpEdFlag = SettingService.GetValue(SettingConstants.Player.AUTO_SKIP_OP_ED,
+                SettingConstants.Player.DEFAULT_AUTO_SKIP_OP_ED);
+
             this.Loaded += PlayerControl_Loaded;
             this.Unloaded += PlayerControl_Unloaded;
             m_playerKeyRightAction = (PlayerKeyRightAction)SettingService.GetValue(SettingConstants.Player.PLAYER_KEY_RIGHT_ACTION, (int)PlayerKeyRightAction.ControlProgress);
@@ -241,6 +249,7 @@ namespace BiliLite.Controls
 
             danmuTimer.Start();
             timer_focus.Start();
+            m_positionTimer.Start();
         }
 
         private async void _systemMediaTransportControls_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
@@ -812,6 +821,27 @@ namespace BiliLite.Controls
             {
                 m_danmakuController.Pause();
             }
+        }
+
+        private void PositionTimer_Tick(object sender, object e)
+        {
+            if (!m_autoSkipOpEdFlag) return;
+            if (CurrentPlayItem.EpisodeSkip == null) return;
+            SkipSection(CurrentPlayItem.EpisodeSkip.Op, "SkipOp", "自动跳过OP");
+            SkipSection(CurrentPlayItem.EpisodeSkip.Ed, "SkipEd", "自动跳过ED");
+        }
+
+        private void SkipSection(PlayerSkipItem section, string toastId, string message)
+        {
+            if (section == null) return;
+            if (!IsSectionValid(section) || (int)Player.Position != section.Start) return;
+            m_playerToastService.Show(toastId, message);
+            SetPosition(section.End);
+        }
+
+        private bool IsSectionValid(PlayerSkipItem section)
+        {
+            return section.Start != 0 && section.End != 0 && section.Start != section.End;
         }
 
         private async Task SetPlayItem(int index)
@@ -2545,6 +2575,11 @@ namespace BiliLite.Controls
             {
                 danmuTimer.Stop();
                 danmuTimer = null;
+            }
+            if (m_positionTimer != null)
+            {
+                m_positionTimer.Stop();
+                m_positionTimer = null;
             }
             danmakuPool = null;
             if (dispRequest != null)
