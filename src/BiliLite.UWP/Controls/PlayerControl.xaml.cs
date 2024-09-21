@@ -1506,8 +1506,13 @@ namespace BiliLite.Controls
                 }
             }
 
-            TopOnline.Text = await playerHelper.GetOnline(CurrentPlayItem.avid, CurrentPlayItem.cid);
+            if (player_info.ViewPoints != null && player_info.ViewPoints.Any())
+            {
+                m_viewModel.ViewPoints = player_info.ViewPoints;
+                m_viewModel.ShowViewPointsBtn = true;
+            }
 
+            TopOnline.Text = await playerHelper.GetOnline(CurrentPlayItem.avid, CurrentPlayItem.cid);
         }
 
         public async Task ReportHistory(double progress = double.NaN)
@@ -2913,6 +2918,23 @@ namespace BiliLite.Controls
             m_danmakuController.UpdateSize(SplitView.ActualWidth, SplitView.ActualHeight);
             // 更新画面比例
             Player.SetRatioMode(PlayerSettingRatio.SelectedIndex);
+        }
+
+        private void TopBtnViewPoints_OnClick(object sender, RoutedEventArgs e)
+        {
+            m_viewModel.ShowViewPointsView = true;
+        }
+
+        private void ViewPointsGrid_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            m_viewModel.ShowViewPointsView = false;
+        }
+
+        private void ViewPoint_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (!(sender is FrameworkElement element)) return;
+            if (!(element.DataContext is PlayerInfoViewPoint viewPoint)) return;
+            SetPosition(viewPoint.From);
         }
     }
 }

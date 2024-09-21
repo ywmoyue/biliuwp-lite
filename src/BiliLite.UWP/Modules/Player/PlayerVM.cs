@@ -285,7 +285,29 @@ namespace BiliLite.Modules
         /// 互动视频信息
         /// </summary>
         public InteractionModel interaction { get; set; }
+
+        /// <summary>
+        /// 章节看点信息
+        /// </summary>
+        [JsonProperty("view_points")]
+        public List<PlayerInfoViewPoint> ViewPoints { get; set; }
     }
+
+    public class PlayerInfoViewPoint
+    {
+        public int Type { get; set; }
+
+        public long From { get; set; }
+
+        public long To { get; set; }
+
+        public string Content { get; set; }
+
+        public string ImgUrl { get; set; }
+
+        public string LogoUrl { get; set; }
+    }
+
     public class PlayerOnlineInfo
     {
         public string total { get; set; }
