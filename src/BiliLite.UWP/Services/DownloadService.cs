@@ -344,6 +344,7 @@ namespace BiliLite.Services
             var downloadedItems = m_mapper.Map<List<DownloadedItem>>(downloadedDtos);
 
             m_downloadPageViewModel.LoadedDownloadedCount = 0;
+            m_downloadPageViewModel.TotalDownloadedCount = downloadedItems.Count;
 
             foreach (var downloadedItem in downloadedItems)
             {
