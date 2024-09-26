@@ -826,6 +826,7 @@ namespace BiliLite.Controls
         private void PositionTimer_Tick(object sender, object e)
         {
             if (!m_autoSkipOpEdFlag) return;
+            if (CurrentPlayItem == null) return;
             if (CurrentPlayItem.EpisodeSkip == null) return;
             SkipSection(CurrentPlayItem.EpisodeSkip.Op, "SkipOp", "自动跳过OP");
             SkipSection(CurrentPlayItem.EpisodeSkip.Ed, "SkipEd", "自动跳过ED");

@@ -29,10 +29,12 @@ namespace BiliLite.Pages
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
         private readonly DownloadPageViewModel m_viewModel;
+        private readonly DownloadService m_downloadService;
 
         public DownloadPage()
         {
             m_viewModel = App.ServiceProvider.GetRequiredService<DownloadPageViewModel>();
+            m_downloadService = App.ServiceProvider.GetRequiredService<DownloadService>();
             this.InitializeComponent();
             Title = "下载";
         }
@@ -41,13 +43,13 @@ namespace BiliLite.Pages
             base.OnNavigatedTo(e);
             if (e.NavigationMode == NavigationMode.New)
             {
-                m_viewModel.RefreshDownloaded();
+                m_downloadService.RefreshDownloaded();
             }
         }
 
         public async Task Refresh()
         {
-            m_viewModel.RefreshDownloaded();
+            m_downloadService.RefreshDownloaded();
         }
 
         private void listDowned_ItemClick(object sender, ItemClickEventArgs e)
@@ -319,7 +321,7 @@ namespace BiliLite.Pages
         private void SearchBox_OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             var keyword = sender.Text;
-            m_viewModel.SearchDownloaded(keyword);
+            m_downloadService.SearchDownloaded(keyword);
             DownloadPivot.SelectedIndex = 1;
         }
     }

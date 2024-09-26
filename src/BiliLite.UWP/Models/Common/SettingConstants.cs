@@ -962,6 +962,11 @@ namespace BiliLite.Models.Common
             [SettingKey(typeof(int))]
             public const string DEFAULT_VIDEO_TYPE = "DownloadDefaultVideoType";
 
+            [SettingKey(typeof(bool))]
+            public const string USE_DOWNLOAD_INDEX = "UseDownloadIndex";
+
+            [SettingDefaultValue]
+            public const bool DEFAULT_USE_DOWNLOAD_INDEX = false;
         }
 
         /// <summary>

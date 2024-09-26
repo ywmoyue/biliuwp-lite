@@ -594,15 +594,8 @@ namespace BiliLite.Pages
             {
                 //检查正在下载及下载完成是否存在此视频
                 int state = 0;
-                var downloadViewModel = App.ServiceProvider.GetRequiredService<DownloadPageViewModel>();
-                if (downloadViewModel.Downloadings.FirstOrDefault(x => x.EpisodeID == item.Cid) != null)
-                {
-                    state = 2;
-                }
-                if (downloadViewModel.DownloadedViewModels.FirstOrDefault(x => x.Epsidoes.FirstOrDefault(y => y.CID == item.Cid) != null) != null)
-                {
-                    state = 3;
-                }
+                var downloadService = App.ServiceProvider.GetRequiredService<DownloadService>();
+                state = downloadService.CheckExist(item.Cid);
                 //如果正在下载state=2,下载完成state=3
                 downloadItem.Episodes.Add(new DownloadEpisodeItem()
                 {
@@ -626,15 +619,8 @@ namespace BiliLite.Pages
                     {
                         //检查正在下载及下载完成是否存在此视频
                         int state = 0;
-                        var downloadViewModel = App.ServiceProvider.GetRequiredService<DownloadPageViewModel>();
-                        if (downloadViewModel.Downloadings.FirstOrDefault(x => x.EpisodeID == episode.Cid) != null)
-                        {
-                            state = 2;
-                        }
-                        if (downloadViewModel.DownloadedViewModels.FirstOrDefault(x => x.Epsidoes.FirstOrDefault(y => y.CID == episode.Cid) != null) != null)
-                        {
-                            state = 3;
-                        }
+                        var downloadService = App.ServiceProvider.GetRequiredService<DownloadService>();
+                        state = downloadService.CheckExist(episode.Cid);
                         //如果正在下载state=2,下载完成state=3
                         downloadItem.Episodes.Add(new DownloadEpisodeItem()
                         {

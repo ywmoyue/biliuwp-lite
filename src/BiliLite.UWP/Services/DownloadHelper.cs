@@ -8,14 +8,18 @@ using Windows.Storage;
 using BiliLite.Models.Common;
 using BiliLite.Models.Download;
 using BiliLite.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite.Services
 {
     public static class DownloadHelper
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
+        private const string DOWNLOAD_FOLDER_NAME = "哔哩哔哩下载";
+        private const string OLD_DOWNLOAD_FOLDER_NAME = "BiliBiliDownload";
 
         public static BackgroundTransferGroup group = BackgroundTransferGroup.CreateGroup("BiliDownlad");//下载组，方便管理
+
         public static async Task AddDownload(DownloadInfo downloadInfo)
         {
             //读取存储文件夹
@@ -43,19 +47,28 @@ namespace BiliLite.Services
             //保存文件
             await SaveInfo(downloadInfo, folder, episodeFolder);
         }
-        private static async Task<StorageFolder> GetDownloadFolder()
+        
+        public static async Task<StorageFolder> GetDownloadFolder()
         {
             var path = SettingService.GetValue(SettingConstants.Download.DOWNLOAD_PATH, SettingConstants.Download.DEFAULT_PATH);
-            if (path == SettingConstants.Download.DEFAULT_PATH)
-            {
-                var folder = KnownFolders.VideosLibrary;
-                return await folder.CreateFolderAsync("哔哩哔哩下载", CreationCollisionOption.OpenIfExists);
-            }
-            else
-            {
-                return await StorageFolder.GetFolderFromPathAsync(path);
-            }
+            if (path != SettingConstants.Download.DEFAULT_PATH) return await StorageFolder.GetFolderFromPathAsync(path);
+            var folder = KnownFolders.VideosLibrary;
+            return await folder.CreateFolderAsync(DOWNLOAD_FOLDER_NAME, CreationCollisionOption.OpenIfExists);
         }
+
+        /// <summary>
+        /// 旧版下载目录
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<StorageFolder> GetDownloadOldFolder()
+        {
+            var path = SettingService.GetValue(SettingConstants.Download.OLD_DOWNLOAD_PATH, SettingConstants.Download.DEFAULT_OLD_PATH);
+            if (path != SettingConstants.Download.DEFAULT_OLD_PATH)
+                return await StorageFolder.GetFolderFromPathAsync(path);
+            var folder = KnownFolders.VideosLibrary;
+            return await folder.CreateFolderAsync(OLD_DOWNLOAD_FOLDER_NAME, CreationCollisionOption.OpenIfExists);
+        }
+
         private static async Task DownloadCover(string url, StorageFolder folder)
         {
             try
@@ -96,7 +109,9 @@ namespace BiliLite.Services
                     SeasonType = info.SeasonType,
                     Title = info.Title,
                     Type = info.Type,
-                    ID = info.Type == DownloadType.Season ? info.SeasonID.ToString() : info.AVID
+                    ID = info.Type == DownloadType.Season ? info.SeasonID.ToString() : info.AVID,
+                    Path = folder.Path,
+                    CreatedTime = DateTime.Now,
                 };
                 DownloadSaveEpisodeInfo downloadSaveEpisodeInfo = new DownloadSaveEpisodeInfo()
                 {
@@ -109,7 +124,8 @@ namespace BiliLite.Services
                     Index = info.Index,
                     VideoPath = new List<string>(),
                     QualityID = info.QualityID,
-                    QualityName = info.QualityName
+                    QualityName = info.QualityName,
+                    Path = episodeFolder.Path,
                 };
                 if (info.Subtitles != null)
                 {
@@ -131,7 +147,13 @@ namespace BiliLite.Services
                 await FileIO.WriteTextAsync(file, JsonConvert.SerializeObject(downloadSaveInfo));
                 StorageFile episodeFile = await episodeFolder.CreateFileAsync("info.json", CreationCollisionOption.ReplaceExisting);
                 await FileIO.WriteTextAsync(episodeFile, JsonConvert.SerializeObject(downloadSaveEpisodeInfo));
-
+                
+                if (SettingService.GetValue(SettingConstants.Download.USE_DOWNLOAD_INDEX,
+                        SettingConstants.Download.DEFAULT_USE_DOWNLOAD_INDEX))
+                {
+                    var downloadService = App.ServiceProvider.GetRequiredService<DownloadService>();
+                    downloadService.AddDownloadItemsIndex(downloadSaveInfo, downloadSaveEpisodeInfo);
+                }
             }
             catch (Exception ex)
             {

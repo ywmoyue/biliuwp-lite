@@ -224,6 +224,7 @@
     <Compile Include="Models\Common\User\SendDynamic\UploadImagesModel.cs" />
     <Compile Include="Models\Common\User\SendDynamic\RcmdTopicModel.cs" />
     <Compile Include="Models\Common\Video\MediaListResources.cs" />
+    <Compile Include="Models\Databases\DownloadItemDTO.cs" />
     <Compile Include="Models\Databases\SettingItem.cs" />
     <Compile Include="Models\Functions\BaseShortcutFunction.cs" />
     <Compile Include="Models\Functions\CancelFullscreenFunction.cs" />
@@ -261,6 +262,7 @@
     <Compile Include="Models\Functions\ToggleMiniWindowShortcutFunction.cs" />
     <Compile Include="Pages\IScrollRecorablePage.cs" />
     <Compile Include="Services\BiliLiteDbContext.cs" />
+    <Compile Include="Services\DownloadService.cs" />
     <Compile Include="Services\SqlMigrateService.cs" />
     <Compile Include="ViewModels\Common\MainPageViewModel.cs" />
     <Compile Include="ViewModels\Common\PieControlViewModel.cs" />
@@ -940,6 +942,7 @@
     <Compile Include="ViewModels\Video\VideoListViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\DbMigrations\01-0_40704.sql" />
     <Content Include="Assets\GeeTest\bili_gt.html" />
     <Content Include="Assets\GeeTest\gt.js" />
     <Content Include="Assets\Icon\icon_view_point.png" />

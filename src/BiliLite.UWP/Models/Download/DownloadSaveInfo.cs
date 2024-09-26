@@ -1,4 +1,5 @@
-﻿using BiliLite.Models.Common;
+﻿using System;
+using BiliLite.Models.Common;
 
 namespace BiliLite.Models.Download
 {
@@ -10,5 +11,8 @@ namespace BiliLite.Models.Download
         public string Title { get; set; }
         public string Cover { get; set; }
      
+        public string Path { get; set; }
+
+        public DateTime CreatedTime { get; set; }
     }
 }

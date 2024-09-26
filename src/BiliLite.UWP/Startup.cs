@@ -18,6 +18,7 @@ namespace BiliLite
             services.AddControls();
             services.AddDanmakuController();
 
+            services.AddSingleton<DownloadService>();
             services.AddSingleton<CookieService>();
             services.AddSingleton<ShortcutKeyService>();
             services.AddTransient<PlayerToastService>();
