@@ -11,6 +11,7 @@ namespace BiliLite
         {
             services.AddDbContext<BiliLiteDbContext>();
             services.AddSingleton<SettingSqlService>();
+            services.AddTransient<SqlMigrateService>();
 
             services.AddMapper();
             services.AddViewModels();

@@ -261,6 +261,7 @@
     <Compile Include="Models\Functions\ToggleMiniWindowShortcutFunction.cs" />
     <Compile Include="Pages\IScrollRecorablePage.cs" />
     <Compile Include="Services\BiliLiteDbContext.cs" />
+    <Compile Include="Services\SqlMigrateService.cs" />
     <Compile Include="ViewModels\Common\MainPageViewModel.cs" />
     <Compile Include="ViewModels\Common\PieControlViewModel.cs" />
     <Compile Include="ViewModels\Settings\CDNServerItemViewModel.cs" />

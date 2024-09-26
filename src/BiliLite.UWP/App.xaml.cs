@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
@@ -205,10 +206,16 @@ namespace BiliLite
             //圆角
             App.Current.Resources["ImageCornerRadius"] = new CornerRadius(SettingService.GetValue<double>(SettingConstants.UI.IMAGE_CORNER_RADIUS, 0));
             await AppHelper.SetRegions();
-            var downloadViewModel = ServiceProvider.GetRequiredService<DownloadPageViewModel>();
+            await InitDb();
             downloadViewModel.LoadDownloading();
             downloadViewModel.LoadDownloaded();
             VideoPlayHistoryHelper.LoadABPlayHistories(true);
+        }
+
+        private async Task InitDb()
+        {
+            var sqlMigrateService = ServiceProvider.GetRequiredService<SqlMigrateService>();
+            await sqlMigrateService.MigrateDatabase();
         }
 
         /// <summary>
