@@ -1566,31 +1566,29 @@ namespace BiliLite.Controls
             };
             if (quality.PlayUrlType == BiliPlayUrlType.DASH)
             {
-                var audio = audioQuality == null ? quality.DashInfo.Audio : audioQuality.Audio;
-                var video = quality.DashInfo.Video;
-
-                result = await Player.PlayerDashUseNative(quality.DashInfo, quality.UserAgent, quality.Referer, positon: _postion);
-
-                if (!result.result)
+                var realPlayerType = (RealPlayerType)SettingService.GetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE, (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
+                if (realPlayerType==RealPlayerType.Native)
                 {
-                    var mpd_url = new PlayerAPI().GenerateMPD(new Models.GenerateMPDModel()
+                    result = await Player.PlayerDashUseNative(quality.DashInfo, quality.UserAgent, quality.Referer, positon: _postion);
+
+                    if (!result.result)
                     {
-                        AudioBandwidth = audio.BandWidth.ToString(),
-                        AudioCodec = audio.Codecs,
-                        AudioID = audio.ID.ToString(),
-                        AudioUrl = audio.Url,
-                        Duration = quality.DashInfo.Duration,
-                        DurationMS = quality.Timelength,
-                        VideoBandwidth = video.BandWidth.ToString(),
-                        VideoCodec = video.Codecs,
-                        VideoID = video.ID.ToString(),
-                        VideoFrameRate = video.FrameRate.ToString(),
-                        VideoHeight = video.Height,
-                        VideoWidth = video.Width,
-                        VideoUrl = video.Url,
-                    });
-                    result = await Player.PlayDashUrlUseFFmpegInterop(mpd_url, quality.UserAgent, quality.Referer, positon: _postion);
+                        result = await Player.PlayDashUseFFmpegInterop(quality.DashInfo, quality.UserAgent, quality.Referer,
+                            positon: _postion);
+                    }
                 }
+                else
+                {
+                    result = await Player.PlayDashUseFFmpegInterop(quality.DashInfo, quality.UserAgent, quality.Referer,
+                        positon: _postion);
+
+                    if (!result.result)
+                    {
+
+                        result = await Player.PlayerDashUseNative(quality.DashInfo, quality.UserAgent, quality.Referer, positon: _postion);
+                    }
+                }
+
             }
             else if (quality.PlayUrlType == BiliPlayUrlType.SingleFLV)
             {

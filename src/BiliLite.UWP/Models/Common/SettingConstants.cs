@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using BiliLite.Models.Attributes;
+using BiliLite.Models.Common.Player;
 using BiliLite.Services;
 
 namespace BiliLite.Models.Common
@@ -584,6 +585,15 @@ namespace BiliLite.Models.Common
 
         public class Player
         {
+            /// <summary>
+            /// 优先使用播放器类型
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const string USE_REAL_PLAYER_TYPE = "UseRealPlayerType";
+
+            [SettingDefaultValue]
+            public const RealPlayerType DEFAULT_USE_REAL_PLAYER_TYPE = RealPlayerType.Native;
+
             /// <summary>
             /// 使用外站视频替换无法播放的视频 bool
             /// </summary>

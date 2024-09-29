@@ -325,6 +325,7 @@ namespace BiliLite.Controls
             if (referer != null && referer.Length > 0)
             {
                 _ffmpegConfig.FFmpegOptions.Add("referer", referer);
+                _ffmpegConfig.FFmpegOptions.Add("headers", $"Referer: {referer}");
             }
 
             _ffmpegConfig.VideoDecoderMode = passthrough ? VideoDecoderMode.ForceSystemDecoder : VideoDecoderMode.ForceFFmpegSoftwareDecoder;
@@ -520,7 +521,7 @@ namespace BiliLite.Controls
                         message = "创建MediaSource失败"
                     };
                 }
-
+                
                 m_playerVideo.Source = MediaSource.CreateFromAdaptiveMediaSource(mediaSource);
                 Buffering = true;
 
@@ -665,6 +666,7 @@ namespace BiliLite.Controls
                 //关闭正在播放的视频
                 ClosePlay();
                 var _ffmpegConfig = CreateFFmpegInteropConfig(userAgent, referer);
+                
                 if (isLocal)
                 {
 

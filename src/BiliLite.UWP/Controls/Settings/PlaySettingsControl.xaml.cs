@@ -7,6 +7,7 @@ using BiliLite.Models.Common;
 using BiliLite.Services;
 using BiliLite.ViewModels.Settings;
 using System.Linq;
+using BiliLite.Models.Common.Player;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -16,6 +17,7 @@ namespace BiliLite.Controls.Settings
     {
         private readonly PlaySettingsControlViewModel m_viewModel;
         private readonly PlaySpeedMenuService m_playSpeedMenuService;
+        private readonly RealPlayerTypes m_realPlayerTypes = new RealPlayerTypes();
 
         public PlaySettingsControl()
         {
@@ -33,6 +35,13 @@ namespace BiliLite.Controls.Settings
             cbVideoType.SelectionChanged += (e, args) =>
             {
                 SettingService.SetValue(SettingConstants.Player.DEFAULT_VIDEO_TYPE, (int)cbVideoType.SelectedValue);
+            };
+            //优先播放器类型
+            var realPlayerType = (RealPlayerType)SettingService.GetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE, (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
+            ComboBoxUseRealPlayerType.SelectedItem = realPlayerType;
+            ComboBoxUseRealPlayerType.SelectionChanged += (e, args) =>
+            {
+                SettingService.SetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE, (int)ComboBoxUseRealPlayerType.SelectedValue);
             };
             //视频倍速
             var speeds = m_playSpeedMenuService.MenuItems
