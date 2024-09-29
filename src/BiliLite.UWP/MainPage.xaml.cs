@@ -251,7 +251,10 @@ namespace BiliLite
         private void ClosePage(TabViewItem tabItem)
         {
             var frame = tabItem.Content as MyFrame;
-            ((frame.Content as Page).Content as Grid).Children.Clear();
+            if (frame.Content is Page { Content: Grid grid })
+            {
+                grid.Children.Clear();
+            }
 
             frame.Close();
             //frame.Navigate(typeof(BlankPage));

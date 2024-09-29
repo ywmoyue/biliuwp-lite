@@ -206,6 +206,7 @@
     <Compile Include="Models\Common\Comment\HotReply.cs" />
     <Compile Include="Models\Common\Danmaku\BiliDanmakuItem.cs" />
     <Compile Include="Models\Common\Dynamic\DynamicUgcSeasonCardModel.cs" />
+    <Compile Include="Models\Common\MarkdownViewerPagerParameter.cs" />
     <Compile Include="Models\Common\Player\PlaySpeedMenu.cs" />
     <Compile Include="Models\Common\Season\EpisodeSkip.cs" />
     <Compile Include="Models\Common\Player\PlayerSkipItem.cs" />
@@ -261,6 +262,9 @@
     <Compile Include="Models\Functions\ToggleFullWindowShortcutFunction.cs" />
     <Compile Include="Models\Functions\ToggleMiniWindowShortcutFunction.cs" />
     <Compile Include="Pages\IScrollRecorablePage.cs" />
+    <Compile Include="Pages\Other\MarkdownViewerPage.xaml.cs">
+      <DependentUpon>MarkdownViewerPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Services\BiliLiteDbContext.cs" />
     <Compile Include="Services\DownloadService.cs" />
     <Compile Include="Services\SqlMigrateService.cs" />
@@ -1047,6 +1051,9 @@
     <Content Include="Assets\StoreLogo.scale-200.png" />
     <Content Include="Assets\StoreLogo.scale-400.png" />
     <Content Include="Assets\Text\help.md" />
+    <Content Include="Assets\Text\img\1433952792.png" />
+    <Content Include="Assets\Text\img\2655001972.png" />
+    <Content Include="Assets\Text\img\3382929121.png" />
     <Content Include="Assets\Text\version_log.txt" />
     <Content Include="Assets\Thumbnails\Placeholde.png" />
     <Content Include="Assets\Thumbnails\Placeholde1x1.png" />
@@ -1059,6 +1066,7 @@
     <Content Include="Assets\Fonts\FansNum.otf" />
     <Content Include="Assets\Fonts\biliicon.ttf" />
     <Content Include="Assets\GeeTest\bili_gt.cshtml" />
+    <Content Include="Assets\Text\bili-merge.md" />
     <None Include="Assets\Text\new_version.json" />
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
@@ -1165,6 +1173,10 @@
     <Page Include="Pages\Home\UserDynamicPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\Other\MarkdownViewerPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\User\CollectedPage.xaml">
       <SubType>Designer</SubType>

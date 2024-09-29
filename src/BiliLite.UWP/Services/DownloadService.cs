@@ -404,7 +404,8 @@ namespace BiliLite.Services
 
         public void SearchDownloaded(string keyword)
         {
-            var searchResult = m_downloadPageViewModel.Downloadeds.Where(x => x.Title.Contains(keyword)).ToList();
+            var searchResult = m_downloadPageViewModel.Downloadeds
+                .Where(x => x.Title.ToLower().Contains(keyword.ToLower())).ToList();
             m_downloadPageViewModel.DownloadedViewModels.Clear();
             m_downloadPageViewModel.DownloadedViewModels.AddRange(searchResult);
         }
@@ -461,10 +462,6 @@ namespace BiliLite.Services
                         IsSeason = info.Type == DownloadType.Season,
                         Path = item.Path
                     };
-                    if (downloadedItem.ID == "44960")
-                    {
-
-                    }
                     if (await item.TryGetItemAsync("cover.jpg") is StorageFile coverFile)
                     {
                         var bitmapImage = new BitmapImage();

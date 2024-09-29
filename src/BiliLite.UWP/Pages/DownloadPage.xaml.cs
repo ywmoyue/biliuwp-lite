@@ -17,6 +17,7 @@ using BiliLite.Models.Common.Video.PlayUrlInfos;
 using BiliLite.ViewModels.Download;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.RegularExpressions;
+using BiliLite.Pages.Other;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -249,7 +250,18 @@ namespace BiliLite.Pages
 
         private async void btnMerge_Click(object sender, RoutedEventArgs e)
         {
-            await Launcher.LaunchUriAsync(new Uri("https://iliili.cn/index.php/bili-merge.html"));
+            MessageCenter.NavigateToPage(null, new NavigationInfo()
+            {
+                icon = Symbol.Video,
+                page = typeof(MarkdownViewerPage),
+                title = "BiliLite导出视频",
+                parameters = new MarkdownViewerPagerParameter()
+                {
+                    Type = MarkdownViewerPagerParameterType.Link,
+                    Value = "ms-appx:///Assets/Text/bili-merge.md",
+                },
+                dontGoTo = false,
+            });
         }
 
         private void btnEpisodesOutput_Click(object sender, RoutedEventArgs e)

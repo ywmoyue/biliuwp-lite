@@ -338,9 +338,9 @@ namespace BiliLite.Extensions
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public static bool IsUrl(this string url)
+        public static bool IsUrl(this string url, UriKind kind = UriKind.Absolute)
         {
-            return Uri.TryCreate(url, UriKind.Absolute, out Uri _);
+            return Uri.TryCreate(url, kind, out Uri _);
         }
 
         public static string UrlEncode(this string text)
