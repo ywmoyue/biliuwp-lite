@@ -179,6 +179,7 @@ namespace BiliLite.Pages
                 var folder = await StorageFolder.GetFolderFromPathAsync(item.FilePath);
                 await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
                 data.Epsidoes.Remove(item);
+                m_downloadService.RemoveDbSubItem(item.CID);
             }
             catch (Exception ex)
             {
@@ -238,6 +239,7 @@ namespace BiliLite.Pages
                 var folder = await StorageFolder.GetFolderFromPathAsync(data.Path);
                 await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
                 m_viewModel.DownloadedViewModels.Remove(data);
+                m_downloadService.RemoveDbItem(data.ID);
             }
             catch (Exception ex)
             {

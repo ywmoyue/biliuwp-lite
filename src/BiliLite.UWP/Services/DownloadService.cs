@@ -225,6 +225,7 @@ namespace BiliLite.Services
                 m_loadDownloadingCts[data.EpisodeID].Cancel();
                 var folder = await StorageFolder.GetFolderFromPathAsync(data.Path);
                 await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                RemoveDbSubItem(data.EpisodeID);
             }
             catch (Exception ex)
             {
@@ -270,6 +271,7 @@ namespace BiliLite.Services
                     m_loadDownloadingCts[item.EpisodeID].Cancel();
                     var folder = await StorageFolder.GetFolderFromPathAsync(item.Path);
                     await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                    RemoveDbSubItem(item.EpisodeID);
                 }
                 catch (Exception ex)
                 {
@@ -394,6 +396,26 @@ namespace BiliLite.Services
 
             // If neither condition is met, return 0
             return 0;
+        }
+
+        public void RemoveDbItem(string id)
+        {
+            var entity = m_biliLiteDbContext.DownloadedItems
+                .Include(x => x.Epsidoes)
+                .FirstOrDefault(x => x.ID == id);
+            if (entity == null) return;
+            m_biliLiteDbContext.DownloadedSubItems.RemoveRange(entity.Epsidoes);
+            m_biliLiteDbContext.DownloadedItems.Remove(entity);
+            m_biliLiteDbContext.SaveChanges();
+        }
+
+        public void RemoveDbSubItem(string id)
+        {
+            var entity = m_biliLiteDbContext.DownloadedSubItems
+                .FirstOrDefault(x => x.CID == id);
+            if (entity == null) return;
+            m_biliLiteDbContext.DownloadedSubItems.Remove(entity);
+            m_biliLiteDbContext.SaveChanges();
         }
 
         public void RefreshDownloaded()
