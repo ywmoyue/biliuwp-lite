@@ -186,7 +186,8 @@ namespace BiliLite.Pages
                     order = i,
                     play_mode = VideoPlayType.Season,
                     title = item.Title + " " + item.LongTitle,
-                    area = m_viewModel.Detail.Title.ParseArea(m_viewModel.Detail.UpInfo?.Mid ?? 0)
+                    area = m_viewModel.Detail.Title.ParseArea(m_viewModel.Detail.UpInfo?.Mid ?? 0),
+                    EpisodeSkip = item.Skip,
                 });
                 i++;
             }
@@ -511,15 +512,8 @@ namespace BiliLite.Pages
             {
                 // 检查正在下载及下载完成是否存在此视频
                 int state = 0;
-                var downloadViewModel = App.ServiceProvider.GetRequiredService<DownloadPageViewModel>();
-                if (downloadViewModel.Downloadings.FirstOrDefault(x => x.EpisodeID == item.Id.ToString()) != null)
-                {
-                    state = 2;
-                }
-                if (downloadViewModel.DownloadedViewModels.FirstOrDefault(x => x.Epsidoes.FirstOrDefault(y => y.EpisodeID == item.Id.ToString()) != null) != null)
-                {
-                    state = 3;
-                }
+                var downloadService = App.ServiceProvider.GetRequiredService<DownloadService>();
+                state = downloadService.CheckExist(item.Id.ToString(), true);
 
                 //如果正在下载state=2,下载完成state=3
                 downloadItem.Episodes.Add(new DownloadEpisodeItem()

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Windows.Storage;
 using BiliLite.Models.Databases;
@@ -30,6 +26,10 @@ namespace BiliLite.Services
         }
 
         public DbSet<SettingItem> SettingItems { get; set; }
+
+        public DbSet<DownloadedItemDTO> DownloadedItems { get; set; }
+
+        public DbSet<DownloadedSubItemDTO> DownloadedSubItems { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

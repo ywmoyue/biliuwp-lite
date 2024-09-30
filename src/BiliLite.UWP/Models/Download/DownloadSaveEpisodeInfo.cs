@@ -15,5 +15,7 @@ namespace BiliLite.Models.Download
         public string QualityName { get; set; }
         public List<DownloadSubtitleInfo> SubtitlePath { get; set; }
         public bool IsDash { get; set; }
+
+        public string Path { get; set; }
     }
 }

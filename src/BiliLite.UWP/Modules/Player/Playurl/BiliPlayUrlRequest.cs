@@ -49,7 +49,7 @@ namespace BiliLite.Modules.Player.Playurl
         /// </summary>
         public string Message { get; set; } = "";
 
-        public const string WebUserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36";
+        public const string WebUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36";
         public const string WebReferer = "https://www.bilibili.com";
         public const string AndroidUserAgent = "Bilibili Freedoooooom/MarkII";
 

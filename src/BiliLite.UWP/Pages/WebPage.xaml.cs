@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Navigation;
 using BiliLite.Models.Common;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Extensions.DependencyInjection;
+using Windows.Storage;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -81,15 +82,25 @@ namespace BiliLite.Pages
             }
 
             var url = new Uri(uri);
-            if (url.Host.Contains(Constants.BILIBILI_HOST))
+            if (uri.StartsWith("ms-appx://"))
             {
-                foreach (var cookie in m_cookieService.Cookies)
-                {
-                    var webCookie = webView.CoreWebView2.CookieManager.CreateCookie(cookie.Name, cookie.Value, Constants.BILIBILI_HOST, "/");
-                    webView.CoreWebView2.CookieManager.AddOrUpdateCookie(webCookie);
-                }
+                var templateText = await FileIO.ReadTextAsync(
+                    await StorageFile.GetFileFromApplicationUriAsync(url));
+
+                webView.NavigateToString(templateText);
             }
-            webView.Source=new Uri(uri);
+            else
+            {
+                if (url.Host.Contains(Constants.BILIBILI_HOST))
+                {
+                    foreach (var cookie in m_cookieService.Cookies)
+                    {
+                        var webCookie = webView.CoreWebView2.CookieManager.CreateCookie(cookie.Name, cookie.Value, Constants.BILIBILI_HOST, "/");
+                        webView.CoreWebView2.CookieManager.AddOrUpdateCookie(webCookie);
+                    }
+                }
+                webView.Source = new Uri(uri);
+            }
         }
 
         private async Task InitWebView2()

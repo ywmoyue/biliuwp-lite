@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using BiliLite.Models.Attributes;
+using BiliLite.Models.Common.Player;
 using BiliLite.Services;
 
 namespace BiliLite.Models.Common
@@ -585,6 +586,15 @@ namespace BiliLite.Models.Common
         public class Player
         {
             /// <summary>
+            /// 优先使用播放器类型
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const string USE_REAL_PLAYER_TYPE = "UseRealPlayerType";
+
+            [SettingDefaultValue]
+            public const RealPlayerType DEFAULT_USE_REAL_PLAYER_TYPE = RealPlayerType.Native;
+
+            /// <summary>
             /// 使用外站视频替换无法播放的视频 bool
             /// </summary>
             [SettingKey(typeof(bool))]
@@ -849,6 +859,18 @@ namespace BiliLite.Models.Common
 
             [SettingKey(typeof(string))]
             public const string PLAY_SPEED_MENU = "PlaySpeedMenu";
+
+            /// <summary>
+            /// 自动跳过OP/ED
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string AUTO_SKIP_OP_ED = "AutoSkipOpEd";
+
+            /// <summary>
+            /// 默认不自动跳过OP/ED
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_AUTO_SKIP_OP_ED = false;
         }
 
         public class Filter
@@ -950,6 +972,11 @@ namespace BiliLite.Models.Common
             [SettingKey(typeof(int))]
             public const string DEFAULT_VIDEO_TYPE = "DownloadDefaultVideoType";
 
+            [SettingKey(typeof(bool))]
+            public const string USE_DOWNLOAD_INDEX = "UseDownloadIndex";
+
+            [SettingDefaultValue]
+            public const bool DEFAULT_USE_DOWNLOAD_INDEX = false;
         }
 
         /// <summary>
@@ -1022,6 +1049,8 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const string DEFAULT_REQUEST_BUILD = "75900200";
+
+            public const string SQL_DB_VERSION = "SqlDbVersion";
         }
     }
 }

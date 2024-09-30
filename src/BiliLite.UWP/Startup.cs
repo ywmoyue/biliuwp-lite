@@ -11,12 +11,14 @@ namespace BiliLite
         {
             services.AddDbContext<BiliLiteDbContext>();
             services.AddSingleton<SettingSqlService>();
+            services.AddTransient<SqlMigrateService>();
 
             services.AddMapper();
             services.AddViewModels();
             services.AddControls();
             services.AddDanmakuController();
 
+            services.AddSingleton<DownloadService>();
             services.AddSingleton<CookieService>();
             services.AddSingleton<ShortcutKeyService>();
             services.AddTransient<PlayerToastService>();

@@ -5,7 +5,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using BiliLite.Models.Common;
 using BiliLite.Services;
-using BiliLite.ViewModels.Download;
 using Microsoft.Extensions.DependencyInjection;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
@@ -14,11 +13,11 @@ namespace BiliLite.Controls.Settings
 {
     public sealed partial class DownloadSettingsControl : UserControl
     {
-        private readonly DownloadPageViewModel m_downloadPageViewModel;
+        private readonly DownloadService m_downloadService;
 
         public DownloadSettingsControl()
         {
-            m_downloadPageViewModel = App.ServiceProvider.GetRequiredService<DownloadPageViewModel>();
+            m_downloadService = App.ServiceProvider.GetRequiredService<DownloadService>();
             this.InitializeComponent();
             LoadDownlaod();
         }
@@ -52,7 +51,7 @@ namespace BiliLite.Controls.Settings
                     SettingService.SetValue(SettingConstants.Download.DOWNLOAD_PATH, folder.Path);
                     txtDownloadPath.Text = folder.Path;
                     Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(folder);
-                    m_downloadPageViewModel.RefreshDownloaded();
+                    m_downloadService.RefreshDownloaded();
                 }
             });
             //旧版下载目录
@@ -89,14 +88,14 @@ namespace BiliLite.Controls.Settings
             swDownloadParallelDownload.Toggled += new RoutedEventHandler((e, args) =>
             {
                 SettingService.SetValue(SettingConstants.Download.PARALLEL_DOWNLOAD, swDownloadParallelDownload.IsOn);
-                m_downloadPageViewModel.UpdateSetting();
+                m_downloadService.UpdateSetting();
             });
             //付费网络下载
             swDownloadAllowCostNetwork.IsOn = SettingService.GetValue<bool>(SettingConstants.Download.ALLOW_COST_NETWORK, false);
             swDownloadAllowCostNetwork.Toggled += new RoutedEventHandler((e, args) =>
             {
                 SettingService.SetValue(SettingConstants.Download.ALLOW_COST_NETWORK, swDownloadAllowCostNetwork.IsOn);
-                m_downloadPageViewModel.UpdateSetting();
+                m_downloadService.UpdateSetting();
             });
             //下载完成发送通知
             swDownloadSendToast.IsOn = SettingService.GetValue<bool>(SettingConstants.Download.SEND_TOAST, false);
@@ -104,6 +103,13 @@ namespace BiliLite.Controls.Settings
             {
                 SettingService.SetValue(SettingConstants.Download.SEND_TOAST, swDownloadSendToast.IsOn);
             });
+            //使用下载索引
+            SwUseDownloadIndex.IsOn = SettingService.GetValue(SettingConstants.Download.USE_DOWNLOAD_INDEX,
+                SettingConstants.Download.DEFAULT_USE_DOWNLOAD_INDEX);
+            SwUseDownloadIndex.Toggled += (e, args) =>
+            {
+                SettingService.SetValue(SettingConstants.Download.USE_DOWNLOAD_INDEX, SwUseDownloadIndex.IsOn);
+            };
             //下载类型
             var selectedValue = (PlayUrlCodecMode)SettingService.GetValue(SettingConstants.Download.DEFAULT_VIDEO_TYPE, (int)DefaultVideoTypeOptions.DEFAULT_VIDEO_TYPE);
             cbDownloadVideoType.SelectedItem = DefaultVideoTypeOptions.GetOption(selectedValue);
@@ -120,6 +126,12 @@ namespace BiliLite.Controls.Settings
             {
                 SettingService.SetValue(SettingConstants.Download.LOAD_OLD_DOWNLOAD, swDownloadLoadOld.IsOn);
             });
+        }
+
+        private void BtnRebuildDownloadIndex_OnClick(object sender, RoutedEventArgs e)
+        {
+            m_downloadService.ClearIndex();
+            m_downloadService.LoadDownloaded(true);
         }
     }
 }

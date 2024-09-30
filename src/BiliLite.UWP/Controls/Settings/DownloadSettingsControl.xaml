@@ -99,5 +99,19 @@
             </controls:SettingsCard.HeaderIcon>
             <ToggleSwitch  x:Name="swDownloadSendToast"></ToggleSwitch>
         </controls:SettingsCard>
+
+        <controls:SettingsExpander Header="使用下载索引"
+                               Description="实验性功能,是否在数据库中建立下载索引而不是每次读取下载文件夹,暂不支持旧版下载的视频,下次重启生效">
+            <controls:SettingsExpander.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Database"></font:FontAwesome>
+            </controls:SettingsExpander.HeaderIcon>
+            <ToggleSwitch  x:Name="SwUseDownloadIndex"></ToggleSwitch>
+
+            <controls:SettingsExpander.Items>
+                <controls:SettingsCard Header="重建索引">
+                    <Button Click="BtnRebuildDownloadIndex_OnClick">重建索引</Button>
+                </controls:SettingsCard>
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>
     </StackPanel>
 </UserControl>

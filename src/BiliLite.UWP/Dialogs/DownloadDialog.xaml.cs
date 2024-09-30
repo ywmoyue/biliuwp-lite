@@ -24,7 +24,7 @@ namespace BiliLite.Dialogs
         DownloadItemViewModel downloadItem;
         List<DownloadEpisodeItemViewModel> allEpisodes;
         private readonly DownloadDialogViewModel m_viewModel;
-        private readonly DownloadPageViewModel m_downloadPageViewModel;
+        private readonly DownloadService m_downloadService;
         private readonly IMapper m_mapper;
 
         public DownloadDialog(DownloadItem downloadItem)
@@ -33,7 +33,7 @@ namespace BiliLite.Dialogs
             playerVM = new PlayerVM(true);
 
             m_viewModel = App.ServiceProvider.GetService<DownloadDialogViewModel>();
-            m_downloadPageViewModel = App.ServiceProvider.GetService<DownloadPageViewModel>();
+            m_downloadService = App.ServiceProvider.GetService<DownloadService>();
             m_mapper = App.ServiceProvider.GetService<IMapper>();
 
             var downloadItemViewModel = m_mapper.Map<DownloadItemViewModel>(downloadItem);
@@ -233,7 +233,7 @@ namespace BiliLite.Dialogs
                     item.ErrorMessage = ex.Message;
                 }
             }
-            m_downloadPageViewModel.LoadDownloading();
+            m_downloadService.LoadDownloading();
             IsPrimaryButtonEnabled = true;
             if (hide)
             {
@@ -249,7 +249,7 @@ namespace BiliLite.Dialogs
 
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            m_downloadPageViewModel.LoadDownloading();
+            m_downloadService.LoadDownloading();
             this.Hide();
         }
 

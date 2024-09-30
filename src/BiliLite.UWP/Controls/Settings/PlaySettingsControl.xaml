@@ -42,6 +42,18 @@
                        DisplayMemberPath="Name"></ComboBox>
         </controls:SettingsCard>
 
+        <controls:SettingsCard Header="优先播放器类型"
+                               Description="如果遇到加载卡顿、磁盘占用高等问题，请尝试修改优先播放器类型">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_PhotoVideo"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <ComboBox x:Name="ComboBoxUseRealPlayerType" SelectedIndex="0" MinWidth="200"
+                      SelectedValuePath="Value"
+                      DisplayMemberPath="Content"
+                      ItemsSource="{x:Bind m_realPlayerTypes.Options}">
+            </ComboBox>
+        </controls:SettingsCard>
+
         <!--<TextBlock  Margin="0 16 0 8" FontSize="16" Visibility="Collapsed">优先使用FFmpeg播放器</TextBlock>
         <ToggleSwitch x:Name="swPriorityFFmpeg" Visibility="Collapsed"></ToggleSwitch>
 
@@ -74,6 +86,14 @@
                 <font:FontAwesome Icon="Solid_Play"></font:FontAwesome>
             </controls:SettingsCard.HeaderIcon>
             <ToggleSwitch  x:Name="swAutoPlay"></ToggleSwitch>
+        </controls:SettingsCard>
+
+        <controls:SettingsCard Header="番剧自动跳过OP/ED"
+                               Description="自动跳过片头/片尾">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Music"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch  x:Name="SwSkipOpEd"></ToggleSwitch>
         </controls:SettingsCard>
 
         <controls:SettingsCard Header="自动跳转至上次观看进度"

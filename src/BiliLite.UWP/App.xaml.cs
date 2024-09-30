@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
@@ -18,7 +19,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using BiliLite.Pages;
-using BiliLite.ViewModels.Download;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite
@@ -205,10 +205,24 @@ namespace BiliLite
             //圆角
             App.Current.Resources["ImageCornerRadius"] = new CornerRadius(SettingService.GetValue<double>(SettingConstants.UI.IMAGE_CORNER_RADIUS, 0));
             await AppHelper.SetRegions();
-            var downloadViewModel = ServiceProvider.GetRequiredService<DownloadPageViewModel>();
-            downloadViewModel.LoadDownloading();
-            downloadViewModel.LoadDownloaded();
+            await InitDb();
+            try
+            {
+                var downloadService = ServiceProvider.GetRequiredService<DownloadService>();
+                downloadService.LoadDownloading();
+                downloadService.LoadDownloaded();
+            }
+            catch (Exception ex)
+            {
+                logger.Error("初始化加载下载视频错误", ex);
+            }
             VideoPlayHistoryHelper.LoadABPlayHistories(true);
+        }
+
+        private async Task InitDb()
+        {
+            var sqlMigrateService = ServiceProvider.GetRequiredService<SqlMigrateService>();
+            await sqlMigrateService.MigrateDatabase();
         }
 
         /// <summary>

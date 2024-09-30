@@ -112,6 +112,8 @@ namespace BiliLite.Services
             if (url.Contains("b23.tv"))
             {
                 url = await BiliExtensions.GetShortLinkLocation(url);
+                var uri = new Uri(url);
+                uriHref = uri.GetLeftPart(UriPartial.Path);
             }
 
 

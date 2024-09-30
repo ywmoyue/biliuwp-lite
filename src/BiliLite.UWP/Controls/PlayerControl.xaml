@@ -13,6 +13,7 @@
     xmlns:fa="using:FontAwesome5" xmlns:player="using:BiliLite.Modules.Player"
     xmlns:common="using:BiliLite.Models.Common"
     xmlns:player1="using:BiliLite.Models.Common.Player"
+    xmlns:modules="using:BiliLite.Modules"
     d:DesignHeight="800"
     d:DesignWidth="1000">
     <UserControl.Resources>
@@ -302,7 +303,7 @@
                                             <StackPanel>
                                                 <Grid Visibility="{Binding ShowTitlePart}">
                                                     <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition MinWidth="25"></ColumnDefinition>
+                                                        <ColumnDefinition MinWidth="25" Width="Auto"></ColumnDefinition>
                                                         <ColumnDefinition Width="*"></ColumnDefinition>
                                                     </Grid.ColumnDefinitions>
                                                     <TextBlock Text="{Binding TitlePage}" 
@@ -410,7 +411,7 @@
                                     <TextBlock Margin="0 4 0 0">弹幕同屏密度(0为不限制) <Run Text="{x:Bind Path=DanmuSettingMaxNum.Value,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
                                     <Slider  x:Name="DanmuSettingMaxNum" Value="0" Minimum="0" Maximum="50" StepFrequency="1"></Slider>
                                     <TextBlock Margin="0 4 0 0">
-                                        弹幕字体 
+                                        弹幕字体
                                     </TextBlock>
                                     <AutoSuggestBox QueryIcon="Accept" x:Name="DanmuSettingFont"></AutoSuggestBox>
 
@@ -446,7 +447,7 @@
                                                 <TextBlock  Foreground="White" >合并重复弹幕</TextBlock>
                                             </ToggleSwitch.Header>
                                         </ToggleSwitch>
-                                        
+
                                     </Grid>
                                     <TextBlock Margin="0 8">屏蔽等级(0为不屏蔽) <Run Text="{x:Bind Path=DanmuSettingShieldLevel.Value,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/>级</TextBlock>
                                     <Slider x:Name="DanmuSettingShieldLevel"  Minimum="0" Maximum="10" StepFrequency="1"></Slider>
@@ -605,10 +606,10 @@
                    DoubleTapped="Grid_DoubleTapped">
                 <!--播放器-->
                 <local:Player x:Name="Player"  PlayStateChanged="Player_PlayStateChanged" PlayMediaEnded="Player_PlayMediaEnded" PlayMediaError="Player_PlayMediaError" ChangeEngine="Player_ChangeEngine" PlayMediaOpened="Player_PlayMediaOpened"/>
-               
+
                 <!--字幕-->
                 <Border x:Name="BorderSubtitle" Visibility="Collapsed" Opacity="{Binding ElementName=SubtitleSettingOpacity,Path=Value,Mode=OneWay}" Padding="3 4 8 4" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0 0 0 24">
-                   
+
                 </Border>
                 <!--弹幕-->
                 <Grid>
@@ -666,7 +667,7 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                
+
                 <Grid x:Name="VirtualProgressBar"
                       Visibility="{x:Bind m_viewModel.ShowVideoBottomVirtualProgressBar}">
                     <Grid.RowDefinitions>
@@ -702,9 +703,15 @@
                             <TextBlock x:Name="TopTitle" VerticalAlignment="Center" Foreground="White" FontSize="18" Margin="12 0" TextTrimming="CharacterEllipsis">第一集</TextBlock>
                             <StackPanel Grid.Column="1" Orientation="Horizontal">
                                 <TextBlock x:Name="TopOnline" Foreground="White" FontSize="16" VerticalAlignment="Center" Margin="12 0"></TextBlock>
+
+                                <Button x:Name="TopBtnViewPoints"
+                                        Visibility="{x:Bind m_viewModel.ShowViewPointsBtn,Mode=OneWay}"
+                                        Click="TopBtnViewPoints_OnClick" Background="Transparent" Padding="0" Width="48" Height="48">
+                                    <Image Width="28" Height="28" Source="/Assets/Icon/icon_view_point.png" ></Image>
+                                </Button>
+
                                 <Button x:Name="TopBtnSettingDanmaku" Click="TopBtnSettingDanmaku_Click" Background="Transparent" Padding="0" Width="48" Height="48">
                                     <Image Width="28" Height="28" Source="/Assets/Icon/icon_danmaku_setting.png" ></Image>
-
                                 </Button>
                                 <Button x:Name="TopBtnScreenshot" Click="TopBtnScreenshot_Click" Background="Transparent" Padding="0" Width="48" Height="48">
                                     <Button.KeyboardAccelerators>
@@ -887,7 +894,7 @@
                                 </StackPanel>
                             </Grid>
                         </Grid>
-                       
+
                     </Grid>
                     <Grid x:Name="MiniControl" Visibility="Collapsed" VerticalAlignment="Bottom">
                         <Grid.Background>
@@ -915,11 +922,49 @@
                         </StackPanel>
                         <ProgressBar VerticalAlignment="Bottom" Foreground="White" Value="{Binding ElementName=BottomProgress,Path=Value,Mode=OneWay}" Maximum="{Binding ElementName=BottomProgress,Path=Maximum,Mode=OneWay}"></ProgressBar>
                     </Grid>
-                   
+
                 </Grid>
                 <HyperlinkButton x:Name="BottomImageBtnPlay" Visibility="Collapsed"  Margin="24 100" Width="80" Height="80" Click="BottomBtnPlay_Click" VerticalAlignment="Bottom" HorizontalAlignment="Right" >
                     <Image Source="ms-appx:///Assets/Icon/ic_play.png"></Image>
                 </HyperlinkButton>
+
+                <!--看点列表-->
+                <Grid x:Name="ViewPointsGrid"
+                      Visibility="{x:Bind m_viewModel.ShowViewPointsView,Mode=OneWay}"
+                      Tapped="ViewPointsGrid_OnTapped"
+                      Background="Transparent">
+                    <Grid 
+                        Width="320"
+                        HorizontalAlignment="Right"
+                        Background="#C8000000">
+                        <ListView
+                            SelectionMode="Single"
+                            ItemsSource="{x:Bind m_viewModel.ViewPoints,Mode=OneWay}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="modules:PlayerInfoViewPoint">
+                                    <ListViewItem>
+                                        <StackPanel Margin="0 8 0 8" Orientation="Horizontal" Tapped="ViewPoint_OnTapped"
+                                                    Background="Transparent">
+                                            <Image Source="{x:Bind ImgUrl}" Width="120"></Image>
+                                            <StackPanel Orientation="Vertical"
+                                                        Margin="8 0 0 0"
+                                                        Width="172">
+                                                <TextBlock Text="{x:Bind Content}"
+                                                           TextWrapping="Wrap"></TextBlock>
+                                                <TextBlock>
+                                                    <Run Text="{x:Bind From,Converter={StaticResource progress}}"></Run>
+                                                    -
+                                                    <Run Text="{x:Bind To,Converter={StaticResource progress}}"></Run>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </ListViewItem>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </Grid>
+
                 <Button x:Name="BtnFoucs" Width="0" Height="0" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="-8 -8 0 0" Background="Transparent" BorderThickness="0"></Button>
             </Grid>
         </SplitView>

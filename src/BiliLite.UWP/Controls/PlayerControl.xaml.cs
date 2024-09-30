@@ -114,6 +114,8 @@ namespace BiliLite.Controls
             set { _playUrlInfo = value; DoPropertyChanged("playUrlInfo"); }
         }
 
+        private readonly bool m_autoSkipOpEdFlag = false;
+        private DispatcherTimer m_positionTimer;
         DispatcherTimer danmuTimer;
         /// <summary>
         /// 弹幕信息
@@ -149,6 +151,12 @@ namespace BiliLite.Controls
             danmuTimer = new DispatcherTimer();
             danmuTimer.Interval = TimeSpan.FromSeconds(1);
             danmuTimer.Tick += DanmuTimer_Tick;
+
+            m_positionTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1) };
+            m_positionTimer.Tick += PositionTimer_Tick;
+            m_autoSkipOpEdFlag = SettingService.GetValue(SettingConstants.Player.AUTO_SKIP_OP_ED,
+                SettingConstants.Player.DEFAULT_AUTO_SKIP_OP_ED);
+
             this.Loaded += PlayerControl_Loaded;
             this.Unloaded += PlayerControl_Unloaded;
             m_playerKeyRightAction = (PlayerKeyRightAction)SettingService.GetValue(SettingConstants.Player.PLAYER_KEY_RIGHT_ACTION, (int)PlayerKeyRightAction.ControlProgress);
@@ -241,6 +249,7 @@ namespace BiliLite.Controls
 
             danmuTimer.Start();
             timer_focus.Start();
+            m_positionTimer.Start();
         }
 
         private async void _systemMediaTransportControls_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
@@ -812,6 +821,28 @@ namespace BiliLite.Controls
             {
                 m_danmakuController.Pause();
             }
+        }
+
+        private void PositionTimer_Tick(object sender, object e)
+        {
+            if (!m_autoSkipOpEdFlag) return;
+            if (CurrentPlayItem == null) return;
+            if (CurrentPlayItem.EpisodeSkip == null) return;
+            SkipSection(CurrentPlayItem.EpisodeSkip.Op, "SkipOp", "自动跳过OP");
+            SkipSection(CurrentPlayItem.EpisodeSkip.Ed, "SkipEd", "自动跳过ED");
+        }
+
+        private void SkipSection(PlayerSkipItem section, string toastId, string message)
+        {
+            if (section == null) return;
+            if (!IsSectionValid(section) || (int)Player.Position != section.Start) return;
+            m_playerToastService.Show(toastId, message);
+            SetPosition(section.End);
+        }
+
+        private bool IsSectionValid(PlayerSkipItem section)
+        {
+            return section.Start != 0 && section.End != 0 && section.Start != section.End;
         }
 
         private async Task SetPlayItem(int index)
@@ -1476,8 +1507,13 @@ namespace BiliLite.Controls
                 }
             }
 
-            TopOnline.Text = await playerHelper.GetOnline(CurrentPlayItem.avid, CurrentPlayItem.cid);
+            if (player_info.ViewPoints != null && player_info.ViewPoints.Any())
+            {
+                m_viewModel.ViewPoints = player_info.ViewPoints;
+                m_viewModel.ShowViewPointsBtn = true;
+            }
 
+            TopOnline.Text = await playerHelper.GetOnline(CurrentPlayItem.avid, CurrentPlayItem.cid);
         }
 
         public async Task ReportHistory(double progress = double.NaN)
@@ -1530,31 +1566,29 @@ namespace BiliLite.Controls
             };
             if (quality.PlayUrlType == BiliPlayUrlType.DASH)
             {
-                var audio = audioQuality == null ? quality.DashInfo.Audio : audioQuality.Audio;
-                var video = quality.DashInfo.Video;
-
-                result = await Player.PlayerDashUseNative(quality.DashInfo, quality.UserAgent, quality.Referer, positon: _postion);
-
-                if (!result.result)
+                var realPlayerType = (RealPlayerType)SettingService.GetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE, (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
+                if (realPlayerType==RealPlayerType.Native)
                 {
-                    var mpd_url = new PlayerAPI().GenerateMPD(new Models.GenerateMPDModel()
+                    result = await Player.PlayerDashUseNative(quality.DashInfo, quality.UserAgent, quality.Referer, positon: _postion);
+
+                    if (!result.result)
                     {
-                        AudioBandwidth = audio.BandWidth.ToString(),
-                        AudioCodec = audio.Codecs,
-                        AudioID = audio.ID.ToString(),
-                        AudioUrl = audio.Url,
-                        Duration = quality.DashInfo.Duration,
-                        DurationMS = quality.Timelength,
-                        VideoBandwidth = video.BandWidth.ToString(),
-                        VideoCodec = video.Codecs,
-                        VideoID = video.ID.ToString(),
-                        VideoFrameRate = video.FrameRate.ToString(),
-                        VideoHeight = video.Height,
-                        VideoWidth = video.Width,
-                        VideoUrl = video.Url,
-                    });
-                    result = await Player.PlayDashUrlUseFFmpegInterop(mpd_url, quality.UserAgent, quality.Referer, positon: _postion);
+                        result = await Player.PlayDashUseFFmpegInterop(quality.DashInfo, quality.UserAgent, quality.Referer,
+                            positon: _postion);
+                    }
                 }
+                else
+                {
+                    result = await Player.PlayDashUseFFmpegInterop(quality.DashInfo, quality.UserAgent, quality.Referer,
+                        positon: _postion);
+
+                    if (!result.result)
+                    {
+
+                        result = await Player.PlayerDashUseNative(quality.DashInfo, quality.UserAgent, quality.Referer, positon: _postion);
+                    }
+                }
+
             }
             else if (quality.PlayUrlType == BiliPlayUrlType.SingleFLV)
             {
@@ -2546,6 +2580,11 @@ namespace BiliLite.Controls
                 danmuTimer.Stop();
                 danmuTimer = null;
             }
+            if (m_positionTimer != null)
+            {
+                m_positionTimer.Stop();
+                m_positionTimer = null;
+            }
             danmakuPool = null;
             if (dispRequest != null)
             {
@@ -2878,6 +2917,23 @@ namespace BiliLite.Controls
             m_danmakuController.UpdateSize(SplitView.ActualWidth, SplitView.ActualHeight);
             // 更新画面比例
             Player.SetRatioMode(PlayerSettingRatio.SelectedIndex);
+        }
+
+        private void TopBtnViewPoints_OnClick(object sender, RoutedEventArgs e)
+        {
+            m_viewModel.ShowViewPointsView = true;
+        }
+
+        private void ViewPointsGrid_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            m_viewModel.ShowViewPointsView = false;
+        }
+
+        private void ViewPoint_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (!(sender is FrameworkElement element)) return;
+            if (!(element.DataContext is PlayerInfoViewPoint viewPoint)) return;
+            SetPosition(viewPoint.From);
         }
     }
 }

@@ -19,6 +19,7 @@ using BiliLite.Models.Common.User.UserDetails;
 using BiliLite.Models.Common.UserDynamic;
 using BiliLite.Models.Common.Video;
 using BiliLite.Models.Common.Video.Detail;
+using BiliLite.Models.Databases;
 using BiliLite.Models.Download;
 using BiliLite.Models.Dynamic;
 using BiliLite.Models.Functions;
@@ -45,6 +46,11 @@ namespace BiliLite.Extensions
         {
             var mapper = new Mapper(new MapperConfiguration(expression =>
             {
+                expression.CreateMap<DownloadedItemDTO, DownloadedItem>()
+                    .ReverseMap();
+                expression.CreateMap<DownloadedSubItemDTO, DownloadedSubItem>()
+                    .ReverseMap();
+
                 expression.CreateMap<DownloadItem, DownloadItemViewModel>();
                 expression.CreateMap<DownloadEpisodeItem, DownloadEpisodeItemViewModel>();
                 expression.CreateMap<CommentItem, HotReply>()
