@@ -1363,7 +1363,7 @@ namespace BiliLite.Controls
             BottomSoundQuality.SelectionChanged -= BottomSoundQuality_SelectionChanged;
             BottomSoundQuality.SelectedItem = playUrlInfo.CurrentAudioQuality;
             BottomSoundQuality.SelectionChanged += BottomSoundQuality_SelectionChanged;
-            ChangeQuality(current_quality_info, playUrlInfo.CurrentAudioQuality).RunWithoutAwait();
+            // ChangeQuality(current_quality_info, playUrlInfo.CurrentAudioQuality).RunWithoutAwait();
         }
 
         private void SetQuality()
@@ -1584,7 +1584,6 @@ namespace BiliLite.Controls
 
                     if (!result.result)
                     {
-
                         result = await Player.PlayerDashUseNative(quality.DashInfo, quality.UserAgent, quality.Referer, positon: _postion);
                     }
                 }
