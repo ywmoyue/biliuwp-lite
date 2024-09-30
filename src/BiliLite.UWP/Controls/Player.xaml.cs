@@ -142,7 +142,7 @@ namespace BiliLite.Controls
         }
 
         public static readonly DependencyProperty BufferCacheProperty =
-            DependencyProperty.Register("BufferCache", typeof(double), typeof(Player), new PropertyMetadata(1));
+            DependencyProperty.Register("BufferCache", typeof(double), typeof(Player), new PropertyMetadata(1d));
 
         /// <summary>
         /// 播放速度
