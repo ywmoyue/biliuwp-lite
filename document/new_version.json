@@ -1,7 +1,7 @@
 {
-    "version": "4.7.3",
-    "version_num": 40703,
-    "version_desc": "更新内容:\r\n\r\n- 快捷键设置页方向键显示改为对应方向字符 \r\n\r\n- 支持设置默认最大音质，未找到指定音质时默认音质改为192K  \r\n\r\n- 播放视频中左右快进可能使右侧页面左右滚动  \r\n\r\n- 修复互动视频的cid长度越界int类型  \r\n\r\n- 移除会导致异常的首页推荐项，该问题会导致闪退发生  \r\n\r\n- 超过100分p视频播放器中列表显示不全  \r\n\r\n- 单窗口模式滚动定位问题处理   \r\n\r\n- 修复读取个人资料被风控导致失败  \r\n\r\n- 修复快速收藏设置项不生效 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+    "version": "4.7.4",
+    "version_num": 40704,
+    "version_desc": "更新内容:\r\n\r\n- 新增自动跳过OP/ED功能，设置中开启  \r\n\r\n- 可选保存已下载视频数据到数据库 \r\n\r\n- 视频播放控件内新增章节看点列表 \r\n\r\n- 持续快进功能启用分档位快进  \r\n\r\n- 将外部合并视频帮助页移入内部，添加python批量合并脚本外链  \r\n\r\n- 更新证书  \r\n\r\n- sqlite数据库迁移更新  \r\n\r\n- 可设置优先播放器类型\r\n\r\n- 修复选集界面错误换行 \r\n\r\n- 捕获初始化下载视频错误 \r\n\r\n- 已下载番剧打开详情错误 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
     "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
     "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
