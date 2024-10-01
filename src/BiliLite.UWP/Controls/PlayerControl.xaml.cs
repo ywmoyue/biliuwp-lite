@@ -788,7 +788,7 @@ namespace BiliLite.Controls
             {
                 await LoadDanmaku(segIndex);
             }
-            else if (position < m_danmakuController.Position && !m_useNsDanmaku)
+            else if (position < m_danmakuController.Position && !m_useNsDanmaku && Player.PlayState == PlayState.Playing)
             {
                 await LoadDanmaku(segIndex);
             }

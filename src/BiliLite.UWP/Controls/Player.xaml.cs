@@ -22,6 +22,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.Web.Http;
 using BiliLite.Models.Common.Player;
+using Newtonsoft.Json;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -445,16 +446,19 @@ namespace BiliLite.Controls
             //播放开始
             m_playerVideo.MediaOpened += async (e, arg) =>
             {
+                _logger.Trace($"MediaOpened");
                 await OnPlayerMediaOpened(specificPlayerMediaOpenAction);
             };
             //播放完成
             m_playerVideo.MediaEnded += async (e, arg) =>
             {
+                _logger.Trace($"MediaEnded");
                 await OnPlayerMediaEnded();
             };
             //播放错误
             m_playerVideo.MediaFailed += async (e, arg) =>
             {
+                _logger.Trace($"MediaFailed: {JsonConvert.SerializeObject(arg)}");
                 if (playFailedNeedCheckPlayerHasValue && m_playerVideo?.Source == null)
                 {
                     return;
@@ -465,23 +469,66 @@ namespace BiliLite.Controls
             //缓冲开始
             m_playerVideo.PlaybackSession.BufferingStarted += async (e, arg) =>
             {
+                _logger.Trace($"BufferingStarted: {JsonConvert.SerializeObject(arg)}");
                 await OnPlayerBufferingStarted();
             };
             //缓冲进行中
             m_playerVideo.PlaybackSession.BufferingProgressChanged += async (e, arg) =>
             {
+                _logger.Trace($"BufferingProgressChanged");
                 await OnPlayerBufferingProgressChanged(e);
             };
             //缓冲结束
             m_playerVideo.PlaybackSession.BufferingEnded += async (e, arg) =>
             {
+                _logger.Trace($"BufferingEnded");
                 await OnPlayerBufferingEnded();
             };
             //进度变更
             m_playerVideo.PlaybackSession.PositionChanged += async (e, arg) =>
-            {
+            { 
                 await OnPlayerPositionChanged(e);
             };
+
+            if (m_playerAudio != null)
+            {
+                //播放开始
+                m_playerAudio.MediaOpened += async (e, arg) =>
+                {
+                    _logger.Trace($"m_playerAudioMediaOpened");
+                };
+                //播放完成
+                m_playerAudio.MediaEnded += async (e, arg) =>
+                {
+                    _logger.Trace($"m_playerAudioMediaEnded");
+                    // 检测音画同步
+                    if ((int)m_playerAudio.Position.TotalSeconds != (int)m_playerVideo.Position.TotalSeconds)
+                    {
+                        m_mediaTimelineController.Position = m_playerVideo.Position;
+                        _logger.Trace($"m_playerAudioMediaEnded 音频轨道进度修复");
+                    }
+                };
+                //播放错误
+                m_playerAudio.MediaFailed += async (e, arg) =>
+                {
+                    _logger.Trace($"m_playerAudioMediaFailed: {JsonConvert.SerializeObject(arg)}");
+                };
+                //缓冲开始
+                m_playerAudio.PlaybackSession.BufferingStarted += async (e, arg) =>
+                {
+                    _logger.Trace($"m_playerAudioBufferingStarted: {JsonConvert.SerializeObject(arg)}");
+                };
+                //缓冲进行中
+                m_playerAudio.PlaybackSession.BufferingProgressChanged += async (e, arg) =>
+                {
+                    _logger.Trace($"m_playerAudioBufferingProgressChanged");
+                };
+                //缓冲结束
+                m_playerAudio.PlaybackSession.BufferingEnded += async (e, arg) =>
+                {
+                    _logger.Trace($"m_playerAudioBufferingEnded: {JsonConvert.SerializeObject(arg)}");
+                };
+            }
         }
 
         #endregion
