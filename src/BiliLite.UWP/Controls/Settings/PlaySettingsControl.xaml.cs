@@ -38,7 +38,8 @@ namespace BiliLite.Controls.Settings
             };
             //优先播放器类型
             var realPlayerType = (RealPlayerType)SettingService.GetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE, (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
-            ComboBoxUseRealPlayerType.SelectedItem = realPlayerType;
+            ComboBoxUseRealPlayerType.SelectedItem =
+                m_realPlayerTypes.Options.FirstOrDefault(x => x.Value == realPlayerType);
             ComboBoxUseRealPlayerType.SelectionChanged += (e, args) =>
             {
                 SettingService.SetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE, (int)ComboBoxUseRealPlayerType.SelectedValue);
