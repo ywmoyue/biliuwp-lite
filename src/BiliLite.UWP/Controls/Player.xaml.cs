@@ -329,7 +329,22 @@ namespace BiliLite.Controls
                 _ffmpegConfig.FFmpegOptions.Add("headers", $"Referer: {referer}");
             }
 
-            _ffmpegConfig.VideoDecoderMode = passthrough ? VideoDecoderMode.ForceSystemDecoder : VideoDecoderMode.ForceFFmpegSoftwareDecoder;
+            _ffmpegConfig.FFmpegOptions.Add("allowed_extensions","ALL");
+            _ffmpegConfig.FFmpegOptions.Add("reconnect", "1");
+            _ffmpegConfig.FFmpegOptions.Add("reconnect_streamed", "1");
+            _ffmpegConfig.FFmpegOptions.Add("reconnect_on_network_error", "1");
+            //_ffmpegConfig.BufferTime
+
+            var ffmpegOptions =
+                SettingService.GetValue(SettingConstants.Player.FfmpegOptions, new Dictionary<string, string>());
+
+            if (ffmpegOptions.Any())
+            {
+                foreach (var keyValuePair in ffmpegOptions)
+                {
+                    _ffmpegConfig.FFmpegOptions.Add(keyValuePair.Key,keyValuePair.Value);
+                }
+            }
             return _ffmpegConfig;
         }
 
@@ -501,13 +516,12 @@ namespace BiliLite.Controls
                 m_playerAudio.MediaEnded += async (e, arg) =>
                 {
                     _logger.Trace($"m_playerAudioMediaEnded");
-                    // 检测音画同步
-                    if ((int)m_playerAudio.Position.TotalSeconds != (int)m_playerVideo.Position.TotalSeconds)
-                    {
-                        m_mediaTimelineController.Position = m_playerVideo.Position;
-                        _logger.Trace($"m_playerAudioMediaEnded 音频轨道进度修复");
-                    }
                 };
+                //m_playerAudio.PlaybackSession.PositionChanged += (e, arg) =>
+                //{
+                //    _logger.Trace(
+                //        $"audio:{m_playerAudio.Position},video:{m_playerVideo.Position},controller:{m_mediaTimelineController.Position},offset:{m_playerAudio.TimelineControllerPositionOffset}");
+                //};
                 //播放错误
                 m_playerAudio.MediaFailed += async (e, arg) =>
                 {

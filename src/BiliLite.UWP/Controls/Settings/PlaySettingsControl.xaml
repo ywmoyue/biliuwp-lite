@@ -9,6 +9,7 @@
     xmlns:font="using:FontAwesome5"
     xmlns:common="using:BiliLite.Models.Common"
     xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
+    xmlns:settings="using:BiliLite.ViewModels.Settings"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -42,17 +43,24 @@
                        DisplayMemberPath="Name"></ComboBox>
         </controls:SettingsCard>
 
-        <controls:SettingsCard Header="优先播放器类型"
+        <controls:SettingsExpander Header="优先播放器类型"
                                Description="如果遇到加载卡顿、磁盘占用高等问题，请尝试修改优先播放器类型">
-            <controls:SettingsCard.HeaderIcon>
+            <controls:SettingsExpander.HeaderIcon>
                 <font:FontAwesome Icon="Solid_PhotoVideo"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
+            </controls:SettingsExpander.HeaderIcon>
             <ComboBox x:Name="ComboBoxUseRealPlayerType" SelectedIndex="0" MinWidth="200"
                       SelectedValuePath="Value"
                       DisplayMemberPath="Content"
                       ItemsSource="{x:Bind m_realPlayerTypes.Options}">
             </ComboBox>
-        </controls:SettingsCard>
+
+            <controls:SettingsExpander.Items>
+                <controls:SettingsCard Header="ffmpeg options">
+                    <Button Click="BtnOpenFFmpegOptionsPanel_OnClick">设置</Button>
+                </controls:SettingsCard>
+            </controls:SettingsExpander.Items>
+
+        </controls:SettingsExpander>
 
         <!--<TextBlock  Margin="0 16 0 8" FontSize="16" Visibility="Collapsed">优先使用FFmpeg播放器</TextBlock>
         <ToggleSwitch x:Name="swPriorityFFmpeg" Visibility="Collapsed"></ToggleSwitch>
@@ -302,5 +310,39 @@
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
+
+        <ContentDialog  x:Name="FFmpegOptionsDialog"
+                        Width="600"
+                        PrimaryButtonText="确定"
+                        IsPrimaryButtonEnabled="True"
+                        Title="设置FFmpeg options"
+        >
+            <StackPanel Orientation="Vertical">
+                <Button Click="BtnAddFFmpegOption_OnClick">Add</Button>
+                <ScrollViewer>
+                    <ListView ItemsSource="{x:Bind m_viewModel.FFmpegOptions,Mode=OneWay}"
+                              SelectionMode="None">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="settings:KeyValuePairViewModel">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition></ColumnDefinition>
+                                        <ColumnDefinition></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Text="{x:Bind Key,Mode=TwoWay}"
+                                             Width="300"
+                                             TextChanged="FFmpegOptions_OnTextChanged"></TextBox>
+                                    <TextBox Text="{x:Bind Value,Mode=TwoWay}"
+                                             Grid.Column="1"
+                                             HorizontalAlignment="Right"
+                                             Width="300"
+                                             TextChanged="FFmpegOptions_OnTextChanged"></TextBox>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollViewer>
+            </StackPanel>
+        </ContentDialog>
     </StackPanel>
 </UserControl>

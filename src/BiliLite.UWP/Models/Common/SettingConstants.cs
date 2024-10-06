@@ -594,7 +594,10 @@ namespace BiliLite.Models.Common
             [SettingDefaultValue]
             public const RealPlayerType DEFAULT_USE_REAL_PLAYER_TYPE = RealPlayerType.Native;
 
-            /// <summary>
+            [SettingKey(typeof(object))]
+            public const string FfmpegOptions = "FfmpegOptions";
+
+                /// <summary>
             /// 使用外站视频替换无法播放的视频 bool
             /// </summary>
             [SettingKey(typeof(bool))]
