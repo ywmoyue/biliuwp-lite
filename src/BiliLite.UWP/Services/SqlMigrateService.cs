@@ -34,14 +34,11 @@ namespace BiliLite.Services
                 {
                     await ExecuteMigrationScript(script);
                 }
+                UpdateDatabaseVersion();
             }
             catch (Exception ex)
             {
                 _logger.Error("迁移数据库错误", ex);
-            }
-            finally
-            {
-                UpdateDatabaseVersion();
             }
         }
 
