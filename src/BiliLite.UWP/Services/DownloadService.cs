@@ -50,8 +50,6 @@ namespace BiliLite.Services
             m_biliLiteDbContext = biliLiteDbContext;
 
             m_downloadPageViewModel.RefreshDownloadedCommand = new RelayCommand(RefreshDownloaded);
-            m_downloadPageViewModel.PauseItemCommand = new RelayCommand<DownloadingSubItemViewModel>(PauseItem);
-            m_downloadPageViewModel.ResumeItemCommand = new RelayCommand<DownloadingSubItemViewModel>(ResumeItem);
             m_downloadPageViewModel.DeleteItemCommand = new RelayCommand<DownloadingItemViewModel>(DeleteItem);
             m_downloadPageViewModel.PauseCommand = new RelayCommand(PauseAll);
             m_downloadPageViewModel.StartCommand = new RelayCommand(StartAll);
@@ -99,6 +97,7 @@ namespace BiliLite.Services
                 var guid = downloadOperation.Guid.ToString();
                 var item = m_downloadPageViewModel.Downloadings.FirstOrDefault(x => x.Items.FirstOrDefault(y => y.GUID == guid) != null);
                 await Notify.ShowDialog("下载出现问题", $"失败视频:{item.Title ?? ""} {item.EpisodeTitle ?? ""}\r\n" + ex.Message);
+                // TODO: 启用重试策略
             }
             finally
             {
@@ -177,40 +176,6 @@ namespace BiliLite.Services
         }
 
         /// <summary>
-        /// 暂停下载
-        /// </summary>
-        /// <param name="item"></param>
-        private void PauseItem(DownloadingSubItemViewModel item)
-        {
-            try
-            {
-                var downloadOperation = m_downloadOperations.FirstOrDefault(x => x.Guid.ToString().Equals(item.GUID));
-                downloadOperation.Pause();
-            }
-            catch (Exception ex)
-            {
-                _logger.Warn("暂停下载，未知错误", ex);
-            }
-        }
-
-        /// <summary>
-        /// 开始下载
-        /// </summary>
-        /// <param name="item"></param>
-        private void ResumeItem(DownloadingSubItemViewModel item)
-        {
-            try
-            {
-                var downloadOperation = m_downloadOperations.FirstOrDefault(x => x.Guid.ToString().Equals(item.GUID));
-                downloadOperation.Resume();
-            }
-            catch (Exception ex)
-            {
-                _logger.Warn("继续下载，未知错误", ex);
-            }
-        }
-
-        /// <summary>
         /// 删除
         /// </summary>
         /// <param name="item"></param>
@@ -223,8 +188,13 @@ namespace BiliLite.Services
                     return;
                 }
                 m_loadDownloadingCts[data.EpisodeID].Cancel();
-                var folder = await StorageFolder.GetFolderFromPathAsync(data.Path);
-                await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                if (Directory.Exists(data.Path))
+                {
+                    var folder = await StorageFolder.GetFolderFromPathAsync(data.Path);
+                    await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                }
+
+                m_downloadPageViewModel.Downloadings.Remove(data);
                 RemoveDbSubItem(data.EpisodeID);
             }
             catch (Exception ex)
@@ -314,8 +284,6 @@ namespace BiliLite.Services
                 Path = data.Path,
                 CID = data.CID,
                 GUID = data.GUID,
-                PauseItemCommand = m_downloadPageViewModel.PauseItemCommand,
-                ResumeItemCommand = m_downloadPageViewModel.ResumeItemCommand
             });
         }
 
@@ -396,6 +364,40 @@ namespace BiliLite.Services
 
             // If neither condition is met, return 0
             return 0;
+        }
+
+        /// <summary>
+        /// 暂停下载
+        /// </summary>
+        /// <param name="item"></param>
+        public void PauseItem(DownloadingSubItemViewModel item)
+        {
+            try
+            {
+                var downloadOperation = m_downloadOperations.FirstOrDefault(x => x.Guid.ToString().Equals(item.GUID));
+                downloadOperation.Pause();
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn("暂停下载，未知错误", ex);
+            }
+        }
+
+        /// <summary>
+        /// 开始下载
+        /// </summary>
+        /// <param name="item"></param>
+        public void ResumeItem(DownloadingSubItemViewModel item)
+        {
+            try
+            {
+                var downloadOperation = m_downloadOperations.FirstOrDefault(x => x.Guid.ToString().Equals(item.GUID));
+                downloadOperation.Resume();
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn("继续下载，未知错误", ex);
+            }
         }
 
         public void RemoveDbItem(string id)

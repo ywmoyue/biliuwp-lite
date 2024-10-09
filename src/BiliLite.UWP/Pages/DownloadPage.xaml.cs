@@ -334,5 +334,21 @@ namespace BiliLite.Pages
             m_downloadService.SearchDownloaded(keyword);
             DownloadPivot.SelectedIndex = 1;
         }
+
+        private void BtnPauseSubItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button { DataContext: DownloadingSubItemViewModel item })
+            {
+                m_downloadService.PauseItem(item);
+            }
+        }
+
+        private void BtnResumeSubItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button { DataContext: DownloadingSubItemViewModel item })
+            {
+                m_downloadService.ResumeItem(item);
+            }
+        }
     }
 }
