@@ -441,5 +441,7 @@ namespace BiliLite.Modules
         public int danmaku { get; set; }
         public string rname { get; set; }
         public int duration { get; set; }
+
+        public int Rid { get; set; }
     }
 }

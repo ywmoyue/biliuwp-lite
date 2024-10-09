@@ -51,12 +51,6 @@ namespace BiliLite.ViewModels.Download
         public ICommand DeleteItemCommand { get; set; }
 
         [DoNotNotify]
-        public ICommand PauseItemCommand { get; set; }
-
-        [DoNotNotify]
-        public ICommand ResumeItemCommand { get; set; }
-
-        [DoNotNotify]
         public ICommand RefreshDownloadedCommand { get; set; }
 
         public ObservableCollection<DownloadingItemViewModel> Downloadings { get; set; }

@@ -126,6 +126,20 @@ namespace BiliLite.Pages
         private void AdaptiveGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var data = e.ClickedItem as RegionVideoItemModel;
+
+            // 连载动画/完结动画
+            if (data.Rid == 33 || data.Rid == 32)
+            {
+                MessageCenter.NavigateToPage(this, new NavigationInfo()
+                {
+                    icon = Symbol.Play,
+                    page = typeof(SeasonDetailPage),
+                    parameters = data.param,
+                    title = data.title
+                });
+                return;
+            }
+
             MessageCenter.NavigateToPage(this,new NavigationInfo() { 
                 icon= Symbol.Play,
                 page=typeof(VideoDetailPage),
