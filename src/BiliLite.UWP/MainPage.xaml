@@ -15,6 +15,7 @@
     Background="Transparent">
 
     <Grid>
+        <Grid x:Name="CustomDragRegion" Width="{Binding ElementName=AvailableDragRegion, Path=Width}"/>
         <winui:TabView 
             TabWidthMode="SizeToContent" Style="{ThemeResource DefaultTabViewStyle}"
             x:Name="tabView" 
@@ -35,15 +36,14 @@
                     <winui:TabViewItem.IconSource>
                         <winui:SymbolIconSource Symbol="Home" />
                     </winui:TabViewItem.IconSource>
-                   
                 </winui:TabViewItem>
             </winui:TabView.TabItems>
-          
+
             <winui:TabView.TabStripHeader>
                 <Grid x:Name="ShellTitlebarInset" Background="Transparent" />
             </winui:TabView.TabStripHeader>
             <winui:TabView.TabStripFooter>
-                <Grid x:Name="CustomDragRegion" Background="Transparent" ></Grid>
+                <Grid x:Name="AvailableDragRegion" Background="Transparent" ></Grid>
             </winui:TabView.TabStripFooter>
         </winui:TabView>
         <Border x:Name="MiniWindowsTitleBar"  Visibility="Collapsed" Background="#00FFFFFF" Height="36" VerticalAlignment="Top"></Border>
