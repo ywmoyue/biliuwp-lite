@@ -6,6 +6,7 @@ using AutoMapper;
 using BiliLite.Extensions;
 using BiliLite.Models;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.User;
 using BiliLite.Models.Common.User.UserDetails;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests.Api.User;
@@ -47,31 +48,27 @@ namespace BiliLite.ViewModels.User
         [DoNotNotify]
         public string Mid { get; set; }
 
-        public UserCenterInfoViewModel UserInfo { get; set; }
+        public bool NeedCaptcha { get; set; }
 
-        public bool HaveLiveRoom => UserInfo != null && UserInfo.LiveRoom != null;
+        public bool HaveLiveRoom => UserSpaceInfo != null && UserSpaceInfo.LiveRoom != null;
+
+        public UserCenterSpaceStatModel Stat { get; set; }
+
+        public UserSpaceInfo UserSpaceInfo { get; set; }
+
+        public bool IsFollowed { get; set; }
+
+        #endregion
+
+        #region Events
+
+        public event EventHandler<Uri> OpenWebView;
 
         public EventHandler LiveStreaming;
 
         #endregion
 
         #region Private Methods
-
-        private async Task GetUserInfoCore()
-        {
-            var api = await m_userDetailApi.UserInfo(Mid);
-
-            var result = await api.Request();
-            if (!result.status) throw new CustomizedErrorException(result.message);
-
-            var data = await result.GetData<UserCenterInfoModel>();
-            if (!data.success) throw new CustomizedErrorException(data.message);
-
-            data.data.Stat = await GetSpaceStat();
-            UserInfo = m_mapper.Map<UserCenterInfoViewModel>(data.data);
-
-            if (HaveLiveRoom && UserInfo.LiveRoom.LiveStatus == 1) LiveStreaming?.Invoke(this, null);
-        }
 
         private async Task<UserCenterInfoStatModel> GetStatCore()
         {
@@ -83,7 +80,7 @@ namespace BiliLite.ViewModels.User
             return data.data;
         }
 
-        private async Task<UserCenterSpaceStatModel> GetSpaceStatCore()
+        private async Task GetSpaceStatCore()
         {
             var result = await m_userDetailApi.Space(Mid).Request();
 
@@ -94,7 +91,7 @@ namespace BiliLite.ViewModels.User
             if (!data.success)
                 throw new CustomizedErrorException(data.message);
 
-            var stat = new UserCenterSpaceStatModel
+            Stat = new UserCenterSpaceStatModel
             {
                 ArticleCount = (data.data["article"]?["count"] ?? 0).ToInt32(),
                 VideoCount = (data.data["archive"]?["count"] ?? 0).ToInt32(),
@@ -104,7 +101,51 @@ namespace BiliLite.ViewModels.User
                 CollectionCount = (data.data?["ugc_season"]?["count"] ?? 0).ToInt32() +
                                   (data.data?["series"]?["item"].ToArray().Length ?? 0)
             };
-            return stat;
+
+            var vipInfoData = data.data["card"]?["vip"];
+            UserSpaceInfoVipInfo vipInfo = new UserSpaceInfoVipInfo();
+            if(vipInfoData != null)
+            {
+                vipInfo = vipInfoData.ToObject<UserSpaceInfoVipInfo>();
+            }
+
+            var pendantData = data.data["card"]?["pendant"];
+            UserCenterInfoPendantModel pendant = new UserCenterInfoPendantModel();
+            if (pendantData != null)
+            {
+                pendant = pendantData.ToObject<UserCenterInfoPendantModel>();
+            }
+
+            var officialData = data.data["card"]?["official_verify"];
+            UserCenterInfoOfficialModel official = new UserCenterInfoOfficialModel();
+            if (officialData != null)
+            {
+                official = officialData.ToObject<UserCenterInfoOfficialModel>();
+            }
+
+            var liveData = data.data["live"];
+            UserCenterInfoLiveRoomModel live = new UserCenterInfoLiveRoomModel();
+            if (liveData != null)
+            {
+                live = liveData.ToObject<UserCenterInfoLiveRoomModel>();
+            }
+
+            UserSpaceInfo = new UserSpaceInfo
+            {
+                Name = (data.data["card"]?["name"] ?? "").ToString(),
+                Mid = Mid,
+                Face = (data.data["card"]?["face"] ?? "").ToString(),
+                Sign = (data.data["card"]?["sign"] ?? "").ToString(),
+                Vip = vipInfo,
+                TopImageLight = (data.data["images"]?["imgUrl"] ?? "").ToString(),
+                TopImageDark = (data.data["images"]?["night_imgurl"] ?? "").ToString(),
+                Level = (data.data["card"]?["level_info"]?["current_level"] ?? 0).ToInt32(),
+                Pendant = pendant,
+                Official = official,
+                LiveRoom = live,
+            };
+
+            IsFollowed = (data.data["card"]?["relation"]?["is_follow"] ?? 0).ToInt32() == 1;
         }
 
         private async Task AttentionUPCore(string mid, int mode)
@@ -128,7 +169,7 @@ namespace BiliLite.ViewModels.User
         {
             try
             {
-                await GetUserInfoCore();
+                await GetSpaceStat();
             }
             catch (Exception ex)
             {
@@ -150,25 +191,24 @@ namespace BiliLite.ViewModels.User
             }
         }
 
-        public async Task<UserCenterSpaceStatModel> GetSpaceStat()
+        public async Task GetSpaceStat()
         {
             try
             {
-                return await GetSpaceStatCore();
+                await GetSpaceStatCore();
             }
             catch (Exception ex)
             {
                 _logger.Log("读取个人资料失败", LogType.Error, ex);
-                return null;
             }
         }
 
         public async void DoAttentionUP()
         {
-            var result = await AttentionUP(UserInfo.Mid.ToString(), UserInfo.IsFollowed ? 2 : 1);
+            var result = await AttentionUP(Mid.ToString(), IsFollowed ? 2 : 1);
             if (result)
             {
-                UserInfo.IsFollowed = !UserInfo.IsFollowed;
+                IsFollowed = !IsFollowed;
             }
         }
 

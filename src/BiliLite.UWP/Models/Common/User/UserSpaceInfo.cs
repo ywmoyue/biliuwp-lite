@@ -1,36 +1,32 @@
 ﻿using Windows.UI;
-using Windows.UI.Xaml.Media;
-using BiliLite.Models.Common;
 using BiliLite.Models.Common.User.UserDetails;
-using BiliLite.ViewModels.Common;
+using Newtonsoft.Json;
 using PropertyChanged;
+using Windows.UI.Xaml.Media;
+using static Bilibili.Live.App.Room.V1.GetStudioListResp.Types;
 
-namespace BiliLite.ViewModels.User
+namespace BiliLite.Models.Common.User
 {
-    public class UserCenterInfoViewModel : BaseViewModel
+    public class UserSpaceInfo
     {
-        [DoNotNotify]
-        public long Mid { get; set; }
-
-        [DoNotNotify]
         public string Name { get; set; }
 
-        [DoNotNotify]
-        public string Sex { get; set; }
+        public string Mid { get; set; }
 
-        [DoNotNotify]
         public string Face { get; set; }
 
-        [DoNotNotify]
         public string Sign { get; set; }
 
-        [DoNotNotify]
-        public int Rank { get; set; }
+        public UserSpaceInfoVipInfo Vip { get; set; }
 
-        [DoNotNotify]
+        public string TopImageLight { get; set; }
+
+        public string TopImageDark { get; set; }
+
+        public string TopImage => TopImageLight;
+
         public int Level { get; set; }
 
-        [DoNotNotify]
         public SolidColorBrush LevelColor =>
             Level switch
             {
@@ -44,48 +40,8 @@ namespace BiliLite.ViewModels.User
                 _ => new SolidColorBrush(Colors.Gray)
             };
 
-        [DoNotNotify]
-        public int JoinTime { get; set; }
-
-        [DoNotNotify]
-        public int Moral { get; set; }
-
-        [DoNotNotify]
-        public int Silence { get; set; }
-
-        [DoNotNotify]
-        public string Birthday { get; set; }
-
-        [DoNotNotify]
-        public double Coins { get; set; }
-
-        [DoNotNotify]
-        public bool FansBadge { get; set; }
-
-        [DoNotNotify]
-        public UserCenterInfoOfficialModel Official { get; set; }
-
-        [DoNotNotify]
-        public UserCenterInfoVipModel Vip { get; set; }
-
-        [DoNotNotify]
         public UserCenterInfoPendantModel Pendant { get; set; }
 
-        [DoNotNotify]
-        public UserCenterInfoNameplateModel NamePlate { get; set; }
-
-        public bool IsFollowed { get; set; }
-
-        [DoNotNotify]
-        public string TopPhoto { get; set; }
-
-        [DoNotNotify]
-        public UserCenterInfoLiveRoomModel LiveRoom { get; set; }
-
-        [DoNotNotify]
-        public UserCenterSpaceStatModel Stat { get; set; }
-
-        [DoNotNotify]
         public string PendantStr
         {
             get
@@ -101,7 +57,8 @@ namespace BiliLite.ViewModels.User
             }
         }
 
-        [DoNotNotify]
+        public UserCenterInfoOfficialModel Official { get; set; }
+
         public string Verify
         {
             get
@@ -121,5 +78,18 @@ namespace BiliLite.ViewModels.User
                 }
             }
         }
+
+        public UserCenterInfoLiveRoomModel LiveRoom { get; set; }
+    }
+
+    public class UserSpaceInfoVipInfo
+    {
+        [JsonProperty("vipType")]
+        public int Type { get; set; }
+
+        [JsonProperty("vipStatus")]
+        public int Status { get; set; }
+
+        public UserCenterInfoVipLabelModel Label { get; set; }
     }
 }

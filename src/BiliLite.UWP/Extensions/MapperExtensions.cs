@@ -70,7 +70,6 @@ namespace BiliLite.Extensions
                 expression.CreateMap<SeasonDetailModel, SeasonDetailViewModel>();
                 expression.CreateMap<AnimeFallModel, AnimeFallViewModel>();
                 expression.CreateMap<HomeNavItem, HomeNavItemViewModel>();
-                expression.CreateMap<UserCenterInfoModel, UserCenterInfoViewModel>();
                 expression.CreateMap<FollowTlistItemModel, UserRelationFollowingTagViewModel>();
                 expression.CreateMap<VideoListSection, VideoListSectionViewModel>();
                 expression.CreateMap<VideoPlaylistItem,VideoListItem>();

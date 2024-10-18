@@ -201,8 +201,8 @@ namespace BiliLite.Pages
             {
                 icon = Symbol.Video,
                 page = typeof(LiveDetailPage),
-                title = m_viewModel.UserInfo.Name + "的直播间",
-                parameters = m_viewModel.UserInfo.LiveRoom.RoomId
+                title = m_viewModel.UserSpaceInfo.Name + "的直播间",
+                parameters = m_viewModel.UserSpaceInfo.LiveRoom.RoomId
             });
         }
 
@@ -449,7 +449,7 @@ namespace BiliLite.Pages
                 {
                     Index = 0,
                     Playlist = items,
-                    Title = $"{m_viewModel.UserInfo.Name}:全部视频",
+                    Title = $"{m_viewModel.UserSpaceInfo.Name}:全部视频",
                     MediaListId = m_userSubmitVideoViewModel.PlayAllMediaListId,
                     IsOnlineMediaList = true,
                 }
