@@ -14,25 +14,25 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid Height="32">
+        
+        <local:NewInstanceFrame x:Name="frame" Grid.Row="1"/>
+        
+        <Grid x:Name="gridViewer" Grid.RowSpan="2" Visibility="Collapsed" Background="{ThemeResource SystemControlChromeHighAcrylicElementMediumBrush}" >
+            <controls:ImageViewerControl x:Name="imgViewer" CloseEvent="imgViewer_CloseEvent"></controls:ImageViewerControl>
+        </Grid>
+        <Border x:Name="MiniWindowsTitleBar" Grid.RowSpan="2" Visibility="Collapsed"  Background="#00FFFFFF" Height="40" VerticalAlignment="Top"></Border>
+        <Grid Height="32" Background="Transparent">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="btnBack" Click="btnBack_Click" Visibility="Visible" Height="40" Background="Transparent" Width="48" Margin="0 -4" >
+            <Button x:Name="btnBack" Click="btnBack_Click" Visibility="Visible" Height="40" Width="48" Margin="0 -4" >
                 <FontIcon FontFamily="Segoe MDL2 Assets" FontSize="14" Glyph="&#xE0A6;" />
             </Button>
-            <Border Grid.Column="1"  x:Name="TitleBar"  Background="#00000000">
+            <Border Grid.Column="1"  x:Name="TitleBar"  Background="Transparent">
                 <TextBlock x:Name="txtTitle" Margin="12 0" VerticalAlignment="Center">哔哩哔哩 UWP</TextBlock>
             </Border>
         </Grid>
 
-        <local:NewInstanceFrame x:Name="frame" Grid.Row="1"/>
-
-
-        <Border x:Name="MiniWindowsTitleBar" Grid.RowSpan="2" Visibility="Collapsed"  Background="#00FFFFFF" Height="40" VerticalAlignment="Top"></Border>
-        <Grid x:Name="gridViewer" Grid.RowSpan="2" Visibility="Collapsed" Background="{ThemeResource SystemControlChromeHighAcrylicElementMediumBrush}" >
-            <controls:ImageViewerControl x:Name="imgViewer" CloseEvent="imgViewer_CloseEvent"></controls:ImageViewerControl>
-        </Grid>
     </Grid>
 </Page>

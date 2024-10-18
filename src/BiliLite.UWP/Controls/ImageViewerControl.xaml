@@ -37,15 +37,6 @@
                                 <SymbolIcon Margin="0 -4 0 4" Symbol="Pictures"></SymbolIcon>
                             </AppBarButton.Icon>
                         </AppBarButton>
-                        <AppBarButton ToolTipService.ToolTip="放大" x:Name="btnZoomIn" Click="btnZoomIn_Click" Width="40" Height="40" Foreground="White">
-                            <AppBarButton.KeyboardAccelerators>
-                                <KeyboardAccelerator  Modifiers="None"  Key="Up" />
-                            </AppBarButton.KeyboardAccelerators>
-                            <AppBarButton.Icon>
-                                <SymbolIcon Margin="0 -4 0 4" Symbol="ZoomIn"></SymbolIcon>
-                            </AppBarButton.Icon>
-                        </AppBarButton>
-                        <TextBlock VerticalAlignment="Center" FontSize="16" Margin="8 0" Foreground="White" Text="{Binding ElementName=scrollViewer,Path=ZoomFactor,Mode=OneWay,Converter={StaticResource numberToStringConvert},ConverterParameter='p00'}"></TextBlock>
                         <AppBarButton ToolTipService.ToolTip="缩小" x:Name="btnZoomOut" Click="btnZoomOut_Click" Width="40" Height="40" Foreground="White">
                             <AppBarButton.Icon>
                                 <SymbolIcon Margin="0 -4 0 4" Symbol="ZoomOut"></SymbolIcon>
@@ -54,7 +45,15 @@
                                 <KeyboardAccelerator  Modifiers="None"  Key="Down" />
                             </AppBarButton.KeyboardAccelerators>
                         </AppBarButton>
-
+                        <TextBlock VerticalAlignment="Center" FontSize="16" Margin="8 0" Foreground="White" Text="{Binding ElementName=scrollViewer,Path=ZoomFactor,Mode=OneWay,Converter={StaticResource numberToStringConvert},ConverterParameter='p00'}"></TextBlock>
+                        <AppBarButton ToolTipService.ToolTip="放大" x:Name="btnZoomIn" Click="btnZoomIn_Click" Width="40" Height="40" Foreground="White">
+                            <AppBarButton.KeyboardAccelerators>
+                                <KeyboardAccelerator  Modifiers="None"  Key="Up" />
+                            </AppBarButton.KeyboardAccelerators>
+                            <AppBarButton.Icon>
+                                <SymbolIcon Margin="0 -4 0 4" Symbol="ZoomIn"></SymbolIcon>
+                            </AppBarButton.Icon>
+                        </AppBarButton>
                     </StackPanel>
                 </Border>
                 <Border Margin="12 0 0 0" CornerRadius="8"  Background="#7F000000" >

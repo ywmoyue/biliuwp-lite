@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
-    winui:BackdropMaterial.ApplyToRootOrPageBackground="True"
+    winui:BackdropMaterial.ApplyToRootOrPageBackground="False"
     xmlns:fa="using:FontAwesome5"
     xmlns:pages="using:BiliLite.Pages"
     xmlns:muxm="using:Microsoft.UI.Xaml.Media" 
@@ -47,7 +47,7 @@
             </winui:TabView.TabStripFooter>
         </winui:TabView>
         <Border x:Name="MiniWindowsTitleBar"  Visibility="Collapsed" Background="#00FFFFFF" Height="36" VerticalAlignment="Top"></Border>
-        <Grid x:Name="gridViewer" Opacity="0" Visibility="Collapsed" Background="{ThemeResource SystemControlChromeHighAcrylicElementMediumBrush}" >
+        <Grid x:Name="gridViewer" Opacity="0" Margin="0 48 0 0" Visibility="Collapsed" Background="{ThemeResource SystemControlChromeHighAcrylicElementMediumBrush}">
             <controls:ImageViewerControl x:Name="imgViewer" CloseEvent="imgViewer_CloseEvent"></controls:ImageViewerControl>
         </Grid>
     </Grid>
