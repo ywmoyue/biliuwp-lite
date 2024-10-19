@@ -11,7 +11,8 @@
     xmlns:convert="using:BiliLite.Converters"
     xmlns:modules="using:BiliLite.Modules"
     xmlns:control="using:BiliLite.Controls"
-    Background="Transparent">
+    Background="Transparent"
+    Loaded="SearchPage_Loaded">
     <Page.Resources>
         <convert:DatetimeConvert x:Key="ts"/>
         <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent"></SolidColorBrush>
