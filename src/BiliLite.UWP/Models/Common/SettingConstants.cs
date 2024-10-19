@@ -311,6 +311,9 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const int WBI_KEY_REFRESH_TIME = 120;
+
+            [SettingKey]
+            public const string BILI_TICKET = "BiliTicket";
         }
 
         public class VideoDanmaku

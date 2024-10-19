@@ -1,9 +1,7 @@
 ﻿using Windows.UI;
 using BiliLite.Models.Common.User.UserDetails;
 using Newtonsoft.Json;
-using PropertyChanged;
 using Windows.UI.Xaml.Media;
-using static Bilibili.Live.App.Room.V1.GetStudioListResp.Types;
 
 namespace BiliLite.Models.Common.User
 {

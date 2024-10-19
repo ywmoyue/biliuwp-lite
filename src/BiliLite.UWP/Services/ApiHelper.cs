@@ -1,10 +1,9 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
-using BiliLite.Models.Common.Account;
-using BiliLite.Models.Requests.Api;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -62,6 +61,29 @@ namespace BiliLite.Services
         {
             // 对 imgKey 和 subKey 进行字符顺序打乱编码
             return mixinKeyEncTab.Aggregate("", (s, i) => s + origin[i]).Substring(0, 32);
+        }
+
+        public static string GetHMACSHA256(string key, string message)
+        {
+            // 将密钥和消息转换为字节串
+            byte[] keyBytes = Encoding.UTF8.GetBytes(key);
+            byte[] messageBytes = Encoding.UTF8.GetBytes(message);
+
+            // 创建HMACSHA256对象
+            using (HMACSHA256 hmac = new HMACSHA256(keyBytes))
+            {
+                // 计算哈希值
+                byte[] hashValue = hmac.ComputeHash(messageBytes);
+
+                // 将哈希值转换为十六进制字符串
+                StringBuilder hashHexString = new StringBuilder();
+                for (int i = 0; i < hashValue.Length; i++)
+                {
+                    hashHexString.Append(hashValue[i].ToString("x2"));
+                }
+
+                return hashHexString.ToString();
+            }
         }
 
         public static async Task<string> GetWbiSign(string url)

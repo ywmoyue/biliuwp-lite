@@ -62,8 +62,6 @@ namespace BiliLite.ViewModels.User
 
         #region Events
 
-        public event EventHandler<Uri> OpenWebView;
-
         public EventHandler LiveStreaming;
 
         #endregion

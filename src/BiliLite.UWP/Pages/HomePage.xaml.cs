@@ -24,6 +24,7 @@ namespace BiliLite.Pages
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
 
         private readonly DownloadPageViewModel m_downloadPageViewModel;
+        // private readonly CookieService m_cookieService;
         private readonly HomeViewModel m_viewModel;
         readonly Account account;
 
@@ -35,6 +36,7 @@ namespace BiliLite.Pages
             m_viewModel = new HomeViewModel();
             account = new Account();
             m_downloadPageViewModel = App.ServiceProvider.GetRequiredService<DownloadPageViewModel>();
+            // m_cookieService = App.ServiceProvider.GetRequiredService<CookieService>();
             this.DataContext = m_viewModel;
         }
 
@@ -78,6 +80,7 @@ namespace BiliLite.Pages
                     if (await account.CheckLoginState())
                     {
                         await account.CheckUpdateCookies();
+                        //await m_cookieService.CheckCookieKeys();
                         await m_viewModel.LoginUserCard();
                     }
                     else

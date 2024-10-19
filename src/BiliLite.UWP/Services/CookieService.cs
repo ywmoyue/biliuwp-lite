@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Web.Http.Filters;
+using BiliLite.Extensions;
 using BiliLite.Models;
 using BiliLite.Models.Common;
+using BiliLite.Models.Requests.Api;
 using Newtonsoft.Json;
 
 namespace BiliLite.Services
@@ -38,6 +41,8 @@ namespace BiliLite.Services
                 m_cookies = value;
             }
         }
+
+        public string BiliTicket { get; set; }
 
         private List<HttpCookieItem> GetOldVersionCookies()
         {
@@ -104,6 +109,62 @@ namespace BiliLite.Services
             }
 
             return csrf;
+        }
+
+        public async Task CheckCookieKeys()
+        {
+            BiliTicket = SettingService.GetValue("BiliTicket", "");
+            if (string.IsNullOrEmpty(BiliTicket))
+            {
+                var api = new AccountApi().BiliTicket();
+                var result = await api.Request();
+                var data  = result.GetJObject();
+                BiliTicket = data["data"]["ticket"].ToString();
+            }
+            if (!Cookies.Any(x => x.Name == "buvid3"))
+            {
+                var api = new AccountApi().Buvid();
+                var result = await api.Request();
+                var data = result.GetJObject();
+                m_cookies.Add(new HttpCookieItem()
+                {
+                    Name = "buvid3",
+                    Value = data["data"]["buvid"].ToString()
+                });
+                SaveCookies(m_cookies);
+            }
+            if (!Cookies.Any(x => x.Name == "buvid4"))
+            {
+                var api = new AccountApi().Buvid4();
+                var result = await api.Request();
+                var data = result.GetJObject();
+                m_cookies.Add(new HttpCookieItem()
+                {
+                    Name = "buvid4",
+                    Value = data["data"]["b_4"].ToString()
+                });
+                var buvid3 = m_cookies.FirstOrDefault(x => x.Name == "buvid3");
+                buvid3.Value = data["data"]["b_3"].ToString();
+                SaveCookies(m_cookies);
+            }
+            if (!Cookies.Any(x => x.Name == "b_nut"))
+            {
+                var api = new AccountApi().BNut();
+                var result = await api.Request();
+                foreach (var httpCookieItem in result.cookies)
+                {
+                    if (httpCookieItem.Name == "b_nut")
+                    {
+                        m_cookies.Add(httpCookieItem);
+                    }
+                    if (httpCookieItem.Name == "buvid3 ")
+                    {
+                        var buvid3 = m_cookies.FirstOrDefault(x => x.Name == "buvid3");
+                        buvid3.Value = httpCookieItem.Value;
+                    }
+                }
+                SaveCookies(m_cookies);
+            }
         }
 
         public void ClearCookies()
