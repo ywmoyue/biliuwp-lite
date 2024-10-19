@@ -1,6 +1,7 @@
 ﻿using BiliLite.Pages.Bangumi;
 using Microsoft.UI.Xaml.Controls;
 using System;
+using System.IO;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
@@ -40,6 +41,11 @@ namespace BiliLite.Pages
             }
             else
             {
+                if (!File.Exists(background))
+                {
+                    Notify.ShowMessageToast("背景图片不存在,请重新设置");
+                    return;
+                }
                 var file = await StorageFile.GetFileFromPathAsync(background);
                 var img = new BitmapImage();
                 img.SetSource(await file.OpenReadAsync());

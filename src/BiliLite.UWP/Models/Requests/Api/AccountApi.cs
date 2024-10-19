@@ -544,5 +544,64 @@ namespace BiliLite.Models.Requests.Api
             };
             return api;
         }
+
+        public ApiModel Buvid()
+        {
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Get,
+                baseUrl = "https://api.bilibili.com/x/web-frontend/getbuvid"
+            };
+            return api;
+        }
+
+        public ApiModel Buvid4()
+        {
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Get,
+                baseUrl = "https://api.bilibili.com/x/frontend/finger/spi"
+            };
+            return api;
+        }
+
+        public ApiModel BNut()
+        {
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Get,
+                baseUrl = "https://www.bilibili.com/",
+                need_cookie = true,
+            };
+            return api;
+        }
+
+        public ApiModel BiliTicket()
+        {
+            var csrf = m_cookieService.GetCSRFToken();
+            var ts = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
+            var hexSign = ApiHelper.GetHMACSHA256("XgwSnGZ1p", $"ts{ts}");
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Post,
+                baseUrl = "https://api.bilibili.com/bapis/bilibili.api.ticket.v1.Ticket/GenWebTicket",
+                parameter= $"key_id=ec02&hexsign={hexSign}&context[ts]={ts}&csrf={csrf}",
+                need_cookie = true,
+            };
+            return api;
+        }
+
+        public ApiModel CaptchaRegister(string voucher)
+        {
+            var csrf = m_cookieService.GetCSRFToken();
+            var api = new ApiModel()
+            {
+                method = RestSharp.Method.Post,
+                baseUrl = "https://api.bilibili.com/x/gaia-vgate/v1/register",
+                body = $"csrf={csrf}&v_voucher={voucher}",
+                need_cookie = true,
+            };
+            return api;
+        }
     }
 }
