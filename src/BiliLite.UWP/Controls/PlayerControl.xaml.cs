@@ -462,6 +462,18 @@ namespace BiliLite.Controls
                     await LoadDanmaku(segIndex);
                 }
             };
+            //屏蔽彩色弹幕
+            DanmuSettingDisableColorful.IsOn = SettingService.GetValue<bool>(SettingConstants.VideoDanmaku.DISABLE_COLORFUL, false);
+            DanmuSettingDisableColorful.Toggled += async (e, args) =>
+            {
+                SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.DISABLE_COLORFUL, DanmuSettingDisableColorful.IsOn);
+                if (!m_useNsDanmaku)
+                {
+                    var segIndex = Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                    if (segIndex <= 0) segIndex = 1;
+                    await LoadDanmaku(segIndex);
+                }
+            };
             //半屏显示
             //DanmuControl.DanmakuArea = SettingService.GetValue<bool>(SettingConstants.VideoDanmaku.DOTNET_HIDE_SUBTITLE, false)?1:.5;
             //DanmuSettingDotHideSubtitle.Toggled += new RoutedEventHandler((e, args) =>
@@ -693,6 +705,10 @@ namespace BiliLite.Controls
                 {
                     danmakus = danmakus.Where(x => !Regex.IsMatch(x.Text, item));
                 }
+                //彩色
+                danmakus = danmakus.WhereIf(
+                    DanmuSettingDisableColorful.IsOn,
+                    x => x.TextColor == Colors.White);
 
                 // 同屏密度
                 if (max > 0)
@@ -745,6 +761,10 @@ namespace BiliLite.Controls
                     {
                         data = data.Where(x => !Regex.IsMatch(x.text, item));
                     }
+                    //彩色
+                    data = data.WhereIf(
+                        DanmuSettingDisableColorful.IsOn,
+                        x => x.color == Colors.White);
                     if (max > 0)
                     {
                         data = data.Take(max);

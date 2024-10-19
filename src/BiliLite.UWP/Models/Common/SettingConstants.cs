@@ -433,6 +433,12 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(string))]
             public const string DANMAKU_FONT_FAMILY = "VideoDanmuFontFamily";
+
+            /// <summary>
+            /// 屏蔽彩色弹幕
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string DISABLE_COLORFUL = "DisableColorful";
         }
 
         public class Live
