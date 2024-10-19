@@ -19,7 +19,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Grid Background="{ThemeResource TopPaneBackground}">
+        <Grid>
             <ItemsControl ItemsSource="{x:Bind Path=seasonIndexVM.Conditions,Mode=OneWay}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>

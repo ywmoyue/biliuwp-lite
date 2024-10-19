@@ -2,35 +2,65 @@
     x:Class="BiliLite.NoTabMainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BiliLite"
+    xmlns:controls="using:BiliLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:BiliLite.Controls"
-    mc:Ignorable="d"
+    xmlns:local="using:BiliLite"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+    winui:BackdropMaterial.ApplyToRootOrPageBackground="True"
     Background="Transparent"
-    Loaded="NoTabMainPage_OnLoaded">
+    Loaded="NoTabMainPage_OnLoaded"
+    mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationBackground}">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
         </Grid.RowDefinitions>
-        
-        <local:NewInstanceFrame x:Name="frame" Grid.Row="1"/>
-        
-        <Grid x:Name="gridViewer" Grid.RowSpan="2" Visibility="Collapsed" Background="{ThemeResource SystemControlChromeHighAcrylicElementMediumBrush}" >
-            <controls:ImageViewerControl x:Name="imgViewer" CloseEvent="imgViewer_CloseEvent"></controls:ImageViewerControl>
+
+        <local:NewInstanceFrame x:Name="frame" Grid.Row="1" />
+
+        <Grid
+            x:Name="gridViewer"
+            Grid.RowSpan="2"
+            Background="{ThemeResource SystemControlChromeHighAcrylicElementMediumBrush}"
+            Visibility="Collapsed">
+            <controls:ImageViewerControl x:Name="imgViewer" CloseEvent="imgViewer_CloseEvent" />
         </Grid>
-        <Border x:Name="MiniWindowsTitleBar" Grid.RowSpan="2" Visibility="Collapsed"  Background="#00FFFFFF" Height="40" VerticalAlignment="Top"></Border>
+        <Border
+            x:Name="MiniWindowsTitleBar"
+            Grid.RowSpan="2"
+            Height="40"
+            VerticalAlignment="Top"
+            Background="#00FFFFFF"
+            Visibility="Collapsed" />
         <Grid Height="32" Background="Transparent">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Button x:Name="btnBack" Click="btnBack_Click" Visibility="Visible" Height="40" Width="48" Margin="0 -4" >
-                <FontIcon FontFamily="Segoe MDL2 Assets" FontSize="14" Glyph="&#xE0A6;" />
+            <Button
+                x:Name="btnBack"
+                Width="48"
+                Height="40"
+                Margin="0,-4"
+                Click="btnBack_Click"
+                Visibility="Visible">
+                <FontIcon
+                    FontFamily="Segoe MDL2 Assets"
+                    FontSize="14"
+                    Glyph="&#xE0A6;" />
             </Button>
-            <Border Grid.Column="1"  x:Name="TitleBar"  Background="Transparent">
-                <TextBlock x:Name="txtTitle" Margin="12 0" VerticalAlignment="Center">哔哩哔哩 UWP</TextBlock>
+            <Border
+                x:Name="TitleBar"
+                Grid.Column="1"
+                Background="Transparent">
+                <TextBlock
+                    x:Name="txtTitle"
+                    Margin="12,0"
+                    VerticalAlignment="Center">
+                    哔哩哔哩 UWP
+                </TextBlock>
             </Border>
         </Grid>
 

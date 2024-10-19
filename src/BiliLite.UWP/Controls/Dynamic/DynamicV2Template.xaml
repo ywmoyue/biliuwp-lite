@@ -188,7 +188,7 @@
                 <Grid>
                     <Border BorderThickness="1"  
                             BorderBrush="#C8E5E9EF"  
-                            CornerRadius="4" Background="{ThemeResource TopPaneBackground}"
+                            CornerRadius="4" Background="Transparent"
                             Visibility="{Binding ForwardMissed,Converter={StaticResource display} }">
                         <ListView 
                             SelectionMode="None" 

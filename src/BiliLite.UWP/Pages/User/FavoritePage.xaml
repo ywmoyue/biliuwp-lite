@@ -15,7 +15,7 @@
     xmlns:user="using:BiliLite.ViewModels.User"
     Background="Transparent">
     <Page.Resources>
-        <SolidColorBrush x:Key="PivotHeaderBackground" Color="{ThemeResource TopPaneBackground}"></SolidColorBrush>
+        <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent"></SolidColorBrush>
         <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White"></SolidColorBrush>
         <convert:BooleanConvert x:Name="boolConvert" />
         <Style x:Key="SeasonItemStyle" TargetType="GridViewItem">
@@ -205,7 +205,7 @@
                                           ItemsSource="{x:Bind Path=animeVM.Follows,Mode=OneWay}"
                                           ItemHeight="140">
                         <GridView.Header>
-                            <Grid Padding="12 4" Background="{ThemeResource TopPaneBackground}">
+                            <Grid Padding="12 4" Background="Transparent">
                                 <StackPanel Orientation="Horizontal">
                                     <ToggleButton FontSize="12" 
                                               Command="{x:Bind Path=animeVM.StatusCommand}" 
@@ -278,7 +278,7 @@
                                           ItemsSource="{x:Bind Path=cinemaVM.Follows,Mode=OneWay}"
                                           ItemHeight="140">
                         <GridView.Header>
-                            <Grid Padding="12 4" Background="{ThemeResource TopPaneBackground}">
+                            <Grid Padding="12 4" Background="Transparent">
                                 <StackPanel Orientation="Horizontal">
                                     <ToggleButton FontSize="12" 
                                               Command="{x:Bind Path=cinemaVM.StatusCommand}" 

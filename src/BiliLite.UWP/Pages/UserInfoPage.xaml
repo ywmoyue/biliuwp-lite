@@ -15,7 +15,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:userViewModel="using:BiliLite.ViewModels.User"
-    Background="{ThemeResource ApplicationBackground}">
+    Background="Transparent">
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -99,13 +99,13 @@
             <SplitView.Content>
                 <Grid>
                     <Grid.Resources>
-                        <SolidColorBrush x:Key="PivotHeaderBackground" Color="{ThemeResource TopPaneBackground}"></SolidColorBrush>
+                        <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent"></SolidColorBrush>
                     </Grid.Resources>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <Grid Padding="8 0" Background="{ThemeResource TopPaneBackground}" VerticalAlignment="Top" Height="48">
+                    <Grid Padding="8 0" Background="Transparent" VerticalAlignment="Top" Height="48">
                         <Button Background="Transparent" Padding="0" HorizontalAlignment="Left">
                             <Button.Content>
                                 <StackPanel VerticalAlignment="Center" Orientation="Horizontal" >
@@ -202,7 +202,7 @@
                     </Grid>
                     <Pivot Grid.Row="1" x:Name="pivot" SelectionChanged="pivot_SelectionChanged">
                         <!--<Pivot.RightHeader>
-                <Grid Background="{ThemeResource TopPaneBackground}">
+                <Grid Background="Transparent">
                     <AutoSuggestBox VerticalAlignment="Center" PlaceholderText="搜索视频" Width="120" Margin="8 0" QueryIcon="Find"></AutoSuggestBox>
                 </Grid>
             </Pivot.RightHeader>-->
