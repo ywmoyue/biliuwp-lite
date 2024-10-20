@@ -10,7 +10,7 @@
     xmlns:user="using:BiliLite.ViewModels.User"
     xmlns:controls="using:BiliLite.Controls"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="Transparent">
 
     <Page.Resources>
         <Style x:Key="SeasonItemStyle" TargetType="GridViewItem">

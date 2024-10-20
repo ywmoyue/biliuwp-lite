@@ -61,7 +61,7 @@
                 <Grid Background="Transparent">
                     <control:PlayerControl x:Name="player" AllMediaEndEvent="player_AllMediaEndEvent" FullScreenEvent="PlayerControl_FullScreenEvent" FullWindowEvent="PlayerControl_FullWindowEvent" ChangeEpisodeEvent="PlayerControl_ChangeEpisodeEvent"/>
                 </Grid>
-                <Grid Grid.Row="1" x:Name="BottomActionBar" SizeChanged="BottomActionBar_OnSizeChanged" Background="{ThemeResource ApplicationBackground}">
+                <Grid Grid.Row="1" x:Name="BottomActionBar" SizeChanged="BottomActionBar_OnSizeChanged">
                     <StackPanel Orientation="Horizontal" >
                         <Button Holding="btnLike_Holding" 
                                   RightTapped="btnLike_RightTapped"
@@ -294,7 +294,7 @@
                 </Grid>
             </Grid>
 
-            <Grid Grid.Column="1"  Background="{ThemeResource ApplicationBackground}" VerticalAlignment="Top" Height="{x:Bind m_viewModel.RightInfoHeight,Mode=OneWay}">
+            <Grid Grid.Column="1"  VerticalAlignment="Top" Height="{x:Bind m_viewModel.RightInfoHeight,Mode=OneWay}">
                 <Pivot x:Name="pivot" PreviewKeyDown="Pivot_OnPreviewKeyDown">
                     <PivotItem Margin="0">
                         <PivotItem.Header>
@@ -416,7 +416,7 @@
                                     <GridView.ItemContainerStyle>
                                         <Style TargetType="GridViewItem">
                                             <Setter Property="BorderThickness" Value="1"></Setter>
-                                            <Setter Property="BorderBrush" Value="{ThemeResource TopPaneBackground}"></Setter>
+                                            <Setter Property="BorderBrush" Value="Transparent"></Setter>
                                             <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
                                             <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
                                         </Style>
@@ -440,7 +440,7 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate x:DataType="videoModel:BiliVideoTag">
                                             <HyperlinkButton Click="btnTagItem_Click" Margin="0 0 8 0" Foreground="{ThemeResource TextColor}">
-                                                <Border CornerRadius="4" Padding="8 4" Background="{ThemeResource TopPaneBackground}">
+                                                <Border CornerRadius="4" Padding="8 4" Background="Transparent">
                                                     <TextBlock FontSize="12" Text="{x:Bind TagName}" Foreground="{ThemeResource TextColor}">></TextBlock>
                                                 </Border>
                                             </HyperlinkButton>

@@ -110,7 +110,7 @@ namespace BiliLite
             {
                 txtTitle.Text = "哔哩哔哩 UWP";
             }
-            if (e.Content is Pages.BasePage && e.NavigationMode!=NavigationMode.Back)
+            if (e.Content is Pages.BasePage && e.NavigationMode != NavigationMode.Back)
             {
                 var title = (e.Content as BasePage).Title;
                 PushTitle(title);
@@ -168,6 +168,12 @@ namespace BiliLite
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
+            //如果打开了图片浏览，则关闭图片浏览
+            if (gridViewer.Visibility == Visibility.Visible)
+            {
+                imgViewer_CloseEvent(this, null);
+                return;
+            }
             if (frame.CanGoBack)
             {
                 frame.GoBack();
@@ -289,7 +295,7 @@ namespace BiliLite
 
             //跳转页面
             (this.Children.Last() as Frame).Navigate(sourcePageType, parameter);
-            
+
             return true;
         }
         public bool CanGoBack

@@ -15,7 +15,7 @@
     Background="Transparent">
     <Page.Resources>
       
-        <SolidColorBrush x:Key="PivotHeaderBackground" Color="{ThemeResource TopPaneBackground}"></SolidColorBrush>
+        <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent"></SolidColorBrush>
         <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White"></SolidColorBrush>
         <DataTemplate x:Key="HomeTemplate" x:DataType="modules:RegionDetailHomeVM">
             <Grid>

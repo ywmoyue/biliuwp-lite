@@ -15,9 +15,7 @@
     Background="Transparent">
     <Page.Resources>
         <converters:CountDisplayConvert x:Name="countDisplayConvert"></converters:CountDisplayConvert>
-        <StaticResource x:Key="NavigationViewContentBackground" ResourceKey="LayerFillColorDefaultBrush" />
         <SolidColorBrush x:Key="LayerFillColorDefaultBrush" Color="Transparent" />
-        <StaticResource x:Key="NavigationViewContentGridBorderBrush" ResourceKey="CardStrokeColorDefaultBrush" />
         <SolidColorBrush x:Key="CardStrokeColorDefaultBrush" Color="Transparent" />
     </Page.Resources>
 
@@ -162,7 +160,7 @@
             </winui:NavigationView.PaneFooter>
             <winui:NavigationView.MenuItemTemplate>
                 <DataTemplate x:DataType="home:HomeNavItemViewModel" >
-                    <winui:NavigationViewItem Content="{x:Bind Title}" Visibility="{x:Bind Path=Show,Mode=OneWay}" ToolTipService.ToolTip="{x:Bind Title}">
+                    <winui:NavigationViewItem Content="{x:Bind Title}" Visibility="{x:Bind Path=Show,Mode=OneWay}" ToolTipService.ToolTip="{x:Bind Title}" UseSystemFocusVisuals="False">
                         <winui:NavigationViewItem.Icon>
                             <fa:FontAwesome Icon="{x:Bind Icon}" Margin="0 2 0 0"></fa:FontAwesome>
                         </winui:NavigationViewItem.Icon>
