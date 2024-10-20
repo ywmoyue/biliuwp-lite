@@ -110,6 +110,11 @@ namespace BiliLite.Pages
             Player.ToggleDanmakuDisplay();
         }
 
+        public void ToggleSubtitle()
+        {
+            Player.ToggleSubtitle();
+        }
+
         public void AddVolume()
         {
             Player.AddVolume();
@@ -175,5 +180,7 @@ namespace BiliLite.Pages
         public void ToggleFullWindow();
 
         public void ToggleMiniWindows();
+
+        public void ToggleSubtitle();
     }
 }

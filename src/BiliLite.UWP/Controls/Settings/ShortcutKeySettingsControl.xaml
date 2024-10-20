@@ -63,5 +63,37 @@
 
             </controls1:NumberBox>
         </controls:SettingsCard>
+
+        <ContentDialog x:Name="AddActionDialog"
+                       Title="添加行为"
+                       PrimaryButtonText="确认"
+                       PrimaryButtonClick="AddActionDialog_OnPrimaryButtonClick"
+                       CloseButtonText="取消"
+                       MinWidth="600"
+                       DataContext="{x:Bind m_viewModel.AddShortcutFunctionModel,Mode=OneWay}">
+            <StackPanel Orientation="Vertical" Width="500">
+                <controls:SettingsCard Header="行为">
+                    <ComboBox x:Name="ComboAddAction"
+                              ItemsSource="{x:Bind m_viewModel.Actions}"
+                              DisplayMemberPath="Value"
+                              SelectedValuePath="Key"
+                              SelectedValue="{x:Bind m_viewModel.AddShortcutFunctionTypeName,Mode=TwoWay}"
+                              SelectionChanged="ComboAddAction_OnSelectionChanged">
+
+                    </ComboBox>
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="按键"
+                                       DataContext="{x:Bind m_viewModel.AddShortcutFunctionModel,Mode=OneWay}">
+                    <Button MinWidth="120" Click="BtnRecordKeys_OnClick">
+                        <TextBlock Text="{Binding KeysString,Mode=OneWay}"></TextBlock>
+                    </Button>
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="是否松开按键执行"
+                                       DataContext="{x:Bind m_viewModel.AddShortcutFunctionModel,Mode=OneWay}">
+                    <ToggleSwitch IsOn="{Binding NeedKeyUp,Mode=TwoWay}"
+                                  Toggled="ShortcutFunctionViewModel_Changed"></ToggleSwitch>
+                </controls:SettingsCard>
+            </StackPanel>
+        </ContentDialog>
     </StackPanel>
 </UserControl>
