@@ -2578,34 +2578,14 @@ namespace BiliLite.Controls
         public void ToggleSubtitle()
         {
             if (!(BottomBtnSelctSubtitle.Flyout is MenuFlyout subtitleMenu)) return;
-            if (!menu.Items.Any()) return;
 
             var targetItem = subtitleMenu.Items.OfType<ToggleMenuFlyoutItem>().FirstOrDefault(item =>
                 (CurrentSubtitleName == "无" && item.Text != "无") ||
                 (CurrentSubtitleName != "无" && item.Text == "无")
             );
-                    if (!(x is ToggleMenuFlyoutItem item))
-                    {
-                        return false;
-                    }
 
             if (targetItem != null)
-                    return true;
-                }).FirstOrDefault(), null);
-            }
-            else
-            {
-                Menuitem_Click(menu.Items.Where(x =>
-                {
-                    if (!(x is ToggleMenuFlyoutItem item))
-                    {
                 Menuitem_Click(targetItem, null);
-                    }
-
-                    if (item.Text == "无") return true;
-                    return false;
-                }).FirstOrDefault(), null);
-            }
         }
 
         public async void Dispose()
