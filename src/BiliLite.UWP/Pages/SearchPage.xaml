@@ -11,10 +11,11 @@
     xmlns:convert="using:BiliLite.Converters"
     xmlns:modules="using:BiliLite.Modules"
     xmlns:control="using:BiliLite.Controls"
-    Background="Transparent">
+    Background="Transparent"
+    Loaded="SearchPage_Loaded">
     <Page.Resources>
         <convert:DatetimeConvert x:Key="ts"/>
-        <SolidColorBrush x:Key="PivotHeaderBackground" Color="{ThemeResource TopPaneBackground}"></SolidColorBrush>
+        <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent"></SolidColorBrush>
         <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White"></SolidColorBrush>
         <DataTemplate x:Key="VideoTpl" x:DataType="modules:SearchVideoVM">
             <Grid>
@@ -390,7 +391,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid  Background="{ThemeResource TopPaneBackground}" Padding="8 8 8 0">
+        <Grid  Background="Transparent" Padding="8 8 8 0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition/>

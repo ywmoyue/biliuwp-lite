@@ -22,7 +22,7 @@
                 <Setter Property="Foreground" Value="#178bcf" />
             </Style>
             <convert:DatetimeConvert x:Key="time"/>
-            <SolidColorBrush x:Key="PivotHeaderBackground" Color="{ThemeResource TopPaneBackground}"></SolidColorBrush>
+            <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent"></SolidColorBrush>
             <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White"></SolidColorBrush>
         </ResourceDictionary>
 
@@ -30,7 +30,7 @@
     <Grid>
         <Pivot>
             <Pivot.RightHeader>
-                <Grid VerticalAlignment="Stretch" Background="{ThemeResource TopPaneBackground}">
+                <Grid VerticalAlignment="Stretch" Background="Transparent">
                     <Button Margin="12 0">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon FontSize="12" Margin="0 0 8 0" FontFamily="Segoe MDL2 Assets" Glyph="&#xE109;" />

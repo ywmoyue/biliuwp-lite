@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Modules;
 using BiliLite.Services;
 using Microsoft.UI.Xaml.Controls;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -277,6 +277,11 @@ namespace BiliLite.Pages
         {
             if (!(pivot.SelectedItem is ISearchVM searchVm)) return;
             searchVm.Refresh();
+        }
+
+        private void SearchPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            txtKeyword.Focus(FocusState.Keyboard);
         }
     }
     public class SearchDataTemplateSelector : DataTemplateSelector

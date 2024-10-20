@@ -9,7 +9,7 @@
     xmlns:controls="using:BiliLite.Controls"
     xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
-    Background="{ThemeResource TopPaneBackground}">
+    Background="Transparent">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -145,7 +145,7 @@
                 VerticalAlignment="Stretch"
                 Background="{ThemeResource HalfTransparentBackground}"></Grid>
             <Grid x:Name="grid" HorizontalAlignment="Right"
-                  Background="{ThemeResource ApplicationBackground}"
+                  
                   Width="{x:Bind m_viewModel.CommentControlWidth}"
                   VerticalAlignment="Stretch" RenderTransformOrigin="0.5,0.5">
                 <Grid.RenderTransform>

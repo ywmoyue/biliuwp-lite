@@ -35,7 +35,7 @@
                 <Grid Background="Black">
                     <control:PlayerControl x:Name="player" FullScreenEvent="PlayerControl_FullScreenEvent" FullWindowEvent="PlayerControl_FullWindowEvent" ChangeEpisodeEvent="PlayerControl_ChangeEpisodeEvent"/>
                 </Grid>
-                <Grid Grid.Row="1" x:Name="BottomActionBar" SizeChanged="BottomActionBar_OnSizeChanged" Background="{ThemeResource ApplicationBackground}">
+                <Grid Grid.Row="1" x:Name="BottomActionBar" SizeChanged="BottomActionBar_OnSizeChanged">
                     <StackPanel Orientation="Horizontal" >
                         <Button Background="Transparent"
                                 Width="56" 
@@ -159,7 +159,7 @@
                     </StackPanel>
                 </Grid>
             </Grid>
-            <Grid Grid.Column="1" VerticalAlignment="Top" Background="{ThemeResource ApplicationBackground}"   Height="{x:Bind m_viewModel.RightInfoHeight,Mode=OneWay}">
+            <Grid Grid.Column="1" VerticalAlignment="Top" Height="{x:Bind m_viewModel.RightInfoHeight,Mode=OneWay}">
 
                 <Pivot x:Name="pivot" SelectionChanged="pivot_SelectionChanged"  >
                     <PivotItem Margin="0">
@@ -310,7 +310,7 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate x:DataType="season1:SeasonDetailAreaItemModel">
                                             <HyperlinkButton x:Name="btnOpenIndexWithArea" Click="btnOpenIndexWithArea_Click" Margin="0 0 8 0" Foreground="{ThemeResource TextColor}">
-                                                <Border CornerRadius="4" Padding="8 4" Background="{ThemeResource TopPaneBackground}">
+                                                <Border CornerRadius="4" Padding="8 4" Background="Transparent">
                                                     <TextBlock FontSize="14" Text="{x:Bind Path=Name}"></TextBlock>
                                                 </Border>
                                             </HyperlinkButton>
@@ -327,7 +327,7 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate x:DataType="season1:SeasonDetailStyleItemModel">
                                             <HyperlinkButton x:Name="btnOpenIndexWithStyle" Click="btnOpenIndexWithStyle_Click" Margin="0 0 8 0" Foreground="{ThemeResource TextColor}">
-                                                <Border CornerRadius="4" Padding="8 4" Background="{ThemeResource TopPaneBackground}">
+                                                <Border CornerRadius="4" Padding="8 4" Background="Transparent">
                                                     <TextBlock FontSize="14" Text="{x:Bind Path=Name}"></TextBlock>
                                                 </Border>
                                             </HyperlinkButton>

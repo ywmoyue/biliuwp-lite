@@ -64,7 +64,7 @@
                                 <TextBox x:Name="LiveDanmuSettingTxtWord" PlaceholderText="请输入关键词" Width="200"></TextBox>
                                 <Button x:Name="LiveDanmuSettingAddWord" Click="LiveDanmuSettingAddWord_Click" Margin="4 0">添加</Button>
                             </StackPanel>
-                            <ListView x:Name="LiveDanmuSettingListWords" ItemContainerStyle="{StaticResource DanmuFilterStyle}" Margin="0 8 0 0" SelectionMode="None" IsItemClickEnabled="False" Width="320" Height="160" HorizontalAlignment="Left" Background="{ThemeResource TopPaneBackground}">
+                            <ListView x:Name="LiveDanmuSettingListWords" ItemContainerStyle="{StaticResource DanmuFilterStyle}" Margin="0 8 0 0" SelectionMode="None" IsItemClickEnabled="False" Width="320" Height="160" HorizontalAlignment="Left" Background="Transparent">
 
                                 <ListView.ItemTemplate>
                                     <DataTemplate>

@@ -12,7 +12,7 @@
     xmlns:modules="using:BiliLite.Modules.Live" xmlns:fa="using:FontAwesome5" xmlns:controls="using:BiliLite.Controls" xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     Background="Transparent">
     <Page.Resources>
-        <SolidColorBrush x:Key="PivotHeaderBackground" Color="{ThemeResource TopPaneBackground}"></SolidColorBrush>
+        <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent"></SolidColorBrush>
         <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White"></SolidColorBrush>
     </Page.Resources>
     <Grid>

@@ -84,7 +84,7 @@
                                 <TextBox x:Name="DanmuSettingTxtWord" PlaceholderText="请输入关键词" Width="200"></TextBox>
                                 <Button x:Name="DanmuSettingAddWord" Click="DanmuSettingAddWord_Click" Margin="4 0">添加</Button>
                             </StackPanel>
-                            <ListView x:Name="DanmuSettingListWords" ItemContainerStyle="{StaticResource DanmuFilterStyle}" Margin="0 8 0 0" SelectionMode="None" IsItemClickEnabled="False" Width="320" Height="160" HorizontalAlignment="Left" Background="{ThemeResource TopPaneBackground}">
+                            <ListView x:Name="DanmuSettingListWords" ItemContainerStyle="{StaticResource DanmuFilterStyle}" Margin="0 8 0 0" SelectionMode="None" IsItemClickEnabled="False" Width="320" Height="160" HorizontalAlignment="Left" Background="Transparent">
 
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
@@ -111,7 +111,7 @@
                                 <TextBox x:Name="DanmuSettingTxtRegex" PlaceholderText="请输入正则表达式" Width="200"></TextBox>
                                 <Button x:Name="DanmuSettingAddRegex" Click="DanmuSettingAddRegex_Click" Margin="4 0">添加</Button>
                             </StackPanel>
-                            <ListView x:Name="DanmuSettingListRegulars" ItemContainerStyle="{StaticResource DanmuFilterStyle}" Margin="0 8 0 0" SelectionMode="None" IsItemClickEnabled="False" Width="320" Height="160" HorizontalAlignment="Left" Background="{ThemeResource TopPaneBackground}">
+                            <ListView x:Name="DanmuSettingListRegulars" ItemContainerStyle="{StaticResource DanmuFilterStyle}" Margin="0 8 0 0" SelectionMode="None" IsItemClickEnabled="False" Width="320" Height="160" HorizontalAlignment="Left" Background="Transparent">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <Grid>
@@ -137,7 +137,7 @@
                                 <TextBox x:Name="DanmuSettingTxtUser" PlaceholderText="请输入用户ID" Width="200"></TextBox>
                                 <Button x:Name="DanmuSettingAddUser" Click="DanmuSettingAddUser_Click" Margin="4 0">添加</Button>
                             </StackPanel>
-                            <ListView x:Name="DanmuSettingListUsers"  ItemContainerStyle="{StaticResource DanmuFilterStyle}" Margin="0 8" SelectionMode="None" IsItemClickEnabled="False" Width="320" Height="160" HorizontalAlignment="Left" Background="{ThemeResource TopPaneBackground}">
+                            <ListView x:Name="DanmuSettingListUsers"  ItemContainerStyle="{StaticResource DanmuFilterStyle}" Margin="0 8" SelectionMode="None" IsItemClickEnabled="False" Width="320" Height="160" HorizontalAlignment="Left" Background="Transparent">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <Grid>

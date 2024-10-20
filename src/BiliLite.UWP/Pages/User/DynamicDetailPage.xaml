@@ -11,7 +11,7 @@
      xmlns:dynamic="using:BiliLite.Controls.Dynamic"
      xmlns:fa="using:FontAwesome5" xmlns:converters="using:BiliLite.Converters" 
     xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    Background="{ThemeResource TopPaneBackground}">
+    Background="Transparent">
 
     <Page.Resources>
         <ResourceDictionary>

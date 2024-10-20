@@ -177,7 +177,7 @@
     <DataTemplate x:Key="Repost">
         <local:DynamicItemControl ViewModel="{Binding}">
             <local:DynamicItemControl.CardContent>
-                <Border BorderThickness="1"  BorderBrush="#C8E5E9EF"  CornerRadius="4" Background="{ThemeResource TopPaneBackground}">
+                <Border BorderThickness="1"  BorderBrush="#C8E5E9EF"  CornerRadius="4" Background="Transparent">
                     <ListView 
                         SelectionMode="None" 
                         IsItemClickEnabled="false" 
