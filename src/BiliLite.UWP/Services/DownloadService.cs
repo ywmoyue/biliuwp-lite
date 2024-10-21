@@ -759,6 +759,23 @@ namespace BiliLite.Services
             {
                 downloadedSubItem.Paths.Add(Path.Combine(downloadSaveEpisodeInfo.Path, path));
             }
+
+            foreach (var downloadSubtitleInfo in downloadSaveEpisodeInfo.SubtitlePath)
+            {
+                if (!downloadSubtitleInfo.Url.IsUrl())
+                {
+                    downloadSubtitleInfo.Url =
+                        Path.Combine(downloadSaveEpisodeInfo.Path, downloadSubtitleInfo.Url);
+                }
+
+                downloadedSubItem.SubtitlePath.Add(downloadSubtitleInfo);
+            }
+
+            if (!downloadSaveEpisodeInfo.DanmakuPath.IsUrl())
+            {
+                downloadedSubItem.DanmakuPath = Path.Combine(downloadSaveEpisodeInfo.Path, downloadSaveEpisodeInfo.DanmakuPath);
+            }
+
             var downloadItemDto = m_mapper.Map<DownloadedItemDTO>(downloadedItem);
             var downloadSubItemDto = m_mapper.Map<DownloadedSubItemDTO>(downloadedSubItem);
             var downloadItemData = m_biliLiteDbContext.DownloadedItems.FirstOrDefault(x => x.ID == downloadItemDto.ID);
