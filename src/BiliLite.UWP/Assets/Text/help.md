@@ -89,6 +89,12 @@ F2 / ' | 加快播放速度
 
 Webp图片扩展安装地址:[ms-windows-store://pdp/?productid=9PG2DK419DRG](ms-windows-store://pdp/?productid=9PG2DK419DRG)
 
+### 杜比全景声没有声音
+
+在应用商店中下载 杜比扩展
+
+杜比扩展安装地址:[ms-windows-store://pdp/?productid=9nvjqjbdkn97](ms-windows-store://pdp/?productid=9nvjqjbdkn97)
+
 ### 中文乱码
 
 系统设置-时间和语言-语言-管理语言设置-管理-非Unicode程序的语言-更改系统区域设置为中文,重启电脑
