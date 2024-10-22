@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -113,9 +115,28 @@ namespace BiliLite.Controls.Settings
             m_viewModel.ShortcutFunctions = m_mapper.Map<ObservableCollection<ShortcutFunctionViewModel>>(m_shortcutKeyService.ShortcutFunctions);
         }
 
-        private void BtnAddAction_OnClick(object sender, RoutedEventArgs e)
+        private async void BtnAddAction_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            m_viewModel.AddShortcutFunctionModel = m_mapper.Map<ShortcutFunctionViewModel>(DefaultShortcuts.GetDefaultShortcutFunctions().First());
+            m_viewModel.AddShortcutFunctionTypeName = m_viewModel.AddShortcutFunctionModel.TypeName;
+            await AddActionDialog.ShowAsync();
+        }
+
+        private async void ComboAddAction_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            await Task.Delay(50);
+            var typeName = m_viewModel.AddShortcutFunctionTypeName;
+            var functionModel = m_mapper.Map<ShortcutFunctionViewModel>(DefaultShortcuts.GetDefaultShortcutFunctions()
+                .FirstOrDefault(x => x.TypeName == typeName));
+            if (functionModel == null) return;
+            m_viewModel.AddShortcutFunctionModel = functionModel;
+        }
+
+        private void AddActionDialog_OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            m_viewModel.ShortcutFunctions.Add(m_viewModel.AddShortcutFunctionModel);
+            var shortcutFunction = m_mapper.Map<ShortcutFunctionModel>(m_viewModel.AddShortcutFunctionModel);
+            m_shortcutKeyService.AddShortcutFunction(shortcutFunction);
         }
     }
 }

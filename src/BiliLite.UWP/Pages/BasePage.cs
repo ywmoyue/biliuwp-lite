@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using BiliLite.Controls;
 using BiliLite.Models.Common;
 using BiliLite.Services;
@@ -20,8 +21,18 @@ namespace BiliLite.Pages
             {
                 this.NavigationCacheMode = NavigationCacheMode.Disabled;
             }
+            else
+            {
+                this.Visibility = Visibility.Collapsed;
+            }
 
             base.OnNavigatingFrom(e);
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            this.Visibility = Visibility.Visible;
         }
     }
 
@@ -110,6 +121,11 @@ namespace BiliLite.Pages
             Player.ToggleDanmakuDisplay();
         }
 
+        public void ToggleSubtitle()
+        {
+            Player.ToggleSubtitle();
+        }
+
         public void AddVolume()
         {
             Player.AddVolume();
@@ -175,5 +191,7 @@ namespace BiliLite.Pages
         public void ToggleFullWindow();
 
         public void ToggleMiniWindows();
+
+        public void ToggleSubtitle();
     }
 }

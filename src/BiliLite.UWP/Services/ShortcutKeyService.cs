@@ -209,6 +209,15 @@ namespace BiliLite.Services
             m_settingSqlService.SetValue(SettingConstants.ShortcutKey.SHORTCUT_KEY_FUNCTIONS, shortcutFunctionModels);
         }
 
+        public void AddShortcutFunction(ShortcutFunctionModel shortcutFunctionModel)
+        {
+            m_shortcutKeys.Add(ShortcutFunctionFactory.Map(shortcutFunctionModel));
+
+            var shortcutFunctionModels = m_mapper.Map<List<ShortcutFunctionModel>>(m_shortcutKeys);
+
+            m_settingSqlService.SetValue(SettingConstants.ShortcutKey.SHORTCUT_KEY_FUNCTIONS, shortcutFunctionModels);
+        }
+
         public void UpdateShortcutFunction(ShortcutFunctionModel shortcutFunctionModel)
         {
             var shortcutFunction = m_shortcutKeys.FirstOrDefault(x => x.Id == shortcutFunctionModel.Id);
@@ -217,6 +226,10 @@ namespace BiliLite.Services
                 shortcutFunction.Keys = shortcutFunctionModel.Keys;
                 shortcutFunction.NeedKeyUp = shortcutFunctionModel.NeedKeyUp;
                 shortcutFunction.Enable = shortcutFunctionModel.Enable;
+            }
+            else
+            {
+                return;
             }
 
             var shortcutFunctionModels = m_mapper.Map<List<ShortcutFunctionModel>>(m_shortcutKeys);

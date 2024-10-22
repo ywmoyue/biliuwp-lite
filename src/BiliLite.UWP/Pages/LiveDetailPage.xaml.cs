@@ -873,6 +873,11 @@ namespace BiliLite.Pages
             MiniWidnows(BottomBtnMiniWindows.Visibility == Visibility.Visible);
         }
 
+        public void ToggleSubtitle()
+        {
+            
+        }
+
         private async Task CaptureVideo()
         {
             try

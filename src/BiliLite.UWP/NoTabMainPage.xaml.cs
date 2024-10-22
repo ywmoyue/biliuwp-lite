@@ -234,6 +234,7 @@ namespace BiliLite
 
         private void PushTitle(string title)
         {
+            if (title == null) return;
             m_titleStack.Push(txtTitle.Text);
             txtTitle.Text = title;
         }
@@ -292,6 +293,10 @@ namespace BiliLite
             {
                 (frame.Content as PlayPage).Pause();
             }
+            if (frame.Content is Page page)
+            {
+                page.Visibility = Visibility.Collapsed;
+            }
 
             //跳转页面
             (this.Children.Last() as Frame).Navigate(sourcePageType, parameter);
@@ -310,11 +315,20 @@ namespace BiliLite
         public async void GoBack()
         {
             var frame = this.Children.Last() as MyFrame;
-            (frame.Content as Page).NavigationCacheMode = NavigationCacheMode.Disabled;
+
+            if (frame.Content is Page page)
+            {
+                page.NavigationCacheMode = NavigationCacheMode.Disabled;
+            }
             if (frame.CanGoBack)
             {
                 frame.GoBack();
                 frame.ForwardStack.Clear();
+
+                if (frame.Content is Page forwardPage)
+                {
+                    forwardPage.Visibility = Visibility.Visible;
+                }
             }
             else
             {
@@ -328,6 +342,11 @@ namespace BiliLite
                     this.Children.Remove(frame);
                     //frame = this.Children.Last() as Frame;
 
+                    var lastFrameEle = Children.LastOrDefault();
+                    if (lastFrameEle is Frame { Content: Page lastFramePage })
+                    {
+                        lastFramePage.Visibility = Visibility.Visible;
+                    }
                 }
             }
         }

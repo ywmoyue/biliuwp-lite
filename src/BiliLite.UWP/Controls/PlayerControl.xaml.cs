@@ -2575,6 +2575,19 @@ namespace BiliLite.Controls
             Player.SetPosition(position);
         }
 
+        public void ToggleSubtitle()
+        {
+            if (!(BottomBtnSelctSubtitle.Flyout is MenuFlyout subtitleMenu)) return;
+
+            var targetItem = subtitleMenu.Items.OfType<ToggleMenuFlyoutItem>().FirstOrDefault(item =>
+                (CurrentSubtitleName == "无" && item.Text != "无") ||
+                (CurrentSubtitleName != "无" && item.Text == "无")
+            );
+
+            if (targetItem != null)
+                Menuitem_Click(targetItem, null);
+        }
+
         public async void Dispose()
         {
             _logger.Trace("Dispose PlayerControl");

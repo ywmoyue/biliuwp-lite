@@ -171,6 +171,10 @@ namespace BiliLite.Models.Functions
                 {
                     Keys = new List<InputKey>() { new InputKey(VirtualKey.T) }
                 },
+                new ToggleSubtitleShortcutFunction()
+                {
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.F6) }
+                },
                 new SaveFunction()
                 {
                     Keys = new List<InputKey>() { new InputKey(VirtualKey.Control), new InputKey(VirtualKey.S) }
