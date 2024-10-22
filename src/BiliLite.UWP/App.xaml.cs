@@ -1,4 +1,29 @@
-﻿namespace BiliLite
+﻿using BiliLite.Extensions;
+using BiliLite.Models.Common;
+using BiliLite.Models.Events;
+using BiliLite.Pages;
+using BiliLite.Services;
+using BiliLite.Services.Notification;
+using FFmpegInteropX;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Toolkit.Uwp.Helpers;
+using System;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using Windows.ApplicationModel;
+using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Background;
+using Windows.ApplicationModel.Core;
+using Windows.Foundation;
+using Windows.Graphics.Display;
+using Windows.UI;
+using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
+
+namespace BiliLite
 {
     /// <summary>
     /// 提供特定于应用程序的行为，以补充默认的应用程序类。
