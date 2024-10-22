@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using BiliLite.Controls;
 using BiliLite.Models.Common;
 using BiliLite.Services;
@@ -20,8 +21,18 @@ namespace BiliLite.Pages
             {
                 this.NavigationCacheMode = NavigationCacheMode.Disabled;
             }
+            else
+            {
+                this.Visibility = Visibility.Collapsed;
+            }
 
             base.OnNavigatingFrom(e);
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            this.Visibility = Visibility.Visible;
         }
     }
 

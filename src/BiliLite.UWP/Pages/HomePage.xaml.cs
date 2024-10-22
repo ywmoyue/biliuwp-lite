@@ -19,7 +19,7 @@ namespace BiliLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class HomePage : Page, IRefreshablePage, IScrollRecoverablePage
+    public sealed partial class HomePage : BasePage, IRefreshablePage, IScrollRecoverablePage
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
 
