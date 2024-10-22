@@ -261,12 +261,17 @@
     <Compile Include="Models\Functions\ToggleFullscreenShortcutFunction.cs" />
     <Compile Include="Models\Functions\ToggleFullWindowShortcutFunction.cs" />
     <Compile Include="Models\Functions\ToggleMiniWindowShortcutFunction.cs" />
+    <Compile Include="Models\TileModel.cs" />
     <Compile Include="Pages\IScrollRecorablePage.cs" />
     <Compile Include="Pages\Other\MarkdownViewerPage.xaml.cs">
       <DependentUpon>MarkdownViewerPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\BiliLiteDbContext.cs" />
     <Compile Include="Services\DownloadService.cs" />
+    <Compile Include="Services\Notification\LiveTileHelper.cs" />
+    <Compile Include="Services\Notification\Show.cs" />
+    <Compile Include="Services\Notification\Register.cs" />
+    <Compile Include="Services\Notification\Template\TileTemplate.cs" />
     <Compile Include="Services\SqlMigrateService.cs" />
     <Compile Include="ViewModels\Common\MainPageViewModel.cs" />
     <Compile Include="ViewModels\Common\PieControlViewModel.cs" />
@@ -1502,6 +1507,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.Connectivity">
       <Version>6.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications">
+      <Version>7.1.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations">
       <Version>6.1.1</Version>
