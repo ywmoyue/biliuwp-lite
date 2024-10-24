@@ -198,6 +198,7 @@
                 VerticalAlignment="Stretch"
                 Background="{ThemeResource HalfTransparentBackground}"></Grid>
             <Grid x:Name="grid" HorizontalAlignment="Right"
+                  Background="{ThemeResource DynCommentBackground}"
                   Width="{x:Bind m_viewModel.CommentControlWidth}"
                   VerticalAlignment="Stretch" RenderTransformOrigin="0.5,0.5">
                 <Grid.RenderTransform>
