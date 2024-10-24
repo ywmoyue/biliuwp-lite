@@ -1,8 +1,11 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Models.Events;
+using BiliLite.Pages;
 using BiliLite.Services;
+using BiliLite.Services.Notification;
 using FFmpegInteropX;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
@@ -10,6 +13,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Graphics.Display;
@@ -18,8 +22,6 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Pages;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite
 {
@@ -201,6 +203,9 @@ namespace BiliLite
                     //如果屏幕分辨率大于16：9,设置为List
                     SettingService.SetValue<int>(SettingConstants.UI.RECMEND_DISPLAY_MODE, 1);
                 }
+
+                Register.BackgroundTask("DisposableTileFeedBackgroundTask");
+                Register.BackgroundTask("TileFeedBackgroundTask", new TimeTrigger(15, false));
             }
             //圆角
             App.Current.Resources["ImageCornerRadius"] = new CornerRadius(SettingService.GetValue<double>(SettingConstants.UI.IMAGE_CORNER_RADIUS, 0));
@@ -298,6 +303,13 @@ namespace BiliLite
             {
                 logger.Error("Start Host Error", ex);
             }
+        }
+
+        protected override void OnBackgroundActivated(BackgroundActivatedEventArgs args)
+        {
+            //base.OnBackgroundActivated(args);
+            //IBackgroundTaskInstance taskInstance = args.TaskInstance;
+            Show.Tile();
         }
     }
 }
