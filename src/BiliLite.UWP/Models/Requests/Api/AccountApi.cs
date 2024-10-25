@@ -24,7 +24,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = "https://passport.bilibili.com/x/passport-login/web/key"
             };
             return api;
@@ -38,7 +38,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = "https://passport.bilibili.com/api/oauth2/login",
                 body = $"username={Uri.EscapeDataString(username)}&password={Uri.EscapeDataString(password)}{(captcha == "" ? "" : "&captcha=" + captcha)}&" + ApiHelper.MustParameter(appKey)
             };
@@ -54,7 +54,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = "https://passport.bilibili.com/x/passport-login/oauth2/login",
                 body = $"actionKey=appkey&channel=bili&device=phone&permission=ALL&subid=1&username={Uri.EscapeDataString(username)}&password={Uri.EscapeDataString(password)}&" + ApiHelper.MustParameter(appKey),
                 headers = ApiHelper.MustHeader(appKey),
@@ -71,7 +71,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = "https://passport.bilibili.com/x/passport-login/country",
                 parameter = ApiHelper.MustParameter(AppKey)
             };
@@ -83,7 +83,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = "https://passport.bilibili.com/x/passport-login/sms/send",
                 body = $"actionKey=appkey&cid={cid}&tel={phone}&login_session_id={sessionId}&" + ApiHelper.MustParameter(appKey),
                 headers = ApiHelper.MustHeader(appKey),
@@ -101,7 +101,7 @@ namespace BiliLite.Models.Requests.Api
             var buvid = ApiHelper.GetBuvid();
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = "https://passport.bilibili.com/x/passport-login/sms/send",
                 body = $"buvid={buvid}&actionKey=appkey&cid={cid}&tel={phone}&login_session_id={session_id}&gee_seccode={seccode}&gee_validate={validate}&gee_challenge={challenge}&recaptcha_token={recaptchaToken}&" + ApiHelper.MustParameter(appKey),
                 headers = ApiHelper.MustHeader(appKey),
@@ -114,7 +114,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = "https://passport.bilibili.com/x/passport-login/login/sms",
                 body = $"actionKey=appkey&cid={cid}&tel={phone}&login_session_id={sessionId}&captcha_key={captchaKey}&code={code}&" + ApiHelper.MustParameter(appKey),
                 headers = ApiHelper.MustHeader(appKey),
@@ -132,7 +132,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"https://passport.bilibili.com/api/login/sso",
                 parameter = ApiHelper.MustParameter(AppKey, false) + $"&access_key={accessKey}",
                 headers = ApiHelper.GetDefaultHeaders()
@@ -149,7 +149,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = "https://passport.bilibili.com/captcha",
                 headers = ApiHelper.GetDefaultHeaders(),
                 parameter = $"ts={TimeExtensions.GetTimestampS()}"
@@ -165,7 +165,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = "https://passport.bilibili.com/x/safecenter/captcha/pre"
             };
             return api;
@@ -179,7 +179,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = "https://api.bilibili.com/x/safecenter/user/info",
                 parameter = $"tmp_code={tmp_token}"
             };
@@ -194,7 +194,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = "https://passport.bilibili.com/x/safecenter/common/sms/send",
                 body = $"sms_type=loginTelCheck&tmp_code={tmp_token}&recaptcha_token={recaptcha_token}&gee_challenge={gee_challenge}&gee_gt={gee_gt}&gee_validate={geetest_validate}&gee_seccode={geetest_seccode}"
             };
@@ -209,7 +209,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = "https://passport.bilibili.com/x/safecenter/login/tel/verify",
                 body = $"type=loginTelCheck&code={code}&tmp_code={tmp_token}&request_id={request_id}&captcha_key={captcha_key}"
             };
@@ -224,7 +224,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = "https://passport.bilibili.com/x/passport-login/web/exchange_cookie",
                 body = $"code={code}"
             };
@@ -239,7 +239,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = "https://app.bilibili.com/x/v2/account/myinfo",
                 parameter = ApiHelper.MustParameter(AppKey, true)
             };
@@ -256,7 +256,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = "https://app.bilibili.com/x/v2/account/mine",
                 parameter = ApiHelper.MustParameter(AppKey, true)
             };
@@ -272,7 +272,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = "http://app.biliapi.net/x/v2/space",
                 parameter = ApiHelper.MustParameter(AppKey, true) + $"&vmid={mid}"
             };
@@ -284,7 +284,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/history",
                 parameter = ApiHelper.MustParameter(AppKey, true) + $"&pn={pn}&ps={ps}"
             };
@@ -304,7 +304,7 @@ namespace BiliLite.Models.Requests.Api
             }
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/web-interface/history/cursor",
                 parameter = $"max={cursor.Max}&view_at={cursor.ViewAt}&business=",
                 need_cookie = true,
@@ -317,7 +317,7 @@ namespace BiliLite.Models.Requests.Api
             var kw = keyword.UrlEncode();
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/web-goblin/history/search",
                 parameter = $"pn={page}&ps=20&keyword={kw}&business=all",
                 need_cookie = true,
@@ -329,7 +329,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/history/delete",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&kid={id}"
             };
@@ -346,7 +346,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = "https://passport.bilibili.com/x/passport-tv-login/qrcode/auth_code",
                 body = $"appkey={appkey.Appkey}&local_id={local_id}&ts={TimeExtensions.GetTimestampS()}&mobi_app=ios",
                 headers = ApiHelper.MustHeader(appkey),
@@ -364,7 +364,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = "https://passport.bilibili.com/x/passport-tv-login/qrcode/poll",
                 body = $"appkey={appkey.Appkey}&auth_code={auth_code}&local_id={local_id}&ts={TimeExtensions.GetTimestampS()}&mobi_app=ios",
                 headers = ApiHelper.MustHeader(appkey),
@@ -381,7 +381,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = "https://passport.bilibili.com/x/passport-login/web/qrcode/generate",
             };
             return api;
@@ -396,7 +396,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = "https://passport.bilibili.com/x/passport-login/web/qrcode/poll",
                 parameter = $"qrcode_key={auth_code}"
             };
@@ -412,7 +412,7 @@ namespace BiliLite.Models.Requests.Api
             var apiBody = "api=http://link.acg.tv/forum.php";
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = "https://passport.bilibili.com/login/app/third",
                 parameter = $"appkey={appKey.Appkey}&{apiBody}",
                 need_cookie = true,
@@ -429,7 +429,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = url,
                 need_cookie = true,
                 need_redirect = true,
@@ -445,7 +445,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = "https://passport.bilibili.com/api/oauth2/info",
                 parameter = ApiHelper.MustParameter(AppKey) + "&access_token=" + SettingService.Account.AccessKey
             };
@@ -461,7 +461,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = "https://passport.bilibili.com/api/oauth2/refreshToken",
                 body = ApiHelper.MustParameter(appKey) + $"&access_token={SettingService.Account.AccessKey}&refresh_token={SettingService.GetValue(SettingConstants.Account.REFRESH_KEY, "")}"
             };
@@ -478,7 +478,7 @@ namespace BiliLite.Models.Requests.Api
             var csrf = m_cookieService.GetCSRFToken();
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = "https://passport.bilibili.com/x/passport-login/web/cookie/info",
                 parameter = $"csrf={csrf}",
                 need_cookie = true,
@@ -494,7 +494,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"https://www.bilibili.com/correspond/1/{correspondPath}",
                 need_cookie = true,
             };
@@ -510,7 +510,7 @@ namespace BiliLite.Models.Requests.Api
             var csrf = m_cookieService.GetCSRFToken();
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"https://passport.bilibili.com/x/passport-login/web/cookie/refresh",
                 body = $"csrf={csrf}&refresh_csrf={refreshCsrf}&source=main_web&refresh_token={refreshToken}",
                 need_cookie = true,
@@ -527,7 +527,7 @@ namespace BiliLite.Models.Requests.Api
             var csrf = m_cookieService.GetCSRFToken();
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"https://passport.bilibili.com/x/passport-login/web/confirm/refresh",
                 body = $"csrf={csrf}&refresh_token={refreshToken}",
                 need_cookie = true,
@@ -539,8 +539,67 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = "https://api.bilibili.com/x/web-interface/nav"
+            };
+            return api;
+        }
+
+        public ApiModel Buvid()
+        {
+            var api = new ApiModel()
+            {
+                method = HttpMethods.Get,
+                baseUrl = "https://api.bilibili.com/x/web-frontend/getbuvid"
+            };
+            return api;
+        }
+
+        public ApiModel Buvid4()
+        {
+            var api = new ApiModel()
+            {
+                method = HttpMethods.Get,
+                baseUrl = "https://api.bilibili.com/x/frontend/finger/spi"
+            };
+            return api;
+        }
+
+        public ApiModel BNut()
+        {
+            var api = new ApiModel()
+            {
+                method = HttpMethods.Get,
+                baseUrl = "https://www.bilibili.com/",
+                need_cookie = true,
+            };
+            return api;
+        }
+
+        public ApiModel BiliTicket()
+        {
+            var csrf = m_cookieService.GetCSRFToken();
+            var ts = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
+            var hexSign = ApiHelper.GetHMACSHA256("XgwSnGZ1p", $"ts{ts}");
+            var api = new ApiModel()
+            {
+                method = HttpMethods.Post,
+                baseUrl = "https://api.bilibili.com/bapis/bilibili.api.ticket.v1.Ticket/GenWebTicket",
+                parameter= $"key_id=ec02&hexsign={hexSign}&context[ts]={ts}&csrf={csrf}",
+                need_cookie = true,
+            };
+            return api;
+        }
+
+        public ApiModel CaptchaRegister(string voucher)
+        {
+            var csrf = m_cookieService.GetCSRFToken();
+            var api = new ApiModel()
+            {
+                method = HttpMethods.Post,
+                baseUrl = "https://api.bilibili.com/x/gaia-vgate/v1/register",
+                body = $"csrf={csrf}&v_voucher={voucher}",
+                need_cookie = true,
             };
             return api;
         }

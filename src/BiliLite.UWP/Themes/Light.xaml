@@ -2,11 +2,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    xmlns:primitives="using:Microsoft.UI.Xaml.Controls.Primitives"
-    x:Key="Light">
+    xmlns:primitives="using:Microsoft.UI.Xaml.Controls.Primitives">
     <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="Transparent" />
     <SolidColorBrush x:Key="ApplicationBackground" Color="#FFF9F9F9" />
-    <Color x:Key="TopPaneBackground">#00000000</Color>
+    <Color x:Key="SystemAccentColor">#ec407a</Color>
     <Color x:Key="HighLightColor">#ec407a</Color>
     <Color x:Key="TextColor">#CC000000</Color>
     <Color x:Key="CardColor">#0F000000</Color>
@@ -20,14 +19,12 @@
     <Color x:Key="PieControlColor">#f8f8f8</Color>
     <Color x:Key="PieControlIconColor">#FF808080</Color>
 
-    <SolidColorBrush x:Key="NavigationViewTopPaneBackground" Color="{ThemeResource TopPaneBackground}" />
     <Color x:Key="NoTapGridBackground">#FFF9F9F9</Color>
+    <Color x:Key="DynCommentBackground">#eff4f9</Color>
 
     <Color x:Key="TabViewBackground">Transparent</Color>
-    <SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected" Color="{ThemeResource TopPaneBackground}"/>
     <SolidColorBrush x:Key="TabViewItemHeaderBackgroundNormal" Color="Transparent"/>
-    <Color x:Key="TabViewRightContentPresenterColor">#1ACFCFCF</Color>
-    <Color x:Key="TabViewTabContainerGridColor">#1ACFCFCF</Color>
-    <Color x:Key="TabViewLayoutRootBackground">#1ACFCFCF</Color>
-
+    <Color x:Key="TabViewRightContentPresenterColor">#1A333333</Color>
+    <Color x:Key="TabViewTabContainerGridColor">#1A333333</Color>
+    <Color x:Key="TabViewLayoutRootBackground">#1A333333</Color>
 </ResourceDictionary>

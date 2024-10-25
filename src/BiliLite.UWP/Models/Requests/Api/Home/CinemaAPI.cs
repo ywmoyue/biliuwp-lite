@@ -10,7 +10,7 @@ namespace BiliLite.Models.Requests.Api.Home
             var baseUrl = SettingService.GetValue(SettingConstants.Other.BILI_LITE_WEB_API_BASE_URL, ApiConstants.BILI_LITE_WEB_API_DEFAULT_BASE_URL);
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{baseUrl}api/cinema/home"
             };
             return api;
@@ -20,7 +20,7 @@ namespace BiliLite.Models.Requests.Api.Home
             var baseUrl = SettingService.GetValue(SettingConstants.Other.BILI_LITE_WEB_API_BASE_URL, ApiConstants.BILI_LITE_WEB_API_DEFAULT_BASE_URL);
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{baseUrl}api/cinema/falls",
                 parameter = $"wid={wid}&cursor={cursor}"
             };

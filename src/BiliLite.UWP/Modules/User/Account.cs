@@ -108,6 +108,7 @@ namespace BiliLite.Modules
                             Value = cookieItem.value,
                         }));
                         m_cookieService.Cookies = cookies;
+                        // await m_cookieService.CheckCookieKeys();
                     }
                     //执行SSO
                     //await accountApi.SSO(access_key).Request();
@@ -235,6 +236,7 @@ namespace BiliLite.Modules
         public async void LoginByCookie(List<HttpCookieItem> cookies, string refreshToken)
         {
             m_cookieService.Cookies = cookies;
+            // await m_cookieService.CheckCookieKeys();
             var appKey = SettingConstants.Account.DefaultLoginAppKeySecret;
             var cookieToAccessKeyConfirmUrl = await GetCookieToAccessKeyConfirmUrl(appKey);
             var accessKey = await GetAccessKey(cookieToAccessKeyConfirmUrl);

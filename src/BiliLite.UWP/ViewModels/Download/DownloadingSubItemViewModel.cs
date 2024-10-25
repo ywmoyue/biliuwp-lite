@@ -47,11 +47,5 @@ namespace BiliLite.ViewModels.Download
 
         [DependsOn(nameof(TotalBytes))]
         public bool ShowStart { get { return Status != BackgroundTransferStatus.Running; } }
-
-        [DoNotNotify]
-        public ICommand PauseItemCommand { get; set; }
-
-        [DoNotNotify]
-        public ICommand ResumeItemCommand { get; set; }
     }
 }

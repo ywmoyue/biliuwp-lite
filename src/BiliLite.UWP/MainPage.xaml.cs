@@ -42,7 +42,7 @@ namespace BiliLite
             var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
 
-            Window.Current.SetTitleBar(CustomDragRegion);
+            Window.Current.SetTitleBar(AvailableDragRegion);
 
             //处理页面跳转
             MessageCenter.NavigateToPageEvent += NavigationHelper_NavigateToPageEvent;
@@ -86,10 +86,10 @@ namespace BiliLite
             var tabs = tabView.TabItems;
             foreach (var tab in tabs)
             {
-                if(!(tab is TabViewItem tabItem))continue;
-                if(!(tabItem.Content is MyFrame frame)) continue;
+                if (!(tab is TabViewItem tabItem)) continue;
+                if (!(tabItem.Content is MyFrame frame)) continue;
                 var page = frame.Content;
-                if(!(page is PlayPage playPage)) continue;
+                if (!(page is PlayPage playPage)) continue;
                 await playPage.ReportHistory();
             }
         }
@@ -117,7 +117,7 @@ namespace BiliLite
             else
             {
                 MiniWindowsTitleBar.Visibility = Visibility.Collapsed;
-                Window.Current.SetTitleBar(CustomDragRegion);
+                Window.Current.SetTitleBar(AvailableDragRegion);
             }
         }
 
@@ -314,7 +314,7 @@ namespace BiliLite
 
         private void TabView_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if(e.Key == VirtualKey.Space && e.OriginalSource.GetType()!= typeof(TextBox))
+            if (e.Key == VirtualKey.Space && e.OriginalSource.GetType() != typeof(TextBox))
                 e.Handled = true;
         }
 

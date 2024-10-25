@@ -166,12 +166,12 @@ namespace BiliLite.Modules.Player.Playurl
             // 处理普通音质列表
             foreach (var audio in audios)
             {
-                audio.baseUrl = await HandleUrl(audio.baseUrl, audio.backupUrl, userAgent, referer, isProxy);
+                audio.BaseUrl = await HandleUrl(audio.BaseUrl, audio.BackupUrl, userAgent, referer, isProxy);
                 info.AudioQualites.Add(new BiliDashAudioPlayUrlInfo()
                 {
                     HasPlayUrl = true,
-                    QualityID = audio.id,
-                    QualityName = SoundQualityConstants.Dictionary[audio.id],
+                    QualityID = audio.Id,
+                    QualityName = SoundQualityConstants.Dictionary[audio.Id],
                     Referer = referer,
                     UserAgent = userAgent,
                     Timelength = timeLength,
@@ -182,12 +182,12 @@ namespace BiliLite.Modules.Player.Playurl
             if (flacAudio is { Display: true, Audio: { } })
             {
                 var audio = flacAudio.Audio;
-                audio.baseUrl = await HandleUrl(audio.baseUrl, audio.backupUrl, userAgent, referer, isProxy);
+                audio.BaseUrl = await HandleUrl(audio.BaseUrl, audio.BackupUrl, userAgent, referer, isProxy);
                 info.AudioQualites.Add(new BiliDashAudioPlayUrlInfo()
                 {
                     HasPlayUrl = true,
-                    QualityID = audio.id,
-                    QualityName = SoundQualityConstants.Dictionary[audio.id],
+                    QualityID = audio.Id,
+                    QualityName = SoundQualityConstants.Dictionary[audio.Id],
                     Referer = referer,
                     UserAgent = userAgent,
                     Timelength = timeLength,
@@ -199,12 +199,12 @@ namespace BiliLite.Modules.Player.Playurl
             if (dolbyAudio is { Audio: { } } && dolbyAudio.Audio.Count > 0)
             {
                 var audio = dolbyAudio.Audio[0];
-                audio.baseUrl = await HandleUrl(audio.baseUrl, audio.backupUrl, userAgent, referer, isProxy);
+                audio.BaseUrl = await HandleUrl(audio.BaseUrl, audio.BackupUrl, userAgent, referer, isProxy);
                 info.AudioQualites.Add(new BiliDashAudioPlayUrlInfo()
                 {
                     HasPlayUrl = true,
-                    QualityID = audio.id,
-                    QualityName = SoundQualityConstants.Dictionary[audio.id],
+                    QualityID = audio.Id,
+                    QualityName = SoundQualityConstants.Dictionary[audio.Id],
                     Referer = referer,
                     UserAgent = userAgent,
                     Timelength = timeLength,
@@ -231,9 +231,9 @@ namespace BiliLite.Modules.Player.Playurl
             var videos = JsonConvert.DeserializeObject<List<DashItemModel>>(playUrlInfoResult["dash"]["video"].ToString());
             var currentAudio = await ParseBiliPlayUrlInfoAudioDash(info, playUrlInfoResult, quality, qualites, userAgent, referer, isProxy, soundQualityId);
             var qn = quality;
-            var h264Videos = videos.Where(x => x.codecid == (int)BiliPlayUrlVideoCodec.AVC);
-            var h265Videos = videos.Where(x => x.codecid == (int)BiliPlayUrlVideoCodec.HEVC);
-            var av01Videos = videos.Where(x => x.codecid == (int)BiliPlayUrlVideoCodec.AV1);
+            var h264Videos = videos.Where(x => x.Codecid == (int)BiliPlayUrlVideoCodec.AVC);
+            var h265Videos = videos.Where(x => x.Codecid == (int)BiliPlayUrlVideoCodec.HEVC);
+            var av01Videos = videos.Where(x => x.Codecid == (int)BiliPlayUrlVideoCodec.AV1);
 
             var duration = playUrlInfoResult["dash"]["duration"].ToInt32();
             var minBufferTime = playUrlInfoResult["dash"]["minBufferTime"].ToString();
@@ -249,9 +249,9 @@ namespace BiliLite.Modules.Player.Playurl
             foreach (var item in info.Qualites)
             {
                 item.PlayUrlType = BiliPlayUrlType.DASH;
-                var video = h264Videos.FirstOrDefault(x => x.id == item.QualityID);
-                var h265_video = h265Videos.FirstOrDefault(x => x.id == item.QualityID);
-                var av1_video = av01Videos.FirstOrDefault(x => x.id == item.QualityID);
+                var video = h264Videos.FirstOrDefault(x => x.Id == item.QualityID);
+                var h265_video = h265Videos.FirstOrDefault(x => x.Id == item.QualityID);
+                var av1_video = av01Videos.FirstOrDefault(x => x.Id == item.QualityID);
                 //h265处理
                 switch (CodecMode)
                 {
@@ -270,9 +270,9 @@ namespace BiliLite.Modules.Player.Playurl
                     continue;
                 }
                 //替换链接
-                video.baseUrl = await HandleUrl(video.baseUrl, video.backupUrl, userAgent, referer, isProxy);
+                video.BaseUrl = await HandleUrl(video.BaseUrl, video.BackupUrl, userAgent, referer, isProxy);
 
-                item.Codec = (BiliPlayUrlVideoCodec)video.codecid;
+                item.Codec = (BiliPlayUrlVideoCodec)video.Codecid;
                 item.HasPlayUrl = true;
 
                 item.DashInfo = new BiliDashPlayUrlInfo()
@@ -402,20 +402,20 @@ namespace BiliLite.Modules.Player.Playurl
                         }
                         videos.Add(new DashItemModel()
                         {
-                            backupUrl = item.DashVideo.BackupUrl.ToList(),
-                            baseUrl = item.DashVideo.BaseUrl,
-                            bandwidth = (int)item.DashVideo.Bandwidth,
-                            codecid = (int)item.DashVideo.Codecid,
-                            mimeType = "video/mp4",
-                            id = (int)item.StreamInfo.Quality,
-                            startWithSap = 1,
-                            sar = "",
-                            codecs = codecs,
-                            frameRate = "",
+                            BackupUrl = item.DashVideo.BackupUrl.ToList(),
+                            BaseUrl = item.DashVideo.BaseUrl,
+                            Bandwidth = (int)item.DashVideo.Bandwidth,
+                            Codecid = (int)item.DashVideo.Codecid,
+                            MimeType = "video/mp4",
+                            Id = (int)item.StreamInfo.Quality,
+                            StartWithSap = 1,
+                            Sar = "",
+                            Codecs = codecs,
+                            FrameRate = "",
                             SegmentBase = new SegmentBase()
                             {
-                                indexRange = indexRange,
-                                initialization = initialization
+                                IndexRange = indexRange,
+                                Initialization = initialization
                             }
                         });
                     }
@@ -424,26 +424,26 @@ namespace BiliLite.Modules.Player.Playurl
 
                         audios.Add(new DashItemModel()
                         {
-                            backupUrl = item.BackupUrl.ToList(),
-                            baseUrl = item.BaseUrl,
-                            bandwidth = (int)item.Bandwidth,
-                            codecid = (int)item.Codecid,
-                            mimeType = "audio/mp4",
-                            id = (int)item.Id,
-                            codecs = "mp4a.40.2",
-                            startWithSap = 0,
+                            BackupUrl = item.BackupUrl.ToList(),
+                            BaseUrl = item.BaseUrl,
+                            Bandwidth = (int)item.Bandwidth,
+                            Codecid = (int)item.Codecid,
+                            MimeType = "audio/mp4",
+                            Id = (int)item.Id,
+                            Codecs = "mp4a.40.2",
+                            StartWithSap = 0,
                             SegmentBase = new SegmentBase()
                             {
-                                indexRange = "0-907",
-                                initialization = "908-4575"
+                                IndexRange = "0-907",
+                                Initialization = "908-4575"
                             }
                         });
                     }
 
 
-                    var h264Videos = videos.Where(x => x.codecid == (int)BiliPlayUrlVideoCodec.AVC);
-                    var h265Videos = videos.Where(x => x.codecid == (int)BiliPlayUrlVideoCodec.HEVC);
-                    var av01Videos = videos.Where(x => x.codecid == (int)BiliPlayUrlVideoCodec.AV1);
+                    var h264Videos = videos.Where(x => x.Codecid == (int)BiliPlayUrlVideoCodec.AVC);
+                    var h265Videos = videos.Where(x => x.Codecid == (int)BiliPlayUrlVideoCodec.HEVC);
+                    var av01Videos = videos.Where(x => x.Codecid == (int)BiliPlayUrlVideoCodec.AV1);
 
                     var duration = (timeLength / 1000).ToInt32();
 
@@ -461,9 +461,9 @@ namespace BiliLite.Modules.Player.Playurl
                     {
                         var item = info.Qualites[i];
                         item.PlayUrlType = BiliPlayUrlType.DASH;
-                        var video = h264Videos.FirstOrDefault(x => x.id == item.QualityID);
-                        var h265_video = h265Videos.FirstOrDefault(x => x.id == item.QualityID);
-                        var av1_video = av01Videos.FirstOrDefault(x => x.id == item.QualityID);
+                        var video = h264Videos.FirstOrDefault(x => x.Id == item.QualityID);
+                        var h265_video = h265Videos.FirstOrDefault(x => x.Id == item.QualityID);
+                        var av1_video = av01Videos.FirstOrDefault(x => x.Id == item.QualityID);
                         //h265处理
                         if (CodecMode == PlayUrlCodecMode.DASH_H265 && h265_video != null)
                         {
@@ -504,13 +504,13 @@ namespace BiliLite.Modules.Player.Playurl
                             }
                         }
                         //替换链接
-                        video.baseUrl = await HandleUrl(video.baseUrl, video.backupUrl, userAgent, referer, false);
+                        video.BaseUrl = await HandleUrl(video.BaseUrl, video.BackupUrl, userAgent, referer, false);
                         if (audio != null)
                         {
-                            audio.baseUrl = await HandleUrl(audio.baseUrl, audio.backupUrl, userAgent, referer, false);
+                            audio.BaseUrl = await HandleUrl(audio.BaseUrl, audio.BackupUrl, userAgent, referer, false);
                         }
 
-                        item.Codec = (BiliPlayUrlVideoCodec)video.codecid;
+                        item.Codec = (BiliPlayUrlVideoCodec)video.Codecid;
                         item.HasPlayUrl = true;
                         item.DashInfo = new BiliDashPlayUrlInfo()
                         {
@@ -808,33 +808,79 @@ namespace BiliLite.Modules.Player.Playurl
 
     public class DashItemModel
     {
-        public int id { get; set; }
-        public int bandwidth { get; set; }
-        public string baseUrl { get; set; }
-        public List<string> backupUrl { get; set; }
-        public string mimeType { get; set; }
-        public string codecs { get; set; }
-        public int codecid { get; set; }
-        public int width { get; set; }
-        public int height { get; set; }
-        public string frameRate { get; set; }
-        public int startWithSap { get; set; }
-        public string sar { get; set; }
+        private string m_baseUrl;
+        private List<string> m_backupUrl;
+        private string m_mimeType;
+        private string m_frameRate;
+        private SegmentBase m_segmentBase;
+        private int? m_startWithSap;
+
+        public int Id { get; set; }
+        public int Bandwidth { get; set; }
+
+        public string BaseUrl
+        {
+            get => m_baseUrl ?? BaseUrlV2;
+            set => m_baseUrl = value;
+        }
+        [JsonProperty("base_url")]
+        public string BaseUrlV2 { get; set; }
+
+        public List<string> BackupUrl
+        {
+            get => m_backupUrl ?? BackupUrlV2;
+            set => m_backupUrl = value;
+        }
+        [JsonProperty("backup_url")]
+        public List<string> BackupUrlV2 { get; set; }
+        public string MimeType
+        {
+            get => m_mimeType ?? MimeTypeV2;
+            set => m_mimeType = value;
+        }
+
+        [JsonProperty("mime_type")]
+        public string MimeTypeV2 { get; set; }
+
+        public string Codecs { get; set; }
+        public int Codecid { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+
+        public string FrameRate
+        {
+            get => m_frameRate ?? FrameRateV2;
+            set => m_frameRate = value;
+        }
+
+        [JsonProperty("frame_rate")]
+        public string FrameRateV2 { get; set; }
+
+        public int StartWithSap
+        {
+            get => m_startWithSap ?? StartWithSapV2;
+            set => m_startWithSap = value;
+        }
+
+        [JsonProperty("start_with_sap")]
+        public int StartWithSapV2 { get; set; }
+
+        public string Sar { get; set; }
         /// <summary>
         /// 计算平均帧数
         /// </summary>
-        public string fps
+        public string Fps
         {
             get
             {
                 try
                 {
-                    if (!string.IsNullOrEmpty(frameRate) && frameRate.Contains("/"))
+                    if (!string.IsNullOrEmpty(FrameRate) && FrameRate.Contains("/"))
                     {
-                        var values = frameRate.Split('/');
+                        var values = FrameRate.Split('/');
                         if (values.Length == 1)
                         {
-                            return frameRate;
+                            return FrameRate;
                         }
                         double r = Convert.ToDouble(values[0]);
                         double d = Convert.ToDouble(values[1]);
@@ -842,47 +888,62 @@ namespace BiliLite.Modules.Player.Playurl
                     }
                     else
                     {
-                        return frameRate;
+                        return FrameRate;
                     }
                 }
                 catch (Exception)
                 {
-                    return frameRate;
+                    return FrameRate;
                 }
 
             }
         }
 
-        public SegmentBase SegmentBase { get; set; }
+        public SegmentBase SegmentBase
+        {
+            get => m_segmentBase ?? SegmentBaseV2;
+            set => m_segmentBase = value;
+        }
 
+        [JsonProperty("segment_base")]
+        public SegmentBase SegmentBaseV2 { get; set; }
 
         public BiliDashItem ToBiliDashItem()
         {
             return new BiliDashItem()
             {
-                BandWidth = bandwidth,
-                CodecID = codecid,
-                Codecs = codecs,
-                FrameRate = frameRate,
-                Height = height,
-                Width = width,
-                ID = id,
-                IsVideo = width != 0,
-                MimeType = mimeType,
-                Sar = sar,
-                StartWithSap = startWithSap,
-                SegmentBaseIndexRange = SegmentBase.indexRange,
-                SegmentBaseInitialization = SegmentBase.initialization,
-                Url = baseUrl,
+                BandWidth = Bandwidth,
+                CodecID = Codecid,
+                Codecs = Codecs,
+                FrameRate = FrameRate,
+                Height = Height,
+                Width = Width,
+                ID = Id,
+                IsVideo = Width != 0,
+                MimeType = MimeType,
+                Sar = Sar,
+                StartWithSap = StartWithSap,
+                SegmentBaseIndexRange = SegmentBase.IndexRange,
+                SegmentBaseInitialization = SegmentBase.Initialization,
+                Url = BaseUrl,
             };
         }
     }
 
     public class SegmentBase
     {
-        public string initialization { get; set; }
-        public string indexRange { get; set; }
+        private string m_indexRange;
 
+        public string Initialization { get; set; }
+
+        public string IndexRange
+        {
+            get => m_indexRange ?? IndexRangeV2;
+            set => m_indexRange = value;
+        }
+
+        [JsonProperty("index_range")]
+        public string IndexRangeV2 { get; set; }
     }
 
     public class FlvDurlModel

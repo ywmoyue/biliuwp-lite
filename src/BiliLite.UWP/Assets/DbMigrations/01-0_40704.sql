@@ -25,4 +25,5 @@ CREATE TABLE IF NOT EXISTS "DownloadedSubItems" (
     CONSTRAINT "FK_DownloadedSubItems_DownloadedItems_DownloadedItemDTOID" FOREIGN KEY ("DownloadedItemDTOID") REFERENCES "DownloadedItems" ("ID") ON DELETE RESTRICT
 );
 
-CREATE INDEX "IX_DownloadedSubItems_DownloadedItemDTOID" ON "DownloadedSubItems" ("DownloadedItemDTOID");
+-- 创建索引 IX_DownloadedSubItems_DownloadedItemDTOID
+CREATE INDEX IF NOT EXISTS "IX_DownloadedSubItems_DownloadedItemDTOID" ON "DownloadedSubItems" ("DownloadedItemDTOID");

@@ -7,6 +7,7 @@ using BiliLite.Models.Common;
 using BiliLite.Services;
 using BiliLite.ViewModels.Settings;
 using System.Linq;
+using System.Threading.Tasks;
 using BiliLite.Models.Common.Player;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
@@ -38,7 +39,8 @@ namespace BiliLite.Controls.Settings
             };
             //优先播放器类型
             var realPlayerType = (RealPlayerType)SettingService.GetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE, (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
-            ComboBoxUseRealPlayerType.SelectedItem = realPlayerType;
+            ComboBoxUseRealPlayerType.SelectedItem =
+                m_realPlayerTypes.Options.FirstOrDefault(x => x.Value == realPlayerType);
             ComboBoxUseRealPlayerType.SelectionChanged += (e, args) =>
             {
                 SettingService.SetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE, (int)ComboBoxUseRealPlayerType.SelectedValue);
@@ -317,6 +319,23 @@ namespace BiliLite.Controls.Settings
         private void RoamingSettingTestCDN_Click(object sender, RoutedEventArgs e)
         {
             m_viewModel.CDNServerDelayTest();
+        }
+
+        private async void FFmpegOptions_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            await Task.Delay(50);
+            var dict = m_viewModel.FFmpegOptions.ToDictionary(x => x.Key, t => t.Value);
+            SettingService.SetValue(SettingConstants.Player.FfmpegOptions, dict);
+        }
+
+        private void BtnAddFFmpegOption_OnClick(object sender, RoutedEventArgs e)
+        {
+            m_viewModel.FFmpegOptions.Add(new KeyValuePairViewModel());
+        }
+
+        private void BtnOpenFFmpegOptionsPanel_OnClick(object sender, RoutedEventArgs e)
+        {
+            FFmpegOptionsDialog.ShowAsync();
         }
     }
 }

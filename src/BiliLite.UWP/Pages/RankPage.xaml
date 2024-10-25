@@ -16,7 +16,7 @@
     xmlns:rank1="using:BiliLite.ViewModels.Rank"
     Background="Transparent">
     <Page.Resources>
-        <SolidColorBrush x:Key="PivotHeaderBackground" Color="{ThemeResource TopPaneBackground}"></SolidColorBrush>
+        <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent"></SolidColorBrush>
         <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White"></SolidColorBrush>
         <convert:RankColorConvert x:Key="RankConvert"/>
         <convert:ProgressToTimeConverter x:Key="progressToTimeConverter"></convert:ProgressToTimeConverter>

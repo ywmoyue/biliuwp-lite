@@ -1,5 +1,6 @@
 ﻿using BiliLite.Services;
 using System;
+using BiliLite.Models.Common;
 
 namespace BiliLite.Models.Requests.Api
 {
@@ -9,7 +10,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"https://app.bilibili.com/x/v2/view",
                 parameter = ApiHelper.MustParameter(AppKey, true) + $"&{(isbvid ? "bvid=" : "aid=")}{id}&plat=0"
             };
@@ -21,7 +22,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"https://api.bilibili.com/x/web-interface/view",
                 parameter = $"&{(isBvId ? "bvid=" : "aid=")}{id}",
                 need_cookie = true,
@@ -33,7 +34,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"https://api.bilibili.com/x/web-interface/archive/related",
                 parameter = $"&{(isBvId ? "bvid=" : "aid=")}{id}"
             };
@@ -44,7 +45,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"https://app.bilibili.com/x/v2/view",
                 parameter = ApiHelper.GetAccessParameter(AppKey) + $"&{(isbvid ? "bvid=" : "aid=")}{id}&plat=0"
             };
@@ -64,7 +65,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"https://app.bilibili.com/x/v2/view/like",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&aid={aid}&dislike={dislike}&from=7&like={like}"
             };
@@ -81,7 +82,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"https://app.biliapi.net/x/v2/view/dislike",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&aid={aid}&dislike={dislike}&from=7&like={like}"
             };
@@ -97,7 +98,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"https://app.bilibili.com/x/v2/view/like/triple",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&aid={aid}"
             };
@@ -109,7 +110,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"https://app.biliapi.net/x/v2/view/coin/add",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&aid={aid}&multiply={num}&platform=android&select_like=0"
             };
@@ -127,7 +128,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/relation/modify",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&act={mode}&fid={mid}&re_src=32"
             };
@@ -139,7 +140,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/tag/archive/tags",
                 parameter = $"&aid={aid}",
                 need_cookie = true,
@@ -151,7 +152,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"https://api.bilibili.com/x/v2/medialist/resource/list",
                 parameter =
                     $"{ApiHelper.MustParameter(AppKey, true)}&type=1&biz_id={medisListId}&oid={lastAid}&otype=2&ps={pagesize}&direction=false&desc=true&sort_field=1&tid=0&with_current=false",

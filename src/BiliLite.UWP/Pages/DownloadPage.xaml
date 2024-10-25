@@ -13,7 +13,7 @@
     xmlns:viewModel="using:BiliLite.ViewModels.Download"
     Background="Transparent">
     <Page.Resources>
-        <SolidColorBrush x:Key="PivotHeaderBackground" Color="{ThemeResource TopPaneBackground}"></SolidColorBrush>
+        <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent"></SolidColorBrush>
         <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White"></SolidColorBrush>
         <convert:ByteSizeConvert x:Key="byteSizeConvert"/>
         <convert:DownloadStatusConvert x:Key="downloadStatusConvert"/>
@@ -121,10 +121,15 @@
                                                             </TextBlock>
                                                         </Grid>
                                                     </StackPanel>
-                                                    <Button Grid.Column="1" Padding="0" Visibility="{x:Bind Path=ShowPause,Mode=OneWay}"  Command="{x:Bind Path=PauseItemCommand}" CommandParameter="{x:Bind}" VerticalAlignment="Stretch" Background="Transparent" Width="36">
+                                                    <Button Grid.Column="1" Padding="0" Visibility="{x:Bind Path=ShowPause,Mode=OneWay}"  
+                                                            Click="BtnPauseSubItem_OnClick"
+                                                            VerticalAlignment="Stretch" Background="Transparent" Width="36">
                                                         <FontIcon FontSize="14" FontFamily="Segoe MDL2 Assets" Glyph="&#xE103;" />
                                                     </Button>
-                                                    <Button Grid.Column="1" Padding="0" Visibility="{x:Bind Path=ShowStart,Mode=OneWay}" Command="{x:Bind Path=ResumeItemCommand}"  CommandParameter="{x:Bind}" VerticalAlignment="Stretch" Background="Transparent" Width="36">
+                                                    <Button Grid.Column="1" Padding="0" 
+                                                            Visibility="{x:Bind Path=ShowStart,Mode=OneWay}" 
+                                                            Click="BtnResumeSubItem_OnClick"
+                                                            VerticalAlignment="Stretch" Background="Transparent" Width="36">
                                                         <FontIcon FontSize="14" FontFamily="Segoe MDL2 Assets" Glyph="&#xE118;" />
                                                     </Button>
                                                 </Grid>

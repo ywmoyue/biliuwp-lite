@@ -211,5 +211,11 @@ namespace BiliLite.Controls.Settings
             var path = Windows.Storage.ApplicationData.Current.LocalFolder.Path + @"\log\";
             await Windows.System.Launcher.LaunchFolderPathAsync(path);
         }
+
+        private async void BtnMigrateDb_OnClick(object sender, RoutedEventArgs e)
+        {
+            var migrateService = App.ServiceProvider.GetRequiredService<SqlMigrateService>();
+            await migrateService.ExcuteAllMigrationScripts();
+        }
     }
 }

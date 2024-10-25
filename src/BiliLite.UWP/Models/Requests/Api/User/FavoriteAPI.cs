@@ -1,6 +1,7 @@
 ﻿using BiliLite.Services;
 using System;
 using System.Collections.Generic;
+using BiliLite.Models.Common;
 
 namespace BiliLite.Models.Requests.Api.User
 {
@@ -17,7 +18,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/space/v2",
                 parameter = ApiHelper.MustParameter(AppKey, true) + $"&up_mid={SettingService.Account.UserID}"
             };
@@ -28,7 +29,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/created/list",
                 parameter = ApiHelper.MustParameter(AppKey, true) + $"&up_mid={SettingService.Account.UserID}&pn={page}&ps=20"
             };
@@ -43,7 +44,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/medialist/gateway/base/created",
                 parameter = ApiHelper.MustParameter(AppKey, true) + $"&rid={aid}&up_mid={SettingService.Account.UserID}&type=2&pn=1&ps=100"
             };
@@ -65,7 +66,7 @@ namespace BiliLite.Models.Requests.Api.User
             ids = Uri.EscapeDataString(ids.TrimEnd(','));
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/medialist/gateway/coll/resource/deal",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&add_media_ids={ids}&rid={avid}&type=2"
             };
@@ -93,7 +94,7 @@ namespace BiliLite.Models.Requests.Api.User
             delIds = Uri.EscapeDataString(delIds.TrimEnd(','));
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/medialist/gateway/coll/resource/deal",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&add_media_ids={addIds}&del_media_ids={delIds}&rid={avid}&type=2"
             };
@@ -109,7 +110,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/fav",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&media_id={media_id}"
             };
@@ -124,7 +125,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/unfav",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&media_id={media_id}"
             };
@@ -143,7 +144,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/add",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&privacy={(isOpen ? 0 : 1)}&title={Uri.EscapeDataString(title)}&intro={Uri.EscapeDataString(intro)}"
             };
@@ -162,7 +163,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/edit",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&privacy={(isOpen ? 0 : 1)}&title={Uri.EscapeDataString(title)}&intro={Uri.EscapeDataString(intro)}&media_id={media_id}"
             };
@@ -179,7 +180,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/del",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&media_ids={media_id}"
             };
@@ -195,7 +196,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/resource/list",
                 parameter = $"media_id={fid}&mid={SettingService.Account.UserID}&keyword={Uri.EscapeDataString(keyword)}&pn={page}&ps=20&platform=web",
                 need_cookie = true,
@@ -207,7 +208,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/space/fav/season/list",
                 parameter = ApiHelper.MustParameter(AppKey, true) + $"&season_id={season_id}&mid={SettingService.Account.UserID}&keyword={Uri.EscapeDataString(keyword)}&pn={page}&ps=20"
             };
@@ -229,7 +230,7 @@ namespace BiliLite.Models.Requests.Api.User
             ids = Uri.EscapeDataString(ids.TrimEnd(','));
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/resource/batch-del",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&media_id={media_id}&resources={ids}"
             };
@@ -250,7 +251,7 @@ namespace BiliLite.Models.Requests.Api.User
             ids = Uri.EscapeDataString(ids.TrimEnd(','));
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/resource/copy",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&src_media_id={src_media_id}&tar_media_id={tar_media_id}&resources={ids}&mid={mid}"
             };
@@ -271,7 +272,7 @@ namespace BiliLite.Models.Requests.Api.User
             ids = Uri.EscapeDataString(ids.TrimEnd(','));
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/resource/move",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&src_media_id={src_media_id}&tar_media_id={tar_media_id}&resources={ids}"
             };
@@ -286,7 +287,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/resource/clean",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&media_id={media_id}"
             };
@@ -299,7 +300,7 @@ namespace BiliLite.Models.Requests.Api.User
             var sort = string.Join(',', favIdList);
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/sort",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&sort={sort}"
             };
@@ -315,7 +316,7 @@ namespace BiliLite.Models.Requests.Api.User
             sort = string.IsNullOrEmpty(targetId) ? $"0:0:{sourceId}:2" : $"{targetId}:2:{sourceId}:2";
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/resource/sort",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&media_id={mediaId}&sort={sort}"
             };
@@ -327,7 +328,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/collected/list",
                 parameter = $"up_mid={SettingService.Account.UserID}&pn={page}&ps={pageCount}&platform=web",
                 need_cookie = true,
@@ -339,7 +340,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/season/unfav",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&season_id={seasonId}"
             };

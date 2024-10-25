@@ -121,7 +121,7 @@ namespace BiliLite
 
         public void Log(LogLevel level, string message)
         {
-            System.Diagnostics.Debug.WriteLine("FFmpeg ({0}): {1}", level, message);
+            logger.Trace($"FFmpeg ({level}): {message}");
         }
         /// <summary>
         /// 在应用程序由最终用户正常启动时进行调用。

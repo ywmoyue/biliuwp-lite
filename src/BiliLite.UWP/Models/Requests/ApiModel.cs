@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using BiliLite.Models.Common;
 
 namespace BiliLite.Models.Requests
 {
@@ -7,7 +8,7 @@ namespace BiliLite.Models.Requests
         /// <summary>
         /// 请求方法
         /// </summary>
-        public RestSharp.Method method { get; set; }
+        public HttpMethods method { get; set; }
         /// <summary>
         /// API地址
         /// </summary>

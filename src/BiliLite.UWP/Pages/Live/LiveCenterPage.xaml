@@ -13,13 +13,13 @@
       xmlns:convert="using:BiliLite.Converters"
     Background="Transparent">
     <Page.Resources>
-        <SolidColorBrush x:Key="PivotHeaderBackground" Color="{ThemeResource TopPaneBackground}"></SolidColorBrush>
+        <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent"></SolidColorBrush>
         <convert:DatetimeConvert x:Key="time"/>
     </Page.Resources>
     <Grid>
         <Pivot x:Name="pivot" SelectionChanged="pivot_SelectionChanged">
             <Pivot.RightHeader>
-                <Grid Background="{ThemeResource TopPaneBackground}">
+                <Grid Background="Transparent">
                     <StackPanel Orientation="Horizontal" Margin="8 0">
                        
                         <!--<StackPanel Margin="0 0 12 0" VerticalAlignment="Center">

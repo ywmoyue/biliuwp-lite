@@ -6,7 +6,6 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Storage;
 using BiliLite.Extensions;
-using BiliLite.Models;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.User.SendDynamic;
 using BiliLite.Models.Exceptions;
@@ -18,7 +17,8 @@ using BiliLite.ViewModels.UserDynamic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
-using RestSharp;
+using BiliLite.Models.Common.UserDynamic;
+using BiliLite.Models.Requests.Api;
 
 namespace BiliLite.ViewModels.User.SendDynamic
 {
@@ -80,30 +80,21 @@ namespace BiliLite.ViewModels.User.SendDynamic
             try
             {
                 Uploading = true;
-                var api = m_dynamicApi.UploadImage();
-
                 var fileStream = await file.OpenAsync(FileAccessMode.Read);
                 var bytes = new byte[fileStream.Size];
                 await fileStream.ReadAsync(bytes.AsBuffer(), (uint)fileStream.Size, Windows.Storage.Streams.InputStreamOptions.None);
-                var client = new RestClient(api.url);
-                var request = new RestRequest();
-                request.Method = Method.Post;
-                request.AddParameter("biz", "draw");
-                request.AddParameter("category", "daily");
-                request.AddFile("file_up", bytes, file.Name);
-                var response = await client.ExecuteAsync(request);
-                var content = response.Content;
-
-                var result = JsonConvert.DeserializeObject<ApiDataModel<UploadImagesModel>>(content);
-                if (result.code == 0)
+                var fileInfo = new UploadFileInfo()
                 {
-                    result.data.ImageSize = (await file.GetBasicPropertiesAsync()).Size / 1024;
-                    Images.Add(result.data);
-                }
-                else
-                {
-                    Notify.ShowMessageToast(result.message);
-                }
+                    Data = bytes,
+                    FileName = file.Name,
+                };
+                var api = new CommentApi().UploadDraw(fileInfo);
+                var result = await api.Request();
+                if (!result.status)
+                    throw new CustomizedErrorException(result.message);
+                var uploadDrawResult = await result.GetData<DynamicPicture>();
+                if (!uploadDrawResult.success)
+                    throw new CustomizedErrorException(uploadDrawResult.message);
             }
             catch (Exception ex)
             {

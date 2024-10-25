@@ -66,6 +66,16 @@
             </ComboBox>
         </controls:SettingsCard>
 
+        <controls:SettingsCard  Header="迁移数据库"
+                                Description="开发者调试用">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Database"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+
+            <Button Click="BtnMigrateDb_OnClick">执行全部迁移脚本</Button>
+
+        </controls:SettingsCard>
+
         <controls:SettingsCard Header="优先使用Grpc请求动态"
                                Description="建议开启，旧版接口已被风控">
             <controls:SettingsCard.HeaderIcon>

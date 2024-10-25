@@ -311,6 +311,9 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const int WBI_KEY_REFRESH_TIME = 120;
+
+            [SettingKey]
+            public const string BILI_TICKET = "BiliTicket";
         }
 
         public class VideoDanmaku
@@ -430,6 +433,12 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(string))]
             public const string DANMAKU_FONT_FAMILY = "VideoDanmuFontFamily";
+
+            /// <summary>
+            /// 屏蔽彩色弹幕
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string DISABLE_COLORFUL = "DisableColorful";
         }
 
         public class Live
@@ -594,7 +603,10 @@ namespace BiliLite.Models.Common
             [SettingDefaultValue]
             public const RealPlayerType DEFAULT_USE_REAL_PLAYER_TYPE = RealPlayerType.Native;
 
-            /// <summary>
+            [SettingKey(typeof(object))]
+            public const string FfmpegOptions = "FfmpegOptions";
+
+                /// <summary>
             /// 使用外站视频替换无法播放的视频 bool
             /// </summary>
             [SettingKey(typeof(bool))]

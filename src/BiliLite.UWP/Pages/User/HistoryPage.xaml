@@ -15,7 +15,7 @@
     d:DataContext="{d:DesignInstance Type=user:HistoryViewModel}"
     Background="Transparent">
     <Page.Resources>
-        <SolidColorBrush x:Key="PivotHeaderBackground" Color="{ThemeResource TopPaneBackground}"></SolidColorBrush>
+        <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent"></SolidColorBrush>
         <convert:DatetimeConvert x:Key="datetime"/>
         <Style x:Key="ItemStyle" TargetType="GridViewItem">
             <Setter Property="Margin" Value="4"></Setter>
@@ -64,7 +64,7 @@
     <Grid>
         <Pivot>
             <!--<Pivot.RightHeader>
-                <Grid Background="{ThemeResource TopPaneBackground}">
+                <Grid Background="Transparent">
                     <Button Margin="8 0">清空记录</Button>
                 </Grid>
             </Pivot.RightHeader>-->

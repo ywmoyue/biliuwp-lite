@@ -451,6 +451,19 @@
                                     </Grid>
                                     <TextBlock Margin="0 8">屏蔽等级(0为不屏蔽) <Run Text="{x:Bind Path=DanmuSettingShieldLevel.Value,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/>级</TextBlock>
                                     <Slider x:Name="DanmuSettingShieldLevel"  Minimum="0" Maximum="10" StepFrequency="1"></Slider>
+
+                                    <Grid Margin="0 8 0 0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <ToggleSwitch  x:Name="DanmuSettingDisableColorful" Foreground="White"  >
+                                            <ToggleSwitch.Header>
+                                                <TextBlock  Foreground="White" >屏蔽彩色弹幕</TextBlock>
+                                            </ToggleSwitch.Header>
+                                        </ToggleSwitch>
+                                    </Grid>
+
                                     <TextBlock Margin="0 8">关键词屏蔽</TextBlock>
                                     <Grid >
                                         <Grid.ColumnDefinitions>
@@ -605,7 +618,12 @@
                    PointerReleased="Grid_PointerReleased"
                    DoubleTapped="Grid_DoubleTapped">
                 <!--播放器-->
-                <local:Player x:Name="Player"  PlayStateChanged="Player_PlayStateChanged" PlayMediaEnded="Player_PlayMediaEnded" PlayMediaError="Player_PlayMediaError" ChangeEngine="Player_ChangeEngine" PlayMediaOpened="Player_PlayMediaOpened"/>
+                <local:Player x:Name="Player"  
+                              PlayStateChanged="Player_PlayStateChanged" 
+                              PlayMediaEnded="Player_PlayMediaEnded" 
+                              PlayMediaError="Player_PlayMediaError" 
+                              ChangeEngine="Player_ChangeEngine" 
+                              PlayMediaOpened="Player_PlayMediaOpened"/>
 
                 <!--字幕-->
                 <Border x:Name="BorderSubtitle" Visibility="Collapsed" Opacity="{Binding ElementName=SubtitleSettingOpacity,Path=Value,Mode=OneWay}" Padding="3 4 8 4" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0 0 0 24">
