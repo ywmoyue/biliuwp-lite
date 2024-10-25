@@ -11,6 +11,15 @@
         Necessary,
     }
 
+    public enum HttpMethods
+    {
+        Get,
+        Post,
+        Put,
+        Patch,
+        Delete,
+    }
+
     public enum LoginStatus
     {
         /// <summary>

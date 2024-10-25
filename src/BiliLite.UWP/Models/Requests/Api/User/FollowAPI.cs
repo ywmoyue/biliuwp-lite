@@ -1,4 +1,5 @@
-﻿using BiliLite.Services;
+﻿using BiliLite.Models.Common;
+using BiliLite.Services;
 
 namespace BiliLite.Models.Requests.Api.User
 {
@@ -15,7 +16,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/pgc/app/follow/v2/bangumi",
                 parameter = ApiHelper.MustParameter(AppKey, true) + $"&pn={page}&ps={pagesize}&status={status}",
                 headers = ApiHelper.GetAuroraHeaders()
@@ -34,7 +35,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/pgc/app/follow/v2/cinema",
                 parameter = ApiHelper.MustParameter(AppKey, true) + $"&pn={page}&ps={pagesize}&status={status}",
             };
@@ -49,7 +50,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/pgc/app/follow/add",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&season_id={season_id}"
             };
@@ -64,7 +65,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/pgc/app/follow/del",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&season_id={season_id}"
             };
@@ -80,7 +81,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/pgc/app/follow/status/update",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&season_id={season_id}&status={status}"
             };
@@ -99,7 +100,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/relation/modify",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&act={mode}&fid={mid}&re_src=32"
             };
@@ -116,7 +117,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/relation",
                 parameter = $"fid={mid}",
                 need_cookie = true

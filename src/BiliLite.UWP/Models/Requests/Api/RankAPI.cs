@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using BiliLite.Models.Common;
 using BiliLite.Services;
 
 namespace BiliLite.Models.Requests.Api
@@ -9,7 +10,7 @@ namespace BiliLite.Models.Requests.Api
         //{
         //    var api = new ApiModel()
         //    {
-        //        method = RestSharp.Method.Get,
+        //        method = HttpMethods.Get,
         //        baseUrl = $"{ApiHelper.baseUrl}/api/rank/RankRegion"
         //    };
         //    return api;
@@ -24,7 +25,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/web-interface/ranking/v2",
                 parameter = $"rid={rid}&type={type}",
             };
@@ -45,7 +46,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/pgc/season/rank/list",
                 parameter = $"season_type={type}"
             };

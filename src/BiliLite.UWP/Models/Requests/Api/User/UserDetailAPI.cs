@@ -2,6 +2,7 @@
 using System.Linq;
 using BiliLite.Services;
 using System.Threading.Tasks;
+using BiliLite.Models.Common;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite.Models.Requests.Api.User
@@ -24,7 +25,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/space/wbi/acc/info",
                 parameter = $"mid={mid}",
                 need_cookie = true
@@ -41,7 +42,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = "https://app.bilibili.com/x/v2/space",
                 parameter = ApiHelper.MustParameter(AppKey, needAccesskey: true) + $"&vmid={mid}",
             };
@@ -57,7 +58,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/relation/stat",
                 parameter = $"vmid={mid}",
             };
@@ -76,7 +77,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/space/wbi/arc/search",
                 parameter = $"mid={mid}&ps={pagesize}&tid={tid}&pn={page}&keyword={keyword}&order={order.ToString()}",
                 need_cookie = true,
@@ -89,7 +90,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"https://app.bilibili.com/x/v2/space/archive/cursor",
                 parameter =
                     $"{ApiHelper.MustParameter(AppKey, true)}&vmid={mid}&ps={pagesize}&order={order.ToString()}&aid={cursor}",
@@ -109,7 +110,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/space/article",
                 parameter = $"mid={mid}&ps={pagesize}&pn={page}&sort={order.ToString()}",
             };
@@ -120,7 +121,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"https://app.bilibili.com/x/polymer/space/seasons_series_list_mobile",
                 parameter = $"{ApiHelper.MustParameter(AppKey, true)}&mid={mid}&page_num={pageNum}&page_size=20",
             };
@@ -136,7 +137,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/relation/tags",
                 parameter = ApiHelper.MustParameter(AppKey, true)
             };
@@ -152,7 +153,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/relation/tag/user",
                 parameter = $"fid={targetUserId}&" + ApiHelper.MustParameter(AppKey, true)
             };
@@ -168,7 +169,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/relation/tag/create",
                 body = $"tag={tag}&" + ApiHelper.MustParameter(AppKey, true)
             };
@@ -194,7 +195,7 @@ namespace BiliLite.Models.Requests.Api.User
 
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/relation/tags/addUsers",
                 body = $"fids={fids}&tagids={tagids}&csrf={csrf}",// + ApiHelper.MustParameter(AppKey, true)
                 need_cookie = true,
@@ -214,7 +215,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/relation/followings",
                 parameter = $"vmid={mid}&ps={pagesize}&pn={page}&order=desc&order_type={(order == FollowingsOrder.attention ? "attention" : "")}",
                 need_cookie = true,
@@ -244,7 +245,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/relation/followers",
                 parameter = $"vmid={mid}&ps={pagesize}&pn={page}&order=desc",
                 need_cookie = true,
@@ -261,7 +262,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/created/list-all",
                 parameter = $"up_mid={mid}",
             };

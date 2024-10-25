@@ -1,4 +1,5 @@
-﻿using BiliLite.Services;
+﻿using BiliLite.Models.Common;
+using BiliLite.Services;
 
 namespace BiliLite.Models.Requests.Api
 {
@@ -21,7 +22,7 @@ namespace BiliLite.Models.Requests.Api
             var type = business.ToString();
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/emote/user/panel/web",
                 parameter = ApiHelper.MustParameter(AppKey) + $"&business={type}",
                 headers = ApiHelper.GetAuroraHeaders(),
