@@ -1,14 +1,14 @@
-﻿using System.Collections.ObjectModel;
+﻿using BiliLite.Extensions;
+using BiliLite.Models.Common;
+using BiliLite.Models.Common.Home;
+using BiliLite.Services;
+using Microsoft.Toolkit.Uwp.UI;
+using Microsoft.UI.Xaml.Controls;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using BiliLite.Extensions;
-using BiliLite.Models.Common;
-using BiliLite.Models.Common.Home;
-using BiliLite.Services;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.Toolkit.Uwp.UI;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -18,7 +18,7 @@ namespace BiliLite.Controls.Settings
     {
         public UISettingsControl()
         {
-            this.InitializeComponent(); 
+            this.InitializeComponent();
             LoadUI();
         }
         private void LoadUI()
@@ -87,7 +87,7 @@ namespace BiliLite.Controls.Settings
                 swHomeCache.Toggled += new RoutedEventHandler((obj, args) =>
                 {
                     SettingService.SetValue(SettingConstants.UI.CACHE_HOME, swHomeCache.IsOn);
-
+                    Notify.ShowMessageToast("重启生效");
                 });
             });
 

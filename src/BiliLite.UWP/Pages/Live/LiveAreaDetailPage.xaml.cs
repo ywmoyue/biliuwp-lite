@@ -27,7 +27,6 @@ namespace BiliLite.Pages.Live
         {
             this.InitializeComponent();
             Title = "分区详情";
-            this.NavigationCacheMode = NavigationCacheMode.Enabled;
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -61,7 +60,7 @@ namespace BiliLite.Pages.Live
         {
             var data = (sender as ToggleButton).DataContext as LiveTagItemModel;
             if (data.Select) return;
-            var select=liveAreaDetailVM.Tags.FirstOrDefault(x => x.Select);
+            var select = liveAreaDetailVM.Tags.FirstOrDefault(x => x.Select);
             select.Select = false;
             data.Select = true;
             liveAreaDetailVM.SelectTag = data;

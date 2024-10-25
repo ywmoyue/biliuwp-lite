@@ -21,7 +21,6 @@ namespace BiliLite.Pages.Bangumi
         {
             this.InitializeComponent();
             Title = "热门榜单";
-            this.NavigationCacheMode = NavigationCacheMode.Enabled;
             seasonRankVM = new SeasonRankVM();
         }
 
@@ -30,7 +29,7 @@ namespace BiliLite.Pages.Bangumi
             base.OnNavigatedTo(e);
             if (e.NavigationMode == NavigationMode.New)
             {
-                 seasonRankVM.LoadRankRegion((int)e.Parameter);
+                seasonRankVM.LoadRankRegion((int)e.Parameter);
             }
         }
 

@@ -1,13 +1,27 @@
 ﻿using BiliLite.Controls;
 using BiliLite.Extensions;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Live;
+using BiliLite.Models.Common.Player;
+using BiliLite.Models.Exceptions;
 using BiliLite.Modules;
+using BiliLite.Player;
+using BiliLite.Player.Controllers;
+using BiliLite.Player.States.ContentStates;
+using BiliLite.Player.States.PauseStates;
+using BiliLite.Player.States.PlayStates;
+using BiliLite.Player.States.ScreenStates;
 using BiliLite.Services;
+using BiliLite.Services.Interfaces;
+using BiliLite.ViewModels.Live;
+using BiliLite.ViewModels.Settings;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Graphics.Display;
@@ -22,21 +36,6 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Models.Common.Live;
-using BiliLite.Models.Common.Player;
-using BiliLite.Models.Exceptions;
-using BiliLite.Player;
-using BiliLite.Player.Controllers;
-using BiliLite.Player.States.ContentStates;
-using BiliLite.Player.States.PauseStates;
-using BiliLite.Player.States.PlayStates;
-using BiliLite.Player.States.ScreenStates;
-using BiliLite.ViewModels.Live;
-using Windows.UI.Xaml.Documents;
-using System.Text.RegularExpressions;
-using BiliLite.Services.Interfaces;
-using BiliLite.ViewModels.Settings;
-using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -85,7 +84,6 @@ namespace BiliLite.Pages
             InitPlayerEvent();
 
             Title = "直播间";
-            this.NavigationCacheMode = NavigationCacheMode.Enabled;
             dispRequest = new DisplayRequest();
             DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
             dataTransferManager.DataRequested += DataTransferManager_DataRequested;
@@ -94,7 +92,7 @@ namespace BiliLite.Pages
             timer_focus.Tick += Timer_focus_Tick;
             controlTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1) };
             controlTimer.Tick += ControlTimer_Tick;
-            chatScrollTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(3)};
+            chatScrollTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(3) };
             chatScrollTimer.Tick += ChatScrollTimer_Tick;
             chatScrollTimer.Start();
 
@@ -107,7 +105,7 @@ namespace BiliLite.Pages
             m_liveRoomViewModel.RedPocketLotteryEnd += LiveRoomViewModelRedPocketLotteryEnd;
             m_liveRoomViewModel.AnchorLotteryStart += LiveRoomViewModelAnchorLotteryStart;
             m_liveRoomViewModel.SetManualPlayUrl += LiveRoomViewModelSetManualPlayUrl;
-            m_liveRoomViewModel.AddLotteryShieldWord += (sender, word) => 
+            m_liveRoomViewModel.AddLotteryShieldWord += (sender, word) =>
             {
                 if (m_liveRoomViewModel.ShowLotteryDanmu) return;
                 AddShieldWord(word);
@@ -122,8 +120,8 @@ namespace BiliLite.Pages
                 BottomGiftBar.Visibility = Visibility.Collapsed;
             };
             this.Loaded += LiveDetailPage_Loaded;
-            this.Unloaded += LiveDetailPage_Unloaded; 
-            
+            this.Unloaded += LiveDetailPage_Unloaded;
+
             m_useNsDanmaku = (DanmakuEngineType)SettingService.GetValue(SettingConstants.Live.DANMAKU_ENGINE,
                 (int)SettingConstants.Live.DEFAULT_DANMAKU_ENGINE) == DanmakuEngineType.NSDanmaku;
             if (m_useNsDanmaku)
@@ -207,7 +205,7 @@ namespace BiliLite.Pages
             m_liveRoomViewModel.ShowAnchorLotteryWinnerList = true;
             m_liveRoomViewModel.LoadBag().RunWithoutAwait();
         }
-         
+
         private void LiveRoomViewModelRedPocketLotteryEnd(object sender, LiveRoomEndRedPocketLotteryInfoModel e)
         {
             var winners = e.Winners;
@@ -216,7 +214,8 @@ namespace BiliLite.Pages
             m_liveRoomViewModel.ShowRedPocketLotteryWinnerList = true;
             foreach (var winner in winners)
             {
-                if (winner[0] == (SettingService.Account.UserID).ToString()) {
+                if (winner[0] == (SettingService.Account.UserID).ToString())
+                {
                     Notify.ShowMessageToast($"你已在人气红包抽奖中抽中 {awards[winner[3]].AwardName} , 赶快到背包中查看吧~", 5);
                     break;
                 }
@@ -427,7 +426,8 @@ namespace BiliLite.Pages
             {
                 var domain = new Uri(urls[i].Url).Host;
 
-                if (domain.Contains(m_viewModel.LivePlayUrlSource) && !flag) {
+                if (domain.Contains(m_viewModel.LivePlayUrlSource) && !flag)
+                {
                     BottomCBLine.SelectedIndex = i;
                     flag = true;
                 }
@@ -494,7 +494,7 @@ namespace BiliLite.Pages
             SliderVolume.ValueChanged += (e, args) =>
             {
                 m_player.Volume = SliderVolume.Value;
-                if(!lockPlayerVolume)
+                if (!lockPlayerVolume)
                     SettingService.SetValue(SettingConstants.Player.PLAYER_VOLUME, SliderVolume.Value);
             };
             //亮度
@@ -840,7 +840,7 @@ namespace BiliLite.Pages
         {
             SetFullScreen(false);
         }
-        
+
         Task IPlayPage.CaptureVideo()
         {
             return CaptureVideo();
@@ -875,7 +875,7 @@ namespace BiliLite.Pages
 
         public void ToggleSubtitle()
         {
-            
+
         }
 
         private async Task CaptureVideo()
@@ -1052,7 +1052,7 @@ namespace BiliLite.Pages
             var msg = "";
             msg += "弹幕发送成功";
 
-            if(m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.RequireText.Contains("关注主播") && !m_liveRoomViewModel.Attention)
+            if (m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.RequireText.Contains("关注主播") && !m_liveRoomViewModel.Attention)
             {
                 // 参与天选会自动关注, 无须手动关注
                 m_liveRoomViewModel.Attention = true;
@@ -1379,7 +1379,7 @@ namespace BiliLite.Pages
             }
         }
 
-        private bool IsPlayForward {  get; set; } = false;
+        private bool IsPlayForward { get; set; } = false;
         private async void btnPlayForward_Click(object sender, RoutedEventArgs e)
         {
             if (IsPlayForward) { return; }

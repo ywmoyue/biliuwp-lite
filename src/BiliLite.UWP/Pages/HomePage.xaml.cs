@@ -2,15 +2,15 @@
 using BiliLite.Models.Common;
 using BiliLite.Modules;
 using BiliLite.Services;
+using BiliLite.ViewModels.Download;
+using BiliLite.ViewModels.Home;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Uwp.Connectivity;
 using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.ViewModels.Download;
-using BiliLite.ViewModels.Home;
-using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -38,6 +38,10 @@ namespace BiliLite.Pages
             m_downloadPageViewModel = App.ServiceProvider.GetRequiredService<DownloadPageViewModel>();
             // m_cookieService = App.ServiceProvider.GetRequiredService<CookieService>();
             this.DataContext = m_viewModel;
+            NavigationCacheMode = SettingService.GetValue(SettingConstants.UI.CACHE_HOME, true)
+                ? NavigationCacheMode.Required
+                : NavigationCacheMode.Disabled;
+
         }
 
         public async Task Refresh()

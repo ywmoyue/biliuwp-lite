@@ -23,14 +23,6 @@ namespace BiliLite.Pages.Home
         {
             this.InitializeComponent();
             cinemaVM = new Modules.CinemaVM();
-            if (SettingService.GetValue<bool>(SettingConstants.UI.CACHE_HOME, true))
-            {
-                this.NavigationCacheMode = NavigationCacheMode.Enabled;
-            }
-            else
-            {
-                this.NavigationCacheMode = NavigationCacheMode.Disabled;
-            }
             MessageCenter.LoginedEvent += MessageCenter_LoginedEvent;
             MessageCenter.LogoutedEvent += MessageCenter_LogoutedEvent;
         }

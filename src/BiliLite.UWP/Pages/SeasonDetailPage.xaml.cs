@@ -1,8 +1,18 @@
 ﻿using BiliLite.Controls;
 using BiliLite.Dialogs;
+using BiliLite.Extensions;
+using BiliLite.Models.Common;
+using BiliLite.Models.Common.Comment;
+using BiliLite.Models.Common.Season;
+using BiliLite.Models.Common.Video;
+using BiliLite.Models.Download;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Modules;
 using BiliLite.Modules.Season;
+using BiliLite.Services;
+using BiliLite.Services.Interfaces;
+using BiliLite.ViewModels.Season;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
@@ -14,17 +24,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Models.Common;
-using BiliLite.Services;
-using BiliLite.Extensions;
-using BiliLite.Models.Common.Comment;
-using BiliLite.Models.Common.Season;
-using BiliLite.Models.Common.Video;
-using BiliLite.Models.Download;
-using BiliLite.ViewModels.Season;
-using BiliLite.Services.Interfaces;
-using BiliLite.ViewModels.Download;
-using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -48,7 +47,6 @@ namespace BiliLite.Pages
             Title = "剧集详情";
             this.Loaded += SeasonDetailPage_Loaded;
             this.Player = this.player;
-            NavigationCacheMode = NavigationCacheMode.Enabled;
             m_viewModel = new SeasonDetailPageViewModel();
             seasonReviewVM = new SeasonReviewVM();
             DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();

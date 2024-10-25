@@ -23,7 +23,6 @@ namespace BiliLite.Pages.Bangumi
         {
             this.InitializeComponent();
             Title = "剧集索引";
-            this.NavigationCacheMode = NavigationCacheMode.Enabled;
             seasonIndexVM = new SeasonIndexVM();
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)

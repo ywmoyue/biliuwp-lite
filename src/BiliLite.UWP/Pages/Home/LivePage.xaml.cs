@@ -18,21 +18,13 @@ namespace BiliLite.Pages.Home
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class LivePage : Page,IRefreshablePage
+    public sealed partial class LivePage : Page, IRefreshablePage
     {
         private Modules.LiveVM liveVM;
         public LivePage()
         {
             this.InitializeComponent();
             liveVM = new Modules.LiveVM();
-            if (SettingService.GetValue<bool>(SettingConstants.UI.CACHE_HOME, true))
-            {
-                this.NavigationCacheMode = NavigationCacheMode.Enabled;
-            }
-            else
-            {
-                this.NavigationCacheMode = NavigationCacheMode.Disabled;
-            }
 
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)

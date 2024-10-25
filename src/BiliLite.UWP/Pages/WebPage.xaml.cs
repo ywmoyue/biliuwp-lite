@@ -1,17 +1,17 @@
 ﻿using BiliLite.Controls;
 using BiliLite.Extensions;
+using BiliLite.Models.Common;
 using BiliLite.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.Web.WebView2.Core;
 using System;
 using System.Threading.Tasks;
+using Windows.Storage;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Models.Common;
-using Microsoft.Web.WebView2.Core;
-using Microsoft.Extensions.DependencyInjection;
-using Windows.Storage;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -113,7 +113,6 @@ namespace BiliLite.Pages
         {
             if (e.NavigationMode == NavigationMode.Back || e.SourcePageType == typeof(BlankPage))
             {
-                NavigationCacheMode = NavigationCacheMode.Disabled;
                 CloseWebView();
             }
             base.OnNavigatingFrom(e);

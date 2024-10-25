@@ -1,14 +1,14 @@
-﻿using System.Threading.Tasks;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Dynamic;
 using BiliLite.Services;
+using BiliLite.ViewModels.Home;
+using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Models.Common.Dynamic;
-using BiliLite.ViewModels.Home;
-using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -27,7 +27,6 @@ namespace BiliLite.Pages.Home
             m_viewModel = App.ServiceProvider.GetService<DynamicPageViewModel>();
             m_viewModel.DynamicItemDataTemplateSelector.Resource = this.Resources;
             this.DataContext = m_viewModel;
-            this.NavigationCacheMode = SettingService.GetValue<bool>(SettingConstants.UI.CACHE_HOME, true) ? NavigationCacheMode.Enabled : NavigationCacheMode.Disabled;
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)

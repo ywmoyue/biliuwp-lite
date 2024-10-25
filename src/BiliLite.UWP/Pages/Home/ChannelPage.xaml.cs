@@ -1,5 +1,4 @@
 ﻿using BiliLite.Extensions;
-using BiliLite.Models.Common;
 using BiliLite.Services;
 using System;
 using Windows.UI.Popups;
@@ -18,14 +17,6 @@ namespace BiliLite.Pages.Home
         public ChannelPage()
         {
             this.InitializeComponent();
-            if (SettingService.GetValue<bool>(SettingConstants.UI.CACHE_HOME, true))
-            {
-                this.NavigationCacheMode = NavigationCacheMode.Enabled;
-            }
-            else
-            {
-                this.NavigationCacheMode = NavigationCacheMode.Disabled;
-            }
             web.NewWindowRequested += webView_NewWindowRequested;
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)

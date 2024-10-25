@@ -1,8 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using BiliLite.Controls;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
-using BiliLite.Controls;
-using BiliLite.Models.Common;
-using BiliLite.Services;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -13,13 +11,13 @@ namespace BiliLite.Pages
         public string Title { get; set; }
         public BasePage()
         {
-            this.NavigationCacheMode = (SettingService.GetValue<int>(SettingConstants.UI.DISPLAY_MODE, 0) == 1) ? Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled : Windows.UI.Xaml.Navigation.NavigationCacheMode.Disabled;
+
         }
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             if (e.NavigationMode == NavigationMode.Back || e.SourcePageType == typeof(BlankPage))
             {
-                this.NavigationCacheMode = NavigationCacheMode.Disabled;
+
             }
             else
             {

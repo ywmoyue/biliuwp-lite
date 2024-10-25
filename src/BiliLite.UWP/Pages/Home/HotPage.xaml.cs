@@ -24,15 +24,6 @@ namespace BiliLite.Pages.Home
             this.InitializeComponent();
             hotVM = new HotVM();
             this.DataContext = hotVM;
-            if (SettingService.GetValue<bool>(SettingConstants.UI.CACHE_HOME, true))
-            {
-                this.NavigationCacheMode = NavigationCacheMode.Enabled;
-            }
-            else
-            {
-                this.NavigationCacheMode = NavigationCacheMode.Disabled;
-            }
-
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {

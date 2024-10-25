@@ -1,7 +1,10 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Recommend;
 using BiliLite.Modules.User;
 using BiliLite.Services;
+using BiliLite.ViewModels.Home;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,9 +13,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Models.Common.Recommend;
-using BiliLite.ViewModels.Home;
-using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -35,7 +35,6 @@ namespace BiliLite.Pages.Home
         public RecommendPage()
         {
             this.InitializeComponent();
-            this.NavigationCacheMode = SettingService.GetValue<bool>(SettingConstants.UI.CACHE_HOME, true) ? NavigationCacheMode.Enabled : NavigationCacheMode.Disabled;
             m_viewModel = App.ServiceProvider.GetRequiredService<RecommendPageViewModel>();
             this.DataContext = m_viewModel;
         }
@@ -115,11 +114,11 @@ namespace BiliLite.Pages.Home
             switch (threePoint.Type)
             {
                 case "watch_later":
-                {
-                    var item = (sender as ListView).DataContext as RecommendItemModel;
-                    WatchLaterVM.Instance.AddToWatchlater(item.Param);
-                    return;
-                }
+                    {
+                        var item = (sender as ListView).DataContext as RecommendItemModel;
+                        WatchLaterVM.Instance.AddToWatchlater(item.Param);
+                        return;
+                    }
                 case "dislike":
                     await m_viewModel.Dislike(threePoint.Idx, threePoint, null);
                     return;
@@ -155,7 +154,7 @@ namespace BiliLite.Pages.Home
                         url = data.AdInfo.CreativeContent.ClickUrl ?? data.AdInfo.CreativeContent.Url;
                     }
                     await MessageCenter.HandelUrl(url, dontGoTo);
-                    
+
                     return;
                 }
             if (data.CardGoto == "new_tunnel")

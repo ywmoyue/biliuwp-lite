@@ -17,13 +17,12 @@ namespace BiliLite.Pages.Live
     {
         readonly LiveAttentionVM liveAttentionVM;
         readonly LiveAttentionUnLiveVM liveAttentionUnLiveVM;
-        readonly LiveCenterHistoryVM  liveCenterHistoryVM;
+        readonly LiveCenterHistoryVM liveCenterHistoryVM;
         readonly LiveCenterVM liveCenterVM;
         public LiveCenterPage()
         {
             this.InitializeComponent();
             Title = "直播中心";
-            this.NavigationCacheMode = NavigationCacheMode.Enabled;
             liveAttentionVM = new LiveAttentionVM();
             liveAttentionUnLiveVM = new LiveAttentionUnLiveVM();
             liveCenterHistoryVM = new LiveCenterHistoryVM();
@@ -33,7 +32,7 @@ namespace BiliLite.Pages.Live
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if(e.NavigationMode== NavigationMode.New)
+            if (e.NavigationMode == NavigationMode.New)
             {
                 liveCenterVM.GetUserInfo();
                 await liveAttentionVM.GetFollows();
@@ -73,12 +72,12 @@ namespace BiliLite.Pages.Live
                 page = typeof(LiveDetailPage),
                 title = data.name + "的直播间",
                 parameters = data.history.oid
-            }) ;
+            });
         }
 
         private async void pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(pivot.SelectedIndex==1&& liveAttentionUnLiveVM.Items == null)
+            if (pivot.SelectedIndex == 1 && liveAttentionUnLiveVM.Items == null)
             {
                 await liveAttentionUnLiveVM.Get();
             }
