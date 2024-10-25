@@ -143,7 +143,7 @@
                 Tapped="CommentPanel_OnTapped"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                Background="{ThemeResource HalfTransparentBackground}"></Grid>
+                Background="Transparent"></Grid>
             <Grid x:Name="grid" HorizontalAlignment="Right"
                   
                   Width="{x:Bind m_viewModel.CommentControlWidth}"
