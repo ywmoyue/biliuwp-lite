@@ -1,4 +1,12 @@
-﻿using BiliLite.Models;
+﻿using BiliLite.Extensions;
+using BiliLite.Models;
+using BiliLite.Models.Common;
+using BiliLite.Models.Exceptions;
+using BiliLite.Models.Requests.Api;
+using BiliLite.Pages;
+using BiliLite.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -6,14 +14,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BiliLite.Extensions;
-using BiliLite.Models.Common;
-using BiliLite.Models.Exceptions;
-using Newtonsoft.Json;
-using BiliLite.Pages;
-using BiliLite.Models.Requests.Api;
-using BiliLite.Services;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite.Modules
 {
@@ -86,9 +86,9 @@ namespace BiliLite.Modules
         /// 搜索请求需要cookie
         /// </summary>
         public static string cookie = "";
-        public SearchVM()
+        public SearchVM(int pivotIndex, int comboIndex)
         {
-            Area = Areas[0];
+            Area = Areas[comboIndex];
             SearchItems = new ObservableCollection<ISearchVM>() {
                 new SearchVideoVM()
                 {
@@ -138,8 +138,7 @@ namespace BiliLite.Modules
                     Area= Area.area
                 }
             };
-            SelectItem = SearchItems[0];
-
+            SelectItem = SearchItems[pivotIndex];
         }
         private ObservableCollection<ISearchVM> _items;
         public ObservableCollection<ISearchVM> SearchItems
@@ -266,7 +265,7 @@ namespace BiliLite.Modules
                 var searchVideoItems = JsonConvert.DeserializeObject<List<SearchVideoItem>>(data.data["result"]?.ToString() ?? "[]");
                 searchVideoItems = m_contentFilterService.FilterSearchItems(searchVideoItems);
                 var result = new ObservableCollection<SearchVideoItem>(searchVideoItems);
-                
+
                 if (Page == 1)
                 {
                     if (result == null || result.Count == 0)

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -58,15 +59,28 @@ namespace BiliLite.Pages
     /// </summary>
     public sealed partial class SearchPage : BasePage, IRefreshablePage
     {
-        SearchVM searchVM;
+        private static int _pivotIndex;
+        public int pivotIndex
+        {
+            get => _pivotIndex;
+            set => _pivotIndex = value;
+        }
+        private static int _comboIndex;
+        public int comboIndex
+        {
+            get => _comboIndex;
+            set => _comboIndex = value;
+        }
+        SearchVM searchVM = new SearchVM(_pivotIndex, _comboIndex);
+
         public SearchPage()
         {
             this.InitializeComponent();
-            Title = "搜索";
-            searchVM = new SearchVM();
         }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            CompositionTarget.Rendered += CompositionTarget_Rendered; // 订阅页面加载后事件
             base.OnNavigatedTo(e);
             SearchParameter par = new SearchParameter();
             if (e.Parameter is SearchParameter)
@@ -84,9 +98,13 @@ namespace BiliLite.Pages
                 item.Keyword = par.keyword;
                 item.Area = searchVM.Area.area;
             }
-            pivot.SelectedIndex = (int)par.searchType;
         }
-
+        private void CompositionTarget_Rendered(object sender, RenderedEventArgs e)
+        {
+            txtKeyword.Focus(FocusState.Keyboard);
+            Title = "搜索";
+            CompositionTarget.Rendered -= CompositionTarget_Rendered;
+        }
         private async void txtKeyword_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             var queryText = args.QueryText;
