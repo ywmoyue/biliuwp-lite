@@ -23,5 +23,19 @@ namespace BiliLite.Extensions
             var file = await savePicker.PickSaveFileAsync();
             return file;
         }
+
+        public static async Task<bool> CheckFileExist(this string path)
+        {
+            try
+            {
+                var file = await StorageFile.GetFileFromPathAsync(path);
+                return file != null;
+            }
+            catch (Exception)
+            {
+                // 如果文件不存在或者路径无效，将捕获异常
+                return false;
+            }
+        }
     }
 }
