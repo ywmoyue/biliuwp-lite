@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--  关键字 # 加字体名，不是字体文件名。字体名打开字体文件可得  -->
+    <FontFamily x:Key="VanFont">ms-appx:///Assets/Fonts/vanfont.otf#vanfont</FontFamily>
+    <FontFamily x:Key="BiliIconFont">ms-appx:///Assets/Fonts/biliicon.ttf#biliicon</FontFamily>
+    
+    <!--  该字体来自哔哩哔哩Web端，该字体可能需要商业授权  -->
+    <FontFamily x:Key="FansNum">ms-appx:///Assets/Fonts/FansNum.otf#FansNum</FontFamily>
+</ResourceDictionary>

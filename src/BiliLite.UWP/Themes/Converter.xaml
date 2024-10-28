@@ -1,0 +1,11 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:convert="using:BiliLite.Converters">
+
+    <convert:NumberToStringConvert x:Key="numberToStringConvert" />
+    <convert:ImageCompressionConvert x:Key="imageConvert" />
+    <convert:ImageSourceConvert x:Key="imageConvert2" />
+    <convert:DisplayConvert x:Key="display" />
+    <convert:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+</ResourceDictionary>
