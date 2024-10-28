@@ -17,7 +17,7 @@
     <Page.Resources>
         <convert:DatetimeConvert x:Key="datetime" ></convert:DatetimeConvert>
         <convert:ColorSelecteConvert x:Key="colorSelct" ></convert:ColorSelecteConvert>
-        <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource HighLightColor}" />
+        <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource SystemAccentColor}" />
         <SolidColorBrush x:Key="GridViewItemForegroundSelected" Color="{ThemeResource HighLightTextColor}" />
         <SolidColorBrush x:Key="RatingControlSelectedForeground" Color="Orange" />
     </Page.Resources>
@@ -216,7 +216,7 @@
                                         <DataTemplate x:DataType="season1:SeasonDetailEpisodeModel">
                                             <Grid ToolTipService.ToolTip="{x:Bind Path=LongTitle}">
                                                 <TextBlock VerticalAlignment="Center" TextAlignment="Center" TextTrimming="CharacterEllipsis"><Run Text="{x:Bind Path=Title}"/></TextBlock>
-                                                <Border Visibility="{x:Bind Path=ShowBadge}" VerticalAlignment="Top" Padding="4 2" CornerRadius="0 0 0 4" Background="{ThemeResource HighLightColor}" HorizontalAlignment="Right">
+                                                <Border Visibility="{x:Bind Path=ShowBadge}" VerticalAlignment="Top" Padding="4 2" CornerRadius="0 0 0 4" Background="{ThemeResource SystemAccentColor}" HorizontalAlignment="Right">
                                                     <TextBlock FontSize="12" Foreground="{ThemeResource HighLightTextColor}" Text="{x:Bind Path=Badge}"></TextBlock>
                                                 </Border>
                                             </Grid>
@@ -242,7 +242,7 @@
                                         <DataTemplate x:DataType="season1:SeasonDetailEpisodeModel">
                                             <Grid ToolTipService.ToolTip="{x:Bind Path=LongTitle}">
                                                 <TextBlock VerticalAlignment="Center" TextAlignment="Center" TextTrimming="CharacterEllipsis"><Run Text="{x:Bind Path=Title}"/></TextBlock>
-                                                <Border Visibility="{x:Bind Path=ShowBadge}" VerticalAlignment="Top" Padding="4 2" CornerRadius="0 0 0 4" Background="{ThemeResource HighLightColor}" HorizontalAlignment="Right">
+                                                <Border Visibility="{x:Bind Path=ShowBadge}" VerticalAlignment="Top" Padding="4 2" CornerRadius="0 0 0 4" Background="{ThemeResource SystemAccentColor}" HorizontalAlignment="Right">
                                                     <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=Badge}"></TextBlock>
                                                 </Border>
                                             </Grid>
@@ -395,7 +395,7 @@
                                                              x:Name="btnReviewLike"
                                                              Click="btnReviewLike_Click"
                                                              Visibility="{x:Bind Path=stat.liked,Mode=OneWay,Converter={StaticResource display},ConverterParameter=1}"
-                                                             Foreground="{ThemeResource HighLightColor}" 
+                                                             Foreground="{ThemeResource SystemAccentColor}" 
                                                              HorizontalContentAlignment="Left">
                                                     <StackPanel Orientation="Horizontal">
                                                         <fa:FontAwesome Icon="Regular_ThumbsUp" FontSize="14"></fa:FontAwesome>

@@ -17,8 +17,8 @@
     d:DesignHeight="800"
     d:DesignWidth="1000">
     <UserControl.Resources>
-        <SolidColorBrush x:Key="HyperlinkButtonForegroundPointerOver" Color="{ThemeResource HighLightColor}"></SolidColorBrush>
-        <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="{ThemeResource HighLightColor}"></SolidColorBrush>
+        <SolidColorBrush x:Key="HyperlinkButtonForegroundPointerOver" Color="{ThemeResource SystemAccentColor}"></SolidColorBrush>
+        <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="{ThemeResource SystemAccentColor}"></SolidColorBrush>
         <Style TargetType="ComboBox" x:Key="PlayerComboBoxStyle">
             <Setter Property="Padding" Value="8,0" />
             <Setter Property="MinWidth" Value="{ThemeResource ComboBoxThemeMinWidth}" />
@@ -88,7 +88,7 @@
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ComboBoxBorderBrushPointerOver}" />
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource HighLightColor}"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemAccentColor}"/>
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
@@ -282,10 +282,10 @@
         <convert:ProgressToTimeConverter x:Key="progress"></convert:ProgressToTimeConverter>
         <convert:ColorConvert x:Key="color"></convert:ColorConvert>
         <convert:DanmakuStyleConvert x:Key="styleConvert"></convert:DanmakuStyleConvert>
-        <SolidColorBrush x:Key="ListViewItemForegroundPointerOver" Color="{ThemeResource HighLightColor}"></SolidColorBrush>
+        <SolidColorBrush x:Key="ListViewItemForegroundPointerOver" Color="{ThemeResource SystemAccentColor}"></SolidColorBrush>
         <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="Transparent"></SolidColorBrush>
         <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="Transparent"></SolidColorBrush>
-        <SolidColorBrush x:Key="ListViewItemForegroundSelected" Color="{ThemeResource HighLightColor}"></SolidColorBrush>
+        <SolidColorBrush x:Key="ListViewItemForegroundSelected" Color="{ThemeResource SystemAccentColor}"></SolidColorBrush>
     </UserControl.Resources>
     <Grid Background="Black">
         <SplitView x:Name="SplitView" PanePlacement="Right" PaneBackground="#C8000000" SizeChanged="Player_SizeChanged">
@@ -650,11 +650,11 @@
                 <Canvas x:Name="ToolTipContainer"></Canvas>
                 <Grid>
                     <StackPanel VerticalAlignment="Center" Visibility="{Binding ElementName=Player,Path=Buffering,Mode=OneWay}" x:Name="GridBuffering">
-                        <ProgressRing IsActive="True" Width="36" Height="36" Foreground="{ThemeResource HighLightColor}"></ProgressRing>
+                        <ProgressRing IsActive="True" Width="36" Height="36" Foreground="{ThemeResource SystemAccentColor}"></ProgressRing>
                         <TextBlock Foreground="White" Margin="0 8" TextAlignment="Center" x:Name="TxtBuffering" Text="缓冲中..."></TextBlock>
                     </StackPanel>
                     <StackPanel VerticalAlignment="Center" x:Name="VideoLoading">
-                        <ProgressRing IsActive="True" Width="36" Height="36" Foreground="{ThemeResource HighLightColor}"></ProgressRing>
+                        <ProgressRing IsActive="True" Width="36" Height="36" Foreground="{ThemeResource SystemAccentColor}"></ProgressRing>
                         <TextBlock Foreground="White" Margin="0 8" TextAlignment="Center" Text="视频加载中"></TextBlock>
                     </StackPanel>
                 </Grid>
@@ -767,7 +767,7 @@
                                 x:Name="BottomProgress" 
                                 Value="{Binding ElementName=Player,Path=Position,Mode=TwoWay}"
                                 Maximum="{Binding ElementName=Player,Path=Duration,Mode=OneWay}"
-                                Foreground="{ThemeResource HighLightColor}"
+                                Foreground="{ThemeResource SystemAccentColor}"
                                 ThumbToolTipValueConverter="{StaticResource progress}" ></Slider>
                             <Grid Grid.Row="1" Padding="4 8">
                                 <Grid.ColumnDefinitions>

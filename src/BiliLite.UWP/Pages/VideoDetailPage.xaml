@@ -28,7 +28,7 @@
         <convert:ColorSelecteConvert x:Key="colorSelct" ></convert:ColorSelecteConvert>
         <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="#64B0B0B0" />
         <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="{ThemeResource SystemListLowColor}" />
-        <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource HighLightColor}" />
+        <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource SystemAccentColor}" />
 
         <DataTemplate x:Name="PlayListTpl">
             <PivotItem Margin="0" >
