@@ -9,6 +9,7 @@ using System.Linq;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -19,9 +20,9 @@ namespace BiliLite.Controls.Settings
         public UISettingsControl()
         {
             this.InitializeComponent();
-            LoadUI();
+            CompositionTarget.Rendered += CompositionTarget_Rendered; //订阅页面加载后事件
         }
-        private void LoadUI()
+        private void CompositionTarget_Rendered(object sender, RenderedEventArgs e)
         {
             //主题
             cbTheme.SelectedIndex = SettingService.GetValue<int>(SettingConstants.UI.THEME, 0);
@@ -30,23 +31,6 @@ namespace BiliLite.Controls.Settings
                 cbTheme.SelectionChanged += new SelectionChangedEventHandler((obj, args) =>
                 {
                     SettingService.SetValue(SettingConstants.UI.THEME, cbTheme.SelectedIndex);
-                    Frame rootFrame = Window.Current.Content as Frame;
-                    switch (cbTheme.SelectedIndex)
-                    {
-                        case 1:
-                            rootFrame.RequestedTheme = ElementTheme.Light;
-                            break;
-                        case 2:
-                            rootFrame.RequestedTheme = ElementTheme.Dark;
-                            break;
-                        //case 3:
-                        //    // TODO: 切换自定义主题
-                        //    rootFrame.Resources = Application.Current.Resources.ThemeDictionaries["Pink"] as ResourceDictionary;
-                        //    break;
-                        default:
-                            rootFrame.RequestedTheme = ElementTheme.Default;
-                            break;
-                    }
                     App.ExtendAcrylicIntoTitleBar();
                 });
             });
@@ -310,6 +294,8 @@ namespace BiliLite.Controls.Settings
             var navItems = SettingService.GetValue(SettingConstants.UI.HOEM_ORDER, DefaultHomeNavItems.GetDefaultHomeNavItems());
             gridHomeCustom.ItemsSource = new ObservableCollection<HomeNavItem>(navItems);
             ExceptHomeNavItems();
+
+            CompositionTarget.Rendered -= CompositionTarget_Rendered;
         }
 
         private void ExceptHomeNavItems()
