@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using BiliLite.Models.Common;
 using BiliLite.Models.Requests;
 using BiliLite.Models.Responses;
 using BiliLite.Services;
@@ -18,7 +19,7 @@ namespace BiliLite.Extensions
         public static async Task<HttpResults> Request(this ApiModel api, [CallerMemberName] string methodName = null)
         {
             _logger.Trace($"ÇëÇó¼ÇÂ¼ {methodName} {api.baseUrl}");
-            if (api.method == RestSharp.Method.Get)
+            if (api.method == HttpMethods.Get)
             {
                 if (api.need_redirect)
                 {

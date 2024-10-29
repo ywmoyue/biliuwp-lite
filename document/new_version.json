@@ -1,7 +1,7 @@
 {
-    "version": "4.7.4",
-    "version_num": 40704,
-    "version_desc": "更新内容:\r\n\r\n- 新增自动跳过OP/ED功能，设置中开启  \r\n\r\n- 可选保存已下载视频数据到数据库 \r\n\r\n- 视频播放控件内新增章节看点列表 \r\n\r\n- 持续快进功能启用分档位快进  \r\n\r\n- 将外部合并视频帮助页移入内部，添加python批量合并脚本外链  \r\n\r\n- 更新证书  \r\n\r\n- sqlite数据库迁移更新  \r\n\r\n- 可设置优先播放器类型\r\n\r\n- 修复选集界面错误换行 \r\n\r\n- 捕获初始化下载视频错误 \r\n\r\n- 已下载番剧打开详情错误 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
-    "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
-    "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
+  "version": "4.7.6",
+  "version_num": 40706,
+  "version_desc": "更新内容:\r\n\r\n- 支持屏蔽彩色弹幕 \r\n\r\n- 完善快捷键自定义功能，新增快捷键行为：切换字幕开关 \r\n\r\n- 打开下载页时不重新加载下载项 \r\n\r\n- 打开图片时不再遮挡状态栏   \r\n\r\n- 全局mica半透明背景样式调整  \r\n\r\n- 去除多余的白色焦点边框 \r\n\r\n- 状态栏顶部拖拽窗口 \r\n\r\n- 修复sql脚本错误 \r\n\r\n- 修复FFmpegInterop播放器播放视频偶现播放中突然跳转视频 结尾或无声音 \r\n\r\n- 修复分区->番剧->连载动画页的港澳台番剧打开失败 \r\n\r\n- 安装教程补充 \r\n\r\n- 修复部分视频媒体流加载错误 \r\n\r\n- 修复UP主个人主页报错 \r\n\r\n- 开启使用下载索引设置项后下载视频无字幕 \r\n\r\n- 帮助页新增 Windows 11 24H2 杜比全景声无声说明 \r\n\r\n- 新标签页已设置背景图不存在时提示\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
+  "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }

@@ -46,7 +46,7 @@
 
 ![](./_img/check-ps1-permission-02.drawio.png)
 
-3. 执行命令`Set-ExecutionPolicy -ExecutionPolicy RemoteSigned`并按<kbd>Y</kbd>键启用脚本执行权限
+3. 执行命令`Set-ExecutionPolicy -ExecutionPolicy RemoteSigned`并按<kbd>Y</kbd>键启用脚本执行权限, 如果执行命令后无任何输出表示执行成功可以进入下一步运行安装脚本
 
 ### 运行安装脚本
 

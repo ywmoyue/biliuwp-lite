@@ -1,4 +1,5 @@
-﻿using BiliLite.Services;
+﻿using BiliLite.Models.Common;
+using BiliLite.Services;
 
 namespace BiliLite.Models.Requests.Api
 {
@@ -8,7 +9,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"https://app.bilibili.com/x/v2/region/index",
                 parameter = ApiHelper.MustParameter(AppKey, true)
             };
@@ -20,7 +21,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"https://app.bilibili.com/x/v2/region/dynamic",
                 parameter = ApiHelper.MustParameter(AppKey, false) + $"&rid={rid}"
             };
@@ -31,7 +32,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"https://app.biliapi.net/x/v2/region/dynamic/list",
                 parameter = ApiHelper.MustParameter(AppKey, false) + $"&rid={rid}&ctime={next_aid}&pull=false"
             };
@@ -44,7 +45,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"https://app.biliapi.net/x/v2/region/dynamic/child",
                 parameter = ApiHelper.MustParameter(AppKey, false) + $"&rid={rid}&tag_id={tag_id}&pull=true"
             };
@@ -56,7 +57,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"https://app.bilibili.com/x/v2/region/dynamic/child/list",
                 parameter = ApiHelper.MustParameter(AppKey, false) + $"&rid={rid}&tag_id={tag_id}&pull=false&ctime={next}"
             };
@@ -67,7 +68,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"https://app.biliapi.net/x/v2/region/show/child/list",
                 parameter = ApiHelper.MustParameter(AppKey, false) + $"&order={order}&pn={page}&ps=20&rid={rid}&tag_id={tag_id}"
             };

@@ -41,7 +41,7 @@ namespace BiliLite.Pages
             }
             else
             {
-                if (!File.Exists(background))
+                if (!await background.CheckFileExist())
                 {
                     Notify.ShowMessageToast("背景图片不存在,请重新设置");
                     return;

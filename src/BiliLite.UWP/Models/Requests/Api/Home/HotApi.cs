@@ -1,4 +1,5 @@
-﻿using BiliLite.Services;
+﻿using BiliLite.Models.Common;
+using BiliLite.Services;
 
 namespace BiliLite.Models.Requests.Api.Home
 {
@@ -8,7 +9,7 @@ namespace BiliLite.Models.Requests.Api.Home
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"https://app.bilibili.com/x/v2/show/popular/index",
                 parameter = ApiHelper.MustParameter(AppKey, true) + $"&idx={idx}&last_param={last_param}"
             };

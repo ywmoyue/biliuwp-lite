@@ -1,4 +1,5 @@
-﻿using BiliLite.Services;
+﻿using BiliLite.Models.Common;
+using BiliLite.Services;
 
 namespace BiliLite.Models.Requests.Api.User
 {
@@ -8,7 +9,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/history/toview/add",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&aid={aid}"
             };
@@ -19,7 +20,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/history/toview",
                 parameter = ApiHelper.MustParameter(AppKey, true) + $"&ps=100"
             };
@@ -30,7 +31,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/history/toview/clear",
                 body = ApiHelper.MustParameter(AppKey, true)
             };
@@ -41,7 +42,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/history/toview/del",
                 body = ApiHelper.MustParameter(AppKey, true) + "&viewed=true"
             };
@@ -52,7 +53,7 @@ namespace BiliLite.Models.Requests.Api.User
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/history/toview/del",
                 body = ApiHelper.MustParameter(AppKey, true) + "&aid=" + id
             };
