@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -7,6 +8,13 @@ using BiliLite.Models.Common;
 using BiliLite.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Windows.ApplicationModel.Core;
+using BiliLite.ViewModels.Settings;
+using Windows.Storage.Pickers;
+using Windows.Storage;
+using BiliLite.ViewModels.Plugins;
+using Microsoft.Toolkit.Uwp.Helpers;
+using Newtonsoft.Json;
+using IMapper = AutoMapper.IMapper;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -15,9 +23,17 @@ namespace BiliLite.Controls.Settings
     public sealed partial class DevSettingsControl : UserControl
     {
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+        private readonly DevSettingsControlViewModel m_viewModel;
+        private readonly PluginService m_pluginService;
+        private readonly IMapper m_mapper;
 
         public DevSettingsControl()
         {
+            m_viewModel = App.ServiceProvider.GetRequiredService<DevSettingsControlViewModel>();
+            m_mapper = App.ServiceProvider.GetRequiredService<IMapper>();
+            m_pluginService = App.ServiceProvider.GetRequiredService<PluginService>();
+            m_viewModel.Plugins =
+                m_mapper.Map<ObservableCollection<WebSocketPluginViewModel>>(m_pluginService.GetPlugins());
             this.InitializeComponent();
             LoadDev();
         }
@@ -216,6 +232,31 @@ namespace BiliLite.Controls.Settings
         {
             var migrateService = App.ServiceProvider.GetRequiredService<SqlMigrateService>();
             await migrateService.ExcuteAllMigrationScripts();
+        }
+
+        private async void BtnSettingPlugin_OnClick(object sender, RoutedEventArgs e)
+        {
+            await PluginsDialog.ShowAsync();
+        }
+
+        private async void BtnImportPluginInfo_OnClick(object sender, RoutedEventArgs e)
+        {
+            var filePicker = new FileOpenPicker();
+            filePicker.FileTypeFilter.Add(".json");
+            var file = await filePicker.PickSingleFileAsync();
+            if (file == null) return;
+            using var openFile = await file.OpenAsync(FileAccessMode.Read);
+            var text = await openFile.ReadTextAsync();
+            var plugin = JsonConvert.DeserializeObject<WebSocketPlugin>(text);
+            await m_pluginService.AddPlugin(plugin);
+            m_viewModel.AddPlugin(m_mapper.Map<WebSocketPluginViewModel>(plugin));
+        }
+
+        private async void BtnDeletePlugin_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is Button { DataContext: WebSocketPluginViewModel plugin })) return;
+            await m_pluginService.RemovePlugin(plugin.Name);
+            m_viewModel.RemovePlugin(plugin);
         }
     }
 }

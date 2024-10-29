@@ -193,6 +193,12 @@ namespace BiliLite.Services
             }
         }
 
+        public void ExecuteAction(string name)
+        {
+            var function = DefaultShortcuts.GetDefaultShortcutFunctions().FirstOrDefault(x => x.TypeName==name);
+            function?.Action(m_mainPage.CurrentPage);
+        }
+
         public void SetDefault()
         {
             m_shortcutKeys = DefaultShortcuts.GetDefaultShortcutFunctions();

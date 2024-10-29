@@ -845,6 +845,7 @@ namespace BiliLite.Controls
 
         private void PositionTimer_Tick(object sender, object e)
         {
+            PluginCenter.BroadcastPosition(this, Player.Position);
             if (!m_autoSkipOpEdFlag) return;
             if (CurrentPlayItem == null) return;
             if (CurrentPlayItem.EpisodeSkip == null) return;
@@ -1834,7 +1835,7 @@ namespace BiliLite.Controls
             {
                 _brightness = value;
                 BrightnessShield.Opacity = value;
-                if(!lockBrightness)
+                if (!lockBrightness)
                     SettingService.SetValue<double>(SettingConstants.Player.PLAYER_BRIGHTNESS, _brightness);
             }
         }
