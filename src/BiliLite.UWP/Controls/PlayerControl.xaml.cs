@@ -1,49 +1,48 @@
-﻿using BiliLite.Modules;
+﻿using Atelier39;
+using BiliLite.Dialogs;
+using BiliLite.Extensions;
+using BiliLite.Models.Common;
+using BiliLite.Models.Common.Danmaku;
+using BiliLite.Models.Common.Player;
+using BiliLite.Models.Common.Video;
+using BiliLite.Models.Common.Video.PlayUrlInfos;
+using BiliLite.Modules;
+using BiliLite.Modules.Player;
+using BiliLite.Services;
+using BiliLite.Services.Interfaces;
+using BiliLite.ViewModels;
+using BiliLite.ViewModels.Settings;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.Geometry;
+using Microsoft.Graphics.Canvas.Text;
 using NSDanmaku.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Windows.Devices.Input;
 using Windows.Foundation;
+using Windows.Graphics.Display;
+using Windows.Graphics.Imaging;
 using Windows.Media;
+using Windows.Storage;
+using Windows.Storage.Streams;
+using Windows.System.Display;
+using Windows.UI;
+using Windows.UI.Input;
 using Windows.UI.Popups;
+using Windows.UI.Text;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.System.Display;
-using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.Graphics.Imaging;
-using Windows.Graphics.Display;
-using System.Text.RegularExpressions;
-using Windows.UI.Core;
-using BiliLite.Dialogs;
-using BiliLite.Modules.Player;
-using Microsoft.Graphics.Canvas;
-using Microsoft.Graphics.Canvas.Geometry;
-using Microsoft.Graphics.Canvas.Text;
-using Windows.UI;
-using Windows.Storage.Streams;
-using Windows.UI.Text;
-using BiliLite.Models.Requests.Api;
-using BiliLite.Services;
-using BiliLite.Models.Common;
-using BiliLite.Extensions;
-using BiliLite.Models.Common.Video;
-using Windows.UI.Input;
-using Atelier39;
-using BiliLite.Models.Common.Danmaku;
-using BiliLite.Models.Common.Player;
-using BiliLite.Models.Common.Video.PlayUrlInfos;
-using BiliLite.Services.Interfaces;
-using BiliLite.ViewModels;
-using BiliLite.ViewModels.Settings;
-using Microsoft.Extensions.DependencyInjection;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -173,7 +172,7 @@ namespace BiliLite.Controls
             }
             else
             {
-                m_danmakuController = App.ServiceProvider.GetRequiredService<FrostMasterDanmakuController>(); 
+                m_danmakuController = App.ServiceProvider.GetRequiredService<FrostMasterDanmakuController>();
                 m_danmakuController.Init(DanmakuCanvas);
             }
         }
@@ -496,7 +495,7 @@ namespace BiliLite.Controls
         {
             //音量
             Player.Volume = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_VOLUME, SettingConstants.Player.DEFAULT_PLAYER_VOLUME);
-            
+
             var lockPlayerVolume = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_VOLUME, SettingConstants.Player.DEFAULT_LOCK_PLAYER_VOLUME);
             if (!lockPlayerVolume)
             {
@@ -1587,7 +1586,7 @@ namespace BiliLite.Controls
             if (quality.PlayUrlType == BiliPlayUrlType.DASH)
             {
                 var realPlayerType = (RealPlayerType)SettingService.GetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE, (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
-                if (realPlayerType==RealPlayerType.Native)
+                if (realPlayerType == RealPlayerType.Native)
                 {
                     result = await Player.PlayerDashUseNative(quality.DashInfo, quality.UserAgent, quality.Referer, positon: _postion);
 
@@ -1834,7 +1833,7 @@ namespace BiliLite.Controls
             {
                 _brightness = value;
                 BrightnessShield.Opacity = value;
-                if(!lockBrightness)
+                if (!lockBrightness)
                     SettingService.SetValue<double>(SettingConstants.Player.PLAYER_BRIGHTNESS, _brightness);
             }
         }
@@ -1971,28 +1970,67 @@ namespace BiliLite.Controls
             }
         }
 
-        private void Grid_PointerPressed(object sender, PointerRoutedEventArgs e)
+        PointerDeviceType lastPointerDeviceType;
+        private bool isDoubleTapped;
+        private async void Grid_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            try
+            // 获取 PointerPoint 以访问设备类型
+            var pointer = e.GetCurrentPoint(MyGrid);
+            lastPointerDeviceType = pointer.PointerDevice.PointerDeviceType;
+
+            // 重置双击标志
+            isDoubleTapped = false;
+
+            // 延迟 200 毫秒等待双击事件
+            await Task.Delay(200);
+
+            if (!isDoubleTapped)
             {
-                var par = e.GetCurrentPoint(sender as Frame).Properties.PointerUpdateKind;
-                if (SettingService.GetValue(SettingConstants.UI.MOUSE_MIDDLE_ACTION, (int)MouseMiddleActions.Back) == (int)MouseMiddleActions.Back
-                && par == Windows.UI.Input.PointerUpdateKind.XButton1Pressed || par == Windows.UI.Input.PointerUpdateKind.MiddleButtonPressed)
+                switch (lastPointerDeviceType)
                 {
-                    Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
-                    MessageCenter.GoBack(this);
-                    return;
-                }
-                var ps = e.GetIntermediatePoints(null);
-                if (ps != null && ps.Count > 0 && HandlingGesture != true)
-                {
-                    gestureRecognizer.ProcessDownEvent(ps[0]);
-                    e.Handled = true;
+                    case PointerDeviceType.Touch:
+                    case PointerDeviceType.Pen:
+                        tapFlag = true;
+                        if (!tapFlag) return;
+                        ShowControl(control.Visibility == Visibility.Collapsed);
+                        break;
+
+                    case PointerDeviceType.Mouse:
+                        if (Player.PlayState == PlayState.Pause || Player.PlayState == PlayState.End)
+                        {
+                            Player.Play();
+                        }
+                        else if (Player.PlayState == PlayState.Playing)
+                        {
+                            Pause();
+                        }
+                        break;
                 }
             }
-            catch (Exception ex)
+        }
+
+        private void Grid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            // 设置双击标志
+            isDoubleTapped = true;
+
+            switch (lastPointerDeviceType)
             {
-                // 重复获取鼠标指针导致异常
+                case PointerDeviceType.Touch:
+                case PointerDeviceType.Pen:
+                    if (Player.PlayState == PlayState.Pause || Player.PlayState == PlayState.End)
+                    {
+                        Player.Play();
+                    }
+                    else if (Player.PlayState == PlayState.Playing)
+                    {
+                        Pause();
+                    }
+                    break;
+
+                case PointerDeviceType.Mouse:
+                    IsFullScreen = !IsFullScreen;
+                    break;
             }
         }
 
@@ -2009,25 +2047,25 @@ namespace BiliLite.Controls
 
         private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            //ShowControl(true);
-            ////FadeIn.Begin();
-            ////control.Visibility = Visibility.Visible;
+            ShowControl(true);
+            //FadeIn.Begin();
+            control.Visibility = Visibility.Visible;
             pointer_in_player = true;
-            //showControlsFlag = 0;
+            showControlsFlag = 0;
         }
 
         private void Grid_PointerExited(object sender, PointerRoutedEventArgs e)
         {
-            //showControlsFlag = 3;
+            showControlsFlag = 3;
             pointer_in_player = false;
             Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
         }
 
         private void Grid_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            //showControlsFlag = 0;
-            //ShowControl(true);
-            ////control.Visibility = Visibility.Visible;
+            showControlsFlag = 0;
+            ShowControl(true);
+            control.Visibility = Visibility.Visible;
             if (Window.Current.CoreWindow.PointerCursor == null)
             {
                 Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
@@ -2035,48 +2073,7 @@ namespace BiliLite.Controls
             gestureRecognizer.ProcessMoveEvents(e.GetIntermediatePoints(null));
             e.Handled = true;
         }
-        private async void Grid_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            tapFlag = true;
-            await Task.Delay(200);
-            //if (control.Visibility == Visibility.Visible)
-            //{
-            //    if (e.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse&& !Player.Opening)
-            //    {
-            //        if (Player.PlayState == PlayState.Pause || Player.PlayState == PlayState.End)
-            //        {
-            //            Player.Play();
-            //        }
-            //        else if (Player.PlayState == PlayState.Playing)
-            //        {
-            //            Pause();
-            //        }
-            //    }
 
-            //}
-            if (!tapFlag) return;
-            ShowControl(control.Visibility == Visibility.Collapsed);
-        }
-        private void Grid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
-        {
-            tapFlag = false;
-            var fullScreen = SettingService.GetValue<bool>(SettingConstants.Player.DOUBLE_CLICK_FULL_SCREEN, false);
-            if (!fullScreen)
-            {
-                if (Player.PlayState == PlayState.Pause || Player.PlayState == PlayState.End)
-                {
-                    Player.Play();
-                }
-                else if (Player.PlayState == PlayState.Playing)
-                {
-                    Pause();
-                }
-            }
-            else
-            {
-                IsFullScreen = !IsFullScreen;
-            }
-        }
         private void HandleSlideProgressDelta(double delta)
         {
             if (Player.PlayState != PlayState.Playing && Player.PlayState != PlayState.Pause)

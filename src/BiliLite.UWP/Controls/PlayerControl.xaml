@@ -611,7 +611,8 @@
                     </Pivot>
                 </Grid>
             </SplitView.Pane>
-            <Grid  PointerMoved="Grid_PointerMoved"   
+            <Grid x:Name="MyGrid"  
+                  PointerMoved="Grid_PointerMoved"   
                    PointerEntered="Grid_PointerEntered" 
                    PointerExited="Grid_PointerExited"
                    PointerPressed="Grid_PointerPressed"
@@ -637,7 +638,7 @@
                     <canvas:CanvasAnimatedControl x:Name="DanmakuCanvas"/>
                 </Grid>
                 <!--亮度-->
-                <Grid x:Name="BrightnessShield" Tapped="Grid_Tapped" Background="#99000000" Opacity="0"></Grid>
+                <Grid x:Name="BrightnessShield" Background="#99000000" Opacity="0"></Grid>
 
                 <Canvas x:Name="ToolTipContainer"></Canvas>
                 <Grid>
