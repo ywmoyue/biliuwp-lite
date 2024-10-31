@@ -1673,6 +1673,7 @@ namespace BiliLite.Controls
         {
             ApplicationView view = ApplicationView.GetForCurrentView();
             FullScreenEvent?.Invoke(this, fullScreen);
+            MessageCenter.SetFullscreen(fullScreen);
             m_danmakuController.SetFullscreen(fullScreen);
             if (fullScreen)
             {
@@ -1680,6 +1681,11 @@ namespace BiliLite.Controls
                 BottomBtnFull.Visibility = Visibility.Collapsed;
                 BottomBtnFullWindows.Visibility = Visibility.Collapsed;
                 BottomBtnExitFullWindows.Visibility = Visibility.Collapsed;
+                if (SettingService.GetValue(SettingConstants.UI.DISPLAY_MODE, 0) > 0)
+                {
+                    TopControlBar.Margin = new Thickness(0, 48, 0, 0);
+                }
+
                 //全屏
                 if (!view.IsFullScreenMode)
                 {
@@ -1690,6 +1696,11 @@ namespace BiliLite.Controls
             {
                 BottomBtnExitFull.Visibility = Visibility.Collapsed;
                 BottomBtnFull.Visibility = Visibility.Visible;
+                TopControlBar.Margin = new Thickness(0, 0, 0, 0);
+                if (SettingService.GetValue(SettingConstants.UI.DISPLAY_MODE, 0) > 0)
+                {
+                    TopControlBar.Margin = new Thickness(0, 0, 0, 0);
+                }
                 if (IsFullWindow)
                 {
                     FullWidnow(true);

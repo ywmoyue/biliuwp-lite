@@ -707,7 +707,7 @@
                         </Grid.RowDefinitions>
 
 
-                        <Grid Height="48">
+                        <Grid Height="48" x:Name="TopControlBar" Margin="0 0 0 0">
                             <Grid.Background>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                     <GradientStop Color="#C8000000"/>
