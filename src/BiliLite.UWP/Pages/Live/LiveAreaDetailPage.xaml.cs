@@ -27,6 +27,7 @@ namespace BiliLite.Pages.Live
         {
             this.InitializeComponent();
             Title = "分区详情";
+            NavigationCacheMode = NavigationCacheMode.Required;
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {

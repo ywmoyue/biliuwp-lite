@@ -1,17 +1,17 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using BiliLite.Services;
+﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Comment;
 using BiliLite.Models.Requests.Api;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
-using BiliLite.Extensions;
+using BiliLite.Services;
 using BiliLite.ViewModels.UserDynamic;
 using Microsoft.Extensions.DependencyInjection;
-using BiliLite.Models.Common.Comment;
+using System.Linq;
+using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -20,7 +20,7 @@ namespace BiliLite.Pages.Home
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class UserDynamicPage : Page,IRefreshablePage
+    public sealed partial class UserDynamicPage : Page, IRefreshablePage
     {
         readonly UserDynamicAllViewModel m_viewModel;
         private bool m_isStaggered = false;
@@ -32,9 +32,12 @@ namespace BiliLite.Pages.Home
             m_viewModel.OpenCommentEvent += UserDynamicViewModelOpenCommentEvent;
             this.InitializeComponent();
             m_currentShowType = (UserDynamicShowType)DynPivot.SelectedIndex;
+            NavigationCacheMode = SettingService.GetValue(SettingConstants.UI.CACHE_HOME, true)
+                ? NavigationCacheMode.Required
+                : NavigationCacheMode.Disabled;
         }
 
-        protected  override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 

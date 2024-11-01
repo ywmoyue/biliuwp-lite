@@ -22,11 +22,13 @@ namespace BiliLite.Pages.Live
             this.InitializeComponent();
             Title = "推荐直播";
             liveRecommendVM = new LiveRecommendVM();
+            NavigationCacheMode = NavigationCacheMode.Required;
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
         }
+
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             base.OnNavigatingFrom(e);

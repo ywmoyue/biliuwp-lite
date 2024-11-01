@@ -71,10 +71,12 @@ namespace BiliLite.Pages
             get => _comboIndex;
             set => _comboIndex = value;
         }
-        SearchVM searchVM = new SearchVM(_pivotIndex, _comboIndex);
+        SearchVM searchVM;
 
         public SearchPage()
         {
+            NavigationCacheMode = NavigationCacheMode.Disabled;
+            searchVM = new SearchVM(_pivotIndex = 0, _comboIndex = 0);
             this.InitializeComponent();
         }
 

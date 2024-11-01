@@ -24,7 +24,6 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Windows.Devices.Input;
 using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.Graphics.Imaging;
@@ -1970,67 +1969,28 @@ namespace BiliLite.Controls
             }
         }
 
-        PointerDeviceType lastPointerDeviceType;
-        private bool isDoubleTapped;
-        private async void Grid_PointerPressed(object sender, PointerRoutedEventArgs e)
+        private void Grid_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            // 获取 PointerPoint 以访问设备类型
-            var pointer = e.GetCurrentPoint(MyGrid);
-            lastPointerDeviceType = pointer.PointerDevice.PointerDeviceType;
-
-            // 重置双击标志
-            isDoubleTapped = false;
-
-            // 延迟 200 毫秒等待双击事件
-            await Task.Delay(200);
-
-            if (!isDoubleTapped)
+            try
             {
-                switch (lastPointerDeviceType)
+                var par = e.GetCurrentPoint(sender as Frame).Properties.PointerUpdateKind;
+                if (SettingService.GetValue(SettingConstants.UI.MOUSE_MIDDLE_ACTION, (int)MouseMiddleActions.Back) == (int)MouseMiddleActions.Back
+                && par == Windows.UI.Input.PointerUpdateKind.XButton1Pressed || par == Windows.UI.Input.PointerUpdateKind.MiddleButtonPressed)
                 {
-                    case PointerDeviceType.Touch:
-                    case PointerDeviceType.Pen:
-                        tapFlag = true;
-                        if (!tapFlag) return;
-                        ShowControl(control.Visibility == Visibility.Collapsed);
-                        break;
-
-                    case PointerDeviceType.Mouse:
-                        if (Player.PlayState == PlayState.Pause || Player.PlayState == PlayState.End)
-                        {
-                            Player.Play();
-                        }
-                        else if (Player.PlayState == PlayState.Playing)
-                        {
-                            Pause();
-                        }
-                        break;
+                    Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
+                    MessageCenter.GoBack(this);
+                    return;
+                }
+                var ps = e.GetIntermediatePoints(null);
+                if (ps != null && ps.Count > 0 && HandlingGesture != true)
+                {
+                    gestureRecognizer.ProcessDownEvent(ps[0]);
+                    e.Handled = true;
                 }
             }
-        }
-
-        private void Grid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
-        {
-            // 设置双击标志
-            isDoubleTapped = true;
-
-            switch (lastPointerDeviceType)
+            catch (Exception ex)
             {
-                case PointerDeviceType.Touch:
-                case PointerDeviceType.Pen:
-                    if (Player.PlayState == PlayState.Pause || Player.PlayState == PlayState.End)
-                    {
-                        Player.Play();
-                    }
-                    else if (Player.PlayState == PlayState.Playing)
-                    {
-                        Pause();
-                    }
-                    break;
-
-                case PointerDeviceType.Mouse:
-                    IsFullScreen = !IsFullScreen;
-                    break;
+                // 重复获取鼠标指针导致异常
             }
         }
 
@@ -2047,25 +2007,25 @@ namespace BiliLite.Controls
 
         private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            ShowControl(true);
-            //FadeIn.Begin();
-            control.Visibility = Visibility.Visible;
+            //ShowControl(true);
+            ////FadeIn.Begin();
+            ////control.Visibility = Visibility.Visible;
             pointer_in_player = true;
-            showControlsFlag = 0;
+            //showControlsFlag = 0;
         }
 
         private void Grid_PointerExited(object sender, PointerRoutedEventArgs e)
         {
-            showControlsFlag = 3;
+            //showControlsFlag = 3;
             pointer_in_player = false;
             Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
         }
 
         private void Grid_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            showControlsFlag = 0;
-            ShowControl(true);
-            control.Visibility = Visibility.Visible;
+            //showControlsFlag = 0;
+            //ShowControl(true);
+            ////control.Visibility = Visibility.Visible;
             if (Window.Current.CoreWindow.PointerCursor == null)
             {
                 Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
@@ -2073,7 +2033,48 @@ namespace BiliLite.Controls
             gestureRecognizer.ProcessMoveEvents(e.GetIntermediatePoints(null));
             e.Handled = true;
         }
+        private async void Grid_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            tapFlag = true;
+            await Task.Delay(200);
+            //if (control.Visibility == Visibility.Visible)
+            //{
+            //    if (e.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse&& !Player.Opening)
+            //    {
+            //        if (Player.PlayState == PlayState.Pause || Player.PlayState == PlayState.End)
+            //        {
+            //            Player.Play();
+            //        }
+            //        else if (Player.PlayState == PlayState.Playing)
+            //        {
+            //            Pause();
+            //        }
+            //    }
 
+            //}
+            if (!tapFlag) return;
+            ShowControl(control.Visibility == Visibility.Collapsed);
+        }
+        private void Grid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            tapFlag = false;
+            var fullScreen = SettingService.GetValue<bool>(SettingConstants.Player.DOUBLE_CLICK_FULL_SCREEN, false);
+            if (!fullScreen)
+            {
+                if (Player.PlayState == PlayState.Pause || Player.PlayState == PlayState.End)
+                {
+                    Player.Play();
+                }
+                else if (Player.PlayState == PlayState.Playing)
+                {
+                    Pause();
+                }
+            }
+            else
+            {
+                IsFullScreen = !IsFullScreen;
+            }
+        }
         private void HandleSlideProgressDelta(double delta)
         {
             if (Player.PlayState != PlayState.Playing && Player.PlayState != PlayState.Pause)

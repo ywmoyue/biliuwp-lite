@@ -41,7 +41,6 @@ namespace BiliLite.Pages
             NavigationCacheMode = SettingService.GetValue(SettingConstants.UI.CACHE_HOME, true)
                 ? NavigationCacheMode.Required
                 : NavigationCacheMode.Disabled;
-
         }
 
         public async Task Refresh()

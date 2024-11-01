@@ -43,6 +43,7 @@ namespace BiliLite.Pages
         bool selectProview = false;
         public SeasonDetailPage()
         {
+            this.NavigationCacheMode = NavigationCacheMode.Required;
             this.InitializeComponent();
             Title = "剧集详情";
             this.Loaded += SeasonDetailPage_Loaded;

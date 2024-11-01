@@ -1,16 +1,16 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Anime;
 using BiliLite.Modules;
 using BiliLite.Services;
+using BiliLite.ViewModels.Home;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Models.Common.Anime;
-using BiliLite.ViewModels.Home;
-using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -30,6 +30,9 @@ namespace BiliLite.Pages.Home
 
             MessageCenter.LoginedEvent += MessageCenter_LoginedEvent;
             MessageCenter.LogoutedEvent += MessageCenter_LogoutedEvent;
+            NavigationCacheMode = SettingService.GetValue(SettingConstants.UI.CACHE_HOME, true)
+                ? NavigationCacheMode.Required
+                : NavigationCacheMode.Disabled;
 
         }
 

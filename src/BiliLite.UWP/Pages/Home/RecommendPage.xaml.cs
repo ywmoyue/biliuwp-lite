@@ -37,6 +37,9 @@ namespace BiliLite.Pages.Home
             this.InitializeComponent();
             m_viewModel = App.ServiceProvider.GetRequiredService<RecommendPageViewModel>();
             this.DataContext = m_viewModel;
+            NavigationCacheMode = SettingService.GetValue(SettingConstants.UI.CACHE_HOME, true)
+                ? NavigationCacheMode.Required
+                : NavigationCacheMode.Disabled;
         }
 
         #endregion

@@ -19,6 +19,7 @@ namespace BiliLite.Pages.Live
             this.InitializeComponent();
             Title = "直播分区";
             liveAreaVM = new LiveAreaVM();
+            NavigationCacheMode = NavigationCacheMode.Required;
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {

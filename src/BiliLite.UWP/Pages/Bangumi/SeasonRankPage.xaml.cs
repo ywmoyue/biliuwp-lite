@@ -19,6 +19,7 @@ namespace BiliLite.Pages.Bangumi
         readonly SeasonRankVM seasonRankVM;
         public SeasonRankPage()
         {
+            NavigationCacheMode = NavigationCacheMode.Required;
             this.InitializeComponent();
             Title = "热门榜单";
             seasonRankVM = new SeasonRankVM();

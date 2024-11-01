@@ -42,6 +42,7 @@ namespace BiliLite.Pages
 
         public VideoDetailPage()
         {
+            this.NavigationCacheMode = NavigationCacheMode.Required;
             this.InitializeComponent();
             Title = "视频详情";
             this.Loaded += VideoDetailPage_Loaded;

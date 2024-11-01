@@ -25,6 +25,9 @@ namespace BiliLite.Pages.Home
             cinemaVM = new Modules.CinemaVM();
             MessageCenter.LoginedEvent += MessageCenter_LoginedEvent;
             MessageCenter.LogoutedEvent += MessageCenter_LogoutedEvent;
+            NavigationCacheMode = SettingService.GetValue(SettingConstants.UI.CACHE_HOME, true)
+                ? NavigationCacheMode.Required
+                : NavigationCacheMode.Disabled;
         }
         private void MessageCenter_LogoutedEvent(object sender, EventArgs e)
         {

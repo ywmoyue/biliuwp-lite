@@ -69,6 +69,7 @@ namespace BiliLite.Pages
 
         public LiveDetailPage()
         {
+            this.NavigationCacheMode = NavigationCacheMode.Required;
             m_viewModel = new LiveDetailPageViewModel();
             DataContext = m_viewModel;
             this.InitializeComponent();

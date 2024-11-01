@@ -27,6 +27,9 @@ namespace BiliLite.Pages.Home
             m_viewModel = App.ServiceProvider.GetService<DynamicPageViewModel>();
             m_viewModel.DynamicItemDataTemplateSelector.Resource = this.Resources;
             this.DataContext = m_viewModel;
+            NavigationCacheMode = SettingService.GetValue(SettingConstants.UI.CACHE_HOME, true)
+                ? NavigationCacheMode.Required
+                : NavigationCacheMode.Disabled;
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)

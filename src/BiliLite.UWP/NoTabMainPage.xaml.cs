@@ -158,6 +158,7 @@ namespace BiliLite
             {
                 //PushTitle(e.title);
                 frame.Navigate(e.page, e.parameters);
+                (frame.Content as Page).NavigationCacheMode = NavigationCacheMode.Required;
             }
             else
             {
@@ -314,6 +315,11 @@ namespace BiliLite
         public async void GoBack()
         {
             var frame = this.Children.Last() as MyFrame;
+
+            if (frame.Content is Page page)
+            {
+                page.NavigationCacheMode = NavigationCacheMode.Disabled;
+            }
 
             if (frame.CanGoBack)
             {

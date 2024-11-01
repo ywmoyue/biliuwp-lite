@@ -127,14 +127,12 @@ namespace BiliLite
 
                 case ElementTheme.Light:
                     titleBar.ButtonForegroundColor = Colors.Black;
-                    titleBar.ButtonInactiveForegroundColor = Colors.Black;
                     titleBar.ButtonHoverForegroundColor = Colors.White;
                     titleBar.ButtonPressedForegroundColor = Colors.Black;
                     break;
 
                 case ElementTheme.Dark:
                     titleBar.ButtonForegroundColor = Colors.White;
-                    titleBar.ButtonInactiveForegroundColor = Colors.White;
                     titleBar.ButtonHoverForegroundColor = Colors.Black;
                     titleBar.ButtonPressedForegroundColor = Colors.White;
                     break;

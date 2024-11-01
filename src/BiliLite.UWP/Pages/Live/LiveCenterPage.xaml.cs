@@ -27,8 +27,8 @@ namespace BiliLite.Pages.Live
             liveAttentionUnLiveVM = new LiveAttentionUnLiveVM();
             liveCenterHistoryVM = new LiveCenterHistoryVM();
             liveCenterVM = new LiveCenterVM();
+            NavigationCacheMode = NavigationCacheMode.Required;
         }
-
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
