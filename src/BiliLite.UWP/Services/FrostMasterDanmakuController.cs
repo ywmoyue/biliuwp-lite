@@ -196,5 +196,11 @@ namespace BiliLite.Services
             base.UpdateTime(position);
             m_danmakuMaster.UpdateTime((uint)position * 1000);
         }
+
+        public void SetAssSubtitle(string assContent)
+        {
+            var subItems = AssParser.GetDanmakuList(assContent);
+            m_danmakuMaster.SetSubtitleList(subItems);
+        }
     }
 }
