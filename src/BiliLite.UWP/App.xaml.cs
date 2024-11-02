@@ -200,6 +200,13 @@ namespace BiliLite
                 {
                     //如果屏幕分辨率大于16：9,设置为List
                     SettingService.SetValue<int>(SettingConstants.UI.RECMEND_DISPLAY_MODE, 1);
+                    // // 当导航堆栈尚未还原时，导航到第一页，
+                    // // 并通过将所需信息作为导航参数传入来配置参数
+                    // bool loadState = args.PreviousExecutionState == ApplicationExecutionState.Terminated;
+                    // ExtendedSplash extendedSplash = new(args.SplashScreen, loadState);
+                    // rootFrame.Content = extendedSplash;
+                    // Window.Current.Content = rootFrame;
+                    // await Task.Delay(200); // 防止初始屏幕闪烁
                 }
             }
             //圆角
@@ -259,11 +266,37 @@ namespace BiliLite
             ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
             titleBar.ButtonBackgroundColor = Colors.Transparent;
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-            titleBar.ButtonForegroundColor = TitltBarButtonColor(uISettings);
-            uISettings.ColorValuesChanged += new TypedEventHandler<UISettings, object>((setting, args) =>
+            // titleBar.ButtonForegroundColor = TitltBarButtonColor(uISettings);
+            // uISettings.ColorValuesChanged += new TypedEventHandler<UISettings, object>((setting, args) =>
+            //titleBar.ButtonHoverBackgroundColor = Colors.Gray;
+            //titleBar.ButtonPressedBackgroundColor = Colors.Gray;
+            Frame rootFrame = Window.Current.Content as Frame;
+            var theme = rootFrame.RequestedTheme = (ElementTheme)SettingService.GetValue<int>(SettingConstants.UI.THEME, 0);
+            switch (theme)
             {
-                titleBar.ButtonForegroundColor = TitltBarButtonColor(setting);
-            });
+                case ElementTheme.Default:
+                    var rootTheme = App.Current.RequestedTheme;
+                    if (rootTheme == ApplicationTheme.Light)
+                    {
+                        goto case ElementTheme.Light;
+                    }
+                    else
+                    {
+                        goto case ElementTheme.Dark;
+                    }
+
+                case ElementTheme.Light:
+                    titleBar.ButtonForegroundColor = Colors.Black;
+                    titleBar.ButtonHoverForegroundColor = Colors.White;
+                    titleBar.ButtonPressedForegroundColor = Colors.Black;
+                    break;
+
+                case ElementTheme.Dark:
+                    titleBar.ButtonForegroundColor = Colors.White;
+                    titleBar.ButtonHoverForegroundColor = Colors.Black;
+                    titleBar.ButtonPressedForegroundColor = Colors.White;
+                    break;
+            }
         }
         private static Color TitltBarButtonColor(UISettings uISettings)
         {
