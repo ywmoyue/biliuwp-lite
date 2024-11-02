@@ -49,7 +49,7 @@ namespace BiliLite
                 PositionImage();
 
                 // Optional: Add a progress ring to your splash screen to show users that content is loading
-                PositionRing();
+                //PositionRing();
             }
 
             // Restore the saved session state if necessary
@@ -74,11 +74,11 @@ namespace BiliLite
 
         }
 
-        void PositionRing()
-        {
-            loadingRing.SetValue(Canvas.LeftProperty, splashImageRect.X + splashImageRect.Width * 0.5 - loadingRing.Width * 0.5);
-            loadingRing.SetValue(Canvas.TopProperty, splashImageRect.Y + splashImageRect.Height + splashImageRect.Height * 0.1);
-        }
+        //void PositionRing()
+        //{
+        //    loadingRing.SetValue(Canvas.LeftProperty, splashImageRect.X + splashImageRect.Width * 0.5 - loadingRing.Width * 0.5);
+        //    loadingRing.SetValue(Canvas.TopProperty, splashImageRect.Y + splashImageRect.Height + splashImageRect.Height * 0.1);
+        //}
 
         void ExtendedSplash_OnResize(object sender, WindowSizeChangedEventArgs e)
         {
@@ -88,7 +88,7 @@ namespace BiliLite
                 // Update the coordinates of the splash screen image.
                 splashImageRect = splash.ImageLocation;
                 PositionImage();
-                PositionRing();
+                //PositionRing();
             }
         }
 

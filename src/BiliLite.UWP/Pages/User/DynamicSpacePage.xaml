@@ -27,38 +27,43 @@
             </ItemsPanelTemplate>
 
             <Storyboard x:Name="ShowComment">
-                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CommentPanel" Storyboard.TargetProperty="(UIElement.Visibility)">
-                    <DiscreteObjectKeyFrame KeyTime="00:00:00">
-                        <DiscreteObjectKeyFrame.Value>
-                            <Visibility>Collapsed</Visibility>
-                        </DiscreteObjectKeyFrame.Value>
-                    </DiscreteObjectKeyFrame>
-                    <DiscreteObjectKeyFrame KeyTime="00:00:00.0100000">
-                        <DiscreteObjectKeyFrame.Value>
-                            <Visibility>Visible</Visibility>
-                        </DiscreteObjectKeyFrame.Value>
-                    </DiscreteObjectKeyFrame>
-                </ObjectAnimationUsingKeyFrames>
-                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CommentPanelMask" Storyboard.TargetProperty="(UIElement.Visibility)">
-                    <DiscreteObjectKeyFrame KeyTime="00:00:00">
-                        <DiscreteObjectKeyFrame.Value>
-                            <Visibility>Collapsed</Visibility>
-                        </DiscreteObjectKeyFrame.Value>
-                    </DiscreteObjectKeyFrame>
-                    <DiscreteObjectKeyFrame KeyTime="00:00:00.0100000">
-                        <DiscreteObjectKeyFrame.Value>
-                            <Visibility>Visible</Visibility>
-                        </DiscreteObjectKeyFrame.Value>
-                    </DiscreteObjectKeyFrame>
-                </ObjectAnimationUsingKeyFrames>
                 <DoubleAnimation Storyboard.TargetName="Translation" Storyboard.TargetProperty="X" From="{x:Bind m_viewModel.CommentControlWidth}" To="0" >
                     <DoubleAnimation.EasingFunction>
                         <ExponentialEase Exponent="7" EasingMode="EaseOut" />
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CommentPanel" Storyboard.TargetProperty="(UIElement.Visibility)">
+                    <DiscreteObjectKeyFrame KeyTime="00:00:00">
+                        <DiscreteObjectKeyFrame.Value>
+                            <Visibility>Collapsed</Visibility>
+                        </DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                    <DiscreteObjectKeyFrame KeyTime="00:00:00.0100000">
+                        <DiscreteObjectKeyFrame.Value>
+                            <Visibility>Visible</Visibility>
+                        </DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CommentPanelMask" Storyboard.TargetProperty="(UIElement.Visibility)">
+                    <DiscreteObjectKeyFrame KeyTime="00:00:00">
+                        <DiscreteObjectKeyFrame.Value>
+                            <Visibility>Collapsed</Visibility>
+                        </DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                    <DiscreteObjectKeyFrame KeyTime="00:00:00.0100000">
+                        <DiscreteObjectKeyFrame.Value>
+                            <Visibility>Visible</Visibility>
+                        </DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
             </Storyboard>
 
             <Storyboard x:Name="HideComment">
+                <DoubleAnimation Storyboard.TargetName="Translation" Storyboard.TargetProperty="X" From="0" To="{x:Bind m_viewModel.CommentControlWidth}" >
+                    <DoubleAnimation.EasingFunction>
+                        <ExponentialEase Exponent="7" EasingMode="EaseOut" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CommentPanel" Storyboard.TargetProperty="(UIElement.Visibility)">
                     <DiscreteObjectKeyFrame KeyTime="00:00:00.4900000">
                         <DiscreteObjectKeyFrame.Value>
@@ -83,11 +88,6 @@
                         </DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
-                <DoubleAnimation Storyboard.TargetName="Translation" Storyboard.TargetProperty="X" From="0" To="{x:Bind m_viewModel.CommentControlWidth}" >
-                    <DoubleAnimation.EasingFunction>
-                        <ExponentialEase Exponent="7" EasingMode="EaseOut" />
-                    </DoubleAnimation.EasingFunction>
-                </DoubleAnimation>
             </Storyboard>
         </ResourceDictionary>
     </Page.Resources>

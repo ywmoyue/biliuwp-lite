@@ -4,28 +4,28 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Background="{ThemeResource SystemAccentColor}"
     Loaded="Page_Loaded"
     mc:Ignorable="d">
 
     <Grid>
         <Canvas>
             <Image x:Name="extendedSplashImage" Source="/Assets/SplashScreen.png" />
-            <ProgressRing
-                Name="loadingRing"
-                Width="50"
-                Height="50"
-                Margin="0,50,0,0"
-                HorizontalAlignment="Center"
-                IsActive="True" />
         </Canvas>
         <StackPanel
             Margin="0,60"
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom">
-            <TextBlock Style="{ThemeResource SubheaderTextBlockStyle}">加载中...</TextBlock>
+            <ProgressRing
+                x:Name="loadingRing"
+                Width="50"
+                Height="50"
+                Margin="0,50"
+                Foreground="White"
+                IsActive="True" />
+            <TextBlock Foreground="White" Style="{ThemeResource SubheaderTextBlockStyle}">加载中...</TextBlock>
             <!--<TextBlock
-                Name="prompt"
+                x:Name="prompt"
                 Margin="5"
                 Foreground="Orange"
                 Style="{ThemeResource BodyTextBlockStyle}">

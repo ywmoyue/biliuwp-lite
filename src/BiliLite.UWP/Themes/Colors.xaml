@@ -7,9 +7,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <muxc:XamlControlsResources>
                     <muxc:XamlControlsResources.MergedDictionaries>
-                        <!--  Other app resources here  -->
+                        <!--  统一主题颜色  -->
                         <ResourceDictionary>
-                            <Color x:Key="SystemAccentColor">#ec407a</Color>
+                            <Color x:Key="SystemAccentColor">#D14E65</Color>
                             <SolidColorBrush x:Key="ControlStrongStrokeColorDefaultBrush" Color="{ThemeResource SystemAccentColor}" />
                             <SolidColorBrush x:Key="AccentFillColorDefaultBrush" Color="{ThemeResource SystemAccentColor}" />
                             <SolidColorBrush
@@ -31,6 +31,8 @@
                                 </LinearGradientBrush.GradientStops>
                             </LinearGradientBrush>
 
+                            <SolidColorBrush x:Key="CardStrokeColorDefaultBrush" Color="Transparent" />
+
                             <SolidColorBrush x:Key="AccentTextFillColorPrimaryBrush" Color="{ThemeResource SystemAccentColor}" />
                             <SolidColorBrush x:Key="AccentTextFillColorSecondaryBrush" Color="{ThemeResource SystemAccentColor}" />
                             <SolidColorBrush
@@ -42,9 +44,9 @@
                 </muxc:XamlControlsResources>
             </ResourceDictionary.MergedDictionaries>
 
-            <Color x:Key="SystemAccentColor">#ec407a</Color>
+            <Color x:Key="SystemAccentColor">#D14E65</Color>
             <Color x:Key="TextColor">#CC000000</Color>
-            <Color x:Key="Car5dColor">#0F000000</Color>
+            <Color x:Key="CardColor">#0F000000</Color>
             <Color x:Key="HighLightTextColor">#FFFFFFFF</Color>
             <Color x:Key="DefaultTextColor">#CC000000</Color>
             <Color x:Key="LinkTextColor">#008ac5</Color>
@@ -67,9 +69,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <muxc:XamlControlsResources>
                     <muxc:XamlControlsResources.MergedDictionaries>
-                        <!--  Other app resources here  -->
+                        <!--  统一主题颜色  -->
                         <ResourceDictionary>
-                            <Color x:Key="SystemAccentColor">#ec407a</Color>
+                            <Color x:Key="SystemAccentColor">#D14E65</Color>
                             <SolidColorBrush x:Key="ControlStrongStrokeColorDefaultBrush" Color="{ThemeResource SystemAccentColor}" />
                             <SolidColorBrush x:Key="AccentFillColorDefaultBrush" Color="{ThemeResource SystemAccentColor}" />
                             <SolidColorBrush
@@ -90,6 +92,8 @@
                                     <GradientStop Offset="1.0" Color="{StaticResource ControlStrokeColorDefault}" />
                                 </LinearGradientBrush.GradientStops>
                             </LinearGradientBrush>
+                            
+                            <SolidColorBrush x:Key="CardStrokeColorDefaultBrush" Color="Transparent" />
 
                             <SolidColorBrush x:Key="AccentTextFillColorPrimaryBrush" Color="{ThemeResource SystemAccentColor}" />
                             <SolidColorBrush x:Key="AccentTextFillColorSecondaryBrush" Color="{ThemeResource SystemAccentColor}" />
@@ -102,7 +106,7 @@
                 </muxc:XamlControlsResources>
             </ResourceDictionary.MergedDictionaries>
 
-            <Color x:Key="SystemAccentColor">#ec407a</Color>
+            <Color x:Key="SystemAccentColor">#D14E65</Color>
             <Color x:Key="TextColor">#CCFFFFFF</Color>
             <Color x:Key="CardColor">#19000000</Color>
             <Color x:Key="HighLightTextColor">#FFFFFFFF</Color>

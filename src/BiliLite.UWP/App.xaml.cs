@@ -75,7 +75,7 @@ namespace BiliLite
                     ExtendedSplash extendedSplash = new(args.SplashScreen, loadState);
                     rootFrame.Content = extendedSplash;
                     Window.Current.Content = rootFrame;
-                    await Task.Delay(50); // 防止初始屏幕闪烁
+                    await Task.Delay(200); // 防止初始屏幕闪烁
                 }
             }
 
@@ -110,8 +110,8 @@ namespace BiliLite
 
             titleBar.ButtonBackgroundColor = Colors.Transparent;
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-            titleBar.ButtonHoverBackgroundColor = (Color)App.Current.Resources["SystemAccentColor"];
-            titleBar.ButtonPressedBackgroundColor = (Color)App.Current.Resources["SystemAccentColor"];
+            //titleBar.ButtonHoverBackgroundColor = Colors.Gray;
+            //titleBar.ButtonPressedBackgroundColor = Colors.Gray;
             switch (theme)
             {
                 case ElementTheme.Default:
