@@ -1,8 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using BiliLite.ViewModels.Common;
+using PropertyChanged;
+using System.Collections.ObjectModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using BiliLite.ViewModels.Common;
-using PropertyChanged;
 
 namespace BiliLite.ViewModels.Comment
 {
@@ -26,9 +26,6 @@ namespace BiliLite.ViewModels.Comment
         public bool NewCommentVisibility { get; set; } = true;
 
         public bool IsCommentDialog { private get; set; } = true;
-
-        [DependsOn(nameof(IsCommentDialog))]
-        public Thickness BtnRefreshMargin => IsCommentDialog ? new Thickness(0, 0, 40, 0) : new Thickness(0);
 
         public double Width { get; set; } = 320;
 

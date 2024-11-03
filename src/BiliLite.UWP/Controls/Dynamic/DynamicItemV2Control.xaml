@@ -16,7 +16,7 @@
         <converters:ColorConvert x:Name="colorConvert"></converters:ColorConvert>
     </UserControl.Resources>
 
-    <StackPanel CornerRadius="8" Padding="12" Background="{ThemeResource CardColor}">
+    <StackPanel CornerRadius="8" Padding="12" Background="{ThemeResource ControlFillColorDefaultBrush}">
         <!--用户信息-->
         <Grid Height="64">
             <Grid.ColumnDefinitions>
@@ -60,8 +60,7 @@
                 <Image Height="44" Source="{x:Bind Path=ViewModel.Author.DecorateCard.CardUrl,Mode=OneWay,Converter={StaticResource imageConvert2},ConverterParameter='64h.png'}"></Image>
                 <TextBlock FontSize="12" Visibility="{x:Bind Path=ViewModel.Author.DecorateCard.Fan,Mode=OneWay,Converter={StaticResource display}}" FontFamily="{StaticResource FansNum}"  VerticalAlignment="Center" Margin="0 0 40 0" HorizontalAlignment="Right" Foreground="{x:Bind Path=ViewModel.Author.DecorateCard.Fan.Color,Mode=OneWay,Converter={StaticResource colorConvert}}"  Text="{x:Bind Path=ViewModel.Author.DecorateCard.Fan.NumberStr,Mode=OneWay}"></TextBlock>
             </Grid>
-            <AppBarButton 
-                Background="Transparent" 
+            <AppBarButton
                 Visibility="{x:Bind ViewModel.IsRepost,Converter={StaticResource display},Mode=OneWay}"
                 Style="{StaticResource AppBarButtonNoChevronStyle}" 
                 Width="48" 
@@ -116,8 +115,7 @@
                     <Button HorizontalAlignment="Right" 
                             Command="{x:Bind Path=ViewModel.Parent.DetailCommand,Mode=OneWay}" 
                             CommandParameter="{x:Bind Path=ViewModel.Extend.DynIdStr,Mode=OneWay}"
-                            Foreground="Gray" 
-                            Background="Transparent">
+                            Foreground="Gray">
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE17C;" />
                     </Button>
                 </Grid>
@@ -141,7 +139,6 @@
                         <Setter Property="Height" Value="32"/>
                         <Setter Property="Width" Value="96"/>
                         <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="Foreground" Value="Gray"/>
                         <Setter Property="BorderThickness" Value="0"/>
                         <Setter Property="CornerRadius" Value="4"/>
                     </Style>
