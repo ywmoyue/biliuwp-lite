@@ -318,7 +318,7 @@ namespace BiliLite.Models.Requests.Api
             var api = new ApiModel()
             {
                 method = HttpMethods.Get,
-                baseUrl = $"{ApiHelper.API_BASE_URL}/x/web-goblin/history/search",
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/web-interface/history/search",
                 parameter = $"pn={page}&ps=20&keyword={kw}&business=all",
                 need_cookie = true,
             };
