@@ -457,12 +457,27 @@ namespace BiliLite.Pages
             });
         }
 
-        private void UserInfoPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        private void UpdateSize()
         {
             m_viewModel.PivotHeaderWidth =
                 pivot.Items.Select(x => (((x as PivotItem).Header as FrameworkElement).Parent as FrameworkElement).ActualWidth).Sum();
             m_viewModel.UserBarWidth = UserBar.ActualWidth;
-            m_viewModel.PageWidth = e.NewSize.Width;
+            m_viewModel.PageWidth = ActualWidth;
+        }
+
+        private void UserInfoPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            UpdateSize();
+        }
+
+        private void UserInfoPage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            UpdateSize();
+        }
+
+        private void UserBar_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            UpdateSize();
         }
     }
 }

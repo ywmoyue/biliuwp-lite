@@ -16,7 +16,8 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:userViewModel="using:BiliLite.ViewModels.User" xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     Background="Transparent"
-    SizeChanged="UserInfoPage_OnSizeChanged">
+    SizeChanged="UserInfoPage_OnSizeChanged"
+    Loaded="UserInfoPage_OnLoaded">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -522,7 +523,7 @@
                         </PivotItem>
                     </Pivot>
                     <Grid Padding="8 0" VerticalAlignment="Top" HorizontalAlignment="Right">
-                        <StackPanel x:Name="UserBar" HorizontalAlignment="Right" Orientation="Horizontal" >
+                        <StackPanel x:Name="UserBar" HorizontalAlignment="Right" Orientation="Horizontal" SizeChanged="UserBar_OnSizeChanged">
                             <Button Margin="0 0 5 0">
                                 <Button.Content>
                                     <StackPanel VerticalAlignment="Center" Orientation="Horizontal" >

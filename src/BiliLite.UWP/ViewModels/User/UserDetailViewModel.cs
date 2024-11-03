@@ -62,7 +62,6 @@ namespace BiliLite.ViewModels.User
         [DoNotNotify]
         public double PivotHeaderWidth { get; set; }
 
-        [DoNotNotify]
         public double UserBarWidth { get; set; }
 
         public double PageWidth { get; set; }
