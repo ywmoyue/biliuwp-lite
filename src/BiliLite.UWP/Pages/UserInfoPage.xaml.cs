@@ -15,6 +15,7 @@ using BiliLite.ViewModels.UserDynamic;
 using Microsoft.Extensions.DependencyInjection;
 using BiliLite.Models.Common.Video;
 using System.Collections.Generic;
+using System.Linq;
 using BiliLite.Services.Biz;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -151,7 +152,7 @@ namespace BiliLite.Pages
                 if (m_viewModel.Mid == SettingService.Account.UserID.ToString())
                 {
                     isSelf = true;
-                    appBar.Visibility = Visibility.Collapsed;
+                    UserAppBar.Visibility = Visibility.Collapsed;
                     followHeader.Visibility = Visibility.Visible;
                 }
                 else
@@ -454,6 +455,14 @@ namespace BiliLite.Pages
                     IsOnlineMediaList = true,
                 }
             });
+        }
+
+        private void UserInfoPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            m_viewModel.PivotHeaderWidth =
+                pivot.Items.Select(x => (((x as PivotItem).Header as FrameworkElement).Parent as FrameworkElement).ActualWidth).Sum();
+            m_viewModel.UserBarWidth = UserBar.ActualWidth;
+            m_viewModel.PageWidth = e.NewSize.Width;
         }
     }
 }

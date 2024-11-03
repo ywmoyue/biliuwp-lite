@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.UI.Xaml;
 using AutoMapper;
 using BiliLite.Extensions;
 using BiliLite.Models;
@@ -58,6 +59,17 @@ namespace BiliLite.ViewModels.User
 
         public bool IsFollowed { get; set; }
 
+        [DoNotNotify]
+        public double PivotHeaderWidth { get; set; }
+
+        [DoNotNotify]
+        public double UserBarWidth { get; set; }
+
+        public double PageWidth { get; set; }
+
+        [DependsOn(nameof(PivotHeaderWidth), nameof(UserBarWidth), nameof(PageWidth))]
+        public Thickness PivotMargin => PivotHeaderWidth + UserBarWidth < PageWidth ? new Thickness(0, 0, 0, 0) : new Thickness(0, 54, 0, 0);
+
         #endregion
 
         #region Events
@@ -102,7 +114,7 @@ namespace BiliLite.ViewModels.User
 
             var vipInfoData = data.data["card"]?["vip"];
             UserSpaceInfoVipInfo vipInfo = new UserSpaceInfoVipInfo();
-            if(vipInfoData != null)
+            if (vipInfoData != null)
             {
                 vipInfo = vipInfoData.ToObject<UserSpaceInfoVipInfo>();
             }

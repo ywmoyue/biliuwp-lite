@@ -15,7 +15,8 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:userViewModel="using:BiliLite.ViewModels.User" xmlns:controls="using:Microsoft.UI.Xaml.Controls"
-    Background="Transparent">
+    Background="Transparent"
+    SizeChanged="UserInfoPage_OnSizeChanged">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -104,7 +105,7 @@
                             <Setter Property="Margin" Value="0 15 0 0"/>
                         </Style>
                     </Grid.Resources>
-                    <Pivot x:Name="pivot" SelectionChanged="pivot_SelectionChanged">
+                    <Pivot x:Name="pivot" SelectionChanged="pivot_SelectionChanged" Margin="{x:Bind m_viewModel.PivotMargin,Mode=OneWay}">
                         <!--<Pivot.RightHeader>
                 <Grid Background="Transparent">
                     <AutoSuggestBox VerticalAlignment="Center" PlaceholderText="搜索视频" Width="120" Margin="8 0" QueryIcon="Find"></AutoSuggestBox>
@@ -521,7 +522,7 @@
                         </PivotItem>
                     </Pivot>
                     <Grid Padding="8 0" VerticalAlignment="Top" HorizontalAlignment="Right">
-                        <StackPanel x:Name="appBar" HorizontalAlignment="Right" Orientation="Horizontal" >
+                        <StackPanel x:Name="UserBar" HorizontalAlignment="Right" Orientation="Horizontal" >
                             <Button Margin="0 0 5 0">
                                 <Button.Content>
                                     <StackPanel VerticalAlignment="Center" Orientation="Horizontal" >
@@ -582,43 +583,46 @@
                                     </Flyout>
                                 </Button.Flyout>
                             </Button>
-                            <control:UserFollowingTagsFlyout x:Name="UserFollowingTagsFlyout"></control:UserFollowingTagsFlyout>
-                            <AppBarButton 
+
+                            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" x:Name="UserAppBar">
+                                <AppBarButton 
             Label="关注分组"
             x:Name="BtnFollowingTag"
             Click="BtnFollowingTag_OnClick"
                        Visibility="{x:Bind Path=m_viewModel.IsFollowed,Mode=OneWay}">
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE779;" />
-                            </AppBarButton>
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE779;" />
+                                </AppBarButton>
 
-                            <AppBarButton Label="关注" 
+                                <AppBarButton Label="关注" 
                       Command="{x:Bind Path=m_viewModel.AttentionCommand,Mode=OneWay}" 
                       Visibility="{x:Bind Path=m_viewModel.IsFollowed,Mode=OneWay,Converter={StaticResource display}}">
-                                <AppBarButton.Icon>
-                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE006;" />
-                                </AppBarButton.Icon>
-                                <!--<interactivity:Interaction.Behaviors>
+                                    <AppBarButton.Icon>
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE006;" />
+                                    </AppBarButton.Icon>
+                                    <!--<interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="RightTapped">
                     <core:InvokeCommandAction Command="{x:Bind userDetailVM.AttentionWithGroupCommand,Mode=OneWay}"></core:InvokeCommandAction>
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>-->
-                            </AppBarButton>
+                                </AppBarButton>
 
-                            <AppBarButton Label="取消关注" Command="{x:Bind Path=m_viewModel.AttentionCommand,Mode=OneWay}" 
+                                <AppBarButton Label="取消关注" Command="{x:Bind Path=m_viewModel.AttentionCommand,Mode=OneWay}" 
                       Visibility="{x:Bind Path=m_viewModel.IsFollowed,Mode=OneWay}">
-                                <AppBarButton.Icon>
-                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE00B;" />
-                                </AppBarButton.Icon>
-                            </AppBarButton>
+                                    <AppBarButton.Icon>
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE00B;" />
+                                    </AppBarButton.Icon>
+                                </AppBarButton>
 
-                            <AppBarButton x:Name="btnChat" Click="btnChat_Click" Label="私信" Icon="Message">
-                            </AppBarButton>
+                                <AppBarButton x:Name="btnChat" Click="btnChat_Click" Label="私信" Icon="Message">
+                                </AppBarButton>
 
-                            <AppBarButton x:Name="btnLiveRoom" Click="btnLiveRoom_Click" Visibility="{x:Bind Path=m_viewModel.HaveLiveRoom,Mode=OneWay}" Label="直播间" >
-                                <AppBarButton.Icon>
-                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE960;" />
-                                </AppBarButton.Icon>
-                            </AppBarButton>
+                                <AppBarButton x:Name="btnLiveRoom" Click="btnLiveRoom_Click" Visibility="{x:Bind Path=m_viewModel.HaveLiveRoom,Mode=OneWay}" Label="直播间" >
+                                    <AppBarButton.Icon>
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE960;" />
+                                    </AppBarButton.Icon>
+                                </AppBarButton>
+                            </StackPanel>
+                            <control:UserFollowingTagsFlyout x:Name="UserFollowingTagsFlyout"></control:UserFollowingTagsFlyout>
                         </StackPanel>
                     </Grid>
                 </Grid>
