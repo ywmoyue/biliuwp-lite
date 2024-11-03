@@ -46,7 +46,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply",
                 parameter = $"oid={oid}&plat=2&pn={pn}&ps={ps}&sort={(int)sort}&type={type}",
                 need_cookie = true,
@@ -76,7 +76,7 @@ namespace BiliLite.Models.Requests.Api
 
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply/main",
                 parameter = $"oid={oid}&ps={ps}&mode={mode}&type={type}&csrf={csrf}&pagination_str={paginationStr}",
                 need_cookie = true,
@@ -89,7 +89,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply/reply",
                 parameter = $"oid={oid}&plat=2&pn={pn}&ps={ps}&root={root}&type={type}",
                 need_cookie = true,
@@ -103,7 +103,7 @@ namespace BiliLite.Models.Requests.Api
             var csrf = m_cookieService.GetCSRFToken();
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply/action",
                 body = $"&oid={oid}&rpid={root}&action={action}&type={type}&csrf={csrf}",
                 need_cookie = true,
@@ -117,7 +117,7 @@ namespace BiliLite.Models.Requests.Api
             var csrf = m_cookieService.GetCSRFToken();
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply/add",
                 body = $"&oid={oid}&root={root}&parent={parent}&type={type}&message={message}&csrf={csrf}",
                 need_cookie = true,
@@ -131,7 +131,7 @@ namespace BiliLite.Models.Requests.Api
             var csrf = m_cookieService.GetCSRFToken();
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply/del",
                 body = $"&oid={oid}&rpid={rpid}&type={type}&csrf={csrf}",
                 need_cookie = true,
@@ -145,7 +145,7 @@ namespace BiliLite.Models.Requests.Api
             var csrf = m_cookieService.GetCSRFToken();
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply/add",
                 body = $"&oid={oid}&type={(int)type}&message={Uri.EscapeDataString(message)}&csrf={csrf}",
                 need_cookie = true,
@@ -178,7 +178,7 @@ namespace BiliLite.Models.Requests.Api
             var csrf = m_cookieService.GetCSRFToken();
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/dynamic/feed/draw/upload_bfs",
                 FormData = new Dictionary<string, object>()
                 {

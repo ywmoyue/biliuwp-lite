@@ -1,4 +1,5 @@
-﻿using BiliLite.Services;
+﻿using BiliLite.Models.Common;
+using BiliLite.Services;
 
 namespace BiliLite.Models.Requests.Api.Home
 {
@@ -8,7 +9,7 @@ namespace BiliLite.Models.Requests.Api.Home
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"https://app.bilibili.com/x/v2/feed/index",
                 parameter = ApiHelper.MustParameter(AppKey, true) + $"&flush=0&idx={idx}&login_event=2&network=wifi&open_event=&pull={(idx == "0").ToString().ToLower()}&qn=32&style=2",
                 headers = ApiHelper.GetAuroraHeaders()
@@ -21,7 +22,7 @@ namespace BiliLite.Models.Requests.Api.Home
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"https://app.biliapi.net/x/feed/dislike",
                 parameter = ApiHelper.MustParameter(AppKey, true) 
                             + $"&goto={feedbackParams.GoTo}&id={feedbackParams.Id}&mid={feedbackParams.Mid}&reason_id={feedbackParams.ReasonId}&rid={feedbackParams.Rid}&tag_id={feedbackParams.TagId}"
@@ -33,7 +34,7 @@ namespace BiliLite.Models.Requests.Api.Home
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"https://app.biliapi.net/x/feed/dislike",
                 parameter = ApiHelper.MustParameter(AppKey, true) + 
                             $"&goto={feedbackParams.GoTo}&id={feedbackParams.Id}&mid={feedbackParams.Mid}&feedback_id={feedbackParams.ReasonId}&rid={feedbackParams.Rid}&tag_id={feedbackParams.TagId}"

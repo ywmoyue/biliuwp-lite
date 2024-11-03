@@ -51,6 +51,7 @@ namespace BiliLite.Extensions
             services.AddTransient<PlaySettingsControlViewModel>();
             services.AddTransient<VideoDanmakuSettingsControlViewModel>();
             services.AddTransient<ShortcutKeySettingsControlViewModel>();
+            services.AddTransient<DevSettingsControlViewModel>();
             services.AddTransient<MainPageViewModel>();
             return services;
         }

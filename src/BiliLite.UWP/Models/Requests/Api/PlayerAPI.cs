@@ -19,7 +19,7 @@ namespace BiliLite.Models.Requests.Api
             }
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{baseUrl}/x/player/playurl",
                 parameter = $"avid={aid}&cid={cid}&qn={qn}&type=&otype=json&mid={(SettingService.Account.Logined ? SettingService.Account.Profile.mid.ToString() : "")}",
                 need_cookie = true,
@@ -42,7 +42,7 @@ namespace BiliLite.Models.Requests.Api
             }
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{baseUrl}/pgc/player/web/playurl",
                 parameter = $"appkey={AppKey.Appkey}&cid={cid}&ep_id={ep_id}&qn={qn}&type=&otype=json&module=bangumi&season_type={season_type}"
             };
@@ -68,7 +68,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/pgc/player/web/playurl",
                 parameter = $"appkey={AppKey.Appkey}&cid={cid}&qn={qn}&type=&otype=json&module=bangumi&season_type={season_type}"
             };
@@ -86,7 +86,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"https://api.live.bilibili.com/xlive/web-room/v2/index/getRoomPlayInfo",
                 parameter = $"room_id={room_id}&qn={qn}&protocol=0,1&format=0,2&codec=0,1", //"cid={cid}&qn={qn}&platform=web"
                 need_cookie = true
@@ -106,7 +106,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/stein/edgeinfo_v2",
                 parameter = ApiHelper.MustParameter(AppKey, true) + $"&aid={aid}&graph_version={graph_version}&edge_id={edge_id}"
             };
@@ -128,7 +128,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/history/report",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&aid={aid}&cid={cid}&epid={epid}&sid={sid}&progress={progress}&realtime={progress}&sub_type=1&type={type}"
             };
@@ -151,7 +151,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/dm/post",
                 parameter = ApiHelper.MustParameter(AppKey, true) + $"&aid={aid}",
                 body = $"msg={Uri.EscapeDataString(msg)}&mode={mode}&screen_state=1&color={color}&pool=0&progress={Convert.ToInt32(position * 1000)}&fontsize=25&rnd={TimeExtensions.GetTimestampS()}&from=7&oid={cid}&plat={plat}&type=1"
@@ -170,7 +170,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/player/wbi/v2",
                 parameter = $"cid={cid}&aid={aid}&bvid={bvid}",
                 need_cookie = true,
@@ -189,7 +189,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/player/online/total",
                 parameter = $"cid={cid}&aid={aid}&bvid={bvid}",
             };
@@ -204,7 +204,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/dm/filter/user",
                 parameter = ApiHelper.MustParameter(AppKey, true)
             };
@@ -222,7 +222,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Post,
+                method = HttpMethods.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/dm/filter/user/add",
                 body = ApiHelper.MustParameter(AppKey, true) + $"&filter={Uri.EscapeDataString(word)}&type={type}"
             };
@@ -240,7 +240,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"http://api.bilibili.com/x/v2/dm/list/seg.so",
                 parameter = $"type=1&oid={oid}&segment_index={segment_index}&{ApiHelper.MustParameter(AppKey, true)}",
             };

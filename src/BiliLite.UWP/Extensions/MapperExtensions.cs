@@ -28,6 +28,7 @@ using BiliLite.Services;
 using BiliLite.ViewModels.Comment;
 using BiliLite.ViewModels.Download;
 using BiliLite.ViewModels.Home;
+using BiliLite.ViewModels.Plugins;
 using BiliLite.ViewModels.Season;
 using BiliLite.ViewModels.Settings;
 using BiliLite.ViewModels.User;
@@ -46,6 +47,8 @@ namespace BiliLite.Extensions
         {
             var mapper = new Mapper(new MapperConfiguration(expression =>
             {
+                expression.CreateMap<WebSocketPlugin, WebSocketPluginViewModel>()
+                    .ReverseMap();
                 expression.CreateMap<DownloadedItemDTO, DownloadedItem>()
                     .ReverseMap();
                 expression.CreateMap<DownloadedSubItemDTO, DownloadedSubItem>()

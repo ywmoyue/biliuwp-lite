@@ -29,6 +29,7 @@
             PreviewKeyDown="TabView_OnPreviewKeyDown"
             TabCloseRequested="TabView_TabCloseRequested"
             TabItemsChanged="tabView_TabItemsChanged"
+            LayoutUpdated="TabView_OnLayoutUpdated"
             TabWidthMode="SizeToContent">
             <winui:TabView.KeyboardAccelerators>
                 <KeyboardAccelerator

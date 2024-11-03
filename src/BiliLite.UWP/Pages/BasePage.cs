@@ -86,6 +86,11 @@ namespace BiliLite.Pages
             Player.StopHighRateSpeedPlay();
         }
 
+        public void SetPosition(double position)
+        {
+            Player.SetPosition(position);
+        }
+
         public void PositionBack()
         {
             Player.PositionBack();

@@ -605,6 +605,10 @@
                                     <Slider x:Name="SubtitleSettingBottom" Value="20" Minimum="4" Maximum="200" StepFrequency="4"></Slider>
                                     <TextBlock Margin="0 8">繁体字幕转简体</TextBlock>
                                     <ToggleSwitch x:Name="SubtitleSettingToSimplified" OnContent="开启" OffContent="关闭"></ToggleSwitch>
+                                    <TextBlock Margin="0 8">外置字幕</TextBlock>
+                                    <Button Click="BtnImportSubFile_OnClick">选择文件</Button>
+                                    <TextBlock Margin="0 8">外置字幕大小</TextBlock>
+                                    <Slider x:Name="OutsideSubtitleSettingSize" Value="3" Minimum="1" Maximum="15" StepFrequency="1"></Slider>
                                 </StackPanel>
                             </ScrollViewer>
                         </PivotItem>
@@ -629,6 +633,10 @@
                 <Border x:Name="BorderSubtitle" Visibility="Collapsed" Opacity="{Binding ElementName=SubtitleSettingOpacity,Path=Value,Mode=OneWay}" Padding="3 4 8 4" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0 0 0 24">
 
                 </Border>
+                <!--Ass弹幕-->
+                <Grid>
+                    <canvas:CanvasAnimatedControl x:Name="SubtitleCanvas"/>
+                </Grid>
                 <!--弹幕-->
                 <Grid>
                     <danmaku:Danmaku x:Name="DanmuControl"/>
@@ -707,7 +715,7 @@
                         </Grid.RowDefinitions>
 
 
-                        <Grid Height="48">
+                        <Grid Height="48" x:Name="TopControlBar" Margin="0 0 0 0">
                             <Grid.Background>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                     <GradientStop Color="#C8000000"/>

@@ -20,6 +20,7 @@
     <Color x:Key="PieControlIconColor">#FF808080</Color>
 
     <Color x:Key="NoTapGridBackground">#FF282828</Color>
+    <Color x:Key="DynCommentBackground">#1a2031</Color>
 
     <Color x:Key="TabViewBackground">Transparent</Color>
     <SolidColorBrush x:Key="TabViewItemHeaderBackgroundNormal" Color="Transparent"/>

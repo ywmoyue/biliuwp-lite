@@ -206,6 +206,7 @@ namespace BiliLite
             App.Current.Resources["ImageCornerRadius"] = new CornerRadius(SettingService.GetValue<double>(SettingConstants.UI.IMAGE_CORNER_RADIUS, 0));
             await AppHelper.SetRegions();
             await InitDb();
+
             try
             {
                 var downloadService = ServiceProvider.GetRequiredService<DownloadService>();
@@ -217,6 +218,9 @@ namespace BiliLite
                 logger.Error("初始化加载下载视频错误", ex);
             }
             VideoPlayHistoryHelper.LoadABPlayHistories(true);
+
+            var pluginService = ServiceProvider.GetRequiredService<PluginService>();
+            await pluginService.Start();
         }
 
         private async Task InitDb()
