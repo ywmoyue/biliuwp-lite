@@ -10,13 +10,16 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:modules="using:BiliLite.Modules"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:dataTemplateSelectors="using:BiliLite.Controls.DataTemplateSelectors"
+    xmlns:viewModel="using:BiliLite.ViewModels.Search"
+    xmlns:model="using:BiliLite.Models.Common.Search"
     Background="Transparent"
     mc:Ignorable="d">
     <Page.Resources>
         <convert:DatetimeConvert x:Key="ts" />
         <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent" />
         <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White" />
-        <DataTemplate x:Key="VideoTpl" x:DataType="modules:SearchVideoVM">
+        <DataTemplate x:Key="VideoTpl" x:DataType="viewModel:SearchVideoViewModel">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -68,7 +71,7 @@
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
                     <toolkit:AdaptiveGridView.ItemTemplate>
-                        <DataTemplate x:DataType="modules:SearchVideoItem">
+                        <DataTemplate x:DataType="model:SearchVideoItem">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -155,7 +158,7 @@
                 </control:RoundButton>
             </Grid>
         </DataTemplate>
-        <DataTemplate x:Key="AnimeTpl" x:DataType="modules:SearchAnimeVM">
+        <DataTemplate x:Key="AnimeTpl" x:DataType="viewModel:SearchAnimeViewModel">
             <Grid>
                 <toolkit:AdaptiveGridView
                     Grid.Row="1"
@@ -168,7 +171,7 @@
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
                     <toolkit:AdaptiveGridView.ItemTemplate>
-                        <DataTemplate x:DataType="modules:SearchAnimeItem">
+                        <DataTemplate x:DataType="model:SearchAnimeItem">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -265,7 +268,7 @@
                 </control:RoundButton>
             </Grid>
         </DataTemplate>
-        <DataTemplate x:Key="UserTpl" x:DataType="modules:SearchUserVM">
+        <DataTemplate x:Key="UserTpl" x:DataType="viewModel:SearchUserViewModel">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -306,7 +309,7 @@
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
                     <toolkit:AdaptiveGridView.ItemTemplate>
-                        <DataTemplate x:DataType="modules:SearchUserItem">
+                        <DataTemplate x:DataType="model:SearchUserItem">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -390,7 +393,7 @@
                 </control:RoundButton>
             </Grid>
         </DataTemplate>
-        <DataTemplate x:Key="LiveRoomTpl" x:DataType="modules:SearchLiveRoomVM">
+        <DataTemplate x:Key="LiveRoomTpl" x:DataType="viewModel:SearchLiveRoomViewModel">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -408,7 +411,7 @@
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
                     <toolkit:AdaptiveGridView.ItemTemplate>
-                        <DataTemplate x:DataType="modules:SearchLiveRoomItem">
+                        <DataTemplate x:DataType="model:SearchLiveRoomItem">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
@@ -508,7 +511,7 @@
                 </control:RoundButton>
             </Grid>
         </DataTemplate>
-        <DataTemplate x:Key="ArticTpl" x:DataType="modules:SearchArticleVM">
+        <DataTemplate x:Key="ArticTpl" x:DataType="viewModel:SearchArticleViewModel">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -549,7 +552,7 @@
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
                     <toolkit:AdaptiveGridView.ItemTemplate>
-                        <DataTemplate x:DataType="modules:SearchArticleItem">
+                        <DataTemplate x:DataType="model:SearchArticleItem">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -627,7 +630,7 @@
                 </control:RoundButton>
             </Grid>
         </DataTemplate>
-        <DataTemplate x:Key="TopicTpl" x:DataType="modules:SearchTopicVM">
+        <DataTemplate x:Key="TopicTpl" x:DataType="viewModel:SearchTopicViewModel">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -645,7 +648,7 @@
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
                     <toolkit:AdaptiveGridView.ItemTemplate>
-                        <DataTemplate x:DataType="modules:SearchTopicItem">
+                        <DataTemplate x:DataType="model:SearchTopicItem">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -726,7 +729,7 @@
         <DataTemplate x:Key="TestTpl">
             <TextBlock>还没写好</TextBlock>
         </DataTemplate>
-        <local:SearchDataTemplateSelector
+        <dataTemplateSelectors:SearchDataTemplateSelector
             x:Key="tplSelect"
             AnimeTemplate="{StaticResource AnimeTpl}"
             ArticTemplate="{StaticResource ArticTpl}"
@@ -741,13 +744,13 @@
             x:Name="pivot"
             Grid.Row="1"
             ItemTemplateSelector="{StaticResource ResourceKey=tplSelect}"
-            ItemsSource="{x:Bind Path=searchVM.SearchItems}"
-            SelectedIndex="{x:Bind pivotIndex, Mode=TwoWay}"
-            SelectedItem="{x:Bind Path=searchVM.SelectItem, Mode=TwoWay}"
+            ItemsSource="{x:Bind Path=m_viewModel.SearchItems}"
+            SelectedIndex="{x:Bind m_viewModel.PivotIndex, Mode=TwoWay}"
+            SelectedItem="{x:Bind Path=m_viewModel.SelectItem, Mode=TwoWay}"
             SelectionChanged="pivot_SelectionChanged"
             UseSystemFocusVisuals="False">
             <Pivot.HeaderTemplate>
-                <DataTemplate x:DataType="modules:ISearchVM">
+                <DataTemplate x:DataType="viewModel:ISearchPivotViewModel">
                     <TextBlock FontSize="15" Text="{x:Bind Title}" />
                 </DataTemplate>
             </Pivot.HeaderTemplate>
@@ -765,7 +768,7 @@
             <AutoSuggestBox
                 x:Name="txtKeyword"
                 MinWidth="200"
-                ItemsSource="{x:Bind Path=searchVM.SuggestSearchContents, Mode=OneWay}"
+                ItemsSource="{x:Bind Path=m_viewModel.SuggestSearchContents, Mode=OneWay}"
                 PlaceholderText="随便搜索点什么东西吧"
                 QueryIcon="Find"
                 QuerySubmitted="txtKeyword_QuerySubmitted"
@@ -775,10 +778,10 @@
                 Grid.Column="1"
                 Margin="8,0,0,0"
                 DisplayMemberPath="name"
-                ItemsSource="{x:Bind Path=searchVM.Areas}"
+                ItemsSource="{x:Bind Path=m_viewModel.Areas}"
                 PlaceholderText="选择地区"
-                SelectedIndex="{x:Bind comboIndex, Mode=TwoWay}"
-                SelectedItem="{x:Bind Path=searchVM.Area, Mode=TwoWay}"
+                SelectedIndex="{x:Bind m_viewModel.ComboIndex, Mode=TwoWay}"
+                SelectedItem="{x:Bind Path=m_viewModel.Area, Mode=TwoWay}"
                 SelectedValuePath="area"
                 SelectionChanged="cbArea_SelectionChanged">
                 <ComboBoxItem>默认地区</ComboBoxItem>

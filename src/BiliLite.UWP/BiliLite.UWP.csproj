@@ -262,16 +262,35 @@
     <Compile Include="Models\Functions\ToggleFullWindowShortcutFunction.cs" />
     <Compile Include="Models\Functions\ToggleMiniWindowShortcutFunction.cs" />
     <Compile Include="Models\Functions\ToggleSubtitleShortcutFunction.cs" />
+    <Compile Include="Models\Common\Search\SearchAnimeItem.cs" />
+    <Compile Include="Models\Common\Search\SearchArea.cs" />
+    <Compile Include="Models\Common\Search\SearchArticleItem.cs" />
+    <Compile Include="Models\Common\Search\SearchLiveRoomItem.cs" />
+    <Compile Include="Models\Common\Search\SearchTopicItem.cs" />
+    <Compile Include="Models\Common\Search\SearchUserItem.cs" />
+    <Compile Include="Models\Common\Search\SearchUserOfficialVerifyItem.cs" />
+    <Compile Include="Models\Common\Search\SearchVideoItem.cs" />
     <Compile Include="Pages\IScrollRecorablePage.cs" />
     <Compile Include="Pages\Other\MarkdownViewerPage.xaml.cs">
       <DependentUpon>MarkdownViewerPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Common\Search\SearchParameter.cs" />
+    <Compile Include="Controls\DataTemplateSelectors\SearchDataTemplateSelector.cs" />
     <Compile Include="Services\BiliLiteDbContext.cs" />
     <Compile Include="Services\DownloadService.cs" />
     <Compile Include="Services\PluginService.cs" />
     <Compile Include="Services\SqlMigrateService.cs" />
     <Compile Include="ViewModels\Common\MainPageViewModel.cs" />
     <Compile Include="ViewModels\Common\PieControlViewModel.cs" />
+    <Compile Include="ViewModels\Search\BaseSearchPivotViewModel.cs" />
+    <Compile Include="ViewModels\Search\ISearchPivotViewModel.cs" />
+    <Compile Include="ViewModels\Search\SearchAnimeViewModel.cs" />
+    <Compile Include="ViewModels\Search\SearchArticleViewModel.cs" />
+    <Compile Include="ViewModels\Search\SearchLiveRoomViewModel.cs" />
+    <Compile Include="ViewModels\Search\SearchPageViewModel.cs" />
+    <Compile Include="ViewModels\Search\SearchTopicViewModel.cs" />
+    <Compile Include="ViewModels\Search\SearchUserViewModel.cs" />
+    <Compile Include="ViewModels\Search\SearchVideoViewModel.cs" />
     <Compile Include="ViewModels\Plugins\WebSocketPluginViewModel.cs" />
     <Compile Include="ViewModels\Settings\CDNServerItemViewModel.cs" />
     <Compile Include="Pages\ISavablePage.cs" />
@@ -785,7 +804,7 @@
     <Compile Include="Modules\Player\Playurl\BiliPlayUrl.cs" />
     <Compile Include="Models\Common\Video\PlayUrlInfos\BiliFlvPlayUrlInfo.cs" />
     <Compile Include="Modules\RegionDetailVM.cs" />
-    <Compile Include="Modules\SearchVM.cs" />
+    <Compile Include="Models\Common\Search\SearchFilterItem.cs" />
     <Compile Include="Modules\Season\SeasonRankVM.cs" />
     <Compile Include="Modules\Season\SeasonReviewVM.cs" />
     <Compile Include="Modules\User\Account.cs" />
@@ -940,7 +959,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\Requests\ApiModel.cs" />
     <Compile Include="Models\Common\ApiKeyInfo.cs" />
-    <Compile Include="Services\SearchService.cs" />
+    <Compile Include="Services\Biz\SearchService.cs" />
     <Compile Include="ViewModels\Common\BaseViewModel.cs" />
     <Compile Include="ViewModels\Download\DownloadDialogViewModel.cs" />
     <Compile Include="Models\Common\Video\VideoListItem.cs" />
