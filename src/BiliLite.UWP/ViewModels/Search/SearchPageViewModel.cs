@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Windows.UI.Xaml;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Search;
 using BiliLite.ViewModels.Common;
@@ -41,6 +42,24 @@ namespace BiliLite.ViewModels.Search
         public int PivotIndex { get; set; }
 
         public int ComboIndex { get; set; }
+
+        public double PivotHeaderWidth { get; set; }
+
+        public double PageWidth { get; set; }
+
+        [DoNotNotify] 
+        public double SearchBoxWidth { get; } = 334;
+
+        [DependsOn(nameof(PivotHeaderWidth), nameof(PageWidth))]
+        public Thickness PivotMargin => PivotHeaderWidth + SearchBoxWidth < PageWidth ? new Thickness(0, 0, 0, 0) : new Thickness(0, 36, 0, 0);
+
+        [DependsOn(nameof(PivotHeaderWidth), nameof(PageWidth))]
+        public Thickness SearchBoxMargin => PivotHeaderWidth + SearchBoxWidth < PageWidth ? new Thickness(400, 8, 8, 0) : new Thickness(8, 8, 8, 0);
+
+        [DependsOn(nameof(PivotHeaderWidth), nameof(PageWidth))]
+        public HorizontalAlignment SearchBoxHorizontalAlignment => PivotHeaderWidth + SearchBoxWidth < PageWidth
+            ? HorizontalAlignment.Right
+            : HorizontalAlignment.Stretch;
 
         #endregion
 

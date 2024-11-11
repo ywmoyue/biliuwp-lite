@@ -14,6 +14,7 @@
     xmlns:viewModel="using:BiliLite.ViewModels.Search"
     xmlns:model="using:BiliLite.Models.Common.Search"
     Background="Transparent"
+    SizeChanged="SearchPage_OnSizeChanged"
     mc:Ignorable="d">
     <Page.Resources>
         <convert:DatetimeConvert x:Key="ts" />
@@ -742,11 +743,11 @@
     <Grid>
         <Pivot
             x:Name="pivot"
-            Grid.Row="1"
             ItemTemplateSelector="{StaticResource ResourceKey=tplSelect}"
             ItemsSource="{x:Bind Path=m_viewModel.SearchItems}"
             SelectedIndex="{x:Bind m_viewModel.PivotIndex, Mode=TwoWay}"
             SelectedItem="{x:Bind Path=m_viewModel.SelectItem, Mode=TwoWay}"
+            Margin="{x:Bind m_viewModel.PivotMargin,Mode=OneWay}"
             SelectionChanged="pivot_SelectionChanged"
             UseSystemFocusVisuals="False">
             <Pivot.HeaderTemplate>
@@ -760,14 +761,18 @@
                 </Style>
             </Pivot.ItemContainerStyle>
         </Pivot>
-        <StackPanel
-            Margin="400,8,8,0"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Top"
-            Orientation="Horizontal">
+        <Grid
+            x:Name="SearchBox"
+            Margin="{x:Bind m_viewModel.SearchBoxMargin,Mode=OneWay}"
+            HorizontalAlignment="{x:Bind m_viewModel.SearchBoxHorizontalAlignment,Mode=OneWay}"
+            VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
             <AutoSuggestBox
                 x:Name="txtKeyword"
-                MinWidth="200"
+                MinWidth="220"
                 ItemsSource="{x:Bind Path=m_viewModel.SuggestSearchContents, Mode=OneWay}"
                 PlaceholderText="随便搜索点什么东西吧"
                 QueryIcon="Find"
@@ -789,6 +794,6 @@
                 <ComboBoxItem>香港地区</ComboBoxItem>
                 <ComboBoxItem>台湾地区</ComboBoxItem>
             </ComboBox>
-        </StackPanel>
+        </Grid>
     </Grid>
 </local:BasePage>

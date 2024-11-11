@@ -13,6 +13,8 @@ using BiliLite.Models.Common.Search;
 using BiliLite.Services.Biz;
 using BiliLite.ViewModels.Search;
 using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
+using Windows.UI.Xaml.Controls.Primitives;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -256,9 +258,16 @@ namespace BiliLite.Pages
             searchVm.Refresh();
         }
 
-        private void SearchPage_Loaded(object sender, RoutedEventArgs e)
+        private void UpdateSize()
         {
-            txtKeyword.Focus(FocusState.Keyboard);
+            m_viewModel.PageWidth = ActualWidth;
+            m_viewModel.PivotHeaderWidth =
+                pivot.FindChildrenByType<PivotHeaderItem>().Select(x=>x.ActualWidth).Sum();
+        }
+
+        private void SearchPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            UpdateSize();
         }
     }
 }
