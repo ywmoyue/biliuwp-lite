@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Models.Common.Search;
+using BiliLite.Services.Biz;
 using BiliLite.ViewModels.Download;
 using BiliLite.ViewModels.Home;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +26,8 @@ namespace BiliLite.Pages
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
 
         private readonly DownloadPageViewModel m_downloadPageViewModel;
+
+        private readonly SearchService m_searchService;
         // private readonly CookieService m_cookieService;
         private readonly HomeViewModel m_viewModel;
         readonly Account account;
@@ -36,6 +40,7 @@ namespace BiliLite.Pages
             m_viewModel = new HomeViewModel();
             account = new Account();
             m_downloadPageViewModel = App.ServiceProvider.GetRequiredService<DownloadPageViewModel>();
+            m_searchService = App.ServiceProvider.GetRequiredService<SearchService>();
             // m_cookieService = App.ServiceProvider.GetRequiredService<CookieService>();
             this.DataContext = m_viewModel;
         }
@@ -188,8 +193,8 @@ namespace BiliLite.Pages
                 title = "搜索:" + args.QueryText,
                 parameters = new SearchParameter()
                 {
-                    keyword = args.QueryText,
-                    searchType = SearchType.Video
+                    Keyword = args.QueryText,
+                    SearchType = SearchType.Video
                 }
             });
         }
@@ -332,7 +337,7 @@ namespace BiliLite.Pages
             var text = sender.Text;
             text = text.TrimEnd();
             if (string.IsNullOrWhiteSpace(text)) return;
-            var suggestSearchContents = await new SearchService().GetSearchSuggestContents(text);
+            var suggestSearchContents = await m_searchService.GetSearchSuggestContents(text);
             if (m_viewModel.SuggestSearchContents == null)
             {
                 m_viewModel.SuggestSearchContents = new System.Collections.ObjectModel.ObservableCollection<string>(suggestSearchContents);
