@@ -28,9 +28,10 @@ namespace BiliLite.Pages
 
         public SearchPage()
         {
+            NavigationCacheMode = NavigationCacheMode.Required;
             m_searchService = App.ServiceProvider.GetRequiredService<SearchService>();
             m_viewModel = App.ServiceProvider.GetRequiredService<SearchPageViewModel>();
-            m_viewModel.Init(m_searchService.PivotIndexCache, m_searchService.ComboIndexCache);
+            m_viewModel.Init(m_searchService.PivotIndexCache = 0, m_searchService.ComboIndexCache = 0);
             this.InitializeComponent();
         }
 
