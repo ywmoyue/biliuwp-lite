@@ -219,8 +219,8 @@ namespace BiliLite
             }
             VideoPlayHistoryHelper.LoadABPlayHistories(true);
 
-            var pluginService = ServiceProvider.GetRequiredService<PluginService>();
-            await pluginService.Start();
+            //var pluginService = ServiceProvider.GetRequiredService<PluginService>();
+            //await pluginService.Start();
         }
 
         private async Task InitDb()

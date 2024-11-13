@@ -67,11 +67,11 @@
             </ComboBox>
         </controls:SettingsCard>
 
-        <controls:SettingsExpander Header="外置插件">
+        <!--<controls:SettingsExpander Header="外置插件">
             <controls:SettingsExpander.Items>
                 <Button Click="BtnSettingPlugin_OnClick">设置</Button>
             </controls:SettingsExpander.Items>
-        </controls:SettingsExpander>
+        </controls:SettingsExpander>-->
 
         <controls:SettingsCard  Header="迁移数据库"
                                 Description="开发者调试用">
