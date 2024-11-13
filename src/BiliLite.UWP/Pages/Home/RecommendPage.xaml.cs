@@ -126,6 +126,9 @@ namespace BiliLite.Pages.Home
                 case "browser":
                     await Launcher.LaunchUriAsync(new Uri(threePoint.Url));
                     return;
+                case "fastFilter":
+                    m_viewModel.AddFilterUser(threePoint.Subtitle);
+                    return;
             }
         }
 
