@@ -10,11 +10,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel.Core;
-using Windows.Foundation;
 using Windows.Graphics.Display;
-using Windows.UI;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -261,54 +257,9 @@ namespace BiliLite
 
         public static void ExtendAcrylicIntoTitleBar()
         {
-            UISettings uISettings = new UISettings();
-            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
-            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            titleBar.ButtonBackgroundColor = Colors.Transparent;
-            titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-            // titleBar.ButtonForegroundColor = TitltBarButtonColor(uISettings);
-            // uISettings.ColorValuesChanged += new TypedEventHandler<UISettings, object>((setting, args) =>
-            //titleBar.ButtonHoverBackgroundColor = Colors.Gray;
-            //titleBar.ButtonPressedBackgroundColor = Colors.Gray;
-            Frame rootFrame = Window.Current.Content as Frame;
-            var theme = rootFrame.RequestedTheme = (ElementTheme)SettingService.GetValue<int>(SettingConstants.UI.THEME, 0);
-            switch (theme)
-            {
-                case ElementTheme.Default:
-                    var rootTheme = App.Current.RequestedTheme;
-                    if (rootTheme == ApplicationTheme.Light)
-                    {
-                        goto case ElementTheme.Light;
-                    }
-                    else
-                    {
-                        goto case ElementTheme.Dark;
-                    }
-
-                case ElementTheme.Light:
-                    titleBar.ButtonForegroundColor = Colors.Black;
-                    titleBar.ButtonHoverForegroundColor = Colors.White;
-                    titleBar.ButtonPressedForegroundColor = Colors.Black;
-                    break;
-
-                case ElementTheme.Dark:
-                    titleBar.ButtonForegroundColor = Colors.White;
-                    titleBar.ButtonHoverForegroundColor = Colors.Black;
-                    titleBar.ButtonPressedForegroundColor = Colors.White;
-                    break;
-            }
+            AppExtensions.HandleTitleTheme();
         }
-        private static Color TitltBarButtonColor(UISettings uISettings)
-        {
-            var settingTheme = SettingService.GetValue<int>(SettingConstants.UI.THEME, 0);
-            var uiSettings = new Windows.UI.ViewManagement.UISettings();
-            var color = uiSettings.GetColorValue(UIColorType.Foreground);
-            if (settingTheme != 0)
-            {
-                color = settingTheme == 1 ? Colors.Black : Colors.White;
-            }
-            return color;
-        }
+
         protected override void OnActivated(IActivatedEventArgs args)
         {
             base.OnActivated(args);

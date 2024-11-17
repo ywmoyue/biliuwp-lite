@@ -192,6 +192,7 @@
     <Compile Include="Dialogs\SendDynamicV2Dialog.xaml.cs">
       <DependentUpon>SendDynamicV2Dialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Extensions\AppExtensions.cs" />
     <Compile Include="Extensions\BizServicesExtensions.cs" />
     <Compile Include="Extensions\ControlsExtensions.cs" />
     <Compile Include="Extensions\FileExtensions.cs" />
