@@ -1,18 +1,18 @@
-﻿using System;
+﻿using BiliLite.Extensions;
+using BiliLite.Models.Common;
+using BiliLite.Models.Common.Comment;
+using BiliLite.Modules;
+using BiliLite.Services;
+using BiliLite.ViewModels.Common;
+using PropertyChanged;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.UI;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Controls;
-using BiliLite.Models.Common.Comment;
-using BiliLite.Modules;
-using BiliLite.Services;
-using BiliLite.ViewModels.Common;
-using BiliLite.Extensions;
-using BiliLite.Models.Common;
-using PropertyChanged;
+using Windows.UI.Xaml.Media;
 
 namespace BiliLite.ViewModels.Comment
 {
@@ -36,7 +36,7 @@ namespace BiliLite.ViewModels.Comment
         public int Action { get; set; }
 
         [DependsOn(nameof(Action))]
-        public SolidColorBrush LikeColor => Action == 0 ? new SolidColorBrush(Colors.Gray) : new SolidColorBrush((Color)Application.Current.Resources["HighLightColor"]);
+        public SolidColorBrush LikeColor => Action == 0 ? new SolidColorBrush(Colors.Gray) : new SolidColorBrush((Color)Application.Current.Resources["SystemAccentColor"]);
 
         public long RpId { get; set; }
 

@@ -22,8 +22,8 @@
         <convert:DatetimeConvert x:Key="datetime" ></convert:DatetimeConvert>
         <convert:ColorConvert x:Key="colorConvert" ></convert:ColorConvert>
         <convert:DanmakuStyleConvert x:Key="styleConvert"></convert:DanmakuStyleConvert>
-        <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource HighLightColor}" />
-        <SolidColorBrush x:Key="GridViewItemForegroundSelected" Color="{ThemeResource HighLightColor}" />
+        <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource SystemAccentColor}" />
+        <SolidColorBrush x:Key="GridViewItemForegroundSelected" Color="{ThemeResource SystemAccentColor}" />
         <Style TargetType="ComboBox" x:Key="PlayerComboBoxStyle">
             <Setter Property="Padding" Value="8,0" />
             <Setter Property="MinWidth" Value="{ThemeResource ComboBoxThemeMinWidth}" />
@@ -93,7 +93,7 @@
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ComboBoxBorderBrushPointerOver}" />
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource HighLightColor}"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemAccentColor}"/>
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
@@ -1113,7 +1113,7 @@
                         <TextBlock Text="{x:Bind Path=m_liveRoomViewModel.LiveInfo.AnchorInfo.BaseInfo.Uname,Mode=OneWay}"></TextBlock>
                         <TextBlock Margin="0 4 0 0" Foreground="Gray" FontSize="12"><Run Text="{x:Bind Path=m_liveRoomViewModel.WatchedNum,Mode=OneWay}"/> 粉丝:<Run Text="{x:Bind Path=m_liveRoomViewModel.LiveInfo.AnchorInfo.RelationInfo.Attention,Converter={StaticResource numberToStringConvert},Mode=OneWay}"/></TextBlock>
                     </StackPanel>
-                    <Button x:Name="BtnAttention" Click="BtnAttention_Click" FontSize="12" Visibility="{x:Bind Path=m_liveRoomViewModel.Attention,Mode=OneWay,Converter={StaticResource display}}" Grid.Column="2" Background="{ThemeResource HighLightColor}" Foreground="White">关注</Button>
+                    <Button x:Name="BtnAttention" Click="BtnAttention_Click" FontSize="12" Visibility="{x:Bind Path=m_liveRoomViewModel.Attention,Mode=OneWay,Converter={StaticResource display}}" Grid.Column="2" Background="{ThemeResource SystemAccentColor}" Foreground="White">关注</Button>
                     <Button x:Name="BtnCacnelAttention" Click="BtnCacnelAttention_Click" FontSize="12" Visibility="{x:Bind Path=m_liveRoomViewModel.Attention,Mode=OneWay}" Grid.Column="2">已关注</Button>
                 </Grid>
                 <Pivot Grid.Row="1" x:Name="pivot" SelectionChanged="pivot_SelectionChanged">

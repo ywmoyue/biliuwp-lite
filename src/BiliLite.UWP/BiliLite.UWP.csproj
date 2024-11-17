@@ -192,6 +192,7 @@
     <Compile Include="Dialogs\SendDynamicV2Dialog.xaml.cs">
       <DependentUpon>SendDynamicV2Dialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Extensions\AppExtensions.cs" />
     <Compile Include="Extensions\BizServicesExtensions.cs" />
     <Compile Include="Extensions\ControlsExtensions.cs" />
     <Compile Include="Extensions\FileExtensions.cs" />
@@ -745,7 +746,7 @@
     </Compile>
     <Compile Include="Converters\BooleanConvert.cs" />
     <Compile Include="Converters\ColorConvert.cs" />
-    <Compile Include="Converters\ColorSelecteConvert.cs" />
+    <Compile Include="Converters\ColorSelectedConvert.cs" />
     <Compile Include="Converters\CountOrTextConvert.cs" />
     <Compile Include="Converters\DatetimeConvert.cs" />
     <Compile Include="Converters\DisplayConvert.cs" />
@@ -1452,17 +1453,25 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Themes\Dark.xaml">
+    <Page Include="Styles\TextBlockStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Themes\Light.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Themes\Breakpoint.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\Pink.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Themes\Colors.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Converter.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Fonts.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
