@@ -38,7 +38,7 @@
             <Setter Property="BorderBrush" Value="#33808080"></Setter>
             <Setter Property="Padding" Value="0"></Setter>
         </Style>
-        <convert:ColorSelecteConvert x:Key="colorSelct" ></convert:ColorSelecteConvert>
+        <convert:ColorSelectedConvert x:Key="colorSelct" ></convert:ColorSelectedConvert>
         <convert:ColorConvert x:Key="colorConvert" ></convert:ColorConvert>
         <Flyout  x:Key="FaceFlyout" x:Name="FaceFlyout">
             <Grid Width="320">

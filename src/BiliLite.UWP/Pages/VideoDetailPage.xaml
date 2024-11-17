@@ -25,7 +25,7 @@
             </Style.Setters>
         </Style>
         <convert:DatetimeConvert x:Key="datetime" ></convert:DatetimeConvert>
-        <convert:ColorSelecteConvert x:Key="colorSelct" ></convert:ColorSelecteConvert>
+        <convert:ColorSelectedConvert x:Key="colorSelct" ></convert:ColorSelectedConvert>
         <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="#64B0B0B0" />
         <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="{ThemeResource SystemListLowColor}" />
         <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource SystemAccentColor}" />

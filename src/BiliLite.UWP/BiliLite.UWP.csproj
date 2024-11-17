@@ -745,7 +745,7 @@
     </Compile>
     <Compile Include="Converters\BooleanConvert.cs" />
     <Compile Include="Converters\ColorConvert.cs" />
-    <Compile Include="Converters\ColorSelecteConvert.cs" />
+    <Compile Include="Converters\ColorSelectedConvert.cs" />
     <Compile Include="Converters\CountOrTextConvert.cs" />
     <Compile Include="Converters\DatetimeConvert.cs" />
     <Compile Include="Converters\DisplayConvert.cs" />
