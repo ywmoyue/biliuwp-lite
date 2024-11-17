@@ -294,7 +294,9 @@
                 </Grid>
             </Grid>
 
-            <Grid Grid.Column="1"  VerticalAlignment="Top" Height="{x:Bind m_viewModel.RightInfoHeight,Mode=OneWay}">
+            <Grid Grid.Column="1"  VerticalAlignment="Top"
+                  Background="{x:Bind m_viewModel.RightInfoBackground,Mode=OneWay}" 
+                  Height="{x:Bind m_viewModel.RightInfoHeight,Mode=OneWay}">
                 <Pivot x:Name="pivot" PreviewKeyDown="Pivot_OnPreviewKeyDown">
                     <PivotItem Margin="0">
                         <PivotItem.Header>
