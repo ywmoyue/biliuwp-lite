@@ -10,11 +10,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel.Core;
-using Windows.Foundation;
 using Windows.Graphics.Display;
-using Windows.UI;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -200,12 +196,20 @@ namespace BiliLite
                 {
                     //如果屏幕分辨率大于16：9,设置为List
                     SettingService.SetValue<int>(SettingConstants.UI.RECMEND_DISPLAY_MODE, 1);
+                    // // 当导航堆栈尚未还原时，导航到第一页，
+                    // // 并通过将所需信息作为导航参数传入来配置参数
+                    // bool loadState = args.PreviousExecutionState == ApplicationExecutionState.Terminated;
+                    // ExtendedSplash extendedSplash = new(args.SplashScreen, loadState);
+                    // rootFrame.Content = extendedSplash;
+                    // Window.Current.Content = rootFrame;
+                    // await Task.Delay(200); // 防止初始屏幕闪烁
                 }
             }
             //圆角
             App.Current.Resources["ImageCornerRadius"] = new CornerRadius(SettingService.GetValue<double>(SettingConstants.UI.IMAGE_CORNER_RADIUS, 0));
             await AppHelper.SetRegions();
             await InitDb();
+
             try
             {
                 var downloadService = ServiceProvider.GetRequiredService<DownloadService>();
@@ -217,6 +221,9 @@ namespace BiliLite
                 logger.Error("初始化加载下载视频错误", ex);
             }
             VideoPlayHistoryHelper.LoadABPlayHistories(true);
+
+            //var pluginService = ServiceProvider.GetRequiredService<PluginService>();
+            //await pluginService.Start();
         }
 
         private async Task InitDb()
@@ -250,28 +257,9 @@ namespace BiliLite
 
         public static void ExtendAcrylicIntoTitleBar()
         {
-            UISettings uISettings = new UISettings();
-            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
-            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            titleBar.ButtonBackgroundColor = Colors.Transparent;
-            titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-            titleBar.ButtonForegroundColor = TitltBarButtonColor(uISettings);
-            uISettings.ColorValuesChanged += new TypedEventHandler<UISettings, object>((setting, args) =>
-            {
-                titleBar.ButtonForegroundColor = TitltBarButtonColor(setting);
-            });
+            AppExtensions.HandleTitleTheme();
         }
-        private static Color TitltBarButtonColor(UISettings uISettings)
-        {
-            var settingTheme = SettingService.GetValue<int>(SettingConstants.UI.THEME, 0);
-            var uiSettings = new Windows.UI.ViewManagement.UISettings();
-            var color = uiSettings.GetColorValue(UIColorType.Foreground);
-            if (settingTheme != 0)
-            {
-                color = settingTheme == 1 ? Colors.Black : Colors.White;
-            }
-            return color;
-        }
+
         protected override void OnActivated(IActivatedEventArgs args)
         {
             base.OnActivated(args);

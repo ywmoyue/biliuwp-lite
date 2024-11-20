@@ -1,14 +1,18 @@
-﻿using BiliLite.Extensions;
-using BiliLite.Models.Requests.Api;
-using BiliLite.Models.Responses;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BiliLite.Extensions;
+using BiliLite.Models.Requests.Api;
+using BiliLite.Models.Responses;
 
-namespace BiliLite.Services
+namespace BiliLite.Services.Biz
 {
     public class SearchService
     {
+        public int PivotIndexCache { get; set; }
+
+        public int ComboIndexCache { get; set; }
+
         public async Task<List<string>> GetSearchSuggestContents(string text)
         {
             if (string.IsNullOrWhiteSpace(text)) return null;

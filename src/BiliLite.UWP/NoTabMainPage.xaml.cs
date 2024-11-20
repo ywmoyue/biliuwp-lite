@@ -40,6 +40,7 @@ namespace BiliLite
             MessageCenter.ChangeTitleEvent += MessageCenter_ChangeTitleEvent;
             MessageCenter.ViewImageEvent += MessageCenter_ViewImageEvent;
             MessageCenter.MiniWindowEvent += MessageCenter_MiniWindowEvent;
+            MessageCenter.FullscreenEvent += MessageCenter_FullscreenEvent;
             MessageCenter.SeekEvent += MessageCenter_SeekEvent;
             Window.Current.Content.PointerPressed += Content_PointerPressed;
 
@@ -72,6 +73,11 @@ namespace BiliLite
                 MiniWindowsTitleBar.Visibility = Visibility.Collapsed;
                 Window.Current.SetTitleBar(TitleBar);
             }
+        }
+
+        private void MessageCenter_FullscreenEvent(object sender, bool e)
+        {
+            MainWindowsTitleBar.Visibility = e ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private void MessageCenter_SeekEvent(object sender, double e)

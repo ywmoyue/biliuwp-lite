@@ -134,7 +134,7 @@
                     <TextBlock Margin="8 0" Text="{x:Bind Path=ViewModel.LikeCount,Mode=OneWay,Converter={StaticResource countConvert},ConverterParameter='点赞'}"></TextBlock>
                 </StackPanel>
             </Button>
-            <Button Visibility="{x:Bind Path=ViewModel.Liked,Mode=OneWay}" Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.LikeCommand,Mode=OneWay}" CommandParameter="{x:Bind Path=ViewModel,Mode=OneWay}" Foreground="{ThemeResource HighLightColor}">
+            <Button Visibility="{x:Bind Path=ViewModel.Liked,Mode=OneWay}" Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.LikeCommand,Mode=OneWay}" CommandParameter="{x:Bind Path=ViewModel,Mode=OneWay}" Foreground="{ThemeResource SystemAccentColor}">
                 <StackPanel Orientation="Horizontal">
                     <fa:FontAwesome Icon="Regular_ThumbsUp" Margin="0 2 0 0" FontSize="14"></fa:FontAwesome>
                     <TextBlock Margin="8 0" Text="{x:Bind Path=ViewModel.LikeCount,Mode=OneWay,Converter={StaticResource countConvert},ConverterParameter='点赞'}"></TextBlock>

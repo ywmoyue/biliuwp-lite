@@ -34,7 +34,7 @@
             VerticalAlignment="Top"
             Background="#00FFFFFF"
             Visibility="Collapsed" />
-        <Grid Height="32" Background="Transparent">
+        <Grid Height="32" Background="Transparent" x:Name="MainWindowsTitleBar">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />

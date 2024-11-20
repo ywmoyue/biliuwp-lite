@@ -123,7 +123,11 @@
                                 </VisualState>
                             </VisualStateGroup>
                             <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Target="Content.Foreground" Value="{ThemeResource AppBarButtonForegroundPointerOver}" />
+                                    </VisualState.Setters>
+                                </VisualState>
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
                                         <Setter Target="AppBarButtonInnerBorder.Background" Value="{ThemeResource AppBarButtonBackgroundPointerOver}" />

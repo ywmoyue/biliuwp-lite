@@ -28,8 +28,8 @@
                 Padding="16 4"  
                 BorderThickness="1" 
                 Background="Transparent" 
-                BorderBrush="{ThemeResource HighLightColor}" 
-                Foreground="{ThemeResource HighLightColor}" 
+                BorderBrush="{ThemeResource SystemAccentColor}" 
+                Foreground="{ThemeResource SystemAccentColor}" 
                 FontSize="12">关注</Button>
     </Grid>
 </UserControl>

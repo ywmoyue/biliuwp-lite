@@ -5,6 +5,7 @@ using BiliLite.ViewModels.Download;
 using BiliLite.ViewModels.Home;
 using BiliLite.ViewModels.Live;
 using BiliLite.ViewModels.Rank;
+using BiliLite.ViewModels.Search;
 using BiliLite.ViewModels.Settings;
 using BiliLite.ViewModels.User;
 using BiliLite.ViewModels.User.SendDynamic;
@@ -51,7 +52,9 @@ namespace BiliLite.Extensions
             services.AddTransient<PlaySettingsControlViewModel>();
             services.AddTransient<VideoDanmakuSettingsControlViewModel>();
             services.AddTransient<ShortcutKeySettingsControlViewModel>();
+            services.AddTransient<DevSettingsControlViewModel>();
             services.AddTransient<MainPageViewModel>();
+            services.AddTransient<SearchPageViewModel>();
             return services;
         }
     }

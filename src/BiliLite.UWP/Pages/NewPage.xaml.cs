@@ -1,7 +1,6 @@
 ﻿using BiliLite.Pages.Bangumi;
 using Microsoft.UI.Xaml.Controls;
 using System;
-using System.IO;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
@@ -11,6 +10,7 @@ using Windows.UI.Xaml.Navigation;
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using BiliLite.Extensions;
+using BiliLite.Models.Common.Search;
 using NavigationView = Microsoft.UI.Xaml.Controls.NavigationView;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -100,8 +100,8 @@ namespace BiliLite.Pages
                 title = "搜索:" + SearchBox.Text,
                 parameters = new SearchParameter()
                 {
-                    keyword = SearchBox.Text,
-                    searchType = SearchType.Video
+                    Keyword = SearchBox.Text,
+                    SearchType = SearchType.Video
                 }
             });
         }

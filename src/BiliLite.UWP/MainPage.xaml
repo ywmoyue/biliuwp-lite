@@ -12,10 +12,6 @@
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     winui:BackdropMaterial.ApplyToRootOrPageBackground="True"
     mc:Ignorable="d">
-    <Page.Resources>
-        <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
-        <SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected" Color="Transparent" />
-    </Page.Resources>
 
     <Grid>
         <Grid x:Name="CustomDragRegion" Width="{Binding ElementName=AvailableDragRegion, Path=Width}" />
@@ -29,6 +25,7 @@
             PreviewKeyDown="TabView_OnPreviewKeyDown"
             TabCloseRequested="TabView_TabCloseRequested"
             TabItemsChanged="tabView_TabItemsChanged"
+            LayoutUpdated="TabView_OnLayoutUpdated"
             TabWidthMode="SizeToContent">
             <winui:TabView.KeyboardAccelerators>
                 <KeyboardAccelerator

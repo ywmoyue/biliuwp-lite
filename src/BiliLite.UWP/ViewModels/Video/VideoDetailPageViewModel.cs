@@ -6,7 +6,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.UI;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media;
 using AutoMapper;
 using BiliLite.Extensions;
 using BiliLite.Models.Common;
@@ -140,6 +142,20 @@ namespace BiliLite.Modules
                 }
 
                 return DefaultRightInfoWidth;
+            }
+        }
+
+        [DependsOn(nameof(PageHeight), nameof(PageWidth))]
+        public Brush RightInfoBackground
+        {
+            get
+            {
+                if (PageWidth < 1000)
+                {
+                    return (Brush)Application.Current.Resources["AcrylicInAppFillColorDefaultBrush"];
+                }
+
+                return new SolidColorBrush(Colors.Transparent);
             }
         }
 

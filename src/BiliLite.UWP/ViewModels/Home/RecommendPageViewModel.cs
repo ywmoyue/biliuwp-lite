@@ -7,6 +7,7 @@ using System.Windows.Input;
 using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Recommend;
+using BiliLite.Models.Common.Settings;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests;
 using BiliLite.Models.Requests.Api.Home;
@@ -179,6 +180,17 @@ namespace BiliLite.ViewModels.Home
                             Type = "browser"
                         });
                     }
+
+                    if (item.ThreePointV2 != null)
+                    {
+                        item.ThreePointV2.Insert(1, new RecommendThreePointV2ItemModel()
+                        {
+                            Idx = item.Idx,
+                            Title = $"过滤UP主",
+                            Subtitle = item.Args.UpName,
+                            Type = "fastFilter"
+                        });
+                    }
                 }
 
                 recommendItems = m_contentFilterService.FilterRecommendItems(recommendItems);
@@ -273,6 +285,23 @@ namespace BiliLite.ViewModels.Home
                 }
                 var handel = HandelError<RecommendPageViewModel>(ex);
                 Notify.ShowMessageToast(handel.message);
+            }
+        }
+
+        public void AddFilterUser(string name)
+        {
+            m_contentFilterService.AddRecommendFilterRule(new FilterRule()
+            {
+                FilterRuleType = FilterRuleType.Recommend,
+                FilterType = FilterType.Word,
+                ContentType = FilterContentType.User,
+                Enable = true,
+                Rule = name,
+            });
+            var filterItems = Items.Where(x => x.Args.UpName == name).ToList();
+            foreach (var filterItem in filterItems)
+            {
+                Items.Remove(filterItem);
             }
         }
 
