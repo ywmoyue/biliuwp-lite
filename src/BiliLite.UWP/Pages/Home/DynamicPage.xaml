@@ -31,7 +31,7 @@
                 <Border CornerRadius="{StaticResource ImageCornerRadius}">
                     <Grid>
                         <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=Video.Pic,Converter={StaticResource imageConvert},ConverterParameter='120h'}"></toolkit:ImageEx>
-                        <Border Background="{ThemeResource HighLightColor}" Padding="4 2" Margin="4" CornerRadius="2" VerticalAlignment="Top" HorizontalAlignment="Right">
+                        <Border Background="{ThemeResource SystemAccentColor}" Padding="4 2" Margin="4" CornerRadius="2" VerticalAlignment="Top" HorizontalAlignment="Right">
                             <TextBlock Foreground="White" FontSize="12">投稿视频</TextBlock>
                         </Border>
                         <Grid VerticalAlignment="Bottom" Padding="5">
@@ -77,7 +77,7 @@
                 <Border CornerRadius="{StaticResource ImageCornerRadius}">
                     <Grid>
                         <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=UgcSeason.Pic,Converter={StaticResource imageConvert},ConverterParameter='120h'}"></toolkit:ImageEx>
-                        <Border Background="{ThemeResource HighLightColor}" Padding="4 2" Margin="4" CornerRadius="2" VerticalAlignment="Top" HorizontalAlignment="Right">
+                        <Border Background="{ThemeResource SystemAccentColor}" Padding="4 2" Margin="4" CornerRadius="2" VerticalAlignment="Top" HorizontalAlignment="Right">
                             <TextBlock Foreground="White" FontSize="12">投稿视频</TextBlock>
                         </Border>
                         <Grid VerticalAlignment="Bottom" Padding="5">
@@ -107,7 +107,7 @@
                 </Grid.ColumnDefinitions>
                 <Grid>
                     <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=Season.Cover,Converter={StaticResource imageConvert},ConverterParameter='120h'}"></toolkit:ImageEx>
-                    <Border Background="{ThemeResource HighLightColor}" Padding="4 2" Margin="4" CornerRadius="2" VerticalAlignment="Top" HorizontalAlignment="Right">
+                    <Border Background="{ThemeResource SystemAccentColor}" Padding="4 2" Margin="4" CornerRadius="2" VerticalAlignment="Top" HorizontalAlignment="Right">
                         <TextBlock Foreground="White" FontSize="12" Text="{x:Bind Path=Season.Season.TypeName}"></TextBlock>
                     </Border>
 

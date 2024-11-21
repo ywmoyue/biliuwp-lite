@@ -1,5 +1,6 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Services;
+using BiliLite.Services.Biz;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -11,6 +12,7 @@ namespace BiliLite
         {
             services.AddDbContext<BiliLiteDbContext>();
             services.AddSingleton<SettingSqlService>();
+            services.AddSingleton<PluginService>();
             services.AddTransient<SqlMigrateService>();
 
             services.AddMapper();
@@ -27,6 +29,7 @@ namespace BiliLite
             services.AddBizServices();
             services.AddSingleton<PlaySpeedMenuService>();
             services.AddSingleton<ContentFilterService>();
+            services.AddSingleton<SearchService>();
 
             services.AddSingleton<GrpcService>();
         }

@@ -1063,6 +1063,8 @@ namespace BiliLite.Models.Common
             public const string DEFAULT_REQUEST_BUILD = "75900200";
 
             public const string SQL_DB_VERSION = "SqlDbVersion";
+
+            public const string PLUGIN_LIST = "PluginList";
         }
     }
 }

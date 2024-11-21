@@ -1,4 +1,5 @@
-﻿using BiliLite.Services;
+﻿using BiliLite.Models.Common;
+using BiliLite.Services;
 
 namespace BiliLite.Models.Requests.Api.Live
 {
@@ -14,7 +15,7 @@ namespace BiliLite.Models.Requests.Api.Live
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"https://api.live.bilibili.com/room/v3/Area/getRoomList",
                 parameter = ApiHelper.MustParameter(AppKey, true) + $"&actionKey=appkey&area_id=0&cate_id=0&parent_area_id=0&page={page}&page_size=36&sort_type={sort_type}"
             };

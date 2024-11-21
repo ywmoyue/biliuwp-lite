@@ -1,7 +1,7 @@
 {
-    "version": "4.7.4",
-    "version_num": 40704,
-    "version_desc": "更新内容:\r\n\r\n- 新增自动跳过OP/ED功能，设置中开启  \r\n\r\n- 可选保存已下载视频数据到数据库 \r\n\r\n- 视频播放控件内新增章节看点列表 \r\n\r\n- 持续快进功能启用分档位快进  \r\n\r\n- 将外部合并视频帮助页移入内部，添加python批量合并脚本外链  \r\n\r\n- 更新证书  \r\n\r\n- sqlite数据库迁移更新  \r\n\r\n- 可设置优先播放器类型\r\n\r\n- 修复选集界面错误换行 \r\n\r\n- 捕获初始化下载视频错误 \r\n\r\n- 已下载番剧打开详情错误 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
-    "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
-    "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
+  "version": "4.7.7",
+  "version_num": 40707,
+  "version_desc": "更新内容:\r\n\r\n- 推荐页视频右键快速设置过滤up主 \r\n\r\n- 历史记录页加入观看到的时间点和看完与否，加入显示准确时间的tooltip\r\n\r\n- 调整评论区样式与个人空间页面样式，修复个人空间页动态评论背景透明问题  \r\n\r\n- 搜索页样式调整  \r\n\r\n- 主题颜色样式调整  \r\n\r\n- 搜索历史记录的api错误 \r\n\r\n- 处理标签页TabViewList最大宽度，修复状态栏卡片右上角与功能键重叠 \r\n\r\n- 修复单窗口模式全屏播放窗口标题栏不消失 \r\n\r\n- 修复视频详情页右侧信息透明问题\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
+  "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }

@@ -11,6 +11,15 @@
         Necessary,
     }
 
+    public enum HttpMethods
+    {
+        Get,
+        Post,
+        Put,
+        Patch,
+        Delete,
+    }
+
     public enum LoginStatus
     {
         /// <summary>
@@ -515,5 +524,41 @@
         Title,
         User,
         Desc,
+    }
+
+    public enum SearchType
+    {
+        /// <summary>
+        /// 视频
+        /// </summary>
+        Video = 0,
+        /// <summary>
+        /// 番剧
+        /// </summary>
+        Anime = 1,
+        /// <summary>
+        /// 直播
+        /// </summary>
+        Live = 2,
+        /// <summary>
+        /// 主播
+        /// </summary>
+        Anchor = 3,
+        /// <summary>
+        /// 用户
+        /// </summary>
+        User = 4,
+        /// <summary>
+        /// 影视
+        /// </summary>
+        Movie = 5,
+        /// <summary>
+        /// 专栏
+        /// </summary>
+        Article = 6,
+        /// <summary>
+        /// 话题
+        /// </summary>
+        Topic = 7
     }
 }

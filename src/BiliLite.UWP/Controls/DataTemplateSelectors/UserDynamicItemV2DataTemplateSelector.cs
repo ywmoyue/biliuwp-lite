@@ -20,6 +20,7 @@ namespace BiliLite.Controls.DataTemplateSelectors
                     { 
                         Constants.DynamicTypes.DRAW, (selector, model) =>
                         {
+                            if (model.Dynamic == null) return selector.OtherTemplate;
                             if (model.Dynamic.DynDraw.Items.Count == 1)
                             {
                                 return selector.Draw1x1Template;

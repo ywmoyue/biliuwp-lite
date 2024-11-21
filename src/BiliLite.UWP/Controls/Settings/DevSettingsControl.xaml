@@ -9,6 +9,7 @@
     xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
     xmlns:common="using:BiliLite.Models.Common"
     xmlns:font="using:FontAwesome5"
+    xmlns:plugins="using:BiliLite.ViewModels.Plugins"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -65,6 +66,12 @@
                 </ComboBox.Items>
             </ComboBox>
         </controls:SettingsCard>
+
+        <!--<controls:SettingsExpander Header="外置插件">
+            <controls:SettingsExpander.Items>
+                <Button Click="BtnSettingPlugin_OnClick">设置</Button>
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>-->
 
         <controls:SettingsCard  Header="迁移数据库"
                                 Description="开发者调试用">
@@ -133,5 +140,45 @@
                       DisplayMemberPath="Name">
             </ComboBox>
         </controls:SettingsCard>
+
+        <ContentDialog x:Name="PluginsDialog"
+                       Title="插件管理"
+                       PrimaryButtonText="确认"
+                       CloseButtonText="取消"
+                       MinWidth="600">
+            <StackPanel Orientation="Vertical" Width="500">
+                <StackPanel>
+                    <Button Click="BtnImportPluginInfo_OnClick">导入插件信息</Button>
+                </StackPanel>
+                <ScrollViewer Visibility="{x:Bind m_viewModel.ShowPluginList,Mode=OneWay}">
+                    <ListView ItemsSource="{x:Bind m_viewModel.Plugins,Mode=OneWay}"
+                              SelectionMode="None">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="plugins:WebSocketPluginViewModel">
+                                <controls:SettingsExpander Header="{x:Bind Name,Mode=OneWay}">
+                                    <controls:SettingsExpander.Items>
+                                        <controls:SettingsCard Header="名称">
+                                            <TextBlock Text="{x:Bind Name}"></TextBlock>
+                                        </controls:SettingsCard>
+                                        <controls:SettingsCard Header="WS地址">
+                                            <TextBlock Text="{x:Bind WebSocketUrl,Mode=OneWay}"></TextBlock>
+                                        </controls:SettingsCard>
+                                        <controls:SettingsCard Header="Http地址">
+                                            <TextBlock Text="{x:Bind CheckUrl,Mode=OneWay}"></TextBlock>
+                                        </controls:SettingsCard>
+                                        <controls:SettingsCard Header="唤醒协议">
+                                            <TextBlock Text="{x:Bind WakeProto,Mode=OneWay}"></TextBlock>
+                                        </controls:SettingsCard>
+                                        <controls:SettingsCard Header="删除">
+                                            <Button Click="BtnDeletePlugin_OnClick">确认删除</Button>
+                                        </controls:SettingsCard>
+                                    </controls:SettingsExpander.Items>
+                                </controls:SettingsExpander>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollViewer>
+            </StackPanel>
+        </ContentDialog>
     </StackPanel>
 </UserControl>

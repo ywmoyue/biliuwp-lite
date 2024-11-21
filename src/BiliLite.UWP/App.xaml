@@ -2,55 +2,23 @@
     x:Class="BiliLite.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:muxm="using:Microsoft.UI.Xaml.Media"
-    xmlns:local="using:BiliLite"
-    xmlns:Custom="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:convert="using:BiliLite.Converters">
+    xmlns:local="using:BiliLite">
     <Application.Resources>
-       
-        <ResourceDictionary >
-
+        <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <XamlControlsResources  xmlns="using:Microsoft.UI.Xaml.Controls"/>
-                <ResourceDictionary Source="ms-appx:///Controls/Carousel/Carousel.xaml"/>
-                <ResourceDictionary Source="ms-appx:///Controls/RoundButton/RoundButton.xaml"/>
-                <ResourceDictionary Source="ms-appx:///Controls/ScrollGridView/ScrollGridView.xaml"/>
-                <ResourceDictionary Source="ms-appx:///Styles/TabViewStyle.xaml"/>
-                <ResourceDictionary Source="ms-appx:///Styles/AppBarButtonNoChevronStyle.xaml"/>
+                <ResourceDictionary Source="Controls/Carousel/Carousel.xaml" />
+                <ResourceDictionary Source="Controls/RoundButton/RoundButton.xaml" />
+                <ResourceDictionary Source="Controls/ScrollGridView/ScrollGridView.xaml" />
+                <ResourceDictionary Source="Styles/AppBarButtonNoChevronStyle.xaml" />
+                <ResourceDictionary Source="Styles/TabViewStyle.xaml" />
+                <ResourceDictionary Source="Styles/TextBlockStyle.xaml" />
+                <ResourceDictionary Source="Themes/Breakpoint.xaml" />
+                <ResourceDictionary Source="Themes/Converter.xaml" />
+                <ResourceDictionary Source="Themes/Colors.xaml" />
+                <ResourceDictionary Source="Themes/Fonts.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary Source="ms-appx:///Themes/Light.xaml" x:Key="Light"/>
-                <ResourceDictionary Source="ms-appx:///Themes/Dark.xaml" x:Key="Dark"/>
-                 <ResourceDictionary x:Key="Default"> 
-                    <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="Transparent" /> 
-                </ResourceDictionary> 
-            </ResourceDictionary.ThemeDictionaries>
-           
-            <SolidColorBrush x:Key="DefaultTextColor" Color="{ThemeResource TextColor}"></SolidColorBrush>
-            <SolidColorBrush x:Key="DefaultCardColor" Color="{ThemeResource CardColor}"></SolidColorBrush>
-            <convert:NumberToStringConvert x:Key="numberToStringConvert"></convert:NumberToStringConvert>
-            <Style x:Key="BaseTextBlockStyle" TargetType="TextBlock">
-                <Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
-                <Setter Property="FontWeight" Value="SemiBold"/>
-                <Setter Property="FontSize" Value="14"/>
-                <Setter Property="TextTrimming" Value="None"/>
-                <Setter Property="TextWrapping" Value="Wrap"/>
-                <Setter Property="LineStackingStrategy" Value="MaxHeight"/>
-                <Setter Property="TextLineBounds" Value="Full"/>
-            </Style>
-            <Style x:Key="CaptionTextBlockStyle" BasedOn="{StaticResource BaseTextBlockStyle}" TargetType="TextBlock">
-                <Setter Property="FontSize" Value="12"/>
-                <Setter Property="FontWeight" Value="Normal"/>
-            </Style>
-            <convert:ImageCompressionConvert x:Key="imageConvert"></convert:ImageCompressionConvert>
-            <convert:ImageSourceConvert x:Key="imageConvert2"></convert:ImageSourceConvert>
-            <convert:DisplayConvert x:Key="display"></convert:DisplayConvert>
-            <convert:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"></convert:BoolToVisibilityConverter>
-            <FontFamily x:Key="VanFont">ms-appx:///Assets/Fonts/vanfont.otf#vanfont</FontFamily>
-            <FontFamily x:Key="BiliIconFont">ms-appx:///Assets/Fonts/biliicon.ttf#biliicon</FontFamily>
+
             <CornerRadius x:Key="ImageCornerRadius">4</CornerRadius>
-            <!--该字体来自哔哩哔哩Web端，该字体可能需要商业授权-->
-            <FontFamily x:Key="FansNum">ms-appx:///Assets/Fonts/FansNum.otf#FansNum</FontFamily>
         </ResourceDictionary>
     </Application.Resources>
 

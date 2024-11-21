@@ -29,6 +29,7 @@ namespace BiliLite.Services
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
 
         public static event EventHandler<bool> MiniWindowEvent;
+        public static event EventHandler<bool> FullscreenEvent;
         public static event EventHandler<NavigationInfo> NavigateToPageEvent;
         public static event EventHandler<string> ChangeTitleEvent;
         public static event EventHandler<object> LoginedEvent;
@@ -43,6 +44,10 @@ namespace BiliLite.Services
         public static void SetMiniWindow(bool mini)
         {
             MiniWindowEvent?.Invoke(null, mini);
+        }
+        public static void SetFullscreen(bool mini)
+        {
+            FullscreenEvent?.Invoke(null, mini);
         }
         public static void ChangeTitle(BasePage page, string title)
         {

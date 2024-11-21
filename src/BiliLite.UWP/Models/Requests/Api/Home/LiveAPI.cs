@@ -1,4 +1,5 @@
-﻿using BiliLite.Services;
+﻿using BiliLite.Models.Common;
+using BiliLite.Services;
 
 namespace BiliLite.Models.Requests.Api.Home
 {
@@ -8,7 +9,7 @@ namespace BiliLite.Models.Requests.Api.Home
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = "https://api.live.bilibili.com/xlive/app-interface/v2/index/getAllList",
                 parameter = ApiHelper.MustParameter(AppKey, true) + "&device=android&rec_page=1&relation_page=1&scale=xxhdpi",
             };
@@ -21,7 +22,7 @@ namespace BiliLite.Models.Requests.Api.Home
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = "https://api.live.bilibili.com/xlive/web-interface/v1/index/getList",
                 parameter = "platform=web"
             };

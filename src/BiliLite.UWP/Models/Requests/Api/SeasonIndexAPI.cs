@@ -1,4 +1,5 @@
-﻿using BiliLite.Services;
+﻿using BiliLite.Models.Common;
+using BiliLite.Services;
 
 namespace BiliLite.Models.Requests.Api
 {
@@ -13,7 +14,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/pgc/season/index/condition",//$"https://bangumi.bilibili.com/media/api/search/v2/condition",
                 parameter = ApiHelper.MustParameter(AppKey, false) + $"&season_type={season_type}&type=0"
             };
@@ -33,7 +34,7 @@ namespace BiliLite.Models.Requests.Api
         {
             var api = new ApiModel()
             {
-                method = RestSharp.Method.Get,
+                method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/pgc/season/index/result",
                 parameter = ApiHelper.MustParameter(AppKey, false) + condition + $"&page={page}&pagesize={pagesize}&season_type={season_type}&type=0"
             };

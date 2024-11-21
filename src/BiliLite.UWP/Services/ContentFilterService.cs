@@ -3,8 +3,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Recommend;
+using BiliLite.Models.Common.Search;
 using BiliLite.Models.Common.Settings;
-using BiliLite.Modules;
 using BiliLite.ViewModels.UserDynamic;
 
 namespace BiliLite.Services

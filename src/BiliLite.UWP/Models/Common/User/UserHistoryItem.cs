@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace BiliLite.Models.Common.User
 {
@@ -37,8 +38,21 @@ namespace BiliLite.Models.Common.User
         [JsonProperty("view_at")]
         public long ViewAt { get; set; }
 
+        public string ViewAtDate => DateTimeOffset.FromUnixTimeSeconds(ViewAt).DateTime.ToLocalTime().ToString("f");
+
         [JsonProperty("progress")]
         public long Progress { get; set; }
+
+        public string ProgressState 
+        {
+            get {
+                if (Badge.Length > 0) return "";
+                if (Progress < 1) return "已看完";
+                var time = TimeSpan.FromSeconds(Progress);
+                var text = time.TotalHours < 1 ? $"{time.Minutes:D2}:{time.Seconds:D2}" : $"{time.Hours:D2}:{time.Minutes:D2}:{time.Seconds:D2}";  
+                return "看到" + text;
+            } 
+        } 
 
         [JsonProperty("badge")]
         public string Badge { get; set; }

@@ -25,10 +25,10 @@
             </Style.Setters>
         </Style>
         <convert:DatetimeConvert x:Key="datetime" ></convert:DatetimeConvert>
-        <convert:ColorSelecteConvert x:Key="colorSelct" ></convert:ColorSelecteConvert>
+        <convert:ColorSelectedConvert x:Key="colorSelct" ></convert:ColorSelectedConvert>
         <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="#64B0B0B0" />
         <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="{ThemeResource SystemListLowColor}" />
-        <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource HighLightColor}" />
+        <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource SystemAccentColor}" />
 
         <DataTemplate x:Name="PlayListTpl">
             <PivotItem Margin="0" >
@@ -294,7 +294,9 @@
                 </Grid>
             </Grid>
 
-            <Grid Grid.Column="1"  VerticalAlignment="Top" Height="{x:Bind m_viewModel.RightInfoHeight,Mode=OneWay}">
+            <Grid Grid.Column="1"  VerticalAlignment="Top"
+                  Background="{x:Bind m_viewModel.RightInfoBackground,Mode=OneWay}" 
+                  Height="{x:Bind m_viewModel.RightInfoHeight,Mode=OneWay}">
                 <Pivot x:Name="pivot" PreviewKeyDown="Pivot_OnPreviewKeyDown">
                     <PivotItem Margin="0">
                         <PivotItem.Header>

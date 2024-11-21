@@ -102,7 +102,7 @@ namespace BiliLite.Extensions
                 {
                     foreach (var kvp in extraCookies.ToList())
                     {
-                        cookies.Add(kvp.Key, kvp.Value);
+                        cookies[kvp.Key] = kvp.Value;
                     }
                 }
 

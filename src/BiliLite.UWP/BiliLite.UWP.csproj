@@ -192,6 +192,7 @@
     <Compile Include="Dialogs\SendDynamicV2Dialog.xaml.cs">
       <DependentUpon>SendDynamicV2Dialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Extensions\AppExtensions.cs" />
     <Compile Include="Extensions\BizServicesExtensions.cs" />
     <Compile Include="Extensions\ControlsExtensions.cs" />
     <Compile Include="Extensions\FileExtensions.cs" />
@@ -263,19 +264,40 @@
     <Compile Include="Models\Functions\ToggleMiniWindowShortcutFunction.cs" />
     <Compile Include="Models\TileModel.cs" />
     <Compile Include="Models\Functions\ToggleSubtitleShortcutFunction.cs" />
+    <Compile Include="Models\Common\Search\SearchAnimeItem.cs" />
+    <Compile Include="Models\Common\Search\SearchArea.cs" />
+    <Compile Include="Models\Common\Search\SearchArticleItem.cs" />
+    <Compile Include="Models\Common\Search\SearchLiveRoomItem.cs" />
+    <Compile Include="Models\Common\Search\SearchTopicItem.cs" />
+    <Compile Include="Models\Common\Search\SearchUserItem.cs" />
+    <Compile Include="Models\Common\Search\SearchUserOfficialVerifyItem.cs" />
+    <Compile Include="Models\Common\Search\SearchVideoItem.cs" />
     <Compile Include="Pages\IScrollRecorablePage.cs" />
     <Compile Include="Pages\Other\MarkdownViewerPage.xaml.cs">
       <DependentUpon>MarkdownViewerPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Common\Search\SearchParameter.cs" />
+    <Compile Include="Controls\DataTemplateSelectors\SearchDataTemplateSelector.cs" />
     <Compile Include="Services\BiliLiteDbContext.cs" />
     <Compile Include="Services\DownloadService.cs" />
     <Compile Include="Services\Notification\LiveTileHelper.cs" />
     <Compile Include="Services\Notification\Show.cs" />
     <Compile Include="Services\Notification\Register.cs" />
     <Compile Include="Services\Notification\Template\TileTemplate.cs" />
+    <Compile Include="Services\PluginService.cs" />
     <Compile Include="Services\SqlMigrateService.cs" />
     <Compile Include="ViewModels\Common\MainPageViewModel.cs" />
     <Compile Include="ViewModels\Common\PieControlViewModel.cs" />
+    <Compile Include="ViewModels\Search\BaseSearchPivotViewModel.cs" />
+    <Compile Include="ViewModels\Search\ISearchPivotViewModel.cs" />
+    <Compile Include="ViewModels\Search\SearchAnimeViewModel.cs" />
+    <Compile Include="ViewModels\Search\SearchArticleViewModel.cs" />
+    <Compile Include="ViewModels\Search\SearchLiveRoomViewModel.cs" />
+    <Compile Include="ViewModels\Search\SearchPageViewModel.cs" />
+    <Compile Include="ViewModels\Search\SearchTopicViewModel.cs" />
+    <Compile Include="ViewModels\Search\SearchUserViewModel.cs" />
+    <Compile Include="ViewModels\Search\SearchVideoViewModel.cs" />
+    <Compile Include="ViewModels\Plugins\WebSocketPluginViewModel.cs" />
     <Compile Include="ViewModels\Settings\CDNServerItemViewModel.cs" />
     <Compile Include="Pages\ISavablePage.cs" />
     <Compile Include="Services\Biz\MediaListService.cs" />
@@ -283,6 +305,7 @@
     <Compile Include="Services\PlaySpeedMenuService.cs" />
     <Compile Include="ViewModels\Comment\SendCommentDialogViewModel.cs" />
     <Compile Include="ViewModels\Rank\RankRegionViewModel.cs" />
+    <Compile Include="ViewModels\Settings\DevSettingsControlViewModel.cs" />
     <Compile Include="ViewModels\Settings\EditPlaySpeedMenuViewModel.cs" />
     <Compile Include="ViewModels\Settings\FilterRuleViewModel.cs" />
     <Compile Include="ViewModels\Settings\FilterSettingsViewModel.cs" />
@@ -728,7 +751,7 @@
     </Compile>
     <Compile Include="Converters\BooleanConvert.cs" />
     <Compile Include="Converters\ColorConvert.cs" />
-    <Compile Include="Converters\ColorSelecteConvert.cs" />
+    <Compile Include="Converters\ColorSelectedConvert.cs" />
     <Compile Include="Converters\CountOrTextConvert.cs" />
     <Compile Include="Converters\DatetimeConvert.cs" />
     <Compile Include="Converters\DisplayConvert.cs" />
@@ -787,7 +810,7 @@
     <Compile Include="Modules\Player\Playurl\BiliPlayUrl.cs" />
     <Compile Include="Models\Common\Video\PlayUrlInfos\BiliFlvPlayUrlInfo.cs" />
     <Compile Include="Modules\RegionDetailVM.cs" />
-    <Compile Include="Modules\SearchVM.cs" />
+    <Compile Include="Models\Common\Search\SearchFilterItem.cs" />
     <Compile Include="Modules\Season\SeasonRankVM.cs" />
     <Compile Include="Modules\Season\SeasonReviewVM.cs" />
     <Compile Include="Modules\User\Account.cs" />
@@ -942,7 +965,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\Requests\ApiModel.cs" />
     <Compile Include="Models\Common\ApiKeyInfo.cs" />
-    <Compile Include="Services\SearchService.cs" />
+    <Compile Include="Services\Biz\SearchService.cs" />
     <Compile Include="ViewModels\Common\BaseViewModel.cs" />
     <Compile Include="ViewModels\Download\DownloadDialogViewModel.cs" />
     <Compile Include="Models\Common\Video\VideoListItem.cs" />
@@ -1435,17 +1458,25 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Themes\Dark.xaml">
+    <Page Include="Styles\TextBlockStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Themes\Light.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Themes\Breakpoint.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\Pink.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Themes\Colors.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Converter.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Fonts.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -1548,10 +1579,7 @@
     <PackageReference Include="QRCoder">
       <Version>1.4.3</Version>
     </PackageReference>
-    <PackageReference Include="RestSharp">
-      <Version>107.3.0</Version>
-    </PackageReference>
-    <PackageReference Include="Simple.AES">
+    <PackageReference Include="Simple.AES.Core.Fork">
       <Version>2.0.2</Version>
     </PackageReference>
     <PackageReference Include="SYEngine.uwp">
@@ -1559,6 +1587,9 @@
     </PackageReference>
     <PackageReference Include="Tomlyn">
       <Version>0.17.0</Version>
+    </PackageReference>
+    <PackageReference Include="WebSocket4Net">
+      <Version>0.15.2</Version>
     </PackageReference>
     <PackageReference Include="Win2D.uwp">
       <Version>1.26.0</Version>
@@ -1586,6 +1617,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\Tools\" />
+    <Folder Include="Models\Plugins\" />
     <Folder Include="Models\Requests\Api\Grpc\" />
     <Folder Include="Modules\User\SendDynamic\" />
   </ItemGroup>
