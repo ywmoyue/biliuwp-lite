@@ -13,7 +13,6 @@ using BiliLite.Models.Common;
 using BiliLite.Services;
 using BiliLite.Models.Common.Video;
 using BiliLite.Models.Common.Video.PlayUrlInfos;
-using Windows.Storage.Pickers;
 
 namespace BiliLite.Modules
 {
@@ -272,27 +271,6 @@ namespace BiliLite.Modules
                 HandelError<object>(ex);
             }
             return "";
-        }
-
-        public async Task<string> GetOutsideSubtitle()
-        {
-            var filePicker = new FileOpenPicker();
-            filePicker.FileTypeFilter.Add(".ass");
-            var file = await filePicker.PickSingleFileAsync();
-            if (file == null) return null;
-
-            var fileContent = await FileIO.ReadTextAsync(file);
-            var tempFolder = Windows.Storage.ApplicationData.Current.TemporaryFolder;
-            var tempFile = await tempFolder.CreateFileAsync($"{Guid.NewGuid().ToString()}.ass", Windows.Storage.CreationCollisionOption.ReplaceExisting);
-            await FileIO.WriteTextAsync(tempFile, fileContent);
-            return tempFile.Path;
-        }
-
-        public async Task<string> GetAssFileContent(string path)
-        {
-            var jsonFile = await StorageFile.GetFileFromPathAsync(path);
-            var content = await FileIO.ReadTextAsync(jsonFile);
-            return content;
         }
     }
 

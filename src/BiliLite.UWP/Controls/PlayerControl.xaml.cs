@@ -1,4 +1,4 @@
-using BiliLite.Modules;
+﻿using BiliLite.Modules;
 using NSDanmaku.Model;
 using System;
 using System.Collections.Generic;
@@ -54,7 +54,6 @@ namespace BiliLite.Controls
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly bool m_useNsDanmaku = true;
         private readonly IDanmakuController m_danmakuController;
-        private readonly FrostMasterDanmakuController m_assSubtitleController;
         private readonly VideoDanmakuSettingsControlViewModel m_danmakuSettingsControlViewModel;
         private readonly PlayControlViewModel m_viewModel;
         private readonly PlayerToastService m_playerToastService;
@@ -174,12 +173,9 @@ namespace BiliLite.Controls
             }
             else
             {
-                m_danmakuController = App.ServiceProvider.GetRequiredService<FrostMasterDanmakuController>();
+                m_danmakuController = App.ServiceProvider.GetRequiredService<FrostMasterDanmakuController>(); 
                 m_danmakuController.Init(DanmakuCanvas);
             }
-
-            m_assSubtitleController = App.ServiceProvider.GetRequiredService<FrostMasterDanmakuController>();
-            m_assSubtitleController.Init(SubtitleCanvas);
         }
 
         private void Timer_focus_Tick(object sender, object e)
@@ -233,7 +229,6 @@ namespace BiliLite.Controls
         private async void PlayerControl_Loaded(object sender, RoutedEventArgs e)
         {
             m_danmakuController.Clear();
-            m_assSubtitleController.Clear();
             BtnFoucs.Focus(FocusState.Programmatic);
             _systemMediaTransportControls = SystemMediaTransportControls.GetForCurrentView();
             _systemMediaTransportControls.IsPlayEnabled = true;
@@ -501,7 +496,7 @@ namespace BiliLite.Controls
         {
             //音量
             Player.Volume = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_VOLUME, SettingConstants.Player.DEFAULT_PLAYER_VOLUME);
-
+            
             var lockPlayerVolume = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_VOLUME, SettingConstants.Player.DEFAULT_LOCK_PLAYER_VOLUME);
             if (!lockPlayerVolume)
             {
@@ -603,14 +598,6 @@ namespace BiliLite.Controls
                 if (miniWin) return;
                 SettingService.SetValue<double>(SettingConstants.Player.SUBTITLE_SIZE, SubtitleSettingSize.Value);
                 UpdateSubtitle();
-            });
-            //外置字幕大小
-            OutsideSubtitleSettingSize.Value = 3;//SettingService.GetValue<double>(SettingConstants.Player.SUBTITLE_SIZE, 40);
-            OutsideSubtitleSettingSize.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
-            {
-                if (miniWin) return;
-                //SettingService.SetValue<double>(SettingConstants.Player.SUBTITLE_SIZE, SubtitleSettingSize.Value);
-                m_assSubtitleController.SetFontZoom((int)OutsideSubtitleSettingSize.Value);
             });
             //字幕描边颜色
             SubtitleSettingBorderColor.SelectedIndex = SettingService.GetValue<int>(SettingConstants.Player.SUBTITLE_BORDER_COLOR, 0);
@@ -840,7 +827,6 @@ namespace BiliLite.Controls
                 return;
             }
             m_danmakuController.UpdateTime(position);
-            m_assSubtitleController.UpdateTime(position);
 
             var needDistinct = DanmuSettingMerge.IsOn;
             var level = DanmuSettingShieldLevel.Value;
@@ -854,7 +840,6 @@ namespace BiliLite.Controls
             if (Player.PlayState == PlayState.Pause)
             {
                 m_danmakuController.Pause();
-                m_assSubtitleController.Pause();
             }
         }
 
@@ -1024,15 +1009,6 @@ namespace BiliLite.Controls
         {
             try
             {
-                if (url.EndsWith(".ass"))
-                {
-                    var content = await playerHelper.GetAssFileContent(url);
-                    m_assSubtitleController.SetFontZoom(1);
-                    m_assSubtitleController.SetAssSubtitle(content);
-
-                    return;
-                }
-
                 subtitles = await playerHelper.GetSubtitle(url);
                 if (subtitles != null)
                 {
@@ -1050,9 +1026,8 @@ namespace BiliLite.Controls
                     subtitleTimer.Start();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.Error(ex.Message, ex);
                 Notify.ShowMessageToast("加载字幕失败了");
             }
 
@@ -1166,7 +1141,6 @@ namespace BiliLite.Controls
         /// </summary>
         private void ClearSubTitle()
         {
-            m_assSubtitleController.Clear();
             if (subtitles != null)
             {
                 if (subtitleTimer != null)
@@ -1701,7 +1675,6 @@ namespace BiliLite.Controls
             FullScreenEvent?.Invoke(this, fullScreen);
             MessageCenter.SetFullscreen(fullScreen);
             m_danmakuController.SetFullscreen(fullScreen);
-            m_assSubtitleController.SetFullscreen(fullScreen);
             if (fullScreen)
             {
                 BottomBtnExitFull.Visibility = Visibility.Visible;
@@ -2258,7 +2231,6 @@ namespace BiliLite.Controls
             {
                 Player.Play();
                 m_danmakuController.Resume();
-                m_assSubtitleController.Resume();
             }
         }
 
@@ -2320,7 +2292,6 @@ namespace BiliLite.Controls
                     BottomBtnPlay.Visibility = Visibility.Collapsed;
                     BottomBtnPause.Visibility = Visibility.Visible;
                     m_danmakuController.Resume();
-                    m_assSubtitleController.Resume();
                     break;
                 case PlayState.Pause:
                     KeepScreenOn(false);
@@ -2333,7 +2304,6 @@ namespace BiliLite.Controls
                     BottomBtnPlay.Visibility = Visibility.Visible;
                     BottomBtnPause.Visibility = Visibility.Collapsed;
                     m_danmakuController.Pause();
-                    m_assSubtitleController.Pause();
                     break;
                 case PlayState.End:
                     KeepScreenOn(false);
@@ -2367,7 +2337,6 @@ namespace BiliLite.Controls
             TxtBuffering.Text = "正在缓冲...";
             BufferingProgress = 0;
             m_danmakuController.Pause();
-            m_assSubtitleController.Pause();
         }
 
         private void Player_PlayBuffering(object sender, double e)
@@ -2383,7 +2352,6 @@ namespace BiliLite.Controls
             GridBuffering.Visibility = Visibility.Collapsed;
             Buffering = false;
             m_danmakuController.Resume();
-            m_assSubtitleController.Resume();
         }
 
         private async void Player_PlayMediaEnded(object sender, EventArgs e)
@@ -2396,7 +2364,6 @@ namespace BiliLite.Controls
                     return;
                 }
                 m_danmakuController.Pause();
-                m_assSubtitleController.Pause();
                 InteractionChoices.Visibility = Visibility.Visible;
                 return;
             }
@@ -2450,7 +2417,6 @@ namespace BiliLite.Controls
             {
                 ClearSubTitle();
                 m_danmakuController.Clear();
-                m_assSubtitleController.Clear();
                 Player.Play();
                 return;
             }
@@ -2467,7 +2433,6 @@ namespace BiliLite.Controls
                 {
                     ClearSubTitle();
                     m_danmakuController.Clear();
-                    m_assSubtitleController.Clear();
                     Player.Play();
                     return;
                 }
@@ -3013,20 +2978,6 @@ namespace BiliLite.Controls
             if (!(sender is FrameworkElement element)) return;
             if (!(element.DataContext is PlayerInfoViewPoint viewPoint)) return;
             SetPosition(viewPoint.From);
-        }
-
-        private async void BtnImportSubFile_OnClick(object sender, RoutedEventArgs e)
-        {
-            var path = await playerHelper.GetOutsideSubtitle();
-
-            if (path == null) return;
-
-            (BottomBtnSelctSubtitle.Flyout as MenuFlyout).Items.Add(new ToggleMenuFlyoutItem()
-            {
-                Tag = path,
-                Name = "外置字幕"
-            });
-            SetSubTitle(path);
         }
     }
 }
