@@ -605,13 +605,13 @@ namespace BiliLite.Controls
                 UpdateSubtitle();
             });
             //外置字幕大小
-            //OutsideSubtitleSettingSize.Value = 3;//SettingService.GetValue<double>(SettingConstants.Player.SUBTITLE_SIZE, 40);
-            //OutsideSubtitleSettingSize.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
-            //{
-            //    if (miniWin) return;
-            //    //SettingService.SetValue<double>(SettingConstants.Player.SUBTITLE_SIZE, SubtitleSettingSize.Value);
-            //    m_assSubtitleController.SetFontZoom((int)OutsideSubtitleSettingSize.Value);
-            //});
+            OutsideSubtitleSettingSize.Value = 3;//SettingService.GetValue<double>(SettingConstants.Player.SUBTITLE_SIZE, 40);
+            OutsideSubtitleSettingSize.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
+            {
+                if (miniWin) return;
+                //SettingService.SetValue<double>(SettingConstants.Player.SUBTITLE_SIZE, SubtitleSettingSize.Value);
+                m_assSubtitleController.SetFontZoom((int)OutsideSubtitleSettingSize.Value);
+            });
             //字幕描边颜色
             SubtitleSettingBorderColor.SelectedIndex = SettingService.GetValue<int>(SettingConstants.Player.SUBTITLE_BORDER_COLOR, 0);
             SubtitleSettingBorderColor.SelectionChanged += new SelectionChangedEventHandler((e, args) =>

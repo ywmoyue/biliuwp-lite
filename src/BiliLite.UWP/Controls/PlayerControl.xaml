@@ -605,10 +605,10 @@
                                     <Slider x:Name="SubtitleSettingBottom" Value="20" Minimum="4" Maximum="200" StepFrequency="4"></Slider>
                                     <TextBlock Margin="0 8">繁体字幕转简体</TextBlock>
                                     <ToggleSwitch x:Name="SubtitleSettingToSimplified" OnContent="开启" OffContent="关闭"></ToggleSwitch>
-                                    <!--<TextBlock Margin="0 8">外置字幕</TextBlock>
+                                    <TextBlock Margin="0 8">外置字幕</TextBlock>
                                     <Button Click="BtnImportSubFile_OnClick">选择文件</Button>
                                     <TextBlock Margin="0 8">外置字幕大小</TextBlock>
-                                    <Slider x:Name="OutsideSubtitleSettingSize" Value="3" Minimum="1" Maximum="15" StepFrequency="1"></Slider>-->
+                                    <Slider x:Name="OutsideSubtitleSettingSize" Value="3" Minimum="1" Maximum="15" StepFrequency="1"></Slider>
                                 </StackPanel>
                             </ScrollViewer>
                         </PivotItem>
