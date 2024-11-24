@@ -281,6 +281,7 @@
     <Compile Include="Services\DownloadService.cs" />
     <Compile Include="Services\PluginService.cs" />
     <Compile Include="Services\SqlMigrateService.cs" />
+    <Compile Include="Services\ThemeService.cs" />
     <Compile Include="ViewModels\Common\MainPageViewModel.cs" />
     <Compile Include="ViewModels\Common\PieControlViewModel.cs" />
     <Compile Include="ViewModels\Search\BaseSearchPivotViewModel.cs" />
@@ -1461,10 +1462,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\Colors.xaml">
+    <Content Include="Themes\Colors.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Page Include="Themes\Converter.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

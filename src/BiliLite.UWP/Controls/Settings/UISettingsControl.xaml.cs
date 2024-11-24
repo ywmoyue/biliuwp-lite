@@ -7,6 +7,7 @@ using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Home;
 using BiliLite.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Toolkit.Uwp.UI;
 
@@ -16,8 +17,11 @@ namespace BiliLite.Controls.Settings
 {
     public sealed partial class UISettingsControl : UserControl
     {
+        private readonly ThemeService m_themeService;
+
         public UISettingsControl()
         {
+            m_themeService = App.ServiceProvider.GetRequiredService<ThemeService>();
             this.InitializeComponent(); 
             LoadUI();
         }
@@ -29,25 +33,10 @@ namespace BiliLite.Controls.Settings
             {
                 cbTheme.SelectionChanged += new SelectionChangedEventHandler((obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.UI.THEME, cbTheme.SelectedIndex);
-                    Frame rootFrame = Window.Current.Content as Frame;
-                    switch (cbTheme.SelectedIndex)
-                    {
-                        case 1:
-                            rootFrame.RequestedTheme = ElementTheme.Light;
-                            break;
-                        case 2:
-                            rootFrame.RequestedTheme = ElementTheme.Dark;
-                            break;
-                        //case 3:
-                        //    // TODO: 切换自定义主题
-                        //    rootFrame.Resources = Application.Current.Resources.ThemeDictionaries["Pink"] as ResourceDictionary;
-                        //    break;
-                        default:
-                            rootFrame.RequestedTheme = ElementTheme.Default;
-                            break;
-                    }
-                    App.ExtendAcrylicIntoTitleBar();
+                    var themeIndex = cbTheme.SelectedIndex;
+                    if (themeIndex > 2)
+                        m_themeService.SetTheme(ElementTheme.Default);
+                    m_themeService.SetTheme((ElementTheme)themeIndex);
                 });
             });
 

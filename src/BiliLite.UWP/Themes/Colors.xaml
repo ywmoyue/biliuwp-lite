@@ -35,10 +35,16 @@
 
                             <SolidColorBrush x:Key="AccentTextFillColorPrimaryBrush" Color="{ThemeResource SystemAccentColor}" />
                             <SolidColorBrush x:Key="AccentTextFillColorSecondaryBrush" Color="{ThemeResource SystemAccentColor}" />
-                            <SolidColorBrush
-                                x:Key="AccentTextFillColorTertiaryBrush"
-                                Opacity="0.7"
-                                Color="{ThemeResource SystemAccentColor}" />
+
+                            <AcrylicBrush x:Key="PlayerControlAcrylicBrush"
+                                          AlwaysUseFallback="False"
+                                          BackgroundSource="Backdrop"
+                                          FallbackColor="#FFD4D4D4"
+                                          Opacity="1"
+                                          TintColor="#FFD4D4D4"
+                                          TintLuminosityOpacity="0.96"
+                                          TintOpacity="0.15"
+                                          TintTransitionDuration="0:0:0.5" />
                         </ResourceDictionary>
                     </muxc:XamlControlsResources.MergedDictionaries>
                 </muxc:XamlControlsResources>
@@ -101,6 +107,16 @@
                                 x:Key="AccentTextFillColorTertiaryBrush"
                                 Opacity="0.7"
                                 Color="{ThemeResource SystemAccentColor}" />
+
+                            <AcrylicBrush x:Key="PlayerControlAcrylicBrush"
+                                          AlwaysUseFallback="False"
+                                          BackgroundSource="Backdrop"
+                                          FallbackColor="#FF2C2C2C"
+                                          Opacity="1"
+                                          TintColor="#FF2C2C2C"
+                                          TintLuminosityOpacity="0.96"
+                                          TintOpacity="0.15"
+                                          TintTransitionDuration="0:0:0.5" />
                         </ResourceDictionary>
                     </muxc:XamlControlsResources.MergedDictionaries>
                 </muxc:XamlControlsResources>

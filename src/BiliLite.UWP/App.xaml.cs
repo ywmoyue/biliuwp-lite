@@ -161,7 +161,6 @@ namespace BiliLite
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
-
                 //主题颜色
                 rootFrame.RequestedTheme = (ElementTheme)SettingService.GetValue<int>(SettingConstants.UI.THEME, 0);
 
@@ -182,7 +181,8 @@ namespace BiliLite
                 }
                 // 确保当前窗口处于活动状态
                 Window.Current.Activate();
-                ExtendAcrylicIntoTitleBar();
+                var themeService = ServiceProvider.GetRequiredService<ThemeService>();
+                themeService.InitTitleBar();
             }
         }
 
@@ -222,6 +222,16 @@ namespace BiliLite
             }
             VideoPlayHistoryHelper.LoadABPlayHistories(true);
 
+            try
+            {
+                var themeService = ServiceProvider.GetRequiredService<ThemeService>();
+                await themeService.Init();
+            }
+            catch (Exception ex)
+            {
+                logger.Error("初始化主题错误", ex);
+            }
+
             //var pluginService = ServiceProvider.GetRequiredService<PluginService>();
             //await pluginService.Start();
         }
@@ -253,11 +263,6 @@ namespace BiliLite
         {
             var deferral = e.SuspendingOperation.GetDeferral();
             deferral.Complete();
-        }
-
-        public static void ExtendAcrylicIntoTitleBar()
-        {
-            AppExtensions.HandleTitleTheme();
         }
 
         protected override void OnActivated(IActivatedEventArgs args)

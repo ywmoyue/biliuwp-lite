@@ -32,6 +32,7 @@ namespace BiliLite
             services.AddSingleton<SearchService>();
 
             services.AddSingleton<GrpcService>();
+            services.AddSingleton<ThemeService>();
         }
     }
 }

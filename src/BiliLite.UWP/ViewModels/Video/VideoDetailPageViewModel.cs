@@ -39,6 +39,7 @@ namespace BiliLite.Modules
         readonly PlayerAPI PlayerAPI;
         readonly FollowAPI followAPI;
         private readonly IMapper m_mapper;
+        private readonly ThemeService m_themeService;
 
         #endregion
 
@@ -46,7 +47,8 @@ namespace BiliLite.Modules
 
         public VideoDetailPageViewModel()
         {
-            m_mapper = App.ServiceProvider.GetService<IMapper>();
+            m_mapper = App.ServiceProvider.GetRequiredService<IMapper>();
+            m_themeService = App.ServiceProvider.GetRequiredService<ThemeService>();
             videoAPI = new VideoAPI();
             favoriteAPI = new FavoriteApi();
             PlayerAPI = new PlayerAPI();
@@ -152,7 +154,7 @@ namespace BiliLite.Modules
             {
                 if (PageWidth < 1000)
                 {
-                    return (Brush)Application.Current.Resources["AcrylicInAppFillColorDefaultBrush"];
+                    return (Brush)m_themeService.ThemeResource["PlayerControlAcrylicBrush"];
                 }
 
                 return new SolidColorBrush(Colors.Transparent);
