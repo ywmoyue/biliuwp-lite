@@ -234,6 +234,12 @@ namespace BiliLite.Models.Common
 
             [SettingDefaultValue]
             public const double DEFAULT_TAB_ITEM_MIN_WIDTH = 192;
+
+            /// <summary>
+            /// 是否启用动态磁贴
+            /// </summary>
+            // 因为要开关时注册磁贴服务，所以不设置SettingKey
+            public const string ENABLE_NOTIFICATION_TILES = "EnableNotificationTiles";
         }
 
         public class Account

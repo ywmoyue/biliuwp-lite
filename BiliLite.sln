@@ -28,6 +28,8 @@ Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "BiliLite.Packages", "src\Bi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiliLite.Win32Tools", "src\BiliLite.Win32Tools\BiliLite.Win32Tools.csproj", "{B44AD18B-7805-4FFB-A29E-C57D09C8D425}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundTasks", "src\BackgroundTasks\BackgroundTasks.csproj", "{32288EDB-3F7F-479A-8303-7BB6705E0636}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -200,6 +202,26 @@ Global
 		{B44AD18B-7805-4FFB-A29E-C57D09C8D425}.Release|x64.Build.0 = Release|Any CPU
 		{B44AD18B-7805-4FFB-A29E-C57D09C8D425}.Release|x86.ActiveCfg = Release|Any CPU
 		{B44AD18B-7805-4FFB-A29E-C57D09C8D425}.Release|x86.Build.0 = Release|Any CPU
+		{32288EDB-3F7F-479A-8303-7BB6705E0636}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32288EDB-3F7F-479A-8303-7BB6705E0636}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32288EDB-3F7F-479A-8303-7BB6705E0636}.Debug|ARM.ActiveCfg = Debug|ARM
+		{32288EDB-3F7F-479A-8303-7BB6705E0636}.Debug|ARM.Build.0 = Debug|ARM
+		{32288EDB-3F7F-479A-8303-7BB6705E0636}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{32288EDB-3F7F-479A-8303-7BB6705E0636}.Debug|ARM64.Build.0 = Debug|ARM64
+		{32288EDB-3F7F-479A-8303-7BB6705E0636}.Debug|x64.ActiveCfg = Debug|x64
+		{32288EDB-3F7F-479A-8303-7BB6705E0636}.Debug|x64.Build.0 = Debug|x64
+		{32288EDB-3F7F-479A-8303-7BB6705E0636}.Debug|x86.ActiveCfg = Debug|x86
+		{32288EDB-3F7F-479A-8303-7BB6705E0636}.Debug|x86.Build.0 = Debug|x86
+		{32288EDB-3F7F-479A-8303-7BB6705E0636}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32288EDB-3F7F-479A-8303-7BB6705E0636}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32288EDB-3F7F-479A-8303-7BB6705E0636}.Release|ARM.ActiveCfg = Release|ARM
+		{32288EDB-3F7F-479A-8303-7BB6705E0636}.Release|ARM.Build.0 = Release|ARM
+		{32288EDB-3F7F-479A-8303-7BB6705E0636}.Release|ARM64.ActiveCfg = Release|ARM64
+		{32288EDB-3F7F-479A-8303-7BB6705E0636}.Release|ARM64.Build.0 = Release|ARM64
+		{32288EDB-3F7F-479A-8303-7BB6705E0636}.Release|x64.ActiveCfg = Release|x64
+		{32288EDB-3F7F-479A-8303-7BB6705E0636}.Release|x64.Build.0 = Release|x64
+		{32288EDB-3F7F-479A-8303-7BB6705E0636}.Release|x86.ActiveCfg = Release|x86
+		{32288EDB-3F7F-479A-8303-7BB6705E0636}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

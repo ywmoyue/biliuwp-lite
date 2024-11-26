@@ -262,7 +262,7 @@
     <Compile Include="Models\Functions\ToggleFullscreenShortcutFunction.cs" />
     <Compile Include="Models\Functions\ToggleFullWindowShortcutFunction.cs" />
     <Compile Include="Models\Functions\ToggleMiniWindowShortcutFunction.cs" />
-    <Compile Include="Models\TileModel.cs" />
+    <Compile Include="Models\Common\Notifications\NotificationTile.cs" />
     <Compile Include="Models\Functions\ToggleSubtitleShortcutFunction.cs" />
     <Compile Include="Models\Common\Search\SearchAnimeItem.cs" />
     <Compile Include="Models\Common\Search\SearchArea.cs" />
@@ -280,10 +280,10 @@
     <Compile Include="Controls\DataTemplateSelectors\SearchDataTemplateSelector.cs" />
     <Compile Include="Services\BiliLiteDbContext.cs" />
     <Compile Include="Services\DownloadService.cs" />
-    <Compile Include="Services\Notification\LiveTileHelper.cs" />
-    <Compile Include="Services\Notification\Show.cs" />
-    <Compile Include="Services\Notification\Register.cs" />
-    <Compile Include="Services\Notification\Template\TileTemplate.cs" />
+    <Compile Include="Services\Notification\LiveTileService.cs" />
+    <Compile Include="Extensions\Notifications\NotificationShowExtensions.cs" />
+    <Compile Include="Extensions\Notifications\NotificationRegisterExtensions.cs" />
+    <Compile Include="Models\Common\Notifications\Template\TileTemplate.cs" />
     <Compile Include="Services\PluginService.cs" />
     <Compile Include="Services\SqlMigrateService.cs" />
     <Compile Include="ViewModels\Common\MainPageViewModel.cs" />

@@ -1,9 +1,9 @@
 ﻿using System;
 using Windows.ApplicationModel.Background;
 
-namespace BiliLite.Services.Notification
+namespace BiliLite.Extensions.Notifications
 {
-    public class Register
+    public class NotificationRegisterExtensions
     {
         /// <summary>
         /// 单次执行后台任务
@@ -85,6 +85,7 @@ namespace BiliLite.Services.Notification
                     }
                 }
 
+                
                 var taskBuilder = new BackgroundTaskBuilder()
                 {
                     Name = taskName,

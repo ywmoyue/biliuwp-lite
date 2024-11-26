@@ -13,13 +13,11 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel.Background;
-using Windows.ApplicationModel.Core;
-using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Extensions.Notifications;
 
 namespace BiliLite
 {
@@ -208,10 +206,8 @@ namespace BiliLite
                     // Window.Current.Content = rootFrame;
                     // await Task.Delay(200); // 防止初始屏幕闪烁
                 }
-
-                Register.BackgroundTask("DisposableTileFeedBackgroundTask");
-                Register.BackgroundTask("TileFeedBackgroundTask", new TimeTrigger(15, false));
             }
+
             //圆角
             App.Current.Resources["ImageCornerRadius"] = new CornerRadius(SettingService.GetValue<double>(SettingConstants.UI.IMAGE_CORNER_RADIUS, 0));
             await AppHelper.SetRegions();
@@ -295,11 +291,11 @@ namespace BiliLite
             }
         }
 
-        protected override void OnBackgroundActivated(BackgroundActivatedEventArgs args)
+        protected override async void OnBackgroundActivated(BackgroundActivatedEventArgs args)
         {
             //base.OnBackgroundActivated(args);
             //IBackgroundTaskInstance taskInstance = args.TaskInstance;
-            Show.Tile();
+            await NotificationShowExtensions.Tile();
         }
     }
 }

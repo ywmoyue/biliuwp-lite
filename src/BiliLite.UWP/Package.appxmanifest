@@ -54,11 +54,6 @@
             <uap:DisplayName>哔哩哔哩 UWP</uap:DisplayName>
           </uap:Protocol>
         </uap:Extension>
-        <Extension Category="windows.backgroundTasks" EntryPoint="BackgroundTasks.TileFeedBackgroundTask">
-          <BackgroundTasks>
-            <Task Type="timer"/>
-          </BackgroundTasks>
-        </Extension>
       </Extensions>
     </Application>
   </Applications>
@@ -69,12 +64,4 @@
     <uap:Capability Name="picturesLibrary"/>
     <uap3:Capability Name="backgroundMediaPlayback"/>
   </Capabilities>
-	<Extensions>
-		<Extension Category="windows.activatableClass.inProcessServer">
-			<InProcessServer>
-				<Path>CLRHost.dll</Path>
-				<ActivatableClass ActivatableClassId="BackgroundTasks.TileFeedBackgroundTask" ThreadingModel="both" />
-			</InProcessServer>
-		</Extension>		
-	</Extensions>
 </Package>

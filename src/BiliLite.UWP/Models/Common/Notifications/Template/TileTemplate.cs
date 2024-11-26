@@ -1,11 +1,10 @@
-﻿using BiliLite.Models;
-using Microsoft.Toolkit.Uwp.Notifications;
+﻿using Microsoft.Toolkit.Uwp.Notifications;
 
-namespace BiliLite.Services.Notification.Template
+namespace BiliLite.Models.Common.Notifications.Template
 {
-    internal class TileTemplate
+    public class TileTemplate
     {
-        public static TileContent LiveTile(TileModel tileModel) => new TileContent()
+        public static TileContent LiveTile(NotificationTile notificationTile) => new TileContent()
         {
             // 创建静态磁贴对象并返回
             Visual = new TileVisual()
@@ -19,20 +18,20 @@ namespace BiliLite.Services.Notification.Template
                         {
                             new AdaptiveText()
                             {
-                                Text = tileModel.Description,
+                                Text = notificationTile.Description,
                                 HintMaxLines = 3,
                                 HintWrap = true,
                             },
                             new AdaptiveText()
                             {
-                                Text = tileModel.Name,
+                                Text = notificationTile.Name,
                                 HintStyle = AdaptiveTextStyle.CaptionSubtle,
                                 HintAlign = AdaptiveTextAlign.Center,
                             },
                         },
                         PeekImage = new TilePeekImage()
                         {
-                            Source = tileModel.Url,
+                            Source = notificationTile.Url,
                             HintOverlay = 30,
                         },
                     }
@@ -45,20 +44,20 @@ namespace BiliLite.Services.Notification.Template
                         {
                             new AdaptiveText()
                             {
-                                Text = tileModel.Description,
+                                Text = notificationTile.Description,
                                 HintStyle = AdaptiveTextStyle.Body,
                                 HintMaxLines = 2,
                                 HintWrap = true,
                             },
                             new AdaptiveText()
                             {
-                                Text = tileModel.Name,
+                                Text = notificationTile.Name,
                                 HintAlign = AdaptiveTextAlign.Center,
                             },
                         },
                         BackgroundImage = new TileBackgroundImage()
                         {
-                            Source = tileModel.Url,
+                            Source = notificationTile.Url,
                         },
                     }
                 },
@@ -70,7 +69,7 @@ namespace BiliLite.Services.Notification.Template
                         {
                             new AdaptiveText()
                             {
-                                Text = tileModel.Description,
+                                Text = notificationTile.Description,
                                 HintStyle = AdaptiveTextStyle.Subtitle,
                                 HintMaxLines = 5,
                                 HintWrap = true,
@@ -78,14 +77,14 @@ namespace BiliLite.Services.Notification.Template
                             new AdaptiveText() {},
                             new AdaptiveText()
                             {
-                                Text = tileModel.Name,
+                                Text = notificationTile.Name,
                                 HintStyle = AdaptiveTextStyle.Base,
                                 HintAlign = AdaptiveTextAlign.Center,
                             },
                         },
                         BackgroundImage = new TileBackgroundImage()
                         {
-                            Source = tileModel.Url,
+                            Source = notificationTile.Url,
                         },
                     }
                 }

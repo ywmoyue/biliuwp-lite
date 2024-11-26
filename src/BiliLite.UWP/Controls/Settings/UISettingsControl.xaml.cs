@@ -9,6 +9,8 @@ using BiliLite.Models.Common.Home;
 using BiliLite.Services;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Toolkit.Uwp.UI;
+using BiliLite.Extensions.Notifications;
+using Windows.ApplicationModel.Background;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -139,6 +141,24 @@ namespace BiliLite.Controls.Settings
                 NumBoxDynamicCommentWidth.ValueChanged += (obj, args) =>
                 {
                     SettingService.SetValue(SettingConstants.UI.DYNAMIC_COMMENT_WIDTH, args.NewValue);
+                };
+            };
+
+            //动态磁贴
+            SwitchTile.IsOn = SettingService.GetValue(SettingConstants.UI.ENABLE_NOTIFICATION_TILES, false);
+            SwitchTile.Loaded += (sender, e) =>
+            {
+                SwitchTile.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.ENABLE_NOTIFICATION_TILES, SwitchTile.IsOn);
+                    if (SwitchTile.IsOn)
+                    {
+                        RegisterBackgroundTask();
+                    }
+                    else
+                    {
+                        // TODO: UnregisterBackgroundTask 
+                    }
                 };
             };
 
@@ -371,6 +391,14 @@ namespace BiliLite.Controls.Settings
             SettingService.SetValue(SettingConstants.UI.HOEM_ORDER, gridHomeCustom.ItemsSource as ObservableCollection<HomeNavItem>);
             ExceptHomeNavItems();
             Notify.ShowMessageToast("更改成功,重启生效");
+        }
+
+        private void RegisterBackgroundTask()
+        {
+            NotificationRegisterExtensions.BackgroundTask("DisposableTileFeedBackgroundTask");
+            NotificationRegisterExtensions.BackgroundTask("TileFeedBackgroundTask", new TimeTrigger(15, false));
+            //NotificationRegisterExtensions.BackgroundTask("TileFeedBackgroundTask",
+            //    "BackgroundTasks.TileFeedBackgroundTask", new TimeTrigger(15, false));
         }
     }
 }
