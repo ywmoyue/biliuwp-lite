@@ -200,6 +200,14 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
+        <controls:SettingsCard Header="动态磁贴（实验性功能，未完成）"
+                               Description="运行中更新动态磁贴，暂不支持后台更新动态磁贴">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_SquareFull"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch x:Name="SwitchTile"></ToggleSwitch>
+        </controls:SettingsCard>
+
         <controls:SettingsExpander Header="图片圆角半径"
                                    Description="重启生效"
                                    IsExpanded="True">

@@ -1,8 +1,11 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Models.Events;
+using BiliLite.Pages;
 using BiliLite.Services;
+using BiliLite.Services.Notification;
 using FFmpegInteropX;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
@@ -14,8 +17,7 @@ using Windows.Graphics.Display;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Pages;
-using Microsoft.Extensions.DependencyInjection;
+using BiliLite.Extensions.Notifications;
 
 namespace BiliLite
 {
@@ -205,6 +207,7 @@ namespace BiliLite
                     // await Task.Delay(200); // 防止初始屏幕闪烁
                 }
             }
+
             //圆角
             App.Current.Resources["ImageCornerRadius"] = new CornerRadius(SettingService.GetValue<double>(SettingConstants.UI.IMAGE_CORNER_RADIUS, 0));
             await AppHelper.SetRegions();
@@ -291,6 +294,13 @@ namespace BiliLite
             {
                 logger.Error("Start Host Error", ex);
             }
+        }
+
+        protected override async void OnBackgroundActivated(BackgroundActivatedEventArgs args)
+        {
+            //base.OnBackgroundActivated(args);
+            //IBackgroundTaskInstance taskInstance = args.TaskInstance;
+            await NotificationShowExtensions.Tile();
         }
     }
 }
