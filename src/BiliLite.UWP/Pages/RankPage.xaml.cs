@@ -1,14 +1,13 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
-using BiliLite.Modules;
+using BiliLite.Models.Common.Rank;
 using BiliLite.Services;
+using BiliLite.ViewModels.Rank;
+using Microsoft.Extensions.DependencyInjection;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Models.Common.Rank;
-using BiliLite.ViewModels.Rank;
-using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -23,20 +22,21 @@ namespace BiliLite.Pages
         public RankPage()
         {
             m_viewModel = App.ServiceProvider.GetRequiredService<RankViewModel>();
+            m_viewModel.LoadRankRegion(0);
             this.InitializeComponent();
             Title = "排行榜";
+
+            NavigationCacheMode = SettingService.GetValue(SettingConstants.UI.CACHE_HOME, true)
+                ? NavigationCacheMode.Required
+                : NavigationCacheMode.Disabled;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.NavigationMode == NavigationMode.New)
+            if (e.Parameter != null)
             {
-                var rid = 0;
-                if (e.Parameter != null)
-                {
-                    rid = e.Parameter.ToInt32();
-                }
+                int rid = e.Parameter.ToInt32();
                 m_viewModel.LoadRankRegion(rid);
             }
         }
