@@ -1,9 +1,9 @@
 ﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Events;
 using BiliLite.Pages;
 using BiliLite.Services;
-using BiliLite.Services.Notification;
 using FFmpegInteropX;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,7 +17,6 @@ using Windows.Graphics.Display;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Extensions.Notifications;
 
 namespace BiliLite
 {
@@ -228,7 +227,7 @@ namespace BiliLite
             try
             {
                 var themeService = ServiceProvider.GetRequiredService<ThemeService>();
-                await themeService.Init();
+                themeService.Init();
             }
             catch (Exception ex)
             {

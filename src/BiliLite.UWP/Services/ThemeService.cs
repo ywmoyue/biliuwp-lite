@@ -1,10 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.UI.Xaml.Markup;
-using Windows.UI.Xaml;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
+using System.Linq;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace BiliLite.Services
@@ -23,18 +20,13 @@ namespace BiliLite.Services
             }
         }
 
-        public async Task Init()
-        {
-            var colorFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Themes/Colors.xaml"));
-            var colorsText = await FileIO.ReadTextAsync(colorFile);
-            m_defaultColorsResource = (ResourceDictionary)XamlReader.Load(colorsText);
-        }
+        public void Init() => m_defaultColorsResource = Application.Current.Resources.MergedDictionaries.FirstOrDefault(x => x.Source.AbsoluteUri.Contains("Default"));
 
         public ResourceDictionary ThemeResource
         {
             get
             {
-                if(m_theme==ElementTheme.Light)return m_defaultColorsResource.ThemeDictionaries["Light"] as ResourceDictionary;
+                if (m_theme == ElementTheme.Light) return m_defaultColorsResource.ThemeDictionaries["Light"] as ResourceDictionary;
                 return m_defaultColorsResource.ThemeDictionaries["Dark"] as ResourceDictionary;
             }
         }
@@ -57,15 +49,23 @@ namespace BiliLite.Services
                 case ElementTheme.Dark:
                     rootFrame.RequestedTheme = ElementTheme.Dark;
                     break;
-                //case 3:
-                //    // TODO: 切换自定义主题
-                //    rootFrame.Resources = Application.Current.Resources.ThemeDictionaries["Pink"] as ResourceDictionary;
-                //    break;
                 default:
                     rootFrame.RequestedTheme = ElementTheme.Default;
                     break;
             }
             InitTitleBar();
+        }
+
+        public void SetColor()
+        {
+            //case 3:
+            //    // TODO: 切换自定义主题
+            //    rootFrame.Resources = Application.Current.Resources.ThemeDictionaries["Pink"] as ResourceDictionary;
+            //    break;
+            //case 4:
+            //    // TODO: 切换自定义主题
+            //    rootFrame.Resources = Application.Current.Resources.ThemeDictionaries["Blue"] as ResourceDictionary;
+            //    break;
         }
     }
 }
