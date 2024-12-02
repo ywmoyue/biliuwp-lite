@@ -1,4 +1,10 @@
-﻿using BiliLite.Pages;
+﻿using BiliLite.Controls;
+using BiliLite.Extensions;
+using BiliLite.Models.Common;
+using BiliLite.Pages;
+using BiliLite.Services;
+using BiliLite.ViewModels.Common;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Linq;
@@ -9,12 +15,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Controls;
-using BiliLite.Models.Common;
-using BiliLite.Extensions;
-using BiliLite.Services;
-using BiliLite.ViewModels.Common;
-using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
