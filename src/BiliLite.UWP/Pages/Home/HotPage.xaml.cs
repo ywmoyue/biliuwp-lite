@@ -1,6 +1,5 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
-using BiliLite.Modules;
 using BiliLite.Modules.User;
 using BiliLite.Services;
 using System.Threading.Tasks;
@@ -8,6 +7,9 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Models.Common.Home;
+using BiliLite.ViewModels.Home;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -18,12 +20,13 @@ namespace BiliLite.Pages.Home
     /// </summary>
     public sealed partial class HotPage : Page, IRefreshablePage, IScrollRecoverablePage
     {
-        HotVM hotVM;
+        private readonly HotViewModel m_viewModel;
+
         public HotPage()
         {
             this.InitializeComponent();
-            hotVM = new HotVM();
-            this.DataContext = hotVM;
+            m_viewModel = App.ServiceProvider.GetRequiredService<HotViewModel>();
+            this.DataContext = m_viewModel;
             if (SettingService.GetValue<bool>(SettingConstants.UI.CACHE_HOME, true))
             {
                 this.NavigationCacheMode = NavigationCacheMode.Enabled;
@@ -34,18 +37,18 @@ namespace BiliLite.Pages.Home
             }
 
         }
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.NavigationMode == NavigationMode.New && hotVM.HotItems == null)
+            if (e.NavigationMode == NavigationMode.New && m_viewModel.HotItems == null)
             {
-                await hotVM.GetPopular();
+                await m_viewModel.GetPopular();
             }
         }
 
         private async void gridHot_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var data = (e.ClickedItem as Modules.HotDataItemModel);
+            var data = (e.ClickedItem as HotDataItemModel);
             await HotDataItemModelOpen(sender, data);
         }
 
@@ -79,7 +82,7 @@ namespace BiliLite.Pages.Home
 
         private async void gridTop_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var data = (e.ClickedItem as Modules.HotTopItemModel);
+            var data = (e.ClickedItem as HotTopItemModel);
             if (data.ModuleId == "rank")
             {
                 MessageCenter.NavigateToPage(this, new NavigationInfo()
@@ -103,7 +106,7 @@ namespace BiliLite.Pages.Home
 
         public async Task Refresh()
         {
-            hotVM.Refresh();
+            m_viewModel.Refresh();
         }
 
         public async void ScrollRecover()

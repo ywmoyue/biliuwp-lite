@@ -199,6 +199,7 @@
     <Compile Include="Extensions\QrCodeExtensions.cs" />
     <Compile Include="Extensions\RegexExtensions.cs" />
     <Compile Include="Extensions\DynamicExtensions.cs" />
+    <Compile Include="Models\Attributes\RegisterServiceAttributes.cs" />
     <Compile Include="Models\Attributes\SettingDefaultValueAttribute.cs" />
     <Compile Include="Models\Attributes\SettingKeyAttribute.cs" />
     <Compile Include="Models\Common\Anime\ISeasonItem.cs" />
@@ -272,6 +273,14 @@
     <Compile Include="Models\Common\Search\SearchUserItem.cs" />
     <Compile Include="Models\Common\Search\SearchUserOfficialVerifyItem.cs" />
     <Compile Include="Models\Common\Search\SearchVideoItem.cs" />
+    <Compile Include="Models\Common\Home\HotDataItemModel.cs" />
+    <Compile Include="Models\Common\Home\HotTopItemModel.cs" />
+    <Compile Include="Models\Common\Home\LiveHomeAreaModel.cs" />
+    <Compile Include="Models\Common\Home\LiveHomeBannerModel.cs" />
+    <Compile Include="Models\Common\Home\LiveHomeItemsItemModel.cs" />
+    <Compile Include="Models\Common\Home\LiveHomeItemsModel.cs" />
+    <Compile Include="Models\Common\Home\LiveHomeItemsModuleInfoModel.cs" />
+    <Compile Include="Models\Common\Home\LivePendentItemModel.cs" />
     <Compile Include="Pages\IScrollRecorablePage.cs" />
     <Compile Include="Pages\Other\MarkdownViewerPage.xaml.cs">
       <DependentUpon>MarkdownViewerPage.xaml</DependentUpon>
@@ -820,10 +829,10 @@
     <Compile Include="Modules\Home\CinemaVM.cs" />
     <Compile Include="ViewModels\Home\DynamicPageViewModel.cs" />
     <Compile Include="ViewModels\Home\HomeViewModel.cs" />
-    <Compile Include="Modules\Home\HotVM.cs" />
+    <Compile Include="ViewModels\Home\HotViewModel.cs" />
     <Compile Include="Modules\IModules.cs" />
     <Compile Include="ViewModels\Live\LiveRoomViewModel.cs" />
-    <Compile Include="Modules\Home\LiveVM.cs" />
+    <Compile Include="ViewModels\Home\LiveViewModel.cs" />
     <Compile Include="ViewModels\UserDynamic\UserDynamicRepostViewModel.cs" />
     <Compile Include="ViewModels\UserDynamic\UserDynamicViewModel.cs" />
     <Compile Include="Modules\User\LoginVM.cs" />

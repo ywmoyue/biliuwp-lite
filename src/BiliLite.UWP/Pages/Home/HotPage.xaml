@@ -10,8 +10,9 @@
       xmlns:controls="using:BiliLite.Controls" 
      xmlns:covert="using:BiliLite.Converters"
       xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls" 
-      xmlns:winui="using:Microsoft.UI.Xaml.Controls" 
-    Background="Transparent">
+      xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+      xmlns:home="using:BiliLite.Models.Common.Home"
+      Background="Transparent">
     <Page.Resources>
         <covert:ColorConvert x:Key="colorConvert"></covert:ColorConvert>
     </Page.Resources>
@@ -23,12 +24,12 @@
                     OneRowModeEnabled="False"
                     Padding="8"
                     StretchContentForSingleRow="False"
-                    ItemsSource="{x:Bind Path=hotVM.HotItems,Mode=OneWay}"
+                    ItemsSource="{x:Bind Path=m_viewModel.HotItems,Mode=OneWay}"
                     ItemHeight="100" DesiredWidth="560" 
                     LoadMoreBottomOffset="0"
-                    LoadMoreCommand="{x:Bind Path=hotVM.LoadMoreCommand}"
+                    LoadMoreCommand="{x:Bind Path=m_viewModel.LoadMoreCommand}"
                     CanLoadMore="True"
-                    Loading="{x:Bind Path=hotVM.Loading,Mode=OneWay}"
+                    Loading="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"
                     SelectionMode="None" IsItemClickEnabled="True">
             <toolkit:AdaptiveGridView.ItemContainerStyle>
                 <Style TargetType="GridViewItem">
@@ -37,7 +38,7 @@
             </toolkit:AdaptiveGridView.ItemContainerStyle>
 
             <toolkit:AdaptiveGridView.ItemTemplate>
-                <DataTemplate x:DataType="modules:HotDataItemModel">
+                <DataTemplate x:DataType="home:HotDataItemModel">
                     <Grid Background="#00FFFFFF">
                         <Grid.ContextFlyout>
                             <MenuFlyout>
@@ -75,9 +76,9 @@
                 </DataTemplate>
             </toolkit:AdaptiveGridView.ItemTemplate>
             <controls:MyAdaptiveGridView.Header>
-                <GridView  ItemClick="gridTop_ItemClick" ItemsSource="{x:Bind Path=hotVM.TopItems,Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="None" HorizontalAlignment="Center">
+                <GridView  ItemClick="gridTop_ItemClick" ItemsSource="{x:Bind Path=m_viewModel.TopItems,Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="None" HorizontalAlignment="Center">
                     <GridView.ItemTemplate>
-                        <DataTemplate x:DataType="modules:HotTopItemModel">
+                        <DataTemplate x:DataType="home:HotTopItemModel">
                             <StackPanel>
                                 <Image Width="48" Margin="0 8" Height="48" Source="{x:Bind Icon}"></Image>
                                 <TextBlock Margin="0 0 0 8" TextAlignment="Center" Text="{x:Bind Title}"></TextBlock>
@@ -94,16 +95,16 @@
             </controls:MyAdaptiveGridView.Header>
             <controls:MyAdaptiveGridView.Footer>
                 <Grid>
-                    <HyperlinkButton  Command="{x:Bind Path=hotVM.LoadMoreCommand}" Visibility="{x:Bind Path=hotVM.Loading,Mode=OneWay,Converter={StaticResource display}}" Foreground="Gray" HorizontalAlignment="Center" x:Name="btnLoadMore">
+                    <HyperlinkButton  Command="{x:Bind Path=m_viewModel.LoadMoreCommand}" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay,Converter={StaticResource display}}" Foreground="Gray" HorizontalAlignment="Center" x:Name="btnLoadMore">
                         <TextBlock>加载更多</TextBlock>
                     </HyperlinkButton>
-                    <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=hotVM.Loading,Mode=OneWay}"></ProgressRing>
+                    <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"></ProgressRing>
                 </Grid>
             </controls:MyAdaptiveGridView.Footer>
         </controls:MyAdaptiveGridView>
 
 
-        <controls:RoundButton  Command="{x:Bind Path=hotVM.RefreshCommand}" Visibility="{x:Bind Path=hotVM.Loading,Mode=OneWay,Converter={StaticResource display}}" VerticalAlignment="Bottom" Padding="12" Margin="12" HorizontalAlignment="Right">
+        <controls:RoundButton  Command="{x:Bind Path=m_viewModel.RefreshCommand}" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay,Converter={StaticResource display}}" VerticalAlignment="Bottom" Padding="12" Margin="12" HorizontalAlignment="Right">
             <SymbolIcon Symbol="Refresh" Foreground="White"></SymbolIcon>
         </controls:RoundButton>
     </Grid>

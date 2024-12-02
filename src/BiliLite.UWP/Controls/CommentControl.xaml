@@ -49,7 +49,7 @@
                         </DataTemplate>
                     </Pivot.HeaderTemplate>
                     <Pivot.ItemTemplate>
-                        <DataTemplate >
+                        <DataTemplate x:DataType="viewModels:EmotePackageModel">
                             <GridView  ItemsSource="{Binding Path=emote,Mode=OneWay}" MaxHeight="300" SelectionMode="None" IsItemClickEnabled="True"  ItemClick="GridView_ItemClick">
                                 <!--<GridView.ItemContainerStyle>
                                                 -->
@@ -59,7 +59,7 @@
                                 <!--
                                             </GridView.ItemContainerStyle>-->
                                 <GridView.ItemTemplate>
-                                    <DataTemplate>
+                                    <DataTemplate x:DataType="viewModels:EmotePackageItemModel">
                                         <StackPanel >
                                             <Image Visibility="{Binding Path=showImage}"  Source="{Binding url}" Width="36" Margin="4 0"></Image>
                                             <TextBlock Width="90" TextAlignment="Center" Visibility="{Binding Path=showImage,Converter={StaticResource display}}" FontSize="12" HorizontalAlignment="Center" Text="{Binding text}"></TextBlock>
