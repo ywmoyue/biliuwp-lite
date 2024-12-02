@@ -323,7 +323,7 @@ namespace BiliLite
             var resources = Application.Current.Resources;
             var dict = resources.MergedDictionaries.FirstOrDefault(x => x.Source.AbsoluteUri.Contains("TabViewStyle"));
 
-            var styleKvp = dict.FirstOrDefault(x => x.Key.ToString().Contains("muxc:TabViewItem"));
+            var styleKvp = dict.FirstOrDefault(x => x.Key.ToString().Contains("TabViewItem"));
 
             if (!(styleKvp.Value is Style style)) return;
             style.Setters.Add(new Setter(TabViewItem.MinWidthProperty, m_viewModel.TabItemMinWidth));
