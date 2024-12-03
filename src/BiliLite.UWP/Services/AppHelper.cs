@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using BiliLite.Extensions;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Home;
 
 namespace BiliLite.Services
 {
@@ -14,21 +15,21 @@ namespace BiliLite.Services
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
 
-        public static List<Modules.Home.RegionItem> Regions { get; set; }
+        public static List<RegionItem> Regions { get; set; }
         private static RegionAPI regionAPI = new RegionAPI();
 
-        public static async Task<List<Modules.Home.RegionItem>> GetDefaultRegions()
+        public static async Task<List<RegionItem>> GetDefaultRegions()
         {
             try
             {
                 var str = await FileIO.ReadTextAsync(
                     await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Text/regions.json")));
-                return JsonConvert.DeserializeObject<List<Modules.Home.RegionItem>>(str);
+                return JsonConvert.DeserializeObject<List<RegionItem>>(str);
             }
             catch (Exception ex)
             {
                 logger.Log("读取默认分区失败！" + ex.Message, LogType.Error, ex);
-                return new List<Modules.Home.RegionItem>();
+                return new List<RegionItem>();
             }
         }
 
@@ -42,11 +43,11 @@ namespace BiliLite.Services
                     var data = results.GetJObject();
                     if (data["code"].ToInt32() == 0)
                     {
-                        var ls = JsonConvert.DeserializeObject<List<Modules.Home.RegionItem>>(data["data"].ToString()
+                        var ls = JsonConvert.DeserializeObject<List<RegionItem>>(data["data"].ToString()
                             .Replace("goto", "_goto"));
                         foreach (var item in ls.Where(x =>
-                                         string.IsNullOrEmpty(x.uri) || x.name == "会员购" || x.name == "漫画" ||
-                                         x.name == "游戏中心" || x.name == "话题中心" || x.name == "音频" || x.name == "原创排行榜")
+                                         string.IsNullOrEmpty(x.Uri) || x.Name == "会员购" || x.Name == "漫画" ||
+                                         x.Name == "游戏中心" || x.Name == "话题中心" || x.Name == "音频" || x.Name == "原创排行榜")
                                      .ToList())
                         {
                             ls.Remove(item);

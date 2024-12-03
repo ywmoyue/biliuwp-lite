@@ -18,7 +18,7 @@
                         </DataTemplate>
                     </Pivot.HeaderTemplate>
                     <Pivot.ItemTemplate>
-                        <DataTemplate >
+                        <DataTemplate x:DataType="viewModels:EmotePackageModel">
                             <GridView  ItemClick="gvEmoji_ItemClick" ItemsSource="{Binding Path=emote,Mode=OneWay}" MaxHeight="300" SelectionMode="None" IsItemClickEnabled="True" >
                                 <!--<GridView.ItemContainerStyle>
                                                 -->
@@ -28,7 +28,7 @@
                                 <!--
                                             </GridView.ItemContainerStyle>-->
                                 <GridView.ItemTemplate>
-                                    <DataTemplate>
+                                    <DataTemplate x:DataType="viewModels:EmotePackageItemModel">
                                         <StackPanel >
                                             <Image Visibility="{Binding Path=showImage}"  Source="{Binding url}" Width="36" Margin="4 0"></Image>
                                             <TextBlock Width="90" TextAlignment="Center" Visibility="{Binding Path=showImage,Converter={StaticResource display}}" FontSize="12" HorizontalAlignment="Center" Text="{Binding Text}"></TextBlock>

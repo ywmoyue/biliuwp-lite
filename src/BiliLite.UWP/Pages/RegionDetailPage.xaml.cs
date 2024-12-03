@@ -1,11 +1,12 @@
 ﻿using BiliLite.Models.Common;
-using BiliLite.Modules;
 using BiliLite.Pages.Bangumi;
 using BiliLite.Services;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Models.Common.Region;
+using BiliLite.ViewModels.Region;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -16,18 +17,18 @@ namespace BiliLite.Pages
     /// </summary>
     public sealed partial class RegionDetailPage : BasePage, IRefreshablePage
     {
-        RegionDetailVM regionDetailVM;
+        RegionDetailViewModel m_viewModel;
         OpenRegionInfo regionInfo;
         public RegionDetailPage()
         {
             this.InitializeComponent();
             Title = "分区详情";
-            regionDetailVM = new RegionDetailVM();
+            m_viewModel = new RegionDetailViewModel();
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.NavigationMode == NavigationMode.New||regionDetailVM.Regions==null)
+            if (e.NavigationMode == NavigationMode.New||m_viewModel.Regions==null)
             {
                 if (e.Parameter!=null)
                 {
@@ -37,7 +38,7 @@ namespace BiliLite.Pages
                 {
                     regionInfo = new OpenRegionInfo();
                 }
-                regionDetailVM.InitRegion(regionInfo.id, regionInfo.tid);
+                m_viewModel.InitRegion(regionInfo.id, regionInfo.tid);
             }
         }
 
@@ -47,10 +48,10 @@ namespace BiliLite.Pages
             {
                 return;
             }
-            if(pivot.SelectedItem is RegionDetailHomeVM)
+            if(pivot.SelectedItem is RegionDetailHomeViewModel)
             {
                 GridOrder.Visibility = Visibility.Collapsed;
-                var data = pivot.SelectedItem as RegionDetailHomeVM;
+                var data = pivot.SelectedItem as RegionDetailHomeViewModel;
                 if (!data.Loading&&data.Banners==null)
                 {
                     await data.LoadHome();
@@ -58,7 +59,7 @@ namespace BiliLite.Pages
             }
             else
             {
-                var data = pivot.SelectedItem as RegionDetailChildVM;
+                var data = pivot.SelectedItem as RegionDetailChildViewModel;
                 if (!data.Loading && data.Tasgs == null)
                 {
                     await data.LoadHome();
@@ -110,7 +111,7 @@ namespace BiliLite.Pages
             {
                 return;
             }
-          (pivot.SelectedItem as RegionDetailChildVM).Refresh();
+          (pivot.SelectedItem as RegionDetailChildViewModel).Refresh();
 
         }
 
@@ -120,7 +121,7 @@ namespace BiliLite.Pages
             {
                 return;
             }
-            (pivot.SelectedItem as RegionDetailChildVM).Refresh();
+            (pivot.SelectedItem as RegionDetailChildViewModel).Refresh();
         }
 
         private void AdaptiveGridView_ItemClick(object sender, ItemClickEventArgs e)
@@ -134,8 +135,8 @@ namespace BiliLite.Pages
                 {
                     icon = Symbol.Play,
                     page = typeof(SeasonDetailPage),
-                    parameters = data.param,
-                    title = data.title
+                    parameters = data.Param,
+                    title = data.Title
                 });
                 return;
             }
@@ -143,21 +144,21 @@ namespace BiliLite.Pages
             MessageCenter.NavigateToPage(this,new NavigationInfo() { 
                 icon= Symbol.Play,
                 page=typeof(VideoDetailPage),
-                parameters=data.param,
-                title=data.title
+                parameters=data.Param,
+                title=data.Title
             });
         }
 
         private async void BtnOpenBanner_Click(object sender, RoutedEventArgs e)
         {
-           await MessageCenter.HandelUrl(((sender as HyperlinkButton).DataContext as RegionHomeBannerItemModel).uri);
+           await MessageCenter.HandelUrl(((sender as HyperlinkButton).DataContext as RegionHomeBannerItemModel).Uri);
         }
 
         private void AddToWatchLater_Click(object sender, RoutedEventArgs e)
         {
             var data = (sender as MenuFlyoutItem).DataContext as RegionVideoItemModel;
 
-            Modules.User.WatchLaterVM.Instance.AddToWatchlater(data.param);
+            Modules.User.WatchLaterVM.Instance.AddToWatchlater(data.Param);
         }
 
         public async Task Refresh()
@@ -166,7 +167,7 @@ namespace BiliLite.Pages
             {
                 return;
             }
-            (pivot.SelectedItem as RegionDetailChildVM).Refresh();
+            (pivot.SelectedItem as RegionDetailChildViewModel).Refresh();
         }
     }
     public class RegionDataTemplateSelector : DataTemplateSelector
@@ -177,7 +178,7 @@ namespace BiliLite.Pages
 
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
-            if (item is RegionDetailHomeVM)
+            if (item is RegionDetailHomeViewModel)
             {
                 return HomeTemplate;
             }

@@ -48,9 +48,9 @@ namespace BiliLite.ViewModels.Search
             RegionFilters = new List<SearchFilterItem>() {
                 new SearchFilterItem("全部分区","0"),
             };
-            foreach (var item in AppHelper.Regions.Where(x => x.children != null && x.children.Count != 0))
+            foreach (var item in AppHelper.Regions.Where(x => x.Children != null && x.Children.Count != 0))
             {
-                RegionFilters.Add(new SearchFilterItem(item.name, item.tid.ToString()));
+                RegionFilters.Add(new SearchFilterItem(item.Name, item.Tid.ToString()));
             }
             SelectRegion = RegionFilters[0];
         }

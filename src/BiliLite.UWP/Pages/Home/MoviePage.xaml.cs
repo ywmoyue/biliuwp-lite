@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Models.Common.Home;
+using BiliLite.ViewModels.Home;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -18,11 +21,12 @@ namespace BiliLite.Pages.Home
     /// </summary>
     public sealed partial class MoviePage : Page, IRefreshablePage
     {
-        readonly Modules.CinemaVM cinemaVM;
+        private readonly CinemaViewModel m_viewModel;
+
         public MoviePage()
         {
+            m_viewModel = App.ServiceProvider.GetRequiredService<CinemaViewModel>();
             this.InitializeComponent();
-            cinemaVM = new Modules.CinemaVM();
             if (SettingService.GetValue<bool>(SettingConstants.UI.CACHE_HOME, true))
             {
                 this.NavigationCacheMode = NavigationCacheMode.Enabled;
@@ -36,18 +40,18 @@ namespace BiliLite.Pages.Home
         }
         private void MessageCenter_LogoutedEvent(object sender, EventArgs e)
         {
-            cinemaVM.ShowFollows = false;
+            m_viewModel.ShowFollows = false;
         }
 
         private async void MessageCenter_LoginedEvent(object sender, object e)
         {
-            cinemaVM.ShowFollows = true;
-            await cinemaVM.GetFollows();
+            m_viewModel.ShowFollows = true;
+            await m_viewModel.GetFollows();
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.NavigationMode == NavigationMode.New && cinemaVM.HomeData == null)
+            if (e.NavigationMode == NavigationMode.New && m_viewModel.HomeData == null)
             {
                 await LoadData();
             }
@@ -55,18 +59,18 @@ namespace BiliLite.Pages.Home
         }
         private async Task LoadData()
         {
-            await cinemaVM.GetCinemaHome();
+            await m_viewModel.GetCinemaHome();
             if (SettingService.Account.Logined)
             {
-                cinemaVM.ShowFollows = true;
-                await cinemaVM.GetFollows();
+                m_viewModel.ShowFollows = true;
+                await m_viewModel.GetFollows();
             }
         }
         private async void btnLoadMoreFall_Click(object sender, RoutedEventArgs e)
         {
             var element = (sender as HyperlinkButton);
-            var data = element.DataContext as CinemaHomeFallModel;
-            await cinemaVM.GetFallMore(element.DataContext as CinemaHomeFallModel);
+            var data = element.DataContext as CinemaHomeFallViewModel;
+            await m_viewModel.GetFallMore(element.DataContext as CinemaHomeFallViewModel);
         }
 
 
@@ -77,7 +81,7 @@ namespace BiliLite.Pages.Home
 
         private async void gvFall_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var result = await MessageCenter.HandelUrl((e.ClickedItem as CinemaHomeFallItemModel).link);
+            var result = await MessageCenter.HandelUrl((e.ClickedItem as CinemaHomeFallItemModel).Link);
             if (!result)
             {
                 Notify.ShowMessageToast("不支持打开的链接");
@@ -90,7 +94,7 @@ namespace BiliLite.Pages.Home
 
         private async void BannerItem_Click(object sender, RoutedEventArgs e)
         {
-            var result = await MessageCenter.HandelUrl(((sender as HyperlinkButton).DataContext as CinemaHomeBannerModel).url);
+            var result = await MessageCenter.HandelUrl(((sender as HyperlinkButton).DataContext as CinemaHomeBannerModel).Url);
             if (!result)
             {
                 Notify.ShowMessageToast("不支持打开的链接");

@@ -1,21 +1,10 @@
 ﻿using BiliLite.Models.Common;
-using BiliLite.Modules;
-using BiliLite.Modules.Home;
 using BiliLite.Services;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Models.Common.Home;
+using BiliLite.ViewModels.Home;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -26,11 +15,12 @@ namespace BiliLite.Pages.Home
     /// </summary>
     public sealed partial class RegionsPage : Page
     {
-        RegionVM channelVM;
+        private readonly RegionViewModel m_viewModel;
+
         public RegionsPage()
         {
+            m_viewModel = App.ServiceProvider.GetRequiredService<RegionViewModel>();
             this.InitializeComponent();
-            channelVM = new RegionVM();
             if (SettingService.GetValue<bool>(SettingConstants.UI.CACHE_HOME, true))
             {
                 this.NavigationCacheMode = NavigationCacheMode.Enabled;
@@ -41,12 +31,12 @@ namespace BiliLite.Pages.Home
             }
         }
 
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.NavigationMode == NavigationMode.New && channelVM.Regions == null)
+            if (e.NavigationMode == NavigationMode.New && m_viewModel.Regions == null)
             {
-                await channelVM.GetRegions();
+                await m_viewModel.GetRegions();
             }
 
         }
@@ -54,74 +44,74 @@ namespace BiliLite.Pages.Home
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as RegionItem;
-            if (item.uri.Contains("http"))
+            if (item.Uri.Contains("http"))
             {
                 MessageCenter.NavigateToPage(this, new NavigationInfo()
                 {
                     icon = Symbol.World,
                     page = typeof(WebPage),
-                    title = item.name,
-                    parameters = item.uri
+                    title = item.Name,
+                    parameters = item.Uri
                 });
                 return;
             }
-            if (item.children != null)
+            if (item.Children != null)
             {
                 MessageCenter.NavigateToPage(this, new NavigationInfo()
                 {
                     icon = Symbol.Document,
                     page = typeof(Pages.RegionDetailPage),
-                    title = item.name,
+                    title = item.Name,
                     parameters = new OpenRegionInfo()
                     {
-                        id = item.tid
+                        id = item.Tid
                     }
                 });
                 return;
             }
-            if (item.name == "番剧")
+            if (item.Name == "番剧")
             {
                 MessageCenter.NavigateToPage(this, new NavigationInfo()
                 {
                     icon = Symbol.Home,
                     page = typeof(Pages.Home.AnimePage),
-                    title = item.name,
+                    title = item.Name,
                     parameters = AnimeType.Bangumi
                 });
                 return;
             }
-            if (item.name == "国创")
+            if (item.Name == "国创")
             {
                 MessageCenter.NavigateToPage(this, new NavigationInfo()
                 {
                     icon = Symbol.Home,
                     page = typeof(Pages.Home.AnimePage),
-                    title = item.name,
+                    title = item.Name,
                     parameters = AnimeType.Bangumi
                 });
                 return;
             }
-            if (item.name == "放映厅")
+            if (item.Name == "放映厅")
             {
                 MessageCenter.NavigateToPage(this, new NavigationInfo()
                 {
                     icon = Symbol.Home,
                     page = typeof(Pages.Home.MoviePage),
-                    title = item.name
+                    title = item.Name
                 });
                 return;
             }
-            if (item.name == "直播")
+            if (item.Name == "直播")
             {
                 MessageCenter.NavigateToPage(this, new NavigationInfo()
                 {
                     icon = Symbol.Home,
                     page = typeof(Pages.Home.LivePage),
-                    title = item.name
+                    title = item.Name
                 });
                 return;
             }
-            if (item.name == "全区排行榜")
+            if (item.Name == "全区排行榜")
             {
                 MessageCenter.NavigateToPage(this, new NavigationInfo()
                 {
