@@ -24,16 +24,10 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
-                        <Grid
-                            x:Name="TabContainerGrid"
-                            Background="Transparent"
-                            XYFocusKeyboardNavigation="Enabled">
+                        <Grid x:Name="TabContainerGrid" XYFocusKeyboardNavigation="Enabled">
 
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition
-                                    x:Name="LeftContentColumn"
-                                    Width="Auto"
-                                    MinWidth="2" />
+                                <ColumnDefinition x:Name="LeftContentColumn" Width="Auto" />
                                 <ColumnDefinition x:Name="TabColumn" Width="Auto" />
                                 <ColumnDefinition x:Name="AddButtonColumn" Width="Auto" />
                                 <ColumnDefinition x:Name="RightContentColumn" Width="*" />
@@ -93,6 +87,7 @@
                             <ContentPresenter
                                 x:Name="RightContentPresenter"
                                 Grid.Column="3"
+                                Padding="0,0,190,0"
                                 HorizontalAlignment="Stretch"
                                 Background="{ThemeResource TabViewRightContentPresenterColor}"
                                 Content="{TemplateBinding TabStripFooter}"
@@ -131,9 +126,9 @@
         <Setter Property="Height" Value="48" />
         <Setter Property="MinWidth" Value="192" />
         <Setter Property="MaxWidth" Value="240" />
-        <Setter Property="BorderThickness" Value="0.1,0,0.1,0" />
+        <Setter Property="BorderThickness" Value="0,0,0.2,0" />
         <Setter Property="BorderBrush" Value="Gray" />
-        <Setter Property="Padding" Value="4,4,0,4" />
+        <Setter Property="Padding" Value="0" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="muxc:TabViewItem">

@@ -329,13 +329,5 @@ namespace BiliLite
             style.Setters.Add(new Setter(TabViewItem.MinWidthProperty, m_viewModel.TabItemMinWidth));
             style.Setters.Add(new Setter(TabViewItem.MaxWidthProperty, m_viewModel.TabItemMaxWidth));
         }
-
-        private void TabView_OnLayoutUpdated(object sender, object e)
-        {
-            // TODO: LayoutUpdated调用频繁，后续更换其他事件
-            var tabList = tabView.FindFirstChildByType<Microsoft.UI.Xaml.Controls.Primitives.TabViewListView>();
-            if (tabList == null) return;
-            tabList.MaxWidth = tabView.ActualWidth - 175;
-        }
     }
 }
