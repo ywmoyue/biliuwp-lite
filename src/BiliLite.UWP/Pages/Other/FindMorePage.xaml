@@ -7,8 +7,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls" xmlns:modules="using:BiliLite.Modules.Other"
-    Background="Transparent">
+     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+     xmlns:other="using:BiliLite.Models.Common.Other"
+     Background="Transparent">
 
     <Grid>
         <toolkit:AdaptiveGridView OneRowModeEnabled="False"
@@ -17,7 +18,7 @@
                                   x:Name="list"
                                   DesiredWidth="600" 
                                   Padding="8"
-                                  ItemsSource="{x:Bind Path=findMoreVM.Items,Mode=OneWay}"
+                                  ItemsSource="{x:Bind Path=m_viewModel.Items,Mode=OneWay}"
                                   SelectionMode="None" 
                                   IsItemClickEnabled="True">
            
@@ -28,17 +29,17 @@
                 </Style>
             </toolkit:AdaptiveGridView.ItemContainerStyle>
             <toolkit:AdaptiveGridView.ItemTemplate>
-                <DataTemplate x:DataType="modules:FindMoreEntranceModel">
+                <DataTemplate x:DataType="other:FindMoreEntranceModel">
                     <Border Background="WhiteSmoke" CornerRadius="8">
                         <Grid Margin="8" >
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <Image Source="{x:Bind Path=pic}" Width="80" Height="80" ></Image>
+                            <Image Source="{x:Bind Path=Pic}" Width="80" Height="80" ></Image>
                             <StackPanel Grid.Column="1" Margin="12 0" Orientation="Vertical">
-                                <TextBlock  Text="{x:Bind name}" FontSize="15" MaxLines="1" TextTrimming="CharacterEllipsis"></TextBlock>
-                                <TextBlock Text="{x:Bind desc}" FontSize="12" Margin="0 4 0 0" MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Foreground="Gray">《SPY×FAMILY 間諜家家酒》、《輝夜姬想讓人告白》、《派對咖孔明》、《街角的魔族女孩》</TextBlock>
+                                <TextBlock  Text="{x:Bind Name}" FontSize="15" MaxLines="1" TextTrimming="CharacterEllipsis"></TextBlock>
+                                <TextBlock Text="{x:Bind Desc}" FontSize="12" Margin="0 4 0 0" MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Foreground="Gray">《SPY×FAMILY 間諜家家酒》、《輝夜姬想讓人告白》、《派對咖孔明》、《街角的魔族女孩》</TextBlock>
                             </StackPanel>
                         </Grid>
                        
@@ -47,6 +48,6 @@
             </toolkit:AdaptiveGridView.ItemTemplate>
             
         </toolkit:AdaptiveGridView>
-        <ProgressRing VerticalAlignment="Center" IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=findMoreVM.Loading,Mode=OneWay}"></ProgressRing>
+        <ProgressRing VerticalAlignment="Center" IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"></ProgressRing>
     </Grid>
 </pages:BasePage>

@@ -1,11 +1,19 @@
 ﻿using BiliLite.Services;
 using System;
 using BiliLite.Models.Common;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite.Models.Requests.Api
 {
     public class SeasonApi : BaseApi
     {
+        private readonly CookieService m_cookieService;
+
+        public SeasonApi()
+        {
+            m_cookieService = App.ServiceProvider.GetRequiredService<CookieService>();
+        }
+
         /// <summary>
         /// 用season_id / ep_id 取番剧信息
         /// </summary>
@@ -63,11 +71,12 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel LikeReview(int media_id, int review_id, ReviewType review_type = ReviewType.Short)
         {
+            var csrf = m_cookieService.GetCSRFToken();
             var api = new ApiModel()
             {
                 method = HttpMethods.Post,
-                baseUrl = $"https://bangumi.bilibili.com/review/api/like",
-                body = $"{ApiHelper.MustParameter(AppKey, true)}&media_id={media_id}&review_id={review_id}&review_type={(int)review_type}"
+                baseUrl = $"https://api.bilibili.com/pgc/review/action/like",
+                body = $"{ApiHelper.MustParameter(AppKey, true)}&media_id={media_id}&review_id={review_id}&review_type={(int)review_type}",
             };
             api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
@@ -82,7 +91,7 @@ namespace BiliLite.Models.Requests.Api
             var api = new ApiModel()
             {
                 method = HttpMethods.Post,
-                baseUrl = $"https://bangumi.bilibili.com/review/api/dislike",
+                baseUrl = $"https://api.bilibili.com/pgc/review/action/dislike",
                 body = $"{ApiHelper.MustParameter(AppKey, true)}&media_id={media_id}&review_id={review_id}&review_type={(int)review_type}"
             };
             api.body += ApiHelper.GetSign(api.body, AppKey);
@@ -101,7 +110,7 @@ namespace BiliLite.Models.Requests.Api
             var api = new ApiModel()
             {
                 method = HttpMethods.Post,
-                baseUrl = $"https://bangumi.bilibili.com/review/api/short/post",
+                baseUrl = $"https://api.bilibili.com/pgc/review/action/short/post",
                 body = $"{ApiHelper.MustParameter(AppKey, true)}&media_id={media_id}&content={Uri.EscapeDataString(content)}&share_feed={(share_feed ? 1 : 0)}&score={score}"
             };
             api.body += ApiHelper.GetSign(api.body, AppKey);

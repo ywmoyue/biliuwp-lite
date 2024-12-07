@@ -11,6 +11,7 @@ using BiliLite.Models.Attributes;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Anime;
 using BiliLite.Models.Common.Home;
+using BiliLite.Models.Common.Season;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests.Api.Home;
 using BiliLite.Models.Requests.Api.User;
@@ -62,7 +63,7 @@ namespace BiliLite.ViewModels.Home
                             title="电影索引",
                             parameters=new SeasonIndexParameter()
                             {
-                                type= IndexSeasonType.Movie
+                                Type= IndexSeasonType.Movie
                             }
                     }
                 },
@@ -75,7 +76,7 @@ namespace BiliLite.ViewModels.Home
                             title="电视剧索引",
                             parameters=new SeasonIndexParameter()
                             {
-                                type= IndexSeasonType.TV
+                                Type= IndexSeasonType.TV
                             }
                     }
                 },
@@ -88,7 +89,7 @@ namespace BiliLite.ViewModels.Home
                             title="纪录片索引",
                             parameters=new SeasonIndexParameter()
                             {
-                                type= IndexSeasonType.Documentary
+                                Type= IndexSeasonType.Documentary
                             }
                     }
                 },
@@ -101,7 +102,7 @@ namespace BiliLite.ViewModels.Home
                             title="综艺索引",
                             parameters=new SeasonIndexParameter()
                             {
-                                type= IndexSeasonType.Variety
+                                Type= IndexSeasonType.Variety
                             }
                     }
                 },

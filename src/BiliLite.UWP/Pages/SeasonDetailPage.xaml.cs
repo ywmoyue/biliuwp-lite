@@ -2,7 +2,6 @@
 using BiliLite.Dialogs;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Modules;
-using BiliLite.Modules.Season;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
@@ -37,20 +36,20 @@ namespace BiliLite.Pages
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
 
-        SeasonDetailPageViewModel m_viewModel;
-        SeasonReviewVM seasonReviewVM;
+        private readonly SeasonDetailPageViewModel m_viewModel;
+        private readonly SeasonReviewViewModel m_seasonReviewViewModel;
         string season_id = "";
         string ep_id = "";
         bool selectProview = false;
         public SeasonDetailPage()
         {
+            m_viewModel = App.ServiceProvider.GetRequiredService<SeasonDetailPageViewModel>();
+            m_seasonReviewViewModel = App.ServiceProvider.GetRequiredService<SeasonReviewViewModel>();
             this.InitializeComponent();
             Title = "剧集详情";
             this.Loaded += SeasonDetailPage_Loaded;
             this.Player = this.player;
             NavigationCacheMode = NavigationCacheMode.Enabled;
-            m_viewModel = new SeasonDetailPageViewModel();
-            seasonReviewVM = new SeasonReviewVM();
             DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
             dataTransferManager.DataRequested += DataTransferManager_DataRequested;
             m_viewModel.DefaultRightInfoWidth = new GridLength(SettingService.GetValue<double>(SettingConstants.UI.RIGHT_DETAIL_WIDTH, 320), GridUnitType.Pixel);
@@ -134,7 +133,7 @@ namespace BiliLite.Pages
                 ChangeTitle(m_viewModel.Detail.Title);
 
 
-                seasonReviewVM.MediaID = m_viewModel.Detail.MediaId;
+                m_seasonReviewViewModel.MediaID = m_viewModel.Detail.MediaId;
 
                 InitializePlayInfo();
                 await CreateQR();
@@ -423,8 +422,8 @@ namespace BiliLite.Pages
                 title = data.Name,
                 parameters = new SeasonIndexParameter()
                 {
-                    type = (IndexSeasonType)m_viewModel.Detail.Type,
-                    area = data.Id
+                    Type = (IndexSeasonType)m_viewModel.Detail.Type,
+                    Area = data.Id
                 }
             });
         }
@@ -440,43 +439,43 @@ namespace BiliLite.Pages
                 title = data.Name,
                 parameters = new SeasonIndexParameter()
                 {
-                    type = (IndexSeasonType)m_viewModel.Detail.Type,
-                    style = data.Id
+                    Type = (IndexSeasonType)m_viewModel.Detail.Type,
+                    Style = data.Id
                 }
             });
         }
 
         private async void pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (pivot.SelectedIndex == 3 && (seasonReviewVM.Items == null || seasonReviewVM.Items.Count == 0))
+            if (pivot.SelectedIndex == 3 && (m_seasonReviewViewModel.Items == null || m_seasonReviewViewModel.Items.Count == 0))
             {
-                await seasonReviewVM.GetItems();
+                await m_seasonReviewViewModel.GetItems();
             }
         }
 
         private void btnReviewLike_Click(object sender, RoutedEventArgs e)
         {
-            var item = (sender as HyperlinkButton).DataContext as SeasonShortReviewItemModel;
-            seasonReviewVM.Like(item);
+            var item = (sender as HyperlinkButton).DataContext as SeasonShortReviewItemViewModel;
+            m_seasonReviewViewModel.Like(item);
         }
 
 
         private void btnReviewDislike_Click(object sender, RoutedEventArgs e)
         {
-            var item = (sender as HyperlinkButton).DataContext as SeasonShortReviewItemModel;
-            seasonReviewVM.Dislike(item);
+            var item = (sender as HyperlinkButton).DataContext as SeasonShortReviewItemViewModel;
+            m_seasonReviewViewModel.Dislike(item);
         }
 
         private async void btnSendReview_Click(object sender, RoutedEventArgs e)
         {
-            if (seasonReviewVM == null || seasonReviewVM.MediaID == 0) return;
+            if (m_seasonReviewViewModel == null || m_seasonReviewViewModel.MediaID == 0) return;
             if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
             {
                 Notify.ShowMessageToast("请先登录后再操作");
                 return;
             }
 
-            SendReviewDialog sendReviewDialog = new SendReviewDialog(seasonReviewVM.MediaID);
+            SendReviewDialog sendReviewDialog = new SendReviewDialog(m_seasonReviewViewModel.MediaID);
             await sendReviewDialog.ShowAsync();
         }
 

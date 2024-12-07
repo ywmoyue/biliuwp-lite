@@ -1,11 +1,13 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
-using BiliLite.Modules;
 using BiliLite.Services;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Models.Common.Anime;
+using BiliLite.ViewModels.Season;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -16,19 +18,22 @@ namespace BiliLite.Pages.Bangumi
     /// </summary>
     public sealed partial class TimelinePage : BasePage
     {
-        Modules.AnimeTimelineVM timelineVM;
+        private AnimeTimelineViewModel m_viewModel;
+
         public TimelinePage()
         {
             this.InitializeComponent();
             Title = "番剧时间表";
         }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if(e.NavigationMode== NavigationMode.New)
             {
-                timelineVM = new AnimeTimelineVM((AnimeType)e.Parameter);
-                this.DataContext = timelineVM;
+                m_viewModel = App.ServiceProvider.GetRequiredService<AnimeTimelineViewModel>();
+                m_viewModel.Init((AnimeType)e.Parameter);
+                this.DataContext = m_viewModel;
                 // timeLine.ItemsSource = e.Parameter as List<AnimeTimelineModel>;
                 // timeLine.SelectedItem = (e.Parameter as List<AnimeTimelineModel>).FirstOrDefault(x => x.is_today);
             }
@@ -40,8 +45,8 @@ namespace BiliLite.Pages.Bangumi
             {
                 return;
             }
-            timelineVM.animeType = (cbType.SelectedItem as AnimeTypeItem).AnimeType;
-            await timelineVM.GetTimeline();
+            m_viewModel.AnimeType = (cbType.SelectedItem as AnimeTypeItem).AnimeType;
+            await m_viewModel.GetTimeline();
         }
 
         private void AdaptiveGridView_ItemClick(object sender, ItemClickEventArgs e)

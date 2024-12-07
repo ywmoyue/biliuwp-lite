@@ -1,11 +1,13 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
-using BiliLite.Modules;
 using BiliLite.Services;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Models.Common.Season;
+using BiliLite.ViewModels.Season;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -18,13 +20,13 @@ namespace BiliLite.Pages.Bangumi
     public sealed partial class AnimeIndexPage : BasePage
     {
         private SeasonIndexParameter indexParameter;
-        readonly SeasonIndexVM seasonIndexVM;
+        private readonly SeasonIndexViewModel m_viewModel;
         public AnimeIndexPage()
         {
+            m_viewModel = App.ServiceProvider.GetRequiredService<SeasonIndexViewModel>();
             this.InitializeComponent();
             Title = "剧集索引";
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
-            seasonIndexVM = new SeasonIndexVM();
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -40,11 +42,11 @@ namespace BiliLite.Pages.Bangumi
                     indexParameter=e.Parameter as SeasonIndexParameter;
                 }
               
-                seasonIndexVM.Parameter = indexParameter;
-                await seasonIndexVM.LoadConditions();
-                if (seasonIndexVM.Conditions != null)
+                m_viewModel.Parameter = indexParameter;
+                await m_viewModel.LoadConditions();
+                if (m_viewModel.Conditions != null)
                 {
-                    await seasonIndexVM.LoadResult();
+                    await m_viewModel.LoadResult();
                 }
             }
         }
@@ -56,8 +58,8 @@ namespace BiliLite.Pages.Bangumi
             {
                 icon = Symbol.Play,
                 page = typeof(Pages.SeasonDetailPage),
-                parameters = item.season_id,
-                title = item.title,
+                parameters = item.SeasonId,
+                title = item.Title,
                 dontGoTo = dontGoTo
             });
         }
@@ -79,12 +81,12 @@ namespace BiliLite.Pages.Bangumi
         private async void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var combox = sender as ComboBox;
-            if (combox.SelectedItem == null || seasonIndexVM.ConditionsLoading|| seasonIndexVM.Loading)
+            if (combox.SelectedItem == null || m_viewModel.ConditionsLoading|| m_viewModel.Loading)
             {
                 return;
             }
-            seasonIndexVM.Page = 1;
-            await seasonIndexVM.LoadResult();
+            m_viewModel.Page = 1;
+            await m_viewModel.LoadResult();
         }
     }
 

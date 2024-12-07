@@ -1,11 +1,13 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
-using BiliLite.Modules.Season;
 using BiliLite.Services;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Models.Common.Season;
+using BiliLite.ViewModels.Season;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -16,13 +18,14 @@ namespace BiliLite.Pages.Bangumi
     /// </summary>
     public sealed partial class SeasonRankPage : BasePage
     {
-        readonly SeasonRankVM seasonRankVM;
+        readonly SeasonRankViewModel m_viewModel;
+
         public SeasonRankPage()
         {
+            m_viewModel = App.ServiceProvider.GetRequiredService<SeasonRankViewModel>();
             this.InitializeComponent();
             Title = "热门榜单";
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
-            seasonRankVM = new SeasonRankVM();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -30,7 +33,7 @@ namespace BiliLite.Pages.Bangumi
             base.OnNavigatedTo(e);
             if (e.NavigationMode == NavigationMode.New)
             {
-                 seasonRankVM.LoadRankRegion((int)e.Parameter);
+                 m_viewModel.LoadRankRegion((int)e.Parameter);
             }
         }
 
@@ -40,10 +43,10 @@ namespace BiliLite.Pages.Bangumi
             {
                 return;
             }
-            var data = pivot.SelectedItem as SeasonRankModel;
+            var data = pivot.SelectedItem as SeasonRankDataViewModel;
             if (data.Items == null || data.Items.Count == 0)
             {
-                await seasonRankVM.LoadRankDetail(data);
+                await m_viewModel.LoadRankDetail(data);
             }
         }
 
@@ -54,8 +57,8 @@ namespace BiliLite.Pages.Bangumi
             {
                 icon = Symbol.Play,
                 page = typeof(SeasonDetailPage),
-                title = item.title,
-                parameters = item.season_id,
+                title = item.Title,
+                parameters = item.SeasonId,
                 dontGoTo = dontGoTo
             });
         }
