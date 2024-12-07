@@ -20,7 +20,7 @@
                 <ControlTemplate TargetType="muxc:TabView">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="40" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
@@ -68,7 +68,7 @@
 
                             <Border
                                 Grid.Column="2"
-                                Padding="0,12"
+                                Padding="15,8"
                                 VerticalAlignment="Center"
                                 Background="{ThemeResource TabViewRightContentPresenterColor}"
                                 Visibility="{Binding IsAddTabButtonVisible, RelativeSource={RelativeSource TemplatedParent}}">
@@ -123,7 +123,7 @@
         <Setter Property="Background" Value="{ThemeResource LayerFillColorDefaultBrush}" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="UseSystemFocusVisuals" Value="True" />
-        <Setter Property="Height" Value="48" />
+        <Setter Property="Height" Value="40" />
         <Setter Property="MinWidth" Value="192" />
         <Setter Property="MaxWidth" Value="240" />
         <Setter Property="BorderThickness" Value="0,0,0.2,0" />
@@ -185,7 +185,7 @@
                             x:Name="TabContainer"
                             Grid.Column="1"
                             Margin="0,-4,0,-6"
-                            Padding="{ThemeResource TabViewItemHeaderPadding}"
+                            Padding="15,0"
                             Background="{ThemeResource TabViewRightContentPresenterColor}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
@@ -575,17 +575,11 @@
                         BorderThickness="{TemplateBinding BorderThickness}">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <ScrollContentPresenter
-                                x:Name="ScrollContentPresenter"
-                                Grid.Column="0"
-                                Padding="1,0,0,0"
-                                TabFocusNavigation="Once" />
-
-                            <Grid Grid.Column="1">
+                            <Grid Grid.Column="0" Background="{ThemeResource TabViewRightContentPresenterColor}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*" />
                                     <RowDefinition Height="*" />
@@ -607,7 +601,6 @@
                                             FontSize="10"
                                             Glyph="&#xe692;" />
                                     </RepeatButton>
-
                                 </Border>
                                 <Border
                                     x:Name="ScrollIncreaseButtonContainer"
@@ -627,10 +620,13 @@
                                             FontSize="10"
                                             Glyph="&#xe693;" />
                                     </RepeatButton>
-
                                 </Border>
                             </Grid>
-
+                            <ScrollContentPresenter
+                                x:Name="ScrollContentPresenter"
+                                Grid.Column="1"
+                                Padding="1,0,0,0"
+                                TabFocusNavigation="Once" />
                         </Grid>
                     </Border>
                 </ControlTemplate>
@@ -728,7 +724,6 @@
                         x:Name="ContentPresenter"
                         HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                         VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                        contract7NotPresent:CornerRadius="{ThemeResource ControlCornerRadius}"
                         AutomationProperties.AccessibilityView="Raw"
                         Background="{TemplateBinding Background}"
                         BackgroundSizing="{TemplateBinding BackgroundSizing}"
