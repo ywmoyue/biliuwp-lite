@@ -332,14 +332,10 @@
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard Header="固定标签宽度"
                                        Description="是否固定标签页宽度（下次打开应用生效）">
-                    <ToggleSwitch x:Name="SwitchTabItemFixedWidth" >
-                    </ToggleSwitch>
-                </controls:SettingsCard>
-
-                <controls:SettingsCard Header="固定标签宽度大小"
-                                       Description="固定标签宽度时宽度值（下次打开应用生效）">
-                    <controls1:NumberBox x:Name="NumTabItemFixedWidth"
-                                         Minimum="20"></controls1:NumberBox>
+                    <StackPanel Orientation="Horizontal">
+                        <ToggleSwitch x:Name="SwitchTabItemFixedWidth" ></ToggleSwitch>
+                        <controls1:NumberBox x:Name="NumTabItemFixedWidth" Minimum="100" MinWidth="200" IsEnabled="{Binding IsOn, ElementName=SwitchTabItemFixedWidth}" Margin="30 5 0 5"></controls1:NumberBox>
+                    </StackPanel>
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>

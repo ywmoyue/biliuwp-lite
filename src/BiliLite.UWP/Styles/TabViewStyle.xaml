@@ -124,7 +124,6 @@
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="UseSystemFocusVisuals" Value="True" />
         <Setter Property="Height" Value="40" />
-        <Setter Property="MinWidth" Value="192" />
         <Setter Property="MaxWidth" Value="240" />
         <Setter Property="BorderThickness" Value="0,0,0.2,0" />
         <Setter Property="BorderBrush" Value="Gray" />
