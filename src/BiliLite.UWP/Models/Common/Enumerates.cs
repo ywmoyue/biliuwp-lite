@@ -561,4 +561,14 @@
         /// </summary>
         Topic = 7
     }
+
+    public enum IndexSeasonType
+    {
+        Anime = 1,
+        Movie = 2,
+        Documentary = 3,
+        Guochuang = 4,
+        TV = 5,
+        Variety = 7
+    }
 }

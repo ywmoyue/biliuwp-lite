@@ -1,7 +1,6 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models;
 using BiliLite.Models.Common;
-using BiliLite.Modules;
 using BiliLite.Services;
 using System;
 using System.Threading.Tasks;
@@ -9,6 +8,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using BiliLite.Models.Common.Anime;
+using BiliLite.Models.Common.Season;
 using BiliLite.ViewModels.Home;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -128,7 +128,7 @@ namespace BiliLite.Pages.Home
                 title = animeType == AnimeType.Bangumi ? "番剧索引" : "国创索引",
                 parameters = new SeasonIndexParameter()
                 {
-                    type = animeType == AnimeType.Bangumi ? IndexSeasonType.Anime : IndexSeasonType.Guochuang
+                    Type = animeType == AnimeType.Bangumi ? IndexSeasonType.Anime : IndexSeasonType.Guochuang
                 }
             });
         }

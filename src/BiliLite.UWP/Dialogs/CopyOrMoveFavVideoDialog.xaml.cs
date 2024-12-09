@@ -1,6 +1,5 @@
 ﻿using BiliLite.Models;
 using BiliLite.Models.Requests.Api.User;
-using BiliLite.Modules;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -8,6 +7,7 @@ using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using BiliLite.Extensions;
+using BiliLite.Models.Common.Favorites;
 using BiliLite.Models.Responses;
 using BiliLite.ViewModels.User;
 
@@ -44,7 +44,7 @@ namespace BiliLite.Dialogs
                 List<string> ids = new List<string>();
                 foreach (var videoItem in selectItems)
                 {
-                    ids.Add(videoItem.id);
+                    ids.Add(videoItem.Id);
                 }
                 if (isMove)
                 {
