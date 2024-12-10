@@ -334,7 +334,7 @@
                                        Description="是否固定标签页宽度（下次打开应用生效）">
                     <StackPanel Orientation="Horizontal">
                         <ToggleSwitch x:Name="SwitchTabItemFixedWidth" ></ToggleSwitch>
-                        <controls1:NumberBox x:Name="NumTabItemFixedWidth" Minimum="100" MinWidth="200" IsEnabled="{Binding IsOn, ElementName=SwitchTabItemFixedWidth}" Margin="30 5 0 5"></controls1:NumberBox>
+                        <controls1:NumberBox x:Name="NumTabItemFixedWidth" Minimum="200" MinWidth="200" IsEnabled="{Binding IsOn, ElementName=SwitchTabItemFixedWidth}" Margin="30 5 0 5"></controls1:NumberBox>
                     </StackPanel>
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
