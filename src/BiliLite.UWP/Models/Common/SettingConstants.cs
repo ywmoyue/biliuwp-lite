@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using BiliLite.Models.Attributes;
+﻿using BiliLite.Models.Attributes;
 using BiliLite.Models.Common.Player;
 using BiliLite.Services;
+using System.Collections.Generic;
 
 namespace BiliLite.Models.Common
 {
@@ -233,7 +233,7 @@ namespace BiliLite.Models.Common
             public const string TAB_ITEM_MIN_WIDTH = "TabItemMinWidth";
 
             [SettingDefaultValue]
-            public const double DEFAULT_TAB_ITEM_MIN_WIDTH = 192;
+            public const double DEFAULT_TAB_ITEM_MIN_WIDTH = 0;
 
             /// <summary>
             /// 是否启用动态磁贴
@@ -612,7 +612,7 @@ namespace BiliLite.Models.Common
             [SettingKey(typeof(object))]
             public const string FfmpegOptions = "FfmpegOptions";
 
-                /// <summary>
+            /// <summary>
             /// 使用外站视频替换无法播放的视频 bool
             /// </summary>
             [SettingKey(typeof(bool))]
