@@ -571,4 +571,13 @@
         TV = 5,
         Variety = 7
     }
+
+    public enum DownloadedSortMode
+    {
+        Default,
+        TimeDesc,
+        TimeAsc,
+        TitleDesc,
+        TitleAsc,
+    }
 }

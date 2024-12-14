@@ -34,6 +34,19 @@
                         <Run Text="{x:Bind m_viewModel.LoadingDownloadedPercent,Mode=OneWay}"></Run>
                         %
                     </TextBlock>
+
+                    <ComboBox SelectedIndex="0" MinWidth="100"
+                              x:Name="CbSortMode"
+                              SelectedValuePath="Value"
+                              DisplayMemberPath="Text"
+                              Margin="8 12"
+                              SelectionChanged="SortOptions_OnSelectionChanged"
+                              Visibility="{x:Bind m_viewModel.LoadingDownloaded,Mode=OneWay,Converter={StaticResource display}}"
+                              ItemsSource="{x:Bind m_sortOptions}">
+                    </ComboBox>
+
+                    <Button Visibility="{x:Bind m_viewModel.IsSearching,Mode=OneWay}"
+                            Click="BtnClearSearch_OnClick">清除搜索</Button>
                     <AutoSuggestBox x:Name="SearchBox" 
                                     MinWidth="200" 
                                     FontSize="12"
