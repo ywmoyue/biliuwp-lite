@@ -9,6 +9,7 @@ using PropertyChanged;
 using System.Threading;
 using Windows.Networking.BackgroundTransfer;
 using AutoMapper;
+using BiliLite.Models.Common;
 
 namespace BiliLite.ViewModels.Download
 {
@@ -60,6 +61,8 @@ namespace BiliLite.ViewModels.Download
         [DoNotNotify]
         public List<DownloadedItem> Downloadeds { get; set; }
 
+        public bool IsSearching { get; set; }
+
         public bool LoadingDownloaded { get; set; } = true;
 
         public double DiskTotal { get; set; }
@@ -74,6 +77,12 @@ namespace BiliLite.ViewModels.Download
 
         [DependsOn(nameof(TotalDownloadedCount), nameof(LoadedDownloadedCount))]
         public int LoadingDownloadedPercent => (int)((LoadedDownloadedCount * 1f / TotalDownloadedCount * 1f) * 100);
+
+        [DoNotNotify]
+        public DownloadedSortMode DownloadedSortMode { get; set; }
+
+        [DoNotNotify]
+        public string SearchKeyword { get; set; }
 
         #endregion
     }

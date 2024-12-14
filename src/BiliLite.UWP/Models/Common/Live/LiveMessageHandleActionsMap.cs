@@ -91,7 +91,7 @@ namespace BiliLite.Models.Common.Live
                 }
             }
 
-            if (viewModel.Messages.Count >= viewModel.CleanCount) viewModel.Messages.RemoveAt(0);
+            viewModel.CheckClearMessages();
             viewModel.Messages.Add(m);
             AddNewDanmu?.Invoke(null, m);
         }
@@ -137,6 +137,7 @@ namespace BiliLite.Models.Common.Live
                 msg.ShowMedal = info.ShowMedal;
             }
 
+            viewModel.CheckClearMessages();
             viewModel.Messages.Add(msg);
         }
 

@@ -44,6 +44,7 @@
         <MenuFlyout x:Name="ShareMenu">
             <MenuFlyoutItem Click="btnShareCopyUrl_Click" Icon="Copy" Text="复制链接"/>
             <MenuFlyoutItem Click="btnShareCopy_Click" Icon="Copy" Text="复制标题链接"/>
+            <MenuFlyoutItem Click="BtnCopyAvId_OnClick"  Icon="Copy" Text="复制Av号"/>
             <MenuFlyoutItem Click="btnShare_Click" Icon="Share" Text="分享到..."/>
         </MenuFlyout>
     </Page.Resources>
