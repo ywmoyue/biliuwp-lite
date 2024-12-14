@@ -68,7 +68,7 @@
 
                             <Border
                                 Grid.Column="2"
-                                Padding="15,8"
+                                Padding="5,8"
                                 VerticalAlignment="Center"
                                 Background="{ThemeResource TabViewRightContentPresenterColor}"
                                 Visibility="{Binding IsAddTabButtonVisible, RelativeSource={RelativeSource TemplatedParent}}">
@@ -183,7 +183,6 @@
                         <Grid
                             x:Name="TabContainer"
                             Grid.Column="1"
-                            Margin="0,-4,0,-6"
                             Padding="15,0"
                             Background="{ThemeResource TabViewRightContentPresenterColor}"
                             BorderBrush="{TemplateBinding BorderBrush}"
@@ -234,7 +233,7 @@
                             <Button
                                 x:Name="CloseButton"
                                 Grid.Column="2"
-                                Margin="{ThemeResource TabViewItemHeaderCloseMargin}"
+                                Margin="0,0,-8,0"
                                 Content="&#xE711;"
                                 HighContrastAdjustment="None"
                                 IsTabStop="False"
