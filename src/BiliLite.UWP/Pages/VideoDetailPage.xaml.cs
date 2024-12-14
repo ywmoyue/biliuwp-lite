@@ -746,5 +746,10 @@ namespace BiliLite.Pages
                 e.OriginalSource.GetType() != typeof(TextBox))
                 e.Handled = true;
         }
+
+        private void BtnCopyAvId_OnClick(object sender, RoutedEventArgs e)
+        {
+            ("av" + m_viewModel.VideoInfo.Aid).SetClipboard();
+        }
     }
 }
