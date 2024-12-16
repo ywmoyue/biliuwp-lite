@@ -87,7 +87,7 @@
                             <ContentPresenter
                                 x:Name="RightContentPresenter"
                                 Grid.Column="3"
-                                Padding="0,0,190,0"
+                                Padding="0,0,183,0"
                                 HorizontalAlignment="Stretch"
                                 Background="{ThemeResource TabViewRightContentPresenterColor}"
                                 Content="{TemplateBinding TabStripFooter}"
