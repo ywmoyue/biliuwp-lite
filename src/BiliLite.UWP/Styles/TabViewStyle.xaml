@@ -68,8 +68,8 @@
 
                             <Border
                                 Grid.Column="2"
-                                Padding="5,8"
-                                VerticalAlignment="Center"
+                                Padding="5,0"
+                                VerticalAlignment="Stretch"
                                 Background="{ThemeResource TabViewRightContentPresenterColor}"
                                 Visibility="{Binding IsAddTabButtonVisible, RelativeSource={RelativeSource TemplatedParent}}">
                                 <Button
@@ -219,6 +219,7 @@
                             <ContentPresenter
                                 x:Name="ContentPresenter"
                                 Grid.Column="1"
+                                Margin="0,0,0,1"
                                 HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                 VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                 Content=""
