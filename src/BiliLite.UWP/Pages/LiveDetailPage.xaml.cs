@@ -323,10 +323,23 @@ namespace BiliLite.Pages
                 if (e.NewState.IsFullscreen && !view.IsFullScreenMode)
                 {
                     view.TryEnterFullScreenMode();
+
+                    if (SettingService.GetValue(SettingConstants.UI.DISPLAY_MODE, 0) <= 0)
+                    {
+                        var marginOffset = SettingService.GetValue(SettingConstants.UI.TAB_HEIGHT,
+                            SettingConstants.UI.DEFAULT_TAB_HEIGHT);
+                        this.Margin = new Thickness(0, marginOffset * -1, 0, 0);
+                    }
+                    else
+                    {
+                        this.Margin = new Thickness(0, -40, 0, 0);
+                    }
                 }
                 else if (view.IsFullScreenMode)
                 {
                     view.ExitFullScreenMode();
+
+                    this.Margin = new Thickness(0);
                 }
             });
         }

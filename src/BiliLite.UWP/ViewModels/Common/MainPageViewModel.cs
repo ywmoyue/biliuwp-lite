@@ -32,5 +32,10 @@ namespace BiliLite.ViewModels.Common
             : SettingService.GetValue(
                 SettingConstants.UI.TAB_ITEM_MIN_WIDTH,
                 SettingConstants.UI.DEFAULT_TAB_ITEM_MIN_WIDTH);
+
+        [DoNotNotify]
+        public double TabHeight => SettingService.GetValue(
+                SettingConstants.UI.TAB_HEIGHT,
+                SettingConstants.UI.DEFAULT_TAB_HEIGHT);
     }
 }

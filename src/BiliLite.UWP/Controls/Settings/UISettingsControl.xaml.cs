@@ -306,6 +306,36 @@ namespace BiliLite.Controls.Settings
                 };
             };
 
+            // 标签最小宽度
+            NumTabItemMinWidth.Value = SettingService.GetValue(SettingConstants.UI.TAB_ITEM_MIN_WIDTH, SettingConstants.UI.DEFAULT_TAB_ITEM_MIN_WIDTH);
+            NumTabItemMinWidth.Loaded += (sender, e) =>
+            {
+                NumTabItemMinWidth.ValueChanged += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.TAB_ITEM_MIN_WIDTH, NumTabItemMinWidth.Value);
+                };
+            };
+
+            // 标签最大宽度
+            NumTabItemMaxWidth.Value = SettingService.GetValue(SettingConstants.UI.TAB_ITEM_MAX_WIDTH, SettingConstants.UI.DEFAULT_TAB_ITEM_MAX_WIDTH);
+            NumTabItemMaxWidth.Loaded += (sender, e) =>
+            {
+                NumTabItemMaxWidth.ValueChanged += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.TAB_ITEM_MAX_WIDTH, NumTabItemMaxWidth.Value);
+                };
+            };
+
+            // 标签高度
+            NumTabHeight.Value = SettingService.GetValue(SettingConstants.UI.TAB_HEIGHT, SettingConstants.UI.DEFAULT_TAB_HEIGHT);
+            NumTabHeight.Loaded += (sender, e) =>
+            {
+                NumTabHeight.ValueChanged += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.TAB_HEIGHT, NumTabHeight.Value);
+                };
+            };
+
             //显示视频底部进度条
             SwShowVideoBottomProgress.IsOn = SettingService.GetValue(SettingConstants.UI.SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR, SettingConstants.UI.DEFAULT_SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR);
             SwShowVideoBottomProgress.Loaded += (sender, e) =>

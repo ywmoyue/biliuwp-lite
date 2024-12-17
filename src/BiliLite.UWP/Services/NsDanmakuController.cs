@@ -12,7 +12,6 @@ using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels.Video;
 using NSDanmaku.Controls;
 using NSDanmaku.Model;
-using BiliLite.Models.Common;
 
 namespace BiliLite.Services
 {
@@ -112,23 +111,7 @@ namespace BiliLite.Services
         public override void SetTopMargin(double topMargin)
         {
             base.SetTopMargin(topMargin);
-            if (SettingService.GetValue(SettingConstants.UI.DISPLAY_MODE, 0) > 0)
-            {
-                m_danmakuControl.Margin = DanmakuViewModel.Fullscreen ? new Thickness(0, DanmakuViewModel.MarginTop + 16, 0, 0) : new Thickness(0, DanmakuViewModel.MarginTop, 0, 0);
-            }
-            else
-            {
-                m_danmakuControl.Margin = new Thickness(0, topMargin, 0, 0);
-            }
-        }
-
-        public override void SetFullscreen(bool fullscreen)
-        {
-            base.SetFullscreen(fullscreen);
-            if (SettingService.GetValue(SettingConstants.UI.DISPLAY_MODE, 0) > 0)
-            {
-                m_danmakuControl.Margin = fullscreen ? new Thickness(0, DanmakuViewModel.MarginTop + 16, 0, 0) : new Thickness(0, DanmakuViewModel.MarginTop, 0, 0);
-            }
+            m_danmakuControl.Margin = new Thickness(0, topMargin, 0, 0);
         }
 
         public override void SetOpacity(double opacity)
