@@ -306,6 +306,16 @@ namespace BiliLite.Controls.Settings
                 };
             };
 
+            // 标签高度
+            NumTabHeight.Value = SettingService.GetValue(SettingConstants.UI.TAB_HEIGHT, SettingConstants.UI.DEFAULT_TAB_HEIGHT);
+            NumTabHeight.Loaded += (sender, e) =>
+            {
+                NumTabHeight.ValueChanged += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.TAB_HEIGHT, NumTabHeight.Value);
+                };
+            };
+
             //显示视频底部进度条
             SwShowVideoBottomProgress.IsOn = SettingService.GetValue(SettingConstants.UI.SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR, SettingConstants.UI.DEFAULT_SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR);
             SwShowVideoBottomProgress.Loaded += (sender, e) =>

@@ -265,6 +265,9 @@ namespace BiliLite
         }
         private void tabView_Loaded(object sender, RoutedEventArgs e)
         {
+            // 根据Tab高度设置图片视图边距
+            gridViewer.Margin = new Thickness(0, m_viewModel.TabHeight, 0, 0);
+
             var frame = new MyFrame();
 
             frame.Navigate(typeof(HomePage));
@@ -325,9 +328,19 @@ namespace BiliLite
 
             var styleKvp = dict.FirstOrDefault(x => x.Key.ToString().Contains("TabViewItem"));
 
-            if (!(styleKvp.Value is Style style)) return;
-            style.Setters.Add(new Setter(TabViewItem.MinWidthProperty, m_viewModel.TabItemMinWidth));
-            style.Setters.Add(new Setter(TabViewItem.MaxWidthProperty, m_viewModel.TabItemMaxWidth));
+            if (styleKvp.Value is Style style)
+            {
+                style.Setters.Add(new Setter(TabViewItem.MinWidthProperty, m_viewModel.TabItemMinWidth));
+                style.Setters.Add(new Setter(TabViewItem.MaxWidthProperty, m_viewModel.TabItemMaxWidth));
+                style.Setters.Add(new Setter(TabViewItem.HeightProperty, m_viewModel.TabHeight));
+            }
+
+            var tabStyleKvp = dict.FirstOrDefault(x => x.Key.ToString().Contains("TabViewListView"));
+
+            if (tabStyleKvp.Value is Style tabStyle)
+            {
+                tabStyle.Setters.Add(new Setter(TabViewItem.HeightProperty, m_viewModel.TabHeight));
+            }
         }
     }
 }

@@ -337,6 +337,10 @@
                         <controls1:NumberBox x:Name="NumTabItemFixedWidth" Minimum="200" MinWidth="200" IsEnabled="{Binding IsOn, ElementName=SwitchTabItemFixedWidth}" Margin="30 5 0 5"></controls1:NumberBox>
                     </StackPanel>
                 </controls:SettingsCard>
+                <controls:SettingsCard Header="标签高度"
+                                       Description="设置标签页高度（下次打开应用生效，建议立即重启应用，否则会出现奇怪的bug）">
+                    <controls1:NumberBox x:Name="NumTabHeight" MinWidth="200" Margin="30 5 0 5"></controls1:NumberBox>
+                </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
