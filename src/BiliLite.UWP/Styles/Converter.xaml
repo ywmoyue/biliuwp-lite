@@ -8,4 +8,5 @@
     <convert:ImageSourceConvert x:Key="imageConvert2" />
     <convert:DisplayConvert x:Key="display" />
     <convert:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    <convert:InverseBooleanConverter x:Key="InverseBooleanConverter" />
 </ResourceDictionary>

@@ -173,7 +173,7 @@ namespace BiliLite.Controls
             }
             else
             {
-                m_danmakuController = App.ServiceProvider.GetRequiredService<FrostMasterDanmakuController>(); 
+                m_danmakuController = App.ServiceProvider.GetRequiredService<FrostMasterDanmakuController>();
                 m_danmakuController.Init(DanmakuCanvas);
             }
         }
@@ -496,7 +496,7 @@ namespace BiliLite.Controls
         {
             //音量
             Player.Volume = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_VOLUME, SettingConstants.Player.DEFAULT_PLAYER_VOLUME);
-            
+
             var lockPlayerVolume = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_VOLUME, SettingConstants.Player.DEFAULT_LOCK_PLAYER_VOLUME);
             if (!lockPlayerVolume)
             {
@@ -1588,7 +1588,7 @@ namespace BiliLite.Controls
             if (quality.PlayUrlType == BiliPlayUrlType.DASH)
             {
                 var realPlayerType = (RealPlayerType)SettingService.GetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE, (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
-                if (realPlayerType==RealPlayerType.Native)
+                if (realPlayerType == RealPlayerType.Native)
                 {
                     result = await Player.PlayerDashUseNative(quality.DashInfo, quality.UserAgent, quality.Referer, positon: _postion);
 
@@ -1681,10 +1681,6 @@ namespace BiliLite.Controls
                 BottomBtnFull.Visibility = Visibility.Collapsed;
                 BottomBtnFullWindows.Visibility = Visibility.Collapsed;
                 BottomBtnExitFullWindows.Visibility = Visibility.Collapsed;
-                if (SettingService.GetValue(SettingConstants.UI.DISPLAY_MODE, 0) > 0)
-                {
-                    TopControlBar.Margin = new Thickness(0, 48, 0, 0);
-                }
 
                 //全屏
                 if (!view.IsFullScreenMode)

@@ -186,6 +186,7 @@
       <DependentUpon>VideoListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\FilterRuleTypeConverter.cs" />
+    <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Dialogs\EditPlaySpeedMenuDialog.xaml.cs">
       <DependentUpon>EditPlaySpeedMenuDialog.xaml</DependentUpon>
     </Compile>
