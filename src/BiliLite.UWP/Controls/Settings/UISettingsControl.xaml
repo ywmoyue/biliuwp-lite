@@ -341,6 +341,14 @@
                                        Description="设置标签页高度（下次打开应用生效，建议立即重启应用，否则会出现奇怪的bug）">
                     <controls1:NumberBox x:Name="NumTabHeight" MinWidth="200" Margin="30 5 0 5"></controls1:NumberBox>
                 </controls:SettingsCard>
+                <controls:SettingsCard Header="标签页最小宽度"
+                                       Description="设置标签页最小宽度（下次打开应用生效）">
+                    <controls1:NumberBox x:Name="NumTabItemMinWidth" MinWidth="200" Margin="30 5 0 5"></controls1:NumberBox>
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="标签页最大宽度"
+                                       Description="设置标签页最大宽度（下次打开应用生效）">
+                    <controls1:NumberBox x:Name="NumTabItemMaxWidth" MinWidth="200" Margin="30 5 0 5"></controls1:NumberBox>
+                </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
