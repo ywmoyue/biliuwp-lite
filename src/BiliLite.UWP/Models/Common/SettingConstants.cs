@@ -235,6 +235,12 @@ namespace BiliLite.Models.Common
             [SettingDefaultValue]
             public const double DEFAULT_TAB_ITEM_MIN_WIDTH = 0;
 
+            [SettingKey(typeof(double))]
+            public const string TAB_HEIGHT = "TabHeight";
+
+            [SettingDefaultValue]
+            public const double DEFAULT_TAB_HEIGHT = 40;
+
             /// <summary>
             /// 是否启用动态磁贴
             /// </summary>

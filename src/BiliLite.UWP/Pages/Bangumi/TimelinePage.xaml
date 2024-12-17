@@ -8,28 +8,28 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:controls="using:BiliLite.Controls"
-    xmlns:modules="using:BiliLite.Modules"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:fa="using:FontAwesome5"
+    xmlns:anime="using:BiliLite.Models.Common.Anime"
     Background="Transparent">
     <Page.Resources>
         <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent"></SolidColorBrush>
         <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White"></SolidColorBrush>
     </Page.Resources>
     <Grid>
-        <Pivot x:Name="timeLine" ItemsSource="{x:Bind Path=timelineVM.Timelines,Mode=OneWay}" SelectedItem="{x:Bind Path=timelineVM.Today,Mode=OneWay}">
+        <Pivot x:Name="timeLine" ItemsSource="{x:Bind Path=m_viewModel.Timelines,Mode=OneWay}" SelectedItem="{x:Bind Path=m_viewModel.Today,Mode=OneWay}">
             <Pivot.HeaderTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="anime:AnimeTimelineModel">
                     <StackPanel>
-                        <TextBlock FontSize="12" TextAlignment="Center" Text="{Binding date}"></TextBlock>
-                        <TextBlock FontSize="16"  Text="{Binding week}"></TextBlock>
+                        <TextBlock FontSize="12" TextAlignment="Center" Text="{Binding Date}"></TextBlock>
+                        <TextBlock FontSize="16"  Text="{Binding Week}"></TextBlock>
                     </StackPanel>
                    
                 </DataTemplate>
             </Pivot.HeaderTemplate>
             <Pivot.RightHeader>
                 <Grid Background="{ThemeResource PivotHeaderBackground}" >
-                    <ComboBox x:Name="cbType" Margin="8" ItemsSource="{x:Bind Path=timelineVM.AnimeTypeItems}" SelectedItem="{x:Bind Path=timelineVM.SelectAnimeType}" SelectionChanged="cbType_SelectionChanged" DisplayMemberPath="Name"></ComboBox>
+                    <ComboBox x:Name="cbType" Margin="8" ItemsSource="{x:Bind Path=m_viewModel.AnimeTypeItems}" SelectedItem="{x:Bind Path=m_viewModel.SelectAnimeType}" SelectionChanged="cbType_SelectionChanged" DisplayMemberPath="Name"></ComboBox>
                 </Grid>
                
             </Pivot.RightHeader>
@@ -42,7 +42,7 @@
                 </Style>
             </Pivot.ItemContainerStyle>
             <Pivot.ItemTemplate>
-                <DataTemplate x:DataType="modules:AnimeTimelineModel">
+                <DataTemplate x:DataType="anime:AnimeTimelineModel">
                     <toolkit:AdaptiveGridView
                          OneRowModeEnabled="False"
                          StretchContentForSingleRow="False"
@@ -50,7 +50,7 @@
                           DesiredWidth="180"
                           ItemClick="AdaptiveGridView_ItemClick"
                         PointerPressed="AdaptiveGridView_PointerPressed"
-                          ItemsSource="{x:Bind Path=seasons}"
+                          ItemsSource="{x:Bind Path=Seasons}"
                                           SelectionMode="None"
                                           IsItemClickEnabled="True">
 
@@ -63,7 +63,7 @@
                         </GridView.ItemContainerStyle>
                       
                         <GridView.ItemTemplate>
-                            <DataTemplate x:DataType="modules:AnimeTimelineItemModel">
+                            <DataTemplate x:DataType="anime:AnimeTimelineItemModel">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition/>
@@ -98,6 +98,6 @@
                 </DataTemplate>
             </Pivot.ItemTemplate>
         </Pivot>
-        <ProgressRing IsActive="True"  VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{x:Bind Path=timelineVM.Loading,Mode=OneWay}"></ProgressRing>
+        <ProgressRing IsActive="True"  VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"></ProgressRing>
     </Grid>
 </pages:BasePage>

@@ -75,9 +75,11 @@ namespace BiliLite.Extensions
                 expression.CreateMap<FollowTlistItemModel, UserRelationFollowingTagViewModel>();
                 expression.CreateMap<VideoListSection, VideoListSectionViewModel>();
                 expression.CreateMap<VideoPlaylistItem,VideoListItem>();
-                expression.CreateMap<FavoriteItemModel, FavoriteItemViewModel>();
-                expression.CreateMap<CinemaHomeModel, CinemaHomeViewModel>();
+                expression.CreateMap<FavoriteItemModel, FavoriteItemViewModel>(); 
+                expression.CreateMap<CinemaHomeModel, CinemaHomeViewModel>(); 
                 expression.CreateMap<CinemaHomeFallModel, CinemaHomeFallViewModel>();
+                expression.CreateMap<SeasonShortReviewItemModel, SeasonShortReviewItemViewModel>();
+                expression.CreateMap<SeasonShortReviewItemStatModel, SeasonShortReviewItemStatViewModel>();
                 expression.CreateMap<MediaListItem, VideoListItem>()
                     .ForMember(dest => dest.Author,
                         opt => opt.MapFrom(src =>

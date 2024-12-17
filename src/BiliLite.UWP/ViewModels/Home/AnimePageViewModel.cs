@@ -11,6 +11,7 @@ using BiliLite.Extensions;
 using BiliLite.Models;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Anime;
+using BiliLite.Models.Common.Season;
 using BiliLite.Models.Requests.Api.Home;
 using BiliLite.Models.Requests.Api.User;
 using BiliLite.Modules;
@@ -108,8 +109,8 @@ namespace BiliLite.ViewModels.Home
                             title="索引",
                             parameters=new SeasonIndexParameter()
                             {
-                                type=  IndexSeasonType.Anime,
-                                area=m_animeType== AnimeType.Bangumi?"-1":"1,6,7"
+                                Type=  IndexSeasonType.Anime,
+                                Area=m_animeType== AnimeType.Bangumi?"-1":"1,6,7"
                             }
                     }
                 },

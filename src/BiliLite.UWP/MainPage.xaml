@@ -61,7 +61,6 @@
             Visibility="Collapsed" />
         <Grid
             x:Name="gridViewer"
-            Margin="0,40,0,0"
             Background="{ThemeResource SystemControlChromeHighAcrylicElementMediumBrush}"
             Opacity="0"
             Visibility="Collapsed">

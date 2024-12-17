@@ -1,7 +1,6 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models;
 using BiliLite.Models.Common;
-using BiliLite.Modules;
 using BiliLite.Services;
 using System;
 using System.Threading.Tasks;
@@ -9,6 +8,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using BiliLite.Models.Common.Home;
+using BiliLite.Models.Common.Season;
 using BiliLite.ViewModels.Home;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -110,7 +110,7 @@ namespace BiliLite.Pages.Home
                 title = "纪录片索引",
                 parameters = new SeasonIndexParameter()
                 {
-                    type = IndexSeasonType.Documentary
+                    Type = IndexSeasonType.Documentary
                 }
             });
         }
@@ -124,7 +124,7 @@ namespace BiliLite.Pages.Home
                 title = "电影索引",
                 parameters = new SeasonIndexParameter()
                 {
-                    type = IndexSeasonType.Movie
+                    Type = IndexSeasonType.Movie
                 }
             });
         }
@@ -138,7 +138,7 @@ namespace BiliLite.Pages.Home
                 title = "电视剧索引",
                 parameters = new SeasonIndexParameter()
                 {
-                    type = IndexSeasonType.TV
+                    Type = IndexSeasonType.TV
                 }
             });
         }
@@ -168,7 +168,7 @@ namespace BiliLite.Pages.Home
                 title = "综艺索引",
                 parameters = new SeasonIndexParameter()
                 {
-                    type = IndexSeasonType.Variety
+                    Type = IndexSeasonType.Variety
                 }
             });
         }

@@ -7,30 +7,33 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-     xmlns:model="using:BiliLite.Modules" 
       xmlns:controls="using:BiliLite.Controls" 
       xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls" 
       xmlns:winui="using:Microsoft.UI.Xaml.Controls" 
-      xmlns:fa="using:FontAwesome5" 
-    Background="Transparent">
-
+      xmlns:fa="using:FontAwesome5"
+      xmlns:season="using:BiliLite.Models.Common.Season"
+      Background="Transparent">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid>
-            <ItemsControl ItemsSource="{x:Bind Path=seasonIndexVM.Conditions,Mode=OneWay}">
+            <ItemsControl ItemsSource="{x:Bind Path=m_viewModel.Conditions,Mode=OneWay}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <toolkit:WrapPanel Orientation="Horizontal"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="model:SeasonIndexConditionFilterModel">
+                    <DataTemplate x:DataType="season:SeasonIndexConditionFilterModel">
                         <StackPanel Padding="8">
-                            <TextBlock Margin="4 0 0 4" Text="{x:Bind Path=name}"></TextBlock>
-                            <ComboBox Width="100" SelectionChanged="ComboBox_SelectionChanged" ItemsSource="{x:Bind Path=values}" SelectedItem="{x:Bind Path=current,Mode=TwoWay}" DisplayMemberPath="name"></ComboBox>
+                            <TextBlock Margin="4 0 0 4" Text="{x:Bind Path=Name}"></TextBlock>
+                            <ComboBox Width="100" SelectionChanged="ComboBox_SelectionChanged" 
+                                      ItemsSource="{x:Bind Path=Values}" 
+                                      SelectedItem="{x:Bind Path=Current,Mode=TwoWay}" 
+                                      DisplayMemberPath="{x:Bind Name}">
+                            </ComboBox>
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
@@ -39,10 +42,10 @@
         <controls:MyAdaptiveGridView 
             ItemClick="ListResult_ItemClick"
             PointerPressed="MyAdaptiveGridView_PointerPressed"
-            LoadMoreCommand="{x:Bind Path=seasonIndexVM.LoadMoreCommand,Mode=OneWay}"
+            LoadMoreCommand="{x:Bind Path=m_viewModel.LoadMoreCommand,Mode=OneWay}"
             CanLoadMore="True"
-            ItemsSource="{x:Bind Path=seasonIndexVM.Result,Mode=OneWay}"
-            Loading="{x:Bind Path=seasonIndexVM.Loading,Mode=OneWay}"
+            ItemsSource="{x:Bind Path=m_viewModel.Result,Mode=OneWay}"
+            Loading="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"
            Padding="8"
             DesiredWidth="180"
             StretchContentForSingleRow="False"
@@ -51,7 +54,7 @@
             SelectionMode="None" 
             IsItemClickEnabled="True">
             <GridView.ItemTemplate>
-                <DataTemplate  x:DataType="model:SeasonIndexResultItemModel">
+                <DataTemplate  x:DataType="season:SeasonIndexResultItemModel">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition />
@@ -60,7 +63,7 @@
                         </Grid.RowDefinitions>
                         <Border CornerRadius="{StaticResource ImageCornerRadius}">
                             <Grid>
-                                <toolkit:ImageEx IsCacheEnabled="True" MaxHeight="240" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=cover,Converter={StaticResource imageConvert},ConverterParameter='300w'}"></toolkit:ImageEx>
+                                <toolkit:ImageEx IsCacheEnabled="True" MaxHeight="240" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=Cover,Converter={StaticResource imageConvert},ConverterParameter='300w'}"></toolkit:ImageEx>
                                 <Grid VerticalAlignment="Bottom" Padding="8">
                                     <Grid.Background>
                                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -69,17 +72,17 @@
                                         </LinearGradientBrush>
                                     </Grid.Background>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=order}" Visibility="{x:Bind Path=show_score,Converter={StaticResource display}}"></TextBlock>
-                                        <TextBlock FontSize="14" Foreground="Orange" FontWeight="Bold" Text="{x:Bind Path=order}" Visibility="{x:Bind Path=show_score}"></TextBlock>
+                                        <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=Order}" Visibility="{x:Bind Path=ShowScore,Converter={StaticResource display}}"></TextBlock>
+                                        <TextBlock FontSize="14" Foreground="Orange" FontWeight="Bold" Text="{x:Bind Path=Order}" Visibility="{x:Bind Path=ShowScore}"></TextBlock>
                                     </StackPanel>
                                 </Grid>
-                                <Border Visibility="{Binding show_badge}" VerticalAlignment="Top" Background="#FFFB9E60" HorizontalAlignment="Right" Margin="4" Padding="8 4" CornerRadius="2">
-                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#FFFFFFFF" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=badge}"></TextBlock>
+                                <Border Visibility="{Binding ShowBadge}" VerticalAlignment="Top" Background="#FFFB9E60" HorizontalAlignment="Right" Margin="4" Padding="8 4" CornerRadius="2">
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#FFFFFFFF" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=Badge}"></TextBlock>
                                 </Border>
                             </Grid>
                         </Border>
-                        <TextBlock Grid.Row="1" Margin="4 4 4 0" MaxLines="1" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=title}"></TextBlock>
-                        <TextBlock Grid.Row="2" Margin="4 0 4 4" TextWrapping="Wrap" FontSize="12" Foreground="Gray" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=index_show}"></TextBlock>
+                        <TextBlock Grid.Row="1" Margin="4 4 4 0" MaxLines="1" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=Title}"></TextBlock>
+                        <TextBlock Grid.Row="2" Margin="4 0 4 4" TextWrapping="Wrap" FontSize="12" Foreground="Gray" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=IndexShow}"></TextBlock>
                     </Grid>
                 </DataTemplate>
             </GridView.ItemTemplate>
@@ -92,14 +95,14 @@
             </GridView.ItemContainerStyle>
             <toolkit:AdaptiveGridView.Footer>
                 <StackPanel>
-                    <HyperlinkButton  Command="{x:Bind Path=seasonIndexVM.LoadMoreCommand}" Visibility="{x:Bind Path=seasonIndexVM.Loading,Mode=OneWay,Converter={StaticResource display}}" Foreground="Gray" HorizontalAlignment="Center" x:Name="btnLoadMore">
+                    <HyperlinkButton  Command="{x:Bind Path=m_viewModel.LoadMoreCommand}" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay,Converter={StaticResource display}}" Foreground="Gray" HorizontalAlignment="Center" x:Name="btnLoadMore">
                         <TextBlock>加载更多</TextBlock>
                     </HyperlinkButton>
-                    <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=seasonIndexVM.Loading,Mode=OneWay}"></ProgressRing>
+                    <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"></ProgressRing>
                 </StackPanel>
             </toolkit:AdaptiveGridView.Footer>
         </controls:MyAdaptiveGridView>
-        <controls:RoundButton Grid.RowSpan="2" Command="{x:Bind Path=seasonIndexVM.RefreshCommand}" Visibility="{x:Bind Path=seasonIndexVM.Loading,Mode=OneWay,Converter={StaticResource display}}" VerticalAlignment="Bottom" Padding="12" Margin="12" HorizontalAlignment="Right">
+        <controls:RoundButton Grid.RowSpan="2" Command="{x:Bind Path=m_viewModel.RefreshCommand}" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay,Converter={StaticResource display}}" VerticalAlignment="Bottom" Padding="12" Margin="12" HorizontalAlignment="Right">
             <SymbolIcon Symbol="Refresh" Foreground="White"></SymbolIcon>
         </controls:RoundButton>
     </Grid>

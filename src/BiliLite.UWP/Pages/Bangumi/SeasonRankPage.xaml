@@ -9,7 +9,8 @@
     mc:Ignorable="d"
     xmlns:convert="using:BiliLite.Converters" 
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:modules="using:BiliLite.Modules.Season"
+     xmlns:season="using:BiliLite.Models.Common.Season"
+    xmlns:viewModel="using:BiliLite.ViewModels.Season"
     Background="Transparent">
     <Page.Resources>
         <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent"></SolidColorBrush>
@@ -17,11 +18,11 @@
         <convert:RankColorConvert x:Key="RankConvert"/>
     </Page.Resources>
     <Grid>
-        <Pivot ItemsSource="{x:Bind Path=seasonRankVM.RegionItems,Mode=OneWay}" SelectedItem="{x:Bind Path=seasonRankVM.Current,Mode=TwoWay}" x:Name="pivot" SelectionChanged="pivot_SelectionChanged">
+        <Pivot ItemsSource="{x:Bind Path=m_viewModel.RegionItems,Mode=OneWay}" SelectedItem="{x:Bind Path=m_viewModel.Current,Mode=TwoWay}" x:Name="pivot" SelectionChanged="pivot_SelectionChanged">
           
             <Pivot.HeaderTemplate>
-                <DataTemplate x:DataType="modules:SeasonRankModel">
-                    <TextBlock FontSize="15" Text="{x:Bind Path=name}"></TextBlock>
+                <DataTemplate x:DataType="viewModel:SeasonRankDataViewModel">
+                    <TextBlock FontSize="15" Text="{x:Bind Path=Name}"></TextBlock>
                 </DataTemplate>
             </Pivot.HeaderTemplate>
             <Pivot.ItemContainerStyle>
@@ -30,7 +31,7 @@
                 </Style>
             </Pivot.ItemContainerStyle>
             <Pivot.ItemTemplate>
-                <DataTemplate x:DataType="modules:SeasonRankModel">
+                <DataTemplate x:DataType="viewModel:SeasonRankDataViewModel">
                     <toolkit:AdaptiveGridView 
                         OneRowModeEnabled="False"
                         ItemClick="AdaptiveGridView_ItemClick"
@@ -46,7 +47,7 @@
                             </Style>
                         </toolkit:AdaptiveGridView.ItemContainerStyle>
                         <toolkit:AdaptiveGridView.ItemTemplate>
-                            <DataTemplate x:DataType="modules:SeasonRankItemModel">
+                            <DataTemplate x:DataType="season:SeasonRankItemModel">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="160"/>
@@ -54,20 +55,20 @@
                                     </Grid.ColumnDefinitions>
                                     <Border Margin="4" CornerRadius="{StaticResource ImageCornerRadius}">
                                         <Grid >
-                                            <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=new_ep.cover,Converter={StaticResource imageConvert},ConverterParameter='120h'}"></toolkit:ImageEx>
-                                            <Border Visibility="{Binding show_badge}" VerticalAlignment="Top" Background="#FFFB9E60" HorizontalAlignment="Right" Margin="4" Padding="8 4" CornerRadius="2">
-                                                <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#FFFFFFFF" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=badge}"></TextBlock>
+                                            <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=NewEp.Cover,Converter={StaticResource imageConvert},ConverterParameter='120h'}"></toolkit:ImageEx>
+                                            <Border Visibility="{Binding ShowBadge}" VerticalAlignment="Top" Background="#FFFB9E60" HorizontalAlignment="Right" Margin="4" Padding="8 4" CornerRadius="2">
+                                                <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#FFFFFFFF" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=Badge}"></TextBlock>
                                             </Border>
-                                            <Border Padding="12 2" Background="{x:Bind Path=rank,Converter={StaticResource RankConvert}}" Opacity="0.8" CornerRadius="0 0 4 0" VerticalAlignment="Top" HorizontalAlignment="Left">
-                                                <TextBlock Foreground="White" Text="{x:Bind Path=rank}" FontWeight="Bold" ></TextBlock>
+                                            <Border Padding="12 2" Background="{x:Bind Path=Rank,Converter={StaticResource RankConvert}}" Opacity="0.8" CornerRadius="0 0 4 0" VerticalAlignment="Top" HorizontalAlignment="Left">
+                                                <TextBlock Foreground="White" Text="{x:Bind Path=Rank}" FontWeight="Bold" ></TextBlock>
                                             </Border>
                                         </Grid>
                                     </Border>
                                     <StackPanel Grid.Column="1" Margin="4 0 0 0" >
-                                        <TextBlock TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=title}"></TextBlock>
-                                        <TextBlock Foreground="Gray" Margin="0 2 0 0"><Run Text="{x:Bind Path=new_ep.index_show}"/></TextBlock>
-                                        <TextBlock Foreground="Gray" Margin="0 2 0 0" Visibility="{x:Bind Path=show_danmaku}">弹幕:<Run Text="{x:Bind Path=stat.danmaku,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
-                                        <TextBlock Foreground="Gray" Margin="0 2 0 0">综合评分 <Run Text="{x:Bind Path=pts}"/></TextBlock>
+                                        <TextBlock TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=Title}"></TextBlock>
+                                        <TextBlock Foreground="Gray" Margin="0 2 0 0"><Run Text="{x:Bind Path=NewEp.IndexShow}"/></TextBlock>
+                                        <TextBlock Foreground="Gray" Margin="0 2 0 0" Visibility="{x:Bind Path=ShowDanmaku}">弹幕:<Run Text="{x:Bind Path=Stat.Danmaku,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
+                                        <TextBlock Foreground="Gray" Margin="0 2 0 0">综合评分 <Run Text="{x:Bind Path=Pts}"/></TextBlock>
                                     </StackPanel>
                                 </Grid>
                             </DataTemplate>
@@ -76,6 +77,6 @@
                 </DataTemplate>
             </Pivot.ItemTemplate>
         </Pivot>
-        <ProgressRing IsActive="True" Visibility="{x:Bind Path=seasonRankVM.Loading,Mode=OneWay}"  VerticalAlignment="Center" HorizontalAlignment="Center"></ProgressRing>
+        <ProgressRing IsActive="True" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"  VerticalAlignment="Center" HorizontalAlignment="Center"></ProgressRing>
     </Grid>
 </pages:BasePage>

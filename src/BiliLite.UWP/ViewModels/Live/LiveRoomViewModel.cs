@@ -1314,6 +1314,11 @@ namespace BiliLite.ViewModels.Live
 
         }
 
+        public void CheckClearMessages()
+        {
+            if (Messages.Count >= CleanCount) Messages.RemoveAt(0);
+        }
+
         public void Dispose()
         {
             foreach (var item in LotteryDanmu)

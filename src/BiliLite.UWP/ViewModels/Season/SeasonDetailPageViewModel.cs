@@ -20,9 +20,11 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
 using Windows.UI.Xaml.Media;
+using BiliLite.Models.Attributes;
 
 namespace BiliLite.ViewModels.Season
 {
+    [RegisterTransientViewModel]
     public class SeasonDetailPageViewModel : BaseViewModel
     {
         #region Fields
