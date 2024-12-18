@@ -14,7 +14,7 @@
     xmlns:common="using:BiliLite.Models.Common"
     xmlns:player1="using:BiliLite.Models.Common.Player"
     xmlns:modules="using:BiliLite.Modules"
-    xmlns:video="using:BiliLite.Models.Common.Video"
+    xmlns:video="using:BiliLite.Models.Common.Video" xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     d:DesignHeight="800"
     d:DesignWidth="1000">
     <UserControl.Resources>
@@ -694,9 +694,9 @@
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
 
-                    <ProgressBar Grid.Row="1" 
+                    <muxc:ProgressBar Grid.Row="1" 
                                  Value="{Binding ElementName=Player,Path=Position,Mode=OneWay}" 
-                                 Maximum="{Binding ElementName=Player,Path=Duration,Mode=OneWay}"></ProgressBar>
+                                 Maximum="{Binding ElementName=Player,Path=Duration,Mode=OneWay}"></muxc:ProgressBar>
                 </Grid>
 
                 <Grid x:Name="control" >
@@ -939,7 +939,7 @@
                                 <fa:FontAwesome Icon="Regular_WindowMaximize"  FontSize="20"></fa:FontAwesome>
                             </HyperlinkButton>
                         </StackPanel>
-                        <ProgressBar VerticalAlignment="Bottom" Foreground="White" Value="{Binding ElementName=BottomProgress,Path=Value,Mode=OneWay}" Maximum="{Binding ElementName=BottomProgress,Path=Maximum,Mode=OneWay}"></ProgressBar>
+                        <muxc:ProgressBar VerticalAlignment="Bottom" Foreground="White" Value="{Binding ElementName=BottomProgress,Path=Value,Mode=OneWay}" Maximum="{Binding ElementName=BottomProgress,Path=Maximum,Mode=OneWay}"></muxc:ProgressBar>
                     </Grid>
 
                 </Grid>

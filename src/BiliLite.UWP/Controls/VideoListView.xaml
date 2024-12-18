@@ -5,7 +5,7 @@
     xmlns:local="using:BiliLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:muxc="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:video="using:BiliLite.ViewModels.Video"
     xmlns:video1="using:BiliLite.Models.Common.Video"
     xmlns:common="using:BiliLite.Controls.Common"
@@ -33,7 +33,7 @@
             ItemsSource="{x:Bind m_viewModel.Sections,Mode=OneWay}">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="video:VideoListSectionViewModel">
-                        <muxc:Expander
+                        <muxc:Expander HorizontalAlignment="Stretch"
                         ContextRequested="UIElement_OnContextRequested" ContextFlyout="{StaticResource SectionFlyout}" 
                         HorizontalContentAlignment="Left"
                         IsExpanded="{x:Bind Selected,Mode=OneWay}">

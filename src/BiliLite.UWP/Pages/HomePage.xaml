@@ -66,15 +66,15 @@
                                             <ImageBrush ImageSource="https://i1.hdslb.com/bfs/face/3e323499026ad0019be48dcd76f8e03199bd606c.jpg@70w_70h_1c_100q.webp"/>
                                         </Ellipse.Fill>
                                     </Ellipse>-->
-                                    <TextBlock TextAlignment="Center" Foreground="HotPink" FontWeight="Medium" Text="{x:Bind Path=m_viewModel.Profile.name,Mode=OneWay}"></TextBlock>
-                                    <Border Background="HotPink" Visibility="{x:Bind Path=m_viewModel.Profile.show_vip,Mode=OneWay}" Margin="4" Padding="4 2" CornerRadius="4" HorizontalAlignment="Center">
+                                    <TextBlock TextAlignment="Center" Foreground="{ThemeResource SystemAccentColor}" FontWeight="Medium" Text="{x:Bind Path=m_viewModel.Profile.name,Mode=OneWay}"></TextBlock>
+                                    <Border Background="{ThemeResource SystemAccentColor}" Visibility="{x:Bind Path=m_viewModel.Profile.show_vip,Mode=OneWay}" Margin="4" Padding="4 2" CornerRadius="4" HorizontalAlignment="Center">
                                         <TextBlock Foreground="White" FontSize="12" Text="{x:Bind Path=m_viewModel.Profile.vip,Mode=OneWay}"></TextBlock>
                                     </Border>
                                     <Grid Margin="12 4" >
                                         <TextBlock Foreground="{ThemeResource TextColor}">等级<Run Text="{x:Bind Path=m_viewModel.Profile.level,Mode=OneWay}"/></TextBlock>
                                         <TextBlock FontSize="12" VerticalAlignment="Center" Foreground="Gray" HorizontalAlignment="Right"><Run Text="{x:Bind Path=m_viewModel.Profile.current_exp,Mode=OneWay}"/>/<Run Text="{x:Bind Path=m_viewModel.Profile.next_exp,Mode=OneWay}"/></TextBlock>
                                     </Grid>
-                                    <ProgressBar Margin="12 4"  Background="#33808080" Value="{x:Bind Path=m_viewModel.Profile.current_exp,Mode=OneWay}" Maximum="{x:Bind Path=m_viewModel.Profile.next_exp,Mode=OneWay}"></ProgressBar>
+                                    <winui:ProgressBar Margin="12 4" Value="{x:Bind Path=m_viewModel.Profile.current_exp,Mode=OneWay}" Maximum="{x:Bind Path=m_viewModel.Profile.next_exp,Mode=OneWay}"></winui:ProgressBar>
 
                                     <Grid Padding="0 12" BorderThickness="0 1 0 1" Margin="0 4" BorderBrush="#19808080">
                                         <Grid.ColumnDefinitions>

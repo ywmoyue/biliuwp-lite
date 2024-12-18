@@ -10,7 +10,7 @@
     xmlns:controls="using:BiliLite.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls" xmlns:modules="using:BiliLite.Modules"
     xmlns:download="using:BiliLite.Models.Common.Download"
-    xmlns:viewModel="using:BiliLite.ViewModels.Download"
+    xmlns:viewModel="using:BiliLite.ViewModels.Download" xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     Background="Transparent">
     <Page.Resources>
         <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent"></SolidColorBrush>
@@ -126,7 +126,7 @@
                                                     </Grid.ColumnDefinitions>
                                                     <StackPanel>
                                                         <TextBlock Foreground="Gray" FontSize="12" Grid.Row="1" Text="{x:Bind Path=FileName}"></TextBlock>
-                                                        <ProgressBar Grid.ColumnSpan="3" Maximum="100" Value="{x:Bind Path=Progress,Mode=OneWay}"></ProgressBar>
+                                                        <muxc:ProgressBar Grid.ColumnSpan="3" Maximum="100" Value="{x:Bind Path=Progress,Mode=OneWay}"></muxc:ProgressBar>
                                                         <Grid>
                                                             <TextBlock FontSize="12"  Foreground="Gray" Text="{x:Bind Path=Status,Mode=OneWay,Converter={StaticResource downloadStatusConvert}}"></TextBlock>
                                                             <TextBlock FontSize="12"  Foreground="Gray" HorizontalAlignment="Right" >
@@ -272,7 +272,7 @@
                                             <Border  Margin="0 0 8 0" CornerRadius="{StaticResource ImageCornerRadius}">
                                                 <Grid>
                                                     <Image Width="128" Height="80" Stretch="UniformToFill" Source="{x:Bind Path=Cover}"></Image>
-                                                    <Border Visibility="{x:Bind Path=IsSeason}" CornerRadius="4" Background="HotPink" VerticalAlignment="Top" Margin="4" HorizontalAlignment="Right">
+                                                    <Border Visibility="{x:Bind Path=IsSeason}" CornerRadius="4" Background="{ThemeResource SystemAccentColor}" VerticalAlignment="Top" Margin="4" HorizontalAlignment="Right">
                                                         <TextBlock FontSize="12" Padding="8 4" Foreground="White">剧集</TextBlock>
                                                     </Border>
                                                 </Grid>
@@ -302,7 +302,7 @@
                 <TextBlock Foreground="Gray" HorizontalAlignment="Right"><Run Text="{x:Bind Path=m_viewModel.DiskUse,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/>GB/<Run Text="{x:Bind Path=m_viewModel.DiskTotal,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/>GB</TextBlock>
             </Grid>
 
-            <ProgressBar Margin="0 4 0 0" Height="8" Value="{x:Bind Path=m_viewModel.DiskUse,Mode=OneWay}" Maximum="{x:Bind Path=m_viewModel.DiskTotal,Mode=OneWay}"></ProgressBar>
+            <muxc:ProgressBar Margin="0 4 0 0" Height="8" Value="{x:Bind Path=m_viewModel.DiskUse,Mode=OneWay}" Maximum="{x:Bind Path=m_viewModel.DiskTotal,Mode=OneWay}"></muxc:ProgressBar>
 
         </StackPanel>
        
