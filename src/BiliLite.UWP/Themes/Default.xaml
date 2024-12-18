@@ -6,6 +6,8 @@
         <muxc:XamlControlsResources>
             <muxc:XamlControlsResources.MergedDictionaries>
                 <ResourceDictionary>
+                    <SolidColorBrush x:Key="ControlStrongStrokeColorDefaultBrush" Color="{ThemeResource SystemAccentColor}" />
+
                     <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
                     <SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected" Color="Transparent" />
 
