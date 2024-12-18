@@ -6,7 +6,7 @@
     xmlns:modules="using:BiliLite.Modules"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModels="using:BiliLite.ViewModels"
+    xmlns:viewModels="using:BiliLite.ViewModels" xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d">
     <ContentDialog.Resources>
         <Flyout  x:Key="FaceFlyout" x:Name="FaceFlyout">
@@ -165,7 +165,7 @@
                 </StackPanel>
             </Grid>
             <StackPanel x:Name="pr_Upload" Margin="0 4" Visibility="{x:Bind Path=m_viewModel.Uploading,Mode=OneWay}">
-                <ProgressBar Background="#00000000" IsIndeterminate="True" ></ProgressBar>
+                <muxc:ProgressBar Background="#00000000" IsIndeterminate="True" ></muxc:ProgressBar>
                 <TextBlock FontSize="14" Foreground="Gray" Margin="4 0" VerticalAlignment="Center">图片上传中...</TextBlock>
             </StackPanel>
 

@@ -11,7 +11,7 @@
     xmlns:convert="using:BiliLite.Converters" xmlns:modules="using:BiliLite.Modules"
     xmlns:comment="using:BiliLite.ViewModels.Comment"
     xmlns:common="using:BiliLite.Models.Common"
-    xmlns:viewModels="using:BiliLite.ViewModels"
+    xmlns:viewModels="using:BiliLite.ViewModels" xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     d:DesignHeight="300"
     d:DesignWidth="400"
     x:Name="CommentControlContent"
@@ -388,7 +388,7 @@
                         </ListView.ItemTemplate>
 
                     </ListView>
-                    <ProgressBar   Visibility="{x:Bind Path=ShowLoading,Mode=OneWay}" IsIndeterminate="True" ></ProgressBar>
+                    <muxc:ProgressBar   Visibility="{x:Bind Path=ShowLoading,Mode=OneWay}" IsIndeterminate="True" ></muxc:ProgressBar>
                     <StackPanel HorizontalAlignment="Center" >
 
                         <HyperlinkButton HorizontalAlignment="Center"  FontSize="14" Click="BtnLoadMoreReply_Click" Visibility="{Binding ShowReplyMore}" >
@@ -462,7 +462,7 @@
 
             <ListView.Footer>
                 <StackPanel>
-                    <ProgressBar x:Name="PrLoad" Visibility="{x:Bind m_viewModel.PrLoadVisibility, Mode=OneWay}" IsIndeterminate="True"></ProgressBar>
+                    <muxc:ProgressBar x:Name="PrLoad" Visibility="{x:Bind m_viewModel.PrLoadVisibility, Mode=OneWay}" IsIndeterminate="True"></muxc:ProgressBar>
                     <HyperlinkButton x:Name="BtnLoadMore" Click="BtnLoadMore_Click" Visibility="{x:Bind m_viewModel.BtnLoadMoreVisibility,Mode=OneWay}" HorizontalAlignment="Center">
                         <TextBlock>加载更多</TextBlock>
                     </HyperlinkButton>

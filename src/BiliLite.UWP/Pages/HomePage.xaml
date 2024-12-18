@@ -74,7 +74,7 @@
                                         <TextBlock Foreground="{ThemeResource TextColor}">等级<Run Text="{x:Bind Path=m_viewModel.Profile.level,Mode=OneWay}"/></TextBlock>
                                         <TextBlock FontSize="12" VerticalAlignment="Center" Foreground="Gray" HorizontalAlignment="Right"><Run Text="{x:Bind Path=m_viewModel.Profile.current_exp,Mode=OneWay}"/>/<Run Text="{x:Bind Path=m_viewModel.Profile.next_exp,Mode=OneWay}"/></TextBlock>
                                     </Grid>
-                                    <ProgressBar Margin="12 4"  Background="#33808080" Value="{x:Bind Path=m_viewModel.Profile.current_exp,Mode=OneWay}" Maximum="{x:Bind Path=m_viewModel.Profile.next_exp,Mode=OneWay}"></ProgressBar>
+                                    <winui:ProgressBar Margin="12 4" Value="{x:Bind Path=m_viewModel.Profile.current_exp,Mode=OneWay}" Maximum="{x:Bind Path=m_viewModel.Profile.next_exp,Mode=OneWay}"></winui:ProgressBar>
 
                                     <Grid Padding="0 12" BorderThickness="0 1 0 1" Margin="0 4" BorderBrush="#19808080">
                                         <Grid.ColumnDefinitions>
