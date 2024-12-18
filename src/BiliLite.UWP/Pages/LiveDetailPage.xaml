@@ -1222,7 +1222,7 @@
                                 <ListView.ItemTemplate>
                                     <DataTemplate x:DataType="live:GiftMsgModel">
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Foreground="HotPink" VerticalAlignment="Center" Text="{x:Bind Path=UserName}"></TextBlock>
+                                            <TextBlock Foreground="{ThemeResource SystemAccentColor}" VerticalAlignment="Center" Text="{x:Bind Path=UserName}"></TextBlock>
                                             <TextBlock  VerticalAlignment="Center" Margin="4 0">赠送</TextBlock>
                                             <TextBlock  VerticalAlignment="Center" Text="{x:Bind Path=GiftName}"></TextBlock>
                                             <Image Width="24" Source="{x:Bind Path=Gif}"></Image>

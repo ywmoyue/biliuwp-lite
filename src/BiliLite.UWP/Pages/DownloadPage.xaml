@@ -272,7 +272,7 @@
                                             <Border  Margin="0 0 8 0" CornerRadius="{StaticResource ImageCornerRadius}">
                                                 <Grid>
                                                     <Image Width="128" Height="80" Stretch="UniformToFill" Source="{x:Bind Path=Cover}"></Image>
-                                                    <Border Visibility="{x:Bind Path=IsSeason}" CornerRadius="4" Background="HotPink" VerticalAlignment="Top" Margin="4" HorizontalAlignment="Right">
+                                                    <Border Visibility="{x:Bind Path=IsSeason}" CornerRadius="4" Background="{ThemeResource SystemAccentColor}" VerticalAlignment="Top" Margin="4" HorizontalAlignment="Right">
                                                         <TextBlock FontSize="12" Padding="8 4" Foreground="White">剧集</TextBlock>
                                                     </Border>
                                                 </Grid>

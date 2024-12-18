@@ -66,8 +66,8 @@
                                             <ImageBrush ImageSource="https://i1.hdslb.com/bfs/face/3e323499026ad0019be48dcd76f8e03199bd606c.jpg@70w_70h_1c_100q.webp"/>
                                         </Ellipse.Fill>
                                     </Ellipse>-->
-                                    <TextBlock TextAlignment="Center" Foreground="HotPink" FontWeight="Medium" Text="{x:Bind Path=m_viewModel.Profile.name,Mode=OneWay}"></TextBlock>
-                                    <Border Background="HotPink" Visibility="{x:Bind Path=m_viewModel.Profile.show_vip,Mode=OneWay}" Margin="4" Padding="4 2" CornerRadius="4" HorizontalAlignment="Center">
+                                    <TextBlock TextAlignment="Center" Foreground="{ThemeResource SystemAccentColor}" FontWeight="Medium" Text="{x:Bind Path=m_viewModel.Profile.name,Mode=OneWay}"></TextBlock>
+                                    <Border Background="{ThemeResource SystemAccentColor}" Visibility="{x:Bind Path=m_viewModel.Profile.show_vip,Mode=OneWay}" Margin="4" Padding="4 2" CornerRadius="4" HorizontalAlignment="Center">
                                         <TextBlock Foreground="White" FontSize="12" Text="{x:Bind Path=m_viewModel.Profile.vip,Mode=OneWay}"></TextBlock>
                                     </Border>
                                     <Grid Margin="12 4" >
