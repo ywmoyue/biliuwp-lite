@@ -11,25 +11,26 @@
       xmlns:controls="using:BiliLite.Controls" 
       xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls" 
       xmlns:winui="using:Microsoft.UI.Xaml.Controls" 
-      xmlns:fa="using:FontAwesome5" 
-    Background="Transparent">
+      xmlns:fa="using:FontAwesome5"
+      xmlns:home="using:BiliLite.Models.Common.Home"
+      Background="Transparent">
 
     <Grid>
         <winui:RefreshContainer RefreshRequested="RefreshContainer_RefreshRequested">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel Padding="16 8">
-                    <controls:Carousel x:Name="control" ItemsSource="{x:Bind Path=liveVM.Banners,Mode=OneWay}" MaxItems="1" SlideInterval="5000" AspectRatio="3.2" MaxHeight="240">
+                    <controls:Carousel x:Name="control" ItemsSource="{x:Bind Path=m_viewModel.Banners,Mode=OneWay}" MaxItems="1" SlideInterval="5000" AspectRatio="3.2" MaxHeight="240">
                         <controls:Carousel.ContentTemplate>
                             <DataTemplate>
                                 <HyperlinkButton Margin="4 0" Padding="0" Click="BannerItem_Click">
                                     <Border CornerRadius="{StaticResource ImageCornerRadius}">
-                                        <toolkit:ImageEx IsCacheEnabled="True"  PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Source="{Binding Path=pic,Converter={StaticResource imageConvert},ConverterParameter='240h'}"></toolkit:ImageEx>
+                                        <toolkit:ImageEx IsCacheEnabled="True"  PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Source="{Binding Path=Pic,Converter={StaticResource imageConvert},ConverterParameter='240h'}"></toolkit:ImageEx>
                                     </Border>
                                 </HyperlinkButton>
                             </DataTemplate>
                         </controls:Carousel.ContentTemplate>
                     </controls:Carousel>
-                    <GridView  ItemsSource="{x:Bind Path=liveVM.Areas,Mode=OneWay}" 
+                    <GridView  ItemsSource="{x:Bind Path=m_viewModel.Areas,Mode=OneWay}" 
                                IsItemClickEnabled="True" 
                                SelectionMode="None" 
                                ScrollViewer.VerticalScrollBarVisibility="Hidden"
@@ -37,15 +38,15 @@
                                ItemClick="GridView_ItemClick"
                                HorizontalAlignment="Center">
                         <GridView.ItemTemplate>
-                            <DataTemplate x:DataType="model:LiveHomeAreaModel">
+                            <DataTemplate x:DataType="home:LiveHomeAreaModel">
                                 <StackPanel>
                                     <toolkit:ImageEx Width="48" Margin="0 4" Height="48"
                                                      IsCacheEnabled="True" 
                                                      CornerRadius="{StaticResource ImageCornerRadius}"
                                                      PlaceholderStretch="UniformToFill" 
                                                      PlaceholderSource="/assets/Thumbnails/Placeholde1x1.png" 
-                                                     Source="{x:Bind Path=pic,Converter={StaticResource imageConvert},ConverterParameter='96w'}"/>
-                                    <TextBlock Margin="0 0 0 8" TextAlignment="Center" Text="{x:Bind title}"></TextBlock>
+                                                     Source="{x:Bind Path=Pic,Converter={StaticResource imageConvert},ConverterParameter='96w'}"/>
+                                    <TextBlock Margin="0 0 0 8" TextAlignment="Center" Text="{x:Bind Title}"></TextBlock>
                                 </StackPanel>
                             </DataTemplate>
                         </GridView.ItemTemplate>
@@ -55,7 +56,7 @@
                             </Style>
                         </GridView.ItemContainerStyle>
                     </GridView>
-                    <StackPanel Margin="0 8 0 0" Visibility="{x:Bind Path=liveVM.ShowFollows,Mode=OneWay}">
+                    <StackPanel Margin="0 8 0 0" Visibility="{x:Bind Path=m_viewModel.ShowFollows,Mode=OneWay}">
                         <Grid>
                             <TextBlock FontSize="18" FontWeight="Bold">关注的直播</TextBlock>
                             <HyperlinkButton Click="btnOpenLiveCenter_Click" HorizontalAlignment="Right" Margin="8 -4 0 0">
@@ -66,7 +67,7 @@
                             MoveOffset="600" 
                             AlwayShowButton="False" 
                             ItemClick="FollowLive_ItemClick"
-                            ItemsSource="{x:Bind Path=liveVM.liveAttentionVM.Follow,Mode=OneWay}" 
+                            ItemsSource="{x:Bind Path=m_viewModel.LiveAttentionVm.Follow,Mode=OneWay}" 
                             SelectionMode="None" 
                             Margin="-4 0 0 0"
                             ScrollViewer.HorizontalScrollMode="Enabled"
@@ -127,17 +128,17 @@
                             </GridView.ItemTemplate>
                         </controls:ScrollGridView>
                     </StackPanel>
-                    <ItemsControl Margin="0 8 0 0" ItemsSource="{x:Bind Path=liveVM.Items,Mode=OneWay}">
+                    <ItemsControl Margin="0 8 0 0" ItemsSource="{x:Bind Path=m_viewModel.Items,Mode=OneWay}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <ItemsStackPanel Orientation="Vertical"></ItemsStackPanel>
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
-                            <DataTemplate x:DataType="model:LiveHomeItemsModel">
+                            <DataTemplate x:DataType="home:LiveHomeItemsModel">
                                 <StackPanel>
                                     <Grid>
-                                        <TextBlock FontSize="18" FontWeight="Bold" Text="{x:Bind Path=module_info.title}"></TextBlock>
+                                        <TextBlock FontSize="18" FontWeight="Bold" Text="{x:Bind Path=ModuleInfo.Title}"></TextBlock>
                                         <HyperlinkButton  Click="loadMore_Click" HorizontalAlignment="Right" Margin="8 -4 0 0">
                                             <TextBlock>查看更多</TextBlock>
                                         </HyperlinkButton>
@@ -146,7 +147,7 @@
                             MoveOffset="600" 
                             AlwayShowButton="False" 
                                         ItemClick="LiveItems_ItemClick"
-                            ItemsSource="{x:Bind Path=list,Mode=OneWay}" 
+                            ItemsSource="{x:Bind Path=List,Mode=OneWay}" 
                             SelectionMode="None" 
                             Margin="-4 0 0 0"
                             ScrollViewer.HorizontalScrollMode="Enabled"
@@ -168,7 +169,7 @@
                                             </ItemsPanelTemplate>
                                         </GridView.ItemsPanel>
                                         <GridView.ItemTemplate>
-                                            <DataTemplate x:DataType="model:LiveHomeItemsItemModel">
+                                            <DataTemplate x:DataType="home:LiveHomeItemsItemModel">
                                                 <Grid>
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition />
@@ -177,7 +178,7 @@
                                                     </Grid.RowDefinitions>
                                                     <Border CornerRadius="{StaticResource ImageCornerRadius}">
                                                         <Grid>
-                                                            <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Height="160" Width="260" Stretch="UniformToFill" Source="{x:Bind Path=cover,Converter={StaticResource imageConvert},ConverterParameter='460w_260h_1c'}"></toolkit:ImageEx>
+                                                            <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Height="160" Width="260" Stretch="UniformToFill" Source="{x:Bind Path=Cover,Converter={StaticResource imageConvert},ConverterParameter='460w_260h_1c'}"></toolkit:ImageEx>
                                                             <Grid VerticalAlignment="Bottom" Padding="8">
                                                                 <Grid.Background>
                                                                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -186,22 +187,22 @@
                                                                     </LinearGradientBrush>
                                                                 </Grid.Background>
                                                                 <StackPanel>
-                                                                    <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=uname}"></TextBlock>
+                                                                    <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=Uname}"></TextBlock>
                                                                 </StackPanel>
                                                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                                                     <fa:FontAwesome Icon="Solid_UserFriends" Foreground="White" FontSize="12" Margin="0 0 8 0"></fa:FontAwesome>
-                                                                    <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=online,Converter={StaticResource numberToStringConvert}}"></TextBlock>
+                                                                    <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=Online,Converter={StaticResource numberToStringConvert}}"></TextBlock>
                                                                 </StackPanel>
 
                                                             </Grid>
-                                                            <Grid Visibility="{x:Bind Path=show_pendent}" VerticalAlignment="Top" HorizontalAlignment="Left" Height="24">
-                                                                <Image Source="{x:Bind Path=pendent.bg_pic}"  Margin="-1 -1 0 0"></Image>
-                                                                <TextBlock Margin="28 0 0 2" Foreground="White" FontSize="12" VerticalAlignment="Center" Text="{x:Bind Path=pendent.text}"></TextBlock>
+                                                            <Grid Visibility="{x:Bind Path=ShowPendent}" VerticalAlignment="Top" HorizontalAlignment="Left" Height="24">
+                                                                <Image Source="{x:Bind Path=Pendent.BgPic}"  Margin="-1 -1 0 0"></Image>
+                                                                <TextBlock Margin="28 0 0 2" Foreground="White" FontSize="12" VerticalAlignment="Center" Text="{x:Bind Path=Pendent.Text}"></TextBlock>
                                                             </Grid>
                                                         </Grid>
                                                     </Border>
-                                                    <TextBlock Grid.Row="1" Margin="4 4 4 0" MaxLines="1" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=title}"></TextBlock>
-                                                    <TextBlock Grid.Row="2" Margin="4 0 4 4" TextWrapping="Wrap" FontSize="12" Foreground="Gray" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=area_v2_name}"></TextBlock>
+                                                    <TextBlock Grid.Row="1" Margin="4 4 4 0" MaxLines="1" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=Title}"></TextBlock>
+                                                    <TextBlock Grid.Row="2" Margin="4 0 4 4" TextWrapping="Wrap" FontSize="12" Foreground="Gray" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=AreaV2Name}"></TextBlock>
                                                 </Grid>
                                             </DataTemplate>
                                         </GridView.ItemTemplate>
@@ -217,7 +218,7 @@
         <controls:RoundButton x:Name="btnRefresh" Click="btnRefresh_Click" VerticalAlignment="Bottom" Padding="12" Margin="12" HorizontalAlignment="Right">
             <SymbolIcon Symbol="Refresh" Foreground="White"></SymbolIcon>
         </controls:RoundButton>
-        <Grid x:Name="gridLoading" Visibility="{x:Bind Path=liveVM.Loading,Mode=OneWay}" Background="Transparent">
+        <Grid x:Name="gridLoading" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}" Background="Transparent">
             <ProgressRing IsActive="True" VerticalAlignment="Center" HorizontalAlignment="Center"></ProgressRing>
         </Grid>
     </Grid>

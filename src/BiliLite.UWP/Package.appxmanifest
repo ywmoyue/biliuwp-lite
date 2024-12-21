@@ -57,7 +57,7 @@
       </Extensions>
     </Application>
   </Applications>
-
+	
   <Capabilities>
     <Capability Name="internetClient" />
     <uap:Capability Name="videosLibrary"/>

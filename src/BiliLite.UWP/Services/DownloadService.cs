@@ -335,6 +335,30 @@ namespace BiliLite.Services
             m_downloadPageViewModel.DownloadedViewModels = new ObservableCollection<DownloadedItem>(downloadedItems);
         }
 
+        private IEnumerable<DownloadedItem> QueryDownloaded()
+        {
+            var query = m_downloadPageViewModel.Downloadeds.AsEnumerable();
+
+            // 提前处理搜索条件
+            var searchKeyword = m_downloadPageViewModel.SearchKeyword?.ToLower();
+            if (!string.IsNullOrEmpty(searchKeyword))
+            {
+                query = query.Where(x => x.Title.ToLower().Contains(searchKeyword));
+            }
+
+            // 使用 switch 表达式简化排序逻辑
+            query = m_downloadPageViewModel.DownloadedSortMode switch
+            {
+                DownloadedSortMode.TimeDesc => query.OrderByDescending(x => x.UpdateTime),
+                DownloadedSortMode.TimeAsc => query.OrderBy(x => x.UpdateTime),
+                DownloadedSortMode.TitleDesc => query.OrderByDescending(x => x.Title),
+                DownloadedSortMode.TitleAsc => query.OrderBy(x => x.Title),
+                _ => query // 默认不排序
+            };
+
+            return query;
+        }
+
         #endregion
 
         #region Public Methods
@@ -428,8 +452,10 @@ namespace BiliLite.Services
 
         public void SearchDownloaded(string keyword)
         {
-            var searchResult = m_downloadPageViewModel.Downloadeds
-                .Where(x => x.Title.ToLower().Contains(keyword.ToLower())).ToList();
+            m_downloadPageViewModel.SearchKeyword = keyword;
+            m_downloadPageViewModel.IsSearching = !string.IsNullOrEmpty(keyword);
+
+            var searchResult = QueryDownloaded();
             m_downloadPageViewModel.DownloadedViewModels.Clear();
             m_downloadPageViewModel.DownloadedViewModels.AddRange(searchResult);
         }
@@ -807,9 +833,16 @@ namespace BiliLite.Services
             m_biliLiteDbContext.DownloadedItems.RemoveRange(m_biliLiteDbContext.DownloadedItems);
         }
 
+        public void SetDownloadedSortMode(DownloadedSortMode mode)
+        {
+            m_downloadPageViewModel.DownloadedSortMode = mode;
+            m_downloadPageViewModel.DownloadedViewModels.Clear();
+
+            var query = QueryDownloaded();
+
+            m_downloadPageViewModel.DownloadedViewModels.AddRange(query);
+        }
+
         #endregion
-
-
-
     }
 }

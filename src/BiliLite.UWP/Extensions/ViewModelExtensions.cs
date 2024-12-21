@@ -1,4 +1,6 @@
-﻿using BiliLite.ViewModels;
+﻿using System.Linq;
+using BiliLite.Models.Attributes;
+using BiliLite.ViewModels;
 using BiliLite.ViewModels.Comment;
 using BiliLite.ViewModels.Common;
 using BiliLite.ViewModels.Download;
@@ -12,6 +14,7 @@ using BiliLite.ViewModels.User.SendDynamic;
 using BiliLite.ViewModels.UserDynamic;
 using BiliLite.ViewModels.Video;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace BiliLite.Extensions
 {
@@ -55,7 +58,28 @@ namespace BiliLite.Extensions
             services.AddTransient<DevSettingsControlViewModel>();
             services.AddTransient<MainPageViewModel>();
             services.AddTransient<SearchPageViewModel>();
+
+            services.AddAttributeViewModel();
+
             return services;
+        }
+
+        private static void AddAttributeViewModel(this IServiceCollection services)
+        {
+            var types = Assembly.GetExecutingAssembly().GetTypes();
+
+            foreach (var type in types)
+            {
+                if (type.GetCustomAttributes(typeof(RegisterSingletonViewModelAttribute), false).Any())
+                {
+                    services.AddSingleton(type);
+                }
+
+                if (type.GetCustomAttributes(typeof(RegisterTransientViewModelAttribute), false).Any())
+                {
+                    services.AddTransient(type);
+                }
+            }
         }
     }
 }

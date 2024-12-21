@@ -449,14 +449,21 @@ namespace BiliLite.Pages
         {
             if (e)
             {
-                this.Margin = new Thickness(0, SettingService.GetValue<int>(SettingConstants.UI.DISPLAY_MODE, 0) == 0 ? -48 : -48, 0, 0);
+                if (SettingService.GetValue(SettingConstants.UI.DISPLAY_MODE, 0) <= 0)
+                {
+                    var marginOffset = SettingService.GetValue(SettingConstants.UI.TAB_HEIGHT,
+                        SettingConstants.UI.DEFAULT_TAB_HEIGHT);
+                    this.Margin = new Thickness(0, marginOffset * -1, 0, 0);
+                }
+
                 m_viewModel.DefaultRightInfoWidth = new GridLength(0, GridUnitType.Pixel);
                 BottomInfo.Height = new GridLength(0, GridUnitType.Pixel);
             }
             else
             {
                 this.Margin = new Thickness(0);
-                m_viewModel.DefaultRightInfoWidth = new GridLength(SettingService.GetValue<double>(SettingConstants.UI.RIGHT_DETAIL_WIDTH, 320), GridUnitType.Pixel);
+                m_viewModel.DefaultRightInfoWidth = new GridLength(
+                    SettingService.GetValue<double>(SettingConstants.UI.RIGHT_DETAIL_WIDTH, 320), GridUnitType.Pixel);
                 BottomInfo.Height = GridLength.Auto;
             }
         }
@@ -745,6 +752,11 @@ namespace BiliLite.Pages
             if ((e.Key == VirtualKey.Right || e.Key == VirtualKey.Left) &&
                 e.OriginalSource.GetType() != typeof(TextBox))
                 e.Handled = true;
+        }
+
+        private void BtnCopyAvId_OnClick(object sender, RoutedEventArgs e)
+        {
+            ("av" + m_viewModel.VideoInfo.Aid).SetClipboard();
         }
     }
 }

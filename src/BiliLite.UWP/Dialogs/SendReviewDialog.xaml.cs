@@ -1,7 +1,8 @@
 ﻿using BiliLite.Extensions;
-using BiliLite.Modules.Season;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using BiliLite.ViewModels.Season;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 
@@ -9,12 +10,13 @@ namespace BiliLite.Dialogs
 {
     public sealed partial class SendReviewDialog : ContentDialog
     {
-        SeasonReviewVM seasonReviewVM;
+        private readonly SeasonReviewViewModel m_viewModel;
+
         public SendReviewDialog(int mediaId)
         {
+            m_viewModel = App.ServiceProvider.GetRequiredService<SeasonReviewViewModel>();
+            m_viewModel.MediaID = mediaId;
             this.InitializeComponent();
-            seasonReviewVM = new SeasonReviewVM();
-            seasonReviewVM.MediaID = mediaId;
         }
 
         private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
@@ -25,7 +27,7 @@ namespace BiliLite.Dialogs
                 return;
             }
             int score = (int)rating.Value * 2;
-            var result = await seasonReviewVM.SendShortReview(txtBoxContent.Text, checkShare.IsChecked.Value, score);
+            var result = await m_viewModel.SendShortReview(txtBoxContent.Text, checkShare.IsChecked.Value, score);
             if (result)
             {
                 this.Hide();

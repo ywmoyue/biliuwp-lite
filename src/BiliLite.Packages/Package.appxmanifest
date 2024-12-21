@@ -61,6 +61,12 @@
 
           </desktop:FullTrustProcess>
         </desktop:Extension>
+        <Extension Category="windows.backgroundTasks"
+          EntryPoint="BackgroundTasks.TileFeedBackgroundTask">
+          <BackgroundTasks>
+            <Task Type="timer" />
+          </BackgroundTasks>
+        </Extension>
       </Extensions>
     </Application>
   </Applications>
@@ -72,4 +78,14 @@
     <uap3:Capability Name="backgroundMediaPlayback"/>
     <rescap:Capability Name="runFullTrust" />
   </Capabilities>
+  <Extensions>
+    <Extension Category="windows.activatableClass.inProcessServer">
+      <InProcessServer>
+        <Path>CLRHost.dll</Path>
+        <ActivatableClass
+          ActivatableClassId="BackgroundTasks.TileFeedBackgroundTask"
+          ThreadingModel="both" />
+      </InProcessServer>
+    </Extension>
+  </Extensions>
 </Package>

@@ -7,8 +7,11 @@ using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Home;
 using BiliLite.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Toolkit.Uwp.UI;
+using BiliLite.Extensions.Notifications;
+using Windows.ApplicationModel.Background;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -16,8 +19,11 @@ namespace BiliLite.Controls.Settings
 {
     public sealed partial class UISettingsControl : UserControl
     {
+        private readonly ThemeService m_themeService;
+
         public UISettingsControl()
         {
+            m_themeService = App.ServiceProvider.GetRequiredService<ThemeService>();
             this.InitializeComponent(); 
             LoadUI();
         }
@@ -29,25 +35,10 @@ namespace BiliLite.Controls.Settings
             {
                 cbTheme.SelectionChanged += new SelectionChangedEventHandler((obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.UI.THEME, cbTheme.SelectedIndex);
-                    Frame rootFrame = Window.Current.Content as Frame;
-                    switch (cbTheme.SelectedIndex)
-                    {
-                        case 1:
-                            rootFrame.RequestedTheme = ElementTheme.Light;
-                            break;
-                        case 2:
-                            rootFrame.RequestedTheme = ElementTheme.Dark;
-                            break;
-                        //case 3:
-                        //    // TODO: 切换自定义主题
-                        //    rootFrame.Resources = Application.Current.Resources.ThemeDictionaries["Pink"] as ResourceDictionary;
-                        //    break;
-                        default:
-                            rootFrame.RequestedTheme = ElementTheme.Default;
-                            break;
-                    }
-                    App.ExtendAcrylicIntoTitleBar();
+                    var themeIndex = cbTheme.SelectedIndex;
+                    if (themeIndex > 2)
+                        m_themeService.SetTheme(ElementTheme.Default);
+                    m_themeService.SetTheme((ElementTheme)themeIndex);
                 });
             });
 
@@ -139,6 +130,24 @@ namespace BiliLite.Controls.Settings
                 NumBoxDynamicCommentWidth.ValueChanged += (obj, args) =>
                 {
                     SettingService.SetValue(SettingConstants.UI.DYNAMIC_COMMENT_WIDTH, args.NewValue);
+                };
+            };
+
+            //动态磁贴
+            SwitchTile.IsOn = SettingService.GetValue(SettingConstants.UI.ENABLE_NOTIFICATION_TILES, false);
+            SwitchTile.Loaded += (sender, e) =>
+            {
+                SwitchTile.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.ENABLE_NOTIFICATION_TILES, SwitchTile.IsOn);
+                    if (SwitchTile.IsOn)
+                    {
+                        RegisterBackgroundTask();
+                    }
+                    else
+                    {
+                        // TODO: UnregisterBackgroundTask 
+                    }
                 };
             };
 
@@ -297,6 +306,36 @@ namespace BiliLite.Controls.Settings
                 };
             };
 
+            // 标签最小宽度
+            NumTabItemMinWidth.Value = SettingService.GetValue(SettingConstants.UI.TAB_ITEM_MIN_WIDTH, SettingConstants.UI.DEFAULT_TAB_ITEM_MIN_WIDTH);
+            NumTabItemMinWidth.Loaded += (sender, e) =>
+            {
+                NumTabItemMinWidth.ValueChanged += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.TAB_ITEM_MIN_WIDTH, NumTabItemMinWidth.Value);
+                };
+            };
+
+            // 标签最大宽度
+            NumTabItemMaxWidth.Value = SettingService.GetValue(SettingConstants.UI.TAB_ITEM_MAX_WIDTH, SettingConstants.UI.DEFAULT_TAB_ITEM_MAX_WIDTH);
+            NumTabItemMaxWidth.Loaded += (sender, e) =>
+            {
+                NumTabItemMaxWidth.ValueChanged += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.TAB_ITEM_MAX_WIDTH, NumTabItemMaxWidth.Value);
+                };
+            };
+
+            // 标签高度
+            NumTabHeight.Value = SettingService.GetValue(SettingConstants.UI.TAB_HEIGHT, SettingConstants.UI.DEFAULT_TAB_HEIGHT);
+            NumTabHeight.Loaded += (sender, e) =>
+            {
+                NumTabHeight.ValueChanged += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.TAB_HEIGHT, NumTabHeight.Value);
+                };
+            };
+
             //显示视频底部进度条
             SwShowVideoBottomProgress.IsOn = SettingService.GetValue(SettingConstants.UI.SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR, SettingConstants.UI.DEFAULT_SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR);
             SwShowVideoBottomProgress.Loaded += (sender, e) =>
@@ -371,6 +410,14 @@ namespace BiliLite.Controls.Settings
             SettingService.SetValue(SettingConstants.UI.HOEM_ORDER, gridHomeCustom.ItemsSource as ObservableCollection<HomeNavItem>);
             ExceptHomeNavItems();
             Notify.ShowMessageToast("更改成功,重启生效");
+        }
+
+        private void RegisterBackgroundTask()
+        {
+            NotificationRegisterExtensions.BackgroundTask("DisposableTileFeedBackgroundTask");
+            NotificationRegisterExtensions.BackgroundTask("TileFeedBackgroundTask", new TimeTrigger(15, false));
+            //NotificationRegisterExtensions.BackgroundTask("TileFeedBackgroundTask",
+            //    "BackgroundTasks.TileFeedBackgroundTask", new TimeTrigger(15, false));
         }
     }
 }

@@ -200,6 +200,14 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
+        <controls:SettingsCard Header="动态磁贴（实验性功能，未完成）"
+                               Description="运行中更新动态磁贴，暂不支持后台更新动态磁贴">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_SquareFull"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch x:Name="SwitchTile"></ToggleSwitch>
+        </controls:SettingsCard>
+
         <controls:SettingsExpander Header="图片圆角半径"
                                    Description="重启生效"
                                    IsExpanded="True">
@@ -322,16 +330,24 @@
             </controls:SettingsExpander.HeaderIcon>
 
             <controls:SettingsExpander.Items>
-                <controls:SettingsCard Header="固定标签宽度"
-                                       Description="是否固定标签页宽度（下次打开应用生效）">
-                    <ToggleSwitch x:Name="SwitchTabItemFixedWidth" >
-                    </ToggleSwitch>
+                <controls:SettingsCard Header="固定标签页宽度"
+                                       Description="下次打开应用生效">
+                    <StackPanel Orientation="Horizontal">
+                        <ToggleSwitch x:Name="SwitchTabItemFixedWidth" ></ToggleSwitch>
+                        <controls1:NumberBox x:Name="NumTabItemFixedWidth" Minimum="200" MinWidth="200" IsEnabled="{Binding IsOn, ElementName=SwitchTabItemFixedWidth}" Margin="30 5 0 5"></controls1:NumberBox>
+                    </StackPanel>
                 </controls:SettingsCard>
-
-                <controls:SettingsCard Header="固定标签宽度大小"
-                                       Description="固定标签宽度时宽度值（下次打开应用生效）">
-                    <controls1:NumberBox x:Name="NumTabItemFixedWidth"
-                                         Minimum="20"></controls1:NumberBox>
+                <controls:SettingsCard Header="设置标签页最小宽度"
+                                       Description="下次打开应用生效">
+                    <controls1:NumberBox x:Name="NumTabItemMinWidth" Minimum="0" MinWidth="200" IsEnabled="{Binding IsOn, ElementName=SwitchTabItemFixedWidth, Converter={StaticResource InverseBooleanConverter}}"></controls1:NumberBox>
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="设置标签页最大宽度"
+                                       Description="下次打开应用生效">
+                    <controls1:NumberBox x:Name="NumTabItemMaxWidth" Minimum="200" MinWidth="200" IsEnabled="{Binding IsOn, ElementName=SwitchTabItemFixedWidth, Converter={StaticResource InverseBooleanConverter}}"></controls1:NumberBox>
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="设置标签页高度"
+                                       Description="下次打开应用生效，建议立即重启应用，否则会出现奇怪的bug">
+                    <controls1:NumberBox x:Name="NumTabHeight" Minimum="32" MinWidth="200"></controls1:NumberBox>
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>

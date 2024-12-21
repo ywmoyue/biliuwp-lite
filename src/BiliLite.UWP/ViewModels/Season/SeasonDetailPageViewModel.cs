@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.UI;
 using Windows.UI.Xaml;
 using AutoMapper;
 using BiliLite.Extensions;
@@ -18,9 +19,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
+using Windows.UI.Xaml.Media;
+using BiliLite.Models.Attributes;
 
 namespace BiliLite.ViewModels.Season
 {
+    [RegisterTransientViewModel]
     public class SeasonDetailPageViewModel : BaseViewModel
     {
         #region Fields
@@ -30,13 +34,15 @@ namespace BiliLite.ViewModels.Season
         private readonly FollowAPI m_followApi;
         private readonly IMapper m_mapper;
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+        private readonly ThemeService m_themeService;
 
         #endregion
 
         #region Constructors
         public SeasonDetailPageViewModel()
         {
-            m_mapper = App.ServiceProvider.GetService<IMapper>();
+            m_mapper = App.ServiceProvider.GetRequiredService<IMapper>();
+            m_themeService = App.ServiceProvider.GetRequiredService<ThemeService>();
             m_seasonApi = new SeasonApi();
             m_playerApi = new PlayerAPI();
             m_followApi = new FollowAPI();
@@ -113,6 +119,19 @@ namespace BiliLite.ViewModels.Season
                 }
 
                 return DefaultRightInfoWidth;
+            }
+        }
+
+        [DependsOn(nameof(PageHeight), nameof(PageWidth))]
+        public Brush RightInfoBackground
+        {
+            get
+            {
+                if (PageWidth < 1000)
+                {
+                    return (Brush)m_themeService.ThemeResource["PlayerControlAcrylicBrush"];
+                }
+                return new SolidColorBrush(Colors.Transparent);
             }
         }
 

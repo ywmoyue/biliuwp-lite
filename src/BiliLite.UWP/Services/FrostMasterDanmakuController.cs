@@ -6,7 +6,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Atelier39;
 using AutoMapper;
-using BiliLite.Models.Common;
 using BiliLite.Models.Common.Danmaku;
 using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels.Video;
@@ -115,23 +114,7 @@ namespace BiliLite.Services
         public override void SetTopMargin(double topMargin)
         {
             base.SetTopMargin(topMargin);
-            if (SettingService.GetValue(SettingConstants.UI.DISPLAY_MODE, 0) > 0)
-            {
-                m_danmakuCanvas.Margin = DanmakuViewModel.Fullscreen ? new Thickness(0, DanmakuViewModel.MarginTop + 16, 0, 0) : new Thickness(0, DanmakuViewModel.MarginTop, 0, 0);
-            }
-            else
-            {
-                m_danmakuCanvas.Margin = new Thickness(0, topMargin, 0, 0);
-            }
-        }
-
-        public override void SetFullscreen(bool fullscreen)
-        {
-            base.SetFullscreen(fullscreen);
-            if (SettingService.GetValue(SettingConstants.UI.DISPLAY_MODE, 0) > 0)
-            {
-                m_danmakuCanvas.Margin = fullscreen ? new Thickness(0, DanmakuViewModel.MarginTop + 16, 0, 0) : new Thickness(0, DanmakuViewModel.MarginTop, 0, 0);
-            }
+            m_danmakuCanvas.Margin = new Thickness(0, topMargin, 0, 0);
         }
 
         public override void SetOpacity(double opacity)
@@ -195,12 +178,6 @@ namespace BiliLite.Services
         {
             base.UpdateTime(position);
             m_danmakuMaster.UpdateTime((uint)position * 1000);
-        }
-
-        public void SetAssSubtitle(string assContent)
-        {
-            var subItems = AssParser.GetDanmakuList(assContent);
-            m_danmakuMaster.SetSubtitleList(subItems);
         }
     }
 }

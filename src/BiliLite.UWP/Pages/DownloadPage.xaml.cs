@@ -31,6 +31,14 @@ namespace BiliLite.Pages
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
         private readonly DownloadPageViewModel m_viewModel;
         private readonly DownloadService m_downloadService;
+        private readonly ComboBoxItemData<DownloadedSortMode>[] m_sortOptions = new ComboBoxItemData<DownloadedSortMode>[]
+        {
+            new() { Text = "默认", Value = DownloadedSortMode.Default },
+            new() { Text = "时间倒序", Value = DownloadedSortMode.TimeDesc },
+            new() { Text = "时间顺序", Value = DownloadedSortMode.TimeAsc },
+            new() { Text = "标题顺序", Value = DownloadedSortMode.TitleAsc },
+            new() { Text = "标题倒序", Value = DownloadedSortMode.TitleDesc },
+        };
 
         public DownloadPage()
         {
@@ -46,6 +54,7 @@ namespace BiliLite.Pages
 
         public async Task Refresh()
         {
+            CbSortMode.SelectedIndex = 0;
             m_downloadService.RefreshDownloaded();
         }
 
@@ -349,6 +358,17 @@ namespace BiliLite.Pages
             {
                 m_downloadService.ResumeItem(item);
             }
+        }
+
+        private void BtnClearSearch_OnClick(object sender, RoutedEventArgs e)
+        {
+            m_downloadService.SearchDownloaded("");
+            DownloadPivot.SelectedIndex = 1;
+        }
+
+        private void SortOptions_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            m_downloadService.SetDownloadedSortMode((DownloadedSortMode)CbSortMode.SelectedValue);
         }
     }
 }

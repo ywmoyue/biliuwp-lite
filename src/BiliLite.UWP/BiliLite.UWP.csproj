@@ -10,7 +10,7 @@
     <RootNamespace>BiliLite</RootNamespace>
     <AssemblyName>BiliLite</AssemblyName>
     <DefaultLanguage>zh-cn</DefaultLanguage>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>latest</LangVersion>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
@@ -186,6 +186,7 @@
       <DependentUpon>VideoListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\FilterRuleTypeConverter.cs" />
+    <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Dialogs\EditPlaySpeedMenuDialog.xaml.cs">
       <DependentUpon>EditPlaySpeedMenuDialog.xaml</DependentUpon>
     </Compile>
@@ -199,6 +200,7 @@
     <Compile Include="Extensions\QrCodeExtensions.cs" />
     <Compile Include="Extensions\RegexExtensions.cs" />
     <Compile Include="Extensions\DynamicExtensions.cs" />
+    <Compile Include="Models\Attributes\RegisterServiceAttributes.cs" />
     <Compile Include="Models\Attributes\SettingDefaultValueAttribute.cs" />
     <Compile Include="Models\Attributes\SettingKeyAttribute.cs" />
     <Compile Include="Models\Common\Anime\ISeasonItem.cs" />
@@ -262,6 +264,7 @@
     <Compile Include="Models\Functions\ToggleFullscreenShortcutFunction.cs" />
     <Compile Include="Models\Functions\ToggleFullWindowShortcutFunction.cs" />
     <Compile Include="Models\Functions\ToggleMiniWindowShortcutFunction.cs" />
+    <Compile Include="Models\Common\Notifications\NotificationTile.cs" />
     <Compile Include="Models\Functions\ToggleSubtitleShortcutFunction.cs" />
     <Compile Include="Models\Common\Search\SearchAnimeItem.cs" />
     <Compile Include="Models\Common\Search\SearchArea.cs" />
@@ -271,6 +274,55 @@
     <Compile Include="Models\Common\Search\SearchUserItem.cs" />
     <Compile Include="Models\Common\Search\SearchUserOfficialVerifyItem.cs" />
     <Compile Include="Models\Common\Search\SearchVideoItem.cs" />
+    <Compile Include="Models\Common\Home\HotDataItemModel.cs" />
+    <Compile Include="Models\Common\Home\HotTopItemModel.cs" />
+    <Compile Include="Models\Common\Home\LiveHomeAreaModel.cs" />
+    <Compile Include="Models\Common\Home\LiveHomeBannerModel.cs" />
+    <Compile Include="Models\Common\Home\LiveHomeItemsItemModel.cs" />
+    <Compile Include="Models\Common\Home\LiveHomeItemsModel.cs" />
+    <Compile Include="Models\Common\Home\LiveHomeItemsModuleInfoModel.cs" />
+    <Compile Include="Models\Common\Home\LivePendentItemModel.cs" />
+    <Compile Include="Models\Common\Home\CinemaHomeBannerModel.cs" />
+    <Compile Include="Models\Common\Home\CinemaHomeFallItemModel.cs" />
+    <Compile Include="Models\Common\Home\CinemaHomeFallModel.cs" />
+    <Compile Include="Models\Common\Home\RegionChildrenItem.cs" />
+    <Compile Include="Models\Common\Home\RegionItem.cs" />
+    <Compile Include="Models\Common\Other\FindMoreEntranceModel.cs" />
+    <Compile Include="Models\Common\Favorites\FavoriteDetailModel.cs" />
+    <Compile Include="Models\Common\Favorites\FavoriteInfoModel.cs" />
+    <Compile Include="Models\Common\Favorites\FavoriteInfoVideoItemModel.cs" />
+    <Compile Include="Models\Common\Favorites\FavoriteInfoVideoItemStatModel.cs" />
+    <Compile Include="Models\Common\Favorites\FavoriteInfoVideoItemUpperModel.cs" />
+    <Compile Include="Models\Common\Anime\AnimeTimelineItemModel.cs" />
+    <Compile Include="Models\Common\Anime\AnimeTimelineModel.cs" />
+    <Compile Include="Models\Common\Anime\AnimeTypeItem.cs" />
+    <Compile Include="Models\Common\Season\SeasonShortReviewItemAuthorModel.cs" />
+    <Compile Include="Models\Common\Season\SeasonShortReviewItemModel.cs" />
+    <Compile Include="Models\Common\Season\SeasonShortReviewItemStatModel.cs" />
+    <Compile Include="Models\Common\Season\SeasonIndexConditionFilterItemModel.cs" />
+    <Compile Include="Models\Common\Season\SeasonIndexConditionFilterModel.cs" />
+    <Compile Include="Models\Common\Season\SeasonIndexParameter.cs" />
+    <Compile Include="Models\Common\Season\SeasonIndexResultItemModel.cs" />
+    <Compile Include="Models\Common\Season\SeasonIndexResultItemOrderModel.cs" />
+    <Compile Include="ViewModels\Season\SeasonShortReviewItemStatViewModel.cs" />
+    <Compile Include="ViewModels\Season\SeasonShortReviewItemViewModel.cs" />
+    <Compile Include="Models\Common\Season\SeasonShortReviewItemVIPModel.cs" />
+    <Compile Include="ViewModels\Season\SeasonRankDataViewModel.cs" />
+    <Compile Include="Models\Common\Season\SeasonRankItemModel.cs" />
+    <Compile Include="Models\Common\Season\SeasonRankItemNewEPModel.cs" />
+    <Compile Include="Models\Common\Season\SeasonRankItemStatModel.cs" />
+    <Compile Include="ViewModels\Region\IRegionViewModel.cs" />
+    <Compile Include="Models\Common\Region\RegionChildOrderModel.cs" />
+    <Compile Include="ViewModels\Region\RegionDetailChildViewModel.cs" />
+    <Compile Include="ViewModels\Region\RegionDetailHomeViewModel.cs" />
+    <Compile Include="Models\Common\Region\RegionHomeBannerItemModel.cs" />
+    <Compile Include="Models\Common\Region\RegionTagItemModel.cs" />
+    <Compile Include="Models\Common\Region\RegionVideoItemModel.cs" />
+    <Compile Include="ViewModels\Home\CinemaHomeFallViewModel.cs" />
+    <Compile Include="Models\Common\Home\CinemaHomeHotItem.cs" />
+    <Compile Include="Models\Common\Home\CinemaHomeModel.cs" />
+    <Compile Include="Models\Common\Home\CinemaHomeStatModel.cs" />
+    <Compile Include="ViewModels\Home\CinemaHomeViewModel.cs" />
     <Compile Include="Pages\IScrollRecorablePage.cs" />
     <Compile Include="Pages\Other\MarkdownViewerPage.xaml.cs">
       <DependentUpon>MarkdownViewerPage.xaml</DependentUpon>
@@ -279,8 +331,13 @@
     <Compile Include="Controls\DataTemplateSelectors\SearchDataTemplateSelector.cs" />
     <Compile Include="Services\BiliLiteDbContext.cs" />
     <Compile Include="Services\DownloadService.cs" />
+    <Compile Include="Services\Notification\LiveTileService.cs" />
+    <Compile Include="Extensions\Notifications\NotificationShowExtensions.cs" />
+    <Compile Include="Extensions\Notifications\NotificationRegisterExtensions.cs" />
+    <Compile Include="Models\Common\Notifications\Template\TileTemplate.cs" />
     <Compile Include="Services\PluginService.cs" />
     <Compile Include="Services\SqlMigrateService.cs" />
+    <Compile Include="Services\ThemeService.cs" />
     <Compile Include="ViewModels\Common\MainPageViewModel.cs" />
     <Compile Include="ViewModels\Common\PieControlViewModel.cs" />
     <Compile Include="ViewModels\Search\BaseSearchPivotViewModel.cs" />
@@ -788,9 +845,9 @@
     <Compile Include="Models\Responses\LoginAppThirdResponse.cs" />
     <Compile Include="Models\ReturnModel.cs" />
     <Compile Include="Models\UserModels.cs" />
-    <Compile Include="Modules\Detail\FavoriteDetailVM.cs" />
+    <Compile Include="ViewModels\Favourites\FavoriteDetailViewModel.cs" />
     <Compile Include="ViewModels\EmoteViewModel.cs" />
-    <Compile Include="Modules\Home\RegionVM.cs" />
+    <Compile Include="ViewModels\Home\RegionViewModel.cs" />
     <Compile Include="Modules\Live\LiveAreaDetailVM.cs" />
     <Compile Include="Modules\Live\LiveAreaVM.cs" />
     <Compile Include="Modules\Live\LiveCenter\LiveAttentionUnLiveVM.cs" />
@@ -799,25 +856,25 @@
     <Compile Include="Modules\Live\LiveCenter\LiveCenterVM.cs" />
     <Compile Include="Modules\Live\LiveMessage.cs" />
     <Compile Include="Modules\Live\LiveRecommendVM.cs" />
-    <Compile Include="Modules\Other\FindMoreVM.cs" />
+    <Compile Include="ViewModels\Other\FindMoreViewModel.cs" />
     <Compile Include="Modules\Player\InteractionVideoVM.cs" />
     <Compile Include="Modules\Player\Playurl\BiliPlayUrlRequest.cs" />
     <Compile Include="Modules\Player\Playurl\BiliPlayUrl.cs" />
     <Compile Include="Models\Common\Video\PlayUrlInfos\BiliFlvPlayUrlInfo.cs" />
-    <Compile Include="Modules\RegionDetailVM.cs" />
+    <Compile Include="ViewModels\Region\RegionDetailViewModel.cs" />
     <Compile Include="Models\Common\Search\SearchFilterItem.cs" />
-    <Compile Include="Modules\Season\SeasonRankVM.cs" />
-    <Compile Include="Modules\Season\SeasonReviewVM.cs" />
+    <Compile Include="ViewModels\Season\SeasonRankViewModel.cs" />
+    <Compile Include="ViewModels\Season\SeasonReviewViewModel.cs" />
     <Compile Include="Modules\User\Account.cs" />
-    <Compile Include="Modules\Season\AnimeTimelineVM.cs" />
+    <Compile Include="ViewModels\Season\AnimeTimelineViewModel.cs" />
     <Compile Include="ViewModels\Home\AnimePageViewModel.cs" />
-    <Compile Include="Modules\Home\CinemaVM.cs" />
+    <Compile Include="ViewModels\Home\CinemaViewModel.cs" />
     <Compile Include="ViewModels\Home\DynamicPageViewModel.cs" />
     <Compile Include="ViewModels\Home\HomeViewModel.cs" />
-    <Compile Include="Modules\Home\HotVM.cs" />
+    <Compile Include="ViewModels\Home\HotViewModel.cs" />
     <Compile Include="Modules\IModules.cs" />
     <Compile Include="ViewModels\Live\LiveRoomViewModel.cs" />
-    <Compile Include="Modules\Home\LiveVM.cs" />
+    <Compile Include="ViewModels\Home\LiveViewModel.cs" />
     <Compile Include="ViewModels\UserDynamic\UserDynamicRepostViewModel.cs" />
     <Compile Include="ViewModels\UserDynamic\UserDynamicViewModel.cs" />
     <Compile Include="Modules\User\LoginVM.cs" />
@@ -829,7 +886,7 @@
     <Compile Include="ViewModels\Home\RecommendPageViewModel.cs" />
     <Compile Include="Modules\RelayCommand.cs" />
     <Compile Include="ViewModels\Season\SeasonDetailPageViewModel.cs" />
-    <Compile Include="Modules\Season\SeasonIndexVM.cs" />
+    <Compile Include="ViewModels\Season\SeasonIndexViewModel.cs" />
     <Compile Include="ViewModels\Video\VideoDetailPageViewModel.cs" />
     <Compile Include="ViewModels\User\MyFollowVideoViewModel.cs" />
     <Compile Include="ViewModels\User\SendDynamic\SendDynamicViewModel.cs" />
@@ -1457,21 +1514,29 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Themes\Breakpoint.xaml">
+    <Page Include="Styles\Breakpoint.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\Colors.xaml">
+    <Page Include="Themes\Blue.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\Converter.xaml">
+    <Page Include="Themes\Default.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\Fonts.xaml">
+    <Page Include="Styles\Converter.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Fonts.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Pink.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -1534,6 +1599,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.Connectivity">
       <Version>6.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications">
+      <Version>7.1.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations">
       <Version>6.1.1</Version>
@@ -1611,6 +1679,7 @@
     <Folder Include="Assets\Tools\" />
     <Folder Include="Models\Plugins\" />
     <Folder Include="Models\Requests\Api\Grpc\" />
+    <Folder Include="Modules\Season\" />
     <Folder Include="Modules\User\SendDynamic\" />
   </ItemGroup>
   <ItemGroup>

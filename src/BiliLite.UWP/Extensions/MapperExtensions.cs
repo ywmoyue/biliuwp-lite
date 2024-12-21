@@ -15,7 +15,6 @@ using BiliLite.Models.Common.Home;
 using BiliLite.Models.Common.Season;
 using BiliLite.Models.Common.Settings;
 using BiliLite.Models.Common.User;
-using BiliLite.Models.Common.User.UserDetails;
 using BiliLite.Models.Common.UserDynamic;
 using BiliLite.Models.Common.Video;
 using BiliLite.Models.Common.Video.Detail;
@@ -76,7 +75,11 @@ namespace BiliLite.Extensions
                 expression.CreateMap<FollowTlistItemModel, UserRelationFollowingTagViewModel>();
                 expression.CreateMap<VideoListSection, VideoListSectionViewModel>();
                 expression.CreateMap<VideoPlaylistItem,VideoListItem>();
-                expression.CreateMap<FavoriteItemModel, FavoriteItemViewModel>();
+                expression.CreateMap<FavoriteItemModel, FavoriteItemViewModel>(); 
+                expression.CreateMap<CinemaHomeModel, CinemaHomeViewModel>(); 
+                expression.CreateMap<CinemaHomeFallModel, CinemaHomeFallViewModel>();
+                expression.CreateMap<SeasonShortReviewItemModel, SeasonShortReviewItemViewModel>();
+                expression.CreateMap<SeasonShortReviewItemStatModel, SeasonShortReviewItemStatViewModel>();
                 expression.CreateMap<MediaListItem, VideoListItem>()
                     .ForMember(dest => dest.Author,
                         opt => opt.MapFrom(src =>

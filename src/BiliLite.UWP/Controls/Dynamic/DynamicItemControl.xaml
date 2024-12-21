@@ -40,7 +40,7 @@
                 <Grid Height="56" >
                     <StackPanel VerticalAlignment="Center" >
                         <StackPanel Orientation="Horizontal" >
-                            <Border Visibility="{x:Bind Path=ViewModel.ShowTag,Mode=OneWay}" Margin="0 0 4 0" Background="HotPink" CornerRadius="2">
+                            <Border Visibility="{x:Bind Path=ViewModel.ShowTag,Mode=OneWay}" Margin="0 0 4 0" Background="{ThemeResource SystemAccentColor}" CornerRadius="2">
                                 <TextBlock Foreground="White" FontSize="12" Margin="4 2" Text="{x:Bind Path=ViewModel.TagName,Mode=OneWay}"></TextBlock>
                             </Border>
                             <TextBlock Text="{x:Bind Path=ViewModel.UserName,Mode=OneWay}" Foreground="DeepPink"  Opacity=".8" Visibility="{x:Bind Path=ViewModel.IsYearVip,Mode=OneWay}"></TextBlock>

@@ -1,6 +1,5 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
-using BiliLite.Modules;
 using BiliLite.Modules.Live.LiveCenter;
 using BiliLite.Pages.Live;
 using BiliLite.Services;
@@ -10,6 +9,9 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Models.Common.Home;
+using BiliLite.ViewModels.Home;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -20,11 +22,11 @@ namespace BiliLite.Pages.Home
     /// </summary>
     public sealed partial class LivePage : Page,IRefreshablePage
     {
-        private Modules.LiveVM liveVM;
+        private LiveViewModel m_viewModel;
         public LivePage()
         {
             this.InitializeComponent();
-            liveVM = new Modules.LiveVM();
+            m_viewModel = App.ServiceProvider.GetRequiredService<LiveViewModel>();
             if (SettingService.GetValue<bool>(SettingConstants.UI.CACHE_HOME, true))
             {
                 this.NavigationCacheMode = NavigationCacheMode.Enabled;
@@ -35,21 +37,21 @@ namespace BiliLite.Pages.Home
             }
 
         }
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.NavigationMode == NavigationMode.New && liveVM.Banners == null)
+            if (e.NavigationMode == NavigationMode.New && m_viewModel.Banners == null)
             {
                 await LoadData();
             }
         }
         private async Task LoadData()
         {
-            await liveVM.GetLiveHome();
+            await m_viewModel.GetLiveHome();
             if (SettingService.Account.Logined)
             {
-                liveVM.ShowFollows = true;
-                await liveVM.liveAttentionVM.GetFollows();
+                m_viewModel.ShowFollows = true;
+                await m_viewModel.LiveAttentionVm.GetFollows();
             }
         }
 
@@ -65,7 +67,7 @@ namespace BiliLite.Pages.Home
 
         private async void BannerItem_Click(object sender, RoutedEventArgs e)
         {
-            var result = await MessageCenter.HandelUrl(((sender as HyperlinkButton).DataContext as LiveHomeBannerModel).link);
+            var result = await MessageCenter.HandelUrl(((sender as HyperlinkButton).DataContext as LiveHomeBannerModel).Link);
             if (!result)
             {
                 Notify.ShowMessageToast("不支持打开的链接");
@@ -96,15 +98,15 @@ namespace BiliLite.Pages.Home
             {
                 icon = Symbol.Video,
                 page = typeof(LiveDetailPage),
-                title = data.uname + "的直播间",
-                parameters = data.roomid
+                title = data.Uname + "的直播间",
+                parameters = data.Roomid
             });
         }
 
         private void loadMore_Click(object sender, RoutedEventArgs e)
         {
             var data = (sender as HyperlinkButton).DataContext as LiveHomeItemsModel;
-            if (data.module_info.title == "推荐直播")
+            if (data.ModuleInfo.Title == "推荐直播")
             {
                 MessageCenter.NavigateToPage(this, new NavigationInfo()
                 {
@@ -113,18 +115,18 @@ namespace BiliLite.Pages.Home
                     title = "全部直播"
                 });
             }
-            if (!string.IsNullOrEmpty(data.module_info.link))
+            if (!string.IsNullOrEmpty(data.ModuleInfo.Link))
             {
                 try
                 {
-                    var match = Regex.Match(data.module_info.link, @"parentAreaId=(\d+)&areaId=(\d+)");
+                    var match = Regex.Match(data.ModuleInfo.Link, @"parentAreaId=(\d+)&areaId=(\d+)");
                     if (match.Groups.Count == 3)
                     {
                         MessageCenter.NavigateToPage(this, new NavigationInfo()
                         {
                             icon = Symbol.Document,
                             page = typeof(LiveAreaDetailPage),
-                            title = data.module_info.title,
+                            title = data.ModuleInfo.Title,
                             parameters = new LiveAreaPar()
                             {
                                 parent_id = match.Groups[1].Value.ToInt32(),
@@ -146,13 +148,13 @@ namespace BiliLite.Pages.Home
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var area = e.ClickedItem as LiveHomeAreaModel;
-            if (area.id == 0)
+            if (area.Id == 0)
             {
                 MessageCenter.NavigateToPage(this, new NavigationInfo()
                 {
                     icon = Symbol.Document,
                     page = typeof(LiveAreaPage),
-                    title = area.title
+                    title = area.Title
                 });
                 return;
             }
@@ -160,11 +162,11 @@ namespace BiliLite.Pages.Home
             {
                 icon = Symbol.Document,
                 page = typeof(LiveAreaDetailPage),
-                title = area.title,
+                title = area.Title,
                 parameters = new LiveAreaPar()
                 {
-                    parent_id = area.area_v2_parent_id,
-                    area_id = area.area_v2_id
+                    parent_id = area.AreaV2ParentId,
+                    area_id = area.AreaV2Id
                 }
             });
         }

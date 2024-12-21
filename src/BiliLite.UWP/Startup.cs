@@ -1,6 +1,7 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Services;
 using BiliLite.Services.Biz;
+using BiliLite.Services.Notification;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -15,6 +16,7 @@ namespace BiliLite
             services.AddSingleton<PluginService>();
             services.AddTransient<SqlMigrateService>();
 
+            services.AddSingleton<LiveTileService>();
             services.AddMapper();
             services.AddViewModels();
             services.AddControls();
@@ -32,6 +34,7 @@ namespace BiliLite
             services.AddSingleton<SearchService>();
 
             services.AddSingleton<GrpcService>();
+            services.AddSingleton<ThemeService>();
         }
     }
 }

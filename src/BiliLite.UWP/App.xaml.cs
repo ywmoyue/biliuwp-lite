@@ -1,8 +1,11 @@
 ﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Events;
+using BiliLite.Pages;
 using BiliLite.Services;
 using FFmpegInteropX;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
@@ -14,8 +17,6 @@ using Windows.Graphics.Display;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Pages;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite
 {
@@ -161,7 +162,6 @@ namespace BiliLite
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
-
                 //主题颜色
                 rootFrame.RequestedTheme = (ElementTheme)SettingService.GetValue<int>(SettingConstants.UI.THEME, 0);
 
@@ -182,7 +182,8 @@ namespace BiliLite
                 }
                 // 确保当前窗口处于活动状态
                 Window.Current.Activate();
-                ExtendAcrylicIntoTitleBar();
+                var themeService = ServiceProvider.GetRequiredService<ThemeService>();
+                themeService.InitTitleBar();
             }
         }
 
@@ -205,6 +206,7 @@ namespace BiliLite
                     // await Task.Delay(200); // 防止初始屏幕闪烁
                 }
             }
+
             //圆角
             App.Current.Resources["ImageCornerRadius"] = new CornerRadius(SettingService.GetValue<double>(SettingConstants.UI.IMAGE_CORNER_RADIUS, 0));
             await AppHelper.SetRegions();
@@ -221,6 +223,16 @@ namespace BiliLite
                 logger.Error("初始化加载下载视频错误", ex);
             }
             VideoPlayHistoryHelper.LoadABPlayHistories(true);
+
+            try
+            {
+                var themeService = ServiceProvider.GetRequiredService<ThemeService>();
+                themeService.Init();
+            }
+            catch (Exception ex)
+            {
+                logger.Error("初始化主题错误", ex);
+            }
 
             //var pluginService = ServiceProvider.GetRequiredService<PluginService>();
             //await pluginService.Start();
@@ -255,11 +267,6 @@ namespace BiliLite
             deferral.Complete();
         }
 
-        public static void ExtendAcrylicIntoTitleBar()
-        {
-            AppExtensions.HandleTitleTheme();
-        }
-
         protected override void OnActivated(IActivatedEventArgs args)
         {
             base.OnActivated(args);
@@ -286,6 +293,13 @@ namespace BiliLite
             {
                 logger.Error("Start Host Error", ex);
             }
+        }
+
+        protected override async void OnBackgroundActivated(BackgroundActivatedEventArgs args)
+        {
+            //base.OnBackgroundActivated(args);
+            //IBackgroundTaskInstance taskInstance = args.TaskInstance;
+            await NotificationShowExtensions.Tile();
         }
     }
 }

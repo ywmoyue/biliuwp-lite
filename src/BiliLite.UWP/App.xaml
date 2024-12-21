@@ -12,10 +12,11 @@
                 <ResourceDictionary Source="Styles/AppBarButtonNoChevronStyle.xaml" />
                 <ResourceDictionary Source="Styles/TabViewStyle.xaml" />
                 <ResourceDictionary Source="Styles/TextBlockStyle.xaml" />
-                <ResourceDictionary Source="Themes/Breakpoint.xaml" />
-                <ResourceDictionary Source="Themes/Converter.xaml" />
-                <ResourceDictionary Source="Themes/Colors.xaml" />
-                <ResourceDictionary Source="Themes/Fonts.xaml" />
+                <ResourceDictionary Source="Styles/Breakpoint.xaml" />
+                <ResourceDictionary Source="Styles/Converter.xaml" />
+                <ResourceDictionary Source="Styles/Fonts.xaml" />
+                <ResourceDictionary Source="Themes/Default.xaml" />
+                <ResourceDictionary Source="Themes/Pink.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <CornerRadius x:Key="ImageCornerRadius">4</CornerRadius>

@@ -78,7 +78,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock TextTrimming="CharacterEllipsis" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{x:Bind Path=Title}" ToolTipService.ToolTip="{x:Bind Path=Title}"></TextBlock>
-                                <Border Grid.Column="1" Visibility="{x:Bind Path=ShowBadge,Mode=OneWay}" HorizontalAlignment="Right" Background="HotPink" CornerRadius="4">
+                                <Border Grid.Column="1" Visibility="{x:Bind Path=ShowBadge,Mode=OneWay}" HorizontalAlignment="Right" Background="{ThemeResource SystemAccentColor}" CornerRadius="4">
                                     <TextBlock FontSize="12" Foreground="White" Margin="4" Text="{x:Bind Path=Badge,Mode=OneWay}"></TextBlock>
                                 </Border>
                                 <TextBlock  Grid.Column="2" FontSize="12" VerticalAlignment="Center" Foreground="Red"  Visibility="{x:Bind Path=State,Mode=OneWay,Converter={StaticResource display},ConverterParameter=99}" Text="{x:Bind Path=ErrorMessage,Mode=OneWay}"></TextBlock>
