@@ -564,12 +564,12 @@
                                                     <StackPanel Margin="0 24 12 0" Grid.Column="1">
 
                                                         <StackPanel Orientation="Horizontal">
-                                                            <TextBlock Visibility="{x:Bind Path=m_viewModel.UserSpaceInfo.Vip.Status,Mode=OneWay,Converter={StaticResource display},ConverterParameter=1}" FontWeight="Bold" Foreground="HotPink" VerticalAlignment="Center" Text="{x:Bind Path=m_viewModel.UserSpaceInfo.Name,Mode=OneWay}"></TextBlock>
+                                                            <TextBlock Visibility="{x:Bind Path=m_viewModel.UserSpaceInfo.Vip.Status,Mode=OneWay,Converter={StaticResource display},ConverterParameter=1}" FontWeight="Bold" Foreground="{ThemeResource SystemAccentColor}" VerticalAlignment="Center" Text="{x:Bind Path=m_viewModel.UserSpaceInfo.Name,Mode=OneWay}"></TextBlock>
                                                             <TextBlock Visibility="{x:Bind Path=m_viewModel.UserSpaceInfo.Vip.Status,Mode=OneWay,Converter={StaticResource display},ConverterParameter=0}" FontWeight="Bold"  VerticalAlignment="Center" Text="{x:Bind Path=m_viewModel.UserSpaceInfo.Name,Mode=OneWay}"></TextBlock>
                                                             <Border Background="{x:Bind Path=m_viewModel.UserSpaceInfo.LevelColor,Mode=OneWay}" Opacity=".8" Margin="8 0" CornerRadius="2">
                                                                 <TextBlock Margin="4 2" Foreground="White" FontSize="12">LV<Run Text="{x:Bind Path=m_viewModel.UserSpaceInfo.Level,Mode=OneWay}"/></TextBlock>
                                                             </Border>
-                                                            <Border Visibility="{x:Bind Path=m_viewModel.UserSpaceInfo.Vip.Status,Mode=OneWay,Converter={StaticResource display},ConverterParameter=1}" Background="HotPink" Opacity=".8" CornerRadius="2">
+                                                            <Border Visibility="{x:Bind Path=m_viewModel.UserSpaceInfo.Vip.Status,Mode=OneWay,Converter={StaticResource display},ConverterParameter=1}" Background="{ThemeResource SystemAccentColor}" Opacity=".8" CornerRadius="2">
                                                                 <TextBlock Margin="4 2" Foreground="White" FontSize="12" Text="{x:Bind Path=m_viewModel.UserSpaceInfo.Vip.Label.Text,Mode=OneWay}"></TextBlock>
                                                             </Border>
                                                         </StackPanel>

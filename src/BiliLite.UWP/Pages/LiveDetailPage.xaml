@@ -1145,7 +1145,7 @@
                                                             <ColumnDefinition Width="Auto"/>
                                                             <ColumnDefinition/>
                                                         </Grid.ColumnDefinitions>
-                                                        <ProgressBar Grid.ColumnSpan="2" Height="48" Foreground="{x:Bind Path=BackgroundBottomColor,Mode=OneWay,Converter={StaticResource colorConvert}}" Background="Transparent" Value="{x:Bind Path=Time,Mode=OneWay}" Maximum="{x:Bind Path=MaxTime,Mode=OneWay}"></ProgressBar>
+                                                        <muxc:ProgressBar Grid.ColumnSpan="2" Height="48" Foreground="{x:Bind Path=BackgroundBottomColor,Mode=OneWay,Converter={StaticResource colorConvert}}" Background="Transparent" Value="{x:Bind Path=Time,Mode=OneWay}" Maximum="{x:Bind Path=MaxTime,Mode=OneWay}"></muxc:ProgressBar>
 
                                                         <Ellipse Width="32" Height="32" Margin="2 0 0 0">
                                                             <Ellipse.Fill>
@@ -1222,7 +1222,7 @@
                                 <ListView.ItemTemplate>
                                     <DataTemplate x:DataType="live:GiftMsgModel">
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Foreground="HotPink" VerticalAlignment="Center" Text="{x:Bind Path=UserName}"></TextBlock>
+                                            <TextBlock Foreground="{ThemeResource SystemAccentColor}" VerticalAlignment="Center" Text="{x:Bind Path=UserName}"></TextBlock>
                                             <TextBlock  VerticalAlignment="Center" Margin="4 0">赠送</TextBlock>
                                             <TextBlock  VerticalAlignment="Center" Text="{x:Bind Path=GiftName}"></TextBlock>
                                             <Image Width="24" Source="{x:Bind Path=Gif}"></Image>
