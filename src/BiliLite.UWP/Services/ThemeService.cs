@@ -8,6 +8,7 @@ namespace BiliLite.Services
 {
     public class ThemeService
     {
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private ResourceDictionary m_defaultColorsResource;
         private ElementTheme m_theme;
 
@@ -20,7 +21,15 @@ namespace BiliLite.Services
             }
         }
 
-        public void Init() => m_defaultColorsResource = Application.Current.Resources.MergedDictionaries.FirstOrDefault(x => x.Source.AbsoluteUri.Contains("Default"));
+        public void Init()
+        {
+            m_defaultColorsResource =
+                Application.Current.Resources.MergedDictionaries.FirstOrDefault(x =>
+                    x.Source.AbsoluteUri.Contains("Default"));
+            _logger.Info($"m_defaultColorsResource[\"Light\"]: {m_defaultColorsResource.ThemeDictionaries["Light"]}");
+            _logger.Info($"m_defaultColorsResource[\"Dark\"]: {m_defaultColorsResource.ThemeDictionaries["Dark"]}");
+            _logger.Info($"ThemeResource[\"PlayerControlAcrylicBrush\"]:{ThemeResource["PlayerControlAcrylicBrush"]}");
+        }
 
         public ResourceDictionary ThemeResource
         {
