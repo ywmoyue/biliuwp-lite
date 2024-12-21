@@ -1,5 +1,7 @@
 ﻿using System;
+using Windows.ApplicationModel.Core;
 using Windows.Storage;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -43,5 +45,7 @@ namespace BiliLite.Pages
                 await Windows.System.Launcher.LaunchUriAsync(new Uri(e.Link));
             }
         }
+
+        private async void RestartButton_Click(object sender, RoutedEventArgs e) => await CoreApplication.RequestRestartAsync(string.Empty);
     }
 }
