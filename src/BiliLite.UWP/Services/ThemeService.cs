@@ -16,7 +16,7 @@ namespace BiliLite.Services
             m_theme = (ElementTheme)SettingService.GetValue<int>(SettingConstants.UI.THEME, 0);
             if (m_theme == ElementTheme.Default)
             {
-                m_theme = (ElementTheme)(App.Current.RequestedTheme - 1);
+                m_theme = (ElementTheme)(App.Current.RequestedTheme + 1);
             }
         }
 

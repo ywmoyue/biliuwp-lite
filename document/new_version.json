@@ -1,7 +1,7 @@
 {
-  "version": "4.7.7",
-  "version_num": 40707,
-  "version_desc": "更新内容:\r\n\r\n- 推荐页视频右键快速设置过滤up主 \r\n\r\n- 历史记录页加入观看到的时间点和看完与否，加入显示准确时间的tooltip\r\n\r\n- 调整评论区样式与个人空间页面样式，修复个人空间页动态评论背景透明问题  \r\n\r\n- 搜索页样式调整  \r\n\r\n- 主题颜色样式调整  \r\n\r\n- 搜索历史记录的api错误 \r\n\r\n- 处理标签页TabViewList最大宽度，修复状态栏卡片右上角与功能键重叠 \r\n\r\n- 修复单窗口模式全屏播放窗口标题栏不消失 \r\n\r\n- 修复视频详情页右侧信息透明问题\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.7.8",
+  "version_num": 40708,
+  "version_desc": "更新内容:\r\n\r\n- 初步实现动态磁贴（暂无内容） \r\n\r\n- 下载视频页添加一键清除搜索结果按钮 \r\n\r\n- 下载视频页添加排序选项 \r\n\r\n- 视频详情页提供av号可复制 \r\n\r\n- 分离主题颜色  \r\n\r\n- 调整标签栏样式、支持自定义相关样式 \r\n\r\n- 升级至C#最新版本 \r\n\r\n- 修复部分控件颜色与设置主题不匹配 \r\n\r\n- 任意视频观看一段时间后闪退 \r\n\r\n- 修复番剧点评点赞点踩报错 \r\n\r\n- 直播将互动区自动清理触发时机添加新增欢迎消息时触发 \r\n\r\n- 标签增加至最右侧时，加号点击范围太小  \r\n\r\n- 修复排行榜页面无法缓存的问题 \r\n\r\n- 修复native包编译报错\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
