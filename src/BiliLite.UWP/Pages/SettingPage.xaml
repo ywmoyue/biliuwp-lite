@@ -127,7 +127,7 @@
                 </ScrollViewer>
             </PivotItem>
             <Pivot.RightHeader>
-                <Button x:Name="RestartButton" Click="RestartButton_Click" Margin="8" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top">重启应用</Button>
+                <Button ToolTipService.ToolTip="Ctrl + R" x:Name="RestartButton" Click="RestartButton_Click" Margin="8" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top">重启应用</Button>
             </Pivot.RightHeader>
         </Pivot>
     </Grid>
