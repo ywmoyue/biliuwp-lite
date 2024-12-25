@@ -1111,7 +1111,7 @@
                     </HyperlinkButton>
                     <StackPanel Grid.Column="1" Margin="8 0" VerticalAlignment="Center">
                         <TextBlock Text="{x:Bind Path=m_liveRoomViewModel.LiveInfo.AnchorInfo.BaseInfo.Uname,Mode=OneWay}"></TextBlock>
-                        <TextBlock Margin="0 4 0 0" Foreground="Gray" FontSize="12"><Run Text="{x:Bind Path=m_liveRoomViewModel.WatchedNum,Mode=OneWay}"/> 粉丝:<Run Text="{x:Bind Path=m_liveRoomViewModel.LiveInfo.AnchorInfo.RelationInfo.Attention,Converter={StaticResource numberToStringConvert},Mode=OneWay}"/></TextBlock>
+                        <TextBlock Margin="0 4 0 0" Foreground="Gray" FontSize="12"><Run Text="{x:Bind Path=m_liveRoomViewModel.ViewerNumCount,Mode=OneWay}"/> 粉丝:<Run Text="{x:Bind Path=m_liveRoomViewModel.LiveInfo.AnchorInfo.RelationInfo.Attention,Converter={StaticResource numberToStringConvert},Mode=OneWay}"/></TextBlock>
                     </StackPanel>
                     <Button x:Name="BtnAttention" Click="BtnAttention_Click" FontSize="12" Visibility="{x:Bind Path=m_liveRoomViewModel.Attention,Mode=OneWay,Converter={StaticResource display}}" Grid.Column="2" Background="{ThemeResource SystemAccentColor}" Foreground="White">关注</Button>
                     <Button x:Name="BtnCacnelAttention" Click="BtnCacnelAttention_Click" FontSize="12" Visibility="{x:Bind Path=m_liveRoomViewModel.Attention,Mode=OneWay}" Grid.Column="2">已关注</Button>

@@ -40,6 +40,7 @@ namespace BiliLite.Models.Common.Live
                     { MessageType.OnlineRankChange, OnlineRankChange },
                     { MessageType.StopLive, StopLive },
                     { MessageType.ChatLevelMute, ChatLevelMute },
+                    { MessageType.OnlineCountChange, OnlineCountChange }
                 };
         }
 
@@ -71,7 +72,12 @@ namespace BiliLite.Models.Common.Live
 
         private void WatchedChange(LiveRoomViewModel viewModel, object message)
         {
-            viewModel.WatchedNum = (string)message;
+            viewModel.ViewerNumCount = (string)message;
+        }
+
+        private void OnlineCountChange(LiveRoomViewModel viewModel, object message)
+        {
+            viewModel.ViewerNumCount = (string)message + "人在看";
         }
 
         private void Danmu(LiveRoomViewModel viewModel, object message)

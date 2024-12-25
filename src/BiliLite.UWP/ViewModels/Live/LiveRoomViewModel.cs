@@ -145,9 +145,9 @@ namespace BiliLite.ViewModels.Live
         public bool ShowGiftMessage { get; set; }
 
         /// <summary>
-        /// 看过的人数(替代人气值)
+        /// 房间在线观众数量与看过的人数(替代人气值)
         /// </summary>
-        public string WatchedNum { get; set; }
+        public string ViewerNumCount { get; set; }
 
         /// <summary>
         /// 舰长数
