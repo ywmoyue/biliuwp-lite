@@ -274,6 +274,8 @@ namespace BiliLite.Models.Common.Live
             
             viewModel.Messages.Add(msg);
             if (isNewGuard) viewModel.ReloadGuardList().RunWithoutAwait();
+
+            if (info.UserID == SettingService.Account.UserID.ToString()) viewModel.GetEmoticons().RunWithoutAwait(); // 自己开通了舰长, 有些表情即可解锁
         }
 
         private void RoomChange(LiveRoomViewModel viewModel, object message)

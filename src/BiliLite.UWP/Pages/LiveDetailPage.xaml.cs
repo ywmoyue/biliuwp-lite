@@ -758,10 +758,14 @@ namespace BiliLite.Pages
             if (e)
             {
                 await m_playerController.ContentState.FullWindow();
+                BottomBtnSendDanmakuWide.Visibility = Visibility.Visible;
+                BottomBtnGiftRow.Visibility = Visibility.Collapsed;
             }
             else
             {
                 await m_playerController.ContentState.CancelFullWindow();
+                BottomBtnGiftRow.Visibility = Visibility.Visible;
+                BottomBtnSendDanmakuWide.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -771,10 +775,14 @@ namespace BiliLite.Pages
             if (e)
             {
                 await m_playerController.ScreenState.Fullscreen();
+                BottomBtnSendDanmakuWide.Visibility = Visibility.Visible;
+                BottomBtnGiftRow.Visibility = Visibility.Collapsed;
             }
             else
             {
                 await m_playerController.ScreenState.CancelFullscreen();
+                BottomBtnGiftRow.Visibility = Visibility.Visible;
+                BottomBtnSendDanmakuWide.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -789,6 +797,7 @@ namespace BiliLite.Pages
             if (sender is Button { DataContext: LiveGiftItem giftInfo })
             {
                 await m_liveRoomViewModel.SendGift(giftInfo);
+                await m_liveRoomViewModel.GetEmoticons(); // 送礼物有可能解锁权限,刷新表情包
             }
         }
 
@@ -797,6 +806,7 @@ namespace BiliLite.Pages
             if (sender is Button { DataContext: LiveGiftItem giftInfo })
             {
                 await m_liveRoomViewModel.SendBagGift(giftInfo);
+                await m_liveRoomViewModel.GetEmoticons(); // 送礼物有可能解锁权限,刷新表情包
             }
         }
 
@@ -978,17 +988,15 @@ namespace BiliLite.Pages
 
         private async void DanmuText_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            if (string.IsNullOrEmpty(DanmuText.Text))
+            if (string.IsNullOrEmpty(sender.Text))
             {
                 Notify.ShowMessageToast("弹幕内容不能为空");
                 return;
             }
-            var result = await m_liveRoomViewModel.SendDanmu(DanmuText.Text);
-            if (result)
-            {
-                DanmuText.Text = "";
-            }
+            var result = await m_liveRoomViewModel.SendDanmu(sender.Text);
+            if(result) sender.Text = "";
 
+            await m_liveRoomViewModel.GetEmoticons(); // 长期不看的观众即使在粉丝团也无法发表情, 此时发弹幕即可解锁
         }
 
         private async void BtnAttention_Click(object sender, RoutedEventArgs e)
@@ -1447,5 +1455,43 @@ namespace BiliLite.Pages
         }
 
         private void RootGrid_PointerExited(object sender, PointerRoutedEventArgs e) => isPointerInThisPage = false;
+
+        private async void EmojiButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Button button) return;
+            EmojiFlyout.ShowAt(button);
+            if(m_liveRoomViewModel.EmoticonsPackages.Count == 0)
+            {
+                await m_liveRoomViewModel.GetEmoticons();
+            }
+        }
+
+        private void Danmu_TextChanged(object sender, AutoSuggestBoxTextChangedEventArgs e)
+        {
+            if (sender is not AutoSuggestBox obj) return;
+            switch (obj.Name)
+            {
+                case "DanmuText":
+                    DanmuTextWide.Text = obj.Text;
+                    break;
+                case "DanmuTextWide":
+                    DanmuText.Text = obj.Text;
+                    break;
+            }
+        }
+
+        private async void EmojiItem_Click(object sender, ItemClickEventArgs e)
+        {
+            if (e.ClickedItem is not LiveRoomEmoticon emoji) return;
+            if (!emoji.IsBigSticker)
+            {
+                DanmuText.Text += emoji.Text;
+            }
+            else
+            {
+                await m_liveRoomViewModel.SendDanmu(emoji);
+                EmojiFlyout.Hide();
+            }
+        }
     }
 }

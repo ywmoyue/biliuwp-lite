@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Live;
+using Newtonsoft.Json;
 
 namespace BiliLite.Models.Requests.Api.Live
 {
@@ -156,7 +158,7 @@ namespace BiliLite.Models.Requests.Api.Live
                 body = ApiHelper.MustParameter(AppKey, true) + $"&actionKey=appkey",
                 need_cookie = true,
             };
-            api.body += $"&biz_code=live&biz_id={roomId}&gift_id={giftId}&gift_num={num}&price=0&bag_id={bagId}&rnd={TimeExtensions.GetTimestampMS()}&ruid={ruid}&uid={SettingService.Account.UserID}";
+            api.body += $"&biz_code=live&biz_id={roomId}&gift_id={giftId}&gift_num={num}&price=0&bag_id={bagId}&rnd={TimeExtensions.GetTimestampMs()}&ruid={ruid}&uid={SettingService.Account.UserID}";
             api.body += ApiHelper.GetSign(api.body, AppKey);
             return api;
         }
@@ -174,7 +176,7 @@ namespace BiliLite.Models.Requests.Api.Live
                 body = ApiHelper.MustParameter(AppKey, true) + $"&actionKey=appkey",
                 need_cookie = true,
             };
-            api.body += $"&biz_code=live&biz_id={roomId}&gift_id={giftId}&gift_num={num}&price={price}&rnd={TimeExtensions.GetTimestampMS()}&ruid={ruid}&uid={SettingService.Account.UserID}";
+            api.body += $"&biz_code=live&biz_id={roomId}&gift_id={giftId}&gift_num={num}&price={price}&rnd={TimeExtensions.GetTimestampMs()}&ruid={ruid}&uid={SettingService.Account.UserID}";
             api.body += ApiHelper.GetSign(api.body, AppKey);
 
             return api;
@@ -192,7 +194,35 @@ namespace BiliLite.Models.Requests.Api.Live
                 baseUrl = $"https://api.live.bilibili.com/api/sendmsg",
                 parameter = ApiHelper.MustParameter(AppKey, true) + $"&actionKey=appkey",
             };
-            api.body = $"cid={roomId}&mid={SettingService.Account.UserID}&msg={Uri.EscapeDataString(text)}&rnd={TimeExtensions.GetTimestampMS()}&mode=1&pool=0&type=json&color=16777215&fontsize=25&playTime=0.0";
+            api.body = $"cid={roomId}&mid={SettingService.Account.UserID}&msg={Uri.EscapeDataString(text)}&rnd={TimeExtensions.GetTimestampMs()}&mode=1&pool=0&type=json&color=16777215&fontsize=25&playTime=0.0";
+            api.parameter += ApiHelper.GetSign(api.body, AppKey);
+            return api;
+        }
+
+        /// <summary>
+        /// ios端使用的发送弹幕api
+        /// 更加高级, 可用于发送大表情等
+        /// </summary>
+        /// <param name="roomId">直播间号</param>
+        /// <param name="emoji">表情信息</param>
+        /// <returns></returns>
+        public ApiModel SendDanmu(int roomId, LiveRoomEmoticon emoji)
+        {
+            var jsonObj = new
+            {
+                content = $"{emoji.Text}",
+                emoticon_unique = $"{emoji.Unique}",
+                dm_type = 1,
+            };
+            var extra = JsonConvert.SerializeObject(jsonObj);
+
+            var api = new ApiModel
+            {
+                method = HttpMethods.Post,
+                baseUrl = $"https://api.live.bilibili.com/xlive/app-room/v1/dM/sendmsg",
+                parameter = ApiHelper.MustParameter(AppKey, true) + $"&actionKey=appkey",
+                body = $"msg={emoji.Unique}&dm_type=1&extra={extra}&cid={roomId}&mid={SettingService.Account.UserID}&ts={TimeExtensions.GetTimestampS()}&rnd={TimeExtensions.GetTimestampMs()}&mode=1&pool=0&type=json&color=16777215&fontsize=25"
+            };
             api.parameter += ApiHelper.GetSign(api.body, AppKey);
             return api;
         }
@@ -398,6 +428,23 @@ namespace BiliLite.Models.Requests.Api.Live
                 need_cookie = true,
                 headers = ApiHelper.GetDefaultHeaders()
             };
+            return api;
+        }
+
+        /// <summary>
+        /// 获取直播间表情
+        /// </summary>
+        /// <param name="room_id">房间号</param>
+        /// <returns></returns>
+        public ApiModel GetLiveRoomEmoticon(int room_id)
+        {
+            var api = new ApiModel()
+            {
+                method = HttpMethods.Get,
+                baseUrl = $"https://api.live.bilibili.com/xlive/web-ucenter/v2/emoticon/GetEmoticons",
+                parameter = ApiHelper.MustParameter(AppKey, true) + $"&actionKey=appkey&room_id={room_id}",
+            };
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
     }

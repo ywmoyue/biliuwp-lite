@@ -372,6 +372,41 @@
                 </Grid>
             </toolkit:WrapPanel>
         </DataTemplate>
+        <Flyout x:Name="EmojiFlyout">
+            <Grid Width="340" Margin="-6 -8">
+                <Pivot ItemsSource="{x:Bind Path=m_liveRoomViewModel.EmoticonsPackages,Mode=OneWay}">
+                    <Pivot.HeaderTemplate>
+                        <DataTemplate x:DataType="live:LiveRoomEmoticonPackage">
+                            <StackPanel Orientation="Horizontal" Height="36" Padding="0 -4">
+                                <Border VerticalAlignment="Center" Padding="0" CornerRadius="{StaticResource ImageCornerRadius}">
+                                    <Image VerticalAlignment="Center" Source="{x:Bind Cover,Mode=OneWay}" Margin="0 4" Height="34"></Image>
+                                </Border>
+                                <TextBlock VerticalAlignment="Center" FontSize="16" Margin="2 0 0 0" Text="{x:Bind Path=Name,Mode=OneWay}"></TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Pivot.HeaderTemplate>
+                    <Pivot.ItemTemplate>
+                        <DataTemplate x:DataType="live:LiveRoomEmoticonPackage">
+                            <GridView ItemsSource="{x:Bind Path=Emoticons,Mode=OneWay}" MaxHeight="300" Width="320" SelectionMode="None" IsItemClickEnabled="True" ItemClick="EmojiItem_Click">
+                                <GridView.ItemTemplate>
+                                    <DataTemplate x:DataType="live:LiveRoomEmoticon">
+                                        <StackPanel Width="64" Margin="4 0">
+                                            <Grid MinHeight="56">
+                                                <FontIcon Visibility="{x:Bind LockIconVisibility,Mode=OneWay}" FontFamily="Segoe MDL2 Assets" Glyph="&#xE72E;" FontSize="36" HorizontalAlignment="Stretch"/>
+                                                <Border VerticalAlignment="Center" Padding="0" HorizontalAlignment="Stretch" CornerRadius="{StaticResource ImageCornerRadius}">
+                                                    <Image Source="{x:Bind Url,Mode=OneWay}" Opacity="{x:Bind Opacity,Mode=OneWay}" MinHeight="56"></Image>
+                                                </Border>
+                                            </Grid>
+                                            <TextBlock TextAlignment="Center" FontSize="12" HorizontalAlignment="Center" Text="{x:Bind ShowText,Mode=OneWay}"></TextBlock>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GridView.ItemTemplate>
+                            </GridView>
+                        </DataTemplate>
+                    </Pivot.ItemTemplate>
+                </Pivot>
+            </Grid>
+        </Flyout>
     </Page.Resources>
     <Grid PointerEntered="RootGrid_PointerEntered" PointerExited="RootGrid_PointerExited">
         <Button x:Name="BtnFoucs" Width="0" Height="0" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="-8 -8 0 0" Background="Transparent" BorderThickness="0"></Button>
@@ -660,9 +695,28 @@
                                     <fa:FontAwesome Icon="Solid_Comments" FontSize="20"></fa:FontAwesome>
                                 </HyperlinkButton>-->
                                     </StackPanel>
-                                    <Grid  x:Name="BottomBtnSendDanmakuWide" Visibility="Collapsed" Grid.Column="1" Margin="12 0" MaxWidth="400">
-                                        <TextBox x:Name="SendDanmakuTextBox"  Padding="8 8 56 8" BorderThickness="0"  Foreground="White" Background="#66FFFFFF"  VerticalAlignment="Center" PlaceholderText="发个友善的弹幕见证当下"></TextBox>
-                                        <Button x:Name="SendDanmakuButton"  BorderThickness="0"  Background="Gray" VerticalAlignment="Stretch" HorizontalAlignment="Right" Height="35" Width="56" Foreground="White" Opacity="0.8">发送</Button>
+                                    <Grid x:Name="BottomBtnSendDanmakuWide" Visibility="Collapsed" Grid.Column="1" Margin="12 0" MaxWidth="400">
+                                        <AutoSuggestBox x:Name="DanmuTextWide"
+                                            VerticalAlignment="Center" 
+                                            Padding="8 8 56 8" 
+                                            BorderThickness="0" 
+                                            TextChanged="Danmu_TextChanged"
+                                            QuerySubmitted="DanmuText_QuerySubmitted"
+                                            QueryIcon="Send"
+                                            PlaceholderText="说点什么吧~">
+                                        </AutoSuggestBox>
+                                        <Button
+                                                Click="EmojiButton_Click"
+                                                Margin="0 0 36 0"
+                                                Padding="0"
+                                                Width="32"
+                                                Height="28"
+                                                BorderThickness="0"
+                                                Background="Transparent"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center">
+                                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xED54;" FontSize="14"/>
+                                        </Button>
                                     </Grid>
 
 
@@ -1233,7 +1287,19 @@
 
                             </ListView>
                             <Grid  Grid.Row="3" Background="{ThemeResource NavigationViewTopPaneBackground}" Padding="8">
-                                <AutoSuggestBox x:Name="DanmuText" QuerySubmitted="DanmuText_QuerySubmitted" QueryIcon="Send" PlaceholderText="说点什么吧"></AutoSuggestBox>
+                                <AutoSuggestBox x:Name="DanmuText" QuerySubmitted="DanmuText_QuerySubmitted" TextChanged="Danmu_TextChanged" QueryIcon="Send" PlaceholderText="说点什么吧"></AutoSuggestBox>
+                                <Button
+                                    Click="EmojiButton_Click"
+                                    Margin="0 0 36 0"
+                                    Padding="0"
+                                    Width="32"
+                                    Height="28"
+                                    BorderThickness="0"
+                                    Background="Transparent"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center">         
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xED54;" FontSize="14"/>
+                                </Button>
                             </Grid>
                         </Grid>
                     </PivotItem>

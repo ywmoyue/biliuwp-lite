@@ -207,6 +207,7 @@
     <Compile Include="Models\Common\Comment\HotReply.cs" />
     <Compile Include="Models\Common\Danmaku\BiliDanmakuItem.cs" />
     <Compile Include="Models\Common\Dynamic\DynamicUgcSeasonCardModel.cs" />
+    <Compile Include="Models\Common\Live\LiveRoomEmoticon.cs" />
     <Compile Include="Models\Common\MarkdownViewerPagerParameter.cs" />
     <Compile Include="Models\Common\Player\RealPlayerType.cs" />
     <Compile Include="Models\Common\Player\PlaySpeedMenu.cs" />

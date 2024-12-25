@@ -173,6 +173,8 @@ namespace BiliLite.ViewModels.Live
         [DoNotNotify]
         public LiveRoomWebUrlQualityDescriptionItemModel CurrentQn { get; set; }
 
+        public ObservableCollection<LiveRoomEmoticonPackage> EmoticonsPackages { get; set; }
+
         public List<LiveRoomWebUrlQualityDescriptionItemModel> Qualites { get; set; }
 
         public List<LiveGiftItem> Gifts { get; set; }
@@ -702,6 +704,9 @@ namespace BiliLite.ViewModels.Live
                 }
 
                 ReceiveMessage(LiveInfo.RoomInfo.RoomId).RunWithoutAwait(); // 连接弹幕优先级提高
+
+                await GetEmoticons();
+
                 await LoadSuperChat();
 
                 if (LiveInfo.GuardInfo == null)
@@ -1255,6 +1260,44 @@ namespace BiliLite.ViewModels.Live
             }
         }
 
+        public async Task SendDanmu(LiveRoomEmoticon emoji)
+        {
+            if (!Logined && !await Notify.ShowLoginDialog())
+            {
+                Notify.ShowMessageToast("请先登录");
+                return;
+            }
+            if (emoji.Perm != 1)
+            {
+                Notify.ShowMessageToast("权限不足哦~\n" + $"需要: {emoji.UnlockShowText}");
+                return;
+            }
+            try
+            {
+                var result = await m_liveRoomApi.SendDanmu(RoomID, emoji).Request();
+                if (!result.status)
+                {
+                    throw new CustomizedErrorException(result.message);
+                }
+
+                var data = await result.GetData<object>();
+                if (!data.success)
+                {
+                    throw new CustomizedErrorException(data.message);
+                }
+            }
+            catch (CustomizedErrorException ex)
+            {
+                Notify.ShowMessageToast(ex.Message);
+                _logger.Error(ex.Message, ex);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log("发送表情弹幕出现错误", LogType.Error, ex);
+                Notify.ShowMessageToast("发送表情弹幕出现错误");
+            }
+        }
+
         public async Task<bool> JoinAnchorLottery()
         {
             try
@@ -1322,6 +1365,35 @@ namespace BiliLite.ViewModels.Live
                 return false;
             }
 
+        }
+
+        public async Task GetEmoticons()
+        {
+            if (!Logined && !await Notify.ShowLoginDialog())
+            {
+                Notify.ShowMessageToast("请先登录");
+                return;
+            }
+            try
+            {
+                var result = await m_liveRoomApi.GetLiveRoomEmoticon(RoomID).Request();
+                if (!result.status) throw new CustomizedErrorException(result.message);
+                var data = await result.GetData<JObject>();
+                if (!data.success) throw new CustomizedErrorException(data.message);
+
+                if (EmoticonsPackages?.Count > 0) EmoticonsPackages?.Clear();
+                EmoticonsPackages = JsonConvert.DeserializeObject<ObservableCollection<LiveRoomEmoticonPackage>>(data.data["data"].ToString());
+            }
+            catch (CustomizedErrorException ex)
+            {
+                Notify.ShowMessageToast(ex.Message);
+                _logger.Error(ex.Message, ex);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log("获取表情包出现错误", LogType.Error, ex);
+                Notify.ShowMessageToast("获取表情包出现错误");
+            }
         }
 
         public void CheckClearMessages()
