@@ -201,7 +201,7 @@ namespace BiliLite.ViewModels.Live
         [DoNotNotify]
         public int GuardPage { get; set; } = 1;
 
-        public bool LoadingGuard { get; set; } = true;
+        public bool LoadingGuard { get; set; } = false;
 
         public bool LoadMoreGuard { get; set; }
 
@@ -254,6 +254,8 @@ namespace BiliLite.ViewModels.Live
         public event EventHandler<string> DelShieldWord;
 
         public event EventHandler SpecialLiveRoomHideElements;
+
+        public event EventHandler RefreshGuardNum;
 
         #endregion
 
@@ -373,7 +375,7 @@ namespace BiliLite.ViewModels.Live
             }
         }
 
-        private async void ReceiveMessage(int roomId)
+        private async Task ReceiveMessage(int roomId)
         {
             try
             {
@@ -471,8 +473,8 @@ namespace BiliLite.ViewModels.Live
                 routeIndex++;
             }
 
-            // 暂时不使用hevc流
-            var codec = codecList.FirstOrDefault(item => item.CodecName == "avc");
+            // 暂时不使用hevc流, 但无法保证avc流一定存在
+            var codec = codecList.Count > 1 ? codecList.FirstOrDefault(item => item.CodecName == "avc") : codecList[0];
 
             var acceptQnList = codec.AcceptQn;
             Qualites ??= liveRoomPlayUrlModel.PlayUrlInfo.PlayUrl.GQnDesc.Where(item => acceptQnList.Contains(item.Qn)).ToList();
@@ -668,8 +670,10 @@ namespace BiliLite.ViewModels.Live
                 m_liveMessage = new LiveMessage();
                 m_liveMessage.NewMessage += LiveMessage_NewMessage;
                 m_cancelSource = new System.Threading.CancellationTokenSource();
+                m_timer.Start();
 
                 Loading = true;
+
                 var result = await m_liveRoomApi.LiveRoomInfo(id).Request();
                 if (!result.status)
                 {
@@ -682,38 +686,48 @@ namespace BiliLite.ViewModels.Live
                     throw new CustomizedErrorException("加载直播间失败:" + data.message);
                 }
 
-                if (data.data.GuardInfo == null) 
-                {
-                    IsSpecialLiveRoom = true;
-                    SpecialLiveRoomHideElements?.Invoke(this, null);
-                };
-
-                RoomID = data.data.RoomInfo.RoomId;
-                RoomTitle = data.data.RoomInfo.Title;
-                Live = data.data.RoomInfo.LiveStatus == 1;
-                GuardNum = !IsSpecialLiveRoom ? data.data.GuardInfo.Count : 0;
-                AnchorUid = data.data.RoomInfo.Uid;
                 LiveInfo = data.data;
+                RoomID = LiveInfo.RoomInfo.RoomId;
+                RoomTitle = LiveInfo.RoomInfo.Title;
+                Live = LiveInfo.RoomInfo.LiveStatus == 1;
+                AnchorUid = LiveInfo.RoomInfo.Uid;
 
-                if (Ranks == null)
-                {
-                    Ranks = new List<LiveRoomRankViewModel>()
-                    {
-                        new LiveRoomRankViewModel(RoomID, AnchorUid, "高能用户贡献榜", "contribution-rank"),
-                        new LiveRoomRankViewModel(RoomID, AnchorUid, "粉丝榜", "fans"),
-                    };
-                    SelectRank = Ranks[0];
-                }
+                var buvidResults = await m_liveRoomApi.GetBuvid().Request();
+                var buvidData = await buvidResults.GetJson<ApiDataModel<LiveBuvidModel>>();
+                Buvid3 = buvidData.data.B3;
 
-
-                await LoadAnchorProfile();
-                m_timer.Start();
                 if (Live)
                 {
                     await GetPlayUrls(RoomID, SettingService.GetValue(SettingConstants.Live.DEFAULT_QUALITY, 10000));
                 }
-                //GetFreeSilverTime();  
+
+                ReceiveMessage(LiveInfo.RoomInfo.RoomId).RunWithoutAwait(); // 连接弹幕优先级提高
                 await LoadSuperChat();
+
+                if (LiveInfo.GuardInfo == null)
+                {
+                    IsSpecialLiveRoom = true;
+                    SpecialLiveRoomHideElements?.Invoke(this, null);
+                }
+                else
+                {
+                    GuardNum = !IsSpecialLiveRoom ? LiveInfo.GuardInfo.Count : 0;
+                    await GetGuardList();
+                }
+
+                if (Ranks == null)
+                {
+                    Ranks =
+                    [
+                        new LiveRoomRankViewModel(RoomID, AnchorUid, "高能用户贡献榜", "contribution-rank"),
+                        new LiveRoomRankViewModel(RoomID, AnchorUid, "粉丝榜", "fans"),
+                    ];
+                    SelectRank = Ranks[0];
+                }
+
+                await LoadAnchorProfile();
+
+                //GetFreeSilverTime();  
                 if (ReceiveLotteryMsg)
                 {
                     // 天选抽奖和红包抽奖
@@ -729,12 +743,7 @@ namespace BiliLite.ViewModels.Live
                     await GetTitles();
                 }
 
-                var buvidResults = await m_liveRoomApi.GetBuvid().Request();
-                var buvidData = await buvidResults.GetJson<ApiDataModel<LiveBuvidModel>>();
-                Buvid3 = buvidData.data.B3;
-
-                EntryRoom();
-                ReceiveMessage(data.data.RoomInfo.RoomId);
+                await EntryRoom();
             }
             catch (CustomizedErrorException ex)
             {
@@ -813,7 +822,7 @@ namespace BiliLite.ViewModels.Live
         /// <summary>
         /// 进入房间
         /// </summary>
-        public async void EntryRoom()
+        public async Task EntryRoom()
         {
             try
             {
@@ -1077,6 +1086,7 @@ namespace BiliLite.ViewModels.Live
             Guards?.Clear();
             GuardPage = 1;
             await GetGuardList();
+            RefreshGuardNum?.Invoke(null, null);
         }
 
         public async Task GetFreeSilverTime()

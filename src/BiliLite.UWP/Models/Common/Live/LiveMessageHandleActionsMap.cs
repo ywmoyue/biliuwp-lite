@@ -257,7 +257,7 @@ namespace BiliLite.Models.Common.Live
             if (match.Success) accompanyDays = match.Groups[1].Value.ToInt32();
 
             var text = info.UserName + 
-                       (isNewGuard ? "\n新开通了" : "\n续费了") +
+                       (isNewGuard ? "\n开通了" : "\n续费了") +
                        $"主播的{info.GiftName}" + 
                        (info.Num > 1 ? $"×{info.Num}个{info.Unit}" : "") +
                        "🎉" +

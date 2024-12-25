@@ -121,6 +121,12 @@ namespace BiliLite.Pages
                 BottomBtnGiftRow.Visibility = Visibility.Collapsed;
                 BottomGiftBar.Visibility = Visibility.Collapsed;
             };
+            m_liveRoomViewModel.RefreshGuardNum += (_, e) =>
+            {
+                var temp = pivot.SelectedIndex;
+                pivot.SelectedIndex = 3;
+                pivot.SelectedIndex = temp;
+            };
             this.Loaded += LiveDetailPage_Loaded;
             this.Unloaded += LiveDetailPage_Unloaded; 
             
