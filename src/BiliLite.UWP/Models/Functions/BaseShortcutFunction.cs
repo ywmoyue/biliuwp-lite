@@ -155,6 +155,10 @@ namespace BiliLite.Models.Functions
                 {
                     Keys = new List<InputKey>() { new InputKey((VirtualKey)222) }
                 },
+                new RestartAppFunction()
+                {
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.Menu), new InputKey(VirtualKey.R) }
+                },
                 new RefreshShortcutFunction()
                 {
                     Keys = new List<InputKey>() { new InputKey(VirtualKey.Control), new InputKey(VirtualKey.R) }

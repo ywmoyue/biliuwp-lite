@@ -251,6 +251,7 @@
     <Compile Include="Models\Common\Rank\RankItemModel.cs" />
     <Compile Include="Models\Common\Rank\RankItemOwnerModel.cs" />
     <Compile Include="Models\Common\Rank\RankItemStatModel.cs" />
+    <Compile Include="Models\Functions\RestartAppFunction.cs" />
     <Compile Include="Models\Functions\SaveFunction.cs" />
     <Compile Include="Models\Common\Danmaku\DanmuFilterItem.cs" />
     <Compile Include="Models\Functions\ShortcutFunctionFactory.cs" />
