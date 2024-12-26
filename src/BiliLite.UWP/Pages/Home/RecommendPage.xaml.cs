@@ -1,7 +1,10 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Recommend;
 using BiliLite.Modules.User;
 using BiliLite.Services;
+using BiliLite.ViewModels.Home;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,9 +13,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Models.Common.Recommend;
-using BiliLite.ViewModels.Home;
-using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -24,8 +24,6 @@ namespace BiliLite.Pages.Home
     public sealed partial class RecommendPage : Page, IRefreshablePage, IScrollRecoverablePage
     {
         #region Fields
-
-        private bool m_isGrid = true;
         private readonly RecommendPageViewModel m_viewModel;
 
         #endregion
@@ -60,14 +58,9 @@ namespace BiliLite.Pages.Home
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-
             if (e.NavigationMode != NavigationMode.New) return;
-            if (m_isGrid)
-            {
-                RecommendGridView.ItemTemplate = (DataTemplate)this.Resources["Grid"];
-            }
 
-            SetListDisplay();
+            SetGridViewDisplayMode();
             await m_viewModel.GetRecommend();
             if (!SettingService.GetValue<bool>("推荐右键提示", true)) return;
             SettingService.SetValue("推荐右键提示", false);
@@ -78,12 +71,10 @@ namespace BiliLite.Pages.Home
 
         #region Private Methods
 
-        private void SetListDisplay()
+        private void SetGridViewDisplayMode()
         {
-            var grid = SettingService.GetValue<int>(SettingConstants.UI.RECMEND_DISPLAY_MODE, 0) == 0;
-            if (grid == m_isGrid) return;
-            m_isGrid = grid;
-            if (grid)
+            var isGridMode = SettingService.GetValue<int>(SettingConstants.UI.RECMEND_DISPLAY_MODE, 0) == 0;
+            if (isGridMode)
             {
                 BtnGrid_Click(this, null);
             }
@@ -115,11 +106,11 @@ namespace BiliLite.Pages.Home
             switch (threePoint.Type)
             {
                 case "watch_later":
-                {
-                    var item = (sender as ListView).DataContext as RecommendItemModel;
-                    WatchLaterVM.Instance.AddToWatchlater(item.Param);
-                    return;
-                }
+                    {
+                        var item = (sender as ListView).DataContext as RecommendItemModel;
+                        WatchLaterVM.Instance.AddToWatchlater(item.Param);
+                        return;
+                    }
                 case "dislike":
                     await m_viewModel.Dislike(threePoint.Idx, threePoint, null);
                     return;
@@ -158,7 +149,7 @@ namespace BiliLite.Pages.Home
                         url = data.AdInfo.CreativeContent.ClickUrl ?? data.AdInfo.CreativeContent.Url;
                     }
                     await MessageCenter.HandelUrl(url, dontGoTo);
-                    
+
                     return;
                 }
             if (data.CardGoto == "new_tunnel")
@@ -191,20 +182,18 @@ namespace BiliLite.Pages.Home
 
         private void BtnList_Click(object sender, RoutedEventArgs e)
         {
-            m_isGrid = false;
             //右下角按钮
             BtnGrid.Visibility = Visibility.Visible;
             BtnList.Visibility = Visibility.Collapsed;
             //设置
             SettingService.SetValue<int>(SettingConstants.UI.RECMEND_DISPLAY_MODE, 1);
             RecommendGridView.ItemHeight = 100;
-            RecommendGridView.DesiredWidth = 500;
+            RecommendGridView.DesiredWidth = 550;
             RecommendGridView.ItemTemplate = (DataTemplate)this.Resources["List"];
         }
 
         private void BtnGrid_Click(object sender, RoutedEventArgs e)
         {
-            m_isGrid = true;
             //右下角按钮
             BtnGrid.Visibility = Visibility.Collapsed;
             BtnList.Visibility = Visibility.Visible;
