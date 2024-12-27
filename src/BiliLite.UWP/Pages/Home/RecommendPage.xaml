@@ -266,8 +266,7 @@
                         <controls:Carousel
                             x:Name="control"
                             MaxHeight="240"
-                            Margin="12,0"
-                            AspectRatio="1.77"
+                            AspectRatio="1.7"
                             ItemsSource="{x:Bind Path=m_viewModel.Banner, Mode=OneWay}"
                             MaxItems="1"
                             SlideInterval="0"
@@ -275,9 +274,10 @@
                             <controls:Carousel.ContentTemplate>
                                 <DataTemplate x:DataType="recommend:RecommendBannerItemModel">
                                     <HyperlinkButton
-                                        Margin="12,0"
-                                        Padding="0"
-                                        Click="BannerItem_Click">
+                                        Margin="0,5,0,0"
+                                        Padding="5"
+                                        Click="BannerItem_Click"
+                                        CornerRadius="{ThemeResource OverlayCornerRadius}">
                                         <Border CornerRadius="{ThemeResource OverlayCornerRadius}">
                                             <toolkit:ImageEx PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Source="{x:Bind Path=Image, Converter={StaticResource imageConvert}, ConverterParameter='240h'}" />
                                         </Border>
