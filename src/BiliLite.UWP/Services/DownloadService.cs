@@ -309,7 +309,7 @@ namespace BiliLite.Services
         {
             var downloadedDtos = m_biliLiteDbContext.DownloadedItems
                 .Include(x => x.Epsidoes)
-                .OrderBy(x=>x.IsSeason)
+                .OrderByDescending(x=>x.UpdateTime)
                 .ToList();
             var downloadedItems = m_mapper.Map<List<DownloadedItem>>(downloadedDtos);
 
