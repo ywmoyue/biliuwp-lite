@@ -1,17 +1,16 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using BiliLite.Services;
+﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Comment;
 using BiliLite.Models.Requests.Api;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
-using BiliLite.Extensions;
+using BiliLite.Services;
 using BiliLite.ViewModels.UserDynamic;
 using Microsoft.Extensions.DependencyInjection;
-using BiliLite.Models.Common.Comment;
+using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -20,7 +19,7 @@ namespace BiliLite.Pages.Home
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class UserDynamicPage : Page,IRefreshablePage
+    public sealed partial class UserDynamicPage : Page, IRefreshablePage
     {
         readonly UserDynamicAllViewModel m_viewModel;
         private bool m_isStaggered = false;
@@ -34,7 +33,7 @@ namespace BiliLite.Pages.Home
             m_currentShowType = (UserDynamicShowType)DynPivot.SelectedIndex;
         }
 
-        protected  override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
@@ -72,14 +71,9 @@ namespace BiliLite.Pages.Home
             m_isStaggered = true;
             BtnGrid.Visibility = Visibility.Collapsed;
             BtnList.Visibility = Visibility.Visible;
-            //XAML
-            ListDyn.ItemsPanel = (ItemsPanelTemplate)this.Resources["GridPanel"];
 
             //顶部
             GridTopBar.MaxWidth = double.MaxValue;
-            GridTopBar.Margin = new Thickness(0, 0, 0, 4);
-            BorderTopBar.CornerRadius = new CornerRadius(0);
-            BorderTopBar.Margin = new Thickness(0);
         }
 
         private void SetListCore()
@@ -88,14 +82,9 @@ namespace BiliLite.Pages.Home
             //右下角按钮
             BtnGrid.Visibility = Visibility.Visible;
             BtnList.Visibility = Visibility.Collapsed;
-            //XAML
-            ListDyn.ItemsPanel = (ItemsPanelTemplate)this.Resources["ListPanel"];
 
             //顶部
             GridTopBar.MaxWidth = 800;
-            GridTopBar.Margin = new Thickness(8, 0, 8, 0);
-            BorderTopBar.CornerRadius = new CornerRadius(4);
-            BorderTopBar.Margin = new Thickness(12, 4, 12, 4);
         }
 
         private async void BtnRefreshDynamic_OnClick(object sender, RoutedEventArgs e)
@@ -105,7 +94,21 @@ namespace BiliLite.Pages.Home
 
         private void BtnTop_OnClick(object sender, RoutedEventArgs e)
         {
-            ListDyn.ScrollIntoView(ListDyn.Items.FirstOrDefault());
+            switch (DynPivot.SelectedIndex)
+            {
+                case 0:
+                    ListDyn0.ScrollToTop();
+                    break;
+                case 1:
+                    ListDyn1.ScrollToTop();
+                    break;
+                case 2:
+                    ListDyn2.ScrollToTop();
+                    break;
+                case 3:
+                    ListDyn3.ScrollToTop();
+                    break;
+            }
         }
 
         private void BtnList_OnClick(object sender, RoutedEventArgs e)
@@ -193,6 +196,11 @@ namespace BiliLite.Pages.Home
         public async Task Refresh()
         {
             await m_viewModel.GetDynamicItems(showType: m_currentShowType);
+        }
+
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

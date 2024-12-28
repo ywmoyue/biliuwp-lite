@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace BiliLite.Controls
 {
-     public class MyListView : ListView
+    public class MyListView : ListView
     {
 
         private ICommand _LoadMoreCommand;
@@ -47,6 +43,12 @@ namespace BiliLite.Controls
                 LoadMoreCommand?.Execute(null);
             }
 
+        }
+
+        public void ScrollToTop()
+        {
+            var scrollViewer = GetTemplateChild("ScrollViewer") as ScrollViewer;
+            scrollViewer?.ChangeView(null, 0, null);
         }
     }
 }
