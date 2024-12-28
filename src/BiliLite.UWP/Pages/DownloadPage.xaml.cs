@@ -46,6 +46,10 @@ namespace BiliLite.Pages
             m_downloadService = App.ServiceProvider.GetRequiredService<DownloadService>();
             this.InitializeComponent();
             Title = "下载";
+            if (!m_viewModel.Downloadings.Any())
+            {
+                DownloadPivot.SelectedIndex = 1;
+            }
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {

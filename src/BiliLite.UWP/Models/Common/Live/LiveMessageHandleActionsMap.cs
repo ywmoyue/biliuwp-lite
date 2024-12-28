@@ -40,6 +40,7 @@ namespace BiliLite.Models.Common.Live
                     { MessageType.OnlineRankChange, OnlineRankChange },
                     { MessageType.StopLive, StopLive },
                     { MessageType.ChatLevelMute, ChatLevelMute },
+                    { MessageType.OnlineCountChange, OnlineCountChange }
                 };
         }
 
@@ -71,7 +72,12 @@ namespace BiliLite.Models.Common.Live
 
         private void WatchedChange(LiveRoomViewModel viewModel, object message)
         {
-            viewModel.WatchedNum = (string)message;
+            viewModel.ViewerNumCount = (string)message;
+        }
+
+        private void OnlineCountChange(LiveRoomViewModel viewModel, object message)
+        {
+            viewModel.ViewerNumCount = (string)message + "人在看";
         }
 
         private void Danmu(LiveRoomViewModel viewModel, object message)
@@ -251,7 +257,7 @@ namespace BiliLite.Models.Common.Live
             if (match.Success) accompanyDays = match.Groups[1].Value.ToInt32();
 
             var text = info.UserName + 
-                       (isNewGuard ? "\n新开通了" : "\n续费了") +
+                       (isNewGuard ? "\n开通了" : "\n续费了") +
                        $"主播的{info.GiftName}" + 
                        (info.Num > 1 ? $"×{info.Num}个{info.Unit}" : "") +
                        "🎉" +
@@ -268,6 +274,8 @@ namespace BiliLite.Models.Common.Live
             
             viewModel.Messages.Add(msg);
             if (isNewGuard) viewModel.ReloadGuardList().RunWithoutAwait();
+
+            if (info.UserID == SettingService.Account.UserID.ToString()) viewModel.GetEmoticons().RunWithoutAwait(); // 自己开通了舰长, 有些表情即可解锁
         }
 
         private void RoomChange(LiveRoomViewModel viewModel, object message)

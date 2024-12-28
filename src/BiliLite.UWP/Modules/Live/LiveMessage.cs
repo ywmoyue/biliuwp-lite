@@ -332,7 +332,7 @@ namespace BiliLite.Modules.Live
                         w.UserID = obj["data"]["uid"].ToString();
                         w.MsgType = obj["data"]["msg_type"].ToInt32();
 
-                        if (obj["data"]["fans_medal"]["medal_level"].ToInt32() != 0)
+                        if (obj["data"]["fans_medal"].ToString().Length != 0 && obj["data"]["fans_medal"]["medal_level"].ToInt32() != 0)
                         {
                             w.MedalName = obj["data"]["fans_medal"]["medal_name"].ToString();
                             w.MedalLevel = obj["data"]["fans_medal"]["medal_level"].ToInt32();
@@ -501,6 +501,13 @@ namespace BiliLite.Modules.Live
                         NewMessage?.Invoke(MessageType.WatchedChange, obj["data"]["text_large"].ToString());
                     }
                     return MessageDelayType.SystemMessage;
+                }
+                else if (cmd == "ONLINE_RANK_COUNT") // 在线人数变动, 即网页端的"房间观众()括号中的数字"
+                {
+                    if (obj["data"] != null)
+                    {
+                        NewMessage?.Invoke(MessageType.OnlineCountChange, obj["data"]["online_count_text"].ToString());
+                    }
                 }
                 else if (cmd == "ONLINE_RANK_V2")
                 {

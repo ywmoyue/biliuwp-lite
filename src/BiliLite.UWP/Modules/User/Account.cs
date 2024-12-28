@@ -504,8 +504,8 @@ namespace BiliLite.Modules
         /// <returns></returns>
         public async Task CheckUpdateCookies()
         {
-            if (!SettingService.GetValue(SettingConstants.Account.IS_WEB_LOGIN, false)) return;
             var checkResult = await CheckCookies();
+            if (!SettingService.GetValue(SettingConstants.Account.IS_WEB_LOGIN, false)) return;
             if (!checkResult.Refresh)
             {
                 return;
@@ -530,6 +530,7 @@ namespace BiliLite.Modules
             var api = new AccountApi().CheckCookies();
             var result = await api.Request();
             var checkCookieResult = await result.GetData<CheckCookieResult>();
+            _logger.Info($"检查Cookie结果:{checkCookieResult.data.Refresh}");
             return checkCookieResult.data;
         }
 

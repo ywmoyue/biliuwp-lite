@@ -424,6 +424,11 @@
         /// 直播间等级禁言
         /// </summary>
         ChatLevelMute,
+
+        /// <summary>
+        /// 直播间观看人数变动
+        /// </summary>
+        OnlineCountChange,
     }
 
     public enum MessageDelayType {
