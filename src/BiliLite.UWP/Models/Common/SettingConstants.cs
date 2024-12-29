@@ -895,6 +895,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const bool DEFAULT_AUTO_SKIP_OP_ED = false;
+
+            /// <summary>
+            /// 快速切换播放速度
+            /// </summary>
+            [SettingKey(typeof(double))]
+            public const string TOGGLE_PLAY_SPEED_VALUE = "TogglePlaySpeedValue";
+
+            /// <summary>
+            /// 快速切换播放速度默认值
+            /// </summary>
+            [SettingKey(typeof(double))]
+            public const double TOGGLE_PLAY_SPEED_DEFAULT_VALUE = 1.5;
         }
 
         public class Filter

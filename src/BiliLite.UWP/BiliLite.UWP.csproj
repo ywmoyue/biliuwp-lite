@@ -267,6 +267,7 @@
     <Compile Include="Models\Functions\ToggleFullWindowShortcutFunction.cs" />
     <Compile Include="Models\Functions\ToggleMiniWindowShortcutFunction.cs" />
     <Compile Include="Models\Common\Notifications\NotificationTile.cs" />
+    <Compile Include="Models\Functions\TogglePlaySpeedFunction.cs" />
     <Compile Include="Models\Functions\ToggleSubtitleShortcutFunction.cs" />
     <Compile Include="Models\Common\Search\SearchAnimeItem.cs" />
     <Compile Include="Models\Common\Search\SearchArea.cs" />

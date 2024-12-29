@@ -71,6 +71,16 @@ namespace BiliLite.Pages
             Player.FastUp();
         }
 
+        public double GetPlaySpeed()
+        {
+            return Player.GetPlaySpeed();
+        }
+
+        public void SetPlaySpeed(double speed)
+        {
+            Player.SetPlaySpeed(speed);
+        }
+
         public void ToggleMute()
         {
             Player.ToggleMute();

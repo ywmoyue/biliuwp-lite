@@ -43,6 +43,7 @@ using BiliLite.Models.Common.Video.PlayUrlInfos;
 using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels;
 using BiliLite.ViewModels.Settings;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
@@ -2788,6 +2789,20 @@ namespace BiliLite.Controls
             }
             BottomCBSpeed.SelectedIndex -= 1;
             m_playerToastService.Show(PlayerToastService.SPEED_KEY, (BottomCBSpeed.SelectedItem as PlaySpeedMenuItem).Content);
+        }
+
+        public double GetPlaySpeed()
+        {
+            var value = (double)BottomCBSpeed.SelectedValue;
+            return value;
+        }
+
+        // 设置播放速度
+        public void SetPlaySpeed(double speed)
+        {
+            var speeds = BottomCBSpeed.ItemsSource as List<PlaySpeedMenuItem>;
+            var index = speeds.Select(x => x.Value).IndexOf(speed);
+            BottomCBSpeed.SelectedIndex = index;
         }
 
         public void GotoLastVideo()
