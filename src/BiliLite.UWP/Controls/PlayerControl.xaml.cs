@@ -581,6 +581,11 @@ namespace BiliLite.Controls
                     PlayerSettingABPlaySetPointB.Content = "设置B点";
                 }
             });
+            //仅播放音频
+            SwitchVideoEnable.Toggled += (e, args) =>
+            {
+                Player.SetVideoEnable(!SwitchVideoEnable.IsOn);
+            };
         }
         private void LoadSutitleSetting()
         {
@@ -2595,6 +2600,11 @@ namespace BiliLite.Controls
 
             if (targetItem != null)
                 Menuitem_Click(targetItem, null);
+        }
+
+        public void ToggleVideoEnable()
+        {
+            SwitchVideoEnable.IsOn = !SwitchVideoEnable.IsOn;
         }
 
         public async void Dispose()

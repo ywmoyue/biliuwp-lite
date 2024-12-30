@@ -141,6 +141,11 @@ namespace BiliLite.Pages
             Player.ToggleSubtitle();
         }
 
+        public void ToggleVideoEnable()
+        {
+            Player.ToggleVideoEnable();
+        }
+
         public void AddVolume()
         {
             Player.AddVolume();

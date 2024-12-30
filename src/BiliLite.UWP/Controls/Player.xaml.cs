@@ -407,13 +407,13 @@ namespace BiliLite.Controls
             });
         }
 
-        private async Task OnPlayerPositionChanged(MediaPlaybackSession session)
+        private async Task OnPlayerPositionChanged(TimeSpan position)
         {
             await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 try
                 {
-                    Position = session.Position.TotalSeconds;
+                    Position = position.TotalSeconds;
                 }
                 catch (Exception)
                 {
@@ -499,11 +499,22 @@ namespace BiliLite.Controls
                 _logger.Trace($"BufferingEnded");
                 await OnPlayerBufferingEnded();
             };
-            //进度变更
-            m_playerVideo.PlaybackSession.PositionChanged += async (e, arg) =>
-            { 
-                await OnPlayerPositionChanged(e);
-            };
+            if (m_mediaTimelineController != null)
+            {
+                //进度变更
+                m_mediaTimelineController.PositionChanged += async (e, arg) =>
+                {
+                    await OnPlayerPositionChanged(e.Position);
+                };
+            }
+            else
+            {
+                //进度变更
+                m_playerVideo.PlaybackSession.PositionChanged += async (e, arg) =>
+                {
+                    await OnPlayerPositionChanged(e.Position);
+                };
+            }
 
             if (m_playerAudio != null)
             {
@@ -1437,6 +1448,28 @@ namespace BiliLite.Controls
             //{
             //}
 
+        }
+
+        public void SetVideoEnable(bool enable)
+        {
+            try
+            {
+                if (enable)
+                {
+                    m_playerVideo.TimelineController = m_mediaTimelineController;
+                    mediaPlayerVideo.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    m_playerVideo.TimelineController = null;
+                    m_playerVideo.Pause();
+                    mediaPlayerVideo.Visibility = Visibility.Collapsed;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message, ex);
+            }
         }
 
         #endregion
