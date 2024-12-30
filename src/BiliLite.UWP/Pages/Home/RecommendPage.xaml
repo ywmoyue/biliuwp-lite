@@ -276,11 +276,14 @@
                                     <HyperlinkButton
                                         Margin="0,5,0,0"
                                         Padding="5"
+                                        HorizontalAlignment="Stretch"
                                         Click="BannerItem_Click"
                                         CornerRadius="{ThemeResource OverlayCornerRadius}">
-                                        <Border CornerRadius="{ThemeResource OverlayCornerRadius}">
-                                            <toolkit:ImageEx PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Source="{x:Bind Path=Image, Converter={StaticResource imageConvert}, ConverterParameter='240h'}" />
-                                        </Border>
+                                        <toolkit:ImageEx
+                                            CornerRadius="{ThemeResource OverlayCornerRadius}"
+                                            PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
+                                            Source="{x:Bind Path=Image, Converter={StaticResource imageConvert}, ConverterParameter='240h'}"
+                                            Stretch="Fill" />
                                     </HyperlinkButton>
                                 </DataTemplate>
                             </controls:Carousel.ContentTemplate>

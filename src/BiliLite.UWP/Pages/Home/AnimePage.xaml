@@ -85,20 +85,23 @@
                     <controls:Carousel
                         x:Name="control"
                         MaxHeight="240"
-                        AspectRatio="3.49"
-                        Background="AliceBlue"
+                        AspectRatio="1.7"
                         ItemsSource="{x:Bind Path=m_viewModel.HomeData.Banners, Mode=OneWay}"
                         MaxItems="1"
-                        SlideInterval="5000">
+                        SlideInterval="0">
                         <controls:Carousel.ContentTemplate>
                             <DataTemplate>
                                 <HyperlinkButton
-                                    Margin="4,0"
-                                    Padding="0"
-                                    Click="BannerItem_Click">
-                                    <Border>
-                                        <toolkit:ImageEx PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Source="{Binding Path=Img, Converter={StaticResource imageConvert}, ConverterParameter='240h'}" />
-                                    </Border>
+                                    Margin="0,5,0,0"
+                                    Padding="5"
+                                    HorizontalAlignment="Stretch"
+                                    Click="BannerItem_Click"
+                                    CornerRadius="{ThemeResource OverlayCornerRadius}">
+                                    <toolkit:ImageEx
+                                        CornerRadius="{ThemeResource OverlayCornerRadius}"
+                                        PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
+                                        Source="{Binding Path=Img, Converter={StaticResource imageConvert}, ConverterParameter='240h'}"
+                                        Stretch="Fill" />
                                 </HyperlinkButton>
                             </DataTemplate>
                         </controls:Carousel.ContentTemplate>
