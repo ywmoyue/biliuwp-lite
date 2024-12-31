@@ -285,6 +285,14 @@
             </ComboBox>
         </controls:SettingsCard>
 
+        <controls:SettingsCard Header="启动应用时打开上次浏览的标签页"
+                               Description="仅支持标签页模式">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Brands_Page4"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch x:Name="SwitchOpenLastPage" ></ToggleSwitch>
+        </controls:SettingsCard>
+
         <controls:SettingsCard Header="鼠标中键/侧键行为"
                                Description="选择鼠标中键/侧键行为">
             <controls:SettingsCard.HeaderIcon>

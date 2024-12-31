@@ -150,7 +150,7 @@ namespace BiliLite
             {
             }
 
-            InitBili();
+            await InitBili();
             Frame rootFrame = Window.Current.Content as Frame;
 
             // 不要在窗口已包含内容时重复应用程序初始化，
@@ -176,6 +176,10 @@ namespace BiliLite
                     var mainPage = ServiceProvider.GetRequiredService<IMainPage>();
                     rootFrame.Content = mainPage;
                 }
+
+                var pageSaveService = ServiceProvider.GetRequiredService<PageSaveService>();
+                pageSaveService.HandleStartApp();
+
                 if (arguments != null && !string.IsNullOrEmpty(arguments.ToString()))
                 {
                     await MessageCenter.HandelUrl(arguments.ToString());
@@ -187,7 +191,7 @@ namespace BiliLite
             }
         }
 
-        private async void InitBili()
+        private async Task InitBili()
         {
             //首次运行设置首页的显示样式
             if (SystemInformation.IsFirstRun)

@@ -47,6 +47,8 @@ namespace BiliLite
             Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
         }
 
+        public event EventHandler MainPageLoaded;
+
         public object CurrentPage => frame.Content;
 
         private void Dispatcher_AcceleratorKeyActivated(Windows.UI.Core.CoreDispatcher sender, Windows.UI.Core.AcceleratorKeyEventArgs args)
@@ -253,6 +255,7 @@ namespace BiliLite
         private void NoTabMainPage_OnLoaded(object sender, RoutedEventArgs e)
         {
             frame.Navigate(typeof(Pages.HomePage));
+            MainPageLoaded?.Invoke(this, EventArgs.Empty);
         }
     }
 

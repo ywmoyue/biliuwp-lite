@@ -246,6 +246,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             // 因为要开关时注册磁贴服务，所以不设置SettingKey
             public const string ENABLE_NOTIFICATION_TILES = "EnableNotificationTiles";
+
+            /// <summary>
+            /// 是否打开上次浏览的标签页
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string ENABLE_OPEN_LAST_PAGE = "EnableOpenLastPage";
+
+            /// <summary>
+            /// 是否打开上次浏览的标签页默认值
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_ENABLE_OPEN_LAST_PAGE = false;
         }
 
         public class Account

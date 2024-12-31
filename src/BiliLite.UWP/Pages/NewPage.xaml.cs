@@ -7,11 +7,13 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Controls;
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using BiliLite.Extensions;
 using BiliLite.Models.Common.Search;
 using NavigationView = Microsoft.UI.Xaml.Controls.NavigationView;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -173,6 +175,12 @@ namespace BiliLite.Pages
                     this.Frame.Navigate(pageType);
                 else
                     this.Frame.Navigate(pageType, parameter);
+
+                if (frame is MyFrame myFrame)
+                {
+                    var pageSaveService = App.ServiceProvider.GetRequiredService<PageSaveService>();
+                    pageSaveService.UpdatePage(myFrame.PageId, title, pageType, parameter, symbol);
+                }
             }
         }
     }
