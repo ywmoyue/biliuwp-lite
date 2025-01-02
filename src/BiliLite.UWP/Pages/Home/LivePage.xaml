@@ -63,7 +63,7 @@
                                 <TextBlock>查看全部</TextBlock>
                             </HyperlinkButton>
                         </Grid>
-                        <controls:ScrollGridView 
+                        <controls:HorizontalGridView 
                             MoveOffset="600" 
                             AlwaysShowButton="False" 
                             ItemClick="FollowLive_ItemClick"
@@ -122,7 +122,7 @@
                                     </Grid>
                                 </DataTemplate>
                             </GridView.ItemTemplate>
-                        </controls:ScrollGridView>
+                        </controls:HorizontalGridView>
                     </StackPanel>
                     <ItemsControl Margin="0 8 0 0" ItemsSource="{x:Bind Path=m_viewModel.Items,Mode=OneWay}">
                         <ItemsControl.ItemsPanel>
@@ -139,7 +139,7 @@
                                             <TextBlock>查看更多</TextBlock>
                                         </HyperlinkButton>
                                     </Grid>
-                                    <controls:ScrollGridView 
+                                    <controls:HorizontalGridView 
                             MoveOffset="600" 
                             AlwaysShowButton="False" 
                                         ItemClick="LiveItems_ItemClick"
@@ -198,7 +198,7 @@
                                                 </Grid>
                                             </DataTemplate>
                                         </GridView.ItemTemplate>
-                                    </controls:ScrollGridView>
+                                    </controls:HorizontalGridView>
                                 </StackPanel>
                               
                             </DataTemplate>

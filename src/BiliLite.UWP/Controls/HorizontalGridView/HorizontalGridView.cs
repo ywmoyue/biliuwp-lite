@@ -4,11 +4,11 @@ using Windows.UI.Xaml.Input;
 
 namespace BiliLite.Controls
 {
-    public class ScrollGridView : GridView
+    public class HorizontalGridView : GridView
     {
-        public ScrollGridView()
+        public HorizontalGridView()
         {
-            DefaultStyleKey = typeof(ScrollGridView);
+            DefaultStyleKey = typeof(HorizontalGridView);
         }
 
         public Grid root;
@@ -123,10 +123,10 @@ namespace BiliLite.Controls
         }
 
         public static readonly DependencyProperty AlwaysShowButtonProperty =
-            DependencyProperty.Register("AlwaysShowButton", typeof(bool), typeof(ScrollGridView), new PropertyMetadata(false, OnAlwaysShowButtonChanged));
+            DependencyProperty.Register("AlwaysShowButton", typeof(bool), typeof(HorizontalGridView), new PropertyMetadata(false, OnAlwaysShowButtonChanged));
         private static void OnAlwaysShowButtonChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var data = d as ScrollGridView;
+            var data = d as HorizontalGridView;
             if ((bool)e.NewValue)
             {
                 data.btnMoveLeft.Visibility = Visibility.Visible;
@@ -143,7 +143,7 @@ namespace BiliLite.Controls
 
         // Using a DependencyProperty as the backing store for MoveOffset.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty MoveOffsetProperty =
-            DependencyProperty.Register("MoveOffset", typeof(double), typeof(ScrollGridView), new PropertyMetadata((double)200.0));
+            DependencyProperty.Register("MoveOffset", typeof(double), typeof(HorizontalGridView), new PropertyMetadata((double)200.0));
 
     }
 }

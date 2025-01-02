@@ -87,7 +87,7 @@
                                 <TextBlock>查看全部</TextBlock>
                             </HyperlinkButton>
                         </Grid>
-                        <controls:ScrollGridView 
+                        <controls:HorizontalGridView 
                             MoveOffset="600" 
                             AlwaysShowButton="False" 
                             ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}" 
@@ -140,7 +140,7 @@
                                     </Grid>
                                 </DataTemplate>
                             </GridView.ItemTemplate>
-                        </controls:ScrollGridView>
+                        </controls:HorizontalGridView>
                     </StackPanel>
                     <StackPanel Margin="0 8 0 0">
                         <Grid>
@@ -149,7 +149,7 @@
                                 <TextBlock>完整时间表</TextBlock>
                             </HyperlinkButton>
                         </Grid>
-                        <controls:ScrollGridView ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}" 
+                        <controls:HorizontalGridView ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}" 
                                                  PointerPressed="{x:Bind Path=m_viewModel.SeasonItemPressed}"
                                                  Margin="-4 0 0 0"
                                                  MoveOffset="600" 
@@ -197,7 +197,7 @@
                                     </Grid>
                                 </DataTemplate>
                             </GridView.ItemTemplate>
-                        </controls:ScrollGridView>
+                        </controls:HorizontalGridView>
                     </StackPanel>
                     <StackPanel Margin="0 8 0 0">
                         <Grid>
@@ -206,7 +206,7 @@
                                 <TextBlock>番剧索引</TextBlock>
                             </HyperlinkButton>
                         </Grid>
-                        <controls:ScrollGridView x:Name="gridView" 
+                        <controls:HorizontalGridView x:Name="gridView" 
                                                  Margin="-4 0 0 0"
                                                  MoveOffset="600" AlwaysShowButton="False" SelectionMode="None" 
                                                  ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}"
@@ -226,7 +226,7 @@
                                     <ItemsStackPanel Orientation="Horizontal"></ItemsStackPanel>
                                 </ItemsPanelTemplate>
                             </GridView.ItemsPanel>
-                        </controls:ScrollGridView>
+                        </controls:HorizontalGridView>
                     </StackPanel>
                     <StackPanel Margin="0 8 0 0">
                         <Grid>
@@ -235,7 +235,7 @@
                                 <TextBlock>查看更多</TextBlock>
                             </HyperlinkButton>
                         </Grid>
-                        <controls:ScrollGridView MoveOffset="600"
+                        <controls:HorizontalGridView MoveOffset="600"
                                                  Margin="-4 0 0 0"
                                                  AlwaysShowButton="False" 
                                                  SelectionMode="None" 
@@ -256,7 +256,7 @@
                                     <ItemsStackPanel Orientation="Horizontal"></ItemsStackPanel>
                                 </ItemsPanelTemplate>
                             </GridView.ItemsPanel>
-                        </controls:ScrollGridView>
+                        </controls:HorizontalGridView>
                     </StackPanel>
                     <ItemsControl Margin="0 8 0 0" ItemsSource="{x:Bind Path=m_viewModel.AnimeFalls,Mode=OneWay}">
                         <ItemsControl.ItemsPanel>
