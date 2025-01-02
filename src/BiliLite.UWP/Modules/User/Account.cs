@@ -444,6 +444,8 @@ namespace BiliLite.Modules
                 if (req.status)
                 {
                     var obj = req.GetJObject();
+                    var refresh = obj["data"]?.Value<bool>("refresh");
+                    _logger.Info("CheckLoginState need refresh:" + refresh);
                     return obj["code"].ToInt32() == 0;
                 }
                 else
@@ -469,6 +471,7 @@ namespace BiliLite.Modules
             {
                 var appKey = SettingService.Account.GetLoginAppKeySecret();
                 var req = await accountApi.RefreshToken(appKey).Request();
+                // TODO: 检查该接口是否会返回刷新的Cookie
 
                 if (req.status)
                 {
