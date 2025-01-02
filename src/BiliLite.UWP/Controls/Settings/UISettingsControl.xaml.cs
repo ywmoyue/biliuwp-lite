@@ -184,6 +184,16 @@ namespace BiliLite.Controls.Settings
                 });
             });
 
+            //启动应用时打开上次浏览的标签页
+            SwitchOpenLastPage.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.ENABLE_OPEN_LAST_PAGE, SettingConstants.UI.DEFAULT_ENABLE_OPEN_LAST_PAGE);
+            SwitchOpenLastPage.Loaded += (sender, e) =>
+            {
+                SwitchOpenLastPage.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.ENABLE_OPEN_LAST_PAGE, SwitchOpenLastPage.IsOn);
+                };
+            };
+
             // 鼠标中键/侧键行为
             cbMouseMiddleAction.SelectedIndex = SettingService.GetValue(SettingConstants.UI.MOUSE_MIDDLE_ACTION, (int)MouseMiddleActions.Back);
             cbMouseMiddleAction.Loaded += new RoutedEventHandler((sender, e) =>

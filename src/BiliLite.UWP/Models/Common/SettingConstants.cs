@@ -246,6 +246,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             // 因为要开关时注册磁贴服务，所以不设置SettingKey
             public const string ENABLE_NOTIFICATION_TILES = "EnableNotificationTiles";
+
+            /// <summary>
+            /// 是否打开上次浏览的标签页
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string ENABLE_OPEN_LAST_PAGE = "EnableOpenLastPage";
+
+            /// <summary>
+            /// 是否打开上次浏览的标签页默认值
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_ENABLE_OPEN_LAST_PAGE = false;
         }
 
         public class Account
@@ -895,6 +907,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const bool DEFAULT_AUTO_SKIP_OP_ED = false;
+
+            /// <summary>
+            /// 快速切换播放速度
+            /// </summary>
+            [SettingKey(typeof(double))]
+            public const string TOGGLE_PLAY_SPEED_VALUE = "TogglePlaySpeedValue";
+
+            /// <summary>
+            /// 快速切换播放速度默认值
+            /// </summary>
+            [SettingKey(typeof(double))]
+            public const double TOGGLE_PLAY_SPEED_DEFAULT_VALUE = 1.5;
         }
 
         public class Filter
