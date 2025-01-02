@@ -19,7 +19,7 @@ namespace BiliLite.Controls
     {
         public ScrollGridView()
         {
-            this.DefaultStyleKey = typeof(ScrollGridView);
+            DefaultStyleKey = typeof(ScrollGridView);
         }
         public Button btnMoveLeft;
         public Button btnMoveRight;
