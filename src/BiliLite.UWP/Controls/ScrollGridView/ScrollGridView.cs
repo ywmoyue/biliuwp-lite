@@ -1,61 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 namespace BiliLite.Controls
 {
-    public class ScrollGridView:GridView
+    public class ScrollGridView : GridView
     {
         public ScrollGridView()
         {
             DefaultStyleKey = typeof(ScrollGridView);
         }
+
+        public Grid root;
         public Button btnMoveLeft;
         public Button btnMoveRight;
         public ScrollViewer scrollViewer;
-        public Grid gridGesture;
+        public Grid itemsPresenterPanel;
+
         protected override void OnApplyTemplate()
         {
-            gridGesture = GetTemplateChild("GridGesture") as Grid;
+            root = GetTemplateChild("root") as Grid;
             btnMoveLeft = GetTemplateChild("moveLeft") as Button;
             btnMoveRight = GetTemplateChild("moveRight") as Button;
-            scrollViewer= GetTemplateChild("ScrollViewer") as ScrollViewer;
+            scrollViewer = GetTemplateChild("scrollViewer") as ScrollViewer;
+            itemsPresenterPanel = GetTemplateChild("itemsPresenterPanel") as Grid;
+
+            itemsPresenterPanel.PointerExited += ItemsPresenterPanel_PointerExited;
+            itemsPresenterPanel.PointerWheelChanged += ItemsPresenterPanel_PointerWheelChanged;
+
+            root.PointerEntered += Root_PointerEntered;
+            root.PointerExited += Root_PointerExited;
             scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
-            gridGesture.PointerExited += GridGesture_PointerExited;
-            gridGesture.PointerEntered += GridGesture_PointerEntered;
             btnMoveLeft.Click += BtnMoveLeft_Click;
             btnMoveRight.Click += BtnMoveRight_Click;
+
             base.OnApplyTemplate();
         }
 
-     
-        private void GridGesture_PointerEntered(object sender, PointerRoutedEventArgs e)
+        #region 触摸板
+        private void ItemsPresenterPanel_PointerExited(object sender, PointerRoutedEventArgs e)
         {
-            if (e.Pointer.PointerDeviceType== Windows.Devices.Input.PointerDeviceType.Mouse)
-            {
-                scrollViewer.HorizontalScrollMode = ScrollMode.Disabled;
-                setButton();
-            }
-            else
-            {
-                scrollViewer.HorizontalScrollMode = ScrollMode.Enabled;
-            }
+            scrollViewer.HorizontalScrollMode = ScrollMode.Enabled;
         }
 
-        private void GridGesture_PointerExited(object sender, PointerRoutedEventArgs e)
+        private void ItemsPresenterPanel_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
-            if (AlwayShowButton)
+            scrollViewer.HorizontalScrollMode = ScrollMode.Disabled;
+        }
+        #endregion
+
+        #region 附加按钮
+        private void Root_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            setButton();
+        }
+
+        private void Root_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            if (AlwaysShowButton)
             {
                 return;
             }
@@ -67,9 +69,10 @@ namespace BiliLite.Controls
         {
             setButton();
         }
+
         void setButton()
         {
-            if (AlwayShowButton)
+            if (AlwaysShowButton)
             {
                 btnMoveLeft.Visibility = Visibility.Visible;
                 btnMoveRight.Visibility = Visibility.Visible;
@@ -92,6 +95,7 @@ namespace BiliLite.Controls
                 btnMoveRight.Visibility = Visibility.Collapsed;
             }
         }
+
         private void BtnMoveRight_Click(object sender, RoutedEventArgs e)
         {
             var move = scrollViewer.HorizontalOffset + MoveOffset;
@@ -112,6 +116,25 @@ namespace BiliLite.Controls
             scrollViewer.ChangeView(move, null, null);
         }
 
+        public bool AlwaysShowButton
+        {
+            get { return (bool)GetValue(AlwaysShowButtonProperty); }
+            set { SetValue(AlwaysShowButtonProperty, value); }
+        }
+
+        public static readonly DependencyProperty AlwaysShowButtonProperty =
+            DependencyProperty.Register("AlwaysShowButton", typeof(bool), typeof(ScrollGridView), new PropertyMetadata(false, OnAlwaysShowButtonChanged));
+        private static void OnAlwaysShowButtonChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var data = d as ScrollGridView;
+            if ((bool)e.NewValue)
+            {
+                data.btnMoveLeft.Visibility = Visibility.Visible;
+                data.btnMoveRight.Visibility = Visibility.Visible;
+            }
+        }
+        #endregion
+
         public double MoveOffset
         {
             get { return (double)GetValue(MoveOffsetProperty); }
@@ -121,27 +144,6 @@ namespace BiliLite.Controls
         // Using a DependencyProperty as the backing store for MoveOffset.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty MoveOffsetProperty =
             DependencyProperty.Register("MoveOffset", typeof(double), typeof(ScrollGridView), new PropertyMetadata((double)200.0));
-
-        public bool AlwayShowButton
-        {
-            get { return (bool)GetValue(AlwayShowButtonProperty); }
-            set { SetValue(AlwayShowButtonProperty, value); }
-        }
-
-        public static readonly DependencyProperty AlwayShowButtonProperty =
-            DependencyProperty.Register("AlwayShowButton", typeof(bool), typeof(ScrollGridView), new PropertyMetadata(false, OnAlwayShowButtonChanged));
-        private static void OnAlwayShowButtonChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var data = d as ScrollGridView;
-            if ((bool)e.NewValue)
-            {
-               
-                data.btnMoveLeft.Visibility = Visibility.Visible;
-                data.btnMoveRight.Visibility = Visibility.Visible;
-            }
-        }
-
-       
 
     }
 }

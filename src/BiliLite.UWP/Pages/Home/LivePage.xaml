@@ -65,15 +65,11 @@
                         </Grid>
                         <controls:ScrollGridView 
                             MoveOffset="600" 
-                            AlwayShowButton="False" 
+                            AlwaysShowButton="False" 
                             ItemClick="FollowLive_ItemClick"
                             ItemsSource="{x:Bind Path=m_viewModel.LiveAttentionVm.Follow,Mode=OneWay}" 
                             SelectionMode="None" 
                             Margin="-4 0 0 0"
-                            ScrollViewer.HorizontalScrollMode="Enabled"
-                            ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                            ScrollViewer.VerticalScrollMode="Disabled" 
-                            ScrollViewer.VerticalScrollBarVisibility="Hidden" 
                             IsItemClickEnabled="True">
                             <GridView.ItemContainerStyle>
                                 <Style TargetType="GridViewItem">
@@ -145,15 +141,11 @@
                                     </Grid>
                                     <controls:ScrollGridView 
                             MoveOffset="600" 
-                            AlwayShowButton="False" 
+                            AlwaysShowButton="False" 
                                         ItemClick="LiveItems_ItemClick"
                             ItemsSource="{x:Bind Path=List,Mode=OneWay}" 
                             SelectionMode="None" 
                             Margin="-4 0 0 0"
-                            ScrollViewer.HorizontalScrollMode="Enabled"
-                            ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                            ScrollViewer.VerticalScrollMode="Disabled" 
-                            ScrollViewer.VerticalScrollBarVisibility="Hidden" 
                             IsItemClickEnabled="True">
                                       
                                         <GridView.ItemContainerStyle>

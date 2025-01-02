@@ -123,15 +123,11 @@
                         </Grid>
                         <controls:ScrollGridView 
                             MoveOffset="600" 
-                            AlwayShowButton="False" 
+                            AlwaysShowButton="False" 
                             ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}" 
                             ItemsSource="{x:Bind Path=m_viewModel.Follows,Mode=OneWay}" 
                             SelectionMode="None" 
                             Margin="-4 0 0 0"
-                            ScrollViewer.HorizontalScrollMode="Enabled"
-                            ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                            ScrollViewer.VerticalScrollMode="Disabled" 
-                            ScrollViewer.VerticalScrollBarVisibility="Hidden" 
                             IsItemClickEnabled="True">
                             <GridView.ItemContainerStyle>
                                 <Style TargetType="GridViewItem">
@@ -186,13 +182,9 @@
                         <controls:ScrollGridView 
                                                  Margin="-4 0 0 0"
                                                  MoveOffset="600" 
-                            AlwayShowButton="False" SelectionMode="None" 
+                            AlwaysShowButton="False" SelectionMode="None" 
                             ItemsSource="{x:Bind Path=m_viewModel.HomeData.Update,Mode=OneWay}"
-                            ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}" 
-                            ScrollViewer.VerticalScrollMode="Disabled" 
-                            ScrollViewer.VerticalScrollBarVisibility="Hidden" 
-                            ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
-                            ScrollViewer.HorizontalScrollMode="Disabled" 
+                            ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}"
                             IsItemClickEnabled="True">
                             <GridView.ItemContainerStyle>
                                 <Style TargetType="GridViewItem">
@@ -249,7 +241,7 @@
                         </Grid>
                         <controls:ScrollGridView 
                                                  Margin="-4 0 0 0"
-                                                 MoveOffset="600" AlwayShowButton="False" SelectionMode="None" ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}" ItemsSource="{x:Bind Path=m_viewModel.HomeData.Documentary,Mode=OneWay}" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollMode="Disabled" ItemTemplate="{StaticResource HotAnimeItem}" IsItemClickEnabled="True">
+                                                 MoveOffset="600" AlwaysShowButton="False" SelectionMode="None" ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}" ItemsSource="{x:Bind Path=m_viewModel.HomeData.Documentary,Mode=OneWay}"  ItemTemplate="{StaticResource HotAnimeItem}" IsItemClickEnabled="True">
                             <GridView.ItemContainerStyle>
                                 <Style TargetType="GridViewItem">
                                     <Setter Property="Margin" Value="4"></Setter>
@@ -273,7 +265,7 @@
                         </Grid>
                         <controls:ScrollGridView 
                                                  Margin="-4 0 0 0"
-                                                 MoveOffset="600" AlwayShowButton="False" SelectionMode="None" ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}" ItemsSource="{x:Bind Path=m_viewModel.HomeData.Movie,Mode=OneWay}" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollMode="Disabled" ItemTemplate="{StaticResource HotAnimeItem}" IsItemClickEnabled="True">
+                                                 MoveOffset="600" AlwaysShowButton="False" SelectionMode="None" ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}" ItemsSource="{x:Bind Path=m_viewModel.HomeData.Movie,Mode=OneWay}"  ItemTemplate="{StaticResource HotAnimeItem}" IsItemClickEnabled="True">
                             <GridView.ItemContainerStyle>
                                 <Style TargetType="GridViewItem">
                                     <Setter Property="Margin" Value="4"></Setter>
@@ -298,7 +290,7 @@
                         <controls:ScrollGridView
                             ItemContainerStyle="{StaticResource HotWideStyle}"
                                                  Margin="-4 0 0 0"
-                                                 MoveOffset="600" AlwayShowButton="False" SelectionMode="None" ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}" ItemsSource="{x:Bind Path=m_viewModel.HomeData.Tv,Mode=OneWay}" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollMode="Disabled" ItemTemplate="{StaticResource HotAnimeItemWide}" IsItemClickEnabled="True">
+                                                 MoveOffset="600" AlwaysShowButton="False" SelectionMode="None" ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}" ItemsSource="{x:Bind Path=m_viewModel.HomeData.Tv,Mode=OneWay}"  ItemTemplate="{StaticResource HotAnimeItemWide}" IsItemClickEnabled="True">
                          
                             <GridView.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -317,7 +309,7 @@
                         <controls:ScrollGridView
                                                  Margin="-4 0 0 0"
                             ItemContainerStyle="{StaticResource HotWideStyle}"
-                                                 MoveOffset="600" AlwayShowButton="False" SelectionMode="None" ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}" ItemsSource="{x:Bind Path=m_viewModel.HomeData.Variety,Mode=OneWay}" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollMode="Disabled" ItemTemplate="{StaticResource HotAnimeItemWide}" IsItemClickEnabled="True">
+                                                 MoveOffset="600" AlwaysShowButton="False" SelectionMode="None" ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}" ItemsSource="{x:Bind Path=m_viewModel.HomeData.Variety,Mode=OneWay}"  ItemTemplate="{StaticResource HotAnimeItemWide}" IsItemClickEnabled="True">
                            
                             <GridView.ItemsPanel>
                                 <ItemsPanelTemplate>
