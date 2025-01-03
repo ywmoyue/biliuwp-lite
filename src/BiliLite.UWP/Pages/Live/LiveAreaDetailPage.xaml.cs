@@ -1,6 +1,7 @@
 ﻿using BiliLite.Models.Common;
 using BiliLite.Modules.Live;
 using BiliLite.Services;
+using Newtonsoft.Json;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
@@ -35,6 +36,10 @@ namespace BiliLite.Pages.Live
             if (e.NavigationMode == NavigationMode.New && liveAreaDetailVM == null)
             {
                 var data = e.Parameter as LiveAreaPar;
+                if (data == null)
+                {
+                    data = JsonConvert.DeserializeObject<LiveAreaPar>(JsonConvert.SerializeObject(e.Parameter));
+                }
                 liveAreaDetailVM = new LiveAreaDetailVM(data.area_id, data.parent_id);
                 await liveAreaDetailVM.GetItems();
             }
