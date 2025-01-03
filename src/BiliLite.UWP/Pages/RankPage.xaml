@@ -2,30 +2,36 @@
     x:Class="BiliLite.Pages.RankPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BiliLite.Pages"
+    xmlns:controls="using:BiliLite.Controls"
+    xmlns:convert="using:BiliLite.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    xmlns:controls="using:BiliLite.Controls" 
-    xmlns:convert="using:BiliLite.Converters" 
-    xmlns:modules="using:BiliLite.Modules" 
-    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls" 
-    xmlns:winui="using:Microsoft.UI.Xaml.Controls" 
     xmlns:fa="using:FontAwesome5"
+    xmlns:local="using:BiliLite.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:modules="using:BiliLite.Modules"
     xmlns:rank="using:BiliLite.Models.Common.Rank"
     xmlns:rank1="using:BiliLite.ViewModels.Rank"
-    Background="Transparent">
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+    Background="Transparent"
+    mc:Ignorable="d">
     <Page.Resources>
-        <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent"></SolidColorBrush>
-        <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White"></SolidColorBrush>
-        <convert:RankColorConvert x:Key="RankConvert"/>
-        <convert:ProgressToTimeConverter x:Key="progressToTimeConverter"></convert:ProgressToTimeConverter>
+        <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White" />
+        <convert:RankColorConvert x:Key="RankConvert" />
+        <convert:ProgressToTimeConverter x:Key="progressToTimeConverter" />
     </Page.Resources>
     <Grid>
-        <Pivot ItemsSource="{x:Bind Path=m_viewModel.RegionItems,Mode=OneWay}" SelectedItem="{x:Bind Path=m_viewModel.Current,Mode=TwoWay}" x:Name="pivot" SelectionChanged="pivot_SelectionChanged">
+        <Pivot
+            x:Name="pivot"
+            ItemsSource="{x:Bind Path=m_viewModel.RegionItems, Mode=OneWay}"
+            SelectedItem="{x:Bind Path=m_viewModel.Current, Mode=TwoWay}"
+            SelectionChanged="pivot_SelectionChanged">
             <Pivot.RightHeader>
-                <Grid Visibility="Collapsed" Background="{ThemeResource PivotHeaderBackground}" >
-                    <ComboBox x:Name="cbType" Margin="8" SelectedIndex="0" >
+                <Grid Background="{ThemeResource PivotHeaderBackground}" Visibility="Collapsed">
+                    <ComboBox
+                        x:Name="cbType"
+                        Margin="8"
+                        SelectedIndex="0">
                         <ComboBoxItem>全站</ComboBoxItem>
                         <ComboBoxItem>原创</ComboBoxItem>
                     </ComboBox>
@@ -33,38 +39,38 @@
             </Pivot.RightHeader>
             <Pivot.HeaderTemplate>
                 <DataTemplate x:DataType="rank1:RankRegionViewModel">
-                    <TextBlock FontSize="15" Text="{x:Bind Path=Name}"></TextBlock>
+                    <TextBlock FontSize="15" Text="{x:Bind Path=Name}" />
                 </DataTemplate>
             </Pivot.HeaderTemplate>
-            <Pivot.ItemContainerStyle>
-                <Style TargetType="PivotItem">
-                    <Setter Property="Margin" Value="0"></Setter>
-                </Style>
-            </Pivot.ItemContainerStyle>
             <Pivot.ItemTemplate>
                 <DataTemplate x:DataType="rank1:RankRegionViewModel">
-                    <toolkit:AdaptiveGridView 
-                    OneRowModeEnabled="False"
+                    <toolkit:AdaptiveGridView
+                        Padding="10,0"
+                        DesiredWidth="550"
+                        IsItemClickEnabled="True"
                         ItemClick="AdaptiveGridView_ItemClick"
+                        ItemContainerStyle="{StaticResource DefaultGridViewItem}"
+                        ItemHeight="100"
+                        ItemsSource="{x:Bind Path=Items, Mode=OneWay}"
+                        OneRowModeEnabled="False"
                         PointerPressed="AdaptiveGridView_PointerPressed"
-                    StretchContentForSingleRow="False"
-                    ItemsSource="{x:Bind Path=Items,Mode=OneWay}"
-                    ItemHeight="100" DesiredWidth="600" 
-                    Padding="8"
-                    SelectionMode="None" IsItemClickEnabled="True">
-                        <toolkit:AdaptiveGridView.ItemContainerStyle>
-                            <Style TargetType="GridViewItem">
-                                <Setter Property="Margin" Value="4"></Setter>
-                            </Style>
-                        </toolkit:AdaptiveGridView.ItemContainerStyle>
+                        SelectionMode="None"
+                        StretchContentForSingleRow="False">
                         <toolkit:AdaptiveGridView.Header>
                             <Grid Padding="8">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <FontIcon Foreground="Gray" FontFamily="Segoe MDL2 Assets" Glyph="&#xE946;" />
-                                <TextBlock Foreground="Gray" Margin="8 0 0 0" Grid.Column="1" Text="{x:Bind Path=ToolTip,Mode=OneWay}"></TextBlock>
+                                <FontIcon
+                                    FontFamily="Segoe MDL2 Assets"
+                                    Foreground="Gray"
+                                    Glyph="&#xE946;" />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Margin="8,0,0,0"
+                                    Foreground="Gray"
+                                    Text="{x:Bind Path=ToolTip, Mode=OneWay}" />
                             </Grid>
                         </toolkit:AdaptiveGridView.Header>
                         <toolkit:AdaptiveGridView.ItemTemplate>
@@ -72,32 +78,71 @@
                                 <Grid Background="#00FFFFFF">
                                     <Grid.ContextFlyout>
                                         <MenuFlyout>
-                                            <MenuFlyoutItem x:Name="AddToWatchLater" Click="AddToWatchLater_Click" Icon="Add" Text="添加到稍后再看"/>
+                                            <MenuFlyoutItem
+                                                x:Name="AddToWatchLater"
+                                                Click="AddToWatchLater_Click"
+                                                Icon="Add"
+                                                Text="添加到稍后再看" />
                                         </MenuFlyout>
                                     </Grid.ContextFlyout>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="160"/>
+                                        <ColumnDefinition Width="160" />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <Border Margin="4" CornerRadius="{StaticResource ImageCornerRadius}">
-                                        <Grid>
-                                            <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=Pic,Converter={StaticResource imageConvert},ConverterParameter='120h'}"></toolkit:ImageEx>
-                                            <Border CornerRadius="4" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="4" Padding="4 2" Background="#99000000">
-                                                <TextBlock Foreground="White" FontSize="12" Text="{x:Bind Path=Duration,Converter={StaticResource progressToTimeConverter}}"></TextBlock>
-                                            </Border>
-                                            <Border Padding="12 2" Background="{x:Bind Path=Rank,Converter={StaticResource RankConvert}}" Opacity="0.8" CornerRadius="0 0 4 0" VerticalAlignment="Top" HorizontalAlignment="Left">
-                                                <TextBlock Foreground="White" Text="{x:Bind Path=Rank}" FontWeight="Bold" ></TextBlock>
-                                            </Border>
+                                    <Grid>
+                                        <toolkit:ImageEx
+                                            IsCacheEnabled="True"
+                                            PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
+                                            Source="{x:Bind Path=Pic, Converter={StaticResource imageConvert}, ConverterParameter='120h'}"
+                                            Stretch="UniformToFill" />
+                                        <Grid Padding="8" VerticalAlignment="Bottom">
+                                            <Grid.Background>
+                                                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                                    <GradientStop Offset="0.993" Color="#CC000005" />
+                                                    <GradientStop Offset="0" Color="#00000000" />
+                                                </LinearGradientBrush>
+                                            </Grid.Background>
+                                            <TextBlock
+                                                HorizontalAlignment="Right"
+                                                FontSize="12"
+                                                Foreground="White"
+                                                Text="{x:Bind Path=Duration, Converter={StaticResource progressToTimeConverter}}" />
                                         </Grid>
-                                    </Border>
-                                    <StackPanel Grid.Column="1" Margin="4 0 0 0" >
-                                        <TextBlock TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=Title}"></TextBlock>
-                                        <TextBlock Foreground="Gray" Margin="0 8 0 0">观看:<Run Text="{x:Bind Path=Stat.View,Converter={StaticResource numberToStringConvert}}"/> 弹幕:<Run Text="{x:Bind Path=Stat.Danmaku,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
 
-                                        <TextBlock Margin="0 2 0 0" Foreground="Gray" VerticalAlignment="Center" >UP:<Run Text="{x:Bind Path=Owner.Name}"/></TextBlock>
+                                        <!--  备注❗：需要做圆角转换器  -->
+                                        <Border
+                                            Margin="-4"
+                                            Padding="14,6,12,4"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            Background="{x:Bind Path=Rank, Converter={StaticResource RankConvert}}"
+                                            CornerRadius="{StaticResource ControlCornerRadius}"
+                                            Opacity="0.8">
+                                            <TextBlock
+                                                FontWeight="Bold"
+                                                Foreground="White"
+                                                Text="{x:Bind Path=Rank}" />
+                                        </Border>
+                                    </Grid>
 
-                                       
-                                    </StackPanel>
+                                    <Grid Grid.Column="1" Margin="10,5">
+                                        <TextBlock
+                                            MaxLines="2"
+                                            Text="{x:Bind Path=Title}"
+                                            TextTrimming="CharacterEllipsis"
+                                            TextWrapping="Wrap" />
+
+                                        <StackPanel VerticalAlignment="Bottom">
+                                            <TextBlock Margin="0,8,0,0" Foreground="Gray">
+                                                观看：<Run Text="{x:Bind Path=Stat.View, Converter={StaticResource numberToStringConvert}}" />
+                                                弹幕：<Run Text="{x:Bind Path=Stat.Danmaku, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
+                                            <TextBlock
+                                                Margin="0,2,0,0"
+                                                VerticalAlignment="Center"
+                                                Foreground="Gray">
+                                                UP：<Run Text="{x:Bind Path=Owner.Name}" /></TextBlock>
+                                        </StackPanel>
+                                    </Grid>
                                 </Grid>
                             </DataTemplate>
                         </toolkit:AdaptiveGridView.ItemTemplate>
@@ -105,6 +150,10 @@
                 </DataTemplate>
             </Pivot.ItemTemplate>
         </Pivot>
-        <ProgressRing IsActive="True" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"  VerticalAlignment="Center" HorizontalAlignment="Center"></ProgressRing>
+        <ProgressRing
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            IsActive="True"
+            Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}" />
     </Grid>
 </local:BasePage>
