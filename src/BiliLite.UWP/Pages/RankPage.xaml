@@ -91,7 +91,6 @@
                                     </Grid.ColumnDefinitions>
                                     <Grid>
                                         <toolkit:ImageEx
-                                            IsCacheEnabled="True"
                                             PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                             Source="{x:Bind Path=Pic, Converter={StaticResource imageConvert}, ConverterParameter='120h'}"
                                             Stretch="UniformToFill" />

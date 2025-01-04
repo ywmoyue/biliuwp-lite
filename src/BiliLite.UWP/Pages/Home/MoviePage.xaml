@@ -26,7 +26,6 @@
                 <Grid>
                     <toolkit:ImageEx
                         MaxHeight="240"
-                        IsCacheEnabled="True"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                         Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='200w'}"
                         Stretch="UniformToFill" />
@@ -84,46 +83,44 @@
                     <RowDefinition Height="24" />
                     <RowDefinition Height="24" />
                 </Grid.RowDefinitions>
-                <Border CornerRadius="{StaticResource ImageCornerRadius}">
-                    <Grid>
-                        <toolkit:ImageEx
-                            Width="200"
-                            MinHeight="132"
-                            IsCacheEnabled="True"
-                            PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                            Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='200w'}"
-                            Stretch="UniformToFill" />
-                        <Grid Padding="8" VerticalAlignment="Bottom">
-                            <Grid.Background>
-                                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                                    <GradientStop Offset="0.993" Color="#CC000005" />
-                                    <GradientStop Offset="0" Color="#00000000" />
-                                </LinearGradientBrush>
-                            </Grid.Background>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock
-                                    FontSize="12"
-                                    Foreground="White"
-                                    Text="{x:Bind Path=Stat.FollowView}" />
-                            </StackPanel>
-                        </Grid>
-                        <Border
-                            Margin="4"
-                            Padding="8,4"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Top"
-                            Background="#FFFB9E60"
-                            CornerRadius="{ThemeResource ControlCornerRadius}"
-                            Visibility="{Binding Path=ShowBadge}">
+                <Grid>
+                    <toolkit:ImageEx
+                        Width="200"
+                        MinHeight="132"
+                        PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
+                        Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='200w'}"
+                        Stretch="UniformToFill" />
+                    <Grid Padding="8" VerticalAlignment="Bottom">
+                        <Grid.Background>
+                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                <GradientStop Offset="0.993" Color="#CC000005" />
+                                <GradientStop Offset="0" Color="#00000000" />
+                            </LinearGradientBrush>
+                        </Grid.Background>
+                        <StackPanel Orientation="Horizontal">
                             <TextBlock
                                 FontSize="12"
-                                Foreground="#FFFFFFFF"
-                                Text="{x:Bind Path=Badge}"
-                                TextTrimming="CharacterEllipsis"
-                                TextWrapping="Wrap" />
-                        </Border>
+                                Foreground="White"
+                                Text="{x:Bind Path=Stat.FollowView}" />
+                        </StackPanel>
                     </Grid>
-                </Border>
+                    <Border
+                        Margin="4"
+                        Padding="8,4"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Background="#FFFB9E60"
+                        CornerRadius="{ThemeResource ControlCornerRadius}"
+                        Visibility="{Binding Path=ShowBadge}">
+                        <TextBlock
+                            FontSize="12"
+                            Foreground="#FFFFFFFF"
+                            Text="{x:Bind Path=Badge}"
+                            TextTrimming="CharacterEllipsis"
+                            TextWrapping="Wrap" />
+                    </Border>
+                </Grid>
+
                 <TextBlock
                     Grid.Row="1"
                     Margin="4,4,4,0"
@@ -164,7 +161,6 @@
                                     CornerRadius="{ThemeResource OverlayCornerRadius}">
                                     <toolkit:ImageEx
                                         CornerRadius="{ThemeResource OverlayCornerRadius}"
-                                        IsCacheEnabled="True"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                         Source="{Binding Path=Img, Converter={StaticResource imageConvert}, ConverterParameter='240h'}"
                                         Stretch="Fill" />
@@ -235,7 +231,6 @@
                                             <toolkit:ImageEx
                                                 Width="200"
                                                 MinHeight="132"
-                                                IsCacheEnabled="True"
                                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                                 Source="{x:Bind Path=NewEp.cover, Converter={StaticResource imageConvert}, ConverterParameter='320w_200h_1c'}"
                                                 Stretch="UniformToFill" />
@@ -314,7 +309,6 @@
                                         <Grid>
                                             <toolkit:ImageEx
                                                 MaxHeight="240"
-                                                IsCacheEnabled="True"
                                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                                 Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='200w'}"
                                                 Stretch="UniformToFill" />
@@ -526,7 +520,6 @@
                                                         <!--<RowDefinition Height="48"/>-->
                                                     </Grid.RowDefinitions>
                                                     <toolkit:ImageEx
-                                                        IsCacheEnabled="True"
                                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                                         Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='180h'}"
                                                         Stretch="UniformToFill" />
