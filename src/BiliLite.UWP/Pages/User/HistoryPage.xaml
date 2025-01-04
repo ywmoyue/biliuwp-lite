@@ -1,61 +1,83 @@
 ﻿<pages:BasePage
-     xmlns:pages="using:BiliLite.Pages"
     x:Class="BiliLite.Pages.User.HistoryPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:BiliLite.Controls"
+    xmlns:convert="using:BiliLite.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    xmlns:controls="using:BiliLite.Controls"
-    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:convert="using:BiliLite.Converters"
     xmlns:model="using:BiliLite.Modules.User"
-    xmlns:userModel="using:BiliLite.Models.Common.User"
+    xmlns:pages="using:BiliLite.Pages"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:user="using:BiliLite.ViewModels.User"
+    xmlns:userModel="using:BiliLite.Models.Common.User"
     d:DataContext="{d:DesignInstance Type=user:HistoryViewModel}"
-    Background="Transparent">
+    Background="Transparent"
+    mc:Ignorable="d">
     <Page.Resources>
-        <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent"></SolidColorBrush>
-        <convert:DatetimeConvert x:Key="datetime"/>
-        <Style x:Key="ItemStyle" TargetType="GridViewItem">
-            <Setter Property="Margin" Value="4"></Setter>
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-            <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
-        </Style>
+        <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent" />
+        <convert:DatetimeConvert x:Key="datetime" />
         <DataTemplate x:Key="VideoDataTemplate" x:DataType="userModel:UserHistoryItem">
             <Grid Background="#00FFFFFF">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="180"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="180" />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.ContextFlyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem Text="移除" Click="removeVideoHistory_Click"></MenuFlyoutItem>
+                        <MenuFlyoutItem Click="removeVideoHistory_Click" Text="移除" />
                     </MenuFlyout>
                 </Grid.ContextFlyout>
-                <Border Grid.Column="0" CornerRadius="{StaticResource ImageCornerRadius}">
-                    <StackPanel>
-                        <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="/Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=Cover,Converter={StaticResource imageConvert},ConverterParameter='180w_100h_1c'}"></toolkit:ImageEx>
-                    </StackPanel>
-                </Border>
-                <Grid Grid.Column="1">
+                <toolkit:ImageEx
+                    PlaceholderSource="/Assets/Thumbnails/Placeholde.png"
+                    Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='180w_100h_1c'}"
+                    Stretch="UniformToFill" />
+                <Grid Grid.Column="1" Margin="5">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="0" Margin="8 0 0 0" VerticalAlignment="Top">
-                        <TextBlock MaxLines="2" Margin="0 0 0 0" TextTrimming="CharacterEllipsis" Text="{x:Bind Title}" TextWrapping="Wrap"></TextBlock>
+                    <StackPanel
+                        Grid.Row="0"
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Top">
+                        <TextBlock
+                            Margin="0,0,0,0"
+                            MaxLines="2"
+                            Text="{x:Bind Title}"
+                            TextTrimming="CharacterEllipsis"
+                            TextWrapping="Wrap" />
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Margin="8 0 0 0" VerticalAlignment="Bottom">
-                        <TextBlock VerticalAlignment="Bottom" Margin="0 3 0 0" FontSize="13" Foreground="Gray" Text="{x:Bind Path=AuthorName}"></TextBlock>
-                        <TextBlock VerticalAlignment="Bottom" Margin="0 3 0 0" FontSize="13" Foreground="Gray" Visibility="{x:Bind ShowTag}"><Run Text="{x:Bind Path=TagName}"></Run></TextBlock>
+                    <StackPanel
+                        Grid.Row="1"
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Bottom">
+                        <TextBlock
+                            Margin="0,3,0,0"
+                            VerticalAlignment="Bottom"
+                            FontSize="13"
+                            Foreground="Gray"
+                            Text="{x:Bind Path=AuthorName}" />
+                        <TextBlock
+                            Margin="0,3,0,0"
+                            VerticalAlignment="Bottom"
+                            FontSize="13"
+                            Foreground="Gray"
+                            Visibility="{x:Bind ShowTag}"><Run Text="{x:Bind Path=TagName}" /></TextBlock>
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Margin="8 0 0 0" VerticalAlignment="Bottom" ToolTipService.ToolTip="{x:Bind Path=ViewAtDate}">
-                        <TextBlock Margin="0 3 0 0" FontSize="13" Foreground="Gray">
-                             <Run Text="{x:Bind Path=ViewAt,Converter={StaticResource datetime},ConverterParameter='ts'}"></Run>
-                             <Run Text="{x:Bind Path=Badge}"></Run>
-                             <Run Text="{x:Bind Path=ProgressState}"></Run>
+                    <StackPanel
+                        Grid.Row="2"
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Bottom"
+                        ToolTipService.ToolTip="{x:Bind Path=ViewAtDate}">
+                        <TextBlock
+                            Margin="0,3,0,0"
+                            FontSize="13"
+                            Foreground="Gray">
+                            <Run Text="{x:Bind Path=ViewAt, Converter={StaticResource datetime}, ConverterParameter='ts'}" />
+                            <Run Text="{x:Bind Path=Badge}" />
+                            <Run Text="{x:Bind Path=ProgressState}" />
                         </TextBlock>
                     </StackPanel>
                 </Grid>
@@ -71,14 +93,13 @@
             </Pivot.RightHeader>-->
             <Pivot.RightHeader>
                 <StackPanel Background="{StaticResource PivotHeaderBackground}" Orientation="Horizontal">
-                    <AutoSuggestBox x:Name="SearchBox" 
-                                    MinWidth="200" 
-                                    FontSize="12"
-                                    Margin="8 12"
-                                    PlaceholderText="你想找什么呢?" 
-                                    QuerySubmitted="SearchBox_OnQuerySubmitted"
-                                    QueryIcon="Find">
-                    </AutoSuggestBox>
+                    <AutoSuggestBox
+                        x:Name="SearchBox"
+                        MinWidth="200"
+                        Margin="8,12"
+                        PlaceholderText="寻找记录"
+                        QueryIcon="Find"
+                        QuerySubmitted="SearchBox_OnQuerySubmitted" />
                 </StackPanel>
             </Pivot.RightHeader>
             <PivotItem Margin="0">
@@ -86,29 +107,43 @@
                     <TextBlock FontSize="15">视频</TextBlock>
                 </PivotItem.Header>
                 <Grid>
-                    <toolkit:AdaptiveGridView 
-                        SelectionMode="None"
-                        Padding="12 8"
+                    <toolkit:AdaptiveGridView
+                        Grid.ColumnSpan="2"
+                        Padding="15,0"
+                        DesiredWidth="550"
                         IsItemClickEnabled="True"
-                        DesiredWidth="600"
                         ItemClick="Video_ItemClick"
-                        StretchContentForSingleRow="False"
-                        ItemContainerStyle="{StaticResource ItemStyle}"
+                        ItemContainerStyle="{StaticResource DefaultGridViewItem}"
+                        ItemHeight="110"
                         ItemTemplate="{StaticResource VideoDataTemplate}"
-                        ItemsSource="{x:Bind Path=m_viewModel.Videos,Mode=OneWay}"
-                        ItemHeight="100" 
-                        Grid.ColumnSpan="2">
+                        ItemsSource="{x:Bind Path=m_viewModel.Videos, Mode=OneWay}"
+                        SelectionMode="None"
+                        StretchContentForSingleRow="False">
 
                         <toolkit:AdaptiveGridView.Footer>
                             <StackPanel>
-                                <HyperlinkButton Command="{x:Bind Path=m_viewModel.LoadMoreCommand}" Visibility="{x:Bind Path=m_viewModel.ShowLoadMore,Mode=OneWay}" Foreground="Gray" HorizontalAlignment="Center" x:Name="btnLoadMore">
+                                <HyperlinkButton
+                                    x:Name="btnLoadMore"
+                                    HorizontalAlignment="Center"
+                                    Command="{x:Bind Path=m_viewModel.LoadMoreCommand}"
+                                    Foreground="Gray"
+                                    Visibility="{x:Bind Path=m_viewModel.ShowLoadMore, Mode=OneWay}">
                                     <TextBlock>加载更多</TextBlock>
                                 </HyperlinkButton>
-                                <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"></ProgressRing>
+                                <ProgressRing
+                                    HorizontalAlignment="Center"
+                                    IsActive="True"
+                                    Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}" />
                             </StackPanel>
                         </toolkit:AdaptiveGridView.Footer>
                     </toolkit:AdaptiveGridView>
-                    <TextBlock Visibility="{x:Bind Path=m_viewModel.Nothing,Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Gray" >这里还什么都没有呢~</TextBlock>
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Foreground="Gray"
+                        Visibility="{x:Bind Path=m_viewModel.Nothing, Mode=OneWay}">
+                        这里还什么都没有呢~
+                    </TextBlock>
                 </Grid>
             </PivotItem>
             <!--<PivotItem Margin="0">
@@ -117,8 +152,14 @@
                 </PivotItem.Header>
             </PivotItem>-->
         </Pivot>
-        <controls:RoundButton Command="{x:Bind Path=m_viewModel.RefreshCommand}" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay,Converter={StaticResource display}}" VerticalAlignment="Bottom" Padding="12" Margin="12" HorizontalAlignment="Right">
-            <SymbolIcon Symbol="Refresh" Foreground="White"></SymbolIcon>
-        </controls:RoundButton>
+        <Button
+            Margin="15"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Command="{x:Bind Path=m_viewModel.RefreshCommand}"
+            Style="{StaticResource AccentCircleButtonStyle}"
+            Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay, Converter={StaticResource display}}">
+            <SymbolIcon Symbol="Refresh" />
+        </Button>
     </Grid>
 </pages:BasePage>
