@@ -19,6 +19,9 @@
         <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White" />
         <convert:RankColorConvert x:Key="RankConvert" />
         <convert:ProgressToTimeConverter x:Key="progressToTimeConverter" />
+        <Style TargetType="PivotItem">
+            <Setter Property="Margin" Value="0" />
+        </Style>
     </Page.Resources>
     <Grid>
         <Pivot
