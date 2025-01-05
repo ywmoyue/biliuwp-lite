@@ -6,6 +6,7 @@ using System.IO;
 using Windows.Storage.Streams;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Diagnostics;
+using System.Net.Http;
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using Flurl.Http;
@@ -243,6 +244,47 @@ namespace BiliLite.Extensions
                     status = false,
                     message = "网络请求出现错误(POST)"
                 };
+            }
+        }
+
+        public static async Task<bool> CheckVideoUrlValidAsync(this string url,string userAgent,string referer)
+        {
+            try
+            {
+                // 使用 Flurl 发送 GET 请求
+                var response = await url
+                    .WithHeader("referer", referer)
+                    .WithHeader("User-Agent", userAgent)
+                    .WithTimeout(TimeSpan.FromSeconds(15)) // 设置超时时间
+                    .GetAsync(completionOption: HttpCompletionOption.ResponseHeadersRead); // 只读取响应头
+
+                // 如果状态码是 2xx，则认为地址有效
+                if (response.StatusCode >= 200 && response.StatusCode < 300)
+                {
+                    // 立即取消请求
+                    response.Dispose();
+                    return true;
+                }
+
+                // 如果状态码不是 2xx，则认为地址无效
+                return false;
+            }
+            catch (FlurlHttpException ex)
+            {
+                // 捕获 Flurl 的 HTTP 异常
+                if (ex.StatusCode.HasValue)
+                {
+                    // 如果有状态码，返回 false
+                    return false;
+                }
+
+                // 其他异常情况（如超时、网络错误等）
+                return false;
+            }
+            catch (Exception)
+            {
+                // 其他异常情况
+                return false;
             }
         }
 

@@ -35,6 +35,8 @@ namespace BiliLite.Controls
 
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
 
+        private string m_referer;
+        private string m_userAgent;
         private BiliDashPlayUrlInfo m_dashInfo;
         private PlayEngine m_currentEngine;
 
@@ -571,6 +573,8 @@ namespace BiliLite.Controls
                 mediaPlayerVideo.Visibility = Visibility.Visible;
                 //vlcVideoView.Visibility = Visibility.Collapsed;
                 m_dashInfo = dashInfo;
+                m_referer = referer;
+                m_userAgent = userAgent;
 
                 Opening = true;
                 m_currentEngine = PlayEngine.Native;
@@ -728,6 +732,8 @@ namespace BiliLite.Controls
                 //vlcVideoView.Visibility = Visibility.Collapsed;
                 Opening = true;
                 m_dashInfo = dashPlayUrlInfo;
+                m_referer = referer;
+                m_userAgent = userAgent;
 
                 m_currentEngine = PlayEngine.FFmpegInteropMSS;
 
@@ -1266,6 +1272,13 @@ namespace BiliLite.Controls
             PlayStateChanged?.Invoke(this, PlayState);
         }
 
+        public async Task<bool> CheckPlayUrl()
+        {
+            if (m_dashInfo == null) return true;
+            if (!m_dashInfo.Video.Url.ToLower().StartsWith("http")) return true;
+            return await m_dashInfo.Video.Url.CheckVideoUrlValidAsync(m_userAgent, m_referer);
+        }
+
         /// <summary>
         /// 设置播放速度
         /// </summary>
@@ -1414,6 +1427,8 @@ namespace BiliLite.Controls
                         info += $"Audio DataRate: {(m_dashInfo.Audio.BandWidth / 1024).ToString("0.0")}Kbps\r\n";
                         info += $"Video Host: {m_dashInfo.Video.Host}\r\n";
                         info += $"Audio Host: {m_dashInfo.Audio.Host}\r\n";
+                        //info += $"Video Url: {m_dashInfo.Video.Url}\r\n";
+                        //info += $"Audio Url: {m_dashInfo.Audio.Url}\r\n";
                     }
                     else
                     {

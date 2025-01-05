@@ -44,11 +44,11 @@ namespace BiliLite.Pages
 
         public void Pause()
         {
-            Player.PlayerInstance.Pause();
+            Player.Pause();
         }
         public void Play()
         {
-            Player.PlayerInstance.Play();
+            Player.Play();
         }
 
         public void GotoLastVideo()
