@@ -2869,7 +2869,7 @@ namespace BiliLite.Controls
             // 暂停超过一定时间，检查播放地址是否仍然有效
             if (DateTime.Now - m_pauseTime > TimeSpan.FromMinutes(30))
             {
-                if (await Player.CheckPlayUrl())
+                if (!await Player.CheckPlayUrl())
                 {
                     await ChangeQuality(current_quality_info, current_audio_quality_info);
                     Notify.ShowMessageToast("检测到视频地址失效，已自动刷新");

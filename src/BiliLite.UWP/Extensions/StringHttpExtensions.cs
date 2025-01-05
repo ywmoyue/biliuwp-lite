@@ -251,6 +251,7 @@ namespace BiliLite.Extensions
         {
             try
             {
+                logger.Debug($"url:{url},referer:{referer},User-Agent:{userAgent}");
                 // 使用 Flurl 发送 GET 请求
                 var response = await url
                     .WithHeader("referer", referer)
