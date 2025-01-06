@@ -836,7 +836,9 @@
                                                     <StackPanel Orientation="Horizontal">
                                                         <TextBlock Margin="0 6 10 0">64K</TextBlock>
                                                         <Slider x:Name="SliderSoundQuality" Width="200" Minimum="0" Maximum="2" StepFrequency="1" TickFrequency="1" TickPlacement="Outside">
-
+                                                            <!--<Slider.ThumbToolTipValueConverter>
+                                                                <local:SliderValueToTextConverter/>
+                                                            </Slider.ThumbToolTipValueConverter>-->
                                                         </Slider>
                                                         <TextBlock Margin="10 6 0 0">192K</TextBlock>
                                                     </StackPanel>
