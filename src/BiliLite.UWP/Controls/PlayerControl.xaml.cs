@@ -1495,6 +1495,20 @@ namespace BiliLite.Controls
             BottomSoundQuality.SelectedItem = playUrlInfo.CurrentAudioQuality;
             BottomSoundQuality.SelectionChanged += BottomSoundQuality_SelectionChanged;
             ChangeQuality(current_quality_info, playUrlInfo.CurrentAudioQuality).RunWithoutAwait();
+
+            SliderSoundQuality.Maximum = playUrlInfo.AudioQualites.Count - 1;
+            SliderSoundQuality.Value = playUrlInfo.AudioQualites.IndexOf(playUrlInfo.CurrentAudioQuality);
+            SliderSoundQuality.ValueChanged += SliderSoundQuality_ValueChanged;
+        }
+
+        private async void SliderSoundQuality_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            _postion = Player.ViewModel.Position;
+            var data = playUrlInfo.AudioQualites[(int)SliderSoundQuality.Value];
+            SettingService.SetValue<int>(SettingConstants.Player.DEFAULT_SOUND_QUALITY, data.QualityID);
+            _autoPlay = Player.PlayState == PlayState.Playing;
+            await ChangeQuality(current_quality_info, data);
+            BottomBtnQuality.Content = data.QualityName;
         }
 
         private void SetQuality()

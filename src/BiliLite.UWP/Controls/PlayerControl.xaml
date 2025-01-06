@@ -827,6 +827,24 @@
                                         </Button.Flyout>
                                     </Button>
 
+                                    <Button x:Name="BottomBtnQuality" Background="Transparent" Foreground="White" Padding="8" Height="48">
+                                        666
+                                        <Button.Flyout>
+                                            <Flyout>
+                                                <StackPanel>
+                                                    <TextBlock Margin="0 0 0 10" HorizontalAlignment="Center">音质</TextBlock>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="0 6 10 0">64K</TextBlock>
+                                                        <Slider x:Name="SliderSoundQuality" Width="200" Minimum="0" Maximum="2" StepFrequency="1" TickFrequency="1" TickPlacement="Outside">
+
+                                                        </Slider>
+                                                        <TextBlock Margin="10 6 0 0">192K</TextBlock>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Flyout>
+                                        </Button.Flyout>
+                                    </Button>
+                                    
                                     <ComboBox 
                                         x:Name="BottomSoundQuality"   
                                         DisplayMemberPath="QualityName" 
