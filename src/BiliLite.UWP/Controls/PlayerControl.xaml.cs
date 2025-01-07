@@ -59,7 +59,7 @@ namespace BiliLite.Controls
         private readonly PlayControlViewModel m_viewModel;
         private readonly PlayerToastService m_playerToastService;
         private readonly PlaySpeedMenuService m_playSpeedMenuService;
-        private DateTime m_pauseTime = DateTime.Now;
+        private DateTime m_startTime = DateTime.Now;
         public event PropertyChangedEventHandler PropertyChanged;
         private GestureRecognizer gestureRecognizer;
         private void DoPropertyChanged(string name)
@@ -2866,13 +2866,26 @@ namespace BiliLite.Controls
 
         public async Task Play()
         {
-            // 暂停超过一定时间，检查播放地址是否仍然有效
-            if (DateTime.Now - m_pauseTime > TimeSpan.FromMinutes(30))
+            // 超过一定时间后继续播放，检查播放地址是否仍然有效
+            if (DateTime.Now - m_startTime > TimeSpan.FromMinutes(30))
             {
                 if (!await Player.CheckPlayUrl())
                 {
-                    await ChangeQuality(current_quality_info, current_audio_quality_info);
+                    _postion = Player.Position;
+                    var info = await GetPlayUrlQualitesInfo();
+                    if (!info.Success)
+                    {
+                        ShowDialog($"请求信息:\r\n{info.Message}", "读取视频播放地址失败");
+                    }
+                    else
+                    {
+                        playUrlInfo = info;
+                        SetSoundQuality();
+                        SetQuality();
+                    }
                     Notify.ShowMessageToast("检测到视频地址失效，已自动刷新");
+                    m_startTime = DateTime.Now;
+                    return;
                 }
             }
             Player.Play();
@@ -2882,7 +2895,6 @@ namespace BiliLite.Controls
         {
             m_danmakuController.Pause();
             Player.Pause();
-            m_pauseTime = DateTime.Now;
         }
 
         public void PositionBack(double progress = 3)
