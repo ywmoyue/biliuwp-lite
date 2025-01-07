@@ -794,7 +794,7 @@
       <DependentUpon>PlayerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\RoundButton\RoundButton.cs" />
-    <Compile Include="Controls\ScrollGridView\ScrollGridView.cs" />
+    <Compile Include="Controls\HorizontalGridView\HorizontalGridView.cs" />
     <Compile Include="Dialogs\SendCommentDialog.xaml.cs">
       <DependentUpon>SendCommentDialog.xaml</DependentUpon>
     </Compile>
@@ -1337,7 +1337,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\ScrollGridView\ScrollGridView.xaml">
+    <Page Include="Controls\HorizontalGridView\HorizontalGridView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -87,18 +87,14 @@
                                 <TextBlock>查看全部</TextBlock>
                             </HyperlinkButton>
                         </Grid>
-                        <controls:ScrollGridView 
+                        <controls:HorizontalGridView 
                             MoveOffset="600" 
-                            AlwayShowButton="False" 
+                            AlwaysShowButton="False" 
                             ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}" 
                             PointerPressed="{x:Bind Path=m_viewModel.SeasonItemPressed}"
                             ItemsSource="{x:Bind Path=m_viewModel.Follows,Mode=OneWay}" 
                             SelectionMode="None" 
                             Margin="-4 0 0 0"
-                            ScrollViewer.HorizontalScrollMode="Enabled"
-                            ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                            ScrollViewer.VerticalScrollMode="Disabled" 
-                            ScrollViewer.VerticalScrollBarVisibility="Hidden" 
                             IsItemClickEnabled="True">
                             <GridView.ItemContainerStyle>
                                 <Style TargetType="GridViewItem">
@@ -144,7 +140,7 @@
                                     </Grid>
                                 </DataTemplate>
                             </GridView.ItemTemplate>
-                        </controls:ScrollGridView>
+                        </controls:HorizontalGridView>
                     </StackPanel>
                     <StackPanel Margin="0 8 0 0">
                         <Grid>
@@ -153,11 +149,11 @@
                                 <TextBlock>完整时间表</TextBlock>
                             </HyperlinkButton>
                         </Grid>
-                        <controls:ScrollGridView ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}" 
+                        <controls:HorizontalGridView ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}" 
                                                  PointerPressed="{x:Bind Path=m_viewModel.SeasonItemPressed}"
                                                  Margin="-4 0 0 0"
                                                  MoveOffset="600" 
-                                                 AlwayShowButton="False" 
+                                                 AlwaysShowButton="False" 
                                                  ItemsSource="{x:Bind Path=m_viewModel.HomeData.Today,Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="True">
                             <GridView.ItemContainerStyle>
                                 <Style TargetType="GridViewItem">
@@ -201,7 +197,7 @@
                                     </Grid>
                                 </DataTemplate>
                             </GridView.ItemTemplate>
-                        </controls:ScrollGridView>
+                        </controls:HorizontalGridView>
                     </StackPanel>
                     <StackPanel Margin="0 8 0 0">
                         <Grid>
@@ -210,16 +206,12 @@
                                 <TextBlock>番剧索引</TextBlock>
                             </HyperlinkButton>
                         </Grid>
-                        <controls:ScrollGridView x:Name="gridView" 
+                        <controls:HorizontalGridView x:Name="gridView" 
                                                  Margin="-4 0 0 0"
-                                                 MoveOffset="600" AlwayShowButton="False" SelectionMode="None" 
+                                                 MoveOffset="600" AlwaysShowButton="False" SelectionMode="None" 
                                                  ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}"
                                                  PointerPressed="{x:Bind Path=m_viewModel.SeasonItemPressed}" 
                                                  ItemsSource="{x:Bind Path=m_viewModel.HomeData.Ranks,Mode=OneWay}" 
-                                                 ScrollViewer.VerticalScrollMode="Disabled" 
-                                                 ScrollViewer.VerticalScrollBarVisibility="Hidden" 
-                                                 ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
-                                                 ScrollViewer.HorizontalScrollMode="Disabled" 
                                                  ItemTemplate="{StaticResource HotAnimeItem}"
                                                  IsItemClickEnabled="True">
                             <GridView.ItemContainerStyle>
@@ -234,7 +226,7 @@
                                     <ItemsStackPanel Orientation="Horizontal"></ItemsStackPanel>
                                 </ItemsPanelTemplate>
                             </GridView.ItemsPanel>
-                        </controls:ScrollGridView>
+                        </controls:HorizontalGridView>
                     </StackPanel>
                     <StackPanel Margin="0 8 0 0">
                         <Grid>
@@ -243,17 +235,13 @@
                                 <TextBlock>查看更多</TextBlock>
                             </HyperlinkButton>
                         </Grid>
-                        <controls:ScrollGridView MoveOffset="600"
+                        <controls:HorizontalGridView MoveOffset="600"
                                                  Margin="-4 0 0 0"
-                                                 AlwayShowButton="False" 
+                                                 AlwaysShowButton="False" 
                                                  SelectionMode="None" 
                                                  ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}" 
                                                  PointerPressed="{x:Bind Path=m_viewModel.SeasonItemPressed}"
                                                  ItemsSource="{x:Bind Path=m_viewModel.HomeData.Hots,Mode=OneWay}" 
-                                                 ScrollViewer.VerticalScrollMode="Disabled" 
-                                                 ScrollViewer.VerticalScrollBarVisibility="Hidden" 
-                                                 ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
-                                                 ScrollViewer.HorizontalScrollMode="Disabled" 
                                                  ItemTemplate="{StaticResource HotAnimeItem}" 
                                                  IsItemClickEnabled="True">
                             <GridView.ItemContainerStyle>
@@ -268,7 +256,7 @@
                                     <ItemsStackPanel Orientation="Horizontal"></ItemsStackPanel>
                                 </ItemsPanelTemplate>
                             </GridView.ItemsPanel>
-                        </controls:ScrollGridView>
+                        </controls:HorizontalGridView>
                     </StackPanel>
                     <ItemsControl Margin="0 8 0 0" ItemsSource="{x:Bind Path=m_viewModel.AnimeFalls,Mode=OneWay}">
                         <ItemsControl.ItemsPanel>

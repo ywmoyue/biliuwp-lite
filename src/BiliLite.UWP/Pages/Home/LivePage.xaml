@@ -63,17 +63,13 @@
                                 <TextBlock>查看全部</TextBlock>
                             </HyperlinkButton>
                         </Grid>
-                        <controls:ScrollGridView 
+                        <controls:HorizontalGridView 
                             MoveOffset="600" 
-                            AlwayShowButton="False" 
+                            AlwaysShowButton="False" 
                             ItemClick="FollowLive_ItemClick"
                             ItemsSource="{x:Bind Path=m_viewModel.LiveAttentionVm.Follow,Mode=OneWay}" 
                             SelectionMode="None" 
                             Margin="-4 0 0 0"
-                            ScrollViewer.HorizontalScrollMode="Enabled"
-                            ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                            ScrollViewer.VerticalScrollMode="Disabled" 
-                            ScrollViewer.VerticalScrollBarVisibility="Hidden" 
                             IsItemClickEnabled="True">
                             <GridView.ItemContainerStyle>
                                 <Style TargetType="GridViewItem">
@@ -126,7 +122,7 @@
                                     </Grid>
                                 </DataTemplate>
                             </GridView.ItemTemplate>
-                        </controls:ScrollGridView>
+                        </controls:HorizontalGridView>
                     </StackPanel>
                     <ItemsControl Margin="0 8 0 0" ItemsSource="{x:Bind Path=m_viewModel.Items,Mode=OneWay}">
                         <ItemsControl.ItemsPanel>
@@ -143,17 +139,13 @@
                                             <TextBlock>查看更多</TextBlock>
                                         </HyperlinkButton>
                                     </Grid>
-                                    <controls:ScrollGridView 
+                                    <controls:HorizontalGridView 
                             MoveOffset="600" 
-                            AlwayShowButton="False" 
+                            AlwaysShowButton="False" 
                                         ItemClick="LiveItems_ItemClick"
                             ItemsSource="{x:Bind Path=List,Mode=OneWay}" 
                             SelectionMode="None" 
                             Margin="-4 0 0 0"
-                            ScrollViewer.HorizontalScrollMode="Enabled"
-                            ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                            ScrollViewer.VerticalScrollMode="Disabled" 
-                            ScrollViewer.VerticalScrollBarVisibility="Hidden" 
                             IsItemClickEnabled="True">
                                       
                                         <GridView.ItemContainerStyle>
@@ -206,7 +198,7 @@
                                                 </Grid>
                                             </DataTemplate>
                                         </GridView.ItemTemplate>
-                                    </controls:ScrollGridView>
+                                    </controls:HorizontalGridView>
                                 </StackPanel>
                               
                             </DataTemplate>

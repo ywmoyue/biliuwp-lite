@@ -8,7 +8,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Controls/Carousel/Carousel.xaml" />
                 <ResourceDictionary Source="Controls/RoundButton/RoundButton.xaml" />
-                <ResourceDictionary Source="Controls/ScrollGridView/ScrollGridView.xaml" />
+                <ResourceDictionary Source="Controls/HorizontalGridView/HorizontalGridView.xaml" />
                 <ResourceDictionary Source="Styles/AppBarButtonNoChevronStyle.xaml" />
                 <ResourceDictionary Source="Styles/TabViewStyle.xaml" />
                 <ResourceDictionary Source="Styles/TextBlockStyle.xaml" />
