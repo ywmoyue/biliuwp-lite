@@ -17,6 +17,7 @@ using BiliLite.Models.Common.Video;
 using System.Collections.Generic;
 using System.Linq;
 using BiliLite.Services.Biz;
+using Newtonsoft.Json;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -132,16 +133,21 @@ namespace BiliLite.Pages
             {
                 var mid = "";
                 var tabIndex = 0;
-                if (e.Parameter is UserInfoParameter)
-                {
-                    var par = e.Parameter as UserInfoParameter;
-                    mid = par.Mid;
-                    tabIndex = (int)par.Tab;
-                }
-                else
+                if (e.Parameter is string)
                 {
                     mid = e.Parameter.ToString();
                 }
+                else
+                {
+                    var par = e.Parameter as UserInfoParameter;
+                    if (par == null)
+                    {
+                        par = JsonConvert.DeserializeObject<UserInfoParameter>(JsonConvert.SerializeObject(e.Parameter));
+                    }
+                    mid = par.Mid;
+                    tabIndex = (int)par.Tab;
+                }
+
                 m_viewModel.Mid = mid;
                 m_userSubmitVideoViewModel.Mid = mid;
                 m_userSubmitCollectionViewModel.Mid = mid;

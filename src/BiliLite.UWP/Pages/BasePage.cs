@@ -44,11 +44,11 @@ namespace BiliLite.Pages
 
         public void Pause()
         {
-            Player.PlayerInstance.Pause();
+            Player.Pause();
         }
         public void Play()
         {
-            Player.PlayerInstance.Play();
+            Player.Play();
         }
 
         public void GotoLastVideo()
@@ -69,6 +69,16 @@ namespace BiliLite.Pages
         public void FastUp()
         {
             Player.FastUp();
+        }
+
+        public double GetPlaySpeed()
+        {
+            return Player.GetPlaySpeed();
+        }
+
+        public void SetPlaySpeed(double speed)
+        {
+            Player.SetPlaySpeed(speed);
         }
 
         public void ToggleMute()
@@ -129,6 +139,11 @@ namespace BiliLite.Pages
         public void ToggleSubtitle()
         {
             Player.ToggleSubtitle();
+        }
+
+        public void ToggleVideoEnable()
+        {
+            Player.ToggleVideoEnable();
         }
 
         public void AddVolume()

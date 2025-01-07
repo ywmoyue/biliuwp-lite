@@ -20,7 +20,8 @@ namespace BiliLite.Models.Functions
             { 37, "←" },
             { 39, "→" },
             { 38, "↑" },
-            { 40, "↓" }
+            { 40, "↓" },
+            { 18, "Alt" },
         };
 
         public VirtualKey BoardKey { get; set; }

@@ -200,6 +200,7 @@
     <Compile Include="Extensions\QrCodeExtensions.cs" />
     <Compile Include="Extensions\RegexExtensions.cs" />
     <Compile Include="Extensions\DynamicExtensions.cs" />
+    <Compile Include="Extensions\RegisterServiceExtensions.cs" />
     <Compile Include="Models\Attributes\RegisterServiceAttributes.cs" />
     <Compile Include="Models\Attributes\SettingDefaultValueAttribute.cs" />
     <Compile Include="Models\Attributes\SettingKeyAttribute.cs" />
@@ -207,6 +208,7 @@
     <Compile Include="Models\Common\Comment\HotReply.cs" />
     <Compile Include="Models\Common\Danmaku\BiliDanmakuItem.cs" />
     <Compile Include="Models\Common\Dynamic\DynamicUgcSeasonCardModel.cs" />
+    <Compile Include="Models\Common\Live\LiveRoomEmoticon.cs" />
     <Compile Include="Models\Common\MarkdownViewerPagerParameter.cs" />
     <Compile Include="Models\Common\Player\RealPlayerType.cs" />
     <Compile Include="Models\Common\Player\PlaySpeedMenu.cs" />
@@ -229,6 +231,7 @@
     <Compile Include="Models\Common\User\UserSpaceInfo.cs" />
     <Compile Include="Models\Common\Video\MediaListResources.cs" />
     <Compile Include="Models\Databases\DownloadItemDTO.cs" />
+    <Compile Include="Models\Databases\PageSavedDTO.cs" />
     <Compile Include="Models\Databases\SettingItem.cs" />
     <Compile Include="Models\Functions\BaseShortcutFunction.cs" />
     <Compile Include="Models\Functions\CancelFullscreenFunction.cs" />
@@ -251,6 +254,7 @@
     <Compile Include="Models\Common\Rank\RankItemModel.cs" />
     <Compile Include="Models\Common\Rank\RankItemOwnerModel.cs" />
     <Compile Include="Models\Common\Rank\RankItemStatModel.cs" />
+    <Compile Include="Models\Functions\RestartAppFunction.cs" />
     <Compile Include="Models\Functions\SaveFunction.cs" />
     <Compile Include="Models\Common\Danmaku\DanmuFilterItem.cs" />
     <Compile Include="Models\Functions\ShortcutFunctionFactory.cs" />
@@ -265,6 +269,7 @@
     <Compile Include="Models\Functions\ToggleFullWindowShortcutFunction.cs" />
     <Compile Include="Models\Functions\ToggleMiniWindowShortcutFunction.cs" />
     <Compile Include="Models\Common\Notifications\NotificationTile.cs" />
+    <Compile Include="Models\Functions\TogglePlaySpeedFunction.cs" />
     <Compile Include="Models\Functions\ToggleSubtitleShortcutFunction.cs" />
     <Compile Include="Models\Common\Search\SearchAnimeItem.cs" />
     <Compile Include="Models\Common\Search\SearchArea.cs" />
@@ -304,6 +309,7 @@
     <Compile Include="Models\Common\Season\SeasonIndexParameter.cs" />
     <Compile Include="Models\Common\Season\SeasonIndexResultItemModel.cs" />
     <Compile Include="Models\Common\Season\SeasonIndexResultItemOrderModel.cs" />
+    <Compile Include="Services\PageSaveService.cs" />
     <Compile Include="ViewModels\Season\SeasonShortReviewItemStatViewModel.cs" />
     <Compile Include="ViewModels\Season\SeasonShortReviewItemViewModel.cs" />
     <Compile Include="Models\Common\Season\SeasonShortReviewItemVIPModel.cs" />
@@ -788,7 +794,7 @@
       <DependentUpon>PlayerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\RoundButton\RoundButton.cs" />
-    <Compile Include="Controls\ScrollGridView\ScrollGridView.cs" />
+    <Compile Include="Controls\HorizontalGridView\HorizontalGridView.cs" />
     <Compile Include="Dialogs\SendCommentDialog.xaml.cs">
       <DependentUpon>SendCommentDialog.xaml</DependentUpon>
     </Compile>
@@ -1027,6 +1033,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\DbMigrations\01-0_40704.sql" />
+    <Content Include="Assets\DbMigrations\02-40704_40709.sql" />
     <Content Include="Assets\GeeTest\bili_gt.html" />
     <Content Include="Assets\GeeTest\gt.js" />
     <Content Include="Assets\Icon\icon_view_point.png" />
@@ -1330,7 +1337,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\ScrollGridView\ScrollGridView.xaml">
+    <Page Include="Controls\HorizontalGridView\HorizontalGridView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1683,7 +1690,7 @@
     <Folder Include="Modules\User\SendDynamic\" />
   </ItemGroup>
   <ItemGroup>
-    <SDKReference Include="WindowsDesktop, Version=10.0.18362.0">
+    <SDKReference Include="WindowsDesktop, Version=10.0.19041.0">
       <Name>Windows Desktop Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>

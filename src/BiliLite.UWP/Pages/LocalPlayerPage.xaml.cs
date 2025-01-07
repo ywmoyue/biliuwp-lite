@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
+using Newtonsoft.Json;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -68,6 +69,12 @@ namespace BiliLite.Pages
                     player.IsFullWindow = SettingService.GetValue<bool>(SettingConstants.Player.AUTO_FULL_WINDOW, false);
                 }
                 var data = e.Parameter as LocalPlayInfo;
+
+                if (data == null)
+                {
+                    data = JsonConvert.DeserializeObject<LocalPlayInfo>(JsonConvert.SerializeObject(e.Parameter));
+                }
+
                 player.InitializePlayInfo(data.PlayInfos, data.Index);
             }
         }

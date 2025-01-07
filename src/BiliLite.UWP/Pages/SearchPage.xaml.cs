@@ -15,6 +15,7 @@ using BiliLite.ViewModels.Search;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using Windows.UI.Xaml.Controls.Primitives;
+using Newtonsoft.Json;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -42,14 +43,19 @@ namespace BiliLite.Pages
             CompositionTarget.Rendered += CompositionTarget_Rendered; // 订阅页面加载后事件
             base.OnNavigatedTo(e);
             SearchParameter par = new SearchParameter();
-            if (e.Parameter is SearchParameter)
-            {
-                par = e.Parameter as SearchParameter;
-            }
-            else
+            if (e.Parameter is string)
             {
                 par.Keyword = e.Parameter.ToString();
             }
+            else
+            {
+                par = e.Parameter as SearchParameter;
+                if (par == null)
+                {
+                    par = JsonConvert.DeserializeObject<SearchParameter>(JsonConvert.SerializeObject(e.Parameter));
+                }
+            }
+
             par.Keyword = par.Keyword.TrimStart('@');
             txtKeyword.Text = par.Keyword;
             foreach (var item in m_viewModel.SearchItems)

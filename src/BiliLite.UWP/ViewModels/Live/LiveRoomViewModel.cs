@@ -145,9 +145,9 @@ namespace BiliLite.ViewModels.Live
         public bool ShowGiftMessage { get; set; }
 
         /// <summary>
-        /// 看过的人数(替代人气值)
+        /// 房间在线观众数量与看过的人数(替代人气值)
         /// </summary>
-        public string WatchedNum { get; set; }
+        public string ViewerNumCount { get; set; }
 
         /// <summary>
         /// 舰长数
@@ -172,6 +172,8 @@ namespace BiliLite.ViewModels.Live
 
         [DoNotNotify]
         public LiveRoomWebUrlQualityDescriptionItemModel CurrentQn { get; set; }
+
+        public ObservableCollection<LiveRoomEmoticonPackage> EmoticonsPackages { get; set; }
 
         public List<LiveRoomWebUrlQualityDescriptionItemModel> Qualites { get; set; }
 
@@ -201,7 +203,7 @@ namespace BiliLite.ViewModels.Live
         [DoNotNotify]
         public int GuardPage { get; set; } = 1;
 
-        public bool LoadingGuard { get; set; } = true;
+        public bool LoadingGuard { get; set; } = false;
 
         public bool LoadMoreGuard { get; set; }
 
@@ -254,6 +256,8 @@ namespace BiliLite.ViewModels.Live
         public event EventHandler<string> DelShieldWord;
 
         public event EventHandler SpecialLiveRoomHideElements;
+
+        public event EventHandler RefreshGuardNum;
 
         #endregion
 
@@ -373,7 +377,7 @@ namespace BiliLite.ViewModels.Live
             }
         }
 
-        private async void ReceiveMessage(int roomId)
+        private async Task ReceiveMessage(int roomId)
         {
             try
             {
@@ -471,8 +475,8 @@ namespace BiliLite.ViewModels.Live
                 routeIndex++;
             }
 
-            // 暂时不使用hevc流
-            var codec = codecList.FirstOrDefault(item => item.CodecName == "avc");
+            // 暂时不使用hevc流, 但无法保证avc流一定存在
+            var codec = codecList.Count > 1 ? codecList.FirstOrDefault(item => item.CodecName == "avc") : codecList[0];
 
             var acceptQnList = codec.AcceptQn;
             Qualites ??= liveRoomPlayUrlModel.PlayUrlInfo.PlayUrl.GQnDesc.Where(item => acceptQnList.Contains(item.Qn)).ToList();
@@ -668,8 +672,10 @@ namespace BiliLite.ViewModels.Live
                 m_liveMessage = new LiveMessage();
                 m_liveMessage.NewMessage += LiveMessage_NewMessage;
                 m_cancelSource = new System.Threading.CancellationTokenSource();
+                m_timer.Start();
 
                 Loading = true;
+
                 var result = await m_liveRoomApi.LiveRoomInfo(id).Request();
                 if (!result.status)
                 {
@@ -682,38 +688,51 @@ namespace BiliLite.ViewModels.Live
                     throw new CustomizedErrorException("加载直播间失败:" + data.message);
                 }
 
-                if (data.data.GuardInfo == null) 
-                {
-                    IsSpecialLiveRoom = true;
-                    SpecialLiveRoomHideElements?.Invoke(this, null);
-                };
-
-                RoomID = data.data.RoomInfo.RoomId;
-                RoomTitle = data.data.RoomInfo.Title;
-                Live = data.data.RoomInfo.LiveStatus == 1;
-                GuardNum = !IsSpecialLiveRoom ? data.data.GuardInfo.Count : 0;
-                AnchorUid = data.data.RoomInfo.Uid;
                 LiveInfo = data.data;
+                RoomID = LiveInfo.RoomInfo.RoomId;
+                RoomTitle = LiveInfo.RoomInfo.Title;
+                Live = LiveInfo.RoomInfo.LiveStatus == 1;
+                AnchorUid = LiveInfo.RoomInfo.Uid;
 
-                if (Ranks == null)
-                {
-                    Ranks = new List<LiveRoomRankViewModel>()
-                    {
-                        new LiveRoomRankViewModel(RoomID, AnchorUid, "高能用户贡献榜", "contribution-rank"),
-                        new LiveRoomRankViewModel(RoomID, AnchorUid, "粉丝榜", "fans"),
-                    };
-                    SelectRank = Ranks[0];
-                }
+                var buvidResults = await m_liveRoomApi.GetBuvid().Request();
+                var buvidData = await buvidResults.GetJson<ApiDataModel<LiveBuvidModel>>();
+                Buvid3 = buvidData.data.B3;
 
-
-                await LoadAnchorProfile();
-                m_timer.Start();
                 if (Live)
                 {
                     await GetPlayUrls(RoomID, SettingService.GetValue(SettingConstants.Live.DEFAULT_QUALITY, 10000));
                 }
-                //GetFreeSilverTime();  
+
+                ReceiveMessage(LiveInfo.RoomInfo.RoomId).RunWithoutAwait(); // 连接弹幕优先级提高
+
+                await GetEmoticons();
+
                 await LoadSuperChat();
+
+                if (LiveInfo.GuardInfo == null)
+                {
+                    IsSpecialLiveRoom = true;
+                    SpecialLiveRoomHideElements?.Invoke(this, null);
+                }
+                else
+                {
+                    GuardNum = !IsSpecialLiveRoom ? LiveInfo.GuardInfo.Count : 0;
+                    await GetGuardList();
+                }
+
+                if (Ranks == null)
+                {
+                    Ranks =
+                    [
+                        new LiveRoomRankViewModel(RoomID, AnchorUid, "高能用户贡献榜", "contribution-rank"),
+                        new LiveRoomRankViewModel(RoomID, AnchorUid, "粉丝榜", "fans"),
+                    ];
+                    SelectRank = Ranks[0];
+                }
+
+                await LoadAnchorProfile();
+
+                //GetFreeSilverTime();  
                 if (ReceiveLotteryMsg)
                 {
                     // 天选抽奖和红包抽奖
@@ -729,12 +748,7 @@ namespace BiliLite.ViewModels.Live
                     await GetTitles();
                 }
 
-                var buvidResults = await m_liveRoomApi.GetBuvid().Request();
-                var buvidData = await buvidResults.GetJson<ApiDataModel<LiveBuvidModel>>();
-                Buvid3 = buvidData.data.B3;
-
-                EntryRoom();
-                ReceiveMessage(data.data.RoomInfo.RoomId);
+                await EntryRoom();
             }
             catch (CustomizedErrorException ex)
             {
@@ -813,7 +827,7 @@ namespace BiliLite.ViewModels.Live
         /// <summary>
         /// 进入房间
         /// </summary>
-        public async void EntryRoom()
+        public async Task EntryRoom()
         {
             try
             {
@@ -1077,6 +1091,7 @@ namespace BiliLite.ViewModels.Live
             Guards?.Clear();
             GuardPage = 1;
             await GetGuardList();
+            RefreshGuardNum?.Invoke(null, null);
         }
 
         public async Task GetFreeSilverTime()
@@ -1245,6 +1260,44 @@ namespace BiliLite.ViewModels.Live
             }
         }
 
+        public async Task SendDanmu(LiveRoomEmoticon emoji)
+        {
+            if (!Logined && !await Notify.ShowLoginDialog())
+            {
+                Notify.ShowMessageToast("请先登录");
+                return;
+            }
+            if (emoji.Perm != 1)
+            {
+                Notify.ShowMessageToast("权限不足哦~\n" + $"需要: {emoji.UnlockShowText}");
+                return;
+            }
+            try
+            {
+                var result = await m_liveRoomApi.SendDanmu(RoomID, emoji).Request();
+                if (!result.status)
+                {
+                    throw new CustomizedErrorException(result.message);
+                }
+
+                var data = await result.GetData<object>();
+                if (!data.success)
+                {
+                    throw new CustomizedErrorException(data.message);
+                }
+            }
+            catch (CustomizedErrorException ex)
+            {
+                Notify.ShowMessageToast(ex.Message);
+                _logger.Error(ex.Message, ex);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log("发送表情弹幕出现错误", LogType.Error, ex);
+                Notify.ShowMessageToast("发送表情弹幕出现错误");
+            }
+        }
+
         public async Task<bool> JoinAnchorLottery()
         {
             try
@@ -1312,6 +1365,35 @@ namespace BiliLite.ViewModels.Live
                 return false;
             }
 
+        }
+
+        public async Task GetEmoticons()
+        {
+            if (!Logined && !await Notify.ShowLoginDialog())
+            {
+                Notify.ShowMessageToast("请先登录");
+                return;
+            }
+            try
+            {
+                var result = await m_liveRoomApi.GetLiveRoomEmoticon(RoomID).Request();
+                if (!result.status) throw new CustomizedErrorException(result.message);
+                var data = await result.GetData<JObject>();
+                if (!data.success) throw new CustomizedErrorException(data.message);
+
+                if (EmoticonsPackages?.Count > 0) EmoticonsPackages?.Clear();
+                EmoticonsPackages = JsonConvert.DeserializeObject<ObservableCollection<LiveRoomEmoticonPackage>>(data.data["data"].ToString());
+            }
+            catch (CustomizedErrorException ex)
+            {
+                Notify.ShowMessageToast(ex.Message);
+                _logger.Error(ex.Message, ex);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log("获取表情包出现错误", LogType.Error, ex);
+                Notify.ShowMessageToast("获取表情包出现错误");
+            }
         }
 
         public void CheckClearMessages()

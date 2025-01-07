@@ -35,6 +35,7 @@ namespace BiliLite
 
             services.AddSingleton<GrpcService>();
             services.AddSingleton<ThemeService>();
+            services.AddAttributeService();
         }
     }
 }

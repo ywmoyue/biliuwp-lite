@@ -7,6 +7,9 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using BiliLite.Models.Common.Region;
 using BiliLite.ViewModels.Region;
+using BiliLite.Pages.Live;
+using Google.Type;
+using Newtonsoft.Json;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -33,6 +36,10 @@ namespace BiliLite.Pages
                 if (e.Parameter!=null)
                 {
                     regionInfo = e.Parameter as OpenRegionInfo;
+                    if (regionInfo == null)
+                    {
+                        regionInfo = JsonConvert.DeserializeObject<OpenRegionInfo>(JsonConvert.SerializeObject(e.Parameter));
+                    }
                 }
                 else
                 {

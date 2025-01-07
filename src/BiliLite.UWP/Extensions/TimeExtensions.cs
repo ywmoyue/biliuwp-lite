@@ -85,10 +85,10 @@ namespace BiliLite.Extensions
         }
 
         /// <summary>
-        /// 生成时间戳/豪秒
+        /// 生成时间戳/毫秒
         /// </summary>
         /// <returns></returns>
-        public static long GetTimestampMS()
+        public static long GetTimestampMs()
         {
             return Convert.ToInt64((DateTime.Now - new DateTime(1970, 1, 1, 8, 0, 0, 0)).TotalMilliseconds);
         }
