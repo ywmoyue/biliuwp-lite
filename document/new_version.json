@@ -1,7 +1,7 @@
 {
-  "version": "4.7.8",
-  "version_num": 40708,
-  "version_desc": "更新内容:\r\n\r\n- 初步实现动态磁贴（暂无内容） \r\n\r\n- 下载视频页添加一键清除搜索结果按钮 \r\n\r\n- 下载视频页添加排序选项 \r\n\r\n- 视频详情页提供av号可复制 \r\n\r\n- 分离主题颜色  \r\n\r\n- 调整标签栏样式、支持自定义相关样式 \r\n\r\n- 升级至C#最新版本 \r\n\r\n- 修复部分控件颜色与设置主题不匹配 \r\n\r\n- 任意视频观看一段时间后闪退 \r\n\r\n- 修复番剧点评点赞点踩报错 \r\n\r\n- 直播将互动区自动清理触发时机添加新增欢迎消息时触发 \r\n\r\n- 标签增加至最右侧时，加号点击范围太小  \r\n\r\n- 修复排行榜页面无法缓存的问题 \r\n\r\n- 修复native包编译报错\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.7.10",
+  "version_num": 40710,
+  "version_desc": "更新内容:\r\n\r\n- 支持快捷键切换播放速度 \r\n\r\n- 支持启动应用时打开上次的标签页 \r\n\r\n- 首页动画页、直播页、影视页支持触摸板横向触摸滑动 \r\n\r\n- 直播间优化  \r\n\r\n- 默认排序方式改为时间倒序（仅支持启用下载索引时） \r\n\r\n- 打开下载页无正在下载视频时直接进入已下载视频tab \r\n\r\n- 首页动态页实现页面切换 \r\n\r\n- 更新sdk \r\n\r\n- 长时间暂停后检测视频地址是否有效，无效则刷新 \r\n\r\n- 修复视频详情页滚动到当前项错误问题\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
