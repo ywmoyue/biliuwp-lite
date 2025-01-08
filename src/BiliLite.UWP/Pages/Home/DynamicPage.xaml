@@ -34,6 +34,8 @@
                 </Grid.ColumnDefinitions>
                 <Grid>
                     <toolkit:ImageEx
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                         Source="{x:Bind Path=Video.Pic, Converter={StaticResource imageConvert}, ConverterParameter='120h'}"
                         Stretch="UniformToFill" />
@@ -112,6 +114,8 @@
                 </Grid.ColumnDefinitions>
                 <Grid>
                     <toolkit:ImageEx
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                         Source="{x:Bind Path=UgcSeason.Pic, Converter={StaticResource imageConvert}, ConverterParameter='120h'}"
                         Stretch="UniformToFill" />
@@ -162,6 +166,8 @@
                 </Grid.ColumnDefinitions>
                 <Grid>
                     <toolkit:ImageEx
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                         Source="{x:Bind Path=Season.Cover, Converter={StaticResource imageConvert}, ConverterParameter='120h'}"
                         Stretch="UniformToFill" />

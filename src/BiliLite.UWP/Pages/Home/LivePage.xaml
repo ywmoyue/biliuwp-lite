@@ -35,6 +35,8 @@
                                     Click="BannerItem_Click"
                                     CornerRadius="{ThemeResource OverlayCornerRadius}">
                                     <toolkit:ImageEx
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
                                         CornerRadius="{ThemeResource OverlayCornerRadius}"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                         Source="{Binding Path=Pic, Converter={StaticResource imageConvert}, ConverterParameter='240h'}"
@@ -58,6 +60,8 @@
                                     <toolkit:ImageEx
                                         Width="48"
                                         Height="48"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
                                         CornerRadius="{StaticResource ImageCornerRadius}"
                                         PlaceholderSource="/assets/Thumbnails/Placeholde1x1.png"
                                         PlaceholderStretch="UniformToFill"
@@ -103,6 +107,8 @@
                                             <toolkit:ImageEx
                                                 Width="260"
                                                 Height="160"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
                                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                                 Source="{x:Bind Path=cover, Converter={StaticResource imageConvert}, ConverterParameter='460w_260h_1c'}"
                                                 Stretch="UniformToFill" />
@@ -213,6 +219,8 @@
                                                         <toolkit:ImageEx
                                                             Width="260"
                                                             Height="160"
+                                                            HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"
                                                             PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                                             Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='460w_260h_1c'}"
                                                             Stretch="UniformToFill" />

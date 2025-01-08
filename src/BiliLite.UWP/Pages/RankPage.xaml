@@ -94,6 +94,8 @@
                                     </Grid.ColumnDefinitions>
                                     <Grid>
                                         <toolkit:ImageEx
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
                                             PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                             Source="{x:Bind Path=Pic, Converter={StaticResource imageConvert}, ConverterParameter='120h'}"
                                             Stretch="UniformToFill" />

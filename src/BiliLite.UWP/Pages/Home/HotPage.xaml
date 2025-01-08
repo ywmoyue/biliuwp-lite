@@ -21,7 +21,7 @@
             x:Name="HotGridView"
             Padding="10,0"
             CanLoadMore="True"
-            DesiredWidth="400"
+            DesiredWidth="550"
             IsItemClickEnabled="True"
             ItemClick="gridHot_ItemClick"
             ItemContainerStyle="{StaticResource DefaultGridViewItem}"
@@ -51,6 +51,9 @@
                         </Grid.ColumnDefinitions>
                         <Grid>
                             <toolkit:ImageEx
+                                Height="100"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                 Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='120h'}"
                                 Stretch="UniformToFill" />
