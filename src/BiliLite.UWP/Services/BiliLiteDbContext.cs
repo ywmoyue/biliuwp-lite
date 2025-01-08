@@ -31,6 +31,8 @@ namespace BiliLite.Services
 
         public DbSet<DownloadedSubItemDTO> DownloadedSubItems { get; set; }
 
+        public DbSet<PageSavedDTO> PageSavedItems { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder

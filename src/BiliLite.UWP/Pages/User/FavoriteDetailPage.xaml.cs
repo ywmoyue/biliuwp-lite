@@ -14,6 +14,7 @@ using BiliLite.Models.Common.Favorites;
 using BiliLite.Models.Common.Video;
 using BiliLite.ViewModels.Favourites;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -43,6 +44,10 @@ namespace BiliLite.Pages.User
             if (e.NavigationMode == NavigationMode.New && m_viewModel.FavoriteInfo == null)
             {
                 FavoriteDetailArgs args = e.Parameter as FavoriteDetailArgs;
+                if (args == null)
+                {
+                    args = JsonConvert.DeserializeObject<FavoriteDetailArgs>(JsonConvert.SerializeObject(e.Parameter));
+                }
                 m_viewModel.Id = args.Id;
                 m_viewModel.Type = args.Type;
                 m_viewModel.Page = 1;

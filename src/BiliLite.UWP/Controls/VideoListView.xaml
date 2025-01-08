@@ -51,6 +51,7 @@
                                             <Grid 
                                                 x:Name="VideoListItemGrid"
                                                 ToolTipService.ToolTip="{x:Bind Title}"
+                                                Height="87"
                                               ContextRequested="UIElement_OnContextRequested" 
                                               ContextFlyout="{StaticResource VideoItemFlyout}" >
                                                 <Grid.ColumnDefinitions>

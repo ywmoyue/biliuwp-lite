@@ -211,7 +211,7 @@
                                 <TextBlock>查看全部</TextBlock>
                             </HyperlinkButton>
                         </Grid>
-                        <controls:ScrollGridView
+                        <controls:HorizontalGridView
                             Margin="-5,0,0,0"
                             AlwayShowButton="False"
                             IsItemClickEnabled="True"
@@ -291,13 +291,13 @@
                                     </Grid>
                                 </DataTemplate>
                             </GridView.ItemTemplate>
-                        </controls:ScrollGridView>
+                        </controls:HorizontalGridView>
                     </StackPanel>
                     <StackPanel>
                         <Grid>
                             <TextBlock FontSize="18" FontWeight="Bold">即将开播</TextBlock>
                         </Grid>
-                        <controls:ScrollGridView
+                        <controls:HorizontalGridView
                             Margin="-5,0,0,0"
                             AlwayShowButton="False"
                             IsItemClickEnabled="True"
@@ -376,7 +376,7 @@
                                     <ItemsStackPanel Orientation="Horizontal" />
                                 </ItemsPanelTemplate>
                             </GridView.ItemsPanel>
-                        </controls:ScrollGridView>
+                        </controls:HorizontalGridView>
                     </StackPanel>
                     <StackPanel Margin="0,5,0,0">
                         <Grid>
@@ -389,7 +389,7 @@
                                 <TextBlock>纪录片索引</TextBlock>
                             </HyperlinkButton>
                         </Grid>
-                        <controls:ScrollGridView
+                        <controls:HorizontalGridView
                             Margin="-5,0,0,0"
                             AlwayShowButton="False"
                             IsItemClickEnabled="True"
@@ -404,7 +404,7 @@
                                     <ItemsStackPanel Orientation="Horizontal" />
                                 </ItemsPanelTemplate>
                             </GridView.ItemsPanel>
-                        </controls:ScrollGridView>
+                        </controls:HorizontalGridView>
                     </StackPanel>
                     <StackPanel Margin="0,5,0,0">
                         <Grid>
@@ -417,7 +417,7 @@
                                 <TextBlock>电影索引</TextBlock>
                             </HyperlinkButton>
                         </Grid>
-                        <controls:ScrollGridView
+                        <controls:HorizontalGridView
                             Margin="-5,0,0,0"
                             AlwayShowButton="False"
                             IsItemClickEnabled="True"
@@ -432,7 +432,7 @@
                                     <ItemsStackPanel Orientation="Horizontal" />
                                 </ItemsPanelTemplate>
                             </GridView.ItemsPanel>
-                        </controls:ScrollGridView>
+                        </controls:HorizontalGridView>
                     </StackPanel>
                     <StackPanel Margin="0,5,0,0">
                         <Grid>
@@ -445,7 +445,7 @@
                                 <TextBlock>电视剧索引</TextBlock>
                             </HyperlinkButton>
                         </Grid>
-                        <controls:ScrollGridView
+                        <controls:HorizontalGridView
                             Margin="-5,0,0,0"
                             AlwayShowButton="False"
                             IsItemClickEnabled="True"
@@ -460,7 +460,7 @@
                                     <ItemsStackPanel Orientation="Horizontal" />
                                 </ItemsPanelTemplate>
                             </GridView.ItemsPanel>
-                        </controls:ScrollGridView>
+                        </controls:HorizontalGridView>
                     </StackPanel>
                     <StackPanel Margin="0,5,0,0">
                         <Grid>
@@ -473,7 +473,7 @@
                                 <TextBlock>综艺索引</TextBlock>
                             </HyperlinkButton>
                         </Grid>
-                        <controls:ScrollGridView
+                        <controls:HorizontalGridView
                             Margin="-5,0,0,0"
                             AlwayShowButton="False"
                             IsItemClickEnabled="True"
@@ -488,7 +488,7 @@
                                     <ItemsStackPanel Orientation="Horizontal" />
                                 </ItemsPanelTemplate>
                             </GridView.ItemsPanel>
-                        </controls:ScrollGridView>
+                        </controls:HorizontalGridView>
                     </StackPanel>
                     <ItemsControl Margin="0,5,0,0" ItemsSource="{x:Bind Path=m_viewModel.HomeData.Falls, Mode=OneWay}">
                         <ItemsControl.ItemsPanel>

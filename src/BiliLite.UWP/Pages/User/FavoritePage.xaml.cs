@@ -48,7 +48,7 @@ namespace BiliLite.Pages.User
             {
                 if (e.Parameter != null)
                 {
-                    openFavoriteType = (OpenFavoriteType)e.Parameter; 
+                    openFavoriteType = (OpenFavoriteType)(e.Parameter.ToInt32());
                 }
                 if (openFavoriteType== OpenFavoriteType.Bangumi)
                 {

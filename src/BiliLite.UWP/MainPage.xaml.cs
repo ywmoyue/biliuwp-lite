@@ -58,6 +58,8 @@ namespace BiliLite
             Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
         }
 
+        public event EventHandler MainPageLoaded;
+
         public object CurrentPage
         {
             get
@@ -172,6 +174,8 @@ namespace BiliLite
             frame.PointerPressed += Content_PointerPressed;
             frame.Navigate(e.page, e.parameters);
             item.Content = frame;
+            var pageSaveService = App.ServiceProvider.GetRequiredService<PageSaveService>();
+            frame.PageId = pageSaveService.AddPage(e.title, e.page, e.parameters, e.icon);
 
             tabView.TabItems.Add(item);
             if (!e.dontGoTo)
@@ -255,6 +259,9 @@ namespace BiliLite
             {
                 grid.Children.Clear();
             }
+
+            var pageSaveService = App.ServiceProvider.GetRequiredService<PageSaveService>();
+            pageSaveService.RemovePage(frame.PageId);
 
             frame.Close();
             //frame.Navigate(typeof(BlankPage));
@@ -341,6 +348,11 @@ namespace BiliLite
             {
                 tabStyle.Setters.Add(new Setter(TabViewItem.HeightProperty, m_viewModel.TabHeight));
             }
+        }
+
+        private void MainPage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            MainPageLoaded?.Invoke(this,EventArgs.Empty);
         }
     }
 }

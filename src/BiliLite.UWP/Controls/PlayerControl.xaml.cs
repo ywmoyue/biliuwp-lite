@@ -43,6 +43,7 @@ using BiliLite.Models.Common.Video.PlayUrlInfos;
 using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels;
 using BiliLite.ViewModels.Settings;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
@@ -58,6 +59,7 @@ namespace BiliLite.Controls
         private readonly PlayControlViewModel m_viewModel;
         private readonly PlayerToastService m_playerToastService;
         private readonly PlaySpeedMenuService m_playSpeedMenuService;
+        private DateTime m_startTime = DateTime.Now;
         public event PropertyChangedEventHandler PropertyChanged;
         private GestureRecognizer gestureRecognizer;
         private void DoPropertyChanged(string name)
@@ -257,9 +259,9 @@ namespace BiliLite.Controls
             switch (args.Button)
             {
                 case SystemMediaTransportControlsButton.Play:
-                    await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                    await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
                     {
-                        Player.Play();
+                        await Play();
                     });
                     break;
                 case SystemMediaTransportControlsButton.Pause:
@@ -580,6 +582,11 @@ namespace BiliLite.Controls
                     PlayerSettingABPlaySetPointB.Content = "设置B点";
                 }
             });
+            //仅播放音频
+            SwitchVideoEnable.Toggled += (e, args) =>
+            {
+                Player.SetVideoEnable(!SwitchVideoEnable.IsOn);
+            };
         }
         private void LoadSutitleSetting()
         {
@@ -1420,7 +1427,7 @@ namespace BiliLite.Controls
             if (result.result)
             {
                 VideoLoading.Visibility = Visibility.Collapsed;
-                Player.Play();
+                await Play();
             }
             else
             {
@@ -2065,7 +2072,7 @@ namespace BiliLite.Controls
             if (!tapFlag) return;
             ShowControl(control.Visibility == Visibility.Collapsed);
         }
-        private void Grid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        private async void Grid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
             tapFlag = false;
             var fullScreen = SettingService.GetValue<bool>(SettingConstants.Player.DOUBLE_CLICK_FULL_SCREEN, false);
@@ -2073,7 +2080,7 @@ namespace BiliLite.Controls
             {
                 if (Player.PlayState == PlayState.Pause || Player.PlayState == PlayState.End)
                 {
-                    Player.Play();
+                    await Play();
                 }
                 else if (Player.PlayState == PlayState.Playing)
                 {
@@ -2217,7 +2224,7 @@ namespace BiliLite.Controls
             Pause();
         }
 
-        private void BottomBtnPlay_Click(object sender, RoutedEventArgs e)
+        private async void BottomBtnPlay_Click(object sender, RoutedEventArgs e)
         {
             if (Player.Opening)
             {
@@ -2225,7 +2232,7 @@ namespace BiliLite.Controls
             }
             if (Player.PlayState == PlayState.Pause || Player.PlayState == PlayState.End)
             {
-                Player.Play();
+                await Play();
                 m_danmakuController.Resume();
             }
         }
@@ -2413,7 +2420,7 @@ namespace BiliLite.Controls
             {
                 ClearSubTitle();
                 m_danmakuController.Clear();
-                Player.Play();
+                await Play();
                 return;
             }
             //列表循环播放
@@ -2429,7 +2436,7 @@ namespace BiliLite.Controls
                 {
                     ClearSubTitle();
                     m_danmakuController.Clear();
-                    Player.Play();
+                    await Play();
                     return;
                 }
                 _autoPlay = true;
@@ -2523,7 +2530,7 @@ namespace BiliLite.Controls
 
         }
 
-        private void Player_PlayMediaOpened(object sender, EventArgs e)
+        private async void Player_PlayMediaOpened(object sender, EventArgs e)
         {
             txtInfo.Text = Player.GetMediaInfo();
             VideoLoading.Visibility = Visibility.Collapsed;
@@ -2533,7 +2540,7 @@ namespace BiliLite.Controls
             }
             if (_autoPlay)
             {
-                Player.Play();
+                await Play();
             }
         }
 
@@ -2553,7 +2560,7 @@ namespace BiliLite.Controls
                 }, true);
             });
             await sendDanmakuDialog.ShowAsync();
-            Player.Play();
+            await Play();
         }
 
         private async void DanmuSettingSyncWords_Click(object sender, RoutedEventArgs e)
@@ -2594,6 +2601,11 @@ namespace BiliLite.Controls
 
             if (targetItem != null)
                 Menuitem_Click(targetItem, null);
+        }
+
+        public void ToggleVideoEnable()
+        {
+            SwitchVideoEnable.IsOn = !SwitchVideoEnable.IsOn;
         }
 
         public async void Dispose()
@@ -2790,6 +2802,20 @@ namespace BiliLite.Controls
             m_playerToastService.Show(PlayerToastService.SPEED_KEY, (BottomCBSpeed.SelectedItem as PlaySpeedMenuItem).Content);
         }
 
+        public double GetPlaySpeed()
+        {
+            var value = (double)BottomCBSpeed.SelectedValue;
+            return value;
+        }
+
+        // 设置播放速度
+        public void SetPlaySpeed(double speed)
+        {
+            var speeds = BottomCBSpeed.ItemsSource as List<PlaySpeedMenuItem>;
+            var index = speeds.Select(x => x.Value).IndexOf(speed);
+            BottomCBSpeed.SelectedIndex = index;
+        }
+
         public void GotoLastVideo()
         {
             if (EpisodeList.SelectedIndex == 0)
@@ -2836,6 +2862,33 @@ namespace BiliLite.Controls
             {
                 m_danmakuController.Show();
             }
+        }
+
+        public async Task Play()
+        {
+            // 超过一定时间后继续播放，检查播放地址是否仍然有效
+            if (DateTime.Now - m_startTime > TimeSpan.FromMinutes(30))
+            {
+                if (!await Player.CheckPlayUrl())
+                {
+                    _postion = Player.Position;
+                    var info = await GetPlayUrlQualitesInfo();
+                    if (!info.Success)
+                    {
+                        ShowDialog($"请求信息:\r\n{info.Message}", "读取视频播放地址失败");
+                    }
+                    else
+                    {
+                        playUrlInfo = info;
+                        SetSoundQuality();
+                        SetQuality();
+                    }
+                    Notify.ShowMessageToast("检测到视频地址失效，已自动刷新");
+                    m_startTime = DateTime.Now;
+                    return;
+                }
+            }
+            Player.Play();
         }
 
         public void Pause()

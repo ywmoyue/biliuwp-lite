@@ -11,7 +11,6 @@ using BiliLite.Extensions;
 using BiliLite.Models.Common.Video;
 using BiliLite.Services.Biz;
 using BiliLite.ViewModels.Video;
-using Microsoft.Toolkit.Uwp.UI.Controls;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -108,7 +107,7 @@ namespace BiliLite.Controls
         private double GetItemOffsetHeight(VideoListItem item)
         {
             var offset = 0d;
-            var expanders = this.FindChildrenByType<Expander>().ToList();
+            var expanders = this.FindChildrenByType<Microsoft.UI.Xaml.Controls.Expander>().ToList();
             if (!expanders.Any()) return 0;
             var expanderHeaderHeight = (expanders.First().Header as FrameworkElement).ActualHeight;
             var videoListItemGridHeight = 87;
@@ -133,11 +132,12 @@ namespace BiliLite.Controls
 
                     foreach (var videoItem in section.Items)
                     {
-                        offset += videoListItemGridHeight;
                         if (videoItem == item)
                         {
                             return offset;
                         }
+
+                        offset += videoListItemGridHeight;
                     }
                 }
             }

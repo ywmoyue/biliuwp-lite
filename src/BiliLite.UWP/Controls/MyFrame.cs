@@ -9,6 +9,8 @@ namespace BiliLite.Controls
 {
     public class MyFrame:Frame
     {
+        public string PageId { get; set; }
+
         public event EventHandler ClosedPage;
         public void Close()
         {
