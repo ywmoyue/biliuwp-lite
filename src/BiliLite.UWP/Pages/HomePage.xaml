@@ -2,46 +2,56 @@
     x:Class="BiliLite.Pages.HomePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BiliLite.Pages"
+    xmlns:converters="using:BiliLite.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     xmlns:fa="using:FontAwesome5"
-    xmlns:pages="using:BiliLite.Pages.Home"
-    xmlns:modules="using:BiliLite.Modules" xmlns:converters="using:BiliLite.Converters"
     xmlns:home="using:BiliLite.ViewModels.Home"
+    xmlns:local="using:BiliLite.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:modules="using:BiliLite.Modules"
+    xmlns:pages="using:BiliLite.Pages.Home"
+    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+    Background="Transparent"
     NavigationCacheMode="Required"
-    Background="Transparent">
+    mc:Ignorable="d">
     <Page.Resources>
-        <converters:CountDisplayConvert x:Name="countDisplayConvert"></converters:CountDisplayConvert>
+        <converters:CountDisplayConvert x:Name="countDisplayConvert" />
         <SolidColorBrush x:Key="LayerFillColorDefaultBrush" Color="Transparent" />
         <SolidColorBrush x:Key="CardStrokeColorDefaultBrush" Color="Transparent" />
     </Page.Resources>
 
-    <Grid >
-        <winui:NavigationView  x:Name="navView" 
-                               SelectedItem="{x:Bind Path=m_viewModel.SelectItem,Mode=TwoWay}" 
-                               MenuItemsSource="{x:Bind Path=m_viewModel.HomeNavItems,Mode=OneWay}" 
-                               SelectionChanged="navView_SelectionChanged" 
-                               IsSettingsVisible="False"  
-                               PaneDisplayMode="Top"  
-                               IsBackButtonVisible="Collapsed" >
+    <Grid>
+        <winui:NavigationView
+            x:Name="navView"
+            IsBackButtonVisible="Collapsed"
+            IsSettingsVisible="False"
+            MenuItemsSource="{x:Bind Path=m_viewModel.HomeNavItems, Mode=OneWay}"
+            PaneDisplayMode="Top"
+            SelectedItem="{x:Bind Path=m_viewModel.SelectItem, Mode=TwoWay}"
+            SelectionChanged="navView_SelectionChanged">
             <winui:NavigationView.AutoSuggestBox>
-                <AutoSuggestBox x:Name="SearchBox" 
-                                TextChanged="SearchBox_TextChanged" 
-                                QuerySubmitted="SearchBox_QuerySubmitted" 
-                                MinWidth="140" 
-                                PlaceholderText="你想找什么呢?" 
-                                ItemsSource="{x:Bind Path=m_viewModel.SuggestSearchContents,Mode=OneWay}"
-                                QueryIcon="Find"></AutoSuggestBox>
+                <AutoSuggestBox
+                    x:Name="SearchBox"
+                    MinWidth="140"
+                    ItemsSource="{x:Bind Path=m_viewModel.SuggestSearchContents, Mode=OneWay}"
+                    PlaceholderText="你想找什么呢?"
+                    QueryIcon="Find"
+                    QuerySubmitted="SearchBox_QuerySubmitted"
+                    TextChanged="SearchBox_TextChanged" />
             </winui:NavigationView.AutoSuggestBox>
             <winui:NavigationView.PaneFooter>
                 <StackPanel Orientation="Horizontal">
-                    <Button x:Name="btnUser" Visibility="{x:Bind Path=m_viewModel.IsLogin,Mode=OneWay}" BorderThickness="0"  Width="48" Height="40" Background="Transparent">
-                        <Ellipse Width="24" Height="24" >
+                    <Button
+                        x:Name="btnUser"
+                        Width="44"
+                        Height="36"
+                        Margin="2"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Visibility="{x:Bind Path=m_viewModel.IsLogin, Mode=OneWay}">
+                        <Ellipse Width="22" Height="22">
                             <Ellipse.Fill>
-                                <ImageBrush  x:Name="imgPhoto"  ImageSource="{x:Bind Path=m_viewModel.Profile.face,Mode=OneWay,Converter={StaticResource imageConvert2},ConverterParameter='100w'}"/>
+                                <ImageBrush x:Name="imgPhoto" ImageSource="{x:Bind Path=m_viewModel.Profile.face, Mode=OneWay, Converter={StaticResource imageConvert2}, ConverterParameter='100w'}" />
                             </Ellipse.Fill>
                         </Ellipse>
                         <Button.Flyout>
@@ -49,129 +59,288 @@
                                 <StackPanel Width="240">
                                     <StackPanel.Resources>
                                         <Style TargetType="Button">
-                                            <Setter Target="BorderThickness" Value="0"/>
+                                            <Setter Target="BorderThickness" Value="0" />
                                         </Style>
                                     </StackPanel.Resources>
                                     <Grid>
                                         <Ellipse Width="48" Height="48">
                                             <Ellipse.Fill>
-                                                <ImageBrush ImageSource="{x:Bind Path=m_viewModel.Profile.face,Mode=OneWay,Converter={StaticResource imageConvert2},ConverterParameter='100w'}"/>
+                                                <ImageBrush ImageSource="{x:Bind Path=m_viewModel.Profile.face, Mode=OneWay, Converter={StaticResource imageConvert2}, ConverterParameter='100w'}" />
                                             </Ellipse.Fill>
                                         </Ellipse>
-                                        <Image Width="72"  Height="72" Source="{x:Bind Path=m_viewModel.Profile.pendant,Mode=OneWay}"></Image>
+                                        <Image
+                                            Width="72"
+                                            Height="72"
+                                            Source="{x:Bind Path=m_viewModel.Profile.pendant, Mode=OneWay}" />
                                     </Grid>
-                                    
+
                                     <!--<Ellipse Width="48" Height="48" >
                                         <Ellipse.Fill>
                                             <ImageBrush ImageSource="https://i1.hdslb.com/bfs/face/3e323499026ad0019be48dcd76f8e03199bd606c.jpg@70w_70h_1c_100q.webp"/>
                                         </Ellipse.Fill>
                                     </Ellipse>-->
-                                    <TextBlock TextAlignment="Center" Foreground="{ThemeResource SystemAccentColor}" FontWeight="Medium" Text="{x:Bind Path=m_viewModel.Profile.name,Mode=OneWay}"></TextBlock>
-                                    <Border Background="{ThemeResource SystemAccentColor}" Visibility="{x:Bind Path=m_viewModel.Profile.show_vip,Mode=OneWay}" Margin="4" Padding="4 2" CornerRadius="4" HorizontalAlignment="Center">
-                                        <TextBlock Foreground="White" FontSize="12" Text="{x:Bind Path=m_viewModel.Profile.vip,Mode=OneWay}"></TextBlock>
+                                    <TextBlock
+                                        FontWeight="Medium"
+                                        Foreground="{ThemeResource SystemAccentColor}"
+                                        Text="{x:Bind Path=m_viewModel.Profile.name, Mode=OneWay}"
+                                        TextAlignment="Center" />
+                                    <Border
+                                        Margin="4"
+                                        Padding="4,2"
+                                        HorizontalAlignment="Center"
+                                        Background="{ThemeResource SystemAccentColor}"
+                                        CornerRadius="4"
+                                        Visibility="{x:Bind Path=m_viewModel.Profile.show_vip, Mode=OneWay}">
+                                        <TextBlock
+                                            FontSize="12"
+                                            Foreground="White"
+                                            Text="{x:Bind Path=m_viewModel.Profile.vip, Mode=OneWay}" />
                                     </Border>
-                                    <Grid Margin="12 4" >
-                                        <TextBlock Foreground="{ThemeResource TextColor}">等级<Run Text="{x:Bind Path=m_viewModel.Profile.level,Mode=OneWay}"/></TextBlock>
-                                        <TextBlock FontSize="12" VerticalAlignment="Center" Foreground="Gray" HorizontalAlignment="Right"><Run Text="{x:Bind Path=m_viewModel.Profile.current_exp,Mode=OneWay}"/>/<Run Text="{x:Bind Path=m_viewModel.Profile.next_exp,Mode=OneWay}"/></TextBlock>
+                                    <Grid Margin="12,4">
+                                        <TextBlock Foreground="{ThemeResource TextColor}">
+                                            等级<Run Text="{x:Bind Path=m_viewModel.Profile.level, Mode=OneWay}" /></TextBlock>
+                                        <TextBlock
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            FontSize="12"
+                                            Foreground="Gray"><Run Text="{x:Bind Path=m_viewModel.Profile.current_exp, Mode=OneWay}" />
+                                            /<Run Text="{x:Bind Path=m_viewModel.Profile.next_exp, Mode=OneWay}" /></TextBlock>
                                     </Grid>
-                                    <winui:ProgressBar Margin="12 4" Value="{x:Bind Path=m_viewModel.Profile.current_exp,Mode=OneWay}" Maximum="{x:Bind Path=m_viewModel.Profile.next_exp,Mode=OneWay}"></winui:ProgressBar>
+                                    <winui:ProgressBar
+                                        Margin="12,4"
+                                        Maximum="{x:Bind Path=m_viewModel.Profile.next_exp, Mode=OneWay}"
+                                        Value="{x:Bind Path=m_viewModel.Profile.current_exp, Mode=OneWay}" />
 
-                                    <Grid Padding="0 12" BorderThickness="0 1 0 1" Margin="0 4" BorderBrush="#19808080">
+                                    <Grid Padding="0,12">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition />
+                                            <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
-                                        <HyperlinkButton Click="btnOpenAttention_Click" Foreground="{ThemeResource TextColor}" HorizontalAlignment="Center" Padding="0">
+                                        <HyperlinkButton
+                                            HorizontalAlignment="Center"
+                                            Click="btnOpenAttention_Click"
+                                            Foreground="{ThemeResource TextColor}">
                                             <StackPanel>
-                                                <TextBlock TextAlignment="Center" Foreground="Gray">关注</TextBlock>
-                                                <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="12" Text="{x:Bind Path=m_viewModel.Profile.follow,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"></TextBlock>
+                                                <TextBlock TextAlignment="Center">关注</TextBlock>
+                                                <TextBlock
+                                                    FontSize="12"
+                                                    Text="{x:Bind Path=m_viewModel.Profile.follow, Mode=OneWay, Converter={StaticResource numberToStringConvert}}"
+                                                    TextAlignment="Center" />
                                             </StackPanel>
                                         </HyperlinkButton>
-                                        <HyperlinkButton Click="btnOpenFans_Click" Grid.Column="1" Foreground="{ThemeResource TextColor}" HorizontalAlignment="Center" Padding="0">
+                                        <HyperlinkButton
+                                            Grid.Column="1"
+                                            HorizontalAlignment="Center"
+                                            Click="btnOpenFans_Click"
+                                            Foreground="{ThemeResource TextColor}">
                                             <StackPanel>
-                                                <TextBlock TextAlignment="Center" Foreground="Gray">粉丝</TextBlock>
-                                                <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="12" Text="{x:Bind Path=m_viewModel.Profile.fans,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"></TextBlock>
+                                                <TextBlock TextAlignment="Center">粉丝</TextBlock>
+                                                <TextBlock
+                                                    FontSize="12"
+                                                    Text="{x:Bind Path=m_viewModel.Profile.fans, Mode=OneWay, Converter={StaticResource numberToStringConvert}}"
+                                                    TextAlignment="Center" />
                                             </StackPanel>
                                         </HyperlinkButton>
-                                        <HyperlinkButton Click="btnOpenDynamic_Click"  Grid.Column="2" Foreground="{ThemeResource TextColor}" HorizontalAlignment="Center" Padding="0">
+                                        <HyperlinkButton
+                                            Grid.Column="2"
+                                            HorizontalAlignment="Center"
+                                            Click="btnOpenDynamic_Click"
+                                            Foreground="{ThemeResource TextColor}">
                                             <StackPanel>
-                                                <TextBlock TextAlignment="Center" Foreground="Gray">动态</TextBlock>
-                                                <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="12" Text="{x:Bind Path=m_viewModel.Profile.dynamic,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"></TextBlock>
+                                                <TextBlock TextAlignment="Center">动态</TextBlock>
+                                                <TextBlock
+                                                    FontSize="12"
+                                                    Text="{x:Bind Path=m_viewModel.Profile.dynamic, Mode=OneWay, Converter={StaticResource numberToStringConvert}}"
+                                                    TextAlignment="Center" />
                                             </StackPanel>
                                         </HyperlinkButton>
                                     </Grid>
-                                    <Button x:Name="MenuUserCenter" Click="MenuUserCenter_Click" Padding="12 8" Foreground="{ThemeResource TextColor}" Background="Transparent" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                    <Border
+                                        Height="1"
+                                        Margin="-20,4"
+                                        Background="#19808080" />
+                                    <Button
+                                        x:Name="MenuUserCenter"
+                                        Padding="12,8"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Stretch"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Click="MenuUserCenter_Click"
+                                        Style="{StaticResource DefaultButtonStyle}">
                                         <StackPanel Orientation="Horizontal">
-                                            <fa:FontAwesome Icon="Regular_User" Width="24" FontSize="16"></fa:FontAwesome>
-                                            <TextBlock Margin="12 0">个人中心</TextBlock>
+                                            <fa:FontAwesome
+                                                Width="24"
+                                                FontSize="16"
+                                                Icon="Regular_User" />
+                                            <TextBlock Margin="12,0">个人中心</TextBlock>
                                         </StackPanel>
                                     </Button>
-                                    <Button x:Name="MenuMessage" Click="MenuMessage_Click" Padding="12 8" Foreground="{ThemeResource TextColor}" Background="Transparent" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                    <Button
+                                        x:Name="MenuMessage"
+                                        Padding="12,8"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Stretch"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Click="MenuMessage_Click"
+                                        Style="{StaticResource DefaultButtonStyle}">
                                         <StackPanel Orientation="Horizontal">
-                                            <fa:FontAwesome Icon="Regular_Envelope" Width="24" FontSize="16"></fa:FontAwesome>
-                                            <TextBlock Margin="12 0">我的消息</TextBlock>
+                                            <fa:FontAwesome
+                                                Width="24"
+                                                FontSize="16"
+                                                Icon="Regular_Envelope" />
+                                            <TextBlock Margin="12,0">我的消息</TextBlock>
                                         </StackPanel>
                                     </Button>
-                                    <Button x:Name="MenuWatchlater" Click="MenuWatchlater_Click" Padding="12 8" Foreground="{ThemeResource TextColor}" Background="Transparent" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                    <Button
+                                        x:Name="MenuWatchlater"
+                                        Padding="12,8"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Stretch"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Click="MenuWatchlater_Click"
+                                        Style="{StaticResource DefaultButtonStyle}">
                                         <StackPanel Orientation="Horizontal">
-                                            <fa:FontAwesome Icon="Regular_PlayCircle" Width="24" FontSize="16"></fa:FontAwesome>
-                                            <TextBlock Margin="12 0">稍后再看</TextBlock>
+                                            <fa:FontAwesome
+                                                Width="24"
+                                                FontSize="16"
+                                                Icon="Regular_PlayCircle" />
+                                            <TextBlock Margin="12,0">稍后再看</TextBlock>
                                         </StackPanel>
                                     </Button>
-                                    <Button x:Name="MenuMyFollow" Click="MenuMyFollow_Click" Padding="12 8" Foreground="{ThemeResource TextColor}" Background="Transparent" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                    <Button
+                                        x:Name="MenuMyFollow"
+                                        Padding="12,8"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Stretch"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Click="MenuMyFollow_Click"
+                                        Style="{StaticResource DefaultButtonStyle}">
                                         <StackPanel Orientation="Horizontal">
-                                            <fa:FontAwesome Icon="Regular_Star" Width="24" FontSize="16"></fa:FontAwesome>
-                                            <TextBlock Margin="12 0">我的收藏</TextBlock>
+                                            <fa:FontAwesome
+                                                Width="24"
+                                                FontSize="16"
+                                                Icon="Regular_Star" />
+                                            <TextBlock Margin="12,0">我的收藏</TextBlock>
                                         </StackPanel>
                                     </Button>
-                                    <Button x:Name="MenuHistory"  Click="MenuHistory_Click" Padding="12 8" Foreground="{ThemeResource TextColor}" Background="Transparent" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                    <Button
+                                        x:Name="MenuHistory"
+                                        Padding="12,8"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Stretch"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Click="MenuHistory_Click"
+                                        Style="{StaticResource DefaultButtonStyle}">
                                         <StackPanel Orientation="Horizontal">
-                                            <fa:FontAwesome Icon="Solid_History" Width="24" FontSize="16"></fa:FontAwesome>
-                                            <TextBlock Margin="12 0">历史记录</TextBlock>
+                                            <fa:FontAwesome
+                                                Width="24"
+                                                FontSize="16"
+                                                Icon="Solid_History" />
+                                            <TextBlock Margin="12,0">历史记录</TextBlock>
                                         </StackPanel>
                                     </Button>
-                                    <Button x:Name="MenuMyLive" Click="MenuMyLive_Click"   Padding="12 8" Foreground="{ThemeResource TextColor}" Background="Transparent" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                    <Button
+                                        x:Name="MenuMyLive"
+                                        Padding="12,8"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Stretch"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Click="MenuMyLive_Click"
+                                        Style="{StaticResource DefaultButtonStyle}">
                                         <StackPanel Orientation="Horizontal">
-                                            <fa:FontAwesome Icon="Regular_Flag" Width="24" FontSize="16"></fa:FontAwesome>
-                                            <TextBlock Margin="12 0">直播中心</TextBlock>
+                                            <fa:FontAwesome
+                                                Width="24"
+                                                FontSize="16"
+                                                Icon="Regular_Flag" />
+                                            <TextBlock Margin="12,0">直播中心</TextBlock>
                                         </StackPanel>
                                     </Button>
-                                    <Border Height="1" Margin="0 4" Background="#19808080"></Border>
-                                    <Button x:Name="btnLogout" Click="btnLogout_Click"  Padding="12 8" Foreground="{ThemeResource TextColor}" Background="Transparent" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                    <Border
+                                        Height="1"
+                                        Margin="-20,4"
+                                        Background="#19808080" />
+                                    <Button
+                                        x:Name="btnLogout"
+                                        Padding="12,8"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Stretch"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Click="btnLogout_Click"
+                                        Style="{StaticResource DefaultButtonStyle}">
                                         <StackPanel Orientation="Horizontal">
-                                            <fa:FontAwesome Icon="Solid_SignOutAlt" Width="24" FontSize="16"></fa:FontAwesome>
-                                            <TextBlock Margin="12 0">退出登录</TextBlock>
+                                            <fa:FontAwesome
+                                                Width="24"
+                                                FontSize="16"
+                                                Icon="Solid_SignOutAlt" />
+                                            <TextBlock Margin="12,0">退出登录</TextBlock>
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
                             </Flyout>
                         </Button.Flyout>
                     </Button>
-                    <AppBarButton x:Name="btnLogin" Visibility="{x:Bind Path=m_viewModel.IsLogin,Converter={StaticResource display},Mode=OneWay}" Click="btnLogin_Click" Height="48" Width="48" Icon="Contact" ></AppBarButton>
+                    <AppBarButton
+                        x:Name="btnLogin"
+                        Width="48"
+                        Height="48"
+                        Click="btnLogin_Click"
+                        Icon="Contact"
+                        Visibility="{x:Bind Path=m_viewModel.IsLogin, Converter={StaticResource display}, Mode=OneWay}" />
                     <Grid>
-                        <AppBarButton x:Name="btnDownlaod" Width="48" Height="48" Icon="Download" Click="btnDownlaod_Click"></AppBarButton>
-                        <Border Visibility="{x:Bind Path=m_downloadPageViewModel.Downloadings.Count,Mode=OneWay,Converter={StaticResource countDisplayConvert}}" Margin="4" CornerRadius="24" Width="14" Height="14" Background="Red" VerticalAlignment="Top" HorizontalAlignment="Right">
-                            <TextBlock  FontSize="10" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" Text="{x:Bind Path=m_downloadPageViewModel.Downloadings.Count,Mode=OneWay}"></TextBlock>
+                        <AppBarButton
+                            x:Name="btnDownlaod"
+                            Width="48"
+                            Height="48"
+                            Click="btnDownlaod_Click"
+                            Icon="Download" />
+                        <Border
+                            Width="14"
+                            Height="14"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Background="Red"
+                            CornerRadius="24"
+                            Visibility="{x:Bind Path=m_downloadPageViewModel.Downloadings.Count, Mode=OneWay, Converter={StaticResource countDisplayConvert}}">
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="10"
+                                Foreground="White"
+                                Text="{x:Bind Path=m_downloadPageViewModel.Downloadings.Count, Mode=OneWay}" />
                         </Border>
                     </Grid>
-                    <AppBarButton x:Name="btnSetting" Height="48" Click="btnSetting_Click" Width="48" Icon="Setting" ></AppBarButton>
+                    <AppBarButton
+                        x:Name="btnSetting"
+                        Width="48"
+                        Height="48"
+                        Click="btnSetting_Click"
+                        Icon="Setting" />
                 </StackPanel>
             </winui:NavigationView.PaneFooter>
             <winui:NavigationView.MenuItemTemplate>
-                <DataTemplate x:DataType="home:HomeNavItemViewModel" >
-                    <winui:NavigationViewItem Content="{x:Bind Title}" Visibility="{x:Bind Path=Show,Mode=OneWay}" ToolTipService.ToolTip="{x:Bind Title}" UseSystemFocusVisuals="False">
+                <DataTemplate x:DataType="home:HomeNavItemViewModel">
+                    <winui:NavigationViewItem
+                        Content="{x:Bind Title}"
+                        ToolTipService.ToolTip="{x:Bind Title}"
+                        UseSystemFocusVisuals="False"
+                        Visibility="{x:Bind Path=Show, Mode=OneWay}">
                         <winui:NavigationViewItem.Icon>
-                            <fa:FontAwesome Icon="{x:Bind Icon}" Margin="0 2 0 0"></fa:FontAwesome>
+                            <fa:FontAwesome Margin="0,2,0,0" Icon="{x:Bind Icon}" />
                         </winui:NavigationViewItem.Icon>
                     </winui:NavigationViewItem>
                 </DataTemplate>
 
             </winui:NavigationView.MenuItemTemplate>
-         
-            <Frame x:Name="frame">
-               
-            </Frame>
+
+            <Frame x:Name="frame" />
         </winui:NavigationView>
 
         <!--<Grid x:Name="appbarTitle" Visibility="{Binding ElementName=navView,Path=IsPaneOpen}" Height="36" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="48 0 0 0">
