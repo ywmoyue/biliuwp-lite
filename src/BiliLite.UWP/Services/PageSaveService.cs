@@ -65,35 +65,58 @@ namespace BiliLite.Services
 
         public string AddPage(string title, Type type, object parameters, Symbol icon)
         {
-            var page = new PageSavedDTO()
+            try
             {
-                Parameters = JsonConvert.SerializeObject(parameters),
-                Type = JsonConvert.SerializeObject(type),
-                Title = title,
-                Icon = JsonConvert.SerializeObject(icon),
-            };
-            m_biliLiteDbContext.PageSavedItems.Add(page);
-            m_biliLiteDbContext.SaveChanges();
-            return page.Id;
+                var page = new PageSavedDTO()
+                {
+                    Parameters = JsonConvert.SerializeObject(parameters),
+                    Type = JsonConvert.SerializeObject(type),
+                    Title = title,
+                    Icon = JsonConvert.SerializeObject(icon),
+                };
+                m_biliLiteDbContext.PageSavedItems.Add(page);
+                m_biliLiteDbContext.SaveChanges();
+                return page.Id;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message, ex);
+            }
+
+            return "";
         }
 
-        public void UpdatePage(string id,string title, Type type, object parameters, Symbol icon)
+        public void UpdatePage(string id, string title, Type type, object parameters, Symbol icon)
         {
-            var page = m_biliLiteDbContext.PageSavedItems.Find(id);
-            if (page == null) return;
-            page.Title = title;
-            page.Type = JsonConvert.SerializeObject(type);
-            page.Parameters = JsonConvert.SerializeObject(parameters);
-            page.Icon = JsonConvert.SerializeObject(icon);
-            m_biliLiteDbContext.SaveChanges();
+            try
+            {
+                var page = m_biliLiteDbContext.PageSavedItems.Find(id);
+                if (page == null) return;
+                page.Title = title;
+                page.Type = JsonConvert.SerializeObject(type);
+                page.Parameters = JsonConvert.SerializeObject(parameters);
+                page.Icon = JsonConvert.SerializeObject(icon);
+                m_biliLiteDbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message, ex);
+            }
         }
 
         public void RemovePage(string id)
         {
-            var page = m_biliLiteDbContext.PageSavedItems.Find(id);
-            if(page == null) return;
-            m_biliLiteDbContext.PageSavedItems.Remove(page);
-            m_biliLiteDbContext.SaveChanges();
+            try
+            {
+                var page = m_biliLiteDbContext.PageSavedItems.Find(id);
+                if (page == null) return;
+                m_biliLiteDbContext.PageSavedItems.Remove(page);
+                m_biliLiteDbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message, ex);
+            }
         }
 
         public void SaveMainPageTabIndex(int index)
