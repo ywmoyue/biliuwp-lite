@@ -29,7 +29,7 @@ namespace BiliLite.Services
                 var currentAppVersion = GetCurrentAppVersion();
                 var currentDbVersion = GetCurrentDatabaseVersion();
                 if (currentDbVersion == currentAppVersion) return;
-                var migrationScripts = await GetMigrationScriptsToRun(currentDbVersion);
+                var migrationScripts = await GetMigrationScriptsToRun(0);
                 foreach (var script in migrationScripts)
                 {
                     await ExecuteMigrationScript(script);
