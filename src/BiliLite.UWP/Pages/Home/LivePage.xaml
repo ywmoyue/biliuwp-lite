@@ -83,7 +83,7 @@
                         </Grid>
                         <controls:HorizontalGridView
                             Margin="-5,0,0,0"
-                            AlwayShowButton="False"
+                            AlwaysShowButton="False"
                             IsItemClickEnabled="True"
                             ItemClick="FollowLive_ItemClick"
                             ItemContainerStyle="{StaticResource DefaultGridViewItem}"
@@ -195,7 +195,7 @@
                                     </Grid>
                                     <controls:HorizontalGridView
                                         Margin="-5,0,0,0"
-                                        AlwayShowButton="False"
+                                        AlwaysShowButton="False"
                                         IsItemClickEnabled="True"
                                         ItemClick="LiveItems_ItemClick"
                                         ItemContainerStyle="{StaticResource DefaultGridViewItem}"

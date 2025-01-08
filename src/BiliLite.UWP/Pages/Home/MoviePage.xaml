@@ -213,7 +213,7 @@
                         </Grid>
                         <controls:HorizontalGridView
                             Margin="-5,0,0,0"
-                            AlwayShowButton="False"
+                            AlwaysShowButton="False"
                             IsItemClickEnabled="True"
                             ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}"
                             ItemContainerStyle="{StaticResource DefaultGridViewItem}"
@@ -299,7 +299,7 @@
                         </Grid>
                         <controls:HorizontalGridView
                             Margin="-5,0,0,0"
-                            AlwayShowButton="False"
+                            AlwaysShowButton="False"
                             IsItemClickEnabled="True"
                             ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}"
                             ItemContainerStyle="{ThemeResource DefaultGridViewItem}"
@@ -391,7 +391,7 @@
                         </Grid>
                         <controls:HorizontalGridView
                             Margin="-5,0,0,0"
-                            AlwayShowButton="False"
+                            AlwaysShowButton="False"
                             IsItemClickEnabled="True"
                             ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}"
                             ItemContainerStyle="{StaticResource DefaultGridViewItem}"
@@ -419,7 +419,7 @@
                         </Grid>
                         <controls:HorizontalGridView
                             Margin="-5,0,0,0"
-                            AlwayShowButton="False"
+                            AlwaysShowButton="False"
                             IsItemClickEnabled="True"
                             ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}"
                             ItemContainerStyle="{StaticResource DefaultGridViewItem}"
@@ -447,7 +447,7 @@
                         </Grid>
                         <controls:HorizontalGridView
                             Margin="-5,0,0,0"
-                            AlwayShowButton="False"
+                            AlwaysShowButton="False"
                             IsItemClickEnabled="True"
                             ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}"
                             ItemContainerStyle="{StaticResource DefaultGridViewItem}"
@@ -475,7 +475,7 @@
                         </Grid>
                         <controls:HorizontalGridView
                             Margin="-5,0,0,0"
-                            AlwayShowButton="False"
+                            AlwaysShowButton="False"
                             IsItemClickEnabled="True"
                             ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}"
                             ItemContainerStyle="{StaticResource DefaultGridViewItem}"
