@@ -18,7 +18,7 @@ namespace BiliLite.Controls.Settings
         public DownloadSettingsControl()
         {
             m_downloadService = App.ServiceProvider.GetRequiredService<DownloadService>();
-            this.InitializeComponent();
+            InitializeComponent();
             LoadDownlaod();
         }
 

@@ -11,7 +11,7 @@ namespace BiliLite.Controls
 
         public DynamicRepostControl()
         {
-            this.InitializeComponent(); 
+            InitializeComponent(); 
             UserDynamicRepostViewModel = new UserDynamicRepostViewModel();
         }
 

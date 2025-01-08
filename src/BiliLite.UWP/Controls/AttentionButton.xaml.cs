@@ -16,7 +16,7 @@ namespace BiliLite.Controls
         public AttentionButton()
         {
             m_viewModel = App.ServiceProvider.GetRequiredService<UserAttentionButtonViewModel>();
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         public static readonly DependencyProperty AttentionProperty =

@@ -8,7 +8,7 @@ namespace BiliLite.Controls.Dynamic
     {
         public DynamicControl()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

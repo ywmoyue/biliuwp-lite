@@ -24,7 +24,7 @@ namespace BiliLite.Controls.Settings
         public UISettingsControl()
         {
             m_themeService = App.ServiceProvider.GetRequiredService<ThemeService>();
-            this.InitializeComponent(); 
+            InitializeComponent(); 
             LoadUI();
         }
         private void LoadUI()

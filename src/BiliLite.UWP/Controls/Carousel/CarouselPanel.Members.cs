@@ -13,7 +13,7 @@ namespace BiliLite.Controls
         public int Value { get; private set; }
         public IntEventArgs(int value)
         {
-            this.Value = value;
+            Value = value;
         }
     }
     partial class CarouselPanel
