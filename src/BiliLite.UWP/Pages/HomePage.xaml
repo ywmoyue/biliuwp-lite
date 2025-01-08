@@ -34,7 +34,7 @@
                     x:Name="SearchBox"
                     MinWidth="140"
                     ItemsSource="{x:Bind Path=m_viewModel.SuggestSearchContents, Mode=OneWay}"
-                    PlaceholderText="你想找什么呢?"
+                    PlaceholderText="你想找什么呢？"
                     QueryIcon="Find"
                     QuerySubmitted="SearchBox_QuerySubmitted"
                     TextChanged="SearchBox_TextChanged" />
