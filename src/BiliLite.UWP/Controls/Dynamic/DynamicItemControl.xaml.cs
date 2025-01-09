@@ -10,7 +10,7 @@ namespace BiliLite.Controls.Dynamic
     {
         public DynamicItemControl()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
       
         public UserDynamicItemDisplayViewModel ViewModel

@@ -10,18 +10,18 @@ namespace BiliLite.Controls
     {
         public CarouselPanel()
         {
-            this.UseLayoutRounding = true;
-            this.HorizontalAlignment = HorizontalAlignment.Left;
-            this.VerticalAlignment = VerticalAlignment.Center;
+            UseLayoutRounding = true;
+            HorizontalAlignment = HorizontalAlignment.Left;
+            VerticalAlignment = VerticalAlignment.Center;
         }
 
         protected override Size MeasureOverride(Size availableSize)
         {
             if (_items.Count > 0)
             {
-                this.ArrangePanes(availableSize.Width);
+                ArrangePanes(availableSize.Width);
 
-                int index = this.Index;
+                int index = Index;
                 int itemCount = _items.Count;
                 int paneCount = base.Children.Count;
                 int leftCount = (paneCount - 1) / 2;
@@ -32,11 +32,11 @@ namespace BiliLite.Controls
                     var pane = base.Children[paneIndex] as ContentControl;
 
                     int itemIndex = (index + n - leftCount).Mod(itemCount);
-                    pane.ContentTemplate = this.ItemTemplate;
+                    pane.ContentTemplate = ItemTemplate;
                     pane.Content = _items[itemIndex];
                     pane.Tag = itemIndex;
 
-                    pane.Measure(new Size(this.ItemWidth, this.ItemHeight));
+                    pane.Measure(new Size(ItemWidth, ItemHeight));
                 }
 
                 return availableSize;
@@ -49,13 +49,13 @@ namespace BiliLite.Controls
         {
             if (_items.Count > 0)
             {
-                int index = this.Index;
+                int index = Index;
                 int paneCount = base.Children.Count;
 
-                double itemWidth = this.ItemWidth;
+                double itemWidth = ItemWidth;
                 double x = index * ItemWidth;
 
-                x -= (paneCount * this.ItemWidth - finalSize.Width) / 2.0;
+                x -= (paneCount * ItemWidth - finalSize.Width) / 2.0;
 
                 for (int n = 0; n < paneCount; n++)
                 {
@@ -76,9 +76,9 @@ namespace BiliLite.Controls
         private void ArrangePanes(double availableWidth)
         {
             double visibleWidth = Math.Min(Window.Current.Bounds.Width, availableWidth);
-            double viewportWidth = visibleWidth + 2 * this.ItemWidth;
+            double viewportWidth = visibleWidth + 2 * ItemWidth;
 
-            int visibleItems = (int)Math.Ceiling(viewportWidth / this.ItemWidth);
+            int visibleItems = (int)Math.Ceiling(viewportWidth / ItemWidth);
             int totalItems = visibleItems;
 
             totalItems = totalItems + (totalItems + 1) % 2;

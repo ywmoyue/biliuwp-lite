@@ -46,10 +46,10 @@ namespace BiliLite.Controls
         {
             int itemCount = _panel.Items.Count;
             index = index.Mod(itemCount);
-            if (index != this.Index.Mod(itemCount))
+            if (index != Index.Mod(itemCount))
             {
-                this.Index = index;
-                this.Position = -index * this.ItemWidth;
+                Index = index;
+                Position = -index * ItemWidth;
             }
         }
 
@@ -72,7 +72,7 @@ namespace BiliLite.Controls
         private void SetIndexInternal(int index)
         {
             int itemCount = _panel.Items.Count;
-            this.SelectedIndex = index.Mod(itemCount);
+            SelectedIndex = index.Mod(itemCount);
         }
 
         public static readonly DependencyProperty IndexProperty = DependencyProperty.Register("Index", typeof(int), typeof(Carousel), new PropertyMetadata(0, IndexChanged));
@@ -191,7 +191,7 @@ namespace BiliLite.Controls
         {
             if (!_isBusy)
             {
-                this.AnimateNext();
+                AnimateNext();
             }
         }
 

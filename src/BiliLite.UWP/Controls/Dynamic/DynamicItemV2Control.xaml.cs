@@ -10,7 +10,7 @@ namespace BiliLite.Controls.Dynamic
     {
         public DynamicItemV2Control()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         public FrameworkElement CardContent

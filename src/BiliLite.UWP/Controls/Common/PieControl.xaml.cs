@@ -17,7 +17,7 @@ namespace BiliLite.Controls.Common
         public PieControl()
         {
             m_viewModel = new PieControlViewModel();
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         public event EventHandler<TappedRoutedEventArgs> FirstBtnTapped;
@@ -111,7 +111,7 @@ namespace BiliLite.Controls.Common
         private async Task ClosePie()
         {
             m_viewModel.ExtendVisibility = true;
-            var storyboard = (Storyboard)this.Resources["ClosePieStory"];
+            var storyboard = (Storyboard)Resources["ClosePieStory"];
             //storyboard.Begin();
             var tcs = new TaskCompletionSource<bool>();
 
@@ -129,7 +129,7 @@ namespace BiliLite.Controls.Common
         private async Task ExtentPie()
         {
             m_viewModel.ExtendVisibility = true;
-            var storyboard = (Storyboard)this.Resources["ExtentPieStory"];
+            var storyboard = (Storyboard)Resources["ExtentPieStory"];
             //storyboard.Begin();
             var tcs = new TaskCompletionSource<bool>();
 
