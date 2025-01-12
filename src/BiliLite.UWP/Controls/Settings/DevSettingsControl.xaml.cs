@@ -34,7 +34,7 @@ namespace BiliLite.Controls.Settings
             m_pluginService = App.ServiceProvider.GetRequiredService<PluginService>();
             m_viewModel.Plugins =
                 m_mapper.Map<ObservableCollection<WebSocketPluginViewModel>>(m_pluginService.GetPlugins());
-            this.InitializeComponent();
+            InitializeComponent();
             LoadDev();
         }
 

@@ -91,7 +91,7 @@ namespace BiliLite.Controls
             }
 
             base.Children.Clear();
-            this.InvalidateMeasure();
+            InvalidateMeasure();
         }
 
         private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -119,7 +119,7 @@ namespace BiliLite.Controls
                 default:
                     break;
             }
-            this.InvalidateMeasure();
+            InvalidateMeasure();
         }
 
         private void ClearChildren()

@@ -39,7 +39,7 @@ namespace BiliLite.Controls.Settings
                 new ObservableCollection<FilterRuleViewModel>(
                     m_mapper.Map<List<FilterRuleViewModel>>(m_contentFilterService.DynamicFilterRules)
                 );
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         private FilterRule CreateNewFilterRule(FilterRuleType filterRuleType)

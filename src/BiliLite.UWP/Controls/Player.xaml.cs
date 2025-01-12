@@ -56,7 +56,7 @@ namespace BiliLite.Controls
         #region Constructors
         public Player()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
             // We don't have ARM64 support of SYEngine.
             if (RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
@@ -388,7 +388,7 @@ namespace BiliLite.Controls
         private async Task OnPlayerMediaOpened(Action specificPlayerAction = null)
         {
             Opening = false;
-            await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 specificPlayerAction?.Invoke();
                 PlayMediaOpened?.Invoke(this, EventArgs.Empty);
@@ -397,7 +397,7 @@ namespace BiliLite.Controls
 
         private async Task OnPlayerMediaEnded()
         {
-            await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 if (PlayState == PlayState.End) return;
                 //加个判断，是否真的播放完成了
@@ -411,7 +411,7 @@ namespace BiliLite.Controls
 
         private async Task OnPlayerPositionChanged(TimeSpan position)
         {
-            await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 try
                 {
@@ -425,7 +425,7 @@ namespace BiliLite.Controls
 
         private async Task OnPlayerMediaFailed(ChangePlayerEngine changeEngineEventArgs)
         {
-            await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 PlayState = PlayState.Error;
                 PlayStateChanged?.Invoke(this, PlayState);
@@ -435,7 +435,7 @@ namespace BiliLite.Controls
 
         private async Task OnPlayerBufferingStarted()
         {
-            await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 Buffering = true;
             });
@@ -443,7 +443,7 @@ namespace BiliLite.Controls
 
         private async Task OnPlayerBufferingProgressChanged(MediaPlaybackSession session)
         {
-            await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 Buffering = true;
                 BufferCache = session.BufferingProgress;
@@ -452,7 +452,7 @@ namespace BiliLite.Controls
 
         private async Task OnPlayerBufferingEnded()
         {
-            await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 Buffering = false;
             });
@@ -1158,29 +1158,29 @@ namespace BiliLite.Controls
                     break;
                 case 2:
                     mediaPlayerVideo.Stretch = Stretch.Fill;
-                    mediaPlayerVideo.Height = this.ActualHeight;
-                    mediaPlayerVideo.Width = this.ActualHeight * 16 / 9;
+                    mediaPlayerVideo.Height = ActualHeight;
+                    mediaPlayerVideo.Width = ActualHeight * 16 / 9;
                     break;
                 case 3:
                     mediaPlayerVideo.Stretch = Stretch.Fill;
-                    mediaPlayerVideo.Height = this.ActualHeight;
-                    mediaPlayerVideo.Width = this.ActualHeight * 4 / 3;
+                    mediaPlayerVideo.Height = ActualHeight;
+                    mediaPlayerVideo.Width = ActualHeight * 4 / 3;
                     break;
                 case 4:
                     if (m_dashInfo != null)
                     {
-                        if (((double)this.ActualWidth / (double)this.ActualHeight) <= ((double)m_dashInfo.Video.Width / (double)m_dashInfo.Video.Height))
+                        if (((double)ActualWidth / (double)ActualHeight) <= ((double)m_dashInfo.Video.Width / (double)m_dashInfo.Video.Height))
                         {
                             /// 原视频长宽比大于等于窗口长宽比
                             mediaPlayerVideo.Stretch = Stretch.Fill;
-                            mediaPlayerVideo.Width = this.ActualWidth;
-                            mediaPlayerVideo.Height = this.ActualWidth * (double)m_dashInfo.Video.Height / (double)m_dashInfo.Video.Width;
+                            mediaPlayerVideo.Width = ActualWidth;
+                            mediaPlayerVideo.Height = ActualWidth * (double)m_dashInfo.Video.Height / (double)m_dashInfo.Video.Width;
                         }
                         else {
                             /// 原视频长宽比小于窗口长宽比
                             mediaPlayerVideo.Stretch = Stretch.Fill;
-                            mediaPlayerVideo.Width = this.ActualHeight * (double)m_dashInfo.Video.Width / (double)m_dashInfo.Video.Height;
-                            mediaPlayerVideo.Height = this.ActualHeight;
+                            mediaPlayerVideo.Width = ActualHeight * (double)m_dashInfo.Video.Width / (double)m_dashInfo.Video.Height;
+                            mediaPlayerVideo.Height = ActualHeight;
                         }
                     }
                     else {
@@ -1448,7 +1448,7 @@ namespace BiliLite.Controls
 
         public void Dispose()
         {
-            this.ClosePlay();
+            ClosePlay();
             //try
             //{
             //    _vlcMediaPlayer?.Media?.Dispose();

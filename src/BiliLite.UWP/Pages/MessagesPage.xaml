@@ -1,0 +1,127 @@
+﻿<local:BasePage
+    x:Class="BiliLite.Pages.MessagesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BiliLite.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:messages="using:BiliLite.ViewModels.Messages"
+    xmlns:mucx="using:Microsoft.UI.Xaml.Controls"
+    xmlns:controls="using:BiliLite.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <local:BasePage.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Controls/ChatMessages/ChatMessageTemplate.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </local:BasePage.Resources>
+
+    <Grid>
+        <Pivot>
+            <PivotItem Margin="0" >
+                <PivotItem.Header>
+                    <TextBlock FontSize="15">我的消息</TextBlock>
+                </PivotItem.Header>
+                <Grid Padding="12 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <ScrollViewer Width="320" VerticalScrollBarVisibility="Auto">
+                            <ListView ItemsSource="{x:Bind m_viewModel.ChatContexts,Mode=OneWay}"
+                                  SelectionChanged="ChatContextListView_OnSelectionChanged"
+                                  SelectedItem="{x:Bind m_viewModel.SelectedChatContext,Mode=TwoWay}"
+                                  x:Name="ChatContextListView">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="messages:ChatContextViewModel">
+                                        <Grid Height="78" Padding="24 19">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                                <ColumnDefinition></ColumnDefinition>
+                                                <ColumnDefinition  Width="Auto"></ColumnDefinition>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition></RowDefinition>
+                                                <RowDefinition></RowDefinition>
+                                            </Grid.RowDefinitions>
+
+                                            <Ellipse Width="40" Height="40"
+                                                 Margin="0 0 8 0"
+                                                 Grid.RowSpan="2">
+                                                <Ellipse.Fill>
+                                                    <ImageBrush ImageSource="{x:Bind Path=Cover,Mode=OneWay,Converter={StaticResource imageConvert2},ConverterParameter='42w'}"></ImageBrush>
+                                                </Ellipse.Fill>
+                                            </Ellipse>
+                                            <TextBlock Grid.Column="1" Text="{x:Bind Title}"></TextBlock>
+
+                                            <mucx:InfoBadge Grid.Column="2" 
+                                                        Grid.Row="0" 
+                                                        Value="{x:Bind UnreadMsgCount,Mode=OneWay}" 
+                                                        Visibility="{x:Bind HasUnreadMsg,Mode=OneWay}"/>
+
+                                            <TextBlock Grid.Column="1" 
+                                                   Grid.ColumnSpan="2" 
+                                                   Grid.Row="1" 
+                                                   TextTrimming="CharacterEllipsis"
+                                                   TextWrapping="NoWrap"
+                                                   Text="{x:Bind LastMsg.DisplayText,Mode=OneWay}"></TextBlock>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                                <ListView.Footer>
+                                    <StackPanel>
+                                        <HyperlinkButton Click="LoadMore_OnClick" Visibility="{x:Bind Path=m_viewModel.HasMoreContexts,Mode=OneWay}" Foreground="Gray" HorizontalAlignment="Center" >
+                                            <TextBlock>加载更多</TextBlock>
+                                        </HyperlinkButton>
+                                        <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.ChatContextLoading,Mode=OneWay}"></ProgressRing>
+                                    </StackPanel>
+                                </ListView.Footer>
+                            </ListView>
+                        </ScrollViewer>
+
+                        <controls:RoundButton Visibility="{x:Bind Path=m_viewModel.ChatContextLoading,Mode=OneWay,Converter={StaticResource display}}"
+                                              VerticalAlignment="Bottom" 
+                                              Click="RefreshContexts_OnClick"
+                                              Padding="12" Margin="12" HorizontalAlignment="Right">
+                            <SymbolIcon Symbol="Refresh" Foreground="White"></SymbolIcon>
+                        </controls:RoundButton>
+                    </Grid>
+                    <Grid Grid.Column="1" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid Margin="0 0 0 8">
+                            <TextBlock HorizontalAlignment="Center" HorizontalTextAlignment="Center" Text="{x:Bind m_viewModel.SelectedChatContext.Title,Mode=OneWay}"></TextBlock>
+                        </Grid>
+                        <ListView x:Name="ChatMessageListView" 
+                                Grid.Row="1"
+                                ItemTemplateSelector="{StaticResource ChatMessageDataTemplateSelector}"
+                                ItemsSource="{x:Bind m_viewModel.ChatMessages,Mode=OneWay}">
+                            <ListView.Header>
+                                <StackPanel>
+                                    <HyperlinkButton Click="LoadMoreMessages_OnClick"  Visibility="{x:Bind Path=m_viewModel.HasMoreMessages,Mode=OneWay}" Foreground="Gray" HorizontalAlignment="Center" >
+                                        <TextBlock>加载更多</TextBlock>
+                                    </HyperlinkButton>
+                                    <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.ChatMessagesLoading,Mode=OneWay}"></ProgressRing>
+                                </StackPanel>
+                            </ListView.Header>
+                        </ListView>
+                        <controls:RoundButton Grid.Row="1" 
+                                              Visibility="{x:Bind Path=m_viewModel.ChatContextLoading,Mode=OneWay,Converter={StaticResource display}}" 
+                                              VerticalAlignment="Bottom" 
+                                              Click="RefreshMessages_OnClick"
+                                              Padding="12" Margin="12" HorizontalAlignment="Right">
+                            <SymbolIcon Symbol="Refresh" Foreground="White"></SymbolIcon>
+                        </controls:RoundButton>
+                    </Grid>
+                </Grid>
+            </PivotItem>
+        </Pivot>
+        <Button Click="OpenWeb_OnClick" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="8 16" FontSize="12">浏览器打开</Button>
+    </Grid>
+</local:BasePage>

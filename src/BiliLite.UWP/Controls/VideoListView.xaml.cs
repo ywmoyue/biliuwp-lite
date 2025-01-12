@@ -1,4 +1,9 @@
-﻿using System;
+﻿using AutoMapper;
+using BiliLite.Extensions;
+using BiliLite.Models.Common.Video;
+using BiliLite.Services.Biz;
+using BiliLite.ViewModels.Video;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -6,11 +11,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
-using AutoMapper;
-using BiliLite.Extensions;
-using BiliLite.Models.Common.Video;
-using BiliLite.Services.Biz;
-using BiliLite.ViewModels.Video;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -28,7 +28,7 @@ namespace BiliLite.Controls
             m_viewModel = viewModel;
             m_mapper = mapper;
             m_mediaListService = mediaListService;
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         public event EventHandler<VideoListItem> OnSelectionChanged;
