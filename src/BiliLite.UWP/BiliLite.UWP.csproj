@@ -139,9 +139,13 @@
     <Compile Include="Controls\AttentionButton.xaml.cs">
       <DependentUpon>AttentionButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ChatMessages\ChatMessageTemplate.xaml.cs">
+      <DependentUpon>ChatMessageTemplate.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Common\PieControl.xaml.cs">
       <DependentUpon>PieControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\DataTemplateSelectors\ChatMessageDataTemplateSelector.cs" />
     <Compile Include="Controls\DataTemplateSelectors\UserDynamicItemV2DataTemplateSelector.cs" />
     <Compile Include="Controls\Dynamic\DynamicItemV2Control.xaml.cs">
       <DependentUpon>DynamicItemV2Control.xaml</DependentUpon>
@@ -1204,6 +1208,10 @@
     <Page Include="Controls\Carousel\Carousel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ChatMessages\ChatMessageTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\CommentControl.xaml">
       <SubType>Designer</SubType>

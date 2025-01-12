@@ -9,6 +9,8 @@ public class ChatMessage
     private string m_contentStr;
     private IChatMsgContent m_chatMsgContent;
 
+    public string ChatMessageId { get; set; }
+
     public string ContentStr
     {
         get => m_contentStr;
@@ -25,6 +27,21 @@ public class ChatMessage
                         var msgContent = JsonConvert.DeserializeObject<TextChatMessageContent>(m_contentStr);
                         m_chatMsgContent = msgContent;
                         DisplayText = msgContent.Content;
+                        break;
+                    }
+                    case ChatMsgType.Image:
+                    case ChatMsgType.CustomEmote:
+                    {
+                        var msgContent = JsonConvert.DeserializeObject<ImageChatMessageContent>(m_contentStr);
+                        m_chatMsgContent = msgContent;
+                        DisplayText = "[图片]";
+                        break;
+                    }
+                    case ChatMsgType.Notification:
+                    {
+                        var msgContent = JsonConvert.DeserializeObject<NotificationChatMessageContent>(m_contentStr);
+                        m_chatMsgContent = msgContent;
+                        DisplayText = msgContent.Title;
                         break;
                     }
                     default:
@@ -50,6 +67,10 @@ public class ChatMessage
 
     public TextChatMessageContent TextContent => m_chatMsgContent as TextChatMessageContent;
 
+    public NotificationChatMessageContent NotificationContent => m_chatMsgContent as NotificationChatMessageContent;
+
+    public ImageChatMessageContent ImageContent => m_chatMsgContent as ImageChatMessageContent;
+
     public string UserId { get; set; }
 
     public string Face { get; set; }
@@ -57,8 +78,6 @@ public class ChatMessage
     public string UserName { get; set; }
 
     public bool IsSelf { get; set; }
-
-    public int IsSelfColumn => IsSelf ? 1 : 0;
 
     public ChatMsgType MsgType { get; set; }
 

@@ -24,6 +24,8 @@ public class NotificationChatMessageContent : IChatMsgContent
     [JsonProperty("jump_text")]
     public string JumpText { get; set; }
 
+    public bool ShowJumpBtn => !string.IsNullOrEmpty(JumpText);
+
     /// <summary>
     /// 按钮1跳转链接。若按钮1不存在则为空。
     /// </summary>
@@ -42,6 +44,8 @@ public class NotificationChatMessageContent : IChatMsgContent
     [JsonProperty("jump_text_2")]
     public string JumpText2 { get; set; }
 
+    public bool ShowJumpBtn2 => !string.IsNullOrEmpty(JumpText2);
+
     /// <summary>
     /// 按钮2跳转链接。若按钮2不存在则为空。
     /// </summary>
@@ -53,6 +57,8 @@ public class NotificationChatMessageContent : IChatMsgContent
     /// </summary>
     [JsonProperty("jump_text_3")]
     public string JumpText3 { get; set; }
+
+    public bool ShowJumpBtn3 => !string.IsNullOrEmpty(JumpText3);
 
     /// <summary>
     /// 按钮3跳转链接。若按钮3不存在则为空。

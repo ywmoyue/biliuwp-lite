@@ -30,4 +30,7 @@ public class ChatContextViewModel : BaseViewModel
 
     [DoNotNotify]
     public int Type { get; set; }
+
+    [DoNotNotify]
+    public long Time { get; set; }
 }

@@ -208,6 +208,9 @@ namespace BiliLite.Extensions
                     .ForMember(dest => dest.Type,
                         opt => opt.MapFrom(src =>
                             src.SessionType))
+                    .ForMember(dest => dest.Time,
+                        opt => opt.MapFrom(src =>
+                            src.SessionTs))
                     .ForMember(dest => dest.FromUserId,
                         opt => opt.MapFrom(src =>
                             src.LastMsg.SenderUid));
@@ -217,6 +220,9 @@ namespace BiliLite.Extensions
                     .ForMember(dest => dest.UserId,
                         opt => opt.MapFrom(src =>
                             src.SenderUid))
+                    .ForMember(dest => dest.ChatMessageId,
+                        opt => opt.MapFrom(src =>
+                            src.MsgSeqno))
                     .ForMember(dest => dest.ContentStr,
                         opt => opt.MapFrom(src =>
                             src.Content));
