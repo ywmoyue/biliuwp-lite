@@ -139,13 +139,20 @@ namespace BiliLite.Pages
                 }
                 else
                 {
-                    var par = e.Parameter as UserInfoParameter;
-                    if (par == null)
+                    if (e.Parameter is long userId)
                     {
-                        par = JsonConvert.DeserializeObject<UserInfoParameter>(JsonConvert.SerializeObject(e.Parameter));
+                        mid = userId.ToString();
                     }
-                    mid = par.Mid;
-                    tabIndex = (int)par.Tab;
+                    else
+                    {
+                        var par = e.Parameter as UserInfoParameter;
+                        if (par == null)
+                        {
+                            par = JsonConvert.DeserializeObject<UserInfoParameter>(JsonConvert.SerializeObject(e.Parameter));
+                        }
+                        mid = par.Mid;
+                        tabIndex = (int)par.Tab;
+                    }
                 }
 
                 m_viewModel.Mid = mid;
