@@ -210,7 +210,7 @@
 
         <controls:SettingsExpander Header="图片圆角半径"
                                    Description="重启生效"
-                                   IsExpanded="True">
+                                   IsExpanded="True" Visibility="Collapsed">
             <controls:SettingsExpander.HeaderIcon>
                 <font:FontAwesome Icon="Solid_Images"></font:FontAwesome>
             </controls:SettingsExpander.HeaderIcon>
