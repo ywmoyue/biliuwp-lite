@@ -1,7 +1,7 @@
 {
-  "version": "4.7.10",
-  "version_num": 40710,
-  "version_desc": "更新内容:\r\n\r\n- 支持快捷键切换播放速度 \r\n\r\n- 支持启动应用时打开上次的标签页 \r\n\r\n- 首页动画页、直播页、影视页支持触摸板横向触摸滑动 \r\n\r\n- 直播间优化  \r\n\r\n- 默认排序方式改为时间倒序（仅支持启用下载索引时） \r\n\r\n- 打开下载页无正在下载视频时直接进入已下载视频tab \r\n\r\n- 首页动态页实现页面切换 \r\n\r\n- 更新sdk \r\n\r\n- 长时间暂停后检测视频地址是否有效，无效则刷新 \r\n\r\n- 修复视频详情页滚动到当前项错误问题\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.7.12",
+  "version_num": 40712,
+  "version_desc": "公告:\r\n\r\n- B站大会员新条款可能影响本App,请知悉:https://github.com/ywmoyue/biliuwp-lite/discussions/980\r\n\r\n\r\n\r\n更新内容:\r\n\r\n- 初步实现消息页，替换原有WebView打开消息页 \r\n\r\n- 简化安装教程文档 \r\n\r\n- 修复 Github action 编译失败 \r\n\r\n- 修复无法进入个人空间 \r\n\r\n- 修复直播间表情按钮遮盖文本输入清除按钮 \r\n\r\n- 修复编译警告XDG0066\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
