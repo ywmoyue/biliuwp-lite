@@ -1,7 +1,6 @@
-﻿using BiliLite.Models.Common.Player;
+﻿using BiliLite.Models.Common;
+using BiliLite.Models.Common.Player;
 using System.Collections.Generic;
-using System.Linq;
-using BiliLite.Models.Common;
 
 namespace BiliLite.Services
 {
@@ -21,15 +20,17 @@ namespace BiliLite.Services
 
         private List<PlaySpeedMenuItem> GetDefaultPlaySpeedMenu()
         {
-            return new List<PlaySpeedMenuItem>()
+            return [.. new List<PlaySpeedMenuItem>()
             {
-                new PlaySpeedMenuItem(0.5),
-                new PlaySpeedMenuItem(0.75),
-                new PlaySpeedMenuItem(1.0),
-                new PlaySpeedMenuItem(1.25),
-                new PlaySpeedMenuItem(1.5),
-                new PlaySpeedMenuItem(2.0),
-            }.OrderByDescending(x => x.Value).ToList();
+                new(0.25),
+                new(0.5),
+                new(0.75),
+                new(1.0),
+                new(1.25),
+                new(1.5),
+                new(1.75),
+                new(2.0),
+            }];
         }
     }
 }
