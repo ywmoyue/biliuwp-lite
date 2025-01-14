@@ -1,50 +1,48 @@
-﻿using BiliLite.Modules;
+﻿using Atelier39;
+using BiliLite.Dialogs;
+using BiliLite.Extensions;
+using BiliLite.Models.Common;
+using BiliLite.Models.Common.Danmaku;
+using BiliLite.Models.Common.Player;
+using BiliLite.Models.Common.Video;
+using BiliLite.Models.Common.Video.PlayUrlInfos;
+using BiliLite.Modules;
+using BiliLite.Modules.Player;
+using BiliLite.Services;
+using BiliLite.Services.Interfaces;
+using BiliLite.ViewModels;
+using BiliLite.ViewModels.Settings;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.Geometry;
+using Microsoft.Graphics.Canvas.Text;
 using NSDanmaku.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.Graphics.Display;
+using Windows.Graphics.Imaging;
 using Windows.Media;
+using Windows.Storage;
+using Windows.Storage.Streams;
+using Windows.System.Display;
+using Windows.UI;
+using Windows.UI.Input;
 using Windows.UI.Popups;
+using Windows.UI.Text;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.System.Display;
-using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.Graphics.Imaging;
-using Windows.Graphics.Display;
-using System.Text.RegularExpressions;
-using Windows.UI.Core;
-using BiliLite.Dialogs;
-using BiliLite.Modules.Player;
-using Microsoft.Graphics.Canvas;
-using Microsoft.Graphics.Canvas.Geometry;
-using Microsoft.Graphics.Canvas.Text;
-using Windows.UI;
-using Windows.Storage.Streams;
-using Windows.UI.Text;
-using BiliLite.Models.Requests.Api;
-using BiliLite.Services;
-using BiliLite.Models.Common;
-using BiliLite.Extensions;
-using BiliLite.Models.Common.Video;
-using Windows.UI.Input;
-using Atelier39;
-using BiliLite.Models.Common.Danmaku;
-using BiliLite.Models.Common.Player;
-using BiliLite.Models.Common.Video.PlayUrlInfos;
-using BiliLite.Services.Interfaces;
-using BiliLite.ViewModels;
-using BiliLite.ViewModels.Settings;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.Extensions.DependencyInjection;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -552,17 +550,7 @@ namespace BiliLite.Controls
                 Player.SetRatioMode(PlayerSettingRatio.SelectedIndex);
             });
             // 播放倍数
-            var speeds = m_playSpeedMenuService.MenuItems
-                .Select(x => x.Value)
-                .ToList();
-            BottomCBSpeed.SelectedIndex = speeds
-                .IndexOf(SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d));
-            Player.SetRate(SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d));
-            BottomCBSpeed.SelectionChanged += new SelectionChangedEventHandler((e, args) =>
-            {
-                SettingService.SetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, speeds[BottomCBSpeed.SelectedIndex]);
-                Player.SetRate(speeds[BottomCBSpeed.SelectedIndex]);
-            });
+            InitPlaySpeed();
 
             _autoPlay = SettingService.GetValue<bool>(SettingConstants.Player.AUTO_PLAY, false);
             //A-B播放
@@ -946,8 +934,8 @@ namespace BiliLite.Controls
                 else
                 {
                     playUrlInfo = info;
-                    SetSoundQuality();
-                    SetQuality();
+                    InitSoundQuality();
+                    InitQuality();
                 }
             }
 
@@ -1222,8 +1210,8 @@ namespace BiliLite.Controls
                 else
                 {
                     playUrlInfo = info;
-                    SetSoundQuality();
-                    SetQuality();
+                    InitSoundQuality();
+                    InitQuality();
                 }
             }
         }
@@ -1365,7 +1353,7 @@ namespace BiliLite.Controls
             {
                 return false;
             }
-            BottomCBQuality.Visibility = Visibility.Collapsed;
+            BottomBtnQuality.Visibility = Visibility.Collapsed;
 
             await PlayLocalFile();
             return true;
@@ -1385,23 +1373,109 @@ namespace BiliLite.Controls
             return info;
         }
 
-        private void SetSoundQuality()
+        private void InitSoundQuality()
         {
-            BottomSoundQuality.ItemsSource = playUrlInfo.AudioQualites;
-            BottomSoundQuality.SelectionChanged -= BottomSoundQuality_SelectionChanged;
-            BottomSoundQuality.SelectedItem = playUrlInfo.CurrentAudioQuality;
-            BottomSoundQuality.SelectionChanged += BottomSoundQuality_SelectionChanged;
+            MinSoundQuality.Text = playUrlInfo.AudioQualites[0].QualityName;
+            MaxSoundQuality.Text = playUrlInfo.AudioQualites[playUrlInfo.AudioQualites.Count - 1].QualityName;
+
+            BottomBtnSoundQuality.Content = playUrlInfo.CurrentAudioQuality.QualityName;
+            SliderSoundQuality.Maximum = playUrlInfo.AudioQualites.Count - 1;
+            SliderSoundQuality.Value = playUrlInfo.AudioQualites.IndexOf(playUrlInfo.CurrentAudioQuality);
+
             // ChangeQuality(current_quality_info, playUrlInfo.CurrentAudioQuality).RunWithoutAwait();
         }
 
-        private void SetQuality()
+        private async void SliderSoundQuality_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            BottomCBQuality.ItemsSource = playUrlInfo.Qualites;
-            BottomCBQuality.SelectionChanged -= BottomCBQuality_SelectionChanged;
-            BottomCBQuality.SelectedItem = playUrlInfo.CurrentQuality;
-            //SettingService.SetValue<int>(SettingConstants.Player.DEFAULT_QUALITY, info.data.current.quality);
-            BottomCBQuality.SelectionChanged += BottomCBQuality_SelectionChanged;
+            _postion = Player.Position;
+            _autoPlay = Player.PlayState == PlayState.Playing;
+
+            var data = playUrlInfo.AudioQualites[(int)SliderSoundQuality.Value];
+            SettingService.SetValue<int>(SettingConstants.Player.DEFAULT_SOUND_QUALITY, data.QualityID);
+            await ChangeQuality(current_quality_info, data);
+            BottomBtnSoundQuality.Content = data.QualityName;
+        }
+
+        private void InitQuality()
+        {
+            MinQuality.Text = playUrlInfo.Qualites[0].QualityName;
+            MaxQuality.Text = playUrlInfo.Qualites[playUrlInfo.Qualites.Count - 1].QualityName;
+
+            BottomBtnQuality.Content = playUrlInfo.CurrentQuality.QualityName;
+            SliderQuality.Maximum = playUrlInfo.Qualites.Count - 1;
+            SliderQuality.Value = playUrlInfo.Qualites.IndexOf(playUrlInfo.CurrentQuality);
+
             ChangeQuality(playUrlInfo.CurrentQuality, playUrlInfo.CurrentAudioQuality).RunWithoutAwait();
+        }
+
+        private async void SliderQuality_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            _postion = Player.Position;
+            _autoPlay = Player.PlayState == PlayState.Playing;
+
+            var data = playUrlInfo.Qualites[(int)SliderQuality.Value];
+            SettingService.SetValue<int>(SettingConstants.Player.DEFAULT_QUALITY, data.QualityID);
+            await ChangeQuality(data, current_audio_quality_info);
+            BottomBtnQuality.Content = data.QualityName;
+        }
+
+        private void InitPlaySpeed()
+        {
+            MinPlaySpeed.Text = m_playSpeedMenuService.MenuItems[0].Content;
+            MaxPlaySpeed.Text = m_playSpeedMenuService.MenuItems[m_playSpeedMenuService.MenuItems.Count - 1].Content;
+            BottomBtnPlaySpeed.Content = $"{SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d)}x";
+            SliderPlaySpeed.Value = SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d);
+
+            Player.SetRate(SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d));
+        }
+
+        private void SliderPlaySpeed_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            SettingService.SetValue(SettingConstants.Player.DEFAULT_VIDEO_SPEED, SliderPlaySpeed.Value);
+
+            Player.SetRate(SliderPlaySpeed.Value);
+            BottomBtnPlaySpeed.Content = $"{SliderPlaySpeed.Value}x";
+        }
+
+        // 快捷键减速播放
+        public void SlowDown()
+        {
+            //if (SliderQuality.Value == 0)
+            //{
+            //    Notify.ShowMessageToast("不能再慢啦");
+            //    return;
+            //}
+
+            //SliderQuality.Value += 1;
+            //m_playerToastService.Show(PlayerToastService.SPEED_KEY, m_playSpeedMenuService.MenuItems[SliderQuality.Value].Content);
+        }
+
+        // 快捷键加速播放
+        public void FastUp()
+        {
+            //if (BottomCBSpeed.SelectedIndex == 0)
+            //{
+            //    Notify.ShowMessageToast("不能再快啦");
+            //    return;
+            //}
+            //BottomCBSpeed.SelectedIndex -= 1;
+            //m_playerToastService.Show(PlayerToastService.SPEED_KEY, (BottomCBSpeed.SelectedItem as PlaySpeedMenuItem).Content);
+        }
+
+        // 快捷键获取播放速度
+        public double GetPlaySpeed()
+        {
+            //var value = (double)BottomCBSpeed.SelectedValue;
+            //return value;
+            return 1;
+        }
+
+        // 快捷键设置播放速度
+        public void SetPlaySpeed(double speed)
+        {
+            //var speeds = BottomCBSpeed.ItemsSource as List<PlaySpeedMenuItem>;
+            //var index = speeds.Select(x => x.Value).IndexOf(speed);
+            //BottomCBSpeed.SelectedIndex = index;
         }
 
         private async Task PlayLocalFile()
@@ -2187,34 +2261,6 @@ namespace BiliLite.Controls
             SplitView.IsPaneOpen = true;
         }
 
-        private async void BottomSoundQuality_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (BottomSoundQuality.SelectedItem == null)
-            {
-                return;
-            }
-
-            _postion = Player.Position;
-            var data = BottomSoundQuality.SelectedItem as BiliDashAudioPlayUrlInfo;
-            SettingService.SetValue<int>(SettingConstants.Player.DEFAULT_SOUND_QUALITY, data.QualityID);
-            _autoPlay = Player.PlayState == PlayState.Playing;
-            await ChangeQuality(current_quality_info, data);
-        }
-
-        private async void BottomCBQuality_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (BottomCBQuality.SelectedItem == null)
-            {
-                return;
-            }
-
-            _postion = Player.Position;
-            var data = BottomCBQuality.SelectedItem as BiliPlayUrlInfo;
-            SettingService.SetValue<int>(SettingConstants.Player.DEFAULT_QUALITY, data.QualityID);
-            _autoPlay = Player.PlayState == PlayState.Playing;
-            await ChangeQuality(data, current_audio_quality_info);
-        }
-
         private void BottomBtnPause_Click(object sender, RoutedEventArgs e)
         {
             if (Player.Opening)
@@ -2777,45 +2823,6 @@ namespace BiliLite.Controls
             await CaptureVideoCore();
         }
 
-        // 减速播放
-        public void SlowDown()
-        {
-            if (BottomCBSpeed.SelectedIndex == m_playSpeedMenuService.MenuItems.Count - 1)
-            {
-                Notify.ShowMessageToast("不能再慢啦");
-                return;
-            }
-
-            BottomCBSpeed.SelectedIndex += 1;
-            m_playerToastService.Show(PlayerToastService.SPEED_KEY, (BottomCBSpeed.SelectedItem as PlaySpeedMenuItem).Content);
-        }
-
-        // 加速播放
-        public void FastUp()
-        {
-            if (BottomCBSpeed.SelectedIndex == 0)
-            {
-                Notify.ShowMessageToast("不能再快啦");
-                return;
-            }
-            BottomCBSpeed.SelectedIndex -= 1;
-            m_playerToastService.Show(PlayerToastService.SPEED_KEY, (BottomCBSpeed.SelectedItem as PlaySpeedMenuItem).Content);
-        }
-
-        public double GetPlaySpeed()
-        {
-            var value = (double)BottomCBSpeed.SelectedValue;
-            return value;
-        }
-
-        // 设置播放速度
-        public void SetPlaySpeed(double speed)
-        {
-            var speeds = BottomCBSpeed.ItemsSource as List<PlaySpeedMenuItem>;
-            var index = speeds.Select(x => x.Value).IndexOf(speed);
-            BottomCBSpeed.SelectedIndex = index;
-        }
-
         public void GotoLastVideo()
         {
             if (EpisodeList.SelectedIndex == 0)
@@ -2880,8 +2887,8 @@ namespace BiliLite.Controls
                     else
                     {
                         playUrlInfo = info;
-                        SetSoundQuality();
-                        SetQuality();
+                        InitSoundQuality();
+                        InitQuality();
                     }
                     Notify.ShowMessageToast("检测到视频地址失效，已自动刷新");
                     m_startTime = DateTime.Now;
