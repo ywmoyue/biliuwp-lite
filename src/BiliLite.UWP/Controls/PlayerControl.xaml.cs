@@ -1440,42 +1440,35 @@ namespace BiliLite.Controls
         // 快捷键减速播放
         public void SlowDown()
         {
-            //if (SliderQuality.Value == 0)
-            //{
-            //    Notify.ShowMessageToast("不能再慢啦");
-            //    return;
-            //}
+            if (SliderPlaySpeed.Value == 0.25)
+            {
+                Notify.ShowMessageToast("不能再慢啦");
+                return;
+            }
 
-            //SliderQuality.Value += 1;
-            //m_playerToastService.Show(PlayerToastService.SPEED_KEY, m_playSpeedMenuService.MenuItems[SliderQuality.Value].Content);
+            SliderPlaySpeed.Value -= 0.25;
+            m_playerToastService.Show(PlayerToastService.SPEED_KEY, $"{SliderPlaySpeed.Value}x");
         }
 
         // 快捷键加速播放
         public void FastUp()
         {
-            //if (BottomCBSpeed.SelectedIndex == 0)
-            //{
-            //    Notify.ShowMessageToast("不能再快啦");
-            //    return;
-            //}
-            //BottomCBSpeed.SelectedIndex -= 1;
-            //m_playerToastService.Show(PlayerToastService.SPEED_KEY, (BottomCBSpeed.SelectedItem as PlaySpeedMenuItem).Content);
+            if (SliderPlaySpeed.Value == 2)
+            {
+                Notify.ShowMessageToast("不能再快啦");
+                return;
+            }
+            SliderPlaySpeed.Value += 0.25;
+            m_playerToastService.Show(PlayerToastService.SPEED_KEY, $"{SliderPlaySpeed.Value}x");
         }
 
         // 快捷键获取播放速度
-        public double GetPlaySpeed()
-        {
-            //var value = (double)BottomCBSpeed.SelectedValue;
-            //return value;
-            return 1;
-        }
+        public double GetPlaySpeed() => SliderPlaySpeed.Value;
 
         // 快捷键设置播放速度
         public void SetPlaySpeed(double speed)
         {
-            //var speeds = BottomCBSpeed.ItemsSource as List<PlaySpeedMenuItem>;
-            //var index = speeds.Select(x => x.Value).IndexOf(speed);
-            //BottomCBSpeed.SelectedIndex = index;
+            SliderPlaySpeed.Value = speed;
         }
 
         private async Task PlayLocalFile()
