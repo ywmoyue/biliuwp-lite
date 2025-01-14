@@ -1431,10 +1431,15 @@ namespace BiliLite.Controls
 
         private void SliderPlaySpeed_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            SettingService.SetValue(SettingConstants.Player.DEFAULT_VIDEO_SPEED, SliderPlaySpeed.Value);
+            if (SliderPlaySpeed.Value <= 0)
+            {
+                SliderPlaySpeed.Value = 0.25;
+            }
 
             Player.SetRate(SliderPlaySpeed.Value);
             BottomBtnPlaySpeed.Content = $"{SliderPlaySpeed.Value}x";
+
+            SettingService.SetValue(SettingConstants.Player.DEFAULT_VIDEO_SPEED, SliderPlaySpeed.Value);
         }
 
         // 快捷键减速播放
