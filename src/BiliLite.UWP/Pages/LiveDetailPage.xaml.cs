@@ -988,13 +988,13 @@ namespace BiliLite.Pages
 
         private async void DanmuText_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            if (string.IsNullOrEmpty(sender.Text))
+            if (string.IsNullOrEmpty(m_viewModel.DanmakuInput))
             {
                 Notify.ShowMessageToast("弹幕内容不能为空");
                 return;
             }
-            var result = await m_liveRoomViewModel.SendDanmu(sender.Text);
-            if(result) sender.Text = "";
+            var result = await m_liveRoomViewModel.SendDanmu(m_viewModel.DanmakuInput);
+            if(result) m_viewModel.DanmakuInput = "";
 
             await m_liveRoomViewModel.GetEmoticons(); // 长期不看的观众即使在粉丝团也无法发表情, 此时发弹幕即可解锁
         }
