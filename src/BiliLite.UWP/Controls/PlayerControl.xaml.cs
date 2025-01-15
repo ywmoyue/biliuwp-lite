@@ -40,6 +40,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
@@ -48,7 +49,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace BiliLite.Controls
 {
-    public sealed partial class PlayerControl : UserControl, IDisposable
+    public sealed partial class PlayerControl : UserControl, IDisposable, IValueConverter
     {
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly bool m_useNsDanmaku = true;
@@ -404,7 +405,7 @@ namespace BiliLite.Controls
                 m_danmakuController.SetDensity((int)DanmuSettingMaxNum.Value);
                 if (!m_useNsDanmaku)
                 {
-                    var segIndex = Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                    var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
                     if (segIndex <= 0) segIndex = 1;
                     await LoadDanmaku(segIndex);
                 }
@@ -414,10 +415,10 @@ namespace BiliLite.Controls
             DanmuSettingShieldLevel.Value = SettingService.GetValue<int>(SettingConstants.VideoDanmaku.SHIELD_LEVEL, 0);
             DanmuSettingShieldLevel.ValueChanged += async (e, args) =>
             {
-                SettingService.SetValue<int>(SettingConstants.VideoDanmaku.SHIELD_LEVEL, Convert.ToInt32(DanmuSettingShieldLevel.Value));
+                SettingService.SetValue<int>(SettingConstants.VideoDanmaku.SHIELD_LEVEL, System.Convert.ToInt32(DanmuSettingShieldLevel.Value));
                 if (!m_useNsDanmaku)
                 {
-                    var segIndex = Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                    var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
                     if (segIndex <= 0) segIndex = 1;
                     await LoadDanmaku(segIndex);
                 }
@@ -457,7 +458,7 @@ namespace BiliLite.Controls
                 SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.MERGE, DanmuSettingMerge.IsOn);
                 if (!m_useNsDanmaku)
                 {
-                    var segIndex = Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                    var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
                     if (segIndex <= 0) segIndex = 1;
                     await LoadDanmaku(segIndex);
                 }
@@ -469,7 +470,7 @@ namespace BiliLite.Controls
                 SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.DISABLE_COLORFUL, DanmuSettingDisableColorful.IsOn);
                 if (!m_useNsDanmaku)
                 {
-                    var segIndex = Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                    var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
                     if (segIndex <= 0) segIndex = 1;
                     await LoadDanmaku(segIndex);
                 }
@@ -679,7 +680,7 @@ namespace BiliLite.Controls
             {
                 var needDistinct = DanmuSettingMerge.IsOn;
                 var level = DanmuSettingShieldLevel.Value;
-                var max = Convert.ToInt32(DanmuSettingMaxNum.Value);
+                var max = System.Convert.ToInt32(DanmuSettingMaxNum.Value);
                 //云屏蔽
                 danmakus = danmakus.Where(x => x.Weight >= level);
                 //去重
@@ -796,8 +797,8 @@ namespace BiliLite.Controls
                     showControlsFlag++;
                 }
             }
-            var position = Convert.ToInt32(Player.Position);
-            var segIndex = Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+            var position = System.Convert.ToInt32(Player.Position);
+            var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
             if (segIndex <= 0) segIndex = 1;
             if (danmakuLoadedSegment != null && !danmakuLoadedSegment.Contains(segIndex))
             {
@@ -825,7 +826,7 @@ namespace BiliLite.Controls
 
             var needDistinct = DanmuSettingMerge.IsOn;
             var level = DanmuSettingShieldLevel.Value;
-            var max = Convert.ToInt32(DanmuSettingMaxNum.Value);
+            var max = System.Convert.ToInt32(DanmuSettingMaxNum.Value);
 
             if (m_useNsDanmaku)
             {
@@ -1259,7 +1260,7 @@ namespace BiliLite.Controls
                     {
                         await LoadDanmaku(1);
                     }
-                    //var danmuList = (await danmakuParse.ParseBiliBili(Convert.ToInt64(CurrentPlayItem.cid)));
+                    //var danmuList = (await danmakuParse.ParseBiliBili(System.Convert.ToInt64(CurrentPlayItem.cid)));
                     ////await playerHelper.GetDanmaku(CurrentPlayItem.cid, 1) ;
                     //danmakuPool = danmuList.GroupBy(x=>x.time_s).ToDictionary(x => x.Key, x => x.ToList());
                     //TxtDanmuCount.Text = danmuList.Count.ToString();
@@ -1373,6 +1374,68 @@ namespace BiliLite.Controls
             return info;
         }
 
+        bool isSliderSoundQuality;
+        bool isSliderQuality;
+
+        private void BottomBtnSoundQuality_Click(object sender, RoutedEventArgs e)
+        {
+            isSliderSoundQuality = true;
+            isSliderQuality = false;
+        }
+
+        private void BottomBtnQuality_Click(object sender, RoutedEventArgs e)
+        {
+            isSliderSoundQuality = false;
+            isSliderQuality = true;
+        }
+
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is double sliderValue)
+            {
+                if (isSliderSoundQuality)
+                {
+                    return sliderValue switch
+                    {
+                        0 => playUrlInfo.AudioQualites[0].QualityName,
+                        1 => playUrlInfo.AudioQualites[1].QualityName,
+                        2 => playUrlInfo.AudioQualites[2].QualityName,
+                        3 => playUrlInfo.AudioQualites[3].QualityName,
+                        4 => playUrlInfo.AudioQualites[4].QualityName,
+                        5 => playUrlInfo.AudioQualites[5].QualityName,
+                        6 => playUrlInfo.AudioQualites[6].QualityName,
+                        7 => playUrlInfo.AudioQualites[7].QualityName,
+                        8 => playUrlInfo.AudioQualites[8].QualityName,
+                        9 => playUrlInfo.AudioQualites[9].QualityName,
+                        _ => sliderValue.ToString()
+                    };
+                }
+                if (isSliderQuality)
+                {
+                    return sliderValue switch
+                    {
+                        0 => playUrlInfo.Qualites[0].QualityName,
+                        1 => playUrlInfo.Qualites[1].QualityName,
+                        2 => playUrlInfo.Qualites[2].QualityName,
+                        3 => playUrlInfo.Qualites[3].QualityName,
+                        4 => playUrlInfo.Qualites[4].QualityName,
+                        5 => playUrlInfo.Qualites[5].QualityName,
+                        6 => playUrlInfo.Qualites[6].QualityName,
+                        7 => playUrlInfo.Qualites[7].QualityName,
+                        8 => playUrlInfo.Qualites[8].QualityName,
+                        9 => playUrlInfo.Qualites[9].QualityName,
+                        _ => sliderValue.ToString()
+                    };
+                }
+            }
+            return value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+
         private void InitSoundQuality()
         {
             MinSoundQuality.Text = playUrlInfo.AudioQualites[0].QualityName;
@@ -1381,6 +1444,7 @@ namespace BiliLite.Controls
             BottomBtnSoundQuality.Content = playUrlInfo.CurrentAudioQuality.QualityName;
             SliderSoundQuality.Maximum = playUrlInfo.AudioQualites.Count - 1;
             SliderSoundQuality.Value = playUrlInfo.AudioQualites.IndexOf(playUrlInfo.CurrentAudioQuality);
+            SliderSoundQuality.ThumbToolTipValueConverter = this;
 
             // ChangeQuality(current_quality_info, playUrlInfo.CurrentAudioQuality).RunWithoutAwait();
         }
@@ -1404,6 +1468,7 @@ namespace BiliLite.Controls
             BottomBtnQuality.Content = playUrlInfo.CurrentQuality.QualityName;
             SliderQuality.Maximum = playUrlInfo.Qualites.Count - 1;
             SliderQuality.Value = playUrlInfo.Qualites.IndexOf(playUrlInfo.CurrentQuality);
+            SliderQuality.ThumbToolTipValueConverter = this;
 
             ChangeQuality(playUrlInfo.CurrentQuality, playUrlInfo.CurrentAudioQuality).RunWithoutAwait();
         }
@@ -2723,10 +2788,10 @@ namespace BiliLite.Controls
             var color = "16777215";
             if (SendDanmakuColorBorder.Background != null)
             {
-                color = Convert.ToInt32((SendDanmakuColorBorder.Background as SolidColorBrush).Color.ToString().Replace("#FF", ""), 16).ToString();
+                color = System.Convert.ToInt32((SendDanmakuColorBorder.Background as SolidColorBrush).Color.ToString().Replace("#FF", ""), 16).ToString();
             }
 
-            var result = await playerHelper.SendDanmaku(CurrentPlayItem.avid, CurrentPlayItem.cid, SendDanmakuTextBox.Text, Convert.ToInt32(Player.Position), modeInt, color);
+            var result = await playerHelper.SendDanmaku(CurrentPlayItem.avid, CurrentPlayItem.cid, SendDanmakuTextBox.Text, System.Convert.ToInt32(Player.Position), modeInt, color);
             if (result)
             {
                 m_danmakuController.Add(new BiliDanmakuItem()

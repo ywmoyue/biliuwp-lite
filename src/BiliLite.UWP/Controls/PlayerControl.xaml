@@ -867,7 +867,7 @@
                                         </Button.Flyout>
                                     </Button>
 
-                                    <Button BorderThickness="0" Style="{StaticResource DefaultButtonStyle}" FontSize="18" x:Name="BottomBtnSoundQuality" Background="Transparent" Foreground="White" Padding="8" Height="48">
+                                    <Button Click="BottomBtnSoundQuality_Click" BorderThickness="0" Style="{StaticResource DefaultButtonStyle}" FontSize="18" x:Name="BottomBtnSoundQuality" Background="Transparent" Foreground="White" Padding="8" Height="48">
                                         <Button.Flyout>
                                             <Flyout>
                                                 <StackPanel Orientation="Horizontal">
@@ -882,7 +882,7 @@
                                         </Button.Flyout>
                                     </Button>
 
-                                    <Button BorderThickness="0" Style="{StaticResource DefaultButtonStyle}" FontSize="18" x:Name="BottomBtnQuality" Background="Transparent" Foreground="White" Padding="8" Height="48">
+                                    <Button Click="BottomBtnQuality_Click" BorderThickness="0" Style="{StaticResource DefaultButtonStyle}" FontSize="18" x:Name="BottomBtnQuality" Background="Transparent" Foreground="White" Padding="8" Height="48">
                                         <Button.Flyout>
                                             <Flyout>
                                                 <StackPanel Orientation="Horizontal">
