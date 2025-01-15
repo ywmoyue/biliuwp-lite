@@ -1438,6 +1438,11 @@ namespace BiliLite.Controls
 
         private void InitSoundQuality()
         {
+            if (playUrlInfo.AudioQualites.Count <= 1)
+            {
+                BottomBtnSoundQuality.IsEnabled = false;
+            }
+
             MinSoundQuality.Text = playUrlInfo.AudioQualites[0].QualityName;
             MaxSoundQuality.Text = playUrlInfo.AudioQualites[playUrlInfo.AudioQualites.Count - 1].QualityName;
 
@@ -1462,6 +1467,11 @@ namespace BiliLite.Controls
 
         private void InitQuality()
         {
+            if (playUrlInfo.Qualites.Count <= 1)
+            {
+                BottomBtnQuality.IsEnabled = false;
+            }
+
             MinQuality.Text = playUrlInfo.Qualites[0].QualityName;
             MaxQuality.Text = playUrlInfo.Qualites[playUrlInfo.Qualites.Count - 1].QualityName;
 
