@@ -6,7 +6,13 @@ using BiliLite.Services.Biz;
 using BiliLite.ViewModels.Messages;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.IO;
 using Windows.System;
+using BiliLite.Models.Requests.Api;
+using BiliLite.ViewModels;
+using BiliLite.Models.Common;
+using Windows.Storage.Pickers;
+using Windows.Storage;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -19,10 +25,12 @@ namespace BiliLite.Pages
     {
         private readonly MessagesService m_messagesService;
         private readonly MessagesViewModel m_viewModel;
+        private readonly EmoteViewModel m_emoteViewModel;
 
         public MessagesPage()
         {
             m_viewModel = App.ServiceProvider.GetRequiredService<MessagesViewModel>();
+            m_emoteViewModel = App.ServiceProvider.GetService<EmoteViewModel>();
             m_messagesService = App.ServiceProvider.GetRequiredService<MessagesService>();
             this.InitializeComponent();
         }
@@ -91,6 +99,50 @@ namespace BiliLite.Pages
         private async void OpenWeb_OnClick(object sender, RoutedEventArgs e)
         {
             await Launcher.LaunchUriAsync(new Uri("https://message.bilibili.com/"));
+        }
+
+        private async void SendButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            await m_messagesService.SendTextMsg(m_viewModel, m_viewModel.SelectedChatContext,
+                m_viewModel.ChatMessageInput);
+            ScrollToLatestMessage();
+        }
+
+        private async void BtnOpenFace_Click(object sender, RoutedEventArgs e)
+        {
+            FaceFlyout.ShowAt(sender as Button);
+            if (m_emoteViewModel.Packages == null || m_emoteViewModel.Packages.Count == 0)
+            {
+                await m_emoteViewModel.GetEmote(EmoteBusiness.reply);
+            }
+        }
+
+        private async void BtnSendImage_Click(object sender, RoutedEventArgs e)
+        {
+            var filePicker = new FileOpenPicker();
+            filePicker.FileTypeFilter.Add(".jpg");
+            filePicker.FileTypeFilter.Add(".png");
+            filePicker.FileTypeFilter.Add(".jpeg");
+            filePicker.FileTypeFilter.Add(".gif");
+            var file = await filePicker.PickSingleFileAsync();
+            if (file == null) return;
+            using var openFile = await file.OpenAsync(FileAccessMode.Read);
+            using var stream = openFile.AsStreamForRead();
+            var bin = new byte[stream.Length];
+
+            await stream.ReadAsync(bin, 0, bin.Length);
+            var fileInfo = new UploadFileInfo()
+            {
+                Data = bin,
+                FileName = file.Name,
+            };
+            await m_messagesService.SendImageMsg(m_viewModel, m_viewModel.SelectedChatContext, fileInfo);
+            ScrollToLatestMessage();
+        }
+
+        private void GridView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            m_viewModel.ChatMessageInput += (e.ClickedItem as EmotePackageItemModel).text.ToString();
         }
     }
 }

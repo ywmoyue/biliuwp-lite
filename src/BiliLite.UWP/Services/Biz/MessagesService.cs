@@ -7,12 +7,17 @@ using AutoMapper;
 using Bilibili.App.Dynamic.V2;
 using BiliLite.Extensions;
 using BiliLite.Models.Attributes;
+using BiliLite.Models.Common;
 using BiliLite.Models.Common.Msg;
+using BiliLite.Models.Common.Msg.MsgContent;
+using BiliLite.Models.Common.UserDynamic;
 using BiliLite.Models.Exceptions;
+using BiliLite.Models.Requests.Api;
 using BiliLite.Models.Requests.Api.User;
 using BiliLite.ViewModels.Messages;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 
 namespace BiliLite.Services.Biz
 {
@@ -20,15 +25,18 @@ namespace BiliLite.Services.Biz
     public class MessagesService : BaseBizService
     {
         private readonly MessageApi m_messageApi;
+        private readonly CommentApi m_commentApi;
         private readonly IMapper m_mapper;
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private string m_selfFace;
+        private string m_selfDevId = Guid.NewGuid().ToString();
         private long m_selfId;
 
         public MessagesService(IMapper mapper)
         {
             m_mapper = mapper;
             m_messageApi = new MessageApi();
+            m_commentApi = new CommentApi();
         }
 
         private async Task GetSelfInfo()
@@ -230,6 +238,91 @@ namespace BiliLite.Services.Biz
             {
                 HandleError(ex);
             }
+        }
+
+        public async Task<ChatMessage> SendTextMsg(MessagesViewModel viewModel, ChatContextViewModel chatContext, string text)
+        {
+            var message = new TextChatMessageContent()
+            {
+                Content = text,
+            };
+            return await SendMessageAsync(viewModel, chatContext, message, 1);
+        }
+
+        public async Task<ChatMessage> SendImageMsg(MessagesViewModel viewModel, ChatContextViewModel chatContext, UploadFileInfo fileInfo)
+        {
+            var imageResult = await UploadImage(fileInfo);
+
+            var message = new ImageChatMessageContent()
+            {
+                Url = imageResult.ImageUrl,
+                Height = imageResult.ImageHeight,
+                Width = imageResult.ImageWidth,
+                Size = imageResult.ImgSize,
+                Original = 1,
+                ImageType = fileInfo.FileName.GetImageTypeFromFileName(),
+            };
+            return await SendMessageAsync(viewModel, chatContext, message, 2);
+        }
+
+        private async Task<ChatMessage> SendMessageAsync(MessagesViewModel viewModel, ChatContextViewModel chatContext, object messageContent, int messageType)
+        {
+            try
+            {
+                var settings = new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                };
+
+                var content = JsonConvert.SerializeObject(messageContent, settings);
+                var api = m_messageApi.SendMsg(m_selfId.ToString(), chatContext.ChatContextId, chatContext.Type, messageType, content, m_selfDevId);
+                var results = await api.Request();
+                if (!results.status)
+                    throw new CustomizedErrorException(results.message);
+
+                var data = await results.GetData<JObject>();
+                var codeDic = new BiliSendMessageResultCode();
+                var msg = codeDic[data.code];
+                Notify.ShowMessageToast($"发送消息： {msg}");
+
+                if (!data.success)
+                {
+                    _logger.Error($"发送消息({data.code})： {msg}");
+                    return null;
+                }
+
+                var chatMessage = new ChatMessage
+                {
+                    UserId = m_selfId.ToString(),
+                    Face = m_selfFace,
+                    IsSelf = true,
+                    MsgType = messageType == 1 ? ChatMsgType.Text : ChatMsgType.Image,
+                    ChatMessageId = data.data["msg_key"].ToString(),
+                };
+                chatMessage.ContentStr = messageType == 1 ? data.data["msg_content"].ToString() : content;
+
+                viewModel.ChatMessages.Add(chatMessage);
+                viewModel.ChatMessageInput = "";
+
+                return chatMessage;
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+        private async Task<DynamicPicture> UploadImage(UploadFileInfo fileInfo)
+        {
+            var api = m_commentApi.UploadDraw(fileInfo, "im");
+            var result = await api.Request();
+            if (!result.status)
+                throw new CustomizedErrorException(result.message);
+            var uploadDrawResult = await result.GetData<DynamicPicture>();
+            if (!uploadDrawResult.success)
+                throw new CustomizedErrorException(uploadDrawResult.message);
+            return uploadDrawResult.data;
         }
     }
 }

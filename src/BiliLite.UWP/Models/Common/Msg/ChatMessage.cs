@@ -16,50 +16,8 @@ public class ChatMessage
         get => m_contentStr;
         set
         {
-            try
-            {
-                m_contentStr = value;
-
-                switch (MsgType)
-                {
-                    case ChatMsgType.Text:
-                    {
-                        var msgContent = JsonConvert.DeserializeObject<TextChatMessageContent>(m_contentStr);
-                        m_chatMsgContent = msgContent;
-                        DisplayText = msgContent.Content;
-                        break;
-                    }
-                    case ChatMsgType.Image:
-                    case ChatMsgType.CustomEmote:
-                    {
-                        var msgContent = JsonConvert.DeserializeObject<ImageChatMessageContent>(m_contentStr);
-                        m_chatMsgContent = msgContent;
-                        DisplayText = "[图片]";
-                        break;
-                    }
-                    case ChatMsgType.Notification:
-                    {
-                        var msgContent = JsonConvert.DeserializeObject<NotificationChatMessageContent>(m_contentStr);
-                        m_chatMsgContent = msgContent;
-                        DisplayText = msgContent.Title;
-                        break;
-                    }
-                    default:
-                    {
-                        var msgContent = new TextChatMessageContent()
-                        {
-                            Content = "暂不支持的消息格式"
-                        };
-                        m_chatMsgContent = msgContent;
-                        DisplayText = msgContent.Content;
-                        break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // content不一定是json对象
-            }
+            m_contentStr = value;
+            UpdateContent();
         }
     }
 
@@ -82,4 +40,50 @@ public class ChatMessage
     public ChatMsgType MsgType { get; set; }
 
     public string DisplayText { get; set; }
+
+    public void UpdateContent()
+    {
+        try
+        {
+            switch (MsgType)
+            {
+                case ChatMsgType.Text:
+                {
+                    var msgContent = JsonConvert.DeserializeObject<TextChatMessageContent>(m_contentStr);
+                    m_chatMsgContent = msgContent;
+                    DisplayText = msgContent.Content;
+                    break;
+                }
+                case ChatMsgType.Image:
+                case ChatMsgType.CustomEmote:
+                {
+                    var msgContent = JsonConvert.DeserializeObject<ImageChatMessageContent>(m_contentStr);
+                    m_chatMsgContent = msgContent;
+                    DisplayText = "[图片]";
+                    break;
+                }
+                case ChatMsgType.Notification:
+                {
+                    var msgContent = JsonConvert.DeserializeObject<NotificationChatMessageContent>(m_contentStr);
+                    m_chatMsgContent = msgContent;
+                    DisplayText = msgContent.Title;
+                    break;
+                }
+                default:
+                {
+                    var msgContent = new TextChatMessageContent()
+                    {
+                        Content = "暂不支持的消息格式"
+                    };
+                    m_chatMsgContent = msgContent;
+                    DisplayText = msgContent.Content;
+                    break;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // content不一定是json对象
+        }
+    }
 }

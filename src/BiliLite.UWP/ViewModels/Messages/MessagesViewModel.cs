@@ -28,5 +28,10 @@ namespace BiliLite.ViewModels.Messages
 
         [DoNotNotify]
         public string NewMsgId { get; set; }
+
+        public string ChatMessageInput { get; set; }
+
+        [DependsOn(nameof(ChatMessageInput))]
+        public int ChatMessageInputCount => ChatMessageInput?.Length ?? 0;
     }
 }
