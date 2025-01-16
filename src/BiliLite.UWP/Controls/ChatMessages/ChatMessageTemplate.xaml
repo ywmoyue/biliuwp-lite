@@ -9,6 +9,7 @@
                                                            NotificationTemplate="{StaticResource ChatMessageNotification}"
                                                            ImageTemplate="{StaticResource ChatMessageImage}"
                                                            TextTemplate="{StaticResource ChatMessageText}"
+                                                           RevokeTemplate="{StaticResource ChatMessageRevoke}"
                                                            OtherTemplate="{StaticResource ChatMessageOther}">
     </dataTemplateSelectors:ChatMessageDataTemplateSelector>
 
@@ -163,6 +164,23 @@
                 <Button Content="{Binding NotificationContent.JumpText3}" Visibility="{Binding NotificationContent.ShowJumpBtn3}" Click="NotificationMsgAction_OnClick" />
             </StackPanel>
         </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="ChatMessageRevoke" x:DataType="msg:ChatMessage">
+        <Border
+            Width="136"
+            Height="20"
+            CornerRadius="10"
+            Background="LightGray"
+            BorderThickness="0">
+            <!-- 文字内容 -->
+            <TextBlock
+                Text="{Binding RevokeContent.Text}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="12"
+                Foreground="Black"/>
+        </Border>
     </DataTemplate>
 
     <DataTemplate x:Key="ChatMessageOther">

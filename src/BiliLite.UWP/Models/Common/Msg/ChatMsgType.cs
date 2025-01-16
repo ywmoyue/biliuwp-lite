@@ -4,6 +4,7 @@ public enum ChatMsgType
 {
     Text = 1,
     Image = 2,
+    Revoke = 5,
     CustomEmote = 6,
     Share = 7,
     MiniProgram = 9,

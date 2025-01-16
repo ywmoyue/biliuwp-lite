@@ -181,6 +181,7 @@ namespace BiliLite.Services.Biz
                             chatMessage.IsSelf = true;
                             chatMessage.Face = m_selfFace;
                         }
+                        chatMessage.UpdateContent();
 
                         chatMessages.Insert(0, chatMessage);
                     }

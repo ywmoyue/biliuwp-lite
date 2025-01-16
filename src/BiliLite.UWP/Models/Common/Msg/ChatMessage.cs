@@ -6,20 +6,11 @@ namespace BiliLite.Models.Common.Msg;
 
 public class ChatMessage
 {
-    private string m_contentStr;
     private IChatMsgContent m_chatMsgContent;
 
     public string ChatMessageId { get; set; }
 
-    public string ContentStr
-    {
-        get => m_contentStr;
-        set
-        {
-            m_contentStr = value;
-            UpdateContent();
-        }
-    }
+    public string ContentStr { get; set; }
 
     public IChatMsgContent Content => m_chatMsgContent;
 
@@ -28,6 +19,8 @@ public class ChatMessage
     public NotificationChatMessageContent NotificationContent => m_chatMsgContent as NotificationChatMessageContent;
 
     public ImageChatMessageContent ImageContent => m_chatMsgContent as ImageChatMessageContent;
+
+    public RevokeChatMessageContent RevokeContent => m_chatMsgContent as RevokeChatMessageContent;
 
     public string UserId { get; set; }
 
@@ -49,7 +42,7 @@ public class ChatMessage
             {
                 case ChatMsgType.Text:
                 {
-                    var msgContent = JsonConvert.DeserializeObject<TextChatMessageContent>(m_contentStr);
+                    var msgContent = JsonConvert.DeserializeObject<TextChatMessageContent>(ContentStr);
                     m_chatMsgContent = msgContent;
                     DisplayText = msgContent.Content;
                     break;
@@ -57,14 +50,30 @@ public class ChatMessage
                 case ChatMsgType.Image:
                 case ChatMsgType.CustomEmote:
                 {
-                    var msgContent = JsonConvert.DeserializeObject<ImageChatMessageContent>(m_contentStr);
+                    var msgContent = JsonConvert.DeserializeObject<ImageChatMessageContent>(ContentStr);
                     m_chatMsgContent = msgContent;
                     DisplayText = "[图片]";
                     break;
                 }
+                case ChatMsgType.Revoke:
+                {
+                    var msgContent = ContentStr;
+                    var text = "对方撤回了一条消息";
+                    if (IsSelf)
+                    {
+                        text = "你撤回了一条消息";
+                    }
+                    m_chatMsgContent = new RevokeChatMessageContent()
+                    {
+                        RevokeId = msgContent,
+                        Text = text,
+                    };
+                    DisplayText = text;
+                        break;
+                }
                 case ChatMsgType.Notification:
                 {
-                    var msgContent = JsonConvert.DeserializeObject<NotificationChatMessageContent>(m_contentStr);
+                    var msgContent = JsonConvert.DeserializeObject<NotificationChatMessageContent>(ContentStr);
                     m_chatMsgContent = msgContent;
                     DisplayText = msgContent.Title;
                     break;

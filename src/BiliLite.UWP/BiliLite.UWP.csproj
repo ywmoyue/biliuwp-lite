@@ -216,6 +216,7 @@
     <Compile Include="Models\Common\MarkdownViewerPagerParameter.cs" />
     <Compile Include="Models\Common\Msg\BiliSendMessageResultCode.cs" />
     <Compile Include="Models\Common\Msg\MsgContent\NotificationChatMessageContent.cs" />
+    <Compile Include="Models\Common\Msg\MsgContent\RevokeChatMessageContent.cs" />
     <Compile Include="Models\Common\Msg\MsgContent\VideoChatMessageContent.cs" />
     <Compile Include="Models\Common\Msg\ChatMsgType.cs" />
     <Compile Include="Models\Common\Player\RealPlayerType.cs" />
