@@ -851,7 +851,7 @@
                             </HyperlinkButton>-->
                                 
                                 <StackPanel Orientation="Horizontal" Grid.Column="2">
-                                    <Button BorderThickness="0" Style="{StaticResource DefaultButtonStyle}" x:Name="BottomBtnVolume" Background="Transparent" Foreground="White" Padding="0 3 0 0" Width="48" Height="48">
+                                    <Button ToolTipService.ToolTip="音量" BorderThickness="0" Style="{StaticResource DefaultButtonStyle}" x:Name="BottomBtnVolume" Background="Transparent" Foreground="White" Padding="0 3 0 0" Width="48" Height="48">
                                         <fa:FontAwesome Icon="Solid_VolumeUp" FontSize="18"></fa:FontAwesome>
                                         <Button.Flyout>
                                             <Flyout>
@@ -867,7 +867,7 @@
                                         </Button.Flyout>
                                     </Button>
 
-                                    <Button Click="BottomBtnSoundQuality_Click" BorderThickness="0" Style="{StaticResource DefaultButtonStyle}" FontSize="18" x:Name="BottomBtnSoundQuality" Background="Transparent" Foreground="White" Padding="8" Height="48">
+                                    <Button ToolTipService.ToolTip="音质" Click="BottomBtnSoundQuality_Click" BorderThickness="0" Style="{StaticResource DefaultButtonStyle}" FontSize="18" x:Name="BottomBtnSoundQuality" Background="Transparent" Foreground="White" Padding="8" Height="48">
                                         <Button.Flyout>
                                             <Flyout>
                                                 <StackPanel Orientation="Horizontal">
@@ -882,7 +882,7 @@
                                         </Button.Flyout>
                                     </Button>
 
-                                    <Button Click="BottomBtnQuality_Click" BorderThickness="0" Style="{StaticResource DefaultButtonStyle}" FontSize="18" x:Name="BottomBtnQuality" Background="Transparent" Foreground="White" Padding="8" Height="48">
+                                    <Button ToolTipService.ToolTip="画质" Click="BottomBtnQuality_Click" BorderThickness="0" Style="{StaticResource DefaultButtonStyle}" FontSize="18" x:Name="BottomBtnQuality" Background="Transparent" Foreground="White" Padding="8" Height="48">
                                         <Button.Flyout>
                                             <Flyout>
                                                 <StackPanel Orientation="Horizontal">
@@ -897,7 +897,7 @@
                                         </Button.Flyout>
                                     </Button>
 
-                                    <Button BorderThickness="0" Style="{StaticResource DefaultButtonStyle}" FontSize="18" x:Name="BottomBtnPlaySpeed" Background="Transparent" Foreground="White" Padding="8" Height="48">
+                                    <Button ToolTipService.ToolTip="播放速度" BorderThickness="0" Style="{StaticResource DefaultButtonStyle}" FontSize="18" x:Name="BottomBtnPlaySpeed" Background="Transparent" Foreground="White" Padding="8" Height="48">
                                         <Button.Flyout>
                                             <Flyout>
                                                 <StackPanel Orientation="Horizontal">
