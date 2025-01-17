@@ -1,15 +1,14 @@
 ﻿using BiliLite.Models.Common;
+using BiliLite.Models.Common.Region;
 using BiliLite.Pages.Bangumi;
 using BiliLite.Services;
+using BiliLite.Services.Interfaces;
+using BiliLite.ViewModels.Region;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Models.Common.Region;
-using BiliLite.ViewModels.Region;
-using BiliLite.Pages.Live;
-using Google.Type;
-using Newtonsoft.Json;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -18,7 +17,7 @@ namespace BiliLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class RegionDetailPage : BasePage, IRefreshablePage
+    public sealed partial class RegionDetailPage : BasePage, IRefreshablePage, IUpdatePivotLayout
     {
         RegionDetailViewModel m_viewModel;
         OpenRegionInfo regionInfo;
@@ -31,9 +30,9 @@ namespace BiliLite.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.NavigationMode == NavigationMode.New||m_viewModel.Regions==null)
+            if (e.NavigationMode == NavigationMode.New || m_viewModel.Regions == null)
             {
-                if (e.Parameter!=null)
+                if (e.Parameter != null)
                 {
                     regionInfo = e.Parameter as OpenRegionInfo;
                     if (regionInfo == null)
@@ -51,15 +50,15 @@ namespace BiliLite.Pages
 
         private async void pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (pivot.SelectedItem==null)
+            if (pivot.SelectedItem == null)
             {
                 return;
             }
-            if(pivot.SelectedItem is RegionDetailHomeViewModel)
+            if (pivot.SelectedItem is RegionDetailHomeViewModel)
             {
                 GridOrder.Visibility = Visibility.Collapsed;
                 var data = pivot.SelectedItem as RegionDetailHomeViewModel;
-                if (!data.Loading&&data.Banners==null)
+                if (!data.Loading && data.Banners == null)
                 {
                     await data.LoadHome();
                 }
@@ -73,7 +72,7 @@ namespace BiliLite.Pages
                 }
                 GridOrder.Visibility = Visibility.Visible;
                 GridOrder.DataContext = data;
-               
+
             }
         }
 
@@ -102,19 +101,19 @@ namespace BiliLite.Pages
                     parameters = AnimeType.GuoChuang
                 });
                 return;
-            } 
+            }
             MessageCenter.NavigateToPage(this, new NavigationInfo()
             {
                 icon = Symbol.FourBars,
                 page = typeof(RankPage),
                 title = "排行榜",
-                parameters= regionInfo.id
+                parameters = regionInfo.id
             });
         }
 
-        private  void cbTags_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void cbTags_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (cbTags.SelectedItem==null)
+            if (cbTags.SelectedItem == null)
             {
                 return;
             }
@@ -148,17 +147,18 @@ namespace BiliLite.Pages
                 return;
             }
 
-            MessageCenter.NavigateToPage(this,new NavigationInfo() { 
-                icon= Symbol.Play,
-                page=typeof(VideoDetailPage),
-                parameters=data.Param,
-                title=data.Title
+            MessageCenter.NavigateToPage(this, new NavigationInfo()
+            {
+                icon = Symbol.Play,
+                page = typeof(VideoDetailPage),
+                parameters = data.Param,
+                title = data.Title
             });
         }
 
         private async void BtnOpenBanner_Click(object sender, RoutedEventArgs e)
         {
-           await MessageCenter.HandelUrl(((sender as HyperlinkButton).DataContext as RegionHomeBannerItemModel).Uri);
+            await MessageCenter.HandelUrl(((sender as HyperlinkButton).DataContext as RegionHomeBannerItemModel).Uri);
         }
 
         private void AddToWatchLater_Click(object sender, RoutedEventArgs e)
@@ -175,6 +175,12 @@ namespace BiliLite.Pages
                 return;
             }
             (pivot.SelectedItem as RegionDetailChildViewModel).Refresh();
+        }
+
+        public void UpdatePivotLayout()
+        {
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
         }
     }
     public class RegionDataTemplateSelector : DataTemplateSelector
@@ -193,7 +199,7 @@ namespace BiliLite.Pages
             {
                 return ChildTemplate;
             }
-            
+
 
         }
     }

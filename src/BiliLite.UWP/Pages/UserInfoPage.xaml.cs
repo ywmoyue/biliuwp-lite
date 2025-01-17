@@ -1,23 +1,24 @@
-﻿using System.Threading.Tasks;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.User;
+using BiliLite.Models.Common.Video;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Modules.User.UserDetail;
 using BiliLite.Pages.User;
 using BiliLite.Services;
+using BiliLite.Services.Biz;
+using BiliLite.Services.Interfaces;
+using BiliLite.ViewModels.User;
+using BiliLite.ViewModels.UserDynamic;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Models.Common.User;
-using BiliLite.ViewModels.User;
-using BiliLite.ViewModels.UserDynamic;
-using Microsoft.Extensions.DependencyInjection;
-using BiliLite.Models.Common.Video;
-using System.Collections.Generic;
-using System.Linq;
-using BiliLite.Services.Biz;
-using Newtonsoft.Json;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -41,7 +42,7 @@ namespace BiliLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class UserInfoPage : BasePage, IRefreshablePage
+    public sealed partial class UserInfoPage : BasePage, IRefreshablePage, IUpdatePivotLayout
     {
         private readonly MediaListService m_mediaListService;
         readonly UserDynamicViewModel m_userDynamicViewModel;
@@ -309,7 +310,7 @@ namespace BiliLite.Pages
             {
                 await m_userSubmitVideoViewModel.GetSubmitVideo();
             }
-            if (pivot.SelectedIndex == 1 && DynamicSpaceFrame.Content==null)
+            if (pivot.SelectedIndex == 1 && DynamicSpaceFrame.Content == null)
             {
                 DynamicSpaceFrame.Navigate(typeof(DynamicSpacePage), m_viewModel.Mid);
                 //await m_userDynamicViewModel.GetDynamicItems();
@@ -491,6 +492,12 @@ namespace BiliLite.Pages
         private void UserBar_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             UpdateSize();
+        }
+
+        public void UpdatePivotLayout()
+        {
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
         }
     }
 }

@@ -324,6 +324,7 @@
     </Compile>
     <Compile Include="Services\Biz\BaseBizService.cs" />
     <Compile Include="Services\Biz\MessagesService.cs" />
+    <Compile Include="Services\Interfaces\IUpdatePivotLayout.cs" />
     <Compile Include="Services\PageSaveService.cs" />
     <Compile Include="Models\Common\Msg\BiliMessageSession.cs" />
     <Compile Include="Models\Common\Msg\BiliMessageSessionResponse.cs" />

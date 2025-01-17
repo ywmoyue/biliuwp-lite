@@ -16,7 +16,7 @@
 
     <Grid>
         <Grid x:Name="CustomDragRegion" Width="{Binding ElementName=AvailableDragRegion, Path=Width}" />
-        <winui:TabView
+        <winui:TabView CanDragTabs="True"
             x:Name="tabView"
             VerticalAlignment="Stretch"
             VerticalContentAlignment="Stretch"
@@ -24,8 +24,7 @@
             IsAddTabButtonVisible="True"
             Loaded="tabView_Loaded"
             PreviewKeyDown="TabView_OnPreviewKeyDown"
-            TabCloseRequested="TabView_TabCloseRequested"
-            TabItemsChanged="tabView_TabItemsChanged"
+            TabCloseRequested="TabView_TabCloseRequested" TabDragCompleted="TabView_TabDragCompleted"
             TabWidthMode="SizeToContent">
             <winui:TabView.KeyboardAccelerators>
                 <KeyboardAccelerator

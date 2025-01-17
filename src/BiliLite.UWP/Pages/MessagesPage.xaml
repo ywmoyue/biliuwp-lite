@@ -21,7 +21,7 @@
 
             <Flyout  x:Key="FaceFlyout" x:Name="FaceFlyout">
                 <Grid Width="320">
-                    <Pivot x:Name="pivot_face" ItemsSource="{x:Bind Path=m_emoteViewModel.Packages,Mode=OneWay}">
+                    <Pivot x:Name="pivot" ItemsSource="{x:Bind Path=m_emoteViewModel.Packages,Mode=OneWay}">
                         <Pivot.HeaderTemplate>
                             <DataTemplate x:DataType="viewModels:EmotePackageModel">
                                 <TextBlock FontSize="18" Text="{x:Bind text}"></TextBlock>

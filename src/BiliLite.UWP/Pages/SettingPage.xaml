@@ -20,7 +20,7 @@
         <covert:ColorConvert x:Key="color"/>
     </Page.Resources>
     <Grid>
-        <Pivot>
+        <Pivot x:Name="pivot">
             <PivotItem Margin="0" >
                 <PivotItem.Header>
                     <TextBlock FontSize="15">个性化</TextBlock>
