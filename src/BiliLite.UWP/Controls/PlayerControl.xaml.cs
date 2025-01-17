@@ -1374,6 +1374,7 @@ namespace BiliLite.Controls
             return info;
         }
 
+        #region Slider
         bool isSliderSoundQuality;
         bool isSliderQuality;
 
@@ -1550,6 +1551,7 @@ namespace BiliLite.Controls
         {
             SliderPlaySpeed.Value = speed;
         }
+        #endregion
 
         private async Task PlayLocalFile()
         {
