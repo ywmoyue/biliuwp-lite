@@ -31,7 +31,7 @@ namespace BiliLite.Controls.Settings
             m_viewModel = App.ServiceProvider.GetRequiredService<ShortcutKeySettingsControlViewModel>();
             m_viewModel.ShortcutFunctions = m_mapper.Map<ObservableCollection<ShortcutFunctionViewModel>>(m_shortcutKeyService.ShortcutFunctions);
             m_viewModel.PressActionDelayTime = m_shortcutKeyService.PressActionDelayTime;
-            this.InitializeComponent();
+            InitializeComponent();
 
             m_shortcutKeyService.OnRecordKeyDown += ShortcutKeyService_OnRecordKeyDown;
             m_shortcutKeyService.OnRecordStoped += ShortcutKeyService_OnRecordStoped; ;

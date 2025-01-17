@@ -140,7 +140,7 @@ namespace BiliLite.Controls
             m_playSpeedMenuService = App.ServiceProvider.GetRequiredService<PlaySpeedMenuService>();
             m_playerToastService = App.ServiceProvider.GetRequiredService<PlayerToastService>();
             m_playerToastService.Init(this);
-            this.InitializeComponent();
+            InitializeComponent();
             dispRequest = new DisplayRequest();
             playerHelper = new PlayerVM();
             m_danmakuSettingsControlViewModel = App.ServiceProvider.GetRequiredService<VideoDanmakuSettingsControlViewModel>();
@@ -158,8 +158,8 @@ namespace BiliLite.Controls
             m_autoSkipOpEdFlag = SettingService.GetValue(SettingConstants.Player.AUTO_SKIP_OP_ED,
                 SettingConstants.Player.DEFAULT_AUTO_SKIP_OP_ED);
 
-            this.Loaded += PlayerControl_Loaded;
-            this.Unloaded += PlayerControl_Unloaded;
+            Loaded += PlayerControl_Loaded;
+            Unloaded += PlayerControl_Unloaded;
             m_playerKeyRightAction = (PlayerKeyRightAction)SettingService.GetValue(SettingConstants.Player.PLAYER_KEY_RIGHT_ACTION, (int)PlayerKeyRightAction.ControlProgress);
 
             gestureRecognizer = new GestureRecognizer();
@@ -1886,7 +1886,7 @@ namespace BiliLite.Controls
                 BottomBtnExitFullWindows.Visibility = Visibility.Collapsed;
             }
             FullWindowEvent?.Invoke(this, fullWindow);
-            this.Focus(FocusState.Programmatic);
+            Focus(FocusState.Programmatic);
         }
         private void BottomBtnExitFull_Click(object sender, RoutedEventArgs e)
         {
@@ -2069,7 +2069,7 @@ namespace BiliLite.Controls
         {
             ssValue = 0;
 
-            if (e.Position.X < this.ActualWidth / 2)
+            if (e.Position.X < ActualWidth / 2)
                 ManipulatingBrightness = true;
             else
                 ManipulatingBrightness = false;
@@ -2248,14 +2248,14 @@ namespace BiliLite.Controls
 
             if (delta > 0)
             {
-                double dd = delta / this.ActualWidth;
+                double dd = delta / ActualWidth;
                 double d = dd * 90;
                 ssValue += d;
                 //slider.Value += d;
             }
             else
             {
-                double dd = Math.Abs(delta) / this.ActualWidth;
+                double dd = Math.Abs(delta) / ActualWidth;
                 double d = dd * 90;
                 ssValue -= d;
                 //slider.Value -= d;
@@ -2276,7 +2276,7 @@ namespace BiliLite.Controls
         {
             if (delta > 0)
             {
-                double dd = delta / (this.ActualHeight * 0.8);
+                double dd = delta / (ActualHeight * 0.8);
 
                 //slider_V.Value -= d;
                 var volume = Player.Volume - dd;
@@ -2285,7 +2285,7 @@ namespace BiliLite.Controls
             }
             else
             {
-                double dd = Math.Abs(delta) / (this.ActualHeight * 0.8);
+                double dd = Math.Abs(delta) / (ActualHeight * 0.8);
                 var volume = Player.Volume + dd;
                 Player.Volume = volume;
                 //slider_V.Value += d;
@@ -2294,7 +2294,7 @@ namespace BiliLite.Controls
         }
         private void HandleSlideBrightnessDelta(double delta)
         {
-            double dd = Math.Abs(delta) / (this.ActualHeight * 0.8);
+            double dd = Math.Abs(delta) / (ActualHeight * 0.8);
             if (delta > 0)
             {
                 Brightness = Math.Min(Brightness + dd, 1);
@@ -2844,7 +2844,7 @@ namespace BiliLite.Controls
                 //处理CC字幕
                 if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.CompactOverlay))
                 {
-                    this.Margin = new Thickness(0, -40, 0, 0);
+                    Margin = new Thickness(0, -40, 0, 0);
                     await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay);
                     SubtitleSettingSize.Value = 14;
 
@@ -2855,7 +2855,7 @@ namespace BiliLite.Controls
             }
             else
             {
-                this.Margin = new Thickness(0, 0, 0, 0);
+                Margin = new Thickness(0, 0, 0, 0);
                 StandardControl.Visibility = Visibility.Visible;
                 MiniControl.Visibility = Visibility.Collapsed;
                 await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default);

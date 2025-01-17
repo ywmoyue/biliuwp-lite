@@ -59,7 +59,7 @@ namespace BiliLite.Controls
         {
             scrollViewer=GetTemplateChild("ScrollViewer") as ScrollViewer;
             scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
-            this.RegisterPropertyChangedCallback(LoadingProperty, new DependencyPropertyChangedCallback((obj,e)=> {
+            RegisterPropertyChangedCallback(LoadingProperty, new DependencyPropertyChangedCallback((obj,e)=> {
                 if( !Loading)
                 {
                     if (scrollViewer.ScrollableHeight == 0)

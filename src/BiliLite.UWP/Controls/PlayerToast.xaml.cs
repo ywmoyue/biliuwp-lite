@@ -14,7 +14,7 @@ namespace BiliLite.Controls
         public PlayerToast(PlayerToastViewModel viewModel)
         {
             m_viewModel = viewModel;
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         public string Text
@@ -24,13 +24,13 @@ namespace BiliLite.Controls
 
         public void Show()
         {
-            var storyboard = (Storyboard)this.Resources["ShowToast"];
+            var storyboard = (Storyboard)Resources["ShowToast"];
             storyboard.Begin();
         }
 
         public async Task Hide()
         {
-            var storyboard = (Storyboard)this.Resources["HideToast"];
+            var storyboard = (Storyboard)Resources["HideToast"];
             storyboard.Begin();
             var tcs = new TaskCompletionSource<bool>();
 

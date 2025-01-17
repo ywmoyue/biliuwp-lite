@@ -435,18 +435,21 @@
                                 </HyperlinkButton>-->
                                     </StackPanel>
                                     <Grid x:Name="BottomBtnSendDanmakuWide" Visibility="Collapsed" Grid.Column="1" Margin="12 0" MaxWidth="400">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
                                         <AutoSuggestBox x:Name="DanmuTextWide"
                                             VerticalAlignment="Center" 
                                             Padding="8 8 56 8" 
                                             BorderThickness="0" 
-                                            TextChanged="Danmu_TextChanged"
+                                            Text="{x:Bind m_viewModel.DanmakuInput,Mode=TwoWay}"
                                             QuerySubmitted="DanmuText_QuerySubmitted"
                                             QueryIcon="Send"
                                             PlaceholderText="说点什么吧~">
                                         </AutoSuggestBox>
-                                        <Button
+                                        <Button Grid.Column="1"
                                                 Click="EmojiButton_Click"
-                                                Margin="0 0 36 0"
                                                 Padding="0"
                                                 Width="32"
                                                 Height="28"
@@ -1041,17 +1044,24 @@
 
                             </ListView>
                             <Grid  Grid.Row="3" Background="{ThemeResource NavigationViewTopPaneBackground}" Padding="8">
-                                <AutoSuggestBox x:Name="DanmuText" QuerySubmitted="DanmuText_QuerySubmitted" TextChanged="Danmu_TextChanged" QueryIcon="Send" PlaceholderText="说点什么吧"></AutoSuggestBox>
-                                <Button
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <AutoSuggestBox x:Name="DanmuText" 
+                                                QuerySubmitted="DanmuText_QuerySubmitted" 
+                                                Text="{x:Bind m_viewModel.DanmakuInput,Mode=TwoWay}"
+                                                QueryIcon="Send" 
+                                                PlaceholderText="说点什么吧"></AutoSuggestBox>
+                                <Button Grid.Column="1"
                                     Click="EmojiButton_Click"
-                                    Margin="0 0 36 0"
                                     Padding="0"
                                     Width="32"
                                     Height="28"
                                     BorderThickness="0"
                                     Background="Transparent"
                                     HorizontalAlignment="Right"
-                                    VerticalAlignment="Center">         
+                                    VerticalAlignment="Center">
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xED54;" FontSize="14"/>
                                 </Button>
                             </Grid>

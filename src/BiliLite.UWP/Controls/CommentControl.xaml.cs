@@ -52,7 +52,7 @@ namespace BiliLite.Controls
             m_viewModel = App.ServiceProvider.GetService<CommentControlViewModel>();
             emoteVM = App.ServiceProvider.GetService<EmoteViewModel>();
             DataContext = m_viewModel;
-            this.InitializeComponent();
+            InitializeComponent();
             m_commentApi = new CommentApi();
             Unloaded += CommentControl_Unloaded;
         }

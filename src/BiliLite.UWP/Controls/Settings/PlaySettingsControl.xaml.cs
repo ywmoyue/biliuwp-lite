@@ -24,7 +24,7 @@ namespace BiliLite.Controls.Settings
         {
             m_viewModel = App.ServiceProvider.GetRequiredService<PlaySettingsControlViewModel>();
             m_playSpeedMenuService = App.ServiceProvider.GetRequiredService<PlaySpeedMenuService>();
-            this.InitializeComponent();
+            InitializeComponent();
             LoadPlayer();
         }
 

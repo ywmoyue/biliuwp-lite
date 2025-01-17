@@ -259,8 +259,7 @@ namespace BiliLite.Pages
             {
                 icon = Symbol.Message,
                 title = "消息中心",
-                page = typeof(WebPage),
-                parameters = $"https://message.bilibili.com/#whisper"
+                page = typeof(MessagesPage),
             });
         }
 

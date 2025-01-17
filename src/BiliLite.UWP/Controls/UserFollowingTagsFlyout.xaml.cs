@@ -16,7 +16,7 @@ namespace BiliLite.Controls
         public UserFollowingTagsFlyout()
         {
             m_viewModel = App.ServiceProvider.GetRequiredService<UserFollowingTagsFlyoutViewModel>();
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         public bool HasInit { get; set; }

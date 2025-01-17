@@ -173,7 +173,7 @@ namespace BiliLite.Models.Requests.Api
             return api;
         }
 
-        public ApiModel UploadDraw(UploadFileInfo file)
+        public ApiModel UploadDraw(UploadFileInfo file, string biz = "new_dyn")
         {
             var csrf = m_cookieService.GetCSRFToken();
             var api = new ApiModel()
@@ -183,12 +183,17 @@ namespace BiliLite.Models.Requests.Api
                 FormData = new Dictionary<string, object>()
                 {
                     { "file_up", file },
-                    { "biz", "new_dyn" },
-                    { "category", "daily" },
+                    { "biz", biz },
                     { "csrf", csrf }
                 },
                 need_cookie = true,
             };
+
+            if (biz == "new_dyn")
+            {
+                api.FormData.Add("category", "daily");
+            }
+
             //api.body += ApiHelper.GetSign(api.body, appKey);
             return api;
         }
