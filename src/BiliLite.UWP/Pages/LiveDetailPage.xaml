@@ -725,36 +725,51 @@
                                             <fa:FontAwesome Icon="Solid_Gift" FontSize="22"></fa:FontAwesome>
                                         </HyperlinkButton>
 
-                                        <Button x:Name="BottomBtnVolume" BorderThickness="0" Background="Transparent" Foreground="White" Padding="8" Width="48" Height="48">
+                                        <Button ToolTipService.ToolTip="音量" x:Name="BottomBtnVolume" BorderThickness="0" Background="Transparent" Foreground="White" Padding="8" Width="48" Height="48">
                                             <fa:FontAwesome x:Name="BottomBtnVolumeIcon" Icon="Solid_VolumeUp"  FontSize="20"></fa:FontAwesome>
                                             <Button.Flyout>
                                                 <Flyout>
-                                                    <StackPanel>
-                                                        <TextBlock>音量</TextBlock>
-                                                        <Slider x:Name="SliderVolume"   Value="1"  Width="200" Minimum="0" Maximum="1" StepFrequency="0.1"></Slider>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock VerticalAlignment="Bottom" Margin="0 0 10 8">0</TextBlock>
+                                                        <StackPanel>
+                                                            <TextBlock HorizontalAlignment="Center">音量</TextBlock>
+                                                            <Slider x:Name="SliderVolume"   Value="1"  Width="200" Minimum="0" Maximum="1" StepFrequency="0.1"></Slider>
+                                                        </StackPanel>
+                                                        <TextBlock VerticalAlignment="Bottom" Margin="10 0 0 8">1</TextBlock>
                                                     </StackPanel>
                                                 </Flyout>
                                             </Button.Flyout>
                                         </Button>
 
-                                        <ComboBox x:Name="BottomCBQuality" 
-                                                  Visibility="{x:Bind Path=m_viewModel.Living,Mode=OneWay}" 
-                                                  ItemsSource="{x:Bind Path=m_liveRoomViewModel.Qualites,Mode=OneWay}" 
-                                                  SelectionChanged="BottomCBQuality_SelectionChanged" 
-                                                  DisplayMemberPath="Desc" 
-                                                  ToolTipService.ToolTip="清晰度" 
-                                                  HorizontalContentAlignment="Center" 
-                                                  Style="{StaticResource PlayerComboBoxStyle}" 
-                                                  Foreground="White" 
-                                                  BorderThickness="0" 
-                                                  FontSize="18" Width="80" 
-                                                  VerticalAlignment="Center" 
-                                                  Background="Transparent">
+                                        <Button ToolTipService.ToolTip="清晰度" Click="BottomBtnQuality_Click" Visibility="{x:Bind Path=m_viewModel.Living,Mode=OneWay}"  BorderThickness="0" FontSize="18" x:Name="BottomBtnQuality" Background="Transparent" Foreground="White" Padding="8" Height="48">
+                                            <Button.Flyout>
+                                                <Flyout>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock VerticalAlignment="Bottom" x:Name="MinQuality" Margin="0 0 10 8" Text="{x:Bind m_liveRoomViewModel.Qualites.Count}"></TextBlock>
+                                                        <StackPanel>
+                                                            <TextBlock Margin="0 0 0 10" HorizontalAlignment="Center">清晰度</TextBlock>
+                                                            <Slider ValueChanged="SliderQuality_ValueChanged" x:Name="SliderQuality" Width="200" Minimum="0" StepFrequency="1" TickFrequency="1" TickPlacement="Outside"/>
+                                                        </StackPanel>
+                                                        <TextBlock VerticalAlignment="Bottom" x:Name="MaxQuality" Margin="10 0 0 8"></TextBlock>
+                                                    </StackPanel>
+                                                </Flyout>
+                                            </Button.Flyout>
+                                        </Button>
 
-                                        </ComboBox>
-                                        <ComboBox x:Name="BottomCBLine"  Visibility="{x:Bind Path=m_viewModel.Living,Mode=OneWay}" Width="80" SelectionChanged="BottomCBLine_SelectionChanged" DisplayMemberPath="Name" ToolTipService.ToolTip="线路" HorizontalContentAlignment="Center" Style="{StaticResource PlayerComboBoxStyle}" Foreground="White" BorderThickness="0" FontSize="18" VerticalAlignment="Center" Background="Transparent">
-
-                                        </ComboBox>
+                                        <Button ToolTipService.ToolTip="线路" Click="BottomBtnLine_Click" Visibility="{x:Bind Path=m_viewModel.Living,Mode=OneWay}"  BorderThickness="0" FontSize="18" x:Name="BottomBtnLine" Background="Transparent" Foreground="White" Padding="8" Height="48">
+                                            <Button.Flyout>
+                                                <Flyout>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock VerticalAlignment="Bottom" x:Name="MinLine" Margin="0 0 10 8"></TextBlock>
+                                                        <StackPanel>
+                                                            <TextBlock Margin="0 0 0 10" HorizontalAlignment="Center">线路</TextBlock>
+                                                            <Slider ValueChanged="SliderLine_ValueChanged" x:Name="SliderLine" Width="200" Minimum="0" StepFrequency="1" TickFrequency="1" TickPlacement="Outside"/>
+                                                        </StackPanel>
+                                                        <TextBlock VerticalAlignment="Bottom" x:Name="MaxLine" Margin="10 0 0 8"></TextBlock>
+                                                    </StackPanel>
+                                                </Flyout>
+                                            </Button.Flyout>
+                                        </Button>
 
                                         <HyperlinkButton x:Name="BottomBtnMiniWindows" Click="BottomBtnMiniWindows_Click"  ToolTipService.ToolTip="小窗置顶" Foreground="White" Padding="8" Width="48" Height="48">
                                             <fa:FontAwesome Icon="Regular_WindowRestore"  FontSize="20"></fa:FontAwesome>
