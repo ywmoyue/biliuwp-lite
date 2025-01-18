@@ -11,8 +11,8 @@
     xmlns:pages="using:BiliLite.Pages"
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     winui:BackdropMaterial.ApplyToRootOrPageBackground="True"
-    mc:Ignorable="d"
-    Loaded="MainPage_OnLoaded">
+    Loaded="MainPage_OnLoaded"
+    mc:Ignorable="d">
 
     <Grid>
         <Grid x:Name="CustomDragRegion" Width="{Binding ElementName=AvailableDragRegion, Path=Width}" />
@@ -21,11 +21,12 @@
             VerticalAlignment="Stretch"
             VerticalContentAlignment="Stretch"
             AddTabButtonClick="TabView_AddTabButtonClick"
+            CanDragTabs="True"
             IsAddTabButtonVisible="True"
             Loaded="tabView_Loaded"
             PreviewKeyDown="TabView_OnPreviewKeyDown"
             TabCloseRequested="TabView_TabCloseRequested"
-            TabItemsChanged="tabView_TabItemsChanged"
+            TabDragCompleted="TabView_TabDragCompleted"
             TabWidthMode="SizeToContent">
             <winui:TabView.KeyboardAccelerators>
                 <KeyboardAccelerator
@@ -38,9 +39,7 @@
                     Modifiers="Control" />
             </winui:TabView.KeyboardAccelerators>
             <winui:TabView.TabItems>
-                <winui:TabViewItem
-                    Header="首页"
-                    IsClosable="False">
+                <winui:TabViewItem Header="首页" IsClosable="False">
                     <winui:TabViewItem.IconSource>
                         <winui:SymbolIconSource Symbol="Home" />
                     </winui:TabViewItem.IconSource>

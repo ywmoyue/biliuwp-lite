@@ -28,7 +28,7 @@
 
     </Page.Resources>
     <Grid>
-        <Pivot>
+        <Pivot x:Name="pivot">
             <Pivot.RightHeader>
                 <Grid VerticalAlignment="Stretch" Background="Transparent">
                     <Button Margin="12 0">

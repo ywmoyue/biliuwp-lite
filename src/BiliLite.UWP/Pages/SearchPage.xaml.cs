@@ -1,21 +1,21 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
-using BiliLite.Modules;
+using BiliLite.Models.Common.Search;
 using BiliLite.Services;
+using BiliLite.Services.Biz;
+using BiliLite.Services.Interfaces;
+using BiliLite.ViewModels.Search;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
+using Newtonsoft.Json;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Models.Common.Search;
-using BiliLite.Services.Biz;
-using BiliLite.ViewModels.Search;
-using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
-using Windows.UI.Xaml.Controls.Primitives;
-using Newtonsoft.Json;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -24,7 +24,7 @@ namespace BiliLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class SearchPage : BasePage, IRefreshablePage
+    public sealed partial class SearchPage : BasePage, IRefreshablePage, IUpdatePivotLayout
     {
         private readonly SearchService m_searchService;
         private readonly SearchPageViewModel m_viewModel;
@@ -268,12 +268,18 @@ namespace BiliLite.Pages
         {
             m_viewModel.PageWidth = ActualWidth;
             m_viewModel.PivotHeaderWidth =
-                pivot.FindChildrenByType<PivotHeaderItem>().Select(x=>x.ActualWidth).Sum();
+                pivot.FindChildrenByType<PivotHeaderItem>().Select(x => x.ActualWidth).Sum();
         }
 
         private void SearchPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             UpdateSize();
+        }
+
+        public void UpdatePivotLayout()
+        {
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
         }
     }
 }

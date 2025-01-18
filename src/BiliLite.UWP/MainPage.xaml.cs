@@ -3,13 +3,13 @@ using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Pages;
 using BiliLite.Services;
+using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Linq;
 using Windows.ApplicationModel.Core;
-using Windows.Foundation.Collections;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -316,12 +316,6 @@ namespace BiliLite
             }
             args.Handled = true;
         }
-
-        private void tabView_TabItemsChanged(TabView sender, IVectorChangedEventArgs args)
-        {
-
-        }
-
         private void TabView_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == VirtualKey.Space && e.OriginalSource.GetType() != typeof(TextBox))
@@ -352,7 +346,18 @@ namespace BiliLite
 
         private void MainPage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            MainPageLoaded?.Invoke(this,EventArgs.Empty);
+            MainPageLoaded?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void TabView_TabDragCompleted(TabView sender, TabViewTabDragCompletedEventArgs args)
+        {
+            var draggedTabViewItem = args.Tab;
+            var draggedFrame = draggedTabViewItem?.Content as Frame;
+            var draggedPage = draggedFrame.Content as Page;
+            if (draggedPage is IUpdatePivotLayout updateable)
+            {
+                updateable.UpdatePivotLayout();
+            }
         }
     }
 }
