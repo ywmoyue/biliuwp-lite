@@ -214,6 +214,7 @@
     <Compile Include="Models\Common\Dynamic\DynamicUgcSeasonCardModel.cs" />
     <Compile Include="Models\Common\Live\LiveRoomEmoticon.cs" />
     <Compile Include="Models\Common\MarkdownViewerPagerParameter.cs" />
+    <Compile Include="Models\Common\Msg\BiliReplyMeResponse.cs" />
     <Compile Include="Models\Common\Msg\BiliSendMessageResultCode.cs" />
     <Compile Include="Models\Common\Msg\MsgContent\NotificationChatMessageContent.cs" />
     <Compile Include="Models\Common\Msg\MsgContent\RevokeChatMessageContent.cs" />
@@ -341,6 +342,7 @@
     <Compile Include="Models\Common\Msg\SessionEmoteInfo.cs" />
     <Compile Include="Models\Common\Msg\MsgContent\ShareChatMessageContent.cs" />
     <Compile Include="Models\Common\Msg\MsgContent\TextChatMessageContent.cs" />
+    <Compile Include="ViewModels\Messages\ReplyMeMessageViewModel.cs" />
     <Compile Include="ViewModels\Season\SeasonShortReviewItemStatViewModel.cs" />
     <Compile Include="ViewModels\Season\SeasonShortReviewItemViewModel.cs" />
     <Compile Include="Models\Common\Season\SeasonShortReviewItemVIPModel.cs" />

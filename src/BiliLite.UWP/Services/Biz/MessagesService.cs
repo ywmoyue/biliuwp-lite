@@ -217,7 +217,7 @@ namespace BiliLite.Services.Biz
                 }
 
                 viewModel.LastMsgId = data.data.MinSeqno.ToString();
-                if(!loadMore)
+                if (!loadMore)
                     viewModel.NewMsgId = data.data.MaxSeqno.ToString();
                 viewModel.HasMoreMessages = data.data.HasMore;
 
@@ -285,6 +285,47 @@ namespace BiliLite.Services.Biz
             return await SendMessageAsync(viewModel, chatContext, message, 5);
         }
 
+        public async Task<List<ReplyMeMessageViewModel>> GetReplyMeMsgs(MessagesViewModel viewModel, bool loadMore = false)
+        {
+            viewModel.ReplyMeLoading = true;
+            try
+            {
+                var api = m_messageApi.ReplyMe(null, null);
+                if (loadMore)
+                {
+                    api = m_messageApi.ReplyMe(viewModel.ReplyMeCurseId, viewModel.ReplyMeCurseTime);
+                }
+                var results = await api.Request();
+                if (!results.status)
+                    throw new CustomizedErrorException(results.message);
+                var data = await results.GetData<BiliReplyMeResponse>();
+                if (!data.success)
+                    throw new CustomizedErrorException(data.message);
+
+                var messages = m_mapper.Map<List<ReplyMeMessageViewModel>>(data.data.Items);
+                if (!loadMore)
+                    viewModel.ReplyMeMessages = new ObservableCollection<ReplyMeMessageViewModel>(messages);
+                else
+                {
+                    viewModel.ReplyMeMessages.AddRange(messages);
+                }
+
+                viewModel.HasMoreReplyMe = !data.data.Cursor.IsEnd;
+                viewModel.ReplyMeCurseId = data.data.Cursor.Id;
+                viewModel.ReplyMeCurseTime = data.data.Cursor.Time;
+                return messages;
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return new List<ReplyMeMessageViewModel>();
+            }
+            finally
+            {
+                viewModel.ReplyMeLoading = false;
+            }
+        }
+
         private void OpenImage(object data)
         {
             if (!(data is ImageChatMessageContent imageContent))
@@ -337,7 +378,7 @@ namespace BiliLite.Services.Biz
                 {
                     content = JsonConvert.SerializeObject(messageContent, settings);
                 }
-                
+
                 var api = m_messageApi.SendMsg(m_selfId.ToString(), chatContext.ChatContextId, chatContext.Type, messageType, content, m_selfDevId);
                 var results = await api.Request();
                 if (!results.status)

@@ -36,21 +36,6 @@ namespace BiliLite.Pages
             this.InitializeComponent();
         }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-            if (m_viewModel.ChatContexts == null)
-            {
-                await m_messagesService.GetChatContexts(m_viewModel);
-            }
-
-            if (m_viewModel.ChatMessages != null) return;
-            if (m_viewModel.ChatContexts != null && m_viewModel.ChatContexts.Any())
-            {
-                ChatContextListView.SelectedIndex = 0;
-            }
-        }
-
         private async void ChatContextListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (ChatContextListView.SelectedValue is not ChatContextViewModel chatContext) return;
@@ -155,6 +140,51 @@ namespace BiliLite.Pages
         {
             pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
             pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
+        }
+
+        private async void ReplyMeGrid_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (m_viewModel.ReplyMeMessages != null) return;
+            await m_messagesService.GetReplyMeMsgs(m_viewModel);
+        }
+
+        private async void MyMsgGrid_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (m_viewModel.ChatContexts == null)
+            {
+                await m_messagesService.GetChatContexts(m_viewModel);
+            }
+
+            if (m_viewModel.ChatMessages != null) return;
+            if (m_viewModel.ChatContexts != null && m_viewModel.ChatContexts.Any())
+            {
+                ChatContextListView.SelectedIndex = 0;
+            }
+        }
+
+        private void BtnLike_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void BtnShowReplyBtn_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private async void RefreshReplyMeMsgs_OnClick(object sender, RoutedEventArgs e)
+        {
+            await m_messagesService.GetReplyMeMsgs(m_viewModel);
+        }
+
+        private async void BtnLoadMoreReplyMeMsg_OnClick(object sender, RoutedEventArgs e)
+        {
+            await m_messagesService.GetReplyMeMsgs(m_viewModel, true);
+        }
+
+        private void AtMeGrid_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }
