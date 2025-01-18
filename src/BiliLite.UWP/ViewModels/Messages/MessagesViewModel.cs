@@ -6,7 +6,7 @@ using PropertyChanged;
 
 namespace BiliLite.ViewModels.Messages
 {
-    [RegisterTransientViewModel]
+    [RegisterSingletonViewModel]
     public class MessagesViewModel : BaseViewModel
     {
         public ObservableCollection<ChatContextViewModel> ChatContexts { get; set; }

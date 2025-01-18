@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BiliLite.Services.Interfaces;
+using System;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.UI.Xaml;
@@ -11,7 +12,7 @@ namespace BiliLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class SettingPage : BasePage
+    public sealed partial class SettingPage : BasePage, IUpdatePivotLayout
     {
         public SettingPage()
         {
@@ -47,5 +48,11 @@ namespace BiliLite.Pages
         }
 
         private async void RestartButton_Click(object sender, RoutedEventArgs e) => await CoreApplication.RequestRestartAsync(string.Empty);
+
+        public void UpdatePivotLayout()
+        {
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
+        }
     }
 }

@@ -72,7 +72,7 @@ namespace BiliLite.Models.Requests.Api.User
             return api;
         }
 
-        public ApiModel SendMsg(string senderId, string receiverId, int receiveType, int msgType, string content,string devId)
+        public ApiModel SendMsg(string senderId, string receiverId, int receiveType, int msgType, string content, string devId)
         {
             var csrf = m_cookieService.GetCSRFToken();
 

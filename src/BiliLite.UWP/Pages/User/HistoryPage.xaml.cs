@@ -1,12 +1,13 @@
-﻿using System.Threading.Tasks;
-using BiliLite.Models.Common;
+﻿using BiliLite.Models.Common;
+using BiliLite.Models.Common.User;
 using BiliLite.Services;
+using BiliLite.Services.Interfaces;
+using BiliLite.ViewModels.User;
+using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Models.Common.User;
-using BiliLite.ViewModels.User;
-using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -15,7 +16,7 @@ namespace BiliLite.Pages.User
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class HistoryPage : BasePage, IRefreshablePage
+    public sealed partial class HistoryPage : BasePage, IRefreshablePage, IUpdatePivotLayout
     {
         private readonly HistoryViewModel m_viewModel;
         public HistoryPage()
@@ -37,7 +38,7 @@ namespace BiliLite.Pages.User
         {
             var data = e.ClickedItem as UserHistoryItem;
             // TODO: 改用方法Map
-            if(data.History.Business == "pgc")
+            if (data.History.Business == "pgc")
             {
                 MessageCenter.NavigateToPage(this, new NavigationInfo()
                 {
@@ -46,12 +47,12 @@ namespace BiliLite.Pages.User
                     title = data.Title,
                     parameters = data.Kid
                 });
-            } 
+            }
             else if (data.History.Business == "live") // 直播
             {
                 MessageCenter.NavigateToPage(this, new NavigationInfo()
                 {
-                    icon= Symbol.Play,
+                    icon = Symbol.Play,
                     page = typeof(LiveDetailPage),
                     title = data.Title,
                     parameters = data.History.Oid
@@ -114,6 +115,12 @@ namespace BiliLite.Pages.User
         public async Task Refresh()
         {
             m_viewModel.Refresh();
+        }
+
+        public void UpdatePivotLayout()
+        {
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
         }
     }
 }

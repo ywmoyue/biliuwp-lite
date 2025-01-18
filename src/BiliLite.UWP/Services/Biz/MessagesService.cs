@@ -14,7 +14,9 @@ using BiliLite.Models.Common.UserDynamic;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Models.Requests.Api.User;
+using BiliLite.Modules;
 using BiliLite.ViewModels.Messages;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
@@ -29,12 +31,14 @@ namespace BiliLite.Services.Biz
         private readonly IMapper m_mapper;
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private string m_selfFace;
-        private string m_selfDevId = Guid.NewGuid().ToString();
+        private readonly string m_selfDevId;
         private long m_selfId;
 
         public MessagesService(IMapper mapper)
         {
             m_mapper = mapper;
+            m_selfDevId =
+                SettingService.GetValue(SettingConstants.Account.MESSAGE_DEVICE_ID, Guid.NewGuid().ToString());
             m_messageApi = new MessageApi();
             m_commentApi = new CommentApi();
         }
@@ -180,7 +184,12 @@ namespace BiliLite.Services.Biz
                         {
                             chatMessage.IsSelf = true;
                             chatMessage.Face = m_selfFace;
+                            chatMessage.RevokeCommand = new RelayCommand<ChatMessage>(CommandRevoke);
                         }
+
+                        chatMessage.ImageCommand = new RelayCommand<object>(OpenImage);
+                        chatMessage.NotificationActionCommand = new RelayCommand<object>(NotificationMsgDoAction);
+
                         chatMessage.UpdateContent();
 
                         chatMessages.Insert(0, chatMessage);
@@ -247,7 +256,9 @@ namespace BiliLite.Services.Biz
             {
                 Content = text,
             };
-            return await SendMessageAsync(viewModel, chatContext, message, 1);
+            var chatMessage = await SendMessageAsync(viewModel, chatContext, message, 1);
+            viewModel.ChatMessageInput = "";
+            return chatMessage;
         }
 
         public async Task<ChatMessage> SendImageMsg(MessagesViewModel viewModel, ChatContextViewModel chatContext, UploadFileInfo fileInfo)
@@ -263,7 +274,49 @@ namespace BiliLite.Services.Biz
                 Original = 1,
                 ImageType = fileInfo.FileName.GetImageTypeFromFileName(),
             };
-            return await SendMessageAsync(viewModel, chatContext, message, 2);
+            var chatMessage = await SendMessageAsync(viewModel, chatContext, message, 2);
+            chatMessage.ImageCommand = new RelayCommand<object>(OpenImage);
+            return chatMessage;
+        }
+
+        public async Task<ChatMessage> RevokeMsg(MessagesViewModel viewModel, ChatContextViewModel chatContext, string chatMessageId)
+        {
+            var message = chatMessageId;
+            return await SendMessageAsync(viewModel, chatContext, message, 5);
+        }
+
+        private void OpenImage(object data)
+        {
+            if (!(data is ImageChatMessageContent imageContent))
+            {
+                return;
+            }
+
+            MessageCenter.OpenImageViewer(new List<string>() { imageContent.Url }, 0);
+        }
+
+        private async void NotificationMsgDoAction(object data)
+        {
+            if (data is not string url)
+            {
+                return;
+            }
+            var result = await MessageCenter.HandelUrl(url);
+            if (!result)
+            {
+                Notify.ShowMessageToast("无法打开Url");
+            }
+        }
+
+        private async void CommandRevoke(ChatMessage chatMessage)
+        {
+            if (DateTimeOffset.Now - chatMessage.Time > TimeSpan.FromMinutes(3))
+            {
+                Notify.ShowMessageToast("发送时间超过两分钟不能撤回");
+                return;
+            }
+            var viewModel = App.ServiceProvider.GetRequiredService<MessagesViewModel>();
+            await RevokeMsg(viewModel, viewModel.SelectedChatContext, chatMessage.ChatMessageId);
         }
 
         private async Task<ChatMessage> SendMessageAsync(MessagesViewModel viewModel, ChatContextViewModel chatContext, object messageContent, int messageType)
@@ -275,7 +328,16 @@ namespace BiliLite.Services.Biz
                     ContractResolver = new CamelCasePropertyNamesContractResolver()
                 };
 
-                var content = JsonConvert.SerializeObject(messageContent, settings);
+                var content = "";
+                if (messageType == 5)
+                {
+                    content = (string)messageContent;
+                }
+                else
+                {
+                    content = JsonConvert.SerializeObject(messageContent, settings);
+                }
+                
                 var api = m_messageApi.SendMsg(m_selfId.ToString(), chatContext.ChatContextId, chatContext.Type, messageType, content, m_selfDevId);
                 var results = await api.Request();
                 if (!results.status)
@@ -297,13 +359,15 @@ namespace BiliLite.Services.Biz
                     UserId = m_selfId.ToString(),
                     Face = m_selfFace,
                     IsSelf = true,
-                    MsgType = messageType == 1 ? ChatMsgType.Text : ChatMsgType.Image,
+                    Time = DateTimeOffset.Now,
+                    MsgType = (ChatMsgType)messageType,
                     ChatMessageId = data.data["msg_key"].ToString(),
+                    RevokeCommand = new RelayCommand<ChatMessage>(CommandRevoke),
                 };
                 chatMessage.ContentStr = messageType == 1 ? data.data["msg_content"].ToString() : content;
+                chatMessage.UpdateContent();
 
                 viewModel.ChatMessages.Add(chatMessage);
-                viewModel.ChatMessageInput = "";
 
                 return chatMessage;
             }

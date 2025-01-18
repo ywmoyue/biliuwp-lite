@@ -3,15 +3,15 @@ using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Modules;
 using BiliLite.Services;
+using BiliLite.Services.Interfaces;
+using BiliLite.ViewModels.User;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.ViewModels.User;
-using Microsoft.Extensions.DependencyInjection;
-using BiliLite.ViewModels.User.SendDynamic;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -19,15 +19,15 @@ namespace BiliLite.Pages.User
 {
     public enum OpenFavoriteType
     {
-        Video=0,
-        Bangumi=1,
+        Video = 0,
+        Bangumi = 1,
         Cinema = 2,
-        Music=3
+        Music = 3
     }
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class FavoritePage : BasePage, IRefreshablePage
+    public sealed partial class FavoritePage : BasePage, IRefreshablePage, IUpdatePivotLayout
     {
         MyFollowSeasonVM animeVM;
         MyFollowSeasonVM cinemaVM;
@@ -40,17 +40,17 @@ namespace BiliLite.Pages.User
             cinemaVM = new MyFollowSeasonVM(false);
             m_videoViewModel = App.ServiceProvider.GetRequiredService<MyFollowVideoViewModel>();
         }
-        OpenFavoriteType openFavoriteType= OpenFavoriteType.Video;
+        OpenFavoriteType openFavoriteType = OpenFavoriteType.Video;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if(e.NavigationMode== NavigationMode.New)
+            if (e.NavigationMode == NavigationMode.New)
             {
                 if (e.Parameter != null)
                 {
                     openFavoriteType = (OpenFavoriteType)(e.Parameter.ToInt32());
                 }
-                if (openFavoriteType== OpenFavoriteType.Bangumi)
+                if (openFavoriteType == OpenFavoriteType.Bangumi)
                 {
                     pivot.SelectedIndex = 1;
                 }
@@ -63,7 +63,7 @@ namespace BiliLite.Pages.User
 
         private async void pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (pivot.SelectedItem==null)
+            if (pivot.SelectedItem == null)
             {
                 return;
             }
@@ -77,7 +77,7 @@ namespace BiliLite.Pages.User
                     await m_videoViewModel.LoadFavorite();
                     break;
                 case 1:
-                    if (animeVM.Loading||animeVM.Follows!=null)
+                    if (animeVM.Loading || animeVM.Follows != null)
                     {
                         return;
                     }
@@ -97,7 +97,7 @@ namespace BiliLite.Pages.User
 
         private void BangumiSeason_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var data= e.ClickedItem as FollowSeasonModel;
+            var data = e.ClickedItem as FollowSeasonModel;
             FollowSeasonModelOpen(sender, data);
         }
 
@@ -133,8 +133,8 @@ namespace BiliLite.Pages.User
                 parameters = new FavoriteDetailArgs()
                 {
                     Id = data.Id,
-                    Type=data.Type
-                } 
+                    Type = data.Type
+                }
             });
         }
 
@@ -147,8 +147,8 @@ namespace BiliLite.Pages.User
 
         private async void btnFavBoxEdit_Click(object sender, RoutedEventArgs e)
         {
-           var data= (sender as MenuFlyoutItem).DataContext as FavoriteItemViewModel;
-            EditFavFolderDialog editFavFolderDialog = new EditFavFolderDialog(data.Id, data.Title,data.Intro,data.Privacy?false:true);
+            var data = (sender as MenuFlyoutItem).DataContext as FavoriteItemViewModel;
+            EditFavFolderDialog editFavFolderDialog = new EditFavFolderDialog(data.Id, data.Title, data.Intro, data.Privacy ? false : true);
             await editFavFolderDialog.ShowAsync();
             m_videoViewModel.Refresh();
         }
@@ -172,7 +172,7 @@ namespace BiliLite.Pages.User
 
         private void BtnShowAllCollected_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            MessageCenter.NavigateToPage(this,new NavigationInfo()
+            MessageCenter.NavigateToPage(this, new NavigationInfo()
             {
                 dontGoTo = false,
                 icon = Symbol.Favorite,
@@ -186,6 +186,12 @@ namespace BiliLite.Pages.User
             if (!(sender is MenuFlyoutItem menuItem)) return;
             var data = menuItem.DataContext as FavoriteItemViewModel;
             await m_videoViewModel.CancelCollected(data);
+        }
+
+        public void UpdatePivotLayout()
+        {
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
         }
     }
 }

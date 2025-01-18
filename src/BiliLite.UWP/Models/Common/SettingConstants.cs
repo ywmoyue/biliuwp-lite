@@ -338,6 +338,12 @@ namespace BiliLite.Models.Common
 
             [SettingKey]
             public const string BILI_TICKET = "BiliTicket";
+
+            /// <summary>
+            /// 发送消息用的devId
+            /// </summary>
+            [SettingKey]
+            public const string MESSAGE_DEVICE_ID = "MessageDeviceId";
         }
 
         public class VideoDanmaku

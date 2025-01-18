@@ -24,7 +24,7 @@
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Pivot x:Name="DownloadPivot">
+        <Pivot x:Name="pivot">
             <Pivot.RightHeader>
                 <StackPanel Background="{StaticResource PivotHeaderBackground}" Orientation="Horizontal">
                     <TextBlock 

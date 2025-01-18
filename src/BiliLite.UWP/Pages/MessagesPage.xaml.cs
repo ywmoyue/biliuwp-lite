@@ -1,18 +1,19 @@
-﻿using System.Linq;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+﻿using BiliLite.Models.Common;
+using BiliLite.Models.Requests.Api;
 using BiliLite.Services.Biz;
+using BiliLite.Services.Interfaces;
+using BiliLite.ViewModels;
 using BiliLite.ViewModels.Messages;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
-using Windows.System;
-using BiliLite.Models.Requests.Api;
-using BiliLite.ViewModels;
-using BiliLite.Models.Common;
-using Windows.Storage.Pickers;
+using System.Linq;
 using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.System;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -21,7 +22,7 @@ namespace BiliLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class MessagesPage : BasePage
+    public sealed partial class MessagesPage : BasePage, IUpdatePivotLayout
     {
         private readonly MessagesService m_messagesService;
         private readonly MessagesViewModel m_viewModel;
@@ -38,8 +39,13 @@ namespace BiliLite.Pages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            await m_messagesService.GetChatContexts(m_viewModel);
-            if (m_viewModel.ChatContexts.Any())
+            if (m_viewModel.ChatContexts == null)
+            {
+                await m_messagesService.GetChatContexts(m_viewModel);
+            }
+
+            if (m_viewModel.ChatMessages != null) return;
+            if (m_viewModel.ChatContexts != null && m_viewModel.ChatContexts.Any())
             {
                 ChatContextListView.SelectedIndex = 0;
             }
@@ -143,6 +149,12 @@ namespace BiliLite.Pages
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)
         {
             m_viewModel.ChatMessageInput += (e.ClickedItem as EmotePackageItemModel).text.ToString();
+        }
+
+        public void UpdatePivotLayout()
+        {
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
         }
     }
 }

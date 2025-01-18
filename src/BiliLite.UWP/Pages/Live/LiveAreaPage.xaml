@@ -15,7 +15,7 @@
     <Grid>
         
     
-    <Pivot ItemsSource="{x:Bind Path=liveAreaVM.Items,Mode=OneWay}" >
+    <Pivot x:Name="pivot" ItemsSource="{x:Bind Path=liveAreaVM.Items,Mode=OneWay}" >
         <Pivot.HeaderTemplate>
             <DataTemplate x:DataType="modules:LiveAreaModel">
                 <TextBlock FontSize="15" Text="{x:Bind Path=name}"></TextBlock>

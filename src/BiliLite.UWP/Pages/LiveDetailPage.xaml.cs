@@ -45,7 +45,7 @@ namespace BiliLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class LiveDetailPage : BasePage, IPlayPage, IValueConverter
+    public sealed partial class LiveDetailPage : BasePage, IPlayPage, IUpdatePivotLayout, IValueConverter
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
 
@@ -1096,7 +1096,7 @@ namespace BiliLite.Pages
                 return;
             }
             var result = await m_liveRoomViewModel.SendDanmu(m_viewModel.DanmakuInput);
-            if(result) m_viewModel.DanmakuInput = "";
+            if (result) m_viewModel.DanmakuInput = "";
 
             await m_liveRoomViewModel.GetEmoticons(); // 长期不看的观众即使在粉丝团也无法发表情, 此时发弹幕即可解锁
         }
@@ -1594,6 +1594,12 @@ namespace BiliLite.Pages
                 await m_liveRoomViewModel.SendDanmu(emoji);
                 EmojiFlyout.Hide();
             }
+        }
+
+        public void UpdatePivotLayout()
+        {
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
         }
     }
 }

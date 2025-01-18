@@ -6,6 +6,8 @@ namespace BiliLite.ViewModels.Messages;
 
 public class ChatContextViewModel : BaseViewModel
 {
+    private ChatMessage m_chatMessage;
+
     [DoNotNotify]
     public string ChatContextId { get; set; }
 
@@ -18,7 +20,15 @@ public class ChatContextViewModel : BaseViewModel
     [DoNotNotify]
     public string Cover { get; set; }
 
-    public ChatMessage LastMsg { get; set; }
+    public ChatMessage LastMsg
+    {
+        get => m_chatMessage;
+        set
+        {
+            m_chatMessage = value;
+            m_chatMessage.UpdateContent();
+        }
+    }
 
     [DoNotNotify]
     public string HasNotify { get; set; }

@@ -17,7 +17,7 @@
         <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White"></SolidColorBrush>
     </Page.Resources>
     <Grid>
-        <Pivot x:Name="timeLine" ItemsSource="{x:Bind Path=m_viewModel.Timelines,Mode=OneWay}" SelectedItem="{x:Bind Path=m_viewModel.Today,Mode=OneWay}">
+        <Pivot x:Name="pivot" ItemsSource="{x:Bind Path=m_viewModel.Timelines,Mode=OneWay}" SelectedItem="{x:Bind Path=m_viewModel.Today,Mode=OneWay}">
             <Pivot.HeaderTemplate>
                 <DataTemplate x:DataType="anime:AnimeTimelineModel">
                     <StackPanel>
