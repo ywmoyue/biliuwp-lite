@@ -52,6 +52,13 @@
                 <!--消息气泡-->
                 <Border Background="{ThemeResource DefaultCardColor}" 
                                 CornerRadius="10" Padding="10" >
+                    <Border.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyout.Items>
+                                <MenuFlyoutItem Command="{Binding RevokeCommand}" CommandParameter="{Binding}">撤回</MenuFlyoutItem>
+                            </MenuFlyout.Items>
+                        </MenuFlyout>
+                    </Border.ContextFlyout>
                     <StackPanel HorizontalAlignment="Right">
                         <TextBlock Text="{Binding TextContent.Content}" TextWrapping="Wrap"/>
                     </StackPanel>
@@ -80,7 +87,8 @@
                                 CornerRadius="10" Padding="10" >
                     <StackPanel>
                         <HyperlinkButton Padding="0" 
-                                         Click="OpenImageBtn_OnClick">
+                                         Command="{Binding ImageCommand}"
+                                         CommandParameter="{Binding ImageContent}">
                             <controls:ImageEx  
                                 IsCacheEnabled="True" 
                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -107,9 +115,17 @@
                 <!--消息气泡-->
                 <Border Background="{ThemeResource DefaultCardColor}" 
                                 CornerRadius="10" Padding="10" >
+                    <Border.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyout.Items>
+                                <MenuFlyoutItem Command="{Binding RevokeCommand}" CommandParameter="{Binding}">撤回</MenuFlyoutItem>
+                            </MenuFlyout.Items>
+                        </MenuFlyout>
+                    </Border.ContextFlyout>
                     <StackPanel HorizontalAlignment="Right">
                         <HyperlinkButton Padding="0" 
-                                         Click="OpenImageBtn_OnClick">
+                                         Command="{Binding ImageCommand}"
+                                         CommandParameter="{Binding ImageContent}">
                             <controls:ImageEx  
                                 IsCacheEnabled="True" 
                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -159,9 +175,18 @@
 
             <!-- 操作按钮 -->
             <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Right">
-                <Button Content="{Binding NotificationContent.JumpText}" Visibility="{Binding NotificationContent.ShowJumpBtn}" Click="NotificationMsgAction_OnClick" />
-                <Button Content="{Binding NotificationContent.JumpText2}" Visibility="{Binding NotificationContent.ShowJumpBtn2}" Click="NotificationMsgAction_OnClick" />
-                <Button Content="{Binding NotificationContent.JumpText3}" Visibility="{Binding NotificationContent.ShowJumpBtn3}" Click="NotificationMsgAction_OnClick" />
+                <Button Content="{Binding NotificationContent.JumpText}" 
+                        Visibility="{Binding NotificationContent.ShowJumpBtn}" 
+                        Command="{Binding NotificationActionCommand}"  
+                        CommandParameter="{Binding NotificationContent.JumpUri}"/>
+                <Button Content="{Binding NotificationContent.JumpText2}" 
+                        Visibility="{Binding NotificationContent.ShowJumpBtn2}" 
+                        Command="{Binding NotificationActionCommand}"  
+                        CommandParameter="{Binding NotificationContent.JumpUri2}"/>
+                <Button Content="{Binding NotificationContent.JumpText3}" 
+                        Visibility="{Binding NotificationContent.ShowJumpBtn3}" 
+                        Command="{Binding NotificationActionCommand}"  
+                        CommandParameter="{Binding NotificationContent.JumpUri3}" />
             </StackPanel>
         </Grid>
     </DataTemplate>

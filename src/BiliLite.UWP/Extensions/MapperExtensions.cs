@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Atelier39;
 using AutoMapper;
@@ -223,6 +224,9 @@ namespace BiliLite.Extensions
                     .ForMember(dest => dest.ChatMessageId,
                         opt => opt.MapFrom(src =>
                             src.MsgSeqno))
+                    .ForMember(dest => dest.Time,
+                        opt => opt.MapFrom(src =>
+                            DateTimeOffset.FromUnixTimeSeconds(src.Timestamp)))
                     .ForMember(dest => dest.ContentStr,
                         opt => opt.MapFrom(src =>
                             src.Content));

@@ -39,8 +39,13 @@ namespace BiliLite.Pages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            await m_messagesService.GetChatContexts(m_viewModel);
-            if (m_viewModel.ChatContexts.Any())
+            if (m_viewModel.ChatContexts == null)
+            {
+                await m_messagesService.GetChatContexts(m_viewModel);
+            }
+
+            if (m_viewModel.ChatMessages != null) return;
+            if (m_viewModel.ChatContexts != null && m_viewModel.ChatContexts.Any())
             {
                 ChatContextListView.SelectedIndex = 0;
             }
