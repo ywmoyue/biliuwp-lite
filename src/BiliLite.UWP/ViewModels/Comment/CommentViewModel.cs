@@ -4,13 +4,13 @@ using BiliLite.Models.Common.Comment;
 using BiliLite.Modules;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
+using Microsoft.Extensions.DependencyInjection;
 using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.UI;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 
@@ -36,7 +36,8 @@ namespace BiliLite.ViewModels.Comment
         public int Action { get; set; }
 
         [DependsOn(nameof(Action))]
-        public SolidColorBrush LikeColor => Action == 0 ? new SolidColorBrush(Colors.Gray) : new SolidColorBrush((Color)Application.Current.Resources["SystemAccentColor"]);
+        public Brush LikeColor => Action == 0 ? new SolidColorBrush(Colors.Gray) :
+            new SolidColorBrush((Color)App.ServiceProvider.GetRequiredService<ThemeService>().ThemeResource["SystemAccentColor"]);
 
         public long RpId { get; set; }
 

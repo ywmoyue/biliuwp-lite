@@ -6,7 +6,7 @@ using PropertyChanged;
 
 namespace BiliLite.ViewModels.Messages
 {
-    [RegisterTransientViewModel]
+    [RegisterSingletonViewModel]
     public class MessagesViewModel : BaseViewModel
     {
         public ObservableCollection<ChatContextViewModel> ChatContexts { get; set; }
@@ -28,5 +28,21 @@ namespace BiliLite.ViewModels.Messages
 
         [DoNotNotify]
         public string NewMsgId { get; set; }
+
+        public string ChatMessageInput { get; set; }
+
+        [DependsOn(nameof(ChatMessageInput))] public int ChatMessageInputCount => ChatMessageInput?.Length ?? 0;
+
+        public ObservableCollection<ReplyMeMessageViewModel> ReplyMeMessages { get; set; }
+
+        public bool ReplyMeLoading { get; set; }
+
+        public bool HasMoreReplyMe { get; set; }
+
+        [DoNotNotify]
+        public long? ReplyMeCurseId { get; set; }
+
+        [DoNotNotify]
+        public long? ReplyMeCurseTime { get; set; }
     }
 }

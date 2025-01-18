@@ -1,4 +1,5 @@
-﻿using BiliLite.Models.Common;
+﻿using System;
+using BiliLite.Models.Common;
 using BiliLite.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
@@ -71,6 +72,35 @@ namespace BiliLite.Models.Requests.Api.User
             return api;
         }
 
+        public ApiModel SendMsg(string senderId, string receiverId, int receiveType, int msgType, string content, string devId)
+        {
+            var csrf = m_cookieService.GetCSRFToken();
+
+            var api = new ApiModel()
+            {
+                method = HttpMethods.Post,
+                baseUrl = "https://api.vc.bilibili.com/web_im/v1/web_im/send_msg",
+                parameter = $"w_sender_uid={senderId}&w_receiver_id={receiverId}",
+                body = $"msg[sender_uid]={senderId}&" +
+                     $"msg[receiver_id]={receiverId}&" +
+                     $"msg[receiver_type]={receiveType}&" +
+                     $"msg[msg_type]={msgType}&" +
+                     $"msg[msg_status]=0&" +
+                     $"msg[content]={content}&" +
+                     $"msg[timestamp]={DateTimeOffset.Now.ToUnixTimeSeconds()}&" +
+                     $"msg[new_face_version]=0&" +
+                     $"msg[dev_id]={devId}&" +
+                     $"from_firework=0&" +
+                     $"build=0&" +
+                     $"mobi_app=web&" +
+                     $"csrf_token={csrf}&" +
+                     $"csrf={csrf}",
+                need_cookie = true,
+            };
+
+            return api;
+        }
+
         public ApiModel UpdateAck(string talkerId, int sessionType, string seqno)
         {
             var csrf = m_cookieService.GetCSRFToken();
@@ -83,6 +113,22 @@ namespace BiliLite.Models.Requests.Api.User
                 need_cookie = true,
             };
 
+            return api;
+        }
+
+        public ApiModel ReplyMe(long? cursorId, long? cursorTime)
+        {
+            var api = new ApiModel()
+            {
+                method = HttpMethods.Get,
+                baseUrl = "https://api.bilibili.com/x/msgfeed/reply",
+                parameter = $"platform=web&build=0&mobi_app=web",
+                need_cookie = true,
+            };
+            if (cursorId != null && cursorTime != null)
+            {
+                api.parameter += $"&id={cursorId}&reply_time={cursorTime}";
+            }
             return api;
         }
     }

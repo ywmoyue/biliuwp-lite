@@ -3,6 +3,7 @@ using BiliLite.Models.Common;
 using BiliLite.Models.Common.Comment;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Services;
+using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels.UserDynamic;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace BiliLite.Pages.Home
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class UserDynamicPage : Page, IRefreshablePage
+    public sealed partial class UserDynamicPage : Page, IRefreshablePage, IUpdatePivotLayout
     {
         readonly UserDynamicAllViewModel m_viewModel;
         private bool m_isStaggered = false;
@@ -30,7 +31,7 @@ namespace BiliLite.Pages.Home
             m_viewModel = App.ServiceProvider.GetRequiredService<UserDynamicAllViewModel>();
             m_viewModel.OpenCommentEvent += UserDynamicViewModelOpenCommentEvent;
             this.InitializeComponent();
-            m_currentShowType = (UserDynamicShowType)DynPivot.SelectedIndex;
+            m_currentShowType = (UserDynamicShowType)pivot.SelectedIndex;
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -94,7 +95,7 @@ namespace BiliLite.Pages.Home
 
         private void BtnTop_OnClick(object sender, RoutedEventArgs e)
         {
-            switch (DynPivot.SelectedIndex)
+            switch (pivot.SelectedIndex)
             {
                 case 0:
                     ListDyn0.ScrollToTop();
@@ -125,7 +126,7 @@ namespace BiliLite.Pages.Home
 
         private async void Pivot_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var showType = (UserDynamicShowType)DynPivot.SelectedIndex;
+            var showType = (UserDynamicShowType)pivot.SelectedIndex;
             if (showType == m_currentShowType) return;
             m_currentShowType = showType;
             await m_viewModel.GetDynamicItems(showType: showType);
@@ -198,9 +199,10 @@ namespace BiliLite.Pages.Home
             await m_viewModel.GetDynamicItems(showType: m_currentShowType);
         }
 
-        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        public void UpdatePivotLayout()
         {
-
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
         }
     }
 }

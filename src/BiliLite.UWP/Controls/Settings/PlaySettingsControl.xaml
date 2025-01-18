@@ -311,6 +311,23 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
+        <controls:SettingsCard Header="自动刷新播放地址"
+                               Description="持续播放长视频时自动刷新播放地址并提示,下次打开视频生效">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Sync"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch  x:Name="SwitchAutoRefreshPlayUrl"></ToggleSwitch>
+        </controls:SettingsCard>
+
+        <controls:SettingsCard Header="自动刷新播放地址时间"
+                               x:Name="AutoRefreshPlayUrlTimeSetting"
+                               Description="单位分钟，默认118分钟，下次打开视频生效">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Sync"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <controls1:NumberBox x:Name="NumAutoRefreshPlayUrlTime" Minimum="10" Maximum="2400"></controls1:NumberBox>
+        </controls:SettingsCard>
+
         <ContentDialog  x:Name="FFmpegOptionsDialog"
                         Width="600"
                         PrimaryButtonText="确定"

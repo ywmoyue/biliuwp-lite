@@ -2,6 +2,7 @@
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Rank;
 using BiliLite.Services;
+using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels.Rank;
 using Microsoft.Extensions.DependencyInjection;
 using Windows.UI.Xaml;
@@ -16,7 +17,7 @@ namespace BiliLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class RankPage : BasePage
+    public sealed partial class RankPage : BasePage, IUpdatePivotLayout
     {
         readonly RankViewModel m_viewModel;
         public RankPage()
@@ -85,6 +86,12 @@ namespace BiliLite.Pages
         {
             var data = (sender as MenuFlyoutItem).DataContext as RankItemModel;
             Modules.User.WatchLaterVM.Instance.AddToWatchlater(data.Aid);
+        }
+
+        public void UpdatePivotLayout()
+        {
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
         }
     }
 }

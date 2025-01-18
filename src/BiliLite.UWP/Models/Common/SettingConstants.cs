@@ -338,6 +338,12 @@ namespace BiliLite.Models.Common
 
             [SettingKey]
             public const string BILI_TICKET = "BiliTicket";
+
+            /// <summary>
+            /// 发送消息用的devId
+            /// </summary>
+            [SettingKey]
+            public const string MESSAGE_DEVICE_ID = "MessageDeviceId";
         }
 
         public class VideoDanmaku
@@ -917,8 +923,26 @@ namespace BiliLite.Models.Common
             /// <summary>
             /// 快速切换播放速度默认值
             /// </summary>
-            [SettingKey(typeof(double))]
+            [SettingDefaultValue]
             public const double TOGGLE_PLAY_SPEED_DEFAULT_VALUE = 1.5;
+
+            /// <summary>
+            /// 自动刷新播放地址
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string AUTO_REFRESH_PLAY_URL = "AutoRefreshPlayUrl";
+
+            [SettingDefaultValue]
+            public const bool DEFAULT_AUTO_REFRESH_PLAY_URL = false;
+
+            /// <summary>
+            /// 自动刷新播放地址时间,单位分钟
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string AUTO_REFRESH_PLAY_URL_TIME = "AutoRefreshPlayUrlTime";
+
+            [SettingDefaultValue]
+            public const double DEFAULT_AUTO_REFRESH_PLAY_URL_TIME = 118;
         }
 
         public class Filter

@@ -19,6 +19,7 @@ namespace BiliLite.Controls.DataTemplateSelectors
                     { ChatMsgType.Text, (selector, chatMessage) => selector.TextTemplate },
                     { ChatMsgType.Image, (selector, chatMessage) => selector.ImageTemplate },
                     { ChatMsgType.CustomEmote, (selector, chatMessage) => selector.ImageTemplate },
+                    { ChatMsgType.Revoke, (selector, chatMessage) => selector.RevokeTemplate },
                     { ChatMsgType.Notification, (selector, chatMessage) => selector.NotificationTemplate },
                 };
         }
@@ -26,6 +27,8 @@ namespace BiliLite.Controls.DataTemplateSelectors
         public DataTemplate TextTemplate { get; set; }
 
         public DataTemplate ImageTemplate { get; set; }
+
+        public DataTemplate RevokeTemplate { get; set; }
 
         public DataTemplate NotificationTemplate { get; set; }
 

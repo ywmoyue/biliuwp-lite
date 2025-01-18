@@ -63,7 +63,7 @@
         </DataTemplate>
     </Page.Resources>
     <Grid>
-        <Pivot>
+        <Pivot x:Name="pivot">
             <!--<Pivot.RightHeader>
                 <Grid Background="Transparent">
                     <Button Margin="8 0">清空记录</Button>
