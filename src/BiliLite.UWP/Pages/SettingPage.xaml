@@ -30,7 +30,6 @@
                         <settings:UISettingsControl></settings:UISettingsControl>
                     </StackPanel>
                 </ScrollViewer>
-                
             </PivotItem>
             <PivotItem Margin="0">
                 <PivotItem.Header>
@@ -39,6 +38,16 @@
                 <ScrollViewer Padding="12 0" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <settings:PlaySettingsControl></settings:PlaySettingsControl>
+                    </StackPanel>
+                </ScrollViewer>
+            </PivotItem>
+            <PivotItem Margin="0" >
+                <PivotItem.Header>
+                    <TextBlock FontSize="15">性能</TextBlock>
+                </PivotItem.Header>
+                <ScrollViewer Padding="12 0" VerticalScrollBarVisibility="Auto">
+                    <StackPanel >
+                        <settings:PerformanceSettingsControl></settings:PerformanceSettingsControl>
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
