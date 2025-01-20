@@ -8,7 +8,7 @@
     xmlns:player="using:BiliLite.Models.Common.Player"
     xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
-    Title="编辑播放速度菜单"
+    Title="自定义播放倍速"
     PrimaryButtonText="确定"
     CloseButtonText="取消"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick">
