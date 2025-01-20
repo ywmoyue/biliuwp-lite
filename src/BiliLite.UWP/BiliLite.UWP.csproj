@@ -168,6 +168,9 @@
     <Compile Include="Controls\Settings\LiveSettingsControl.xaml.cs">
       <DependentUpon>LiveSettingsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Settings\PerformanceSettingsControl.xaml.cs">
+      <DependentUpon>PerformanceSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Settings\PlaySettingsControl.xaml.cs">
       <DependentUpon>PlaySettingsControl.xaml</DependentUpon>
     </Compile>
@@ -1255,6 +1258,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Settings\LiveSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\PerformanceSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
