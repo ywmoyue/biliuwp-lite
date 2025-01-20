@@ -1,4 +1,5 @@
-﻿using BiliLite.Models.Common.Player;
+﻿using BiliLite.Extensions;
+using BiliLite.Models.Common.Player;
 using BiliLite.Services;
 using BiliLite.ViewModels.Settings;
 using System.Collections.ObjectModel;
@@ -41,6 +42,14 @@ namespace BiliLite.Dialogs
 
         private void BtnAddPlaySpeed_OnTapped(object sender, TappedRoutedEventArgs e)
         {
+            foreach (PlaySpeedMenuItem item in m_viewModel.PlaySpeedMenuItems)
+            {
+                if (item.Value == m_viewModel.AddPlaySpeedValue)
+                {
+                    Notify.ShowMessageToast("已重复添加");
+                    return;
+                }
+            }
             m_viewModel.PlaySpeedMenuItems.Add(new PlaySpeedMenuItem(m_viewModel.AddPlaySpeedValue));
             m_viewModel.PlaySpeedMenuItems =
                 new ObservableCollection<PlaySpeedMenuItem>(m_viewModel.PlaySpeedMenuItems.OrderByDescending(x => x.Value));
