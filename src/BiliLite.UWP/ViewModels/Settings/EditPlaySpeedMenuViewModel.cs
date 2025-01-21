@@ -8,6 +8,6 @@ namespace BiliLite.ViewModels.Settings
     {
         public ObservableCollection<PlaySpeedMenuItem> PlaySpeedMenuItems { get; set; }
 
-        public double AddPlaySpeedValue { get; set; } = 1;
+        public double AddPlaySpeedValue { get; set; } = 3;
     }
 }

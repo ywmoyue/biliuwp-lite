@@ -16,45 +16,56 @@
     <Grid>
         <ListView
             MaxHeight="{x:Bind DialogHeight, Mode=OneWay}"
-            Margin="0,0,0,40"
-            Padding="3,0"
+            Margin="-16,0,0,40"
             ItemsSource="{x:Bind m_viewModel.PlaySpeedMenuItems, Mode=OneWay}"
             SelectionMode="None">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="player:PlaySpeedMenuItem">
                     <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock VerticalAlignment="Center" Text="{x:Bind Content}" />
+                        <TextBlock
+                            MinWidth="{Binding ElementName=DisposableBtnAddPlaySpeed, Path=ActualWidth}"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Text="{x:Bind Content}"
+                            TextAlignment="Center" />
                         <Button
                             x:Name="BtnRemovePlaySpeed"
-                            Grid.Column="1"
-                            Tapped="BtnRemovePlaySpeed_OnTapped"
-                            Visibility="{x:Bind IsDeletable}">
+                            HorizontalAlignment="Right"
+                            IsEnabled="{x:Bind IsDeletable}"
+                            Tapped="BtnRemovePlaySpeed_OnTapped">
                             移除
+                        </Button>
+
+                        <Button
+                            x:Name="DisposableBtnAddPlaySpeed"
+                            Margin="0,0,5,0"
+                            HorizontalAlignment="Center"
+                            IsEnabled="False"
+                            Opacity="0"
+                            Style="{StaticResource AccentButtonStyle}">
+                            添加
                         </Button>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Grid Margin="15,0" VerticalAlignment="Bottom">
+        <Grid VerticalAlignment="Bottom">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <controls:NumberBox
-                MinWidth="0.01"
-                Margin="0,5,5,5"
-                Maximum="20"
-                Text="{x:Bind m_viewModel.AddPlaySpeedValue, Mode=TwoWay}" />
             <Button
                 x:Name="BtnAddPlaySpeed"
-                Grid.Column="1"
+                Margin="0,0,5,0"
+                Style="{StaticResource AccentButtonStyle}"
                 Tapped="BtnAddPlaySpeed_OnTapped">
                 添加
             </Button>
+            <controls:NumberBox
+                Grid.Column="1"
+                MinWidth="0.01"
+                Maximum="20"
+                Text="{x:Bind m_viewModel.AddPlaySpeedValue, Mode=TwoWay}" />
         </Grid>
     </Grid>
 </ContentDialog>
