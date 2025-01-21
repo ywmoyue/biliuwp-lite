@@ -31,7 +31,8 @@
                         <Button
                             x:Name="BtnRemovePlaySpeed"
                             Grid.Column="1"
-                            Tapped="BtnRemovePlaySpeed_OnTapped">
+                            Tapped="BtnRemovePlaySpeed_OnTapped"
+                            Visibility="{x:Bind IsDeletable}">
                             移除
                         </Button>
                     </Grid>

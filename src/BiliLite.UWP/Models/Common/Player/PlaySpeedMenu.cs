@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BiliLite.Models.Common.Player
+﻿namespace BiliLite.Models.Common.Player
 {
     public class PlaySpeedMenuItem
     {
-        public PlaySpeedMenuItem(){}
+        public PlaySpeedMenuItem() { }
 
         public PlaySpeedMenuItem(double value)
         {
             Value = value;
+            IsDeletable = value != 1;
         }
 
         public string Content => Value + "x";
 
         public double Value { get; set; }
+
+        public bool IsDeletable;
     }
 }
