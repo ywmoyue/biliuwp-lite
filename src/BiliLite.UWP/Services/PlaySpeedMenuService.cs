@@ -1,26 +1,28 @@
 ﻿using BiliLite.Models.Common;
 using BiliLite.Models.Common.Player;
-using System.Collections.Generic;
+using BiliLite.ViewModels.Common;
+using System.Collections.ObjectModel;
 
 namespace BiliLite.Services
 {
-    public class PlaySpeedMenuService
+    public class PlaySpeedMenuService : BaseViewModel
     {
+        public ObservableCollection<PlaySpeedMenuItem> MenuItems { get; private set; }
+
         public PlaySpeedMenuService()
         {
             MenuItems = SettingService.GetValue(SettingConstants.Player.PLAY_SPEED_MENU, GetDefaultPlaySpeedMenu());
         }
-        public List<PlaySpeedMenuItem> MenuItems { get; private set; }
 
-        public void SetMenuItems(List<PlaySpeedMenuItem> menuItems)
+        public void SetMenuItems(ObservableCollection<PlaySpeedMenuItem> menuItems)
         {
             MenuItems = menuItems;
             SettingService.SetValue(SettingConstants.Player.PLAY_SPEED_MENU, menuItems);
         }
 
-        private List<PlaySpeedMenuItem> GetDefaultPlaySpeedMenu()
+        private ObservableCollection<PlaySpeedMenuItem> GetDefaultPlaySpeedMenu()
         {
-            return [.. new List<PlaySpeedMenuItem>()
+            return [.. new ObservableCollection<PlaySpeedMenuItem>()
             {
                 new(0.25),
                 new(0.5),

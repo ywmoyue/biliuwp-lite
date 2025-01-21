@@ -81,7 +81,7 @@
                 x:Name="cbVideoSpeed"
                 MinWidth="200"
                 DisplayMemberPath="Content"
-                ItemsSource="{x:Bind m_playSpeedMenuService.MenuItems}"
+                ItemsSource="{x:Bind m_playSpeedMenuService.MenuItems, Mode=OneWay}"
                 SelectedIndex="0"
                 SelectedValuePath="Value" />
                 </controls:SettingsCard>

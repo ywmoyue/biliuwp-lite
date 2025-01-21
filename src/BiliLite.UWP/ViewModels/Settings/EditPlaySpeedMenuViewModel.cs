@@ -1,6 +1,6 @@
-﻿using System.Collections.ObjectModel;
-using BiliLite.Models.Common.Player;
+﻿using BiliLite.Models.Common.Player;
 using BiliLite.ViewModels.Common;
+using System.Collections.ObjectModel;
 
 namespace BiliLite.ViewModels.Settings
 {

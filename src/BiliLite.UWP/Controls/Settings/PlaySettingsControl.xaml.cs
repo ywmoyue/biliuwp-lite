@@ -1,14 +1,14 @@
 ﻿using BiliLite.Dialogs;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Player;
 using BiliLite.Services;
 using BiliLite.ViewModels.Settings;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using BiliLite.Models.Common.Player;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -55,6 +55,16 @@ namespace BiliLite.Controls.Settings
             {
                 cbVideoSpeed.SelectionChanged += (obj, args) =>
                 {
+                    if (cbVideoSpeed.SelectedIndex == -1) // 空值初始化
+                    {
+                        speeds = m_playSpeedMenuService.MenuItems
+                                                   .Select(x => x.Value)
+                                                   .ToList();
+                        SettingService.SetValue(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 0);
+                        cbVideoSpeed.SelectedIndex = 0;
+                        return;
+                    }
+
                     SettingService.SetValue(SettingConstants.Player.DEFAULT_VIDEO_SPEED, speeds[cbVideoSpeed.SelectedIndex]);
                 };
             };
@@ -124,7 +134,7 @@ namespace BiliLite.Controls.Settings
                 });
             });
             //默认最大音质
-            SwitchEnableDefaultMaxSoundQuality.IsOn = SettingService.GetValue(SettingConstants.Player.ENABLE_DEFAULT_MAX_SOUND_QUALITY, 
+            SwitchEnableDefaultMaxSoundQuality.IsOn = SettingService.GetValue(SettingConstants.Player.ENABLE_DEFAULT_MAX_SOUND_QUALITY,
                 SettingConstants.Player.DEFAULT_ENABLE_DEFAULT_MAX_SOUND_QUALITY);
             SwitchEnableDefaultMaxSoundQuality.Loaded += (sender, e) =>
             {
