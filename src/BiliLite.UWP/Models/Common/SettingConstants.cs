@@ -258,6 +258,9 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const bool DEFAULT_ENABLE_OPEN_LAST_PAGE = false;
+
+            [SettingKey]
+            public const string LOCAL_ATTENTION_USER = "LocalAttentionUser";
         }
 
         public class Account

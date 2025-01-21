@@ -499,5 +499,17 @@ namespace BiliLite.Pages
             pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
             pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
         }
+
+        private void BtnSetLocalAttention_OnClick(object sender, RoutedEventArgs e)
+        {
+            var localAttentionUserService = App.ServiceProvider.GetRequiredService<LocalAttentionUserService>();
+            localAttentionUserService.AttentionUp(m_viewModel.Mid, m_viewModel.UserSpaceInfo.Name);
+        }
+
+        private void BtnCancelLocalAttention_OnClick(object sender, RoutedEventArgs e)
+        {
+            var localAttentionUserService = App.ServiceProvider.GetRequiredService<LocalAttentionUserService>();
+            localAttentionUserService.CancelAttention(m_viewModel.Mid);
+        }
     }
 }

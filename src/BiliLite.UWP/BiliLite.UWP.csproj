@@ -217,6 +217,7 @@
     <Compile Include="Models\Common\Danmaku\BiliDanmakuItem.cs" />
     <Compile Include="Models\Common\Dynamic\DynamicUgcSeasonCardModel.cs" />
     <Compile Include="Models\Common\Live\LiveRoomEmoticon.cs" />
+    <Compile Include="Models\Common\Live\LiveRoomInfoOldModel.cs" />
     <Compile Include="Models\Common\MarkdownViewerPagerParameter.cs" />
     <Compile Include="Models\Common\Msg\BiliReplyMeResponse.cs" />
     <Compile Include="Models\Common\Msg\BiliSendMessageResultCode.cs" />
@@ -237,6 +238,7 @@
     <Compile Include="Models\Common\UserDynamic\NavDynArticle.cs" />
     <Compile Include="Models\Common\UserDynamic\NavDynArticles.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicSeasonInfo.cs" />
+    <Compile Include="Models\Common\User\LocalAttentionUser.cs" />
     <Compile Include="Models\Common\User\SendDynamic\AtDisplayModel.cs" />
     <Compile Include="Models\Common\User\SendDynamic\AtModel.cs" />
     <Compile Include="Models\Common\User\SendDynamic\SendImagesModel.cs" />
@@ -328,6 +330,7 @@
       <DependentUpon>MessagesPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\Biz\BaseBizService.cs" />
+    <Compile Include="Services\Biz\LocalAttentionUserService.cs" />
     <Compile Include="Services\Biz\MessagesService.cs" />
     <Compile Include="Services\Interfaces\IUpdatePivotLayout.cs" />
     <Compile Include="Services\PageSaveService.cs" />

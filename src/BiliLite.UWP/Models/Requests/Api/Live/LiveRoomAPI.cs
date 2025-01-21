@@ -447,5 +447,21 @@ namespace BiliLite.Models.Requests.Api.Live
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
+
+        /// <summary>
+        /// 获取用户对应的直播间状态
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public ApiModel GetRoomInfoOld(string userId)
+        {
+            var api = new ApiModel()
+            {
+                method = HttpMethods.Get,
+                baseUrl = $"https://api.live.bilibili.com/room/v1/Room/getRoomInfoOld",
+                parameter = $"mid={userId}",
+            };
+            return api;
+        }
     }
 }
