@@ -1433,14 +1433,10 @@ namespace BiliLite.Controls
 
         private void InitSoundQuality()
         {
-            if (playUrlInfo.AudioQualites.Count <= 1)
-            {
-                BottomBtnSoundQuality.IsEnabled = false;
-            }
-
             MinSoundQuality.Text = playUrlInfo.AudioQualites[0].QualityName;
             MaxSoundQuality.Text = playUrlInfo.AudioQualites[playUrlInfo.AudioQualites.Count - 1].QualityName;
 
+            BottomBtnSoundQuality.IsEnabled = playUrlInfo.AudioQualites.Count > 1;
             BottomBtnSoundQuality.Content = playUrlInfo.CurrentAudioQuality.QualityName;
             SliderSoundQuality.Maximum = playUrlInfo.AudioQualites.Count - 1;
             SliderSoundQuality.Value = playUrlInfo.AudioQualites.IndexOf(playUrlInfo.CurrentAudioQuality);
@@ -1462,14 +1458,10 @@ namespace BiliLite.Controls
 
         private void InitQuality()
         {
-            if (playUrlInfo.Qualites.Count <= 1)
-            {
-                BottomBtnQuality.IsEnabled = false;
-            }
-
             MinQuality.Text = playUrlInfo.Qualites[0].QualityName;
             MaxQuality.Text = playUrlInfo.Qualites[playUrlInfo.Qualites.Count - 1].QualityName;
 
+            BottomBtnQuality.IsEnabled = playUrlInfo.Qualites.Count > 1;
             BottomBtnQuality.Content = playUrlInfo.CurrentQuality.QualityName;
             SliderQuality.Maximum = playUrlInfo.Qualites.Count - 1;
             SliderQuality.Value = playUrlInfo.Qualites.IndexOf(playUrlInfo.CurrentQuality);
@@ -1494,11 +1486,39 @@ namespace BiliLite.Controls
             MinPlaySpeed.Text = m_playSpeedMenuService.MenuItems[0].Content;
             MaxPlaySpeed.Text = m_playSpeedMenuService.MenuItems[m_playSpeedMenuService.MenuItems.Count - 1].Content;
 
+            // 强行居中矫正1x倍速
+            var lessThanOneCount = m_playSpeedMenuService.MenuItems.ToList().FindIndex(x => x.Value == 1);
+            var moreThanOneCount = m_playSpeedMenuService.MenuItems.Count - lessThanOneCount - 1;
+            var differenceCount = lessThanOneCount - moreThanOneCount;
+            switch (differenceCount)
+            {
+                case > 0:
+                    if (m_playSpeedMenuService.MenuItems.Count == 2)
+                    {
+                        goto default;
+                    }
+                    SliderPlaySpeed.Maximum = m_playSpeedMenuService.MenuItems.Count - 1 + differenceCount;
+                    SliderPlaySpeed.Minimum = 0;
+                    break;
+                case < 0:
+                    if (m_playSpeedMenuService.MenuItems.Count == 2)
+                    {
+                        goto default;
+                    }
+                    SliderPlaySpeed.Maximum = m_playSpeedMenuService.MenuItems.Count - 1;
+                    SliderPlaySpeed.Minimum = differenceCount;
+                    break;
+                default:
+                    SliderPlaySpeed.Maximum = m_playSpeedMenuService.MenuItems.Count - 1;
+                    SliderPlaySpeed.Minimum = 0;
+                    break;
+            }
+
             var value = SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d);
             var CurrentPlaySpeed = m_playSpeedMenuService.MenuItems.FirstOrDefault(x => x.Value == value);
 
+            BottomBtnPlaySpeed.IsEnabled = m_playSpeedMenuService.MenuItems.Count > 1;
             BottomBtnPlaySpeed.Content = CurrentPlaySpeed.Content;
-            SliderPlaySpeed.Maximum = m_playSpeedMenuService.MenuItems.Count - 1;
             SliderPlaySpeed.Value = m_playSpeedMenuService.MenuItems.IndexOf(CurrentPlaySpeed);
             SliderPlaySpeed.ThumbToolTipValueConverter = this;
 
@@ -1507,15 +1527,14 @@ namespace BiliLite.Controls
 
         private void SliderPlaySpeed_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            if (m_playSpeedMenuService.MenuItems.Count <= 1)
+            if (SliderPlaySpeed.Value < 0)
             {
-                BottomBtnPlaySpeed.IsEnabled = false;
+                SliderPlaySpeed.Value = 0;
             }
-
-            //if (SliderPlaySpeed.Value < 0)
-            //{
-            //    SliderPlaySpeed.Value = m_playSpeedMenuService.MenuItems[0].Value;
-            //}
+            if (SliderPlaySpeed.Value > m_playSpeedMenuService.MenuItems.Count - 1)
+            {
+                SliderPlaySpeed.Value = m_playSpeedMenuService.MenuItems.Count - 1;
+            }
 
             var latestChoice = m_playSpeedMenuService.MenuItems[(int)SliderPlaySpeed.Value];
             Player.SetRate(latestChoice.Value);

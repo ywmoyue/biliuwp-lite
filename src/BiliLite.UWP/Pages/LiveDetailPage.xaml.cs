@@ -449,14 +449,11 @@ namespace BiliLite.Pages
             {
                 return; // 空值检查
             }
-            if (m_liveRoomViewModel.Qualites.Count <= 1)
-            {
-                BottomBtnQuality.IsEnabled = false;
-            }
 
             MinQuality.Text = m_liveRoomViewModel.Qualites[0].Desc;
             MaxQuality.Text = m_liveRoomViewModel.Qualites[m_liveRoomViewModel.Qualites.Count - 1].Desc;
 
+            BottomBtnQuality.IsEnabled = m_liveRoomViewModel.Qualites.Count > 1;
             BottomBtnQuality.Content = m_liveRoomViewModel.CurrentQn.Desc;
             SliderQuality.Maximum = m_liveRoomViewModel.Qualites.Count - 1;
             SliderQuality.Value = m_liveRoomViewModel.Qualites.IndexOf(m_liveRoomViewModel.CurrentQn);
@@ -482,10 +479,7 @@ namespace BiliLite.Pages
             m_realPlayInfo.PlayUrls.FlvUrls = m_liveRoomViewModel.FlvUrls;
             basePlayUrls = m_liveRoomViewModel.HlsUrls ?? m_liveRoomViewModel.FlvUrls;
 
-            if (basePlayUrls.Count <= 1)
-            {
-                BottomBtnLine.IsEnabled = false;
-            }
+            BottomBtnLine.IsEnabled = basePlayUrls.Count > 1;
 
             MinLine.Text = basePlayUrls[0].Name;
             MaxLine.Text = basePlayUrls[basePlayUrls.Count - 1].Name;
