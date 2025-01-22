@@ -540,9 +540,9 @@
                                     <fa:FontAwesome Icon="Solid_Comments" FontSize="20"></fa:FontAwesome>
                                 </HyperlinkButton>-->
                                 </StackPanel>
-                                <Grid  x:Name="BottomBtnSendDanmakuWide"  Grid.Column="1" Margin="12 0" MaxWidth="400">
-                                    <TextBox x:Name="SendDanmakuTextBox" TabIndex="999" KeyDown="SendDanmakuTextBox_KeyDown" Padding="40 8 56 8" BorderThickness="0"  Foreground="White" Background="#66FFFFFF"  VerticalAlignment="Center" PlaceholderText="发个友善的弹幕见证当下"></TextBox>
-                                    <Button Width="40" Background="Transparent" >
+                                <Grid CornerRadius="{StaticResource ControlCornerRadius}" x:Name="BottomBtnSendDanmakuWide"  Grid.Column="1" MaxWidth="400" VerticalAlignment="Center">
+                                    <TextBox x:Name="SendDanmakuTextBox" TabIndex="999" KeyDown="SendDanmakuTextBox_KeyDown" Padding="40 8 56 8" BorderThickness="0"  Foreground="White"  VerticalAlignment="Center" PlaceholderText="发个友善的弹幕见证当下"></TextBox>
+                                    <Button Background="Transparent" VerticalAlignment="Stretch" CornerRadius="0" Style="{StaticResource DefaultButtonStyle}" BorderThickness="0">
                                         <fa:FontAwesome Icon="Solid_Palette" Foreground="#FFC7C5C5" FontSize="18" ></fa:FontAwesome>
                                         <Button.Flyout>
                                             <Flyout>
@@ -581,7 +581,7 @@
                                             </Flyout>
                                         </Button.Flyout>
                                     </Button>
-                                    <Button x:Name="SendDanmakuButton" Click="SendDanmakuButton_Click" BorderThickness="0"  Background="Gray" VerticalAlignment="Stretch" HorizontalAlignment="Right" Height="35" Width="56" Foreground="White" Opacity="0.8">发送</Button>
+                                    <Button CornerRadius="0" Style="{StaticResource DefaultButtonStyle}" x:Name="SendDanmakuButton" Click="SendDanmakuButton_Click" BorderThickness="0"  Background="#555555" VerticalAlignment="Stretch" HorizontalAlignment="Right" Foreground="White" Opacity="0.8">发送</Button>
                                 </Grid>
 
                                 <!--<HyperlinkButton x:Name="BottomBtnSendDanmakuWide" Click="BottomBtnSendDanmakuWide_Click" ToolTipService.ToolTip="发送弹幕" Foreground="White" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" MaxWidth="400" Margin="12 0" Grid.Column="1" >
