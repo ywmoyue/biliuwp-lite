@@ -1485,33 +1485,26 @@ namespace BiliLite.Controls
         {
             MinPlaySpeed.Text = m_playSpeedMenuService.MenuItems[0].Content;
             MaxPlaySpeed.Text = m_playSpeedMenuService.MenuItems[m_playSpeedMenuService.MenuItems.Count - 1].Content;
+            SliderPlaySpeed.Maximum = m_playSpeedMenuService.MenuItems.Count - 1;
+            SliderPlaySpeed.Minimum = 0;
 
             // 强行居中矫正1x倍速
             var lessThanOneCount = m_playSpeedMenuService.MenuItems.ToList().FindIndex(x => x.Value == 1);
             var moreThanOneCount = m_playSpeedMenuService.MenuItems.Count - lessThanOneCount - 1;
-            var differenceCount = lessThanOneCount - moreThanOneCount;
-            switch (differenceCount)
+            if (lessThanOneCount != 0 && moreThanOneCount != 0)
             {
-                case > 0:
-                    if (m_playSpeedMenuService.MenuItems.Count == 2)
-                    {
-                        goto default;
-                    }
-                    SliderPlaySpeed.Maximum = m_playSpeedMenuService.MenuItems.Count - 1 + differenceCount;
-                    SliderPlaySpeed.Minimum = 0;
-                    break;
-                case < 0:
-                    if (m_playSpeedMenuService.MenuItems.Count == 2)
-                    {
-                        goto default;
-                    }
-                    SliderPlaySpeed.Maximum = m_playSpeedMenuService.MenuItems.Count - 1;
-                    SliderPlaySpeed.Minimum = differenceCount;
-                    break;
-                default:
-                    SliderPlaySpeed.Maximum = m_playSpeedMenuService.MenuItems.Count - 1;
-                    SliderPlaySpeed.Minimum = 0;
-                    break;
+                var differenceCount = lessThanOneCount - moreThanOneCount;
+                switch (differenceCount)
+                {
+                    case > 0:
+                        SliderPlaySpeed.Maximum = m_playSpeedMenuService.MenuItems.Count - 1 + differenceCount;
+                        SliderPlaySpeed.Minimum = 0;
+                        break;
+                    case < 0:
+                        SliderPlaySpeed.Maximum = m_playSpeedMenuService.MenuItems.Count - 1;
+                        SliderPlaySpeed.Minimum = differenceCount;
+                        break;
+                }
             }
 
             var value = SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d);
