@@ -447,7 +447,7 @@ namespace BiliLite.Pages
         {
             if (m_liveRoomViewModel.Qualites.IndexOf(m_liveRoomViewModel.CurrentQn) == -1)
             {
-                return;
+                return; // 空值检查
             }
             if (m_liveRoomViewModel.Qualites.Count <= 1)
             {
@@ -472,7 +472,7 @@ namespace BiliLite.Pages
 
             var item = m_liveRoomViewModel.Qualites[(int)SliderQuality.Value];
             SettingService.SetValue(SettingConstants.Live.DEFAULT_QUALITY, item.Qn);
-            await m_liveRoomViewModel.GetPlayUrls(m_liveRoomViewModel.RoomID, item.Qn); // 此异步会使方法 IndexOf() 返回-1，不明原因
+            await m_liveRoomViewModel.GetPlayUrls(m_liveRoomViewModel.RoomID, item.Qn);
             BottomBtnQuality.Content = item.Desc;
         }
 

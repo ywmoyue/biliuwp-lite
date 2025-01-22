@@ -1377,17 +1377,27 @@ namespace BiliLite.Controls
         #region Slider
         bool isSliderSoundQuality;
         bool isSliderQuality;
+        bool isSliderPlaySpeed;
 
         private void BottomBtnSoundQuality_Click(object sender, RoutedEventArgs e)
         {
             isSliderSoundQuality = true;
             isSliderQuality = false;
+            isSliderPlaySpeed = false;
         }
 
         private void BottomBtnQuality_Click(object sender, RoutedEventArgs e)
         {
             isSliderSoundQuality = false;
             isSliderQuality = true;
+            isSliderPlaySpeed = false;
+        }
+
+        private void BottomBtnPlaySpeed_Click(object sender, RoutedEventArgs e)
+        {
+            isSliderSoundQuality = false;
+            isSliderQuality = false;
+            isSliderPlaySpeed = true;
         }
 
         public object Convert(object value, Type targetType, object parameter, string language)
@@ -1396,37 +1406,21 @@ namespace BiliLite.Controls
             {
                 if (isSliderSoundQuality)
                 {
-                    return sliderValue switch
-                    {
-                        0 => playUrlInfo.AudioQualites[0].QualityName,
-                        1 => playUrlInfo.AudioQualites[1].QualityName,
-                        2 => playUrlInfo.AudioQualites[2].QualityName,
-                        3 => playUrlInfo.AudioQualites[3].QualityName,
-                        4 => playUrlInfo.AudioQualites[4].QualityName,
-                        5 => playUrlInfo.AudioQualites[5].QualityName,
-                        6 => playUrlInfo.AudioQualites[6].QualityName,
-                        7 => playUrlInfo.AudioQualites[7].QualityName,
-                        8 => playUrlInfo.AudioQualites[8].QualityName,
-                        9 => playUrlInfo.AudioQualites[9].QualityName,
-                        _ => sliderValue.ToString()
-                    };
+                    return sliderValue >= 0 && sliderValue < playUrlInfo.AudioQualites.Count
+                        ? playUrlInfo.AudioQualites[(int)sliderValue].QualityName
+                        : sliderValue.ToString();
                 }
                 if (isSliderQuality)
                 {
-                    return sliderValue switch
-                    {
-                        0 => playUrlInfo.Qualites[0].QualityName,
-                        1 => playUrlInfo.Qualites[1].QualityName,
-                        2 => playUrlInfo.Qualites[2].QualityName,
-                        3 => playUrlInfo.Qualites[3].QualityName,
-                        4 => playUrlInfo.Qualites[4].QualityName,
-                        5 => playUrlInfo.Qualites[5].QualityName,
-                        6 => playUrlInfo.Qualites[6].QualityName,
-                        7 => playUrlInfo.Qualites[7].QualityName,
-                        8 => playUrlInfo.Qualites[8].QualityName,
-                        9 => playUrlInfo.Qualites[9].QualityName,
-                        _ => sliderValue.ToString()
-                    };
+                    return sliderValue >= 0 && sliderValue < playUrlInfo.Qualites.Count
+                        ? playUrlInfo.Qualites[(int)sliderValue].QualityName
+                        : sliderValue.ToString();
+                }
+                if (isSliderPlaySpeed)
+                {
+                    return sliderValue >= 0 && sliderValue < m_playSpeedMenuService.MenuItems.Count
+                        ? m_playSpeedMenuService.MenuItems[(int)sliderValue].Content
+                        : sliderValue.ToString();
                 }
             }
             return value;
@@ -1460,10 +1454,10 @@ namespace BiliLite.Controls
             _postion = Player.Position;
             _autoPlay = Player.PlayState == PlayState.Playing;
 
-            var data = playUrlInfo.AudioQualites[(int)SliderSoundQuality.Value];
-            SettingService.SetValue<int>(SettingConstants.Player.DEFAULT_SOUND_QUALITY, data.QualityID);
-            await ChangeQuality(current_quality_info, data);
-            BottomBtnSoundQuality.Content = data.QualityName;
+            var latestChoice = playUrlInfo.AudioQualites[(int)SliderSoundQuality.Value];
+            SettingService.SetValue<int>(SettingConstants.Player.DEFAULT_SOUND_QUALITY, latestChoice.QualityID);
+            await ChangeQuality(current_quality_info, latestChoice);
+            BottomBtnSoundQuality.Content = latestChoice.QualityName;
         }
 
         private void InitQuality()
@@ -1489,33 +1483,45 @@ namespace BiliLite.Controls
             _postion = Player.Position;
             _autoPlay = Player.PlayState == PlayState.Playing;
 
-            var data = playUrlInfo.Qualites[(int)SliderQuality.Value];
-            SettingService.SetValue<int>(SettingConstants.Player.DEFAULT_QUALITY, data.QualityID);
-            await ChangeQuality(data, current_audio_quality_info);
-            BottomBtnQuality.Content = data.QualityName;
+            var latestChoice = playUrlInfo.Qualites[(int)SliderQuality.Value];
+            SettingService.SetValue<int>(SettingConstants.Player.DEFAULT_QUALITY, latestChoice.QualityID);
+            await ChangeQuality(latestChoice, current_audio_quality_info);
+            BottomBtnQuality.Content = latestChoice.QualityName;
         }
 
         private void InitPlaySpeed()
         {
             MinPlaySpeed.Text = m_playSpeedMenuService.MenuItems[0].Content;
             MaxPlaySpeed.Text = m_playSpeedMenuService.MenuItems[m_playSpeedMenuService.MenuItems.Count - 1].Content;
-            BottomBtnPlaySpeed.Content = $"{SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d)}x";
-            SliderPlaySpeed.Value = SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d);
 
-            Player.SetRate(SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d));
+            var value = SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d);
+            var CurrentPlaySpeed = m_playSpeedMenuService.MenuItems.FirstOrDefault(x => x.Value == value);
+
+            BottomBtnPlaySpeed.Content = CurrentPlaySpeed.Content;
+            SliderPlaySpeed.Maximum = m_playSpeedMenuService.MenuItems.Count - 1;
+            SliderPlaySpeed.Value = m_playSpeedMenuService.MenuItems.IndexOf(CurrentPlaySpeed);
+            SliderPlaySpeed.ThumbToolTipValueConverter = this;
+
+            Player.SetRate(CurrentPlaySpeed.Value);
         }
 
         private void SliderPlaySpeed_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            if (SliderPlaySpeed.Value <= 0)
+            if (m_playSpeedMenuService.MenuItems.Count <= 1)
             {
-                SliderPlaySpeed.Value = 0.25;
+                BottomBtnPlaySpeed.IsEnabled = false;
             }
 
-            Player.SetRate(SliderPlaySpeed.Value);
-            BottomBtnPlaySpeed.Content = $"{SliderPlaySpeed.Value}x";
+            //if (SliderPlaySpeed.Value < 0)
+            //{
+            //    SliderPlaySpeed.Value = m_playSpeedMenuService.MenuItems[0].Value;
+            //}
 
-            SettingService.SetValue(SettingConstants.Player.DEFAULT_VIDEO_SPEED, SliderPlaySpeed.Value);
+            var latestChoice = m_playSpeedMenuService.MenuItems[(int)SliderPlaySpeed.Value];
+            Player.SetRate(latestChoice.Value);
+            BottomBtnPlaySpeed.Content = latestChoice.Content;
+
+            SettingService.SetValue(SettingConstants.Player.DEFAULT_VIDEO_SPEED, latestChoice.Value);
         }
 
         // 快捷键减速播放

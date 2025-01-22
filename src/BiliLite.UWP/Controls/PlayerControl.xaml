@@ -637,14 +637,14 @@
                                         </Button.Flyout>
                                     </Button>
 
-                                    <Button ToolTipService.ToolTip="播放速度" BorderThickness="0" Style="{StaticResource DefaultButtonStyle}" FontSize="18" x:Name="BottomBtnPlaySpeed" Background="Transparent" Foreground="White" Padding="8" Height="48">
+                                    <Button ToolTipService.ToolTip="倍速" Click="BottomBtnPlaySpeed_Click" BorderThickness="0" Style="{StaticResource DefaultButtonStyle}" FontSize="18" x:Name="BottomBtnPlaySpeed" Background="Transparent" Foreground="White" Padding="8" Height="48">
                                         <Button.Flyout>
                                             <Flyout>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock VerticalAlignment="Bottom" x:Name="MinPlaySpeed" Margin="0 0 10 8"></TextBlock>
                                                     <StackPanel>
-                                                        <TextBlock Margin="0 0 0 10" HorizontalAlignment="Center">播放速度</TextBlock>
-                                                        <Slider ValueChanged="SliderPlaySpeed_ValueChanged" x:Name="SliderPlaySpeed" Width="300" Minimum="0" Maximum="2" StepFrequency="0.25" TickFrequency="0.25" TickPlacement="Outside"/>
+                                                        <TextBlock Margin="0 0 0 10" HorizontalAlignment="Center">倍速</TextBlock>
+                                                        <Slider ValueChanged="SliderPlaySpeed_ValueChanged" x:Name="SliderPlaySpeed" Width="300" StepFrequency="1" TickFrequency="1" TickPlacement="Outside"/>
                                                     </StackPanel>
                                                     <TextBlock VerticalAlignment="Bottom" x:Name="MaxPlaySpeed" Margin="10 0 0 8"></TextBlock>
                                                 </StackPanel>
