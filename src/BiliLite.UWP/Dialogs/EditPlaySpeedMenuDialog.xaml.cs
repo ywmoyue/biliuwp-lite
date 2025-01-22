@@ -50,6 +50,12 @@ namespace BiliLite.Dialogs
                     return;
                 }
             }
+            if (m_viewModel.AddPlaySpeedValue == 0)
+            {
+                Notify.ShowMessageToast("非法参数");
+                return;
+            }
+
             m_viewModel.PlaySpeedMenuItems.Add(new PlaySpeedMenuItem(m_viewModel.AddPlaySpeedValue));
             m_viewModel.PlaySpeedMenuItems =
                 new ObservableCollection<PlaySpeedMenuItem>(m_viewModel.PlaySpeedMenuItems.OrderBy(x => x.Value));
