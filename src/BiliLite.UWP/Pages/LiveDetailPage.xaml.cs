@@ -543,37 +543,15 @@ namespace BiliLite.Pages
             {
                 if (isSliderQuality)
                 {
-                    return sliderValue switch
-                    {
-                        0 => m_liveRoomViewModel.Qualites[0].Desc,
-                        1 => m_liveRoomViewModel.Qualites[1].Desc,
-                        2 => m_liveRoomViewModel.Qualites[2].Desc,
-                        3 => m_liveRoomViewModel.Qualites[3].Desc,
-                        4 => m_liveRoomViewModel.Qualites[4].Desc,
-                        5 => m_liveRoomViewModel.Qualites[5].Desc,
-                        6 => m_liveRoomViewModel.Qualites[6].Desc,
-                        7 => m_liveRoomViewModel.Qualites[7].Desc,
-                        8 => m_liveRoomViewModel.Qualites[8].Desc,
-                        9 => m_liveRoomViewModel.Qualites[9].Desc,
-                        _ => sliderValue.ToString()
-                    };
+                    return sliderValue >= 0 && sliderValue < m_liveRoomViewModel.Qualites.Count
+                        ? m_liveRoomViewModel.Qualites[(int)sliderValue].Desc
+                        : sliderValue.ToString();
                 }
                 if (isSliderLine)
                 {
-                    return sliderValue switch
-                    {
-                        0 => basePlayUrls[0].Name,
-                        1 => basePlayUrls[1].Name,
-                        2 => basePlayUrls[2].Name,
-                        3 => basePlayUrls[3].Name,
-                        4 => basePlayUrls[4].Name,
-                        5 => basePlayUrls[5].Name,
-                        6 => basePlayUrls[6].Name,
-                        7 => basePlayUrls[7].Name,
-                        8 => basePlayUrls[8].Name,
-                        9 => basePlayUrls[9].Name,
-                        _ => sliderValue.ToString()
-                    };
+                    return sliderValue >= 0 && sliderValue < basePlayUrls.Count
+                        ? basePlayUrls[(int)sliderValue].Name
+                        : sliderValue.ToString();
                 }
             }
             return value;
