@@ -243,6 +243,12 @@ $('.author-container').css('margin','12px 0px -12px 0px');"
             {
                 if (webView != null) webView.Visibility = Visibility.Visible;
             }
+
+            IsEnableGoBack = webView.CanGoBack;
+            IsEnableGoForward = webView.CanGoForward;
         }
+
+        bool IsEnableGoBack { get; set; }
+        bool IsEnableGoForward { get; set; }
     }
 }
