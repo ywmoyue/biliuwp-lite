@@ -115,5 +115,21 @@ namespace BiliLite.Models.Requests.Api.User
 
             return api;
         }
+
+        public ApiModel ReplyMe(long? cursorId, long? cursorTime)
+        {
+            var api = new ApiModel()
+            {
+                method = HttpMethods.Get,
+                baseUrl = "https://api.bilibili.com/x/msgfeed/reply",
+                parameter = $"platform=web&build=0&mobi_app=web",
+                need_cookie = true,
+            };
+            if (cursorId != null && cursorTime != null)
+            {
+                api.parameter += $"&id={cursorId}&reply_time={cursorTime}";
+            }
+            return api;
+        }
     }
 }

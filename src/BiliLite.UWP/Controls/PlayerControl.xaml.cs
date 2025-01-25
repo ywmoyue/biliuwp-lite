@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Timers;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -40,12 +41,10 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using BiliLite.Converters;
-
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
 namespace BiliLite.Controls
@@ -120,6 +119,7 @@ namespace BiliLite.Controls
         }
 
         private readonly bool m_autoSkipOpEdFlag = false;
+        private Timer m_autoRefreshTimer;
         private DispatcherTimer m_positionTimer;
         DispatcherTimer danmuTimer;
         /// <summary>
@@ -153,6 +153,18 @@ namespace BiliLite.Controls
             //每过2秒就设置焦点
             timer_focus = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(2) };
             timer_focus.Tick += Timer_focus_Tick;
+
+            //自动刷新播放地址
+            if (SettingService.GetValue(SettingConstants.Player.AUTO_REFRESH_PLAY_URL,
+                    SettingConstants.Player.DEFAULT_AUTO_REFRESH_PLAY_URL))
+            {
+                var timeMin = SettingService.GetValue(SettingConstants.Player.AUTO_REFRESH_PLAY_URL_TIME,
+                    SettingConstants.Player.DEFAULT_AUTO_REFRESH_PLAY_URL_TIME);
+                m_autoRefreshTimer = new Timer();
+                m_autoRefreshTimer.Interval = timeMin * 1000;
+                m_autoRefreshTimer.Elapsed += AutoRefreshTimer_Elapsed;
+            }
+
             danmuTimer = new DispatcherTimer();
             danmuTimer.Interval = TimeSpan.FromSeconds(1);
             danmuTimer.Tick += DanmuTimer_Tick;
@@ -185,6 +197,25 @@ namespace BiliLite.Controls
                 m_danmakuController = App.ServiceProvider.GetRequiredService<FrostMasterDanmakuController>();
                 m_danmakuController.Init(DanmakuCanvas);
             }
+        }
+
+        private async void AutoRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            m_autoRefreshTimer.Stop();
+            _postion = Player.Position;
+            var info = await GetPlayUrlQualitesInfo();
+            if (!info.Success)
+            {
+                ShowDialog($"请求信息:\r\n{info.Message}", "读取视频播放地址失败");
+            }
+            else
+            {
+                playUrlInfo = info;
+                SetSoundQuality();
+                SetQuality();
+            }
+            Notify.ShowMessageToast("已根据设置自动刷新播放地址");
+            m_startTime = DateTime.Now;
         }
 
         private void Timer_focus_Tick(object sender, object e)
@@ -2639,6 +2670,7 @@ namespace BiliLite.Controls
             {
                 await Play();
             }
+            m_autoRefreshTimer?.Start();
         }
 
         private async void BottomBtnSendDanmakuWide_Click(object sender, RoutedEventArgs e)

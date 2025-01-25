@@ -230,6 +230,36 @@ namespace BiliLite.Extensions
                     .ForMember(dest => dest.ContentStr,
                         opt => opt.MapFrom(src =>
                             src.Content));
+
+
+                expression.CreateMap<BiliReplyMeData, ReplyMeMessageViewModel>()
+                    .ForMember(dest => dest.UserId,
+                        opt => opt.MapFrom(src =>
+                            src.User.Mid))
+                    .ForMember(dest => dest.UserFace,
+                        opt => opt.MapFrom(src =>
+                            src.User.Avatar))
+                    .ForMember(dest => dest.UserName,
+                        opt => opt.MapFrom(src =>
+                            src.User.Nickname))
+                    .ForMember(dest => dest.Title,
+                        opt => opt.MapFrom(src =>
+                            src.Item.Title))
+                    .ForMember(dest => dest.Content,
+                        opt => opt.MapFrom(src =>
+                            src.Item.SourceContent))
+                    .ForMember(dest => dest.ReferenceContent,
+                        opt => opt.MapFrom(src =>
+                            src.Item.TargetReplyContent))
+                    .ForMember(dest => dest.HasLike,
+                        opt => opt.MapFrom(src =>
+                            src.Item.LikeState != 0))
+                    .ForMember(dest => dest.Time,
+                        opt => opt.MapFrom(src =>
+                            DateTimeOffset.FromUnixTimeSeconds(src.ReplyTime)))
+                    .ForMember(dest => dest.Url,
+                        opt => opt.MapFrom(src =>
+                            src.Item.NativeUri));
             }));
 
             services.AddSingleton<IMapper>(mapper);

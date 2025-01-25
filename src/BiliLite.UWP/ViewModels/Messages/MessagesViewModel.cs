@@ -31,7 +31,18 @@ namespace BiliLite.ViewModels.Messages
 
         public string ChatMessageInput { get; set; }
 
-        [DependsOn(nameof(ChatMessageInput))]
-        public int ChatMessageInputCount => ChatMessageInput?.Length ?? 0;
+        [DependsOn(nameof(ChatMessageInput))] public int ChatMessageInputCount => ChatMessageInput?.Length ?? 0;
+
+        public ObservableCollection<ReplyMeMessageViewModel> ReplyMeMessages { get; set; }
+
+        public bool ReplyMeLoading { get; set; }
+
+        public bool HasMoreReplyMe { get; set; }
+
+        [DoNotNotify]
+        public long? ReplyMeCurseId { get; set; }
+
+        [DoNotNotify]
+        public long? ReplyMeCurseTime { get; set; }
     }
 }

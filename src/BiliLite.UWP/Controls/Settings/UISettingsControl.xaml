@@ -43,31 +43,6 @@
             </ComboBox>
         </controls:SettingsCard>
 
-        <controls:SettingsCard Header="加载原图"
-                               Description="加载原图会影响加载速度及加大内存占用">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Image"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="swPictureQuality"></ToggleSwitch>
-        </controls:SettingsCard>
-
-        <controls:SettingsCard>
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_FileImage"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <controls:SettingsCard.Header>
-                <Button x:Name="btnCleanImageCache" Click="btnCleanImageCache_Click" Margin="0 0 0 8">清除图片缓存</Button>
-            </controls:SettingsCard.Header>
-        </controls:SettingsCard>
-
-        <controls:SettingsCard Header="缓存首页"
-                               Description="关闭后每次切换首页会重新加载数据,但会减少内存占用">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_SdCard"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="swHomeCache"></ToggleSwitch>
-        </controls:SettingsCard>
-
         <controls:SettingsExpander Header="首页自定义(重启生效)"
                                    Description="拖动排序,右键或长按移除选项"
                                    IsExpanded="True">
@@ -251,14 +226,6 @@
             <ToggleSwitch x:Name="swShowHotReplies" ></ToggleSwitch>
         </controls:SettingsCard>
 
-        <controls:SettingsCard Header="新窗口打开图片预览"
-                               Description="选择当前窗口中打开图片预览或新窗口打开图片预览">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_WindowRestore"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="swPreviewImageNavigateToPage" ></ToggleSwitch>
-        </controls:SettingsCard>
-
         <controls:SettingsCard Header="推荐页显示方式"
                                Description="重启应用生效">
             <controls:SettingsCard.HeaderIcon>
@@ -285,28 +252,6 @@
             </ComboBox>
         </controls:SettingsCard>
 
-        <controls:SettingsCard Header="启动应用时打开上次浏览的标签页"
-                               Description="仅支持标签页模式">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_History"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="SwitchOpenLastPage" ></ToggleSwitch>
-        </controls:SettingsCard>
-
-        <controls:SettingsCard Header="鼠标中键/侧键行为"
-                               Description="选择鼠标中键/侧键行为">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Mouse"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ComboBox x:Name="cbMouseMiddleAction" SelectedIndex="0" MinWidth="200">
-                <ComboBox.Items>
-                    <ComboBoxItem>关闭页面</ComboBoxItem>
-                    <ComboBoxItem>新标签页打开视频但不进入</ComboBoxItem>
-                    <ComboBoxItem>无操作</ComboBoxItem>
-                </ComboBox.Items>
-            </ComboBox>
-        </controls:SettingsCard>
-
         <controls:SettingsExpander Header="快速收藏"
                                Description="点击收藏按钮直接收藏视频到默认收藏夹">
             <controls:SettingsExpander.HeaderIcon>
@@ -321,14 +266,6 @@
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
-
-        <controls:SettingsCard Header="使用浏览器打开无法处理的链接"
-                               Description="比如B站以外的链接">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Brands_Chrome"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="swOpenUrlWithBrowser" ></ToggleSwitch>
-        </controls:SettingsCard>
 
         <controls:SettingsExpander Header="标签页"
                                    Description="标签页样式自定义"

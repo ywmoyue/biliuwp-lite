@@ -318,6 +318,33 @@ namespace BiliLite.Controls.Settings
 
                 });
             });
+
+            //自动刷新播放地址
+            SwitchAutoRefreshPlayUrl.IsOn = SettingService.GetValue(SettingConstants.Player.AUTO_REFRESH_PLAY_URL, SettingConstants.Player.DEFAULT_AUTO_REFRESH_PLAY_URL);
+
+            AutoRefreshPlayUrlTimeSetting.Visibility =
+                SwitchAutoRefreshPlayUrl.IsOn ? Visibility.Visible : Visibility.Collapsed;
+
+            SwitchAutoRefreshPlayUrl.Loaded += (sender, e) =>
+            {
+                SwitchAutoRefreshPlayUrl.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.AUTO_REFRESH_PLAY_URL, SwitchAutoRefreshPlayUrl.IsOn);
+                    AutoRefreshPlayUrlTimeSetting.Visibility =
+                        SwitchAutoRefreshPlayUrl.IsOn ? Visibility.Visible : Visibility.Collapsed;
+                };
+            };
+
+            NumAutoRefreshPlayUrlTime.Value = SettingService.GetValue(
+                SettingConstants.Player.AUTO_REFRESH_PLAY_URL_TIME,
+                SettingConstants.Player.DEFAULT_AUTO_REFRESH_PLAY_URL_TIME);
+            NumAutoRefreshPlayUrlTime.Loaded += (_, _) =>
+            {
+                NumAutoRefreshPlayUrlTime.ValueChanged += (_, _) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.AUTO_REFRESH_PLAY_URL_TIME, NumAutoRefreshPlayUrlTime.Value);
+                };
+            };
         }
 
         private async void BtnEditPlaySpeedMenu_OnClick(object sender, RoutedEventArgs e)

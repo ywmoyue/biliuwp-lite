@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project ToolsVersion="15.0" DefaultTargets="Build"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"
+    Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -168,6 +170,9 @@
     <Compile Include="Controls\Settings\LiveSettingsControl.xaml.cs">
       <DependentUpon>LiveSettingsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Settings\PerformanceSettingsControl.xaml.cs">
+      <DependentUpon>PerformanceSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Settings\PlaySettingsControl.xaml.cs">
       <DependentUpon>PlaySettingsControl.xaml</DependentUpon>
     </Compile>
@@ -196,6 +201,7 @@
     <Compile Include="Converters\PlaySpeedSliderTooltipConverter.cs" />
     <Compile Include="Converters\QualitySliderTooltipConverter.cs" />
     <Compile Include="Converters\SoundQualitySliderTooltipConverter.cs" />
+    <Compile Include="Converters\TimeSpanStrFormatConverter.cs" />
     <Compile Include="Dialogs\EditPlaySpeedMenuDialog.xaml.cs">
       <DependentUpon>EditPlaySpeedMenuDialog.xaml</DependentUpon>
     </Compile>
@@ -218,7 +224,9 @@
     <Compile Include="Models\Common\Danmaku\BiliDanmakuItem.cs" />
     <Compile Include="Models\Common\Dynamic\DynamicUgcSeasonCardModel.cs" />
     <Compile Include="Models\Common\Live\LiveRoomEmoticon.cs" />
+    <Compile Include="Models\Common\Live\LiveRoomInfoOldModel.cs" />
     <Compile Include="Models\Common\MarkdownViewerPagerParameter.cs" />
+    <Compile Include="Models\Common\Msg\BiliReplyMeResponse.cs" />
     <Compile Include="Models\Common\Msg\BiliSendMessageResultCode.cs" />
     <Compile Include="Models\Common\Msg\MsgContent\NotificationChatMessageContent.cs" />
     <Compile Include="Models\Common\Msg\MsgContent\RevokeChatMessageContent.cs" />
@@ -237,6 +245,7 @@
     <Compile Include="Models\Common\UserDynamic\NavDynArticle.cs" />
     <Compile Include="Models\Common\UserDynamic\NavDynArticles.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicSeasonInfo.cs" />
+    <Compile Include="Models\Common\User\LocalAttentionUser.cs" />
     <Compile Include="Models\Common\User\SendDynamic\AtDisplayModel.cs" />
     <Compile Include="Models\Common\User\SendDynamic\AtModel.cs" />
     <Compile Include="Models\Common\User\SendDynamic\SendImagesModel.cs" />
@@ -328,6 +337,7 @@
       <DependentUpon>MessagesPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\Biz\BaseBizService.cs" />
+    <Compile Include="Services\Biz\LocalAttentionUserService.cs" />
     <Compile Include="Services\Biz\MessagesService.cs" />
     <Compile Include="Services\Interfaces\IUpdatePivotLayout.cs" />
     <Compile Include="Services\PageSaveService.cs" />
@@ -346,6 +356,7 @@
     <Compile Include="Models\Common\Msg\SessionEmoteInfo.cs" />
     <Compile Include="Models\Common\Msg\MsgContent\ShareChatMessageContent.cs" />
     <Compile Include="Models\Common\Msg\MsgContent\TextChatMessageContent.cs" />
+    <Compile Include="ViewModels\Messages\ReplyMeMessageViewModel.cs" />
     <Compile Include="ViewModels\Season\SeasonShortReviewItemStatViewModel.cs" />
     <Compile Include="ViewModels\Season\SeasonShortReviewItemViewModel.cs" />
     <Compile Include="Models\Common\Season\SeasonShortReviewItemVIPModel.cs" />
@@ -1261,6 +1272,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Settings\PerformanceSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Settings\PlaySettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1738,10 +1753,12 @@
       <Name>Windows Desktop Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
-  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
+  <PropertyGroup
+    Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <Import
+    Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

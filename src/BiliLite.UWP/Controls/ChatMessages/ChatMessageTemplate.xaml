@@ -18,7 +18,7 @@
             <Grid Visibility="{Binding IsSelf,Converter={StaticResource display}}" Margin="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Ellipse Width="40" Height="40" Margin="10,0,10,0"
                                  VerticalAlignment="Top">
@@ -28,7 +28,7 @@
                 </Ellipse>
 
                 <!--消息气泡-->
-                <Border Background="{ThemeResource DefaultCardColor}" 
+                <Border Background="{ThemeResource ChatBorderColor}" 
                                 Grid.Column="1"
                                 CornerRadius="10" Padding="10" >
                     <StackPanel>
@@ -37,9 +37,9 @@
                 </Border>
             </Grid>
 
-            <Grid Visibility="{Binding IsSelf}" Margin="10">
+            <Grid Visibility="{Binding IsSelf}" Margin="10" HorizontalAlignment="Right">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Ellipse Grid.Column="1" Width="40" Height="40" Margin="10,0,10,0"
@@ -50,7 +50,7 @@
                 </Ellipse>
 
                 <!--消息气泡-->
-                <Border Background="{ThemeResource DefaultCardColor}" 
+                <Border Background="{ThemeResource ChatBorderColor}" 
                                 CornerRadius="10" Padding="10" >
                     <Border.ContextFlyout>
                         <MenuFlyout>
@@ -72,7 +72,7 @@
             <Grid Visibility="{Binding IsSelf,Converter={StaticResource display}}" Margin="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Ellipse Width="40" Height="40" Margin="10,0,10,0"
                                  VerticalAlignment="Top">
@@ -82,7 +82,7 @@
                 </Ellipse>
 
                 <!--消息气泡-->
-                <Border Background="{ThemeResource DefaultCardColor}" 
+                <Border Background="{ThemeResource ChatBorderColor}" 
                                 Grid.Column="1"
                                 CornerRadius="10" Padding="10" >
                     <StackPanel>
@@ -100,9 +100,9 @@
                 </Border>
             </Grid>
 
-            <Grid Visibility="{Binding IsSelf}" Margin="10">
+            <Grid Visibility="{Binding IsSelf}" Margin="10" HorizontalAlignment="Right">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Ellipse Grid.Column="1" Width="40" Height="40" Margin="10,0,10,0"
@@ -113,7 +113,7 @@
                 </Ellipse>
 
                 <!--消息气泡-->
-                <Border Background="{ThemeResource DefaultCardColor}" 
+                <Border Background="{ThemeResource ChatBorderColor}" 
                                 CornerRadius="10" Padding="10" >
                     <Border.ContextFlyout>
                         <MenuFlyout>

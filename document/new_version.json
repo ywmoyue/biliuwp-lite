@@ -1,7 +1,7 @@
 {
-  "version": "4.7.12",
-  "version_num": 40712,
-  "version_desc": "公告:\r\n\r\n- B站大会员新条款可能影响本App,请知悉:https://github.com/ywmoyue/biliuwp-lite/discussions/980\r\n\r\n\r\n\r\n更新内容:\r\n\r\n- 初步实现消息页，替换原有WebView打开消息页 \r\n\r\n- 简化安装教程文档 \r\n\r\n- 修复 Github action 编译失败 \r\n\r\n- 修复无法进入个人空间 \r\n\r\n- 修复直播间表情按钮遮盖文本输入清除按钮 \r\n\r\n- 修复编译警告XDG0066\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.7.13",
+  "version_num": 40713,
+  "version_desc": "更新内容:\r\n\r\n- 完善消息中心页，支持发送消息和查看回复我的消息列表 \r\n\r\n- 新增自动刷新播放地址设置项，默认关闭 \r\n\r\n- 修复直播间弹幕输入框问题 \r\n\r\n- 放映厅索引筛选不显示文字 \r\n\r\n- 修复拖动标签栏隐藏子项的问题\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }

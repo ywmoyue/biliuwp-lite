@@ -42,6 +42,8 @@ namespace BiliLite.ViewModels.Home
 
         public bool ShowFollows { get; set; }
 
+        public bool ShowLocalFollows { get; set; }
+
         public bool Loading { get; set; }
 
         public bool LoadingFollow { get; set; } = true;
