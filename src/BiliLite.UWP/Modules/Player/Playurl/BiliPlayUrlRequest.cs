@@ -179,6 +179,9 @@ namespace BiliLite.Modules.Player.Playurl
                     Audio = audio.ToBiliDashItem(),
                 });
             }
+
+            info.AudioQualites = [.. info.AudioQualites.OrderBy(x => x.QualityID)];
+
             // 处理无损音质
             if (flacAudio is { Display: true, Audio: { } })
             {
@@ -212,7 +215,6 @@ namespace BiliLite.Modules.Player.Playurl
                     Audio = audio.ToBiliDashItem(),
                 });
             }
-            info.AudioQualites = [.. info.AudioQualites.OrderBy(x => x.QualityID)];
 
             BiliDashItem currentAudio = null;
 
