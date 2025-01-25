@@ -607,14 +607,20 @@
                                         </Button.Flyout>
                                     </Button>
 
-                                    <Button ToolTipService.ToolTip="音质" Click="BottomBtnSoundQuality_Click" BorderThickness="0" Style="{StaticResource DefaultButtonStyle}" FontSize="18" x:Name="BottomBtnSoundQuality" Background="Transparent" Foreground="White" Padding="8" Height="48">
+                                    <Button ToolTipService.ToolTip="音质" BorderThickness="0" Style="{StaticResource DefaultButtonStyle}" FontSize="18" x:Name="BottomBtnSoundQuality" Background="Transparent" Foreground="White" Padding="8" Height="48">
                                         <Button.Flyout>
                                             <Flyout>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock VerticalAlignment="Bottom" x:Name="MinSoundQuality" Margin="0 0 10 8"></TextBlock>
                                                     <StackPanel>
                                                         <TextBlock Margin="0 0 0 10" HorizontalAlignment="Center">音质</TextBlock>
-                                                        <Slider ValueChanged="SliderSoundQuality_ValueChanged" x:Name="SliderSoundQuality" Width="200" Minimum="0" StepFrequency="1" TickFrequency="1" TickPlacement="Outside"/>
+                                                        <Slider ValueChanged="SliderSoundQuality_ValueChanged" 
+                                                                x:Name="SliderSoundQuality" 
+                                                                Width="200" Minimum="0" 
+                                                                StepFrequency="1" 
+                                                                TickFrequency="1" 
+                                                                TickPlacement="Outside"
+                                                                />
                                                     </StackPanel>
                                                     <TextBlock VerticalAlignment="Bottom" x:Name="MaxSoundQuality" Margin="10 0 0 8"></TextBlock>
                                                 </StackPanel>
@@ -622,7 +628,7 @@
                                         </Button.Flyout>
                                     </Button>
 
-                                    <Button ToolTipService.ToolTip="画质" Click="BottomBtnQuality_Click" BorderThickness="0" Style="{StaticResource DefaultButtonStyle}" FontSize="18" x:Name="BottomBtnQuality" Background="Transparent" Foreground="White" Padding="8" Height="48">
+                                    <Button ToolTipService.ToolTip="画质" BorderThickness="0" Style="{StaticResource DefaultButtonStyle}" FontSize="18" x:Name="BottomBtnQuality" Background="Transparent" Foreground="White" Padding="8" Height="48">
                                         <Button.Flyout>
                                             <Flyout>
                                                 <StackPanel Orientation="Horizontal">
@@ -637,7 +643,7 @@
                                         </Button.Flyout>
                                     </Button>
 
-                                    <Button ToolTipService.ToolTip="倍速" Click="BottomBtnPlaySpeed_Click" BorderThickness="0" Style="{StaticResource DefaultButtonStyle}" FontSize="18" x:Name="BottomBtnPlaySpeed" Background="Transparent" Foreground="White" Padding="8" Height="48">
+                                    <Button ToolTipService.ToolTip="倍速" BorderThickness="0" Style="{StaticResource DefaultButtonStyle}" FontSize="18" x:Name="BottomBtnPlaySpeed" Background="Transparent" Foreground="White" Padding="8" Height="48">
                                         <Button.Flyout>
                                             <Flyout>
                                                 <StackPanel Orientation="Horizontal">

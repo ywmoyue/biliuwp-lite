@@ -483,7 +483,7 @@
                                             </Button.Flyout>
                                         </Button>
 
-                                        <Button ToolTipService.ToolTip="清晰度" Click="BottomBtnQuality_Click" Visibility="{x:Bind Path=m_viewModel.Living,Mode=OneWay}"  BorderThickness="0" FontSize="18" x:Name="BottomBtnQuality" Background="Transparent" Foreground="White" Padding="8 4 8 8" Height="48">
+                                        <Button ToolTipService.ToolTip="清晰度" Visibility="{x:Bind Path=m_viewModel.Living,Mode=OneWay}"  BorderThickness="0" FontSize="18" x:Name="BottomBtnQuality" Background="Transparent" Foreground="White" Padding="8 4 8 8" Height="48">
                                             <Button.Flyout>
                                                 <Flyout>
                                                     <StackPanel Orientation="Horizontal">
@@ -498,7 +498,7 @@
                                             </Button.Flyout>
                                         </Button>
 
-                                        <Button ToolTipService.ToolTip="线路" Click="BottomBtnLine_Click" Visibility="{x:Bind Path=m_viewModel.Living,Mode=OneWay}"  BorderThickness="0" FontSize="18" x:Name="BottomBtnLine" Background="Transparent" Foreground="White" Padding="8 4 8 8" Height="48">
+                                        <Button ToolTipService.ToolTip="线路" Visibility="{x:Bind Path=m_viewModel.Living,Mode=OneWay}"  BorderThickness="0" FontSize="18" x:Name="BottomBtnLine" Background="Transparent" Foreground="White" Padding="8 4 8 8" Height="48">
                                             <Button.Flyout>
                                                 <Flyout>
                                                     <StackPanel Orientation="Horizontal">

@@ -44,12 +44,13 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+using BiliLite.Converters;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
 namespace BiliLite.Controls
 {
-    public sealed partial class PlayerControl : UserControl, IDisposable, IValueConverter
+    public sealed partial class PlayerControl : UserControl, IDisposable
     {
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly bool m_useNsDanmaku = true;
@@ -58,6 +59,9 @@ namespace BiliLite.Controls
         private readonly PlayControlViewModel m_viewModel;
         private readonly PlayerToastService m_playerToastService;
         private readonly PlaySpeedMenuService m_playSpeedMenuService;
+        private readonly SoundQualitySliderTooltipConverter m_soundQualitySliderTooltipConverter;
+        private readonly QualitySliderTooltipConverter m_qualitySliderTooltipConverter;
+        private readonly PlaySpeedSliderTooltipConverter m_playSpeedSliderTooltipConverter;
         private DateTime m_startTime = DateTime.Now;
         public event PropertyChangedEventHandler PropertyChanged;
         private GestureRecognizer gestureRecognizer;
@@ -164,6 +168,10 @@ namespace BiliLite.Controls
 
             gestureRecognizer = new GestureRecognizer();
             InitializeGesture();
+
+            m_soundQualitySliderTooltipConverter = new SoundQualitySliderTooltipConverter();
+            m_qualitySliderTooltipConverter = new QualitySliderTooltipConverter();
+            m_playSpeedSliderTooltipConverter = new PlaySpeedSliderTooltipConverter(m_playSpeedMenuService);
 
             m_useNsDanmaku = (DanmakuEngineType)SettingService.GetValue(SettingConstants.VideoDanmaku.DANMAKU_ENGINE,
                 (int)SettingConstants.VideoDanmaku.DEFAULT_DANMAKU_ENGINE) == DanmakuEngineType.NSDanmaku;
@@ -1375,61 +1383,6 @@ namespace BiliLite.Controls
         }
 
         #region Slider
-        bool isSliderSoundQuality;
-        bool isSliderQuality;
-        bool isSliderPlaySpeed;
-
-        private void BottomBtnSoundQuality_Click(object sender, RoutedEventArgs e)
-        {
-            isSliderSoundQuality = true;
-            isSliderQuality = false;
-            isSliderPlaySpeed = false;
-        }
-
-        private void BottomBtnQuality_Click(object sender, RoutedEventArgs e)
-        {
-            isSliderSoundQuality = false;
-            isSliderQuality = true;
-            isSliderPlaySpeed = false;
-        }
-
-        private void BottomBtnPlaySpeed_Click(object sender, RoutedEventArgs e)
-        {
-            isSliderSoundQuality = false;
-            isSliderQuality = false;
-            isSliderPlaySpeed = true;
-        }
-
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            if (value is double sliderValue)
-            {
-                if (isSliderSoundQuality)
-                {
-                    return sliderValue >= 0 && sliderValue < playUrlInfo.AudioQualites.Count
-                        ? playUrlInfo.AudioQualites[(int)sliderValue].QualityName
-                        : sliderValue.ToString();
-                }
-                if (isSliderQuality)
-                {
-                    return sliderValue >= 0 && sliderValue < playUrlInfo.Qualites.Count
-                        ? playUrlInfo.Qualites[(int)sliderValue].QualityName
-                        : sliderValue.ToString();
-                }
-                if (isSliderPlaySpeed)
-                {
-                    return sliderValue >= 0 && sliderValue < m_playSpeedMenuService.MenuItems.Count
-                        ? m_playSpeedMenuService.MenuItems[(int)sliderValue].Content
-                        : sliderValue.ToString();
-                }
-            }
-            return value;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            throw new NotImplementedException();
-        }
 
         private void InitSoundQuality()
         {
@@ -1440,7 +1393,8 @@ namespace BiliLite.Controls
             BottomBtnSoundQuality.Content = playUrlInfo.CurrentAudioQuality.QualityName;
             SliderSoundQuality.Maximum = playUrlInfo.AudioQualites.Count - 1;
             SliderSoundQuality.Value = playUrlInfo.AudioQualites.IndexOf(playUrlInfo.CurrentAudioQuality);
-            SliderSoundQuality.ThumbToolTipValueConverter = this;
+            m_soundQualitySliderTooltipConverter.AudioQualites = playUrlInfo.AudioQualites;
+            SliderSoundQuality.ThumbToolTipValueConverter = m_soundQualitySliderTooltipConverter;
 
             // ChangeQuality(current_quality_info, playUrlInfo.CurrentAudioQuality).RunWithoutAwait();
         }
@@ -1465,7 +1419,8 @@ namespace BiliLite.Controls
             BottomBtnQuality.Content = playUrlInfo.CurrentQuality.QualityName;
             SliderQuality.Maximum = playUrlInfo.Qualites.Count - 1;
             SliderQuality.Value = playUrlInfo.Qualites.IndexOf(playUrlInfo.CurrentQuality);
-            SliderQuality.ThumbToolTipValueConverter = this;
+            m_qualitySliderTooltipConverter.Qualites = playUrlInfo.Qualites;
+            SliderQuality.ThumbToolTipValueConverter = m_qualitySliderTooltipConverter;
 
             ChangeQuality(playUrlInfo.CurrentQuality, playUrlInfo.CurrentAudioQuality).RunWithoutAwait();
         }
@@ -1513,7 +1468,7 @@ namespace BiliLite.Controls
             BottomBtnPlaySpeed.IsEnabled = m_playSpeedMenuService.MenuItems.Count > 1;
             BottomBtnPlaySpeed.Content = CurrentPlaySpeed.Content;
             SliderPlaySpeed.Value = m_playSpeedMenuService.MenuItems.IndexOf(CurrentPlaySpeed);
-            SliderPlaySpeed.ThumbToolTipValueConverter = this;
+            SliderPlaySpeed.ThumbToolTipValueConverter = m_playSpeedSliderTooltipConverter;
 
             Player.SetRate(CurrentPlaySpeed.Value);
         }
@@ -1539,26 +1494,29 @@ namespace BiliLite.Controls
         // 快捷键减速播放
         public void SlowDown()
         {
-            if (SliderPlaySpeed.Value == 0.25)
+            var index = (int)SliderPlaySpeed.Value;
+            if (index <= 0)
             {
                 Notify.ShowMessageToast("不能再慢啦");
                 return;
             }
 
-            SliderPlaySpeed.Value -= 0.25;
-            m_playerToastService.Show(PlayerToastService.SPEED_KEY, $"{SliderPlaySpeed.Value}x");
+            SliderPlaySpeed.Value = index - 1;
+            m_playerToastService.Show(PlayerToastService.SPEED_KEY, $"{m_playSpeedMenuService.MenuItems[(int)SliderPlaySpeed.Value].Content}");
         }
 
         // 快捷键加速播放
         public void FastUp()
         {
-            if (SliderPlaySpeed.Value == 2)
+            var index = (int)SliderPlaySpeed.Value;
+            if (index >= m_playSpeedMenuService.MenuItems.Count - 1)
             {
                 Notify.ShowMessageToast("不能再快啦");
                 return;
             }
-            SliderPlaySpeed.Value += 0.25;
-            m_playerToastService.Show(PlayerToastService.SPEED_KEY, $"{SliderPlaySpeed.Value}x");
+
+            SliderPlaySpeed.Value = index + 1;
+            m_playerToastService.Show(PlayerToastService.SPEED_KEY, $"{m_playSpeedMenuService.MenuItems[(int)SliderPlaySpeed.Value].Content}");
         }
 
         // 快捷键获取播放速度

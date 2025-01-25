@@ -29,7 +29,7 @@ namespace BiliLite.Dialogs
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            m_playSpeedMenuService.SetMenuItems(m_viewModel.PlaySpeedMenuItems);
+            m_playSpeedMenuService.SetMenuItems(m_viewModel.PlaySpeedMenuItems.ToList());
         }
 
         private void BtnRemovePlaySpeed_OnTapped(object sender, TappedRoutedEventArgs e)

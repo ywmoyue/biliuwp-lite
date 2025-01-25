@@ -1,4 +1,5 @@
 ﻿using BiliLite.Controls;
+using BiliLite.Converters;
 using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Live;
@@ -45,7 +46,7 @@ namespace BiliLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class LiveDetailPage : BasePage, IPlayPage, IUpdatePivotLayout, IValueConverter
+    public sealed partial class LiveDetailPage : BasePage, IPlayPage, IUpdatePivotLayout
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
 
@@ -57,6 +58,8 @@ namespace BiliLite.Pages
         private readonly bool m_useNsDanmaku = true;
         private readonly IDanmakuController m_danmakuController;
         private readonly LiveSettingsControlViewModel m_liveSettingsControlViewModel;
+        private readonly LiveQualitySliderTooltipConverter m_liveQualitySliderTooltipConverter;
+        private readonly LiveLineSliderTooltipConverter m_liveLineSliderTooltipConverter;
 
         DisplayRequest dispRequest;
         LiveRoomViewModel m_liveRoomViewModel;
@@ -130,6 +133,9 @@ namespace BiliLite.Pages
             };
             this.Loaded += LiveDetailPage_Loaded;
             this.Unloaded += LiveDetailPage_Unloaded;
+
+            m_liveQualitySliderTooltipConverter = new LiveQualitySliderTooltipConverter();
+            m_liveLineSliderTooltipConverter = new LiveLineSliderTooltipConverter();
 
             m_useNsDanmaku = (DanmakuEngineType)SettingService.GetValue(SettingConstants.Live.DANMAKU_ENGINE,
                 (int)SettingConstants.Live.DEFAULT_DANMAKU_ENGINE) == DanmakuEngineType.NSDanmaku;
@@ -457,7 +463,8 @@ namespace BiliLite.Pages
             BottomBtnQuality.Content = m_liveRoomViewModel.CurrentQn.Desc;
             SliderQuality.Maximum = m_liveRoomViewModel.Qualites.Count - 1;
             SliderQuality.Value = m_liveRoomViewModel.Qualites.IndexOf(m_liveRoomViewModel.CurrentQn);
-            SliderQuality.ThumbToolTipValueConverter = this;
+            m_liveQualitySliderTooltipConverter.Qualites = m_liveRoomViewModel.Qualites;
+            SliderQuality.ThumbToolTipValueConverter = m_liveQualitySliderTooltipConverter;
         }
 
         private async void SliderQuality_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
@@ -484,7 +491,8 @@ namespace BiliLite.Pages
             MinLine.Text = basePlayUrls[0].Name;
             MaxLine.Text = basePlayUrls[basePlayUrls.Count - 1].Name;
             SliderLine.Maximum = basePlayUrls.Count - 1;
-            SliderLine.ThumbToolTipValueConverter = this;
+            m_liveLineSliderTooltipConverter.Lines = basePlayUrls;
+            SliderLine.ThumbToolTipValueConverter = m_liveLineSliderTooltipConverter;
 
             var flag = false;
             for (var i = 0; i < basePlayUrls.Count; i++)
@@ -514,46 +522,6 @@ namespace BiliLite.Pages
 
             m_playerConfig.SelectedRouteLine = (int)SliderLine.Value;
             await LoadPlayer();
-        }
-
-        bool isSliderQuality;
-        bool isSliderLine;
-
-        private void BottomBtnQuality_Click(object sender, RoutedEventArgs e)
-        {
-            isSliderQuality = true;
-            isSliderLine = false;
-        }
-
-        private void BottomBtnLine_Click(object sender, RoutedEventArgs e)
-        {
-            isSliderQuality = false;
-            isSliderLine = true;
-        }
-
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            if (value is double sliderValue)
-            {
-                if (isSliderQuality)
-                {
-                    return sliderValue >= 0 && sliderValue < m_liveRoomViewModel.Qualites.Count
-                        ? m_liveRoomViewModel.Qualites[(int)sliderValue].Desc
-                        : sliderValue.ToString();
-                }
-                if (isSliderLine)
-                {
-                    return sliderValue >= 0 && sliderValue < basePlayUrls.Count
-                        ? basePlayUrls[(int)sliderValue].Name
-                        : sliderValue.ToString();
-                }
-            }
-            return value;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            throw new NotImplementedException();
         }
 
         private async Task StopPlay()
