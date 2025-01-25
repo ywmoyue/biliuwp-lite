@@ -7,13 +7,12 @@
         public PlaySpeedMenuItem(double value)
         {
             Value = value;
-            IsDeletable = value != 1;
         }
 
         public string Content => Value + "x";
 
         public double Value { get; set; }
 
-        public bool IsDeletable;
+        public bool IsDeletable => Value != 1;
     }
 }
