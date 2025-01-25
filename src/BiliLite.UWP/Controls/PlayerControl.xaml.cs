@@ -211,8 +211,8 @@ namespace BiliLite.Controls
             else
             {
                 playUrlInfo = info;
-                SetSoundQuality();
-                SetQuality();
+                InitSoundQuality();
+                InitQuality();
             }
             Notify.ShowMessageToast("已根据设置自动刷新播放地址");
             m_startTime = DateTime.Now;
