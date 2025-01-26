@@ -86,11 +86,9 @@ jobs:
       - name: Setup MSBuild.exe
         uses: microsoft/setup-msbuild@v1.0.3
 
-      - name: Windows SDK Install
-        uses: ChristopheLav/windows-sdk-install@v1.0.1
+      - uses: GuillaumeFalourd/setup-windows10-sdk-action@v2.4
         with:
-          version-sdk: 18362
-          features: "OptionId.WindowsPerformanceToolkit,OptionId.WindowsDesktopDebuggers,OptionId.AvrfExternal,OptionId.NetFxSoftwareDevelopmentKit,OptionId.WindowsSoftwareLogoToolkit,OptionId.IpOverUsb,OptionId.MSIInstallTools,OptionId.SigningTools,OptionId.UWPManaged,OptionId.UWPCPP,OptionId.UWPLocalized,OptionId.DesktopCPPx86,OptionId.DesktopCPPx64,OptionId.DesktopCPParm,OptionId.DesktopCPParm64"
+          sdk-version: 19041
 
       - name: Update manifest version
         run: |

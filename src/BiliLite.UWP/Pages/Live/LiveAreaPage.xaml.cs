@@ -1,19 +1,8 @@
 ﻿using BiliLite.Models.Common;
 using BiliLite.Modules.Live;
 using BiliLite.Services;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
+using BiliLite.Services.Interfaces;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -23,7 +12,7 @@ namespace BiliLite.Pages.Live
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class LiveAreaPage : BasePage
+    public sealed partial class LiveAreaPage : BasePage, IUpdatePivotLayout
     {
         readonly LiveAreaVM liveAreaVM;
         public LiveAreaPage()
@@ -36,7 +25,7 @@ namespace BiliLite.Pages.Live
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if(e.NavigationMode==  NavigationMode.New&& liveAreaVM.Items == null)
+            if (e.NavigationMode == NavigationMode.New && liveAreaVM.Items == null)
             {
                 await liveAreaVM.GetItems();
             }
@@ -56,6 +45,12 @@ namespace BiliLite.Pages.Live
                     area_id = area.id
                 }
             });
+        }
+
+        public void UpdatePivotLayout()
+        {
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
         }
     }
 }

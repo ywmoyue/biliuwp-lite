@@ -17,7 +17,7 @@ namespace BiliLite.Controls.Settings
         public LiveSettingsControl()
         {
             m_viewModel = App.ServiceProvider.GetRequiredService<LiveSettingsControlViewModel>();
-            this.InitializeComponent();
+            InitializeComponent();
             LoadLiveDanmu();
         }
 

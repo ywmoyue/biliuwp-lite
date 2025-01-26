@@ -24,10 +24,10 @@ namespace BiliLite.Controls
         {
             get
             {
-                double position = this.Position % this.ItemWidth;
+                double position = Position % ItemWidth;
                 if (Math.Sign(position) > 0)
                 {
-                    return this.ItemWidth - position;
+                    return ItemWidth - position;
                 }
                 return -position;
             }
@@ -56,24 +56,24 @@ namespace BiliLite.Controls
         private async void AnimateNext(double duration = 150)
         {
             _isBusy = true;
-            double delta = this.ItemWidth - this.Offset;
+            double delta = ItemWidth - Offset;
             double position = Position - delta;
 
             await _panel.AnimateXAsync(position, duration);
 
-            this.Index = (int)(-position / this.ItemWidth);
+            Index = (int)(-position / ItemWidth);
             _isBusy = false;
         }
 
         private async void AnimatePrev(double duration = 150)
         {
             _isBusy = true;
-            double delta = this.Offset;
+            double delta = Offset;
             double position = Position + delta;
 
             await _panel.AnimateXAsync(position, duration);
 
-            this.Index = (int)(-position / this.ItemWidth);
+            Index = (int)(-position / ItemWidth);
             _isBusy = false;
         }
     }

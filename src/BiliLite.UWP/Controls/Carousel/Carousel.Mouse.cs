@@ -65,7 +65,7 @@ namespace BiliLite.Controls
                 _arrows.FadeIn();
                 _isArrowVisible = true;
             }
-            this._fadeTimer?.Start();
+            _fadeTimer?.Start();
         }
 
         private void OnFadeTimerTick(object sender, object e)

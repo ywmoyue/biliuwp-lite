@@ -11,7 +11,10 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using BiliLite.Models.Common.Home;
 using BiliLite.ViewModels.Home;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
+using BiliLite.Services.Biz;
+using BiliLite.Models.Common.Live;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -52,6 +55,11 @@ namespace BiliLite.Pages.Home
             {
                 m_viewModel.ShowFollows = true;
                 await m_viewModel.LiveAttentionVm.GetFollows();
+                await m_viewModel.LiveAttentionVm.GetLocalFollows();
+                if (m_viewModel.LiveAttentionVm.LocalFollows != null && m_viewModel.LiveAttentionVm.LocalFollows.Any())
+                {
+                    m_viewModel.ShowLocalFollows = true;
+                }
             }
         }
 
@@ -81,14 +89,26 @@ namespace BiliLite.Pages.Home
 
         private void FollowLive_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var data = e.ClickedItem as LiveFollowAnchorModel;
-            MessageCenter.NavigateToPage(this, new NavigationInfo()
+            if (e.ClickedItem is LiveFollowAnchorModel data)
             {
-                icon = Symbol.Video,
-                page = typeof(LiveDetailPage),
-                title = data.uname + "的直播间",
-                parameters = data.roomid
-            });
+                MessageCenter.NavigateToPage(this, new NavigationInfo()
+                {
+                    icon = Symbol.Video,
+                    page = typeof(LiveDetailPage),
+                    title = data.uname + "的直播间",
+                    parameters = data.roomid
+                });
+            }
+            else if(e.ClickedItem is LiveRoomInfoOldModel info)
+            {
+                MessageCenter.NavigateToPage(this, new NavigationInfo()
+                {
+                    icon = Symbol.Video,
+                    page = typeof(LiveDetailPage),
+                    title = info.UserName + "的直播间",
+                    parameters = info.RoomId
+                });
+            }
         }
 
         private void LiveItems_ItemClick(object sender, ItemClickEventArgs e)
@@ -185,6 +205,18 @@ namespace BiliLite.Pages.Home
                 title = "直播中心",
 
             });
+        }
+
+        private void CancelLocalAttention_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is not FrameworkElement { DataContext: LiveRoomInfoOldModel roomInfo })
+            {
+                return;
+            }
+            
+            var localAttentionUserService = App.ServiceProvider.GetRequiredService<LocalAttentionUserService>();
+            localAttentionUserService.CancelAttention(roomInfo.UserId);
+            m_viewModel.LiveAttentionVm.LocalFollows.Remove(roomInfo);
         }
     }
 }

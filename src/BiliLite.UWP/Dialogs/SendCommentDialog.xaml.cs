@@ -84,7 +84,6 @@ namespace BiliLite.Dialogs
             {
                 await emoteVM.GetEmote(EmoteBusiness.reply);
             }
-
         }
 
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)

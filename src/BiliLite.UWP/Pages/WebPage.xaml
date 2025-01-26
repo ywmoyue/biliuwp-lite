@@ -25,11 +25,13 @@
                     x:Name="btnBack"
                     Click="btnBack_Click"
                     Icon="Back"
+                    IsEnabled="{x:Bind m_viewModel.IsEnableGoBack,Mode=OneWay}"
                     ToolTipService.ToolTip="上一页" />
                 <AppBarButton
                     x:Name="btnForword"
                     Click="btnForword_Click"
                     Icon="Forward"
+                    IsEnabled="{x:Bind m_viewModel.IsEnableGoForward,Mode=OneWay}"
                     ToolTipService.ToolTip="下一页" />
                 <AppBarButton
                     x:Name="btnRefresh"
@@ -43,7 +45,6 @@
                     Foreground="Transparent"
                     Icon="Emoji2"
                     Visibility="Collapsed" />
-
             </StackPanel>
             <AutoSuggestBox
                 Grid.Column="1"

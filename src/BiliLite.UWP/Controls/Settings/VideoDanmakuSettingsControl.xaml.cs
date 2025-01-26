@@ -19,7 +19,7 @@ namespace BiliLite.Controls.Settings
         public VideoDanmakuSettingsControl()
         {
             m_viewModel = App.ServiceProvider.GetRequiredService<VideoDanmakuSettingsControlViewModel>();
-            this.InitializeComponent();
+            InitializeComponent();
             LoadDanmu();
         }
 

@@ -108,7 +108,7 @@
             Visibility="Collapsed" />
         <Grid>
             <Grid x:Name="GridTopBar" MaxWidth="800">
-                <Pivot x:Name="DynPivot" SelectionChanged="Pivot_OnSelectionChanged">
+                <Pivot x:Name="pivot" SelectionChanged="Pivot_OnSelectionChanged">
                     <Pivot.RightHeader>
                         <Button Margin="15,0" Command="{x:Bind Path=m_viewModel.RepostCommand, Mode=OneWay}">
                             <StackPanel Orientation="Horizontal">

@@ -1,4 +1,7 @@
-﻿namespace BiliLite.Models.Common.Search
+﻿using BiliLite.Converters;
+using System;
+
+namespace BiliLite.Models.Common.Search
 {
     public class SearchVideoItem
     {
@@ -24,6 +27,22 @@
         public int review { get; set; }
         public int favorites { get; set; }
         public string duration { get; set; }
+
+        public string DurationShow
+        {
+            get
+            {
+                try
+                {
+                    return TimeSpanStrFormatConverter.Convert(duration);
+                }
+                catch (Exception ex)
+                {
+                    return duration;
+                }
+            }
+        }
+
         private string _pic;
         public string pic
         {

@@ -13,7 +13,7 @@ namespace BiliLite.Controls.Settings
     {
         public ProxySettingsControl()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             LoadRoaming();
         }
 

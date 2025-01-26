@@ -1,6 +1,6 @@
-﻿using System.Collections.ObjectModel;
-using BiliLite.Models.Common.Player;
+﻿using BiliLite.Models.Common.Player;
 using BiliLite.ViewModels.Common;
+using System.Collections.ObjectModel;
 
 namespace BiliLite.ViewModels.Settings
 {
@@ -8,6 +8,6 @@ namespace BiliLite.ViewModels.Settings
     {
         public ObservableCollection<PlaySpeedMenuItem> PlaySpeedMenuItems { get; set; }
 
-        public double AddPlaySpeedValue { get; set; } = 1;
+        public double AddPlaySpeedValue { get; set; } = 3;
     }
 }

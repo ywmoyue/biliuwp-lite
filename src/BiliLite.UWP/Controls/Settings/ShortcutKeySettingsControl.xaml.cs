@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using AutoMapper;
+﻿using AutoMapper;
+using BiliLite.Models.Common;
 using BiliLite.Models.Functions;
 using BiliLite.Services;
 using BiliLite.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -31,10 +32,20 @@ namespace BiliLite.Controls.Settings
             m_viewModel = App.ServiceProvider.GetRequiredService<ShortcutKeySettingsControlViewModel>();
             m_viewModel.ShortcutFunctions = m_mapper.Map<ObservableCollection<ShortcutFunctionViewModel>>(m_shortcutKeyService.ShortcutFunctions);
             m_viewModel.PressActionDelayTime = m_shortcutKeyService.PressActionDelayTime;
-            this.InitializeComponent();
+            InitializeComponent();
 
             m_shortcutKeyService.OnRecordKeyDown += ShortcutKeyService_OnRecordKeyDown;
-            m_shortcutKeyService.OnRecordStoped += ShortcutKeyService_OnRecordStoped; ;
+            m_shortcutKeyService.OnRecordStoped += ShortcutKeyService_OnRecordStoped;
+
+            // 鼠标中键/侧键行为
+            cbMouseMiddleAction.SelectedIndex = SettingService.GetValue(SettingConstants.UI.MOUSE_MIDDLE_ACTION, (int)MouseMiddleActions.Back);
+            cbMouseMiddleAction.Loaded += new RoutedEventHandler((sender, e) =>
+            {
+                cbMouseMiddleAction.SelectionChanged += new SelectionChangedEventHandler((obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.MOUSE_MIDDLE_ACTION, cbMouseMiddleAction.SelectedIndex);
+                });
+            });
         }
 
         private async void ShortcutKeyService_OnRecordStoped(object sender, System.EventArgs e)

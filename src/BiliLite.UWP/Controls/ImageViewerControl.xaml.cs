@@ -29,7 +29,7 @@ namespace BiliLite.Controls
         public event EventHandler CloseEvent;
         public ImageViewerControl()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         public List<ImageInfo> imgs;

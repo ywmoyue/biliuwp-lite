@@ -1,7 +1,7 @@
 {
-  "version": "4.7.10",
-  "version_num": 40710,
-  "version_desc": "更新内容:\r\n\r\n- 支持快捷键切换播放速度 \r\n\r\n- 支持启动应用时打开上次的标签页 \r\n\r\n- 首页动画页、直播页、影视页支持触摸板横向触摸滑动 \r\n\r\n- 直播间优化  \r\n\r\n- 默认排序方式改为时间倒序（仅支持启用下载索引时） \r\n\r\n- 打开下载页无正在下载视频时直接进入已下载视频tab \r\n\r\n- 首页动态页实现页面切换 \r\n\r\n- 更新sdk \r\n\r\n- 长时间暂停后检测视频地址是否有效，无效则刷新 \r\n\r\n- 修复视频详情页滚动到当前项错误问题\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.7.13",
+  "version_num": 40713,
+  "version_desc": "更新内容:\r\n\r\n- 完善消息中心页，支持发送消息和查看回复我的消息列表 \r\n\r\n- 新增自动刷新播放地址设置项，默认关闭 \r\n\r\n- 修复直播间弹幕输入框问题 \r\n\r\n- 放映厅索引筛选不显示文字 \r\n\r\n- 修复拖动标签栏隐藏子项的问题\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }

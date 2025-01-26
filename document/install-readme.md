@@ -2,78 +2,45 @@
 <link rel="stylesheet" href="https://support.microsoft.com/css/fonts/site-fonts.css?v=4M_1wOASateOs9zdphCtIqMvtKo366Gf6pkOjDqzkYo">
 
 # Biliuwp-lite安装教程
-- [Windows10 安装教程（脚本安装方式）](install-readme.md#Windows10)
-- [Windows11 安装教程（Appx直接安装方式/不推荐）](install-readme.md#Windows11)
+- [安装教程（脚本安装方式）](install-readme.md#安装教程)
 - [常见问题](install-readme.md#其他问题)
+  - [安装脚本闪退问题](install-readme.md#运行安装脚本后终端直接退出)
   - [网络/代理问题](install-readme.md#网络代理问题)
 ## 安装要求系统版本信息
 
-- Windows10 1903及以上
+- Windows10 2004及以上
 - 4.6.x 版本更新 4.7.x， 需要卸载并重启系统后使用脚本方式安装
-- 4.7.x第一次安装需要使用脚本方式安装
 
-## Windows10
+## 安装教程
 
-> Win10系统请勿直接运行`.msix`安装包进行安装，可能导致奇怪的问题
-
-### 启用开发者模式
-
-1. 点<kbd>Windows</kbd><span class="icon-fluent icon-windowslogo" aria-hidden="true"></span>+<kbd>I</kbd>键打开 `Windows设置` 按图所示操作
-![](./_img/win10-developer-mode-01.drawio.png)
-![](./_img/win10-developer-mode-02.drawio.png)
-
-### 安装证书
-
-1. 双击打开 `.cer` 证书文件. 如果没有 `.cer` 证书文件则右键 `.appx` 文件-属性-数字签名-详细
-信息-查看证书
-![](./_img/install-cert-01.drawio.png)
-
-2. 点击安装证书，将证书安装到本地计算机
-
-![](./_img/install-cert-02.drawio.png)
-
-3. 选择受信任的根证书颁发机构，下一步，完成即可
-
-![](./_img/install-cert-03.drawio.png)
-
-### 检查脚本执行权限
-
-1. 点<kbd>Windows</kbd>+<kbd>X</kbd>键并选择以管理员身份启动 终端/PowerShell
-
-![](./_img/check-ps1-permission-01.drawio.png)
-
-2. 执行命令 `get-ExecutionPolicy`, 如果输出 `Restricted` 表示 禁止执行脚本,如果输出 `RemoteSigned` 表示 可以执行脚本
-
-![](./_img/check-ps1-permission-02.drawio.png)
-
-3. 执行命令`Set-ExecutionPolicy -ExecutionPolicy RemoteSigned`并按<kbd>Y</kbd>键启用脚本执行权限, 如果执行命令后无任何输出表示执行成功可以进入下一步运行安装脚本
+> 请勿直接运行`.msix`安装包进行安装，可能导致奇怪的问题
 
 ### 运行安装脚本
 
-1. 在安装包解压目录中按住键盘shift并单击鼠标右键打开powershell，执行脚本 `.\Install.ps1` 开始安装
+1. 在安装包解压目录中右键单击脚本文件 `.\Install.ps1` ，选择`使用 PowerShell 运行`开始安装
 
 ![](./_img/run-ps1-script.drawio.png)
 
+2. 之后根据脚本提示操作即可，如下图所示（仅供参考，Windows不同版本界面可能有差异）
 
-## Windows11
-### 安装证书
-
-1. 双击打开 `.cer` 证书文件. 如果没有 `.cer` 证书文件则 **右键 `.appx` 文件-属性-数字签名-详细信息-查看证书**
-![](./_img/install-cert-01.drawio.png)
-
-2. 点击安装证书，将证书安装到`本地计算机`
-
-![](./_img/install-cert-02.drawio.png)
-
-3. 选择受`信任的根证书颁发机构`，下一步，完成即可
-
-![](./_img/install-cert-03.drawio.png)
-
-### 运行Msix安装包
-
-![](./_img/install-msix.drawio.png)
+![](./_img/install-ps1-1.drawio.png)
 
 ## 其他问题：
+
+### 运行安装脚本后终端直接退出
+
+1. 系统可能无法自动提示启用脚本权限，请根据以下操作启用脚本权限
+
+2. 点<kbd>Windows</kbd>+<kbd>X</kbd>键并选择以管理员身份启动 终端/PowerShell
+
+![](./_img/check-ps1-permission-01.drawio.png)
+
+3. 执行命令 `get-ExecutionPolicy`, 如果输出 `Restricted` 表示 禁止执行脚本,如果输出 `RemoteSigned` 表示 可以执行脚本
+
+![](./_img/check-ps1-permission-02.drawio.png)
+
+4. 执行命令`Set-ExecutionPolicy -ExecutionPolicy RemoteSigned`并按<kbd>Y</kbd>键启用脚本执行权限, 如果执行命令后无任何输出表示执行成功可以进入下一步运行安装脚本
+
 ### 网络/代理问题
 1. 脚本安装后无法在 Clash For Windows<sup>1</sup> 中解除对此UWP应用的联网限制
    - 可尝试再脚本安装后再使用`.msix`安装包包 Reinstall 一遍（此解决方案仅限 Windows11, WIndows10 未经测试）

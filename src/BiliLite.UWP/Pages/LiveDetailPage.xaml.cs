@@ -1,13 +1,28 @@
 ﻿using BiliLite.Controls;
+using BiliLite.Converters;
 using BiliLite.Extensions;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Live;
+using BiliLite.Models.Common.Player;
+using BiliLite.Models.Exceptions;
 using BiliLite.Modules;
+using BiliLite.Player;
+using BiliLite.Player.Controllers;
+using BiliLite.Player.States.ContentStates;
+using BiliLite.Player.States.PauseStates;
+using BiliLite.Player.States.PlayStates;
+using BiliLite.Player.States.ScreenStates;
 using BiliLite.Services;
+using BiliLite.Services.Interfaces;
+using BiliLite.ViewModels.Live;
+using BiliLite.ViewModels.Settings;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Graphics.Display;
@@ -19,24 +34,10 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Models.Common.Live;
-using BiliLite.Models.Common.Player;
-using BiliLite.Models.Exceptions;
-using BiliLite.Player;
-using BiliLite.Player.Controllers;
-using BiliLite.Player.States.ContentStates;
-using BiliLite.Player.States.PauseStates;
-using BiliLite.Player.States.PlayStates;
-using BiliLite.Player.States.ScreenStates;
-using BiliLite.ViewModels.Live;
-using Windows.UI.Xaml.Documents;
-using System.Text.RegularExpressions;
-using BiliLite.Services.Interfaces;
-using BiliLite.ViewModels.Settings;
-using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -45,7 +46,7 @@ namespace BiliLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class LiveDetailPage : BasePage, IPlayPage
+    public sealed partial class LiveDetailPage : BasePage, IPlayPage, IUpdatePivotLayout
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
 
@@ -57,9 +58,12 @@ namespace BiliLite.Pages
         private readonly bool m_useNsDanmaku = true;
         private readonly IDanmakuController m_danmakuController;
         private readonly LiveSettingsControlViewModel m_liveSettingsControlViewModel;
+        private readonly LiveQualitySliderTooltipConverter m_liveQualitySliderTooltipConverter;
+        private readonly LiveLineSliderTooltipConverter m_liveLineSliderTooltipConverter;
 
         DisplayRequest dispRequest;
         LiveRoomViewModel m_liveRoomViewModel;
+        List<BasePlayUrlInfo> basePlayUrls;
         DispatcherTimer timer_focus;
         DispatcherTimer controlTimer;
         DispatcherTimer chatScrollTimer;
@@ -94,7 +98,7 @@ namespace BiliLite.Pages
             timer_focus.Tick += Timer_focus_Tick;
             controlTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1) };
             controlTimer.Tick += ControlTimer_Tick;
-            chatScrollTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(3)};
+            chatScrollTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(3) };
             chatScrollTimer.Tick += ChatScrollTimer_Tick;
             chatScrollTimer.Start();
 
@@ -107,7 +111,7 @@ namespace BiliLite.Pages
             m_liveRoomViewModel.RedPocketLotteryEnd += LiveRoomViewModelRedPocketLotteryEnd;
             m_liveRoomViewModel.AnchorLotteryStart += LiveRoomViewModelAnchorLotteryStart;
             m_liveRoomViewModel.SetManualPlayUrl += LiveRoomViewModelSetManualPlayUrl;
-            m_liveRoomViewModel.AddLotteryShieldWord += (sender, word) => 
+            m_liveRoomViewModel.AddLotteryShieldWord += (sender, word) =>
             {
                 if (m_liveRoomViewModel.ShowLotteryDanmu) return;
                 AddShieldWord(word);
@@ -128,8 +132,11 @@ namespace BiliLite.Pages
                 pivot.SelectedIndex = temp;
             };
             this.Loaded += LiveDetailPage_Loaded;
-            this.Unloaded += LiveDetailPage_Unloaded; 
-            
+            this.Unloaded += LiveDetailPage_Unloaded;
+
+            m_liveQualitySliderTooltipConverter = new LiveQualitySliderTooltipConverter();
+            m_liveLineSliderTooltipConverter = new LiveLineSliderTooltipConverter();
+
             m_useNsDanmaku = (DanmakuEngineType)SettingService.GetValue(SettingConstants.Live.DANMAKU_ENGINE,
                 (int)SettingConstants.Live.DEFAULT_DANMAKU_ENGINE) == DanmakuEngineType.NSDanmaku;
             if (m_useNsDanmaku)
@@ -213,7 +220,7 @@ namespace BiliLite.Pages
             m_liveRoomViewModel.ShowAnchorLotteryWinnerList = true;
             m_liveRoomViewModel.LoadBag().RunWithoutAwait();
         }
-         
+
         private void LiveRoomViewModelRedPocketLotteryEnd(object sender, LiveRoomEndRedPocketLotteryInfoModel e)
         {
             var winners = e.Winners;
@@ -222,7 +229,8 @@ namespace BiliLite.Pages
             m_liveRoomViewModel.ShowRedPocketLotteryWinnerList = true;
             foreach (var winner in winners)
             {
-                if (winner[0] == (SettingService.Account.UserID).ToString()) {
+                if (winner[0] == (SettingService.Account.UserID).ToString())
+                {
                     Notify.ShowMessageToast($"你已在人气红包抽奖中抽中 {awards[winner[3]].AwardName} , 赶快到背包中查看吧~", 5);
                     break;
                 }
@@ -432,32 +440,88 @@ namespace BiliLite.Pages
 
         #endregion
 
+        #region Slider
         private void LiveRoomViewModelChangedPlayUrl(object sender, EventArgs e)
         {
             changePlayUrlFlag = true;
+            InitSliderQuality();
+            InitSliderLine();
+            changePlayUrlFlag = false;
+        }
 
+        private void InitSliderQuality()
+        {
+            if (m_liveRoomViewModel.Qualites.IndexOf(m_liveRoomViewModel.CurrentQn) == -1)
+            {
+                return; // 空值检查
+            }
+
+            MinQuality.Text = m_liveRoomViewModel.Qualites[0].Desc;
+            MaxQuality.Text = m_liveRoomViewModel.Qualites[m_liveRoomViewModel.Qualites.Count - 1].Desc;
+
+            BottomBtnQuality.IsEnabled = m_liveRoomViewModel.Qualites.Count > 1;
+            BottomBtnQuality.Content = m_liveRoomViewModel.CurrentQn.Desc;
+            SliderQuality.Maximum = m_liveRoomViewModel.Qualites.Count - 1;
+            SliderQuality.Value = m_liveRoomViewModel.Qualites.IndexOf(m_liveRoomViewModel.CurrentQn);
+            m_liveQualitySliderTooltipConverter.Qualites = m_liveRoomViewModel.Qualites;
+            SliderQuality.ThumbToolTipValueConverter = m_liveQualitySliderTooltipConverter;
+        }
+
+        private async void SliderQuality_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            if (changePlayUrlFlag)
+            {
+                return;
+            }
+
+            var item = m_liveRoomViewModel.Qualites[(int)SliderQuality.Value];
+            SettingService.SetValue(SettingConstants.Live.DEFAULT_QUALITY, item.Qn);
+            await m_liveRoomViewModel.GetPlayUrls(m_liveRoomViewModel.RoomID, item.Qn);
+            BottomBtnQuality.Content = item.Desc;
+        }
+
+        private void InitSliderLine()
+        {
             m_realPlayInfo.PlayUrls.HlsUrls = m_liveRoomViewModel.HlsUrls;
             m_realPlayInfo.PlayUrls.FlvUrls = m_liveRoomViewModel.FlvUrls;
-            var urls = m_liveRoomViewModel.HlsUrls ?? m_liveRoomViewModel.FlvUrls;
-            BottomCBLine.ItemsSource = urls;
+            basePlayUrls = m_liveRoomViewModel.HlsUrls ?? m_liveRoomViewModel.FlvUrls;
+
+            BottomBtnLine.IsEnabled = basePlayUrls.Count > 1;
+
+            MinLine.Text = basePlayUrls[0].Name;
+            MaxLine.Text = basePlayUrls[basePlayUrls.Count - 1].Name;
+            SliderLine.Maximum = basePlayUrls.Count - 1;
+            m_liveLineSliderTooltipConverter.Lines = basePlayUrls;
+            SliderLine.ThumbToolTipValueConverter = m_liveLineSliderTooltipConverter;
 
             var flag = false;
-            for (var i = 0; i < urls.Count; i++)
+            for (var i = 0; i < basePlayUrls.Count; i++)
             {
-                var domain = new Uri(urls[i].Url).Host;
+                var domain = new Uri(basePlayUrls[i].Url).Host;
 
-                if (domain.Contains(m_viewModel.LivePlayUrlSource) && !flag) {
-                    BottomCBLine.SelectedIndex = i;
+                if (domain.Contains(m_viewModel.LivePlayUrlSource) && !flag)
+                {
+                    BottomBtnLine.Content = basePlayUrls[i].Name;
+                    SliderLine.Value = i + 1; // 强制触发 SliderLine_ValueChanged 事件
+                    SliderLine.Value = i;
+
                     flag = true;
                 }
             }
             if (!flag)
             {
-                BottomCBLine.SelectedIndex = 0;
+                BottomBtnLine.Content = basePlayUrls[0].Name;
+                SliderLine.Value = 0 + 1;
+                SliderLine.Value = 0;
             }
+        }
 
-            BottomCBQuality.SelectedItem = m_liveRoomViewModel.CurrentQn;
-            changePlayUrlFlag = false;
+        private async void SliderLine_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            BottomBtnLine.Content = basePlayUrls[(int)SliderLine.Value].Name;
+
+            m_playerConfig.SelectedRouteLine = (int)SliderLine.Value;
+            await LoadPlayer();
         }
 
         private async Task StopPlay()
@@ -473,6 +537,7 @@ namespace BiliLite.Pages
             SetFullScreen(false);
             MiniWidnows(false);
         }
+        #endregion
 
         string roomid;
 
@@ -513,7 +578,7 @@ namespace BiliLite.Pages
             SliderVolume.ValueChanged += (e, args) =>
             {
                 m_player.Volume = SliderVolume.Value;
-                if(!lockPlayerVolume)
+                if (!lockPlayerVolume)
                     SettingService.SetValue(SettingConstants.Player.PLAYER_VOLUME, SliderVolume.Value);
             };
             //亮度
@@ -700,29 +765,6 @@ namespace BiliLite.Pages
             }
         }
 
-        private async void BottomCBQuality_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (BottomCBQuality.SelectedItem == null || changePlayUrlFlag)
-            {
-                return;
-            }
-            var item = BottomCBQuality.SelectedItem as LiveRoomWebUrlQualityDescriptionItemModel;
-            SettingService.SetValue(SettingConstants.Live.DEFAULT_QUALITY, item.Qn);
-            await m_liveRoomViewModel.GetPlayUrls(m_liveRoomViewModel.RoomID, item.Qn);
-        }
-
-        private async void BottomCBLine_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (BottomCBLine.SelectedIndex == -1)
-            {
-                return;
-            }
-
-            m_playerConfig.SelectedRouteLine = BottomCBLine.SelectedIndex;
-
-            await LoadPlayer();
-        }
-
         private async void BottomBtnPause_Click(object sender, RoutedEventArgs e)
         {
             await m_playerController.PauseState.Pause();
@@ -869,7 +911,7 @@ namespace BiliLite.Pages
         {
             SetFullScreen(false);
         }
-        
+
         Task IPlayPage.CaptureVideo()
         {
             return CaptureVideo();
@@ -904,7 +946,7 @@ namespace BiliLite.Pages
 
         public void ToggleSubtitle()
         {
-            
+
         }
 
         private async Task CaptureVideo()
@@ -988,13 +1030,13 @@ namespace BiliLite.Pages
 
         private async void DanmuText_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            if (string.IsNullOrEmpty(sender.Text))
+            if (string.IsNullOrEmpty(m_viewModel.DanmakuInput))
             {
                 Notify.ShowMessageToast("弹幕内容不能为空");
                 return;
             }
-            var result = await m_liveRoomViewModel.SendDanmu(sender.Text);
-            if(result) sender.Text = "";
+            var result = await m_liveRoomViewModel.SendDanmu(m_viewModel.DanmakuInput);
+            if (result) m_viewModel.DanmakuInput = "";
 
             await m_liveRoomViewModel.GetEmoticons(); // 长期不看的观众即使在粉丝团也无法发表情, 此时发弹幕即可解锁
         }
@@ -1079,7 +1121,7 @@ namespace BiliLite.Pages
             var msg = "";
             msg += "弹幕发送成功";
 
-            if(m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.RequireText.Contains("关注主播") && !m_liveRoomViewModel.Attention)
+            if (m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.RequireText.Contains("关注主播") && !m_liveRoomViewModel.Attention)
             {
                 // 参与天选会自动关注, 无须手动关注
                 m_liveRoomViewModel.Attention = true;
@@ -1406,7 +1448,7 @@ namespace BiliLite.Pages
             }
         }
 
-        private bool IsPlayForward {  get; set; } = false;
+        private bool IsPlayForward { get; set; } = false;
         private async void btnPlayForward_Click(object sender, RoutedEventArgs e)
         {
             if (IsPlayForward) { return; }
@@ -1460,7 +1502,7 @@ namespace BiliLite.Pages
         {
             if (sender is not Button button) return;
             EmojiFlyout.ShowAt(button);
-            if(m_liveRoomViewModel.EmoticonsPackages.Count == 0)
+            if (m_liveRoomViewModel.EmoticonsPackages.Count == 0)
             {
                 await m_liveRoomViewModel.GetEmoticons();
             }
@@ -1492,6 +1534,12 @@ namespace BiliLite.Pages
                 await m_liveRoomViewModel.SendDanmu(emoji);
                 EmojiFlyout.Hide();
             }
+        }
+
+        public void UpdatePivotLayout()
+        {
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
         }
     }
 }

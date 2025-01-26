@@ -7,17 +7,25 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.UI.Xaml.Media.Imaging;
 using BiliLite.Extensions;
+using BiliLite.Services;
+using BiliLite.Models.Common.Live;
+using BiliLite.Services.Biz;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite.Modules.Live.LiveCenter
 {
     public class LiveAttentionVM : IModules
     {
         readonly LiveCenterAPI liveCenterAPI;
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         public LiveAttentionVM()
         {
             liveCenterAPI = new LiveCenterAPI();
             RefreshCommand = new RelayCommand(Refresh);
         }
+
+        public ObservableCollection<LiveRoomInfoOldModel> LocalFollows { get; set; }
+
         private ObservableCollection<LiveFollowAnchorModel> _Follow;
 
         public ObservableCollection<LiveFollowAnchorModel> Follow
@@ -70,6 +78,15 @@ namespace BiliLite.Modules.Live.LiveCenter
                 Loading = false;
             }
         }
+
+        public async Task GetLocalFollows()
+        {
+            var localAttentionUserService = App.ServiceProvider.GetRequiredService<LocalAttentionUserService>();
+            var roomList = await localAttentionUserService.GetLiveRooms();
+            if (roomList == null) return;
+            LocalFollows = new ObservableCollection<LiveRoomInfoOldModel>(roomList);
+        }
+
         public async void Refresh()
         {
             if (Loading)
@@ -78,6 +95,7 @@ namespace BiliLite.Modules.Live.LiveCenter
             }
             Follow = null;
             await GetFollows();
+            await GetLocalFollows();
         }
     }
     public class LiveFollowAnchorModel

@@ -135,8 +135,8 @@ namespace BiliLite.WebApi.Controllers
             var getCacheSuccess = m_memoryCache.TryGetValue(cacheKey, out var value);
             if (getCacheSuccess == true && value != null)
             {
-                var cacheResult = value as BangumiTimeline;
-                return new JsonResult(new ApiModel<BangumiTimeline>()
+                var cacheResult = value as List<BangumiTimeline>;
+                return new JsonResult(new ApiModel<List<BangumiTimeline>>()
                 {
                     code = 0,
                     message = "",

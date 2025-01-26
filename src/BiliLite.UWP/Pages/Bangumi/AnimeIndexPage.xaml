@@ -32,7 +32,7 @@
                             <ComboBox Width="100" SelectionChanged="ComboBox_SelectionChanged" 
                                       ItemsSource="{x:Bind Path=Values}" 
                                       SelectedItem="{x:Bind Path=Current,Mode=TwoWay}" 
-                                      DisplayMemberPath="{x:Bind Name}">
+                                      DisplayMemberPath="Name">
                             </ComboBox>
                         </StackPanel>
                     </DataTemplate>

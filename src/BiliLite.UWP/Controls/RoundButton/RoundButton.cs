@@ -8,7 +8,7 @@ namespace BiliLite.Controls
     {
         public RoundButton()
         {
-            this.DefaultStyleKey = typeof(RoundButton);
+            DefaultStyleKey = typeof(RoundButton);
         }
 
         protected override Size MeasureOverride(Size availableSize)

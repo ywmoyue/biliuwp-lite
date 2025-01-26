@@ -1,12 +1,12 @@
-﻿using System;
+﻿using BiliLite.Extensions;
+using BiliLite.Models;
+using BiliLite.Models.Common;
+using BiliLite.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using BiliLite.Extensions;
-using BiliLite.Models;
-using BiliLite.Models.Common;
-using BiliLite.Services;
 
 namespace BiliLite.ViewModels.Common
 {
@@ -15,19 +15,9 @@ namespace BiliLite.ViewModels.Common
         public event PropertyChangedEventHandler PropertyChanged;
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
 
-        protected void OnPropertyChanged(string propertyName)
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            if (PropertyChanged != null)
-            {
-                try
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-                }
-                catch (Exception ex)
-                {
-
-                }
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         protected void OnLocalPropertyChanged(string propertyName)

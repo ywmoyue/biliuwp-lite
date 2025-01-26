@@ -4,6 +4,7 @@ using System;
 using BiliLite.Models.Common;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
@@ -370,6 +371,25 @@ namespace BiliLite.Extensions
             var data = System.Text.Encoding.UTF8.GetBytes(text);
             var buffer = data.AsBuffer();
             return buffer;
+        }
+
+        public static string GetImageTypeFromFileName(this string fileName)
+        {
+            // 获取文件扩展名并转换为小写
+            string extension = Path.GetExtension(fileName)?.ToLower();
+
+            switch (extension)
+            {
+                case ".jpg":
+                case ".jpeg":
+                    return "jpeg";
+                case ".gif":
+                    return "gif";
+                case ".png":
+                    return "png";
+                default:
+                    return "jpeg";
+            }
         }
 
         #region Private methods

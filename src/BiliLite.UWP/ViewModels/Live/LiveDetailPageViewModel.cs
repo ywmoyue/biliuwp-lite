@@ -12,6 +12,8 @@ namespace BiliLite.ViewModels.Live
 {
     public class LiveDetailPageViewModel : BaseViewModel
     {
+        public string DanmakuInput { get; set; }
+
         public bool IsPaused { get; set; } = true;
 
         public IPlayState PlayState { get; set; }

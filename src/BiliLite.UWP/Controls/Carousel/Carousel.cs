@@ -22,16 +22,16 @@ namespace BiliLite.Controls
 
         public Carousel()
         {
-            this.DefaultStyleKey = typeof(Carousel);
-            this.Loaded += OnLoaded;
-            this.Unloaded += OnUnloaded;
-            this.SizeChanged += OnSizeChanged;
+            DefaultStyleKey = typeof(Carousel);
+            Loaded += OnLoaded;
+            Unloaded += OnUnloaded;
+            SizeChanged += OnSizeChanged;
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             CreateFadeTimer();
-            if (_slideTimer != null && this.SlideInterval > 150.0)
+            if (_slideTimer != null && SlideInterval > 150.0)
             {
                 _slideTimer.Start();
             }
@@ -77,25 +77,25 @@ namespace BiliLite.Controls
         {
             availableSize = NormalizeSize(availableSize);
 
-            double width = availableSize.Width / this.MaxItems;
-            double height = width / this.AspectRatio;
+            double width = availableSize.Width / MaxItems;
+            double height = width / AspectRatio;
 
             if (height < MinHeight)
             {
                 height = MinHeight;
-                width = height * this.AspectRatio;
+                width = height * AspectRatio;
             }
 
             if (height > MaxHeight)
             {
                 height = MaxHeight;
-                width = height * this.AspectRatio;
+                width = height * AspectRatio;
             }
 
             _panel.ItemWidth = Math.Round(width);
             _panel.ItemHeight = Math.Round(height);
 
-            this.Position = -this.Index * width;
+            Position = -Index * width;
 
             return base.MeasureOverride(new Size(availableSize.Width, height));
         }
@@ -113,12 +113,12 @@ namespace BiliLite.Controls
 
         private void ApplyGradient()
         {
-            if (this.MaxItems > 2)
+            if (MaxItems > 2)
             {
-                double factor = 1.0 / this.MaxItems;
-                int index = this.MaxItems / 2;
+                double factor = 1.0 / MaxItems;
+                int index = MaxItems / 2;
                 int count = 1;
-                if (this.MaxItems % 2 == 0)
+                if (MaxItems % 2 == 0)
                 {
                     index--;
                     count++;

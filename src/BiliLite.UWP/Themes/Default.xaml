@@ -30,6 +30,7 @@
             <Color x:Key="PieControlColor">#f8f8f8</Color>
             <Color x:Key="PieControlIconColor">#FF808080</Color>
             <SolidColorBrush x:Key="DefaultCardColor" Color="{ThemeResource CardColor}" />
+            <SolidColorBrush x:Key="ChatBorderColor" Color="{ThemeResource CardColor}" />
 
             <Color x:Key="NoTapGridBackground">#FFF9F9F9</Color>
             <Color x:Key="TabViewRightContentPresenterColor">#1A333333</Color>
@@ -59,6 +60,7 @@
             <Color x:Key="PieControlColor">#2d2d2d</Color>
             <Color x:Key="PieControlIconColor">#FF808080</Color>
             <SolidColorBrush x:Key="DefaultCardColor" Color="{ThemeResource CardColor}" />
+            <SolidColorBrush x:Key="ChatBorderColor" Color="Gray" />
 
             <Color x:Key="NoTapGridBackground">#FF282828</Color>
             <Color x:Key="TabViewRightContentPresenterColor">#1ACFCFCF</Color>

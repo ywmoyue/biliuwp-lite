@@ -1,6 +1,7 @@
 ﻿using BiliLite.Models.Common;
 using BiliLite.Modules.Live;
 using BiliLite.Services;
+using BiliLite.Services.Interfaces;
 using System.Threading.Tasks;
 
 using Windows.UI.Xaml.Controls;
@@ -14,7 +15,7 @@ namespace BiliLite.Pages.Live
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class LiveRecommendPage : BasePage, IRefreshablePage
+    public sealed partial class LiveRecommendPage : BasePage, IRefreshablePage, IUpdatePivotLayout
     {
         readonly LiveRecommendVM liveRecommendVM;
         public LiveRecommendPage()
@@ -30,7 +31,7 @@ namespace BiliLite.Pages.Live
         }
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            if(e.NavigationMode== NavigationMode.Back)
+            if (e.NavigationMode == NavigationMode.Back)
             {
                 this.NavigationCacheMode = NavigationCacheMode.Disabled;
             }
@@ -38,12 +39,12 @@ namespace BiliLite.Pages.Live
         }
         private async void pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (pivot.SelectedItem==null)
+            if (pivot.SelectedItem == null)
             {
                 return;
             }
-           var item= pivot.SelectedItem as LiveRecommendItem;
-            if (item.Items.Count==0&&!item.Loading)
+            var item = pivot.SelectedItem as LiveRecommendItem;
+            if (item.Items.Count == 0 && !item.Loading)
             {
                 await item.GetItems();
             }
@@ -70,10 +71,16 @@ namespace BiliLite.Pages.Live
 
         public async Task Refresh()
         {
-            if(pivot.SelectedItem is LiveRecommendItem item)
+            if (pivot.SelectedItem is LiveRecommendItem item)
             {
                 item.Refresh();
             }
+        }
+
+        public void UpdatePivotLayout()
+        {
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
         }
     }
 }

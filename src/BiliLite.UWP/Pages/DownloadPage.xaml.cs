@@ -1,23 +1,24 @@
-﻿using System;
+﻿using BiliLite.Extensions;
+using BiliLite.Models.Common;
+using BiliLite.Models.Common.Download;
+using BiliLite.Models.Common.Video;
+using BiliLite.Models.Common.Video.PlayUrlInfos;
+using BiliLite.Pages.Other;
+using BiliLite.Services;
+using BiliLite.Services.Interfaces;
+using BiliLite.ViewModels.Download;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Extensions;
-using BiliLite.Services;
-using BiliLite.Models.Common;
-using BiliLite.Models.Common.Download;
-using BiliLite.Models.Common.Video;
-using BiliLite.Models.Common.Video.PlayUrlInfos;
-using BiliLite.ViewModels.Download;
-using Microsoft.Extensions.DependencyInjection;
-using System.Text.RegularExpressions;
-using BiliLite.Pages.Other;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -26,7 +27,7 @@ namespace BiliLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class DownloadPage : BasePage, IRefreshablePage
+    public sealed partial class DownloadPage : BasePage, IRefreshablePage, IUpdatePivotLayout
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
         private readonly DownloadPageViewModel m_viewModel;
@@ -48,7 +49,7 @@ namespace BiliLite.Pages
             Title = "下载";
             if (!m_viewModel.Downloadings.Any())
             {
-                DownloadPivot.SelectedIndex = 1;
+                pivot.SelectedIndex = 1;
             }
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -345,7 +346,7 @@ namespace BiliLite.Pages
         {
             var keyword = sender.Text;
             m_downloadService.SearchDownloaded(keyword);
-            DownloadPivot.SelectedIndex = 1;
+            pivot.SelectedIndex = 1;
         }
 
         private void BtnPauseSubItem_OnClick(object sender, RoutedEventArgs e)
@@ -367,12 +368,18 @@ namespace BiliLite.Pages
         private void BtnClearSearch_OnClick(object sender, RoutedEventArgs e)
         {
             m_downloadService.SearchDownloaded("");
-            DownloadPivot.SelectedIndex = 1;
+            pivot.SelectedIndex = 1;
         }
 
         private void SortOptions_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             m_downloadService.SetDownloadedSortMode((DownloadedSortMode)CbSortMode.SelectedValue);
+        }
+
+        public void UpdatePivotLayout()
+        {
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
         }
     }
 }

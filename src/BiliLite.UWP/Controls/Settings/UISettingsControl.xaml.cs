@@ -1,17 +1,16 @@
-﻿using System.Collections.ObjectModel;
-using System.Linq;
-using Windows.Foundation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Home;
 using BiliLite.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.Toolkit.Uwp.UI;
-using BiliLite.Extensions.Notifications;
+using System.Collections.ObjectModel;
+using System.Linq;
 using Windows.ApplicationModel.Background;
+using Windows.Foundation;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -24,7 +23,7 @@ namespace BiliLite.Controls.Settings
         public UISettingsControl()
         {
             m_themeService = App.ServiceProvider.GetRequiredService<ThemeService>();
-            this.InitializeComponent(); 
+            InitializeComponent();
             LoadUI();
         }
         private void LoadUI()
@@ -58,26 +57,6 @@ namespace BiliLite.Controls.Settings
                     {
                         Notify.ShowMessageToast("重启生效");
                     }
-
-                });
-            });
-            //加载原图
-            swPictureQuality.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.ORTGINAL_IMAGE, false);
-            swPictureQuality.Loaded += new RoutedEventHandler((sender, e) =>
-            {
-                swPictureQuality.Toggled += new RoutedEventHandler((obj, args) =>
-                {
-                    SettingService.SetValue(SettingConstants.UI.ORTGINAL_IMAGE, swPictureQuality.IsOn);
-                    SettingService.UI.LoadOriginalImage = null;
-                });
-            });
-            //缓存页面
-            swHomeCache.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.CACHE_HOME, true);
-            swHomeCache.Loaded += new RoutedEventHandler((sender, e) =>
-            {
-                swHomeCache.Toggled += new RoutedEventHandler((obj, args) =>
-                {
-                    SettingService.SetValue(SettingConstants.UI.CACHE_HOME, swHomeCache.IsOn);
 
                 });
             });
@@ -174,36 +153,6 @@ namespace BiliLite.Controls.Settings
                 });
             });
 
-            //新窗口浏览图片
-            swPreviewImageNavigateToPage.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.NEW_WINDOW_PREVIEW_IMAGE, false);
-            swPreviewImageNavigateToPage.Loaded += new RoutedEventHandler((sender, e) =>
-            {
-                swPreviewImageNavigateToPage.Toggled += new RoutedEventHandler((obj, args) =>
-                {
-                    SettingService.SetValue(SettingConstants.UI.NEW_WINDOW_PREVIEW_IMAGE, swPreviewImageNavigateToPage.IsOn);
-                });
-            });
-
-            //启动应用时打开上次浏览的标签页
-            SwitchOpenLastPage.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.ENABLE_OPEN_LAST_PAGE, SettingConstants.UI.DEFAULT_ENABLE_OPEN_LAST_PAGE);
-            SwitchOpenLastPage.Loaded += (sender, e) =>
-            {
-                SwitchOpenLastPage.Toggled += (obj, args) =>
-                {
-                    SettingService.SetValue(SettingConstants.UI.ENABLE_OPEN_LAST_PAGE, SwitchOpenLastPage.IsOn);
-                };
-            };
-
-            // 鼠标中键/侧键行为
-            cbMouseMiddleAction.SelectedIndex = SettingService.GetValue(SettingConstants.UI.MOUSE_MIDDLE_ACTION, (int)MouseMiddleActions.Back);
-            cbMouseMiddleAction.Loaded += new RoutedEventHandler((sender, e) =>
-            {
-                cbMouseMiddleAction.SelectionChanged += new SelectionChangedEventHandler((obj, args) =>
-                {
-                    SettingService.SetValue(SettingConstants.UI.MOUSE_MIDDLE_ACTION, cbMouseMiddleAction.SelectedIndex);
-                });
-            });
-
             // 快速收藏
             SwitchQuickDoFav.IsOn = SettingService.GetValue(SettingConstants.UI.QUICK_DO_FAV, SettingConstants.UI.DEFAULT_QUICK_DO_FAV);
             SwitchQuickDoFav.Loaded += (sender, e) =>
@@ -281,16 +230,6 @@ namespace BiliLite.Controls.Settings
                 cbRecommendDisplayMode.SelectionChanged += new SelectionChangedEventHandler((obj, args) =>
                 {
                     SettingService.SetValue(SettingConstants.UI.RECMEND_DISPLAY_MODE, cbRecommendDisplayMode.SelectedIndex);
-                });
-            });
-
-            //浏览器打开无法处理的链接
-            swOpenUrlWithBrowser.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.OPEN_URL_BROWSER, false);
-            swOpenUrlWithBrowser.Loaded += new RoutedEventHandler((sender, e) =>
-            {
-                swOpenUrlWithBrowser.Toggled += new RoutedEventHandler((obj, args) =>
-                {
-                    SettingService.SetValue(SettingConstants.UI.OPEN_URL_BROWSER, swOpenUrlWithBrowser.IsOn);
                 });
             });
 
@@ -400,12 +339,6 @@ namespace BiliLite.Controls.Settings
             SettingService.SetValue(SettingConstants.UI.HOEM_ORDER, navItems.ToList());
             ExceptHomeNavItems();
             Notify.ShowMessageToast("更改成功,重启生效");
-        }
-
-        private async void btnCleanImageCache_Click(object sender, RoutedEventArgs e)
-        {
-            await ImageCache.Instance.ClearAsync();
-            Notify.ShowMessageToast("已清除图片缓存");
         }
 
         private void menuRemoveHomeItem_Click(object sender, RoutedEventArgs e)

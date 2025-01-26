@@ -14,7 +14,7 @@ namespace BiliLite.Controls.Settings
     {
         public AboutSettingsControl()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         private async void btnCheckUpdate_Click(object sender, RoutedEventArgs e)

@@ -45,6 +45,8 @@
                 Height="40"
                 Margin="0,-4"
                 Click="btnBack_Click"
+                Background="Transparent"
+                BorderThickness="0"
                 Visibility="Visible">
                 <FontIcon
                     FontFamily="Segoe MDL2 Assets"

@@ -17,7 +17,7 @@
     SizeChanged="SearchPage_OnSizeChanged"
     mc:Ignorable="d">
     <Page.Resources>
-        <convert:DatetimeConvert x:Key="ts" />
+        <convert:DatetimeConvert x:Key="DatetimeConvert" />
         <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent" />
         <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White" />
         <DataTemplate x:Key="VideoTpl" x:DataType="viewModel:SearchVideoViewModel">
@@ -96,7 +96,7 @@
                                         <TextBlock
                                             FontSize="12"
                                             Foreground="White"
-                                            Text="{x:Bind duration}" />
+                                            Text="{x:Bind DurationShow}" />
                                     </Border>
                                 </Grid>
                                 <StackPanel Grid.Column="1" Margin="8,0,0,0">
@@ -228,7 +228,7 @@
                                         Margin="0,0,0,4"
                                         FontSize="14"
                                         Foreground="Gray">
-                                        开播时间：<Run Text="{x:Bind Path=pubtime, Converter={StaticResource ts}, ConverterParameter='yyyy-MM-dd'}" /></TextBlock>
+                                        开播时间：<Run Text="{x:Bind Path=pubtime, Converter={StaticResource DatetimeConvert}, ConverterParameter='yyyy-MM-dd'}" /></TextBlock>
                                     <!--<TextBlock Margin="0" MaxLines="2" FontSize="14" Foreground="Gray" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=desc}"></TextBlock>-->
                                 </StackPanel>
                             </Grid>
@@ -684,7 +684,7 @@
                                         Margin="0,4"
                                         FontSize="14"
                                         Foreground="Gray">
-                                        时间:<Run Text="{x:Bind Path=pubdate, Converter={StaticResource ts}, ConverterParameter='yyyy-MM-dd'}" /></TextBlock>
+                                        时间:<Run Text="{x:Bind Path=pubdate, Converter={StaticResource DatetimeConvert}, ConverterParameter='yyyy-MM-dd'}" /></TextBlock>
                                 </StackPanel>
                             </Grid>
                         </DataTemplate>

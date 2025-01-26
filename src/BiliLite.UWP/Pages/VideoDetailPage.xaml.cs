@@ -1,36 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Navigation;
-using BiliLite.Modules;
-using Microsoft.UI.Xaml.Controls;
-using Windows.ApplicationModel.DataTransfer;
-using BiliLite.Controls;
-using Windows.System;
+﻿using BiliLite.Controls;
 using BiliLite.Dialogs;
-using System.Threading.Tasks;
 using BiliLite.Extensions;
 using BiliLite.Models.Common;
-using BiliLite.Models.Requests.Api;
-using BiliLite.Services;
-using Windows.UI.Xaml.Controls.Primitives;
 using BiliLite.Models.Common.Comment;
 using BiliLite.Models.Common.Video;
 using BiliLite.Models.Download;
-using BiliLite.ViewModels.Video;
+using BiliLite.Models.Requests.Api;
+using BiliLite.Modules;
+using BiliLite.Services;
 using BiliLite.Services.Interfaces;
+using BiliLite.ViewModels.Video;
 using Microsoft.Extensions.DependencyInjection;
-using BiliLite.ViewModels.Download;
-using BiliLite.ViewModels.User;
+using Microsoft.UI.Xaml.Controls;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.System;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
 namespace BiliLite.Pages
 {
-    public sealed partial class VideoDetailPage : PlayPage, IRefreshablePage, ISavablePage
+    public sealed partial class VideoDetailPage : PlayPage, IRefreshablePage, ISavablePage, IUpdatePivotLayout
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
 
@@ -242,7 +240,7 @@ namespace BiliLite.Pages
                     order = i,
                     play_mode = VideoPlayType.Video,
                     title = "P" + item.Page + " " + item.Part,
-                    TitlePage = "P"+item.Page,
+                    TitlePage = "P" + item.Page,
                     TitlePart = item.Part.TrimStart(' '),
                     area = m_viewModel.VideoInfo.Title.ParseArea(m_viewModel.VideoInfo.Owner.Mid)
                 });
@@ -568,7 +566,7 @@ namespace BiliLite.Pages
             Modules.User.WatchLaterVM.Instance.AddToWatchlater(avid);
         }
 
-        private async void VideoListView_SelectionChanged(object sender,VideoListItem item)
+        private async void VideoListView_SelectionChanged(object sender, VideoListItem item)
         {
             await InitializeVideo(item.Id);
         }
@@ -757,6 +755,12 @@ namespace BiliLite.Pages
         private void BtnCopyAvId_OnClick(object sender, RoutedEventArgs e)
         {
             ("av" + m_viewModel.VideoInfo.Aid).SetClipboard();
+        }
+
+        public void UpdatePivotLayout()
+        {
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
+            pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
         }
     }
 }

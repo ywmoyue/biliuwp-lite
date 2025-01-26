@@ -8,6 +8,7 @@ using Windows.UI.Xaml.Navigation;
 using BiliLite.Models.Common.Season;
 using BiliLite.ViewModels.Season;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -40,6 +41,10 @@ namespace BiliLite.Pages.Bangumi
                 else
                 {
                     indexParameter=e.Parameter as SeasonIndexParameter;
+                    if (indexParameter == null)
+                    {
+                        indexParameter = JsonConvert.DeserializeObject<SeasonIndexParameter>(JsonConvert.SerializeObject(e.Parameter));
+                    }
                 }
               
                 m_viewModel.Parameter = indexParameter;
