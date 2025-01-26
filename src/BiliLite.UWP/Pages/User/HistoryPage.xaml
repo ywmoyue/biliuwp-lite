@@ -29,8 +29,8 @@
                     </MenuFlyout>
                 </Grid.ContextFlyout>
                 <toolkit:ImageEx
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
                     PlaceholderSource="/Assets/Thumbnails/Placeholde.png"
                     Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='180w_100h_1c'}"
                     Stretch="UniformToFill" />

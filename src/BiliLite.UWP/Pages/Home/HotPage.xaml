@@ -52,8 +52,8 @@
                         <Grid>
                             <toolkit:ImageEx
                                 Height="100"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                 Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='120h'}"
                                 Stretch="UniformToFill" />

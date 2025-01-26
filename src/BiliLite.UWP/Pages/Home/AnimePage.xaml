@@ -25,8 +25,8 @@
                 <Grid>
                     <toolkit:ImageEx
                         MaxHeight="240"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                         Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='300w'}"
                         Stretch="UniformToFill" />
@@ -100,8 +100,8 @@
                                     Click="BannerItem_Click"
                                     CornerRadius="{ThemeResource OverlayCornerRadius}">
                                     <toolkit:ImageEx
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch"
                                         CornerRadius="{ThemeResource OverlayCornerRadius}"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                         Source="{Binding Path=Img, Converter={StaticResource imageConvert}, ConverterParameter='240h'}"
@@ -145,7 +145,7 @@
                                 <TextBlock>查看全部</TextBlock>
                             </HyperlinkButton>
                         </Grid>
-                       <controls:HorizontalGridView
+                        <controls:HorizontalGridView
                             Margin="-5,0,0,0"
                             AlwaysShowButton="False"
                             IsItemClickEnabled="True"
@@ -165,13 +165,13 @@
                                     <Grid MaxWidth="230">
                                         <Grid.RowDefinitions>
                                             <RowDefinition />
-                                            <RowDefinition Height="24" />
+                                            <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
                                         <Grid>
                                             <toolkit:ImageEx
                                                 MinHeight="132"
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Stretch"
                                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                                 Source="{x:Bind Path=NewEp.cover, Converter={StaticResource imageConvert}, ConverterParameter='320w_200h_1c'}"
                                                 Stretch="UniformToFill" />
@@ -262,8 +262,8 @@
                                         </Grid.RowDefinitions>
                                         <Grid>
                                             <toolkit:ImageEx
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Stretch"
                                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                                 Source="{Binding Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='300w'}"
                                                 Stretch="UniformToFill" />
@@ -404,8 +404,8 @@
                                                         <RowDefinition Height="Auto" />
                                                     </Grid.RowDefinitions>
                                                     <toolkit:ImageEx
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"
+                                                        HorizontalAlignment="Stretch"
+                                                        VerticalAlignment="Stretch"
                                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                                         Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='180h'}"
                                                         Stretch="UniformToFill" />

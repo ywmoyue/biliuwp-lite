@@ -51,7 +51,8 @@
                     <toolkit:ImageEx
                         Width="105"
                         Height="140"
-                        VerticalAlignment="Center"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                         Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='160w'}"
                         Stretch="UniformToFill" />
