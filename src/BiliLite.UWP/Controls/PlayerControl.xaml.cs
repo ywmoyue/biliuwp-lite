@@ -64,6 +64,8 @@ namespace BiliLite.Controls
         private DateTime m_startTime = DateTime.Now;
         public event PropertyChangedEventHandler PropertyChanged;
         private GestureRecognizer gestureRecognizer;
+        private bool m_firstMediaOpened;
+
         private void DoPropertyChanged(string name)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -1432,6 +1434,7 @@ namespace BiliLite.Controls
 
         private async void SliderSoundQuality_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
+            if (!m_firstMediaOpened) return;
             _postion = Player.Position;
             _autoPlay = Player.PlayState == PlayState.Playing;
 
@@ -1458,6 +1461,7 @@ namespace BiliLite.Controls
 
         private async void SliderQuality_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
+            if (!m_firstMediaOpened) return;
             _postion = Player.Position;
             _autoPlay = Player.PlayState == PlayState.Playing;
 
@@ -2670,6 +2674,7 @@ namespace BiliLite.Controls
             {
                 await Play();
             }
+            m_firstMediaOpened = true;
             m_autoRefreshTimer?.Start();
         }
 
