@@ -23,12 +23,14 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal">
-                <AppBarButton x:Name="btnBack"  Width="48" Click="btnBack_Click" IsEnabled="{x:Bind IsEnableGoBack,Mode=OneWay}">
+                <AppBarButton x:Name="btnBack"  Width="48" Click="btnBack_Click" 
+                              IsEnabled="{x:Bind m_viewModel.IsEnableGoBack,Mode=OneWay}">
                     <AppBarButton.Icon>
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE0A6;" />
                     </AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton x:Name="btnForword"  Width="48" Click="btnForword_Click" IsEnabled="{x:Bind IsEnableGoForward,Mode=OneWay}">
+                <AppBarButton x:Name="btnForword"  Width="48" Click="btnForword_Click" 
+                              IsEnabled="{x:Bind m_viewModel.IsEnableGoForward,Mode=OneWay}">
                     <AppBarButton.Icon>
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE0AD;" />
                       

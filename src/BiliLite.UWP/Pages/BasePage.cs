@@ -10,7 +10,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace BiliLite.Pages
 {
-    public class BasePage : Page, INotifyPropertyChanged
+    public class BasePage : Page
     {
         public string Title { get; set; }
         public BasePage()
@@ -35,13 +35,6 @@ namespace BiliLite.Pages
         {
             base.OnNavigatedTo(e);
             this.Visibility = Visibility.Visible;
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 

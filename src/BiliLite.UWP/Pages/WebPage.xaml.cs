@@ -13,6 +13,7 @@ using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.ViewModels.Common;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -25,9 +26,11 @@ namespace BiliLite.Pages
     {
         private readonly CookieService m_cookieService;
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+        private readonly WebPageViewModel m_viewModel;
 
         public WebPage()
         {
+            m_viewModel = App.ServiceProvider.GetRequiredService<WebPageViewModel>();
             m_cookieService = App.ServiceProvider.GetRequiredService<CookieService>();
             this.InitializeComponent();
             Title = "网页浏览";
@@ -244,11 +247,8 @@ $('.author-container').css('margin','12px 0px -12px 0px');"
                 if (webView != null) webView.Visibility = Visibility.Visible;
             }
 
-            IsEnableGoBack = webView.CanGoBack;
-            IsEnableGoForward = webView.CanGoForward;
+            m_viewModel.IsEnableGoBack = webView.CanGoBack;
+            m_viewModel.IsEnableGoForward = webView.CanGoForward;
         }
-
-        bool IsEnableGoBack { get; set; }
-        bool IsEnableGoForward { get; set; }
     }
 }
