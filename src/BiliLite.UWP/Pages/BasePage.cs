@@ -1,14 +1,16 @@
-﻿using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using BiliLite.Controls;
+﻿using BiliLite.Controls;
 using BiliLite.Models.Common;
 using BiliLite.Services;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
 namespace BiliLite.Pages
 {
-    public class BasePage : Page
+    public class BasePage : Page, INotifyPropertyChanged
     {
         public string Title { get; set; }
         public BasePage()
@@ -33,6 +35,13 @@ namespace BiliLite.Pages
         {
             base.OnNavigatedTo(e);
             this.Visibility = Visibility.Visible;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 

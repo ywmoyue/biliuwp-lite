@@ -1,17 +1,18 @@
 ﻿using BiliLite.Controls;
 using BiliLite.Extensions;
+using BiliLite.Models.Common;
 using BiliLite.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.Web.WebView2.Core;
 using System;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Models.Common;
-using Microsoft.Web.WebView2.Core;
-using Microsoft.Extensions.DependencyInjection;
-using Windows.Storage;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -143,7 +144,17 @@ namespace BiliLite.Pages
 
         private void btnShare_Click(object sender, RoutedEventArgs e)
         {
-            webView.Source.ToString().SetClipboard();
+            DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
+            dataTransferManager.DataRequested -= DataTransferManager_DataRequested;
+            dataTransferManager.DataRequested += DataTransferManager_DataRequested;
+            DataTransferManager.ShowShareUI();
+        }
+
+        private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs e)
+        {
+            DataPackage dataPackage = e.Request.Data;
+            dataPackage.Properties.Title = "共享链接";
+            dataPackage.SetWebLink(webView.Source);
         }
 
         private async void btnOpenBrowser_Click(object sender, RoutedEventArgs e)
@@ -232,6 +243,12 @@ $('.author-container').css('margin','12px 0px -12px 0px');"
             {
                 if (webView != null) webView.Visibility = Visibility.Visible;
             }
+
+            IsEnableGoBack = webView.CanGoBack;
+            IsEnableGoForward = webView.CanGoForward;
         }
+
+        bool IsEnableGoBack { get; set; }
+        bool IsEnableGoForward { get; set; }
     }
 }
