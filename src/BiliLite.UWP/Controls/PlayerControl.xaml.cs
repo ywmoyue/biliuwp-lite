@@ -1,52 +1,50 @@
-﻿using BiliLite.Modules;
+﻿using Atelier39;
+using BiliLite.Dialogs;
+using BiliLite.Extensions;
+using BiliLite.Models.Common;
+using BiliLite.Models.Common.Danmaku;
+using BiliLite.Models.Common.Player;
+using BiliLite.Models.Common.Video;
+using BiliLite.Models.Common.Video.PlayUrlInfos;
+using BiliLite.Modules;
+using BiliLite.Modules.Player;
+using BiliLite.Services;
+using BiliLite.Services.Interfaces;
+using BiliLite.ViewModels;
+using BiliLite.ViewModels.Settings;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.Geometry;
+using Microsoft.Graphics.Canvas.Text;
 using NSDanmaku.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Timers;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.Graphics.Display;
+using Windows.Graphics.Imaging;
 using Windows.Media;
+using Windows.Storage;
+using Windows.Storage.Streams;
+using Windows.System.Display;
+using Windows.UI;
+using Windows.UI.Input;
 using Windows.UI.Popups;
+using Windows.UI.Text;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.System.Display;
-using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.Graphics.Imaging;
-using Windows.Graphics.Display;
-using System.Text.RegularExpressions;
-using System.Timers;
-using Windows.UI.Core;
-using BiliLite.Dialogs;
-using BiliLite.Modules.Player;
-using Microsoft.Graphics.Canvas;
-using Microsoft.Graphics.Canvas.Geometry;
-using Microsoft.Graphics.Canvas.Text;
-using Windows.UI;
-using Windows.Storage.Streams;
-using Windows.UI.Text;
-using BiliLite.Models.Requests.Api;
-using BiliLite.Services;
-using BiliLite.Models.Common;
-using BiliLite.Extensions;
-using BiliLite.Models.Common.Video;
-using Windows.UI.Input;
-using Atelier39;
-using BiliLite.Models.Common.Danmaku;
-using BiliLite.Models.Common.Player;
-using BiliLite.Models.Common.Video.PlayUrlInfos;
-using BiliLite.Services.Interfaces;
-using BiliLite.ViewModels;
-using BiliLite.ViewModels.Settings;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.Extensions.DependencyInjection;
-
+using BiliLite.Converters;
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
 namespace BiliLite.Controls
@@ -60,6 +58,9 @@ namespace BiliLite.Controls
         private readonly PlayControlViewModel m_viewModel;
         private readonly PlayerToastService m_playerToastService;
         private readonly PlaySpeedMenuService m_playSpeedMenuService;
+        private readonly SoundQualitySliderTooltipConverter m_soundQualitySliderTooltipConverter;
+        private readonly QualitySliderTooltipConverter m_qualitySliderTooltipConverter;
+        private readonly PlaySpeedSliderTooltipConverter m_playSpeedSliderTooltipConverter;
         private DateTime m_startTime = DateTime.Now;
         public event PropertyChangedEventHandler PropertyChanged;
         private GestureRecognizer gestureRecognizer;
@@ -180,6 +181,10 @@ namespace BiliLite.Controls
             gestureRecognizer = new GestureRecognizer();
             InitializeGesture();
 
+            m_soundQualitySliderTooltipConverter = new SoundQualitySliderTooltipConverter();
+            m_qualitySliderTooltipConverter = new QualitySliderTooltipConverter();
+            m_playSpeedSliderTooltipConverter = new PlaySpeedSliderTooltipConverter(m_playSpeedMenuService);
+
             m_useNsDanmaku = (DanmakuEngineType)SettingService.GetValue(SettingConstants.VideoDanmaku.DANMAKU_ENGINE,
                 (int)SettingConstants.VideoDanmaku.DEFAULT_DANMAKU_ENGINE) == DanmakuEngineType.NSDanmaku;
             if (m_useNsDanmaku)
@@ -206,8 +211,8 @@ namespace BiliLite.Controls
             else
             {
                 playUrlInfo = info;
-                SetSoundQuality();
-                SetQuality();
+                InitSoundQuality();
+                InitQuality();
             }
             Notify.ShowMessageToast("已根据设置自动刷新播放地址");
             m_startTime = DateTime.Now;
@@ -439,7 +444,7 @@ namespace BiliLite.Controls
                 m_danmakuController.SetDensity((int)DanmuSettingMaxNum.Value);
                 if (!m_useNsDanmaku)
                 {
-                    var segIndex = Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                    var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
                     if (segIndex <= 0) segIndex = 1;
                     await LoadDanmaku(segIndex);
                 }
@@ -449,10 +454,10 @@ namespace BiliLite.Controls
             DanmuSettingShieldLevel.Value = SettingService.GetValue<int>(SettingConstants.VideoDanmaku.SHIELD_LEVEL, 0);
             DanmuSettingShieldLevel.ValueChanged += async (e, args) =>
             {
-                SettingService.SetValue<int>(SettingConstants.VideoDanmaku.SHIELD_LEVEL, Convert.ToInt32(DanmuSettingShieldLevel.Value));
+                SettingService.SetValue<int>(SettingConstants.VideoDanmaku.SHIELD_LEVEL, System.Convert.ToInt32(DanmuSettingShieldLevel.Value));
                 if (!m_useNsDanmaku)
                 {
-                    var segIndex = Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                    var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
                     if (segIndex <= 0) segIndex = 1;
                     await LoadDanmaku(segIndex);
                 }
@@ -492,7 +497,7 @@ namespace BiliLite.Controls
                 SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.MERGE, DanmuSettingMerge.IsOn);
                 if (!m_useNsDanmaku)
                 {
-                    var segIndex = Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                    var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
                     if (segIndex <= 0) segIndex = 1;
                     await LoadDanmaku(segIndex);
                 }
@@ -504,7 +509,7 @@ namespace BiliLite.Controls
                 SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.DISABLE_COLORFUL, DanmuSettingDisableColorful.IsOn);
                 if (!m_useNsDanmaku)
                 {
-                    var segIndex = Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                    var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
                     if (segIndex <= 0) segIndex = 1;
                     await LoadDanmaku(segIndex);
                 }
@@ -585,17 +590,7 @@ namespace BiliLite.Controls
                 Player.SetRatioMode(PlayerSettingRatio.SelectedIndex);
             });
             // 播放倍数
-            var speeds = m_playSpeedMenuService.MenuItems
-                .Select(x => x.Value)
-                .ToList();
-            BottomCBSpeed.SelectedIndex = speeds
-                .IndexOf(SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d));
-            Player.SetRate(SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d));
-            BottomCBSpeed.SelectionChanged += new SelectionChangedEventHandler((e, args) =>
-            {
-                SettingService.SetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, speeds[BottomCBSpeed.SelectedIndex]);
-                Player.SetRate(speeds[BottomCBSpeed.SelectedIndex]);
-            });
+            InitPlaySpeed();
 
             _autoPlay = SettingService.GetValue<bool>(SettingConstants.Player.AUTO_PLAY, false);
             //A-B播放
@@ -724,7 +719,7 @@ namespace BiliLite.Controls
             {
                 var needDistinct = DanmuSettingMerge.IsOn;
                 var level = DanmuSettingShieldLevel.Value;
-                var max = Convert.ToInt32(DanmuSettingMaxNum.Value);
+                var max = System.Convert.ToInt32(DanmuSettingMaxNum.Value);
                 //云屏蔽
                 danmakus = danmakus.Where(x => x.Weight >= level);
                 //去重
@@ -841,8 +836,8 @@ namespace BiliLite.Controls
                     showControlsFlag++;
                 }
             }
-            var position = Convert.ToInt32(Player.Position);
-            var segIndex = Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+            var position = System.Convert.ToInt32(Player.Position);
+            var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
             if (segIndex <= 0) segIndex = 1;
             if (danmakuLoadedSegment != null && !danmakuLoadedSegment.Contains(segIndex))
             {
@@ -870,7 +865,7 @@ namespace BiliLite.Controls
 
             var needDistinct = DanmuSettingMerge.IsOn;
             var level = DanmuSettingShieldLevel.Value;
-            var max = Convert.ToInt32(DanmuSettingMaxNum.Value);
+            var max = System.Convert.ToInt32(DanmuSettingMaxNum.Value);
 
             if (m_useNsDanmaku)
             {
@@ -979,8 +974,8 @@ namespace BiliLite.Controls
                 else
                 {
                     playUrlInfo = info;
-                    SetSoundQuality();
-                    SetQuality();
+                    InitSoundQuality();
+                    InitQuality();
                 }
             }
 
@@ -1255,8 +1250,8 @@ namespace BiliLite.Controls
                 else
                 {
                     playUrlInfo = info;
-                    SetSoundQuality();
-                    SetQuality();
+                    InitSoundQuality();
+                    InitQuality();
                 }
             }
         }
@@ -1304,7 +1299,7 @@ namespace BiliLite.Controls
                     {
                         await LoadDanmaku(1);
                     }
-                    //var danmuList = (await danmakuParse.ParseBiliBili(Convert.ToInt64(CurrentPlayItem.cid)));
+                    //var danmuList = (await danmakuParse.ParseBiliBili(System.Convert.ToInt64(CurrentPlayItem.cid)));
                     ////await playerHelper.GetDanmaku(CurrentPlayItem.cid, 1) ;
                     //danmakuPool = danmuList.GroupBy(x=>x.time_s).ToDictionary(x => x.Key, x => x.ToList());
                     //TxtDanmuCount.Text = danmuList.Count.ToString();
@@ -1398,7 +1393,7 @@ namespace BiliLite.Controls
             {
                 return false;
             }
-            BottomCBQuality.Visibility = Visibility.Collapsed;
+            BottomBtnQuality.Visibility = Visibility.Collapsed;
 
             await PlayLocalFile();
             return true;
@@ -1418,24 +1413,152 @@ namespace BiliLite.Controls
             return info;
         }
 
-        private void SetSoundQuality()
+        #region Slider
+
+        private void InitSoundQuality()
         {
-            BottomSoundQuality.ItemsSource = playUrlInfo.AudioQualites;
-            BottomSoundQuality.SelectionChanged -= BottomSoundQuality_SelectionChanged;
-            BottomSoundQuality.SelectedItem = playUrlInfo.CurrentAudioQuality;
-            BottomSoundQuality.SelectionChanged += BottomSoundQuality_SelectionChanged;
+            MinSoundQuality.Text = playUrlInfo.AudioQualites[0].QualityName;
+            MaxSoundQuality.Text = playUrlInfo.AudioQualites[playUrlInfo.AudioQualites.Count - 1].QualityName;
+
+            BottomBtnSoundQuality.IsEnabled = playUrlInfo.AudioQualites.Count > 1;
+            BottomBtnSoundQuality.Content = playUrlInfo.CurrentAudioQuality.QualityName;
+            SliderSoundQuality.Maximum = playUrlInfo.AudioQualites.Count - 1;
+            SliderSoundQuality.Value = playUrlInfo.AudioQualites.IndexOf(playUrlInfo.CurrentAudioQuality);
+            m_soundQualitySliderTooltipConverter.AudioQualites = playUrlInfo.AudioQualites;
+            SliderSoundQuality.ThumbToolTipValueConverter = m_soundQualitySliderTooltipConverter;
+
             // ChangeQuality(current_quality_info, playUrlInfo.CurrentAudioQuality).RunWithoutAwait();
         }
 
-        private void SetQuality()
+        private async void SliderSoundQuality_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            BottomCBQuality.ItemsSource = playUrlInfo.Qualites;
-            BottomCBQuality.SelectionChanged -= BottomCBQuality_SelectionChanged;
-            BottomCBQuality.SelectedItem = playUrlInfo.CurrentQuality;
-            //SettingService.SetValue<int>(SettingConstants.Player.DEFAULT_QUALITY, info.data.current.quality);
-            BottomCBQuality.SelectionChanged += BottomCBQuality_SelectionChanged;
+            _postion = Player.Position;
+            _autoPlay = Player.PlayState == PlayState.Playing;
+
+            var latestChoice = playUrlInfo.AudioQualites[(int)SliderSoundQuality.Value];
+            SettingService.SetValue<int>(SettingConstants.Player.DEFAULT_SOUND_QUALITY, latestChoice.QualityID);
+            await ChangeQuality(current_quality_info, latestChoice);
+            BottomBtnSoundQuality.Content = latestChoice.QualityName;
+        }
+
+        private void InitQuality()
+        {
+            MinQuality.Text = playUrlInfo.Qualites[0].QualityName;
+            MaxQuality.Text = playUrlInfo.Qualites[playUrlInfo.Qualites.Count - 1].QualityName;
+
+            BottomBtnQuality.IsEnabled = playUrlInfo.Qualites.Count > 1;
+            BottomBtnQuality.Content = playUrlInfo.CurrentQuality.QualityName;
+            SliderQuality.Maximum = playUrlInfo.Qualites.Count - 1;
+            SliderQuality.Value = playUrlInfo.Qualites.IndexOf(playUrlInfo.CurrentQuality);
+            m_qualitySliderTooltipConverter.Qualites = playUrlInfo.Qualites;
+            SliderQuality.ThumbToolTipValueConverter = m_qualitySliderTooltipConverter;
+
             ChangeQuality(playUrlInfo.CurrentQuality, playUrlInfo.CurrentAudioQuality).RunWithoutAwait();
         }
+
+        private async void SliderQuality_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            _postion = Player.Position;
+            _autoPlay = Player.PlayState == PlayState.Playing;
+
+            var latestChoice = playUrlInfo.Qualites[(int)SliderQuality.Value];
+            SettingService.SetValue<int>(SettingConstants.Player.DEFAULT_QUALITY, latestChoice.QualityID);
+            await ChangeQuality(latestChoice, current_audio_quality_info);
+            BottomBtnQuality.Content = latestChoice.QualityName;
+        }
+
+        private void InitPlaySpeed()
+        {
+            MinPlaySpeed.Text = m_playSpeedMenuService.MenuItems[0].Content;
+            MaxPlaySpeed.Text = m_playSpeedMenuService.MenuItems[m_playSpeedMenuService.MenuItems.Count - 1].Content;
+            SliderPlaySpeed.Maximum = m_playSpeedMenuService.MenuItems.Count - 1;
+            SliderPlaySpeed.Minimum = 0;
+
+            // 强行居中矫正1x倍速
+            var lessThanOneCount = m_playSpeedMenuService.MenuItems.ToList().FindIndex(x => x.Value == 1);
+            var moreThanOneCount = m_playSpeedMenuService.MenuItems.Count - lessThanOneCount - 1;
+            if (lessThanOneCount != 0 && moreThanOneCount != 0)
+            {
+                var differenceCount = lessThanOneCount - moreThanOneCount;
+                switch (differenceCount)
+                {
+                    case > 0:
+                        SliderPlaySpeed.Maximum = m_playSpeedMenuService.MenuItems.Count - 1 + differenceCount;
+                        SliderPlaySpeed.Minimum = 0;
+                        break;
+                    case < 0:
+                        SliderPlaySpeed.Maximum = m_playSpeedMenuService.MenuItems.Count - 1;
+                        SliderPlaySpeed.Minimum = differenceCount;
+                        break;
+                }
+            }
+
+            var value = SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d);
+            var CurrentPlaySpeed = m_playSpeedMenuService.MenuItems.FirstOrDefault(x => x.Value == value);
+
+            BottomBtnPlaySpeed.IsEnabled = m_playSpeedMenuService.MenuItems.Count > 1;
+            BottomBtnPlaySpeed.Content = CurrentPlaySpeed.Content;
+            SliderPlaySpeed.Value = m_playSpeedMenuService.MenuItems.IndexOf(CurrentPlaySpeed);
+            SliderPlaySpeed.ThumbToolTipValueConverter = m_playSpeedSliderTooltipConverter;
+
+            Player.SetRate(CurrentPlaySpeed.Value);
+        }
+
+        private void SliderPlaySpeed_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            if (SliderPlaySpeed.Value < 0)
+            {
+                SliderPlaySpeed.Value = 0;
+            }
+            if (SliderPlaySpeed.Value > m_playSpeedMenuService.MenuItems.Count - 1)
+            {
+                SliderPlaySpeed.Value = m_playSpeedMenuService.MenuItems.Count - 1;
+            }
+
+            var latestChoice = m_playSpeedMenuService.MenuItems[(int)SliderPlaySpeed.Value];
+            Player.SetRate(latestChoice.Value);
+            BottomBtnPlaySpeed.Content = latestChoice.Content;
+
+            SettingService.SetValue(SettingConstants.Player.DEFAULT_VIDEO_SPEED, latestChoice.Value);
+        }
+
+        // 快捷键减速播放
+        public void SlowDown()
+        {
+            var index = (int)SliderPlaySpeed.Value;
+            if (index <= 0)
+            {
+                Notify.ShowMessageToast("不能再慢啦");
+                return;
+            }
+
+            SliderPlaySpeed.Value = index - 1;
+            m_playerToastService.Show(PlayerToastService.SPEED_KEY, $"{m_playSpeedMenuService.MenuItems[(int)SliderPlaySpeed.Value].Content}");
+        }
+
+        // 快捷键加速播放
+        public void FastUp()
+        {
+            var index = (int)SliderPlaySpeed.Value;
+            if (index >= m_playSpeedMenuService.MenuItems.Count - 1)
+            {
+                Notify.ShowMessageToast("不能再快啦");
+                return;
+            }
+
+            SliderPlaySpeed.Value = index + 1;
+            m_playerToastService.Show(PlayerToastService.SPEED_KEY, $"{m_playSpeedMenuService.MenuItems[(int)SliderPlaySpeed.Value].Content}");
+        }
+
+        // 快捷键获取播放速度
+        public double GetPlaySpeed() => SliderPlaySpeed.Value;
+
+        // 快捷键设置播放速度
+        public void SetPlaySpeed(double speed)
+        {
+            SliderPlaySpeed.Value = speed;
+        }
+        #endregion
 
         private async Task PlayLocalFile()
         {
@@ -2220,34 +2343,6 @@ namespace BiliLite.Controls
             SplitView.IsPaneOpen = true;
         }
 
-        private async void BottomSoundQuality_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (BottomSoundQuality.SelectedItem == null)
-            {
-                return;
-            }
-
-            _postion = Player.Position;
-            var data = BottomSoundQuality.SelectedItem as BiliDashAudioPlayUrlInfo;
-            SettingService.SetValue<int>(SettingConstants.Player.DEFAULT_SOUND_QUALITY, data.QualityID);
-            _autoPlay = Player.PlayState == PlayState.Playing;
-            await ChangeQuality(current_quality_info, data);
-        }
-
-        private async void BottomCBQuality_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (BottomCBQuality.SelectedItem == null)
-            {
-                return;
-            }
-
-            _postion = Player.Position;
-            var data = BottomCBQuality.SelectedItem as BiliPlayUrlInfo;
-            SettingService.SetValue<int>(SettingConstants.Player.DEFAULT_QUALITY, data.QualityID);
-            _autoPlay = Player.PlayState == PlayState.Playing;
-            await ChangeQuality(data, current_audio_quality_info);
-        }
-
         private void BottomBtnPause_Click(object sender, RoutedEventArgs e)
         {
             if (Player.Opening)
@@ -2713,10 +2808,10 @@ namespace BiliLite.Controls
             var color = "16777215";
             if (SendDanmakuColorBorder.Background != null)
             {
-                color = Convert.ToInt32((SendDanmakuColorBorder.Background as SolidColorBrush).Color.ToString().Replace("#FF", ""), 16).ToString();
+                color = System.Convert.ToInt32((SendDanmakuColorBorder.Background as SolidColorBrush).Color.ToString().Replace("#FF", ""), 16).ToString();
             }
 
-            var result = await playerHelper.SendDanmaku(CurrentPlayItem.avid, CurrentPlayItem.cid, SendDanmakuTextBox.Text, Convert.ToInt32(Player.Position), modeInt, color);
+            var result = await playerHelper.SendDanmaku(CurrentPlayItem.avid, CurrentPlayItem.cid, SendDanmakuTextBox.Text, System.Convert.ToInt32(Player.Position), modeInt, color);
             if (result)
             {
                 m_danmakuController.Add(new BiliDanmakuItem()
@@ -2811,45 +2906,6 @@ namespace BiliLite.Controls
             await CaptureVideoCore();
         }
 
-        // 减速播放
-        public void SlowDown()
-        {
-            if (BottomCBSpeed.SelectedIndex == m_playSpeedMenuService.MenuItems.Count - 1)
-            {
-                Notify.ShowMessageToast("不能再慢啦");
-                return;
-            }
-
-            BottomCBSpeed.SelectedIndex += 1;
-            m_playerToastService.Show(PlayerToastService.SPEED_KEY, (BottomCBSpeed.SelectedItem as PlaySpeedMenuItem).Content);
-        }
-
-        // 加速播放
-        public void FastUp()
-        {
-            if (BottomCBSpeed.SelectedIndex == 0)
-            {
-                Notify.ShowMessageToast("不能再快啦");
-                return;
-            }
-            BottomCBSpeed.SelectedIndex -= 1;
-            m_playerToastService.Show(PlayerToastService.SPEED_KEY, (BottomCBSpeed.SelectedItem as PlaySpeedMenuItem).Content);
-        }
-
-        public double GetPlaySpeed()
-        {
-            var value = (double)BottomCBSpeed.SelectedValue;
-            return value;
-        }
-
-        // 设置播放速度
-        public void SetPlaySpeed(double speed)
-        {
-            var speeds = BottomCBSpeed.ItemsSource as List<PlaySpeedMenuItem>;
-            var index = speeds.Select(x => x.Value).IndexOf(speed);
-            BottomCBSpeed.SelectedIndex = index;
-        }
-
         public void GotoLastVideo()
         {
             if (EpisodeList.SelectedIndex == 0)
@@ -2914,8 +2970,8 @@ namespace BiliLite.Controls
                     else
                     {
                         playUrlInfo = info;
-                        SetSoundQuality();
-                        SetQuality();
+                        InitSoundQuality();
+                        InitQuality();
                     }
                     Notify.ShowMessageToast("检测到视频地址失效，已自动刷新");
                     m_startTime = DateTime.Now;

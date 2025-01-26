@@ -1,4 +1,5 @@
 ﻿using BiliLite.Controls;
+using BiliLite.Converters;
 using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Live;
@@ -33,6 +34,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
@@ -56,9 +58,12 @@ namespace BiliLite.Pages
         private readonly bool m_useNsDanmaku = true;
         private readonly IDanmakuController m_danmakuController;
         private readonly LiveSettingsControlViewModel m_liveSettingsControlViewModel;
+        private readonly LiveQualitySliderTooltipConverter m_liveQualitySliderTooltipConverter;
+        private readonly LiveLineSliderTooltipConverter m_liveLineSliderTooltipConverter;
 
         DisplayRequest dispRequest;
         LiveRoomViewModel m_liveRoomViewModel;
+        List<BasePlayUrlInfo> basePlayUrls;
         DispatcherTimer timer_focus;
         DispatcherTimer controlTimer;
         DispatcherTimer chatScrollTimer;
@@ -128,6 +133,9 @@ namespace BiliLite.Pages
             };
             this.Loaded += LiveDetailPage_Loaded;
             this.Unloaded += LiveDetailPage_Unloaded;
+
+            m_liveQualitySliderTooltipConverter = new LiveQualitySliderTooltipConverter();
+            m_liveLineSliderTooltipConverter = new LiveLineSliderTooltipConverter();
 
             m_useNsDanmaku = (DanmakuEngineType)SettingService.GetValue(SettingConstants.Live.DANMAKU_ENGINE,
                 (int)SettingConstants.Live.DEFAULT_DANMAKU_ENGINE) == DanmakuEngineType.NSDanmaku;
@@ -432,33 +440,88 @@ namespace BiliLite.Pages
 
         #endregion
 
+        #region Slider
         private void LiveRoomViewModelChangedPlayUrl(object sender, EventArgs e)
         {
             changePlayUrlFlag = true;
+            InitSliderQuality();
+            InitSliderLine();
+            changePlayUrlFlag = false;
+        }
 
+        private void InitSliderQuality()
+        {
+            if (m_liveRoomViewModel.Qualites.IndexOf(m_liveRoomViewModel.CurrentQn) == -1)
+            {
+                return; // 空值检查
+            }
+
+            MinQuality.Text = m_liveRoomViewModel.Qualites[0].Desc;
+            MaxQuality.Text = m_liveRoomViewModel.Qualites[m_liveRoomViewModel.Qualites.Count - 1].Desc;
+
+            BottomBtnQuality.IsEnabled = m_liveRoomViewModel.Qualites.Count > 1;
+            BottomBtnQuality.Content = m_liveRoomViewModel.CurrentQn.Desc;
+            SliderQuality.Maximum = m_liveRoomViewModel.Qualites.Count - 1;
+            SliderQuality.Value = m_liveRoomViewModel.Qualites.IndexOf(m_liveRoomViewModel.CurrentQn);
+            m_liveQualitySliderTooltipConverter.Qualites = m_liveRoomViewModel.Qualites;
+            SliderQuality.ThumbToolTipValueConverter = m_liveQualitySliderTooltipConverter;
+        }
+
+        private async void SliderQuality_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            if (changePlayUrlFlag)
+            {
+                return;
+            }
+
+            var item = m_liveRoomViewModel.Qualites[(int)SliderQuality.Value];
+            SettingService.SetValue(SettingConstants.Live.DEFAULT_QUALITY, item.Qn);
+            await m_liveRoomViewModel.GetPlayUrls(m_liveRoomViewModel.RoomID, item.Qn);
+            BottomBtnQuality.Content = item.Desc;
+        }
+
+        private void InitSliderLine()
+        {
             m_realPlayInfo.PlayUrls.HlsUrls = m_liveRoomViewModel.HlsUrls;
             m_realPlayInfo.PlayUrls.FlvUrls = m_liveRoomViewModel.FlvUrls;
-            var urls = m_liveRoomViewModel.HlsUrls ?? m_liveRoomViewModel.FlvUrls;
-            BottomCBLine.ItemsSource = urls;
+            basePlayUrls = m_liveRoomViewModel.HlsUrls ?? m_liveRoomViewModel.FlvUrls;
+
+            BottomBtnLine.IsEnabled = basePlayUrls.Count > 1;
+
+            MinLine.Text = basePlayUrls[0].Name;
+            MaxLine.Text = basePlayUrls[basePlayUrls.Count - 1].Name;
+            SliderLine.Maximum = basePlayUrls.Count - 1;
+            m_liveLineSliderTooltipConverter.Lines = basePlayUrls;
+            SliderLine.ThumbToolTipValueConverter = m_liveLineSliderTooltipConverter;
 
             var flag = false;
-            for (var i = 0; i < urls.Count; i++)
+            for (var i = 0; i < basePlayUrls.Count; i++)
             {
-                var domain = new Uri(urls[i].Url).Host;
+                var domain = new Uri(basePlayUrls[i].Url).Host;
 
                 if (domain.Contains(m_viewModel.LivePlayUrlSource) && !flag)
                 {
-                    BottomCBLine.SelectedIndex = i;
+                    BottomBtnLine.Content = basePlayUrls[i].Name;
+                    SliderLine.Value = i + 1; // 强制触发 SliderLine_ValueChanged 事件
+                    SliderLine.Value = i;
+
                     flag = true;
                 }
             }
             if (!flag)
             {
-                BottomCBLine.SelectedIndex = 0;
+                BottomBtnLine.Content = basePlayUrls[0].Name;
+                SliderLine.Value = 0 + 1;
+                SliderLine.Value = 0;
             }
+        }
 
-            BottomCBQuality.SelectedItem = m_liveRoomViewModel.CurrentQn;
-            changePlayUrlFlag = false;
+        private async void SliderLine_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            BottomBtnLine.Content = basePlayUrls[(int)SliderLine.Value].Name;
+
+            m_playerConfig.SelectedRouteLine = (int)SliderLine.Value;
+            await LoadPlayer();
         }
 
         private async Task StopPlay()
@@ -474,6 +537,7 @@ namespace BiliLite.Pages
             SetFullScreen(false);
             MiniWidnows(false);
         }
+        #endregion
 
         string roomid;
 
@@ -699,29 +763,6 @@ namespace BiliLite.Pages
                 Notify.ShowMessageToast("播放失败" + ex.Message);
                 await m_playerController.PlayState.Stop();
             }
-        }
-
-        private async void BottomCBQuality_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (BottomCBQuality.SelectedItem == null || changePlayUrlFlag)
-            {
-                return;
-            }
-            var item = BottomCBQuality.SelectedItem as LiveRoomWebUrlQualityDescriptionItemModel;
-            SettingService.SetValue(SettingConstants.Live.DEFAULT_QUALITY, item.Qn);
-            await m_liveRoomViewModel.GetPlayUrls(m_liveRoomViewModel.RoomID, item.Qn);
-        }
-
-        private async void BottomCBLine_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (BottomCBLine.SelectedIndex == -1)
-            {
-                return;
-            }
-
-            m_playerConfig.SelectedRouteLine = BottomCBLine.SelectedIndex;
-
-            await LoadPlayer();
         }
 
         private async void BottomBtnPause_Click(object sender, RoutedEventArgs e)

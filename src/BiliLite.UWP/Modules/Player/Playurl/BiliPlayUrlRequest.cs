@@ -1,21 +1,21 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Bilibili.App.Playurl.V1;
+using BiliLite.Extensions;
+using BiliLite.gRPC.Api;
+using BiliLite.Models.Common;
+using BiliLite.Models.Common.Video;
+using BiliLite.Models.Common.Video.PlayUrlInfos;
+using BiliLite.Models.Requests.Api;
+using BiliLite.Services;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Net.Http;
-using Bilibili.App.Playurl.V1;
-using BiliLite.Extensions;
-using BiliLite.Models.Requests.Api;
-using BiliLite.Services;
-using BiliLite.Models.Common;
-using BiliLite.Models.Common.Video;
-using BiliLite.Models.Common.Video.PlayUrlInfos;
 using PlayURL = BiliLite.gRPC.Api.PlayURL;
-using BiliLite.gRPC.Api;
 
 namespace BiliLite.Modules.Player.Playurl
 {
@@ -124,6 +124,7 @@ namespace BiliLite.Modules.Player.Playurl
                     HasPlayUrl = false,
                 });
             }
+            info.Qualites = [.. info.Qualites.OrderBy(x => x.QualityID)];
         }
 
         private async Task<BiliDashItem> ParseBiliPlayUrlInfoAudioDash(BiliPlayUrlQualitesInfo info, JObject playUrlInfoResult,
@@ -178,6 +179,9 @@ namespace BiliLite.Modules.Player.Playurl
                     Audio = audio.ToBiliDashItem(),
                 });
             }
+
+            info.AudioQualites = [.. info.AudioQualites.OrderBy(x => x.QualityID)];
+
             // 处理无损音质
             if (flacAudio is { Display: true, Audio: { } })
             {

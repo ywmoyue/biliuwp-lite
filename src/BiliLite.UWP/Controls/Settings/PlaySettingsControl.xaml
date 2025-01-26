@@ -67,18 +67,39 @@
 
         <TextBlock  Margin="0 16 0 8" FontSize="16" Visibility="Collapsed">使用FFmpeg播放时硬解视频</TextBlock>
         <ToggleSwitch x:Name="swHardwareDecode" Visibility="Collapsed"></ToggleSwitch>-->
+        
+        <controls:SettingsExpander Description="适用于普通视频" Header="播放倍速" IsExpanded="True">
+            <controls:SettingsExpander.HeaderIcon>
+                <font:FontAwesome Icon="Solid_AngleDoubleRight" />
+            </controls:SettingsExpander.HeaderIcon>
+            
+            <Button x:Name="BtnEditPlaySpeedMenu" Click="BtnEditPlaySpeedMenu_OnClick">自定义</Button>
+         
+            <controls:SettingsExpander.Items>
+                <controls:SettingsCard Header="默认播放倍速">
+                    <ComboBox
+                x:Name="cbVideoSpeed"
+                MinWidth="200"
+                DisplayMemberPath="Content"
+                ItemsSource="{x:Bind m_playSpeedMenuService.MenuItems, Mode=OneWay}"
+                SelectedIndex="0"
+                SelectedValuePath="Value" />
+                </controls:SettingsCard>
 
-        <controls:SettingsCard Header="视频默认倍速"
-                               Description="视频默认倍速">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_AngleDoubleRight"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ComboBox x:Name="cbVideoSpeed" SelectedIndex="0" MinWidth="200"
-                      SelectedValuePath="Value"
-                      DisplayMemberPath="Content"
-                      ItemsSource="{x:Bind m_playSpeedMenuService.MenuItems}">
-            </ComboBox>
-        </controls:SettingsCard>
+                <controls:SettingsCard Description="触摸及键盘长按专用" Header="临时播放倍速">
+                    <ComboBox
+                x:Name="cbRatePlaySpeed"
+                MinWidth="200"
+                SelectedIndex="0">
+                        <ComboBox.Items>
+                            <ComboBoxItem Content="3.0x" />
+                            <ComboBoxItem Content="2.0x" />
+                        </ComboBox.Items>
+                    </ComboBox>
+                </controls:SettingsCard>
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>
+
 
         <controls:SettingsCard Header="播放完成自动切换下一P"
                                Description="分P视频播放完成自动切换下一P">
@@ -176,19 +197,6 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsCard Header="倍速播放速度"
-                               Description="前两项设置为倍速播放时的速度">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_AngleDoubleRight"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ComboBox x:Name="cbRatePlaySpeed" SelectedIndex="0" MinWidth="200">
-                <ComboBox.Items>
-                    <ComboBoxItem Content="3.0x" ></ComboBoxItem>
-                    <ComboBoxItem Content="2.0x" ></ComboBoxItem>
-                </ComboBox.Items>
-            </ComboBox>
-        </controls:SettingsCard>
-
         <controls:SettingsCard Header="音量"
                                Description="视频音量">
             <controls:SettingsCard.HeaderIcon>
@@ -219,14 +227,6 @@
                 <font:FontAwesome Icon="Solid_Lock"></font:FontAwesome>
             </controls:SettingsCard.HeaderIcon>
             <ToggleSwitch x:Name="SwLockPlayerBrightness" ></ToggleSwitch>
-        </controls:SettingsCard>
-
-        <controls:SettingsCard Header="播放速度菜单"
-                               Description="播放速度菜单">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_List"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <Button x:Name="BtnEditPlaySpeedMenu" Click="BtnEditPlaySpeedMenu_OnClick">编辑播放速度菜单</Button>
         </controls:SettingsCard>
 
         <controls:SettingsCard Header="自动打开AI字幕">
