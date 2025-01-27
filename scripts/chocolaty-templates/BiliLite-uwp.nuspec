@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>BiliLite-uwp-{arch}</id>
+    <version>{version}-beta</version>
+    <title>BiliLite-uwp</title>
+    <authors>ruamuyan</authors>
+    <owners>ruamuyan</owners>
+    <projectUrl>https://github.com/ywmoyue/biliuwp-lite</projectUrl>
+    <mailingListUrl>https://github.com/ywmoyue/biliuwp-lite/discussions</mailingListUrl>
+    <bugTrackerUrl>https://github.com/ywmoyue/biliuwp-lite/discussions</bugTrackerUrl>
+    <docsUrl>https://github.com/ywmoyue/biliuwp-lite</docsUrl>
+    <projectSourceUrl>https://github.com/ywmoyue/biliuwp-lite</projectSourceUrl>
+    <description>Bilibili third-party UWP client third-party release version. Fork from https://github.com/xiaoyaocz/biliuwp-lite.</description>
+    <summary >Bilibili third-party UWP client third-party release version.</summary >
+    <iconUrl>https://raw.githubusercontent.com/ywmoyue/biliuwp-lite/refs/heads/master/src/BiliLite.Packages/Images/StoreLogo.scale-400.png</iconUrl>
+    <tags>UWP BiliBili</tags>
+  </metadata>
+</package>
