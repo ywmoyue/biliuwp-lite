@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Timers;
-using System.Windows.Input;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
 using BiliLite.Models;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Live;
@@ -21,6 +13,14 @@ using BiliLite.ViewModels.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Timers;
+using System.Windows.Input;
 using DateTime = System.DateTime;
 
 namespace BiliLite.ViewModels.Live
@@ -161,7 +161,7 @@ namespace BiliLite.ViewModels.Live
         public bool ShowBag { get; set; }
 
         public List<LiveRoomRankViewModel> Ranks { get; set; }
-        
+
         public LiveRoomRankViewModel SelectRank { get; set; }
 
         [DoNotNotify]
@@ -228,7 +228,7 @@ namespace BiliLite.ViewModels.Live
         public string ManualPlayUrl { get; set; } = "";
 
         [DoNotNotify]
-        public Dictionary<string, string> LotteryDanmu = new Dictionary<string, string> { { "AnchorLottery", "" }, {"RedPocketLottery", ""} };
+        public Dictionary<string, string> LotteryDanmu = new Dictionary<string, string> { { "AnchorLottery", "" }, { "RedPocketLottery", "" } };
 
         /// <summary>
         /// 有的特殊直播间没有一些娱乐内容. 例如央视新闻直播间.
@@ -269,7 +269,7 @@ namespace BiliLite.ViewModels.Live
             actionMap.AddNewDanmu += (_, e) =>
             {
                 AddNewDanmu?.Invoke(this, e);
-            }; 
+            };
             actionMap.AnchorLotteryEnd += (_, e) =>
             {
                 AnchorLotteryEnd?.Invoke(this, e);
@@ -364,7 +364,7 @@ namespace BiliLite.ViewModels.Live
             {
                 await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                 {
-                    for(int i = 0; i < SuperChats.Count; i++)
+                    for (int i = 0; i < SuperChats.Count; i++)
                     {
                         if (SuperChats.ElementAt(i).Time <= 0) SuperChats.RemoveAt(i);
                         else SuperChats.ElementAt(i).Time -= 1;
@@ -480,15 +480,16 @@ namespace BiliLite.ViewModels.Live
 
             var acceptQnList = codec.AcceptQn;
             Qualites ??= liveRoomPlayUrlModel.PlayUrlInfo.PlayUrl.GQnDesc.Where(item => acceptQnList.Contains(item.Qn)).ToList();
+            Qualites = [.. Qualites.OrderBy(x => x.Qn)];
             CurrentQn = liveRoomPlayUrlModel.PlayUrlInfo.PlayUrl.GQnDesc.FirstOrDefault(x => x.Qn == codec.CurrentQn);
 
             var urlList = codec.UrlInfo.Select(urlInfo => new BasePlayUrlInfo
-                { Url = urlInfo.Host + codec.BaseUrl + urlInfo.Extra, Name = urlInfo.Name }).ToList();
+            { Url = urlInfo.Host + codec.BaseUrl + urlInfo.Extra, Name = urlInfo.Name }).ToList();
 
             var regex = new Regex(@"live_\d+_\d+\.flv");
             foreach (var item in urlList)
             {
-                if (regex.IsMatch(item.Url)) 
+                if (regex.IsMatch(item.Url))
                 {
                     SetManualPlayUrl?.Invoke(this, item.Url);
                     break;
@@ -1347,7 +1348,7 @@ namespace BiliLite.ViewModels.Live
                     return false;
                 }
                 // 参与红包抽奖会自动发送弹幕, 不用自己发
-                return await JoinRedPocketLotteryRequest(SettingService.Account.UserID, 
+                return await JoinRedPocketLotteryRequest(SettingService.Account.UserID,
                                                                    RoomID,
                                                                    AnchorUid,
                                                                    LotteryViewModel.RedPocketLotteryInfo.LotteryId.ToInt32());

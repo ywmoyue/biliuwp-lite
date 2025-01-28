@@ -61,7 +61,11 @@
                     </StackPanel>
                 </Grid>
             </DataTemplate>
-            
+
+            <MenuFlyout x:Key="AttentionContextManu">
+                <MenuFlyoutItem Click="BtnSetLocalAttention_OnClick">设置本地关注</MenuFlyoutItem>
+                <MenuFlyoutItem Click="BtnCancelLocalAttention_OnClick">取消本地关注</MenuFlyoutItem>
+            </MenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
     <Grid>
@@ -596,7 +600,8 @@
 
                                 <AppBarButton Label="关注" 
                       Command="{x:Bind Path=m_viewModel.AttentionCommand,Mode=OneWay}" 
-                      Visibility="{x:Bind Path=m_viewModel.IsFollowed,Mode=OneWay,Converter={StaticResource display}}">
+                      Visibility="{x:Bind Path=m_viewModel.IsFollowed,Mode=OneWay,Converter={StaticResource display}}"
+                      ContextFlyout="{StaticResource AttentionContextManu}">
                                     <AppBarButton.Icon>
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE006;" />
                                     </AppBarButton.Icon>
@@ -608,7 +613,8 @@
                                 </AppBarButton>
 
                                 <AppBarButton Label="取消关注" Command="{x:Bind Path=m_viewModel.AttentionCommand,Mode=OneWay}" 
-                      Visibility="{x:Bind Path=m_viewModel.IsFollowed,Mode=OneWay}">
+                      Visibility="{x:Bind Path=m_viewModel.IsFollowed,Mode=OneWay}"
+                      ContextFlyout="{StaticResource AttentionContextManu}">
                                     <AppBarButton.Icon>
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE00B;" />
                                     </AppBarButton.Icon>

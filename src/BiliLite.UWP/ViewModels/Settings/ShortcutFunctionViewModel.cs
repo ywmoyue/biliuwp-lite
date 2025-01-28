@@ -1,8 +1,8 @@
-﻿using System.Collections.ObjectModel;
-using System.Linq;
+﻿using BiliLite.Models.Functions;
 using BiliLite.ViewModels.Common;
-using BiliLite.Models.Functions;
 using PropertyChanged;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace BiliLite.ViewModels.Settings
 {
@@ -18,7 +18,7 @@ namespace BiliLite.ViewModels.Settings
 
         public bool IsPressAction { get; set; }
 
-        public string Description => IsPressAction ? "按住行为" : "点击行为";
+        public string Description => IsPressAction ? "长按执行" : "点击执行";
 
         public bool Enable { get; set; }
 

@@ -13,6 +13,7 @@
       xmlns:winui="using:Microsoft.UI.Xaml.Controls" 
       xmlns:fa="using:FontAwesome5"
       xmlns:home="using:BiliLite.Models.Common.Home"
+      xmlns:live1="using:BiliLite.Models.Common.Live"
       Background="Transparent">
 
     <Grid>
@@ -56,6 +57,71 @@
                             </Style>
                         </GridView.ItemContainerStyle>
                     </GridView>
+                    <StackPanel Margin="0 8 0 0" Visibility="{x:Bind Path=m_viewModel.ShowLocalFollows,Mode=OneWay}">
+                        <Grid>
+                            <TextBlock FontSize="18" FontWeight="Bold">本地关注的直播</TextBlock>
+                        </Grid>
+                        <controls:HorizontalGridView 
+                            MoveOffset="600" 
+                            AlwaysShowButton="False" 
+                            ItemClick="FollowLive_ItemClick"
+                            ItemsSource="{x:Bind Path=m_viewModel.LiveAttentionVm.LocalFollows,Mode=OneWay}" 
+                            SelectionMode="None" 
+                            Margin="-4 0 0 0"
+                            IsItemClickEnabled="True">
+                            <GridView.ItemContainerStyle>
+                                <Style TargetType="GridViewItem">
+                                    <Setter Property="Margin" Value="4"></Setter>
+                                    <Setter Property="Height" Value="210"></Setter>
+                                    <Setter Property="Width" Value="260"></Setter>
+                                </Style>
+                            </GridView.ItemContainerStyle>
+                            <GridView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ItemsStackPanel Orientation="Horizontal"></ItemsStackPanel>
+                                </ItemsPanelTemplate>
+                            </GridView.ItemsPanel>
+                            <GridView.ItemTemplate>
+                                <DataTemplate x:DataType="live1:LiveRoomInfoOldModel">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition Height="24" />
+                                            <RowDefinition Height="24" />
+                                        </Grid.RowDefinitions>
+                                        <Border CornerRadius="{StaticResource ImageCornerRadius}">
+                                            <Border.ContextFlyout>
+                                                <MenuFlyout>
+                                                    <MenuFlyoutItem Click="CancelLocalAttention_OnClick">取消本地关注</MenuFlyoutItem>
+                                                </MenuFlyout>
+                                            </Border.ContextFlyout>
+                                            <Grid>
+                                                <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Height="160" Width="260" Stretch="UniformToFill" Source="{x:Bind Path=Cover,Converter={StaticResource imageConvert},ConverterParameter='460w_260h_1c'}"></toolkit:ImageEx>
+                                                <Grid VerticalAlignment="Bottom" Padding="8">
+                                                    <Grid.Background>
+                                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                            <GradientStop Color="#CC000005" Offset="0.993" />
+                                                            <GradientStop Color="#00000000" Offset="0" />
+                                                        </LinearGradientBrush>
+                                                    </Grid.Background>
+                                                    <StackPanel>
+                                                        <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=UserName}"></TextBlock>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                        <fa:FontAwesome Icon="Solid_UserFriends" Foreground="White" FontSize="12" Margin="0 0 8 0"></fa:FontAwesome>
+                                                        <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=Online,Converter={StaticResource numberToStringConvert}}"></TextBlock>
+                                                    </StackPanel>
+
+                                                </Grid>
+
+                                            </Grid>
+                                        </Border>
+                                        <TextBlock Grid.Row="1" Margin="4 4 4 0" MaxLines="1" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=Title}"></TextBlock>
+                                    </Grid>
+                                </DataTemplate>
+                            </GridView.ItemTemplate>
+                        </controls:HorizontalGridView>
+                    </StackPanel>
                     <StackPanel Margin="0 8 0 0" Visibility="{x:Bind Path=m_viewModel.ShowFollows,Mode=OneWay}">
                         <Grid>
                             <TextBlock FontSize="18" FontWeight="Bold">关注的直播</TextBlock>

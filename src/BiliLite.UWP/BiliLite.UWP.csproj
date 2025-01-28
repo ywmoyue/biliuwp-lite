@@ -168,6 +168,9 @@
     <Compile Include="Controls\Settings\LiveSettingsControl.xaml.cs">
       <DependentUpon>LiveSettingsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Settings\PerformanceSettingsControl.xaml.cs">
+      <DependentUpon>PerformanceSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Settings\PlaySettingsControl.xaml.cs">
       <DependentUpon>PlaySettingsControl.xaml</DependentUpon>
     </Compile>
@@ -191,6 +194,12 @@
     </Compile>
     <Compile Include="Converters\FilterRuleTypeConverter.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
+    <Compile Include="Converters\LiveLineSliderTooltipConverter.cs" />
+    <Compile Include="Converters\LiveQualitySliderTooltipConverter.cs" />
+    <Compile Include="Converters\PlaySpeedSliderTooltipConverter.cs" />
+    <Compile Include="Converters\QualitySliderTooltipConverter.cs" />
+    <Compile Include="Converters\SoundQualitySliderTooltipConverter.cs" />
+    <Compile Include="Converters\TimeSpanStrFormatConverter.cs" />
     <Compile Include="Dialogs\EditPlaySpeedMenuDialog.xaml.cs">
       <DependentUpon>EditPlaySpeedMenuDialog.xaml</DependentUpon>
     </Compile>
@@ -213,6 +222,7 @@
     <Compile Include="Models\Common\Danmaku\BiliDanmakuItem.cs" />
     <Compile Include="Models\Common\Dynamic\DynamicUgcSeasonCardModel.cs" />
     <Compile Include="Models\Common\Live\LiveRoomEmoticon.cs" />
+    <Compile Include="Models\Common\Live\LiveRoomInfoOldModel.cs" />
     <Compile Include="Models\Common\MarkdownViewerPagerParameter.cs" />
     <Compile Include="Models\Common\Msg\BiliReplyMeResponse.cs" />
     <Compile Include="Models\Common\Msg\BiliSendMessageResultCode.cs" />
@@ -233,6 +243,7 @@
     <Compile Include="Models\Common\UserDynamic\NavDynArticle.cs" />
     <Compile Include="Models\Common\UserDynamic\NavDynArticles.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicSeasonInfo.cs" />
+    <Compile Include="Models\Common\User\LocalAttentionUser.cs" />
     <Compile Include="Models\Common\User\SendDynamic\AtDisplayModel.cs" />
     <Compile Include="Models\Common\User\SendDynamic\AtModel.cs" />
     <Compile Include="Models\Common\User\SendDynamic\SendImagesModel.cs" />
@@ -324,6 +335,7 @@
       <DependentUpon>MessagesPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\Biz\BaseBizService.cs" />
+    <Compile Include="Services\Biz\LocalAttentionUserService.cs" />
     <Compile Include="Services\Biz\MessagesService.cs" />
     <Compile Include="Services\Interfaces\IUpdatePivotLayout.cs" />
     <Compile Include="Services\PageSaveService.cs" />
@@ -333,6 +345,7 @@
     <Compile Include="Models\Common\Msg\BiliSessionMessageSource.cs" />
     <Compile Include="Models\Common\Msg\BiliSessionMessagesResponse.cs" />
     <Compile Include="Models\Common\Msg\BiliSessionPrivateMessage.cs" />
+    <Compile Include="ViewModels\Common\WebPageViewModel.cs" />
     <Compile Include="ViewModels\Messages\ChatContextViewModel.cs" />
     <Compile Include="Models\Common\Msg\ChatMessage.cs" />
     <Compile Include="Models\Common\Msg\MsgContent\IChatMsgContent.cs" />
@@ -1255,6 +1268,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Settings\LiveSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\PerformanceSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
