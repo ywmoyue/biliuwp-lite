@@ -35,7 +35,8 @@ def replace_string_in_file(file_path, target_string, replacement_string):
         print(f"Failed to encode the file {file_path} with {encoding} encoding.")
 
 def download_github_release_asset(tag, github_token, arch, output_dir):
-    url = f"https://api.github.com/repos/ywmoyue/biliuwp-lite/releases/tags/{tag}"
+    # 获取所有 releases
+    url = "https://api.github.com/repos/ywmoyue/biliuwp-lite/releases"
     headers = {
         "Authorization": f"token {github_token}",
         "Accept": "application/vnd.github.v3+json"
@@ -43,14 +44,27 @@ def download_github_release_asset(tag, github_token, arch, output_dir):
     
     response = requests.get(url, headers=headers)
     if response.status_code != 200:
-        print(f"Failed to fetch release info for tag {tag}. Status code: {response.status_code}")
+        print(f"Failed to fetch releases. Status code: {response.status_code}")
         return False
     
-    assets = response.json().get("assets", [])
+    releases = response.json()
+    
+    # 根据 tag 查找对应的 release
+    release_item = None
+    for release in releases:
+        if release["tag_name"] == tag:
+            release_item = release
+            break
+    
+    if not release_item:
+        print(f"Release with tag {tag} not found.")
+        return False
+    
+    # 查找匹配的 asset
     zip_filename = f"BiliLite.Packages_{tag[1:]}_{arch}.zip"
     asset_url = None
     
-    for asset in assets:
+    for asset in release_item["assets"]:
         if asset["name"] == zip_filename:
             asset_url = asset["url"]
             break
@@ -59,6 +73,7 @@ def download_github_release_asset(tag, github_token, arch, output_dir):
         print(f"Asset {zip_filename} not found in release {tag}.")
         return False
     
+    # 下载 asset
     headers["Accept"] = "application/octet-stream"
     response = requests.get(asset_url, headers=headers, stream=True)
     if response.status_code != 200:
