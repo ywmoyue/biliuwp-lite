@@ -1,7 +1,7 @@
 {
-  "version": "4.7.13",
-  "version_num": 40713,
-  "version_desc": "更新内容:\r\n\r\n- 完善消息中心页，支持发送消息和查看回复我的消息列表 \r\n\r\n- 新增自动刷新播放地址设置项，默认关闭 \r\n\r\n- 修复直播间弹幕输入框问题 \r\n\r\n- 放映厅索引筛选不显示文字 \r\n\r\n- 修复拖动标签栏隐藏子项的问题\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.7.14",
+  "version_num": 40714,
+  "version_desc": "更新内容:\r\n\r\n- 提供本地关注用户功能，可在首页直播页查看本地关注用户的直播间 \r\n\r\n- 支持chocolatey方式安装 \r\n\r\n- 优化WebPage \r\n\r\n- 将播放器控件内的选择框替换为滑块 \r\n\r\n- 简化OnPropertyChanged通用事件 \r\n\r\n- 调整部分个性化设置项 \r\n\r\n- 单窗口模式下返回按钮样式统一 \r\n\r\n- 搜索页视频时长像官网一样显示小时 \r\n\r\n- 修复番剧时间线缓存读取错误\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
