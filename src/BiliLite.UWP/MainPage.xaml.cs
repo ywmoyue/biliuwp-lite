@@ -162,7 +162,7 @@ namespace BiliLite
             }
         }
 
-        private void NavigationHelper_NavigateToPageEvent(object sender, NavigationInfo e)
+        private async void NavigationHelper_NavigateToPageEvent(object sender, NavigationInfo e)
         {
             var item = new TabViewItem()
             {
@@ -175,7 +175,7 @@ namespace BiliLite
             frame.Navigate(e.page, e.parameters);
             item.Content = frame;
             var pageSaveService = App.ServiceProvider.GetRequiredService<PageSaveService>();
-            frame.PageId = pageSaveService.AddPage(e.title, e.page, e.parameters, e.icon);
+            frame.PageId = await pageSaveService.AddPage(e.title, e.page, e.parameters, e.icon);
 
             tabView.TabItems.Add(item);
             if (!e.dontGoTo)

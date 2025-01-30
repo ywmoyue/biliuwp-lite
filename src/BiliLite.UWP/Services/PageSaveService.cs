@@ -6,6 +6,7 @@ using BiliLite.Models.Attributes;
 using BiliLite.Models.Common;
 using BiliLite.Models.Databases;
 using BiliLite.Pages;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace BiliLite.Services
@@ -23,7 +24,7 @@ namespace BiliLite.Services
             m_mainPage = mainPage;
         }
 
-        public void HandleStartApp()
+        public async Task HandleStartApp()
         {
             try
             {
@@ -38,22 +39,46 @@ namespace BiliLite.Services
                 {
                     return;
                 }
-                var pages = m_biliLiteDbContext.PageSavedItems.ToList();
+
+                var pages = await m_biliLiteDbContext.PageSavedItems.ToListAsync();
+
+                var limitCount = SettingService.GetValue(SettingConstants.UI.OPEN_LAST_PAGE_LIMIT_COUNT,
+                    SettingConstants.UI.DEFAULT_OPEN_LAST_PAGE_LIMIT_COUNT);
+
+                if (limitCount > 0)
+                {
+                    pages = pages.TakeLast(limitCount).ToList();
+                }
+
                 if (!pages.Any()) return;
+
                 m_mainPage.MainPageLoaded += async (_, _) =>
                 {
                     // 等待部分资源加载，否则会白屏
                     await Task.Delay(500);
-                    foreach (var page in pages)
+                    await using var transaction = await m_biliLiteDbContext.Database.BeginTransactionAsync();
+                    try
                     {
-                        m_biliLiteDbContext.PageSavedItems.Remove(page);
-                        MessageCenter.NavigateToPage(null, new NavigationInfo()
+                        foreach (var page in pages)
                         {
-                            icon = JsonConvert.DeserializeObject<Symbol>(page.Icon),
-                            page = JsonConvert.DeserializeObject<Type>(page.Type),
-                            parameters = JsonConvert.DeserializeObject<object>(page.Parameters),
-                            title = page.Title,
-                        });
+                            MessageCenter.NavigateToPage(null, new NavigationInfo()
+                            {
+                                icon = JsonConvert.DeserializeObject<Symbol>(page.Icon),
+                                page = JsonConvert.DeserializeObject<Type>(page.Type),
+                                parameters = JsonConvert.DeserializeObject<object>(page.Parameters),
+                                title = page.Title,
+                            });
+                        }
+
+                        m_biliLiteDbContext.PageSavedItems.RemoveRange(m_biliLiteDbContext.PageSavedItems);
+
+                        await m_biliLiteDbContext.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                    }
+                    catch
+                    {
+                        await transaction.RollbackAsync();
+                        throw;
                     }
                 };
             }
@@ -63,20 +88,30 @@ namespace BiliLite.Services
             }
         }
 
-        public string AddPage(string title, Type type, object parameters, Symbol icon)
+        public async Task<string> AddPage(string title, Type type, object parameters, Symbol icon)
         {
             try
             {
-                var page = new PageSavedDTO()
+                await using var transaction = await m_biliLiteDbContext.Database.BeginTransactionAsync();
+                try
                 {
-                    Parameters = JsonConvert.SerializeObject(parameters),
-                    Type = JsonConvert.SerializeObject(type),
-                    Title = title,
-                    Icon = JsonConvert.SerializeObject(icon),
-                };
-                m_biliLiteDbContext.PageSavedItems.Add(page);
-                m_biliLiteDbContext.SaveChanges();
-                return page.Id;
+                    var page = new PageSavedDTO()
+                    {
+                        Parameters = JsonConvert.SerializeObject(parameters),
+                        Type = JsonConvert.SerializeObject(type),
+                        Title = title,
+                        Icon = JsonConvert.SerializeObject(icon),
+                    };
+                    m_biliLiteDbContext.PageSavedItems.Add(page);
+                    await m_biliLiteDbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    return page.Id;
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
             }
             catch (Exception ex)
             {
@@ -86,17 +121,27 @@ namespace BiliLite.Services
             return "";
         }
 
-        public void UpdatePage(string id, string title, Type type, object parameters, Symbol icon)
+        public async Task UpdatePage(string id, string title, Type type, object parameters, Symbol icon)
         {
             try
             {
-                var page = m_biliLiteDbContext.PageSavedItems.Find(id);
-                if (page == null) return;
-                page.Title = title;
-                page.Type = JsonConvert.SerializeObject(type);
-                page.Parameters = JsonConvert.SerializeObject(parameters);
-                page.Icon = JsonConvert.SerializeObject(icon);
-                m_biliLiteDbContext.SaveChanges();
+                await using var transaction = await m_biliLiteDbContext.Database.BeginTransactionAsync();
+                try
+                {
+                    var page = await m_biliLiteDbContext.PageSavedItems.FindAsync(id);
+                    if (page == null) return;
+                    page.Title = title;
+                    page.Type = JsonConvert.SerializeObject(type);
+                    page.Parameters = JsonConvert.SerializeObject(parameters);
+                    page.Icon = JsonConvert.SerializeObject(icon);
+                    await m_biliLiteDbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
             }
             catch (Exception ex)
             {
@@ -104,14 +149,24 @@ namespace BiliLite.Services
             }
         }
 
-        public void RemovePage(string id)
+        public async Task RemovePage(string id)
         {
             try
             {
-                var page = m_biliLiteDbContext.PageSavedItems.Find(id);
-                if (page == null) return;
-                m_biliLiteDbContext.PageSavedItems.Remove(page);
-                m_biliLiteDbContext.SaveChanges();
+                await using var transaction = await m_biliLiteDbContext.Database.BeginTransactionAsync();
+                try
+                {
+                    var page = await m_biliLiteDbContext.PageSavedItems.FindAsync(id);
+                    if (page == null) return;
+                    m_biliLiteDbContext.PageSavedItems.Remove(page);
+                    await m_biliLiteDbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
             }
             catch (Exception ex)
             {
@@ -121,7 +176,6 @@ namespace BiliLite.Services
 
         public void SaveMainPageTabIndex(int index)
         {
-
         }
     }
 }

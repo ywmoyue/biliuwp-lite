@@ -60,6 +60,20 @@ namespace BiliLite.Controls.Settings
                 };
             };
 
+            //启动应用时打开上次浏览的标签页数量限制
+            NumberOpenLastPageCount.Value = SettingService.GetValue(SettingConstants.UI.OPEN_LAST_PAGE_LIMIT_COUNT, SettingConstants.UI.DEFAULT_OPEN_LAST_PAGE_LIMIT_COUNT);
+            NumberOpenLastPageCount.Loaded += (sender, e) =>
+            {
+                NumberOpenLastPageCount.ValueChanged += (obj, args) =>
+                {
+                    if (args.NewValue % 1 != 0)
+                    {
+                        NumberOpenLastPageCount.Value = (int)args.NewValue;
+                    }
+                    SettingService.SetValue(SettingConstants.UI.OPEN_LAST_PAGE_LIMIT_COUNT, (int)NumberOpenLastPageCount.Value);
+                };
+            };
+
             //浏览器打开无法处理的链接
             swOpenUrlWithBrowser.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.OPEN_URL_BROWSER, false);
             swOpenUrlWithBrowser.Loaded += new RoutedEventHandler((sender, e) =>

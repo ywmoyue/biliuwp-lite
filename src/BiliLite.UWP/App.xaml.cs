@@ -178,7 +178,7 @@ namespace BiliLite
                 }
 
                 var pageSaveService = ServiceProvider.GetRequiredService<PageSaveService>();
-                pageSaveService.HandleStartApp();
+                await pageSaveService.HandleStartApp();
 
                 if (arguments != null && !string.IsNullOrEmpty(arguments.ToString()))
                 {
