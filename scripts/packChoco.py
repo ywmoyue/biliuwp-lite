@@ -135,7 +135,7 @@ def process_architecture(arch, version, github_token, chocotoken):
     
     # 执行 choco push 命令
     try:
-        subprocess.run(["choco", "push", package_path, "--source", "https://push.chocolatey.org/", "--api-key", chocotoken], check=True)
+        subprocess.run(["choco", "push", "--source", "https://push.chocolatey.org/", "--api-key", chocotoken], cwd=pack_dir, check=True)
     except subprocess.CalledProcessError as e:
         print(f"Failed to push package for architecture {arch}. Error: {e}")
 
