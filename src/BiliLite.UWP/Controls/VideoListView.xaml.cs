@@ -101,7 +101,7 @@ namespace BiliLite.Controls
         private void ScrollToItem(VideoListItem item)
         {
             var offset = GetItemOffsetHeight(item);
-            VideoListScrollViewer.ScrollToVerticalOffset(offset);
+            VideoListScrollViewer.ChangeView(null, offset, null);
         }
 
         private double GetItemOffsetHeight(VideoListItem item)
@@ -170,21 +170,12 @@ namespace BiliLite.Controls
             await m_mediaListService.LoadMoreMediaList(section);
         }
 
-        private void OnScrollToCurrentBtnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            ScrollToItem(CurrentItem());
-        }
-
-        private void OnUpToTopBtnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            VideoListScrollViewer.ScrollToVerticalOffset(0);
-        }
-
-        private void OnDownToBottomBtnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            VideoListScrollViewer.ScrollToVerticalOffset(SectionListView.ActualHeight);
-        }
-
         private void SectionListView_Loaded(object sender, RoutedEventArgs e) => ScrollToItem(CurrentItem());
+
+        private void OnScrollToCurrentBtnTapped(object sender, TappedRoutedEventArgs e) => ScrollToItem(CurrentItem());
+
+        private void OnUpToTopBtnTapped(object sender, TappedRoutedEventArgs e) => VideoListScrollViewer.ChangeView(null, 0, null);
+
+        private void OnDownToBottomBtnTapped(object sender, TappedRoutedEventArgs e) => VideoListScrollViewer.ChangeView(null, SectionListView.ActualHeight, null);
     }
 }
