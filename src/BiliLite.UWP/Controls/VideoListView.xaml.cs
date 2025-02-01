@@ -184,5 +184,7 @@ namespace BiliLite.Controls
         {
             VideoListScrollViewer.ScrollToVerticalOffset(SectionListView.ActualHeight);
         }
+
+        private void SectionListView_Loaded(object sender, RoutedEventArgs e) => ScrollToItem(CurrentItem());
     }
 }
