@@ -27,7 +27,7 @@
 
     <Grid>
         <ScrollViewer x:Name="VideoListScrollViewer">
-            <ListView 
+            <ListView Loaded="SectionListView_Loaded"
             x:Name="SectionListView"
             SelectionMode="None"
             ItemsSource="{x:Bind m_viewModel.Sections,Mode=OneWay}">

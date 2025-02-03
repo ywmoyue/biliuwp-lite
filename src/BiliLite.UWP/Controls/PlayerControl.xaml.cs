@@ -1,4 +1,5 @@
 ﻿using Atelier39;
+using BiliLite.Converters;
 using BiliLite.Dialogs;
 using BiliLite.Extensions;
 using BiliLite.Models.Common;
@@ -23,9 +24,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Timers;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Timers;
 using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.Graphics.Imaging;
@@ -44,7 +45,6 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using BiliLite.Converters;
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
 namespace BiliLite.Controls
@@ -3123,5 +3123,11 @@ namespace BiliLite.Controls
             if (!(element.DataContext is PlayerInfoViewPoint viewPoint)) return;
             SetPosition(viewPoint.From);
         }
+
+        private void EpisodeList_Loaded(object sender, RoutedEventArgs e) => ScrollToItem();
+
+        private void SplitView_PaneOpening(SplitView sender, object args) => ScrollToItem();
+
+        private void ScrollToItem() => EpisodeList.ScrollIntoView(EpisodeList.SelectedItem);
     }
 }
