@@ -86,7 +86,7 @@ namespace BiliLite.Services
                 var shortcutKeyCodes = shortcutKeyFunction.Keys;
                 if (!shortcutKeyCodes.LastOrDefault().Equals(key)) continue;
                 if (shortcutKeyCodes
-                        .Select(keyCode => Window.Current.CoreWindow.GetKeyState(key.BoardKey))
+                        .Select(keyCode => Window.Current.CoreWindow.GetKeyState(keyCode.BoardKey))
                         .Any(keyState => !keyState.HasFlag(CoreVirtualKeyStates.Down)))
                 {
                     continue;
