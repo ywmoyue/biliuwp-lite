@@ -464,7 +464,7 @@ namespace BiliLite.Services
         /// 读取下载的视频
         /// </summary>
         /// <returns></returns>
-        public async void LoadDownloaded(bool buildIndex = false)
+        public async Task LoadDownloaded(bool buildIndex = false)
         {
             m_downloadPageViewModel.LoadingDownloaded = true;
             m_downloadPageViewModel.DownloadedViewModels.Clear();

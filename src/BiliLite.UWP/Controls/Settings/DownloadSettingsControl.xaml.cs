@@ -3,6 +3,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -128,10 +129,12 @@ namespace BiliLite.Controls.Settings
             });
         }
 
-        private void BtnRebuildDownloadIndex_OnClick(object sender, RoutedEventArgs e)
+        private async void BtnRebuildDownloadIndex_OnClick(object sender, RoutedEventArgs e)
         {
+            Notify.ShowMessageToast("索引重建开始");
             m_downloadService.ClearIndex();
-            m_downloadService.LoadDownloaded(true);
+            await m_downloadService.LoadDownloaded(true);
+            Notify.ShowMessageToast("索引重建完成");
         }
     }
 }
