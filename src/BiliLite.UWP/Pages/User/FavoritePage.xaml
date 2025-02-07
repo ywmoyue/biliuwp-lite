@@ -134,6 +134,7 @@
                                           AllowDrop="True"
                                           CanReorderItems="True"
                                           CanDragItems="True"
+                                          DragItemsStarting="VideoFavGridView_DragItemsStarting"
                                           DragItemsCompleted="VideoFavGridView_OnDragItemsCompleted"
                                           ItemHeight="80">
                                 <toolkit:AdaptiveGridView.Header>
