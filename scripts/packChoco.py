@@ -95,7 +95,7 @@ def process_architecture(arch, version, github_token, chocotoken):
     pack_parent_dir  = "C:/choco/pack"
     pack_dir = f"{pack_parent_dir}/{arch}"
     nuspec_file = f"{pack_dir}/BiliLite-uwp.nuspec"
-    install_script = f"{pack_dir}/tools/chocolateyInstall.ps1"
+    install_script = f"{pack_dir}/tools/subInstall.ps1"
     resources_dir = f"{pack_dir}/resources"
     
     # 复制模板文件夹到目标目录
