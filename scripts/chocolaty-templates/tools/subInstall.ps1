@@ -28,7 +28,7 @@ If (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
 }
 
 $AppName = "BiliLite.Packages"
-$Version = "4.7.14.0"
+$Version = "{version}"
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 Write-Output "scriptDir: $scriptDir"
 
