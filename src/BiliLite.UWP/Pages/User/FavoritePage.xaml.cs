@@ -5,6 +5,7 @@ using BiliLite.Modules;
 using BiliLite.Services;
 using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels.User;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
@@ -163,6 +164,24 @@ namespace BiliLite.Pages.User
         public async Task Refresh()
         {
             m_videoViewModel.Refresh();
+        }
+
+        private void VideoFavGridView_DragItemsStarting(object sender, DragItemsStartingEventArgs e)
+        {
+            if (e.Items.Count == 0)
+                return;
+
+            // 获取被拖拽的项
+            var draggedItem = e.Items[0];
+
+            // 获取数据源集合
+            var collection = m_videoViewModel.MyFavorite;
+
+            // 检查项是否为第一个元素
+            if (collection.IndexOf(draggedItem) == 0)
+            {
+                e.Cancel = true; // 取消拖拽操作
+            }
         }
 
         private async void VideoFavGridView_OnDragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)

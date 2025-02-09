@@ -29,7 +29,7 @@
         <SolidColorBrush x:Key="ListViewItemForegroundSelected" Color="{ThemeResource SystemAccentColor}"></SolidColorBrush>
     </UserControl.Resources>
     <Grid Background="Black">
-        <SplitView x:Name="SplitView" PanePlacement="Right" PaneBackground="#C8000000" SizeChanged="Player_SizeChanged">
+        <SplitView PaneOpening="SplitView_PaneOpening"  x:Name="SplitView" PanePlacement="Right" PaneBackground="#C8000000" SizeChanged="Player_SizeChanged">
             <SplitView.Pane>
                 <Grid x:Name="Setting">
                     <Pivot x:Name="SettingPivot" RequestedTheme="Dark">
@@ -38,7 +38,7 @@
                                 <TextBlock Foreground="White" FontSize="18">选集</TextBlock>
                             </PivotItem.Header>
                             <Grid>
-                                <ListView Margin="0 4" x:Name="EpisodeList" SelectionChanged="EpisodeList_SelectionChanged" >
+                                <ListView Loaded="EpisodeList_Loaded" Margin="0 4" x:Name="EpisodeList" SelectionChanged="EpisodeList_SelectionChanged" >
                                     <ListView.ItemTemplate>
                                         <DataTemplate x:DataType="video:PlayInfo">
                                             <StackPanel>

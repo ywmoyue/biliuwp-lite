@@ -22,13 +22,20 @@ https://app.bilibili.com/
 
 https://github.com/xiaoyaocz/biliuwp-lite
 
-## 下载
-
-https://github.com/ywmoyue/biliuwp-lite/releases
-
 ## 安装
 
-https://github.com/ywmoyue/biliuwp-lite/blob/master/document/install-readme.md
+- 推荐使用Chocolatey安装
+
+```sh
+# x64 版本
+choco install bililite-uwp-x64 --pre
+# x86 版本
+choco install bililite-uwp-x86 --pre 
+# ARM64 版本
+choco install bililite-uwp-arm64 --pre
+```
+
+详细安装教程： https://github.com/ywmoyue/biliuwp-lite/blob/master/document/install-readme.md
 
 ## 讨论
 
@@ -55,4 +62,32 @@ git clone -b dev https://github.com/ywmoyue/biliuwp-lite.git
 
 ### 鸣谢
 
-[![contributors](./document/_img/contributors.png)](https://github.com/ywmoyue/biliuwp-lite/graphs/contributors)
+#### 贡献者
+
+<a href="https://github.com/ywmoyue/biliuwp-lite/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ywmoyue/biliuwp-lite" />
+</a>
+
+#### 支持者
+
+<a href="https://github.com/ywmoyue/biliuwp-lite/stargazers">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://reporoster.com/stars/dark/ywmoyue/biliuwp-lite"/>
+      <source media="(prefers-color-scheme: light)" srcset="https://reporoster.com/stars/ywmoyue/biliuwp-lite"/>
+      <img alt="github contribution grid snake animation" src="https://reporoster.com/stars/ywmoyue/biliuwp-lite"/>
+    </picture>
+</a>
+
+<a href="https://github.com/ywmoyue/biliuwp-lite/network/members">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://reporoster.com/forks/dark/ywmoyue/biliuwp-lite"/>
+      <source media="(prefers-color-scheme: light)" srcset="https://reporoster.com/forks/ywmoyue/biliuwp-lite"/>
+      <img alt="github contribution grid snake animation" src="https://reporoster.com/forks/ywmoyue/biliuwp-lite"/>
+    </picture>
+</a>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=ywmoyue/biliuwp-lite&type=Date&theme=dark"/>
+  <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=ywmoyue/biliuwp-lite&type=Date"/>
+  <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=ywmoyue/biliuwp-lite&type=Date"/>
+</picture>

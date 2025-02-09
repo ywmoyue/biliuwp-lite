@@ -254,6 +254,18 @@ namespace BiliLite.Models.Common
             public const string ENABLE_OPEN_LAST_PAGE = "EnableOpenLastPage";
 
             /// <summary>
+            /// 打开上次浏览的标签页数量限制，0为不限制
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const string OPEN_LAST_PAGE_LIMIT_COUNT = "OpenLastPageLimitCount";
+
+            /// <summary>
+            /// 打开上次浏览的标签页数量限制默认值
+            /// </summary>
+            [SettingDefaultValue]
+            public const int DEFAULT_OPEN_LAST_PAGE_LIMIT_COUNT = 5;
+
+            /// <summary>
             /// 是否打开上次浏览的标签页默认值
             /// </summary>
             [SettingDefaultValue]

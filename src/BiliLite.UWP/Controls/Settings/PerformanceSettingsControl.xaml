@@ -7,6 +7,7 @@
     xmlns:font="using:FontAwesome5"
     xmlns:local="using:BiliLite.Controls.Settings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
@@ -58,6 +59,13 @@
                 <font:FontAwesome Icon="Solid_History" />
             </controls:SettingsCard.HeaderIcon>
             <ToggleSwitch x:Name="SwitchOpenLastPage" />
+        </controls:SettingsCard>
+
+        <controls:SettingsCard Description="0为不限制，不建议使用" Header="启动应用时打开上次浏览的标签页数量限制">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_History" />
+            </controls:SettingsCard.HeaderIcon>
+            <controls1:NumberBox x:Name="NumberOpenLastPageCount" Minimum="0" />
         </controls:SettingsCard>
 
     </StackPanel>
