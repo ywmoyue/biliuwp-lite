@@ -1,6 +1,8 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
+using Microsoft.UI.Xaml.Controls;
 using System.Linq;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -8,7 +10,7 @@ namespace BiliLite.Services
 {
     public class ThemeService
     {
-        private ResourceDictionary m_defaultColorsResource;
+        private readonly ResourceDictionary m_defaultColorsResource = Application.Current.Resources.MergedDictionaries.FirstOrDefault(x => x.Source.AbsoluteUri.Contains("Default"));
         private ElementTheme m_theme;
 
         public ThemeService()
@@ -19,8 +21,6 @@ namespace BiliLite.Services
                 m_theme = (ElementTheme)(App.Current.RequestedTheme + 1);
             }
         }
-
-        public void Init() => m_defaultColorsResource = Application.Current.Resources.MergedDictionaries.FirstOrDefault(x => x.Source.AbsoluteUri.Contains("Default"));
 
         public ResourceDictionary ThemeResource
         {
@@ -34,6 +34,11 @@ namespace BiliLite.Services
         public void InitTitleBar()
         {
             AppExtensions.HandleTitleTheme();
+        }
+
+        public void InitAccentColor()
+        {
+            SetColor();
         }
 
         public void SetTheme(ElementTheme theme)
@@ -58,14 +63,16 @@ namespace BiliLite.Services
 
         public void SetColor()
         {
-            //case 3:
-            //    // TODO: 切换自定义主题
-            //    rootFrame.Resources = Application.Current.Resources.ThemeDictionaries["Pink"] as ResourceDictionary;
-            //    break;
-            //case 4:
-            //    // TODO: 切换自定义主题
-            //    rootFrame.Resources = Application.Current.Resources.ThemeDictionaries["Blue"] as ResourceDictionary;
-            //    break;
+            var appResources = Application.Current.Resources;
+            var accentDictionary = appResources.MergedDictionaries
+                .FirstOrDefault(x => x.Source.AbsoluteUri.Contains("Accent.xaml"));
+
+            // 检查是否已经加载了 muxc:XamlControlsResources
+            if (accentDictionary.MergedDictionaries.OfType<XamlControlsResources>().FirstOrDefault() is XamlControlsResources xamlControlsResources)
+            {
+                var resourceDictionary = xamlControlsResources.MergedDictionaries.FirstOrDefault();
+                resourceDictionary["SystemAccentColor"] = Color.FromArgb(255, 0, 146, 208); // #0092D0
+            }
         }
     }
 }

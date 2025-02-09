@@ -186,8 +186,10 @@ namespace BiliLite
                 }
                 // 确保当前窗口处于活动状态
                 Window.Current.Activate();
+
                 var themeService = ServiceProvider.GetRequiredService<ThemeService>();
                 themeService.InitTitleBar();
+                themeService.InitAccentColor();
             }
         }
 
@@ -227,16 +229,6 @@ namespace BiliLite
                 logger.Error("初始化加载下载视频错误", ex);
             }
             VideoPlayHistoryHelper.LoadABPlayHistories(true);
-
-            try
-            {
-                var themeService = ServiceProvider.GetRequiredService<ThemeService>();
-                themeService.Init();
-            }
-            catch (Exception ex)
-            {
-                logger.Error("初始化主题错误", ex);
-            }
 
             //var pluginService = ServiceProvider.GetRequiredService<PluginService>();
             //await pluginService.Start();
