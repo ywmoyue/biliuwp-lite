@@ -1,12 +1,12 @@
-﻿using System;
+﻿using BiliLite.Models.Common;
+using BiliLite.Services;
+using System;
 using System.Collections.Generic;
+using Windows.ApplicationModel.Core;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using BiliLite.Models.Common;
-using BiliLite.Services;
-using Windows.ApplicationModel.Core;
 
 namespace BiliLite.Extensions
 {
@@ -18,15 +18,18 @@ namespace BiliLite.Extensions
                 {
                     ElementTheme.Default, (titleBar) =>
                     {
-                        var rootTheme = App.Current.RequestedTheme;
-                        if (rootTheme == ApplicationTheme.Light)
+                        Window.Current.Activated += (obj, args) =>
                         {
-                            HandleTitleLightTheme(titleBar);
-                        }
-                        else
-                        {
-                            HandleTitleDarkTheme(titleBar);
-                        }
+                            var rootTheme = App.Current.RequestedTheme;
+                            if (rootTheme == ApplicationTheme.Light)
+                            {
+                                HandleTitleLightTheme(titleBar);
+                            }
+                            else
+                            {
+                                HandleTitleDarkTheme(titleBar);
+                            }
+                        };
                     }
                 },
                 { ElementTheme.Light, HandleTitleLightTheme },
