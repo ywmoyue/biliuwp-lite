@@ -1,7 +1,7 @@
 {
-  "version": "4.7.14",
-  "version_num": 40714,
-  "version_desc": "更新内容:\r\n\r\n- 提供本地关注用户功能，可在首页直播页查看本地关注用户的直播间 \r\n\r\n- 支持chocolatey方式安装 \r\n\r\n- 优化WebPage \r\n\r\n- 将播放器控件内的选择框替换为滑块 \r\n\r\n- 简化OnPropertyChanged通用事件 \r\n\r\n- 调整部分个性化设置项 \r\n\r\n- 单窗口模式下返回按钮样式统一 \r\n\r\n- 搜索页视频时长像官网一样显示小时 \r\n\r\n- 修复番剧时间线缓存读取错误\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.7.15",
+  "version_num": 40715,
+  "version_desc": "更新内容:\r\n\r\n- 可设置打开上次标签页数量限制，标签页保存数据操作均使用事务和异步api包裹 \r\n\r\n- 重建下载索引增加用户提示 \r\n\r\n- 反转AccentButton中的字体颜色  \r\n\r\n- 选集页自动定位到当前分p  \r\n\r\n- 修复快捷键业务错误 \r\n\r\n- 默认收藏夹不可被排序 \r\n\r\n- choco安装方式在24H2中安装失败 \r\n\r\n- 修复三大金刚键无法跟随主题显示正确的颜色\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
