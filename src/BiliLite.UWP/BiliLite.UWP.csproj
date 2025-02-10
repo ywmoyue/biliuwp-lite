@@ -217,6 +217,7 @@
     <Compile Include="Models\Attributes\RegisterServiceAttributes.cs" />
     <Compile Include="Models\Attributes\SettingDefaultValueAttribute.cs" />
     <Compile Include="Models\Attributes\SettingKeyAttribute.cs" />
+    <Compile Include="Models\Theme\ColorItemModel.cs" />
     <Compile Include="Models\Common\Anime\ISeasonItem.cs" />
     <Compile Include="Models\Common\Comment\HotReply.cs" />
     <Compile Include="Models\Common\Danmaku\BiliDanmakuItem.cs" />
@@ -418,6 +419,7 @@
     <Compile Include="ViewModels\Settings\PlaySettingsControlViewModel.cs" />
     <Compile Include="ViewModels\Settings\ShortcutFunctionViewModel.cs" />
     <Compile Include="ViewModels\Settings\ShortcutKeySettingsControlViewModel.cs" />
+    <Compile Include="ViewModels\Settings\UISettingsControlViewModel.cs" />
     <Compile Include="ViewModels\Settings\VideoDanmakuSettingsControlViewModel.cs" />
     <Compile Include="ViewModels\User\FavoriteItemViewModel.cs" />
     <Compile Include="Pages\Home\UserDynamicPage.xaml.cs">

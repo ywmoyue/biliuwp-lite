@@ -8,26 +8,82 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
     xmlns:font="using:FontAwesome5"
-    xmlns:home="using:BiliLite.Models.Common.Home"
+    xmlns:home="using:BiliLite.Models.Common.Home" xmlns:theme="using:BiliLite.Models.Theme" xmlns:convert="using:BiliLite.Converters"
     mc:Ignorable="d"
     d:DesignHeight="300"
-    d:DesignWidth="400">
-
+    d:DesignWidth="400" x:Name="rootPanel">
+    <UserControl.Resources>
+        <convert:ColorConvert x:Key="colorConvert" />
+        <DataTemplate x:Key="ColorItemTemplate" x:DataType="theme:ColorItemModel">
+            <Border
+                Width="40"
+                Height="40"
+                Background="{x:Bind HexCode, Converter={StaticResource colorConvert}}"
+                CornerRadius="{StaticResource ControlCornerRadius}"
+                ToolTipService.ToolTip="{x:Bind ID}" />
+        </DataTemplate>
+    </UserControl.Resources>
+    
     <StackPanel
         MaxWidth="1200">
-        <controls:SettingsCard Header="应用程序主题"
-                               Description="选择要显示的应用主题">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_FillDrip"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ComboBox x:Name="cbTheme"  MinWidth="200" >
-                <ComboBox.Items>
-                    <ComboBoxItem>跟随系统</ComboBoxItem>
-                    <ComboBoxItem>浅色</ComboBoxItem>
-                    <ComboBoxItem>深色</ComboBoxItem>
-                </ComboBox.Items>
-            </ComboBox>
-        </controls:SettingsCard>
+        <controls:SettingsExpander Header="主题" IsExpanded="True">
+            <controls:SettingsExpander.HeaderIcon>
+                <font:FontAwesome Icon="Solid_FillDrip" />
+            </controls:SettingsExpander.HeaderIcon>
+            <controls:SettingsExpander.Items>
+                <controls:SettingsCard Description="更改应用的日夜主题" Header="外观">
+                    <controls:SettingsCard.HeaderIcon>
+                        <font:FontAwesome Icon="Solid_PaintBrush" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <ComboBox x:Name="cbTheme" MinWidth="200">
+                        <ComboBox.Items>
+                            <ComboBoxItem>跟随系统</ComboBoxItem>
+                            <ComboBoxItem>浅色</ComboBoxItem>
+                            <ComboBoxItem>深色</ComboBoxItem>
+                        </ComboBox.Items>
+                    </ComboBox>
+                </controls:SettingsCard>
+
+                <controls:SettingsCard Description="更改应用的强调色彩" Header="色彩">
+                    <controls:SettingsCard.HeaderIcon>
+                        <font:FontAwesome Icon="Solid_Palette" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <StackPanel Orientation="Horizontal">
+                        <GridView
+                            x:Name="gvColor"
+                            Margin="0,0,0,-5"
+                            Padding="0"
+                            ItemTemplate="{StaticResource ColorItemTemplate}"
+                            ItemsSource="{x:Bind m_UISettingsControlViewModel.Colors}">
+                            <GridView.Resources>
+                                <ResourceDictionary>
+                                    <ResourceDictionary.ThemeDictionaries>
+                                        <ResourceDictionary x:Key="Default">
+                                            <StaticResource x:Key="GridViewItemSelectedBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                                            <StaticResource x:Key="GridViewItemSelectedPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                                            <StaticResource x:Key="GridViewItemSelectedPressedBorderBrush" ResourceKey="SystemControlForegroundBaseMediumBrush" />
+                                            <StaticResource x:Key="GridViewItemSelectedInnerBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                                        </ResourceDictionary>
+                                        <ResourceDictionary x:Key="HighContrast">
+                                            <StaticResource x:Key="GridViewItemSelectedBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                                            <StaticResource x:Key="GridViewItemSelectedPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                                            <StaticResource x:Key="GridViewItemSelectedPressedBorderBrush" ResourceKey="SystemControlForegroundBaseMediumBrush" />
+                                            <StaticResource x:Key="GridViewItemSelectedInnerBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                                        </ResourceDictionary>
+                                        <ResourceDictionary x:Key="Light">
+                                            <StaticResource x:Key="GridViewItemSelectedBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                                            <StaticResource x:Key="GridViewItemSelectedPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                                            <StaticResource x:Key="GridViewItemSelectedPressedBorderBrush" ResourceKey="SystemControlForegroundBaseMediumBrush" />
+                                            <StaticResource x:Key="GridViewItemSelectedInnerBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                                        </ResourceDictionary>
+                                    </ResourceDictionary.ThemeDictionaries>
+                                </ResourceDictionary>
+                            </GridView.Resources>
+                        </GridView>
+                    </StackPanel>
+                </controls:SettingsCard>
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>
 
         <controls:SettingsCard Header="显示模式"
                                Description="选择应用的显示模式(重启生效)">

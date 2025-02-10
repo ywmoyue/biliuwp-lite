@@ -1,5 +1,6 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
+using BiliLite.ViewModels.Settings;
 using Microsoft.UI.Xaml.Controls;
 using System.Linq;
 using Windows.UI;
@@ -38,7 +39,10 @@ namespace BiliLite.Services
 
         public void InitAccentColor()
         {
-            SetColor();
+            var a = SettingService.GetValue(SettingConstants.UI.THEME_COLOR, SettingConstants.UI.DEFAULT_THEME_COLOR);
+            var b = new UISettingsControlViewModel();
+            var c = b.Colors[a];
+            SetColor(c.Color);
         }
 
         public void SetTheme(ElementTheme theme)
@@ -61,7 +65,7 @@ namespace BiliLite.Services
             InitTitleBar();
         }
 
-        public void SetColor()
+        public void SetColor(Color color)
         {
             var appResources = Application.Current.Resources;
             var accentDictionary = appResources.MergedDictionaries
@@ -71,8 +75,15 @@ namespace BiliLite.Services
             if (accentDictionary.MergedDictionaries.OfType<XamlControlsResources>().FirstOrDefault() is XamlControlsResources xamlControlsResources)
             {
                 var resourceDictionary = xamlControlsResources.MergedDictionaries.FirstOrDefault();
-                resourceDictionary["SystemAccentColor"] = Color.FromArgb(255, 0, 146, 208); // #0092D0
+                resourceDictionary["SystemAccentColor"] = color;
             }
+
+            // 强制刷新主题
+            var rootFrame = Window.Current.Content as Frame;
+            var requestedTheme = rootFrame.RequestedTheme;
+            rootFrame.RequestedTheme = ElementTheme.Light;
+            rootFrame.RequestedTheme = ElementTheme.Dark;
+            rootFrame.RequestedTheme = requestedTheme;
         }
     }
 }

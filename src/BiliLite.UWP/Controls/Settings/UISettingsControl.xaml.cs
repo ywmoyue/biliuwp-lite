@@ -2,7 +2,9 @@
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Home;
+using BiliLite.Models.Theme;
 using BiliLite.Services;
+using BiliLite.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.ObjectModel;
@@ -19,7 +21,7 @@ namespace BiliLite.Controls.Settings
     public sealed partial class UISettingsControl : UserControl
     {
         private readonly ThemeService m_themeService;
-
+        private readonly UISettingsControlViewModel m_UISettingsControlViewModel = new();
         public UISettingsControl()
         {
             m_themeService = App.ServiceProvider.GetRequiredService<ThemeService>();
@@ -41,6 +43,17 @@ namespace BiliLite.Controls.Settings
                 });
             });
 
+            // 自带色彩
+            gvColor.SelectedIndex = SettingService.GetValue(SettingConstants.UI.THEME_COLOR, SettingConstants.UI.DEFAULT_THEME_COLOR);
+            gvColor.Loaded += (sender, e) =>
+            {
+                gvColor.SelectionChanged += (obj, args) =>
+                {
+                    var selectedItem = gvColor.SelectedItem as ColorItemModel;
+                    m_themeService.SetColor(selectedItem.Color);
+                    SettingService.SetValue(SettingConstants.UI.THEME_COLOR, gvColor.SelectedIndex);
+                };
+            };
 
             //显示模式
             cbDisplayMode.SelectedIndex = SettingService.GetValue<int>(SettingConstants.UI.DISPLAY_MODE, 0);
