@@ -3,6 +3,7 @@ using BiliLite.Services;
 using System;
 using System.Collections.Generic;
 using Windows.ApplicationModel.Core;
+using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -13,42 +14,27 @@ namespace BiliLite.Extensions
     public static class AppExtensions
     {
         private static readonly Dictionary<ElementTheme, Action<ApplicationViewTitleBar>> _handleTitleThemeActions
-            = new Dictionary<ElementTheme, Action<ApplicationViewTitleBar>>()
+            = new()
             {
                 {
                     ElementTheme.Default, (titleBar) =>
                     {
-                        Window.Current.Activated += (obj, args) =>
+                        UISettings uISettings = new();
+                        titleBar.ButtonForegroundColor = uISettings.GetColorValue(UIColorType.Foreground);
+                        uISettings.ColorValuesChanged += new TypedEventHandler<UISettings, object>((setting, args) =>
                         {
-                            var rootTheme = App.Current.RequestedTheme;
-                            if (rootTheme == ApplicationTheme.Light)
-                            {
-                                HandleTitleLightTheme(titleBar);
-                            }
-                            else
-                            {
-                                HandleTitleDarkTheme(titleBar);
-                            }
-                        };
+                            var settingTheme = SettingService.GetValue<int>(SettingConstants.UI.THEME, 0);
+                            if (settingTheme == 0)
+                                titleBar.ButtonForegroundColor = uISettings.GetColorValue(UIColorType.Foreground);
+                        });
                     }
                 },
                 { ElementTheme.Light, HandleTitleLightTheme },
                 { ElementTheme.Dark, HandleTitleDarkTheme },
             };
 
-        private static void HandleTitleLightTheme(ApplicationViewTitleBar titleBar)
-        {
-            titleBar.ButtonForegroundColor = Colors.Black;
-            titleBar.ButtonHoverForegroundColor = Colors.White;
-            titleBar.ButtonPressedForegroundColor = Colors.Black;
-        }
-
-        private static void HandleTitleDarkTheme(ApplicationViewTitleBar titleBar)
-        {
-            titleBar.ButtonForegroundColor = Colors.White;
-            titleBar.ButtonHoverForegroundColor = Colors.Black;
-            titleBar.ButtonPressedForegroundColor = Colors.White;
-        }
+        private static void HandleTitleLightTheme(ApplicationViewTitleBar titleBar) => titleBar.ButtonForegroundColor = Colors.Black;
+        private static void HandleTitleDarkTheme(ApplicationViewTitleBar titleBar) => titleBar.ButtonForegroundColor = Colors.White;
 
         public static void HandleTitleTheme()
         {
