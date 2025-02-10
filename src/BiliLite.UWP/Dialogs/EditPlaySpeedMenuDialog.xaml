@@ -30,6 +30,7 @@
                             TextAlignment="Center" />
                         <Button
                             x:Name="BtnRemovePlaySpeed"
+                            Margin="100,0,0,0"
                             HorizontalAlignment="Right"
                             IsEnabled="{x:Bind IsDeletable}"
                             Tapped="BtnRemovePlaySpeed_OnTapped">
