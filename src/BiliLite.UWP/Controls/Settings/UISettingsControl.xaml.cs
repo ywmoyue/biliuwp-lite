@@ -43,15 +43,27 @@ namespace BiliLite.Controls.Settings
                 });
             });
 
-            // 自带色彩
-            gvColor.SelectedIndex = SettingService.GetValue(SettingConstants.UI.THEME_COLOR, SettingConstants.UI.DEFAULT_THEME_COLOR);
+            //自带色彩
+            gvColor.SelectedIndex = SettingService.GetValue<int>(SettingConstants.UI.THEME_COLOR, SettingConstants.UI.DEFAULT_THEME_COLOR);
             gvColor.Loaded += (sender, e) =>
             {
                 gvColor.SelectionChanged += (obj, args) =>
                 {
+                    if (gvColor.SelectedIndex >= 0)
+                    {
                     var selectedItem = gvColor.SelectedItem as ColorItemModel;
                     m_themeService.SetColor(selectedItem.Color);
                     SettingService.SetValue(SettingConstants.UI.THEME_COLOR, gvColor.SelectedIndex);
+                    }
+                };
+            };
+
+            //系统色彩
+            btnSysColor.Click += (sender, e) =>
+            {
+                gvColor.SelectedIndex = -1;
+                m_themeService.SetColor();
+                SettingService.SetValue(SettingConstants.UI.THEME_COLOR, -1);
                 };
             };
 

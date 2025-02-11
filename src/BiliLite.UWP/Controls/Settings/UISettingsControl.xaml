@@ -14,6 +14,7 @@
     d:DesignWidth="400" x:Name="rootPanel">
     <UserControl.Resources>
         <convert:ColorConvert x:Key="colorConvert" />
+        <convert:BooleanConvert x:Name="boolConvert" />
         <DataTemplate x:Key="ColorItemTemplate" x:DataType="theme:ColorItemModel">
             <Border
                 Width="40"
@@ -62,24 +63,33 @@
                                             <StaticResource x:Key="GridViewItemSelectedBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
                                             <StaticResource x:Key="GridViewItemSelectedPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
                                             <StaticResource x:Key="GridViewItemSelectedPressedBorderBrush" ResourceKey="SystemControlForegroundBaseMediumBrush" />
-                                            <StaticResource x:Key="GridViewItemSelectedInnerBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                                            <StaticResource x:Key="GridViewItemSelectedInnerBorderBrush" ResourceKey="SystemAccentColor" />
                                         </ResourceDictionary>
                                         <ResourceDictionary x:Key="HighContrast">
                                             <StaticResource x:Key="GridViewItemSelectedBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
                                             <StaticResource x:Key="GridViewItemSelectedPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
                                             <StaticResource x:Key="GridViewItemSelectedPressedBorderBrush" ResourceKey="SystemControlForegroundBaseMediumBrush" />
-                                            <StaticResource x:Key="GridViewItemSelectedInnerBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                                            <StaticResource x:Key="GridViewItemSelectedInnerBorderBrush" ResourceKey="SystemAccentColor" />
                                         </ResourceDictionary>
                                         <ResourceDictionary x:Key="Light">
                                             <StaticResource x:Key="GridViewItemSelectedBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
                                             <StaticResource x:Key="GridViewItemSelectedPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
                                             <StaticResource x:Key="GridViewItemSelectedPressedBorderBrush" ResourceKey="SystemControlForegroundBaseMediumBrush" />
-                                            <StaticResource x:Key="GridViewItemSelectedInnerBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                                            <StaticResource x:Key="GridViewItemSelectedInnerBorderBrush" ResourceKey="SystemAccentColor" />
                                         </ResourceDictionary>
                                     </ResourceDictionary.ThemeDictionaries>
                                 </ResourceDictionary>
                             </GridView.Resources>
                         </GridView>
+                        <Border Background="{ThemeResource SeparatorColor}" Margin="5 -8" Width="1"></Border>
+                        <Button ToolTipService.ToolTip="跟随系统" x:Name="btnSysColor" Style="{StaticResource AccentButtonStyle}" Background="{x:Bind m_UISettingsControlViewModel.SysColor, Converter={StaticResource colorConvert}}" Width="42" Height="42" Margin="7 0 0 0">
+                            <Button.Resources>
+                                <!--<StaticResource x:Key="AccentButtonBackground" ResourceKey="SystemAccent" />-->
+                                <StaticResource x:Key="AccentButtonBackgroundPointerOver" ResourceKey="SystemAccentColorLight1" />
+                                <StaticResource x:Key="AccentButtonBackgroundPressed" ResourceKey="SystemAccentColorDark1" />
+                            </Button.Resources>
+                            <SymbolIcon Visibility="{Binding SelectedIndex, ElementName=gvColor,Converter={StaticResource boolConvert},ConverterParameter=-1}" Symbol="Accept"/>
+                        </Button>
                     </StackPanel>
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>

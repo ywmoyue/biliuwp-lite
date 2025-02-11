@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
@@ -17,38 +13,47 @@ namespace BiliLite.Converters
             {
                 return new SolidColorBrush(Colors.Transparent);
             }
-            Color color = new Color();
-            try
+
+            Color color = new();
+            if (value is string)
             {
-                var obj = value.ToString().Replace("#", "");
-                if (long.TryParse(obj, out var c))
+                try
                 {
-                    obj = c.ToString("X2");
+                    var obj = value.ToString().Replace("#", "");
+                    if (long.TryParse(obj, out var c))
+                    {
+                        obj = c.ToString("X2");
+                    }
+
+                    if (obj.Length <= 6)
+                    {
+                        obj = obj.PadLeft(6, '0');
+                        color.R = byte.Parse(obj.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+                        color.G = byte.Parse(obj.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
+                        color.B = byte.Parse(obj.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
+                        color.A = 255;
+                    }
+                    else
+                    {
+                        obj = obj.PadLeft(8, '0');
+                        color.R = byte.Parse(obj.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
+                        color.G = byte.Parse(obj.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
+                        color.B = byte.Parse(obj.Substring(6, 2), System.Globalization.NumberStyles.HexNumber);
+                        color.A = byte.Parse(obj.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+                    }
+
                 }
-                
-                if (obj.Length<=6)
+                catch (Exception)
                 {
-                    obj = obj.PadLeft(6,'0');
-                    color.R = byte.Parse(obj.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
-                    color.G = byte.Parse(obj.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
-                    color.B = byte.Parse(obj.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
-                    color.A = 255;
+                    color = Colors.Transparent;
                 }
-                else
-                {
-                    obj = obj.PadLeft(8, '0');
-                    color.R = byte.Parse(obj.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
-                    color.G = byte.Parse(obj.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
-                    color.B = byte.Parse(obj.Substring(6, 2), System.Globalization.NumberStyles.HexNumber);
-                    color.A = byte.Parse(obj.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
-                }
-               
             }
-            catch (Exception)
+            if (value is Color color1)
             {
-                color = Colors.Transparent;
+                color = color1;
             }
-            if (parameter !=null)
+
+            if (parameter != null)
             {
                 return color;
             }

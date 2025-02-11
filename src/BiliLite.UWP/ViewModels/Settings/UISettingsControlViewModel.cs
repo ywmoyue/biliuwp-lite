@@ -2,6 +2,7 @@
 using BiliLite.ViewModels.Common;
 using System.Collections.ObjectModel;
 using Windows.UI;
+using Windows.UI.ViewManagement;
 
 namespace BiliLite.ViewModels.Settings
 {
@@ -17,5 +18,7 @@ namespace BiliLite.ViewModels.Settings
                 new("蓝色", "#0092D0", Color.FromArgb(255, 0, 146, 208)),
             ];
         }
+
+        public Color SysColor => new UISettings().GetColorValue(UIColorType.Accent);
     }
 }

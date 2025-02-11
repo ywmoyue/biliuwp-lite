@@ -39,10 +39,19 @@ namespace BiliLite.Services
 
         public void InitAccentColor()
         {
-            var a = SettingService.GetValue(SettingConstants.UI.THEME_COLOR, SettingConstants.UI.DEFAULT_THEME_COLOR);
-            var b = new UISettingsControlViewModel();
-            var c = b.Colors[a];
-            SetColor(c.Color);
+            var a = SettingService.GetValue<int>(SettingConstants.UI.THEME_COLOR, SettingConstants.UI.DEFAULT_THEME_COLOR);
+            if (a < 0)
+            {
+                // 系统色彩
+                SetColor();
+            }
+            else
+            {
+                // 自带色彩
+                var b = new UISettingsControlViewModel();
+                var d = b.Colors[a];
+                SetColor(d.Color);
+            }
         }
 
         public void SetTheme(ElementTheme theme)
@@ -65,7 +74,7 @@ namespace BiliLite.Services
             InitTitleBar();
         }
 
-        public void SetColor(Color color)
+        public void SetColor(Color? color = null)
         {
             var appResources = Application.Current.Resources;
             var accentDictionary = appResources.MergedDictionaries
@@ -75,7 +84,15 @@ namespace BiliLite.Services
             if (accentDictionary.MergedDictionaries.OfType<XamlControlsResources>().FirstOrDefault() is XamlControlsResources xamlControlsResources)
             {
                 var resourceDictionary = xamlControlsResources.MergedDictionaries.FirstOrDefault();
-                resourceDictionary["SystemAccentColor"] = color;
+                if (color.HasValue)
+                {
+                    resourceDictionary["SystemAccentColor"] = color;
+                }
+                else
+                {
+                    resourceDictionary["SystemAccentColor"] = Colors.Transparent;
+                    resourceDictionary.Remove("SystemAccentColor");
+                }
             }
 
             // 强制刷新主题
