@@ -28,6 +28,9 @@ namespace BiliLite.Models.Common
             [SettingDefaultValue]
             public const int DEFAULT_THEME_COLOR = 0;
 
+            [SettingKey(typeof(string))]
+            public const string THEME_COLOR_MENU = "themeColorMenu";
+
             /// <summary>
             /// 主题,0为默认，1为浅色，2为深色
             /// </summary>
