@@ -21,7 +21,20 @@
                 Height="40"
                 Background="{x:Bind HexCode, Converter={StaticResource colorConvert}}"
                 CornerRadius="{StaticResource ControlCornerRadius}"
-                ToolTipService.ToolTip="{x:Bind ID}" />
+                ToolTipService.ToolTip="{x:Bind Name}">
+                <Border.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem
+                            Click="MenuFlyoutItem_Click"
+                            Tag="delete"
+                            Text="删除色彩">
+                            <MenuFlyoutItem.Icon>
+                                <SymbolIcon Symbol="Delete"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </Border.ContextFlyout>
+            </Border>
         </DataTemplate>
     </UserControl.Resources>
     
@@ -63,25 +76,52 @@
                                             <StaticResource x:Key="GridViewItemSelectedBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
                                             <StaticResource x:Key="GridViewItemSelectedPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
                                             <StaticResource x:Key="GridViewItemSelectedPressedBorderBrush" ResourceKey="SystemControlForegroundBaseMediumBrush" />
-                                            <StaticResource x:Key="GridViewItemSelectedInnerBorderBrush" ResourceKey="SystemAccentColor" />
+                                            <StaticResource x:Key="GridViewItemSelectedInnerBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
                                         </ResourceDictionary>
                                         <ResourceDictionary x:Key="HighContrast">
                                             <StaticResource x:Key="GridViewItemSelectedBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
                                             <StaticResource x:Key="GridViewItemSelectedPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
                                             <StaticResource x:Key="GridViewItemSelectedPressedBorderBrush" ResourceKey="SystemControlForegroundBaseMediumBrush" />
-                                            <StaticResource x:Key="GridViewItemSelectedInnerBorderBrush" ResourceKey="SystemAccentColor" />
+                                            <StaticResource x:Key="GridViewItemSelectedInnerBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
                                         </ResourceDictionary>
                                         <ResourceDictionary x:Key="Light">
                                             <StaticResource x:Key="GridViewItemSelectedBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
                                             <StaticResource x:Key="GridViewItemSelectedPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
                                             <StaticResource x:Key="GridViewItemSelectedPressedBorderBrush" ResourceKey="SystemControlForegroundBaseMediumBrush" />
-                                            <StaticResource x:Key="GridViewItemSelectedInnerBorderBrush" ResourceKey="SystemAccentColor" />
+                                            <StaticResource x:Key="GridViewItemSelectedInnerBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
                                         </ResourceDictionary>
                                     </ResourceDictionary.ThemeDictionaries>
                                 </ResourceDictionary>
                             </GridView.Resources>
                         </GridView>
                         <Border Background="{ThemeResource SeparatorColor}" Margin="5 -8" Width="1"></Border>
+                        <Button ToolTipService.ToolTip="自定义" Width="42" Height="42" Margin="7 0 0 0">
+                            <SymbolIcon Symbol="Add"/>
+                            <Button.Flyout>
+                                <Flyout>
+                                    <Grid>
+                                        <controls1:ColorPicker
+                                            x:Name="cpAddColor" 
+                                            ColorSpectrumShape="Box"
+                                            IsAlphaEnabled="False"
+                                            IsAlphaSliderVisible="True"
+                                            IsAlphaTextInputVisible="True"
+                                            IsColorChannelTextInputVisible="False"
+                                            IsColorSliderVisible="True"
+                                            IsHexInputVisible="True"
+                                            IsMoreButtonVisible="False" />
+                                        <StackPanel Orientation="Horizontal" 
+                                            Margin="0,0,0,16" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                                            <TextBox x:Name="tbAddColorName" PlaceholderText="备注名称" MinWidth="108" Margin="0 0 10 0"/>
+                                            <Button x:Name="btnAddColor">
+                                                添加
+                                            </Button>
+                                        </StackPanel>
+                                        
+                                    </Grid>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
                         <Button ToolTipService.ToolTip="跟随系统" x:Name="btnSysColor" Style="{StaticResource AccentButtonStyle}" Background="{x:Bind m_UISettingsControlViewModel.SysColor, Converter={StaticResource colorConvert}}" Width="42" Height="42" Margin="7 0 0 0">
                             <Button.Resources>
                                 <!--<StaticResource x:Key="AccentButtonBackground" ResourceKey="SystemAccent" />-->

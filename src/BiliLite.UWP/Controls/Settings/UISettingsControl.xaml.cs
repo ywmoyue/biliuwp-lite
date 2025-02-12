@@ -51,10 +51,15 @@ namespace BiliLite.Controls.Settings
                 {
                     if (gvColor.SelectedIndex >= 0)
                     {
-                    var selectedItem = gvColor.SelectedItem as ColorItemModel;
-                    m_themeService.SetColor(selectedItem.Color);
-                    SettingService.SetValue(SettingConstants.UI.THEME_COLOR, gvColor.SelectedIndex);
+                        var selectedItem = gvColor.SelectedItem as ColorItemModel;
+                        m_themeService.SetColor(selectedItem.Color);
                     }
+                    else
+                    {
+                        m_themeService.SetColor();
+                    }
+                    SettingService.SetValue(SettingConstants.UI.THEME_COLOR, gvColor.SelectedIndex);
+
                 };
             };
 
@@ -62,9 +67,26 @@ namespace BiliLite.Controls.Settings
             btnSysColor.Click += (sender, e) =>
             {
                 gvColor.SelectedIndex = -1;
-                m_themeService.SetColor();
-                SettingService.SetValue(SettingConstants.UI.THEME_COLOR, -1);
-                };
+            };
+
+            //自定义色彩
+            btnAddColor.Click += (sender, e) =>
+            {
+                foreach (ColorItemModel item in m_UISettingsControlViewModel.Colors)
+                {
+                    if (item.HexCode == cpAddColor.Color.ToString())
+                    {
+                        Notify.ShowMessageToast("已重复添加");
+                        return;
+                    }
+                }
+
+                var color = cpAddColor.Color;
+                var hexCode = color.ToString();
+                var name = string.IsNullOrEmpty(tbAddColorName.Text) ? hexCode : tbAddColorName.Text;
+                ColorItemModel colorItemModel = new(name, hexCode, color);
+                m_UISettingsControlViewModel.Colors.Add(colorItemModel);
+                SettingService.SetValue(SettingConstants.UI.THEME_COLOR_MENU, m_UISettingsControlViewModel.Colors);
             };
 
             //显示模式
@@ -386,6 +408,25 @@ namespace BiliLite.Controls.Settings
             NotificationRegisterExtensions.BackgroundTask("TileFeedBackgroundTask", new TimeTrigger(15, false));
             //NotificationRegisterExtensions.BackgroundTask("TileFeedBackgroundTask",
             //    "BackgroundTasks.TileFeedBackgroundTask", new TimeTrigger(15, false));
+        }
+
+        private async void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement menuFlyoutItem = sender as FrameworkElement;
+            var clickedItem = menuFlyoutItem.DataContext;
+            var itemIndex = gvColor.Items.IndexOf(clickedItem);
+
+            switch (menuFlyoutItem.Tag as string)
+            {
+                case "edit":
+                    //people[index] = modifiedPerson;  // 替换数据
+                    break;
+
+                case "delete":
+                    m_UISettingsControlViewModel.Colors.Remove(clickedItem as ColorItemModel);
+                    break;
+            }
+            SettingService.SetValue(SettingConstants.UI.THEME_COLOR_MENU, m_UISettingsControlViewModel.Colors);
         }
     }
 }
