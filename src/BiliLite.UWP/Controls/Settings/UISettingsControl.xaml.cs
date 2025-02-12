@@ -83,7 +83,7 @@ namespace BiliLite.Controls.Settings
 
                 var color = cpAddColor.Color;
                 var hexCode = color.ToString();
-                var name = string.IsNullOrEmpty(tbAddColorName.Text) ? hexCode : tbAddColorName.Text;
+                var name = string.IsNullOrEmpty(tbAddColorName.Text) ? hexCode : tbAddColorName.PlaceholderText;
                 ColorItemModel colorItemModel = new(name, hexCode, color);
                 m_UISettingsControlViewModel.Colors.Add(colorItemModel);
                 SettingService.SetValue(SettingConstants.UI.THEME_COLOR_MENU, m_UISettingsControlViewModel.Colors);
