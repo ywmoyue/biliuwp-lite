@@ -20,7 +20,7 @@
             <Border
                 Width="40"
                 Height="40"
-                Background="{x:Bind HexCode, Converter={StaticResource colorConvert}}"
+                Background="{x:Bind Color, Converter={StaticResource colorConvert}}"
                 CornerRadius="{StaticResource ControlCornerRadius}"
                 ToolTipService.ToolTip="{x:Bind Name}">
                 <Border.ContextFlyout>

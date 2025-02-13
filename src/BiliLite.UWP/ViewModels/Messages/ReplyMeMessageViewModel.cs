@@ -1,10 +1,10 @@
-﻿using System;
-using Windows.UI;
+﻿using BiliLite.Services;
 using BiliLite.ViewModels.Common;
-using PropertyChanged;
-using Windows.UI.Xaml.Media;
-using BiliLite.Services;
 using Microsoft.Extensions.DependencyInjection;
+using PropertyChanged;
+using System;
+using Windows.UI;
+using Windows.UI.Xaml.Media;
 
 namespace BiliLite.ViewModels.Messages;
 
@@ -49,6 +49,6 @@ public class ReplyMeMessageViewModel : BaseViewModel
 
     [DependsOn(nameof(HasLike))]
     public Brush LikeColor => !HasLike ? new SolidColorBrush(Colors.Gray) :
-        new SolidColorBrush((Color)App.ServiceProvider.GetRequiredService<ThemeService>().ThemeResource["SystemAccentColor"]);
+        new SolidColorBrush((Color)App.ServiceProvider.GetRequiredService<ThemeService>().AccentThemeResource["SystemAccentColor"]);
 
 }

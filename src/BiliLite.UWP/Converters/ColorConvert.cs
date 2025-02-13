@@ -15,33 +15,11 @@ namespace BiliLite.Converters
             }
 
             Color color = new();
-            if (value is string)
+            if (value is string string1)
             {
                 try
                 {
-                    var obj = value.ToString().Replace("#", "");
-                    if (long.TryParse(obj, out var c))
-                    {
-                        obj = c.ToString("X2");
-                    }
-
-                    if (obj.Length <= 6)
-                    {
-                        obj = obj.PadLeft(6, '0');
-                        color.R = byte.Parse(obj.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
-                        color.G = byte.Parse(obj.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
-                        color.B = byte.Parse(obj.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
-                        color.A = 255;
-                    }
-                    else
-                    {
-                        obj = obj.PadLeft(8, '0');
-                        color.R = byte.Parse(obj.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
-                        color.G = byte.Parse(obj.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
-                        color.B = byte.Parse(obj.Substring(6, 2), System.Globalization.NumberStyles.HexNumber);
-                        color.A = byte.Parse(obj.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
-                    }
-
+                    color = Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor(string1);
                 }
                 catch (Exception)
                 {
