@@ -186,7 +186,8 @@ namespace BiliLite.Pages.User
                         Cover = item.Cover,
                         Author = item.Upper.Name,
                         Id = item.Id,
-                        Title = item.Title
+                        Title = item.Title,
+                        Duration = TimeSpan.FromSeconds(item.Duration),
                     });
                 }
 

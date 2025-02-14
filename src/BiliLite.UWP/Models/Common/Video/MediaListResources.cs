@@ -24,6 +24,8 @@ namespace BiliLite.Models.Common.Video
         public string Cover { get; set; }
 
         public MediaListItemUpper Upper { get; set; }
+
+        public long Duration { get; set; }
     }
 
     public class MediaListItemUpper

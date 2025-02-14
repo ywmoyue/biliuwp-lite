@@ -47,5 +47,12 @@ namespace BiliLite.Models.Common.Video
 
         [JsonProperty("arc")]
         public VideoDetailModel Arc { get; set; } // 简单复用一下
+
+        public VideoUgcSeasonSectionEpisodePage Page { get; set; }
+    }
+
+    public class VideoUgcSeasonSectionEpisodePage
+    {
+        public long Duration { get; set; }
     }
 }

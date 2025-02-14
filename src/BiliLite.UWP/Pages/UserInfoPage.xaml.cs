@@ -1,4 +1,5 @@
-﻿using BiliLite.Extensions;
+﻿using System;
+using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.User;
 using BiliLite.Models.Common.Video;
@@ -451,7 +452,8 @@ namespace BiliLite.Pages
                     Cover = item.Cover,
                     Author = item.Upper.Name,
                     Id = item.Id.ToString(),
-                    Title = item.Title
+                    Title = item.Title,
+                    Duration = TimeSpan.FromSeconds(item.Duration),
                 });
             }
 
