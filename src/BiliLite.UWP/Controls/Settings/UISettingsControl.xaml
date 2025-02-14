@@ -110,11 +110,13 @@
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
                                             <Button x:Name="btnAddColor" Style="{StaticResource AccentButtonStyle}">
                                                 添加
                                             </Button>
-                                            <TextBox Grid.Column="1" x:Name="tbAddColorName" HorizontalAlignment="Stretch" PlaceholderText="{Binding Color,ElementName=cpAddColor, Converter={StaticResource ColorToDisplayNameConverter}}" MinWidth="0" Margin="5 0 0 0"/>
+                                            <TextBox Grid.Column="1" x:Name="tbAddColorName" HorizontalAlignment="Stretch" PlaceholderText="{Binding Color,ElementName=cpAddColor, Converter={StaticResource ColorToDisplayNameConverter}}" MinWidth="0" Margin="5 0"/>
+                                            <CheckBox IsChecked="True" Grid.Column="2" x:Name="cbSetColor" Content="立即生效" Margin="0 0 -35 0"></CheckBox>
                                         </Grid>
                                     </StackPanel>
                                 </Flyout>

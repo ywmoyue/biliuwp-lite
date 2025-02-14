@@ -84,8 +84,11 @@ namespace BiliLite.Controls.Settings
                 var color = cpAddColor.Color;
                 var hexCode = color.ToString();
                 var name = string.IsNullOrEmpty(tbAddColorName.Text) ? tbAddColorName.PlaceholderText : tbAddColorName.Text;
-                ColorItemModel colorItemModel = new(false, name, hexCode, color);
+                var isActived = cbSetColor.IsChecked.GetValueOrDefault();
+                ColorItemModel colorItemModel = new(isActived, name, hexCode, color);
                 m_UISettingsControlViewModel.Colors.Add(colorItemModel);
+                if (isActived)
+                    gvColor.SelectedIndex = m_UISettingsControlViewModel.Colors.Count - 1;
 
                 SettingService.SetValue(SettingConstants.UI.THEME_COLOR_MENU, m_UISettingsControlViewModel.Colors);
                 Notify.ShowMessageToast($"已添加：{name} {hexCode}");
