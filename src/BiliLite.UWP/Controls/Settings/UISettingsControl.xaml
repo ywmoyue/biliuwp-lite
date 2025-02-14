@@ -8,7 +8,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:font="using:FontAwesome5" xmlns:converters="using:CommunityToolkit.WinUI.Converters"
-    xmlns:home="using:BiliLite.Models.Common.Home" xmlns:theme="using:BiliLite.Models.Theme" xmlns:localconverters="using:BiliLite.Converters" xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
+    xmlns:home="using:BiliLite.Models.Common.Home" xmlns:theme="using:BiliLite.Models.Theme" xmlns:localconverters="using:BiliLite.Converters"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400" x:Name="rootPanel">
@@ -51,7 +51,7 @@
                     <controls:SettingsCard.HeaderIcon>
                         <font:FontAwesome Icon="Solid_PaintBrush" />
                     </controls:SettingsCard.HeaderIcon>
-                    <ComboBox x:Name="cbTheme" MinWidth="200">
+                    <ComboBox x:Name="cbTheme" MinWidth="200" Margin="0 0 -4 0">
                         <ComboBox.Items>
                             <ComboBoxItem>跟随系统</ComboBoxItem>
                             <ComboBoxItem>浅色</ComboBoxItem>
@@ -60,77 +60,92 @@
                     </ComboBox>
                 </controls:SettingsCard>
 
-                <controls:SettingsCard Description="更改应用的强调色彩" Header="色彩">
+                <controls:SettingsCard HorizontalContentAlignment="Stretch"
+                                ContentAlignment="Vertical"  x:Name="rootColor">
                     <controls:SettingsCard.HeaderIcon>
-                        <font:FontAwesome Icon="Solid_Palette" />
+                        <font:FontAwesome Icon="Solid_Palette"/>
                     </controls:SettingsCard.HeaderIcon>
-                    <StackPanel Orientation="Horizontal">
-                        <GridView
-                            x:Name="gvColor"
-                            Margin="0,0,0,-5"
-                            Padding="0"
-                            ItemTemplate="{StaticResource ColorItemTemplate}"
-                            ItemsSource="{x:Bind m_UISettingsControlViewModel.Colors}">
-                            <GridView.Resources>
-                                <ResourceDictionary>
-                                    <ResourceDictionary.ThemeDictionaries>
-                                        <ResourceDictionary x:Key="Default">
-                                            <StaticResource x:Key="GridViewItemSelectedPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
-                                            <StaticResource x:Key="GridViewItemPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
-                                        </ResourceDictionary>
-                                        <ResourceDictionary x:Key="Light">
-                                            <StaticResource x:Key="GridViewItemSelectedPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
-                                            <StaticResource x:Key="GridViewItemPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
-                                        </ResourceDictionary>
-                                    </ResourceDictionary.ThemeDictionaries>
-                                </ResourceDictionary>
-                            </GridView.Resources>
-                        </GridView>
-                        <Border Background="{ThemeResource SeparatorColor}" Margin="5 -8" Width="1"></Border>
-                        <Button ToolTipService.ToolTip="自定义" Width="42" Height="40" Margin="7 0 0 0" Padding="0">
-                            <SymbolIcon Symbol="Add"/>
-                            <Button.Flyout>
-                                <Flyout>
-                                    <StackPanel>
-                                        <Grid>
-                                            <controls:ColorPicker x:Name="cpAddColor"
-                                                              Color="#8764B8"
-                                                              ShowAccentColors="False"/>
-                                            <Grid VerticalAlignment="Top" Height="46">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition/>
-                                                    <ColumnDefinition/>
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center">预览字体</TextBlock>
-                                                <TextBlock Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1">预览字体</TextBlock>
-                                            </Grid>
-                                        </Grid>
-                                        <Grid 
-                                            Margin="8 0" VerticalAlignment="Bottom">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <Button x:Name="btnAddColor" Style="{StaticResource AccentButtonStyle}">
-                                                添加
-                                            </Button>
-                                            <TextBox Grid.Column="1" x:Name="tbAddColorName" HorizontalAlignment="Stretch" PlaceholderText="{Binding Color,ElementName=cpAddColor, Converter={StaticResource ColorToDisplayNameConverter}}" MinWidth="0" Margin="5 0"/>
-                                            <CheckBox IsChecked="True" Grid.Column="2" x:Name="cbSetColor" Content="立即生效" Margin="0 0 -35 0"></CheckBox>
-                                        </Grid>
-                                    </StackPanel>
-                                </Flyout>
-                            </Button.Flyout>
-                        </Button>
-                        <Button ToolTipService.ToolTip="跟随系统" x:Name="btnSysColor" Style="{StaticResource AccentButtonStyle}" Background="{x:Bind m_UISettingsControlViewModel.SysColor, Converter={StaticResource colorConvert}}" Width="40" Height="40" Margin="7 0 0 0" Padding="0">
-                            <Button.Resources>
-                                <!--<StaticResource x:Key="AccentButtonBackground" ResourceKey="SystemAccent" />-->
-                                <StaticResource x:Key="AccentButtonBackgroundPointerOver" ResourceKey="SystemAccentColorLight1" />
-                                <StaticResource x:Key="AccentButtonBackgroundPressed" ResourceKey="SystemAccentColorDark1" />
-                            </Button.Resources>
-                            <SymbolIcon Visibility="{Binding SelectedIndex, ElementName=gvColor,Converter={StaticResource boolConvert},ConverterParameter=-1}" Symbol="Accept"/>
-                        </Button>
-                    </StackPanel>
+                    <controls:SettingsCard.Header>
+                        <StackPanel>
+                            <TextBlock>色彩</TextBlock>
+                            <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap">更改应用的强调色彩</TextBlock>
+                        </StackPanel>
+                    </controls:SettingsCard.Header>
+                    <controls:SettingsCard.Description>
+                        <Grid Margin="0 6 -28 0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <GridView
+                                x:Name="gvColor"
+                                Margin="0 0 0 -4"
+                                Padding="0"
+                                ItemTemplate="{StaticResource ColorItemTemplate}"
+                                ItemsSource="{x:Bind m_UISettingsControlViewModel.Colors}">
+                                <GridView.Resources>
+                                    <ResourceDictionary>
+                                        <ResourceDictionary.ThemeDictionaries>
+                                            <ResourceDictionary x:Key="Default">
+                                                <StaticResource x:Key="GridViewItemSelectedPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                                                <StaticResource x:Key="GridViewItemPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                                            </ResourceDictionary>
+                                            <ResourceDictionary x:Key="Light">
+                                                <StaticResource x:Key="GridViewItemSelectedPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                                                <StaticResource x:Key="GridViewItemPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                                            </ResourceDictionary>
+                                        </ResourceDictionary.ThemeDictionaries>
+                                    </ResourceDictionary>
+                                </GridView.Resources>
+                            </GridView>
+                            <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                <Border Background="{ThemeResource SeparatorColor}" Margin="5" Width="1"></Border>
+                                <Button ToolTipService.ToolTip="自定义" Width="42" Height="40" Margin="7 0 0 0" Padding="0">
+                                    <SymbolIcon Symbol="Add"/>
+                                    <Button.Flyout>
+                                        <Flyout>
+                                            <StackPanel>
+                                                <Grid>
+                                                    <controls:ColorPicker x:Name="cpAddColor"
+                                                        Color="#8764B8"
+                                                        ShowAccentColors="False"/>
+                                                    <Grid VerticalAlignment="Top" Height="46">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition/>
+                                                            <ColumnDefinition/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center">预览字体</TextBlock>
+                                                        <TextBlock Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1">预览字体</TextBlock>
+                                                    </Grid>
+                                                </Grid>
+                                                <Grid 
+                                                    Margin="8 0" VerticalAlignment="Bottom">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Button x:Name="btnAddColor" Style="{StaticResource AccentButtonStyle}">
+                                                        添加
+                                                    </Button>
+                                                    <TextBox Grid.Column="1" x:Name="tbAddColorName" HorizontalAlignment="Stretch" PlaceholderText="{Binding Color,ElementName=cpAddColor, Converter={StaticResource ColorToDisplayNameConverter}}" MinWidth="0" Margin="5 0"/>
+                                                    <CheckBox IsChecked="True" Grid.Column="2" x:Name="cbSetColor" Content="立即生效" Margin="0 0 -35 0"></CheckBox>
+                                                </Grid>
+                                            </StackPanel>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+                                <Button ToolTipService.ToolTip="跟随系统" x:Name="btnSysColor" Style="{StaticResource AccentButtonStyle}" Background="{x:Bind m_UISettingsControlViewModel.SysColor, Converter={StaticResource colorConvert}}" Width="40" Height="40" Margin="7 0 0 0" Padding="0">
+                                    <Button.Resources>
+                                        <!--<StaticResource x:Key="AccentButtonBackground" ResourceKey="SystemAccent" />-->
+                                        <StaticResource x:Key="AccentButtonBackgroundPointerOver" ResourceKey="SystemAccentColorLight1" />
+                                        <StaticResource x:Key="AccentButtonBackgroundPressed" ResourceKey="SystemAccentColorDark1" />
+                                    </Button.Resources>
+                                    <SymbolIcon Visibility="{Binding SelectedIndex, ElementName=gvColor,Converter={StaticResource boolConvert},ConverterParameter=-1}" Symbol="Accept"/>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </controls:SettingsCard.Description>
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
@@ -159,7 +174,7 @@
                 <controls:SettingsCard>
                     <controls:SettingsCard.Header>
                         <StackPanel>
-                            <GridView x:Name="gridHomeCustom" 
+                            <GridView x:Name="gridHomeCustom"
                           SelectionMode="None" 
                           Margin="0 8 0 0"
                           IsItemClickEnabled="True"  CanDragItems="True" CanReorderItems="True" AllowDrop="True" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" DragItemsCompleted="gridHomeCustom_DragItemsCompleted">
