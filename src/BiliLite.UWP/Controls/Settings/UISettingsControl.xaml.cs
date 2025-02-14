@@ -49,6 +49,8 @@ namespace BiliLite.Controls.Settings
             {
                 gvColor.SelectionChanged += (obj, args) =>
                 {
+                    m_UISettingsControlViewModel.ResetIsActived(gvColor.SelectedIndex);
+
                     if (gvColor.SelectedIndex >= 0)
                     {
                         var selectedItem = gvColor.SelectedItem as ColorItemModel;
@@ -58,8 +60,9 @@ namespace BiliLite.Controls.Settings
                     {
                         m_themeService.SetColor();
                     }
-                    SettingService.SetValue(SettingConstants.UI.THEME_COLOR, gvColor.SelectedIndex);
 
+                    SettingService.SetValue(SettingConstants.UI.THEME_COLOR_MENU, m_UISettingsControlViewModel.Colors);
+                    SettingService.SetValue(SettingConstants.UI.THEME_COLOR, gvColor.SelectedIndex);
                 };
             };
 
@@ -72,20 +75,18 @@ namespace BiliLite.Controls.Settings
             //自定义色彩
             btnAddColor.Click += (sender, e) =>
             {
-                foreach (ColorItemModel item in m_UISettingsControlViewModel.Colors)
+                if (m_UISettingsControlViewModel.Colors.Any(item => item.Color == cpAddColor.Color))
                 {
-                    if (item.Color == cpAddColor.Color)
-                    {
-                        Notify.ShowMessageToast("已重复添加");
-                        return;
-                    }
+                    Notify.ShowMessageToast("已重复添加");
+                    return;
                 }
 
                 var color = cpAddColor.Color;
                 var hexCode = color.ToString();
                 var name = string.IsNullOrEmpty(tbAddColorName.Text) ? tbAddColorName.PlaceholderText : tbAddColorName.Text;
-                ColorItemModel colorItemModel = new(name, hexCode, color);
+                ColorItemModel colorItemModel = new(false, name, hexCode, color);
                 m_UISettingsControlViewModel.Colors.Add(colorItemModel);
+
                 SettingService.SetValue(SettingConstants.UI.THEME_COLOR_MENU, m_UISettingsControlViewModel.Colors);
                 Notify.ShowMessageToast($"已添加：{name} {hexCode}");
             };
@@ -421,6 +422,7 @@ namespace BiliLite.Controls.Settings
                     m_UISettingsControlViewModel.Colors.Remove(clickedItem as ColorItemModel);
                     break;
             }
+            m_UISettingsControlViewModel.ResetIsActived(gvColor.SelectedIndex);
 
             SettingService.SetValue(SettingConstants.UI.THEME_COLOR_MENU, m_UISettingsControlViewModel.Colors);
         }
