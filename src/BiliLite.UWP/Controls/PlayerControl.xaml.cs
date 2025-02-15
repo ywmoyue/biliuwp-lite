@@ -1419,6 +1419,10 @@ namespace BiliLite.Controls
 
         private void InitSoundQuality()
         {
+            if (playUrlInfo.AudioQualites == null || !playUrlInfo.AudioQualites.Any())
+            {
+                return;
+            }
             MinSoundQuality.Text = playUrlInfo.AudioQualites[0].QualityName;
             MaxSoundQuality.Text = playUrlInfo.AudioQualites[playUrlInfo.AudioQualites.Count - 1].QualityName;
 
