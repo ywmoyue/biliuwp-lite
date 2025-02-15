@@ -105,21 +105,19 @@
                                     <Button.Flyout>
                                         <Flyout>
                                             <StackPanel>
-                                                <Grid>
-                                                    <controls:ColorPicker x:Name="cpAddColor"
-                                                        Color="#8764B8"
-                                                        ShowAccentColors="False"/>
-                                                    <Grid VerticalAlignment="Top" Height="46">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition/>
-                                                            <ColumnDefinition/>
-                                                        </Grid.ColumnDefinitions>
-                                                        <TextBlock Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center">预览字体</TextBlock>
-                                                        <TextBlock Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1">预览字体</TextBlock>
-                                                    </Grid>
+                                                <Grid VerticalAlignment="Top" Height="40" Background="{Binding Color,ElementName=cpAddColor,Converter={StaticResource colorConvert}}" CornerRadius="{StaticResource ControlCornerRadius}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition/>
+                                                        <ColumnDefinition/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center">预览字体</TextBlock>
+                                                    <TextBlock Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1">预览字体</TextBlock>
                                                 </Grid>
-                                                <Grid 
-                                                    Margin="8 0" VerticalAlignment="Bottom">
+                                                <Grid>
+                                                    <muxc:ColorPicker x:Name="cpAddColor" IsColorPreviewVisible="False" Color="#8764B8" Margin="0 10 -55 0"/>
+
+                                                </Grid>
+                                                <Grid VerticalAlignment="Bottom">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto"/>
                                                         <ColumnDefinition Width="Auto"/>
@@ -128,8 +126,8 @@
                                                     <Button x:Name="btnAddColor" Style="{StaticResource AccentButtonStyle}">
                                                         添加
                                                     </Button>
-                                                    <CheckBox IsChecked="True" Grid.Column="1" x:Name="cbSetColor" Content="立即生效" Margin="35 0 0 0"></CheckBox>
-                                                    <TextBox Grid.Column="2" x:Name="tbAddColorName" HorizontalAlignment="Stretch" PlaceholderText="{Binding Color,ElementName=cpAddColor, Converter={StaticResource ColorToDisplayNameConverter}}"/>
+                                                    <CheckBox IsChecked="True" Grid.Column="1" x:Name="cbSetColor" Content="立即生效" Margin="10 0 -25 0"></CheckBox>
+                                                    <TextBox Grid.Column="2" x:Name="tbAddColorName" HorizontalAlignment="Stretch"  PlaceholderText="{Binding Color,ElementName=cpAddColor, Converter={StaticResource ColorToDisplayNameConverter}}"/>
                                                 </Grid>
                                             </StackPanel>
                                         </Flyout>
