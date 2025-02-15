@@ -29,7 +29,7 @@
                         <MenuFlyoutItem
                             Click="MenuFlyoutItem_Click"
                             Tag="delete"
-                            Text="删除色彩">
+                            Text="移除">
                             <MenuFlyoutItem.Icon>
                                 <SymbolIcon Symbol="Delete" />
                             </MenuFlyoutItem.Icon>
