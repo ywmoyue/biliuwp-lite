@@ -27,7 +27,7 @@ namespace BiliLite.ViewModels.Settings
                 new(false, "黄色", "#C5963C", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#C5963C")),
                 new(false, "绿色", "#5B8F30", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#5B8F30")),
                 new(false, "淡紫色", "#9664DB", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#9664DB")),
-                new(false, "蓝灰色", "#8AA5B8", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#8AA5B8")),
+                new(false, "蓝灰色", "#6D8AA6", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#6D8AA6")),
                 new(false, "红色", "#D63F41", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#D63F41"))
             ];
         }
