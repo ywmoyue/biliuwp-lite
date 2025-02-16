@@ -13,5 +13,7 @@ namespace BiliLite.Models.Common.Video
         public bool IsOnlineMediaList { get; set; }
 
         public string MediaListId { get; set; }
+
+        public string Info { get; set; }
     }
 }

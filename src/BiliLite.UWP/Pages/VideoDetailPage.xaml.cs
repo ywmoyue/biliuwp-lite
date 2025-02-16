@@ -23,6 +23,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Converters;
 using Newtonsoft.Json;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -314,6 +315,14 @@ namespace BiliLite.Pages
                     videoSection.Items.Add(videoItem);
                 }
                 videoSections.Add(videoSection);
+            }
+
+            var firstSection = videoSections.FirstOrDefault();
+            if (firstSection != null)
+            {
+                firstSection.Description = m_viewModel.VideoInfo.UgcSeason.Intro;
+                firstSection.Info = NumberToStringConvert.Convert(m_viewModel.VideoInfo.UgcSeason.Stat.View, null) +
+                                    "播放";
             }
 
             if (m_videoListView == null)

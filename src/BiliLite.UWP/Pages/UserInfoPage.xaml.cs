@@ -445,7 +445,7 @@ namespace BiliLite.Pages
                 return;
             }
 
-            foreach (var item in mediaList)
+            foreach (var item in mediaList.MediaList)
             {
                 items.Add(new VideoPlaylistItem()
                 {
@@ -469,6 +469,7 @@ namespace BiliLite.Pages
                     Title = $"{m_viewModel.UserSpaceInfo.Name}:全部视频",
                     MediaListId = m_userSubmitVideoViewModel.PlayAllMediaListId,
                     IsOnlineMediaList = true,
+                    Info = $"共{mediaList.TotalCount}集"
                 }
             });
         }

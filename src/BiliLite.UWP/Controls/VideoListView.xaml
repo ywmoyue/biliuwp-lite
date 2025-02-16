@@ -38,7 +38,21 @@
                         HorizontalContentAlignment="Left"
                         IsExpanded="{x:Bind Selected,Mode=OneWay}">
                             <muxc:Expander.Header>
-                                <TextBlock Text="{x:Bind Title}"></TextBlock>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{x:Bind Title}"></TextBlock>
+                                    <TextBlock Text="{x:Bind InfoStr}" 
+                                               Margin="0 4 0 0"
+                                               Visibility="{x:Bind ShowInfo}" 
+                                               FontSize="12"
+                                               TextWrapping="Wrap"
+                                               Foreground="Gray"></TextBlock>
+                                    <TextBlock Text="{x:Bind Description}" 
+                                               Margin="0 4 0 0"
+                                               Visibility="{x:Bind ShowDescription}"
+                                               FontSize="12"
+                                               TextWrapping="Wrap"
+                                               Foreground="Gray"></TextBlock>
+                                </StackPanel>
                             </muxc:Expander.Header>
                             <muxc:Expander.Content>
                                 <ListView 
