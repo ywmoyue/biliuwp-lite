@@ -1,7 +1,7 @@
 {
-  "version": "4.7.15",
-  "version_num": 40715,
-  "version_desc": "更新内容:\r\n\r\n- 可设置打开上次标签页数量限制，标签页保存数据操作均使用事务和异步api包裹 \r\n\r\n- 重建下载索引增加用户提示 \r\n\r\n- 反转AccentButton中的字体颜色  \r\n\r\n- 选集页自动定位到当前分p  \r\n\r\n- 修复快捷键业务错误 \r\n\r\n- 默认收藏夹不可被排序 \r\n\r\n- choco安装方式在24H2中安装失败 \r\n\r\n- 修复三大金刚键无法跟随主题显示正确的颜色\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.7.16",
+  "version_num": 40716,
+  "version_desc": "更新内容:\r\n\r\n- 实现自定义主题色功能  \r\n\r\n- 可设置推荐页屏蔽直播功能 \r\n\r\n- 播放列表时长、播放量、集数、描述显示 \r\n\r\n- 修复应用标题栏三大功能键显示错误的颜色  \r\n\r\n- 修复自定义倍速界面和快捷键设置界面在Win10中宽度丢失 \r\n\r\n- 修复无音频视频播放失败 \r\n\r\n- 修复带无损音质的视频下载后导出视频失败 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
