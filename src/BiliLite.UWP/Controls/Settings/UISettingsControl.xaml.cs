@@ -21,10 +21,14 @@ namespace BiliLite.Controls.Settings
     public sealed partial class UISettingsControl : UserControl
     {
         private readonly ThemeService m_themeService;
-        private readonly UISettingsControlViewModel m_UISettingsControlViewModel = new();
+        private readonly UISettingsControlViewModel m_UISettingsControlViewModel;
+        private readonly SettingSqlService m_settingSqlService;
+
         public UISettingsControl()
         {
             m_themeService = App.ServiceProvider.GetRequiredService<ThemeService>();
+            m_settingSqlService = App.ServiceProvider.GetService<SettingSqlService>();
+            m_UISettingsControlViewModel = App.ServiceProvider.GetRequiredService<UISettingsControlViewModel>();
             InitializeComponent();
             LoadUI();
         }
@@ -61,7 +65,7 @@ namespace BiliLite.Controls.Settings
                         m_themeService.SetColor();
                     }
 
-                    SettingService.SetValue(SettingConstants.UI.THEME_COLOR_MENU, m_UISettingsControlViewModel.Colors);
+                    m_settingSqlService.SetValue(SettingConstants.UI.THEME_COLOR_MENU, m_UISettingsControlViewModel.Colors);
                     SettingService.SetValue(SettingConstants.UI.THEME_COLOR, gvColor.SelectedIndex);
                 };
             };
@@ -90,7 +94,7 @@ namespace BiliLite.Controls.Settings
                 if (isActived)
                     gvColor.SelectedIndex = m_UISettingsControlViewModel.Colors.Count - 1;
 
-                SettingService.SetValue(SettingConstants.UI.THEME_COLOR_MENU, m_UISettingsControlViewModel.Colors);
+                m_settingSqlService.SetValue(SettingConstants.UI.THEME_COLOR_MENU, m_UISettingsControlViewModel.Colors);
                 Notify.ShowMessageToast($"已添加：{name} {hexCode}");
             };
 
@@ -415,7 +419,7 @@ namespace BiliLite.Controls.Settings
             //    "BackgroundTasks.TileFeedBackgroundTask", new TimeTrigger(15, false));
         }
 
-        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        private void ColorItemMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             FrameworkElement menuFlyoutItem = sender as FrameworkElement;
             var clickedItem = menuFlyoutItem.DataContext;
@@ -427,7 +431,7 @@ namespace BiliLite.Controls.Settings
             }
             m_UISettingsControlViewModel.ResetIsActived(gvColor.SelectedIndex);
 
-            SettingService.SetValue(SettingConstants.UI.THEME_COLOR_MENU, m_UISettingsControlViewModel.Colors);
+            m_settingSqlService.SetValue(SettingConstants.UI.THEME_COLOR_MENU, m_UISettingsControlViewModel.Colors);
         }
     }
 }

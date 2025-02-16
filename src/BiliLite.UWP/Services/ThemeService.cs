@@ -1,4 +1,6 @@
-﻿using BiliLite.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.ViewModels.Settings;
 using Microsoft.UI.Xaml.Controls;
@@ -6,6 +8,7 @@ using System.Linq;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using BiliLite.Models.Theme;
 
 namespace BiliLite.Services
 {
@@ -14,6 +17,7 @@ namespace BiliLite.Services
         private readonly ResourceDictionary m_defaultColorsResource = App.Current.Resources.MergedDictionaries.FirstOrDefault(x => x.Source.AbsoluteUri.Contains("Default"));
         private readonly ResourceDictionary m_accentColorsResource = GetAccentColorsResourceDictionary();
         private readonly Frame rootFrame = Window.Current.Content as Frame;
+        private readonly SettingSqlService m_settingSqlService;
         private ElementTheme m_theme;
 
         private static ResourceDictionary GetAccentColorsResourceDictionary()
@@ -38,8 +42,9 @@ namespace BiliLite.Services
             ? m_accentColorsResource.ThemeDictionaries["Light"] as ResourceDictionary
             : m_accentColorsResource.ThemeDictionaries["Dark"] as ResourceDictionary;
 
-        public ThemeService()
+        public ThemeService(SettingSqlService settingSqlService)
         {
+            m_settingSqlService = settingSqlService;
             rootFrame.RequestedTheme = m_theme = (ElementTheme)SettingService.GetValue<int>(SettingConstants.UI.THEME, 0);
             if (m_theme == ElementTheme.Default)
             {
@@ -63,8 +68,9 @@ namespace BiliLite.Services
             else
             {
                 // 根据索引选择自带色彩
-                var uiSettingsControlViewModel = new UISettingsControlViewModel();
-                var selectedItem = uiSettingsControlViewModel.Colors[themeColorIndex];
+                var colors = GetColorMenu();
+                if (themeColorIndex >= colors.Count) themeColorIndex = SettingConstants.UI.DEFAULT_THEME_COLOR;
+                var selectedItem = GetColorMenu()[themeColorIndex];
                 SetColor(selectedItem.Color, false);
             }
         }
@@ -114,6 +120,25 @@ namespace BiliLite.Services
             rootFrame.RequestedTheme = ElementTheme.Dark;
             rootFrame.RequestedTheme = (ElementTheme)SettingService.GetValue<int>(SettingConstants.UI.THEME, 0);
             Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 1);
+        }
+
+        public List<ColorItemModel> GetDefaultThemeColorMenu()
+        {
+            return
+            [
+                new(true, "少女粉", "#D14E65", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#D14E65")),
+                new(false, "胖次蓝", "#0092D0", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#0092D0")),
+                new(false, "咸蛋黄", "#C5963C", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#C5963C")),
+                new(false, "早苗绿", "#5B8F30", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#5B8F30")),
+                new(false, "基佬紫", "#9664DB", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#9664DB")),
+                new(false, "蓝灰色", "#6D8AA6", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#6D8AA6")),
+                new(false, "高能红", "#D63F41", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#D63F41"))
+            ];
+        }
+
+        public List<ColorItemModel> GetColorMenu()
+        {
+            return m_settingSqlService.GetValue(SettingConstants.UI.THEME_COLOR_MENU, GetDefaultThemeColorMenu());
         }
     }
 }

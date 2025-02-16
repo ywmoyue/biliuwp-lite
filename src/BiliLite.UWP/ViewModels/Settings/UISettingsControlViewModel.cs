@@ -1,36 +1,26 @@
-﻿using BiliLite.Models.Common;
-using BiliLite.Models.Theme;
+﻿using BiliLite.Models.Theme;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.UI;
 using Windows.UI.ViewManagement;
+using BiliLite.Models.Attributes;
 
 namespace BiliLite.ViewModels.Settings
 {
+    [RegisterTransientViewModel]
     public class UISettingsControlViewModel : BaseViewModel
     {
-        public ObservableCollection<ColorItemModel> Colors;
+        private readonly ThemeService m_themeService;
 
-        public UISettingsControlViewModel()
+        public UISettingsControlViewModel(ThemeService themeService)
         {
-            Colors = SettingService.GetValue(SettingConstants.UI.THEME_COLOR_MENU, GetDefaultThemeColorMenu());
+            m_themeService = themeService;
+            Colors = new ObservableCollection<ColorItemModel>(m_themeService.GetColorMenu());
         }
 
-        private ObservableCollection<ColorItemModel> GetDefaultThemeColorMenu()
-        {
-            return
-            [
-                new(true, "粉色", "#D14E65", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#D14E65")),
-                new(false, "蓝色", "#0092D0", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#0092D0")),
-                new(false, "黄色", "#C5963C", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#C5963C")),
-                new(false, "绿色", "#5B8F30", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#5B8F30")),
-                new(false, "淡紫色", "#9664DB", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#9664DB")),
-                new(false, "蓝灰色", "#6D8AA6", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#6D8AA6")),
-                new(false, "红色", "#D63F41", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#D63F41"))
-            ];
-        }
+        public ObservableCollection<ColorItemModel> Colors { get; set; }
 
         public Color SysColor => new UISettings().GetColorValue(UIColorType.Accent);
 

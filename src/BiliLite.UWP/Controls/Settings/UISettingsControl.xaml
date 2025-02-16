@@ -27,7 +27,7 @@
                 <Border.ContextFlyout>
                     <MenuFlyout>
                         <MenuFlyoutItem
-                            Click="MenuFlyoutItem_Click"
+                            Click="ColorItemMenuFlyoutItem_Click"
                             Tag="delete"
                             Text="移除">
                             <MenuFlyoutItem.Icon>
