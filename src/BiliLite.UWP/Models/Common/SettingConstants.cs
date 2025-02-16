@@ -980,6 +980,12 @@ namespace BiliLite.Models.Common
 
             [SettingKey(typeof(object), useSqlDb: true)]
             public const string DYNAMIC_FILTER_RULE = "DynamicFilterRule";
+
+            /// <summary>
+            /// 是否过滤推荐页直播
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string FILTER_RECOMMEND_LIVE = "FilterRecommendLive";
         }
 
         public class Roaming
