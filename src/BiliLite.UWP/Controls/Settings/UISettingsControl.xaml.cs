@@ -2,7 +2,9 @@
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Home;
+using BiliLite.Models.Theme;
 using BiliLite.Services;
+using BiliLite.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.ObjectModel;
@@ -19,7 +21,7 @@ namespace BiliLite.Controls.Settings
     public sealed partial class UISettingsControl : UserControl
     {
         private readonly ThemeService m_themeService;
-
+        private readonly UISettingsControlViewModel m_UISettingsControlViewModel = new();
         public UISettingsControl()
         {
             m_themeService = App.ServiceProvider.GetRequiredService<ThemeService>();
@@ -41,6 +43,56 @@ namespace BiliLite.Controls.Settings
                 });
             });
 
+            //自带色彩
+            gvColor.SelectedIndex = SettingService.GetValue<int>(SettingConstants.UI.THEME_COLOR, SettingConstants.UI.DEFAULT_THEME_COLOR);
+            gvColor.Loaded += (sender, e) =>
+            {
+                gvColor.SelectionChanged += (obj, args) =>
+                {
+                    m_UISettingsControlViewModel.ResetIsActived(gvColor.SelectedIndex);
+
+                    if (gvColor.SelectedIndex >= 0)
+                    {
+                        var selectedItem = gvColor.SelectedItem as ColorItemModel;
+                        m_themeService.SetColor(selectedItem.Color);
+                    }
+                    else
+                    {
+                        m_themeService.SetColor();
+                    }
+
+                    SettingService.SetValue(SettingConstants.UI.THEME_COLOR_MENU, m_UISettingsControlViewModel.Colors);
+                    SettingService.SetValue(SettingConstants.UI.THEME_COLOR, gvColor.SelectedIndex);
+                };
+            };
+
+            //系统色彩
+            btnSysColor.Click += (sender, e) =>
+            {
+                gvColor.SelectedIndex = -1;
+            };
+
+            //自定义色彩
+            btnAddColor.Click += (sender, e) =>
+            {
+                if (m_UISettingsControlViewModel.Colors.Any(item => item.Color == cpAddColor.Color))
+                {
+                    Notify.ShowMessageToast("已重复添加");
+                    return;
+                }
+
+                var color = cpAddColor.Color;
+                var hexCode = color.ToString();
+                var name = string.IsNullOrEmpty(tbAddColorName.Text) ? tbAddColorName.PlaceholderText : tbAddColorName.Text;
+                var isActived = cbSetColor.IsChecked.GetValueOrDefault();
+                ColorItemModel colorItemModel = new(isActived, name, hexCode, color);
+                m_UISettingsControlViewModel.Colors.Add(colorItemModel);
+                if (isActived)
+                    gvColor.SelectedIndex = m_UISettingsControlViewModel.Colors.Count - 1;
+
+                SettingService.SetValue(SettingConstants.UI.THEME_COLOR_MENU, m_UISettingsControlViewModel.Colors);
+                Notify.ShowMessageToast($"已添加：{name} {hexCode}");
+            };
 
             //显示模式
             cbDisplayMode.SelectedIndex = SettingService.GetValue<int>(SettingConstants.UI.DISPLAY_MODE, 0);
@@ -361,6 +413,21 @@ namespace BiliLite.Controls.Settings
             NotificationRegisterExtensions.BackgroundTask("TileFeedBackgroundTask", new TimeTrigger(15, false));
             //NotificationRegisterExtensions.BackgroundTask("TileFeedBackgroundTask",
             //    "BackgroundTasks.TileFeedBackgroundTask", new TimeTrigger(15, false));
+        }
+
+        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement menuFlyoutItem = sender as FrameworkElement;
+            var clickedItem = menuFlyoutItem.DataContext;
+            switch (menuFlyoutItem.Tag as string)
+            {
+                case "delete":
+                    m_UISettingsControlViewModel.Colors.Remove(clickedItem as ColorItemModel);
+                    break;
+            }
+            m_UISettingsControlViewModel.ResetIsActived(gvColor.SelectedIndex);
+
+            SettingService.SetValue(SettingConstants.UI.THEME_COLOR_MENU, m_UISettingsControlViewModel.Colors);
         }
     }
 }

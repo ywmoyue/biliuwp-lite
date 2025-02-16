@@ -16,10 +16,20 @@ namespace BiliLite.Models.Common
             public const string ORTGINAL_IMAGE = "originalImage";
 
             /// <summary>
-            /// 主题颜色
+            /// 主题色彩
             /// </summary>
             [SettingKey(typeof(int))]
             public const string THEME_COLOR = "themeColor";
+
+            /// <summary>
+            /// 主题色彩默认值
+            /// -1 为系统色彩
+            /// </summary>
+            [SettingDefaultValue]
+            public const int DEFAULT_THEME_COLOR = 0;
+
+            [SettingKey(typeof(string))]
+            public const string THEME_COLOR_MENU = "themeColorMenu";
 
             /// <summary>
             /// 主题,0为默认，1为浅色，2为深色

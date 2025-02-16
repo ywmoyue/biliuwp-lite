@@ -42,13 +42,10 @@ namespace BiliLite.Dialogs
 
         private void BtnAddPlaySpeed_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            foreach (PlaySpeedMenuItem item in m_viewModel.PlaySpeedMenuItems)
+            if (m_viewModel.PlaySpeedMenuItems.Any(item => item.Value == m_viewModel.AddPlaySpeedValue))
             {
-                if (item.Value == m_viewModel.AddPlaySpeedValue)
-                {
-                    Notify.ShowMessageToast("已重复添加");
-                    return;
-                }
+                Notify.ShowMessageToast("已重复添加");
+                return;
             }
             if (m_viewModel.AddPlaySpeedValue == 0)
             {
