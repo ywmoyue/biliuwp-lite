@@ -21,7 +21,8 @@
             SelectionMode="None">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="player:PlaySpeedMenuItem">
-                    <Grid>
+                    <Grid HorizontalAlignment="Stretch"
+                          MinWidth="260">
                         <TextBlock
                             MinWidth="{Binding ElementName=DisposableBtnAddPlaySpeed, Path=ActualWidth}"
                             HorizontalAlignment="Left"

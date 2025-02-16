@@ -3,7 +3,7 @@
   <metadata>
     <id>BiliLite-uwp-{arch}</id>
     <version>{version}-beta</version>
-    <title>BiliLite-uwp</title>
+    <title>BiliLite-uwp-{arch}</title>
     <authors>ruamuyan</authors>
     <owners>ruamuyan</owners>
     <projectUrl>https://github.com/ywmoyue/biliuwp-lite</projectUrl>

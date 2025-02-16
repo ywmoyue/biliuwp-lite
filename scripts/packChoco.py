@@ -50,14 +50,15 @@ def download_github_release_asset(tag, github_token, arch, output_dir):
     releases = response.json()
     
     # 根据 tag 查找对应的 release
+    normalized_tag = tag[:-2] if tag.endswith('.0') else tag
     release_item = None
     for release in releases:
-        if release["tag_name"] == tag:
+        if release["tag_name"] == normalized_tag:
             release_item = release
             break
     
     if not release_item:
-        print(f"Release with tag {tag} not found.")
+        print(f"Release with tag {normalized_tag} not found.")
         return False
     
     # 查找匹配的 asset

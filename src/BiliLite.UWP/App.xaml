@@ -16,7 +16,7 @@
                 <ResourceDictionary Source="Styles/Converter.xaml" />
                 <ResourceDictionary Source="Styles/Fonts.xaml" />
                 <ResourceDictionary Source="Themes/Default.xaml" />
-                <ResourceDictionary Source="Themes/Pink.xaml" />
+                <ResourceDictionary Source="Themes/Accent.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <CornerRadius x:Key="ImageCornerRadius">4</CornerRadius>

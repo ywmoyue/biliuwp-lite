@@ -77,7 +77,7 @@ namespace BiliLite.Services
         public static async Task LaunchConverter(string title, List<string> inputFiles, string outFile,
             List<string> subtitle, bool isDash)
         {
-            ApplicationData.Current.LocalSettings.Values["VideoConverterInfo"] = JsonConvert.SerializeObject(new
+            var videoConverterInfo = JsonConvert.SerializeObject(new
             {
                 title = title,
                 inputFiles = inputFiles,
@@ -85,6 +85,8 @@ namespace BiliLite.Services
                 subtitle = subtitle,
                 isDash = isDash
             });
+            logger.Debug("videoConverterInfo: " + videoConverterInfo);
+            ApplicationData.Current.LocalSettings.Values["VideoConverterInfo"] = videoConverterInfo;
             await Windows.ApplicationModel.FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
         }
     }

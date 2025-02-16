@@ -16,10 +16,20 @@ namespace BiliLite.Models.Common
             public const string ORTGINAL_IMAGE = "originalImage";
 
             /// <summary>
-            /// 主题颜色
+            /// 主题色彩
             /// </summary>
             [SettingKey(typeof(int))]
             public const string THEME_COLOR = "themeColor";
+
+            /// <summary>
+            /// 主题色彩默认值
+            /// -1 为系统色彩
+            /// </summary>
+            [SettingDefaultValue]
+            public const int DEFAULT_THEME_COLOR = 0;
+
+            [SettingKey(typeof(string), useSqlDb: true)]
+            public const string THEME_COLOR_MENU = "themeColorMenu";
 
             /// <summary>
             /// 主题,0为默认，1为浅色，2为深色
@@ -970,6 +980,12 @@ namespace BiliLite.Models.Common
 
             [SettingKey(typeof(object), useSqlDb: true)]
             public const string DYNAMIC_FILTER_RULE = "DynamicFilterRule";
+
+            /// <summary>
+            /// 是否过滤推荐页直播
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string FILTER_RECOMMEND_LIVE = "FilterRecommendLive";
         }
 
         public class Roaming

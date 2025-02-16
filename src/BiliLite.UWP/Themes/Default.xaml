@@ -2,27 +2,13 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls">
-    <ResourceDictionary.MergedDictionaries>
-        <muxc:XamlControlsResources>
-            <muxc:XamlControlsResources.MergedDictionaries>
-                <ResourceDictionary>
-                    <SolidColorBrush x:Key="ControlStrongStrokeColorDefaultBrush" Color="{ThemeResource SystemAccentColor}" />
-
-                    <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
-                    <SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected" Color="Transparent" />
-
-                    <SolidColorBrush x:Key="CardStrokeColorDefaultBrush" Color="Transparent" />
-                </ResourceDictionary>
-            </muxc:XamlControlsResources.MergedDictionaries>
-        </muxc:XamlControlsResources>
-    </ResourceDictionary.MergedDictionaries>
     
     <!--在此自定义颜色-->
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">
             <Color x:Key="TextColor">#CC000000</Color>
             <Color x:Key="CardColor">#0F000000</Color>
-            <Color x:Key="HighLightTextColor">#FFFFFFFF</Color>
+            <Color x:Key="HighLightTextColor">#FF000000</Color>
             <Color x:Key="DefaultTextColor">#CC000000</Color>
             <Color x:Key="LinkTextColor">#008ac5</Color>
             <Color x:Key="LowProfileTextColor">#989898</Color>

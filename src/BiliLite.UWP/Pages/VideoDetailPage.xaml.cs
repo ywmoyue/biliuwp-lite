@@ -23,6 +23,8 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Converters;
+using Newtonsoft.Json;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -95,6 +97,7 @@ namespace BiliLite.Pages
         }
         bool flag = false;
         string _id = "";
+
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -107,10 +110,27 @@ namespace BiliLite.Pages
                 }
                 else
                 {
-                    player.IsFullWindow = SettingService.GetValue<bool>(SettingConstants.Player.AUTO_FULL_WINDOW, false);
+                    player.IsFullWindow =
+                        SettingService.GetValue<bool>(SettingConstants.Player.AUTO_FULL_WINDOW, false);
                 }
+
                 pivot.SelectedIndex = SettingService.GetValue<int>(SettingConstants.UI.DETAIL_DISPLAY, 0);
-                if (e.Parameter is VideoPlaylist videoPlaylist)
+                VideoPlaylist videoPlaylist = null;
+                try
+                {
+                    if (e.Parameter is VideoPlaylist) videoPlaylist = e.Parameter as VideoPlaylist;
+                    else
+                    {
+                        videoPlaylist =
+                            JsonConvert.DeserializeObject<VideoPlaylist>(JsonConvert.SerializeObject(e.Parameter));
+                    }
+                }
+                catch
+                {
+                    videoPlaylist = null;
+                }
+
+                if (videoPlaylist != null)
                 {
                     var videoSections = new List<VideoListSection>();
                     videoSections.Add(new VideoListSection()
@@ -129,6 +149,7 @@ namespace BiliLite.Pages
                             Title = videoPlaylistItem.Title,
                             Author = videoPlaylistItem.Author,
                             Cover = videoPlaylistItem.Cover,
+                            Duration = videoPlaylistItem.Duration,
                         });
                     }
 
@@ -157,6 +178,7 @@ namespace BiliLite.Pages
             }
 
         }
+
         private async Task InitializeVideo(string id)
         {
             _id = id;
@@ -283,6 +305,7 @@ namespace BiliLite.Pages
                         Author = item.AuthorDesc,
                         Cover = item.Cover,
                         Id = item.Aid,
+                        Duration = TimeSpan.FromSeconds(item.Duration),
                     };
                     if (item.Aid == m_viewModel.VideoInfo.Aid)
                     {
@@ -292,6 +315,14 @@ namespace BiliLite.Pages
                     videoSection.Items.Add(videoItem);
                 }
                 videoSections.Add(videoSection);
+            }
+
+            var firstSection = videoSections.FirstOrDefault();
+            if (firstSection != null)
+            {
+                firstSection.Description = m_viewModel.VideoInfo.UgcSeason.Intro;
+                firstSection.Info = NumberToStringConvert.Convert(m_viewModel.VideoInfo.UgcSeason.Stat.View, null) +
+                                    "播放";
             }
 
             if (m_videoListView == null)
