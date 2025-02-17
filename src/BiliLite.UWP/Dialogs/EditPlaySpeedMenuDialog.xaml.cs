@@ -57,5 +57,11 @@ namespace BiliLite.Dialogs
             m_viewModel.PlaySpeedMenuItems =
                 new ObservableCollection<PlaySpeedMenuItem>(m_viewModel.PlaySpeedMenuItems.OrderBy(x => x.Value));
         }
+
+        private void BtnBackToDefault_OnClick(object sender, RoutedEventArgs e)
+        {
+            m_viewModel.PlaySpeedMenuItems =
+                new ObservableCollection<PlaySpeedMenuItem>(m_playSpeedMenuService.GetDefaultPlaySpeedMenu());
+        }
     }
 }
