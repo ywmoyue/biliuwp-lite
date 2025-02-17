@@ -23,6 +23,9 @@ if (Test-Path $successFilePath) {
     # 检查错误文件是否存在
     if (Test-Path $errorFilePath) {
         Write-Host "脚本执行失败，错误文件已创建"
+        # 读取错误文件内容并打印
+        $errorContent = Get-Content $errorFilePath
+        Write-Host "错误内容: $errorContent"
         # 可以选择删除错误文件
         Remove-Item $errorFilePath
     } else {
