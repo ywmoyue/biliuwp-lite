@@ -92,14 +92,12 @@
                                     <ColumnDefinition Width="160" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Border CornerRadius="{StaticResource ImageCornerRadius}">
-                                    <Grid>
-                                        <toolkit:ImageEx
-                                            PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                            Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='120h'}"
-                                            Stretch="UniformToFill" />
-                                    </Grid>
-                                </Border>
+                                <Grid>
+                                    <toolkit:ImageEx
+                                        PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
+                                        Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='120h'}"
+                                        Stretch="UniformToFill" />
+                                </Grid>
                                 <Grid Grid.Column="1" Margin="8,0,0,0">
                                     <TextBlock
                                         Margin="0,0,0,4"
@@ -161,6 +159,7 @@
                     DesiredWidth="600"
                     IsItemClickEnabled="True"
                     ItemClick="AdaptiveGridView_ItemClick"
+                    ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                     ItemHeight="100"
                     ItemsSource="{x:Bind Path=Videos, Mode=OneWay}"
                     LoadMoreBottomOffset="0"
@@ -168,15 +167,9 @@
                     OneRowModeEnabled="False"
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
-                    <toolkit:AdaptiveGridView.ItemContainerStyle>
-                        <Style TargetType="GridViewItem">
-                            <Setter Property="Margin" Value="4" />
-                        </Style>
-                    </toolkit:AdaptiveGridView.ItemContainerStyle>
-
                     <toolkit:AdaptiveGridView.ItemTemplate>
                         <DataTemplate x:DataType="model:RegionVideoItemModel">
-                            <Grid Background="#00FFFFFF">
+                            <Grid>
                                 <Grid.ContextFlyout>
                                     <MenuFlyout>
                                         <MenuFlyoutItem
@@ -190,37 +183,36 @@
                                     <ColumnDefinition Width="160" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Border CornerRadius="{StaticResource ImageCornerRadius}">
-                                    <Grid>
-                                        <toolkit:ImageEx
-                                            Width="160"
-                                            Height="120"
-                                            IsCacheEnabled="True"
-                                            PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                            Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='120h'}"
-                                            Stretch="UniformToFill" />
-                                    </Grid>
-                                </Border>
-                                <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                <Grid>
+                                    <toolkit:ImageEx
+                                        Width="160"
+                                        Height="120"
+                                        PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
+                                        Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='120h'}"
+                                        Stretch="UniformToFill" />
+                                </Grid>
+                                <Grid Grid.Column="1" Margin="8,0,0,0">
                                     <TextBlock
                                         Margin="0,0,0,4"
                                         MaxLines="2"
                                         Text="{x:Bind Title}"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />
-                                    <TextBlock
-                                        Margin="0,1"
-                                        FontSize="14"
-                                        Foreground="Gray">
-                                        播放:<Run Text="{x:Bind Path=Play, Converter={StaticResource numberToStringConvert}}" />
-                                        弹幕:<Run Text="{x:Bind Path=Danmaku, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
-                                    <TextBlock
-                                        Margin="0,1"
-                                        FontSize="14"
-                                        Foreground="Gray"><Run Text="{x:Bind Path=Name}" />
-                                        ·<Run Text="{Binding Rname}" /></TextBlock>
+                                    <StackPanel VerticalAlignment="Bottom">
+                                        <TextBlock
+                                            Margin="0,1"
+                                            FontSize="14"
+                                            Foreground="Gray">
+                                            播放:<Run Text="{x:Bind Path=Play, Converter={StaticResource numberToStringConvert}}" />
+                                            弹幕:<Run Text="{x:Bind Path=Danmaku, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
+                                        <TextBlock
+                                            Margin="0,1"
+                                            FontSize="14"
+                                            Foreground="Gray"><Run Text="{x:Bind Path=Name}" />
+                                            ·<Run Text="{Binding Rname}" /></TextBlock>
 
-                                </StackPanel>
+                                    </StackPanel>
+                                </Grid>
                             </Grid>
                         </DataTemplate>
                     </toolkit:AdaptiveGridView.ItemTemplate>
@@ -242,15 +234,15 @@
                     </toolkit:AdaptiveGridView.Footer>
                 </controls:MyAdaptiveGridView>
 
-                <controls:RoundButton
+                <Button
                     Margin="12"
-                    Padding="12"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Command="{x:Bind Path=RefreshCommand}"
+                    Style="{StaticResource AccentCircleButtonStyle}"
                     Visibility="{x:Bind Path=Loading, Mode=OneWay, Converter={StaticResource display}}">
-                    <SymbolIcon Foreground="White" Symbol="Refresh" />
-                </controls:RoundButton>
+                    <SymbolIcon Symbol="Refresh" />
+                </Button>
             </Grid>
         </DataTemplate>
         <local:RegionDataTemplateSelector
