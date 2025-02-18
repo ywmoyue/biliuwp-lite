@@ -5,14 +5,14 @@
     xmlns:control="using:BiliLite.Controls"
     xmlns:convert="using:BiliLite.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dataTemplateSelectors="using:BiliLite.Controls.DataTemplateSelectors"
     xmlns:fa="using:FontAwesome5"
     xmlns:local="using:BiliLite.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="using:BiliLite.Models.Common.Search"
     xmlns:modules="using:BiliLite.Modules"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:dataTemplateSelectors="using:BiliLite.Controls.DataTemplateSelectors"
     xmlns:viewModel="using:BiliLite.ViewModels.Search"
-    xmlns:model="using:BiliLite.Models.Common.Search"
     Background="Transparent"
     SizeChanged="SearchPage_OnSizeChanged"
     mc:Ignorable="d">
@@ -66,6 +66,7 @@
                     DesiredWidth="600"
                     IsItemClickEnabled="True"
                     ItemClick="Search_ItemClick"
+                    ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                     ItemHeight="100"
                     ItemsSource="{x:Bind Path=Videos, Mode=OneWay}"
                     PointerPressed="Search_ItemPressed"
@@ -82,42 +83,39 @@
                                     <toolkit:ImageEx
                                         Width="160"
                                         Height="100"
-                                        IsCacheEnabled="True"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                         Source="{x:Bind Path=pic, Converter={StaticResource imageConvert}, ConverterParameter='160w'}"
                                         Stretch="UniformToFill" />
-                                    <Border
-                                        Margin="4"
-                                        Padding="4,2"
-                                        HorizontalAlignment="Right"
-                                        VerticalAlignment="Bottom"
-                                        Background="#99000000"
-                                        CornerRadius="4">
+                                    <Grid Padding="8" VerticalAlignment="Bottom">
+                                        <Grid.Background>
+                                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                                <GradientStop Offset="0.993" Color="#CC000005" />
+                                                <GradientStop Offset="0" Color="#00000000" />
+                                            </LinearGradientBrush>
+                                        </Grid.Background>
                                         <TextBlock
+                                            HorizontalAlignment="Right"
                                             FontSize="12"
                                             Foreground="White"
                                             Text="{x:Bind DurationShow}" />
-                                    </Border>
+                                    </Grid>
                                 </Grid>
-                                <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                <Grid Grid.Column="1" Margin="8,0,0,0">
                                     <TextBlock
-                                        Margin="0,0,0,4"
                                         MaxLines="2"
                                         Text="{x:Bind title}"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />
-                                    <TextBlock
-                                        Margin="0,4"
-                                        FontSize="14"
-                                        Foreground="Gray">
-                                        UP:<Run Text="{x:Bind Path=author}" /></TextBlock>
-                                    <TextBlock
-                                        Margin="0,4"
-                                        FontSize="14"
-                                        Foreground="Gray">
-                                        播放:<Run Text="{x:Bind Path=play, Converter={StaticResource numberToStringConvert}}" />
-                                        弹幕:<Run Text="{x:Bind Path=video_review, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
-                                </StackPanel>
+                                    <StackPanel VerticalAlignment="Bottom">
+                                        <TextBlock FontSize="14" Foreground="Gray">
+                                            UP:<Run Text="{x:Bind Path=author}" /></TextBlock>
+                                        <TextBlock FontSize="14" Foreground="Gray">
+                                            播放:<Run Text="{x:Bind Path=play, Converter={StaticResource numberToStringConvert}}" />
+                                            弹幕:<Run Text="{x:Bind Path=video_review, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
+                                    </StackPanel>
+                                </Grid>
                             </Grid>
                         </DataTemplate>
                     </toolkit:AdaptiveGridView.ItemTemplate>
@@ -147,16 +145,16 @@
                     Visibility="{x:Bind Path=Nothing, Mode=OneWay}">
                     什么都没有找到呢~
                 </TextBlock>
-                <control:RoundButton
+                <Button
                     Grid.RowSpan="2"
-                    Margin="12"
-                    Padding="12"
+                    Margin="15"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Command="{x:Bind Path=RefreshCommand}"
+                    Style="{StaticResource AccentCircleButtonStyle}"
                     Visibility="{x:Bind Path=Loading, Mode=OneWay, Converter={StaticResource display}}">
-                    <SymbolIcon Foreground="White" Symbol="Refresh" />
-                </control:RoundButton>
+                    <SymbolIcon Symbol="Refresh" />
+                </Button>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="AnimeTpl" x:DataType="viewModel:SearchAnimeViewModel">
@@ -167,6 +165,7 @@
                     DesiredWidth="600"
                     IsItemClickEnabled="True"
                     ItemClick="Search_ItemClick"
+                    ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                     ItemHeight="140"
                     ItemsSource="{x:Bind Path=Animes, Mode=OneWay}"
                     SelectionMode="None"
@@ -182,7 +181,8 @@
                                     <toolkit:ImageEx
                                         Width="105"
                                         Height="140"
-                                        IsCacheEnabled="True"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                         Source="{x:Bind Path=cover, Converter={StaticResource imageConvert}, ConverterParameter='160w'}"
                                         Stretch="UniformToFill" />
@@ -202,35 +202,44 @@
                                             TextWrapping="Wrap" />
                                     </Border>
                                 </Grid>
-                                <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                <Grid Grid.Column="1" Margin="8,0,0,0">
                                     <TextBlock
                                         Margin="0,0,0,4"
                                         MaxLines="2"
                                         Text="{x:Bind title}"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />
-                                    <TextBlock
-                                        Margin="0,0,0,4"
-                                        FontSize="14"
-                                        Foreground="Gray">
-                                        类型：<Run Text="{x:Bind season_type_name}" /></TextBlock>
-                                    <TextBlock
-                                        Margin="0,0,0,4"
-                                        FontSize="14"
-                                        Foreground="Gray">
-                                        地区：<Run Text="{x:Bind areas}" /></TextBlock>
-                                    <TextBlock
-                                        Margin="0,0,0,4"
-                                        FontSize="14"
-                                        Foreground="Gray">
-                                        风格：<Run Text="{x:Bind styles}" /></TextBlock>
-                                    <TextBlock
-                                        Margin="0,0,0,4"
-                                        FontSize="14"
-                                        Foreground="Gray">
-                                        开播时间：<Run Text="{x:Bind Path=pubtime, Converter={StaticResource DatetimeConvert}, ConverterParameter='yyyy-MM-dd'}" /></TextBlock>
-                                    <!--<TextBlock Margin="0" MaxLines="2" FontSize="14" Foreground="Gray" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=desc}"></TextBlock>-->
-                                </StackPanel>
+                                    <StackPanel VerticalAlignment="Bottom">
+                                        <TextBlock
+                                            Margin="0,0,0,4"
+                                            FontSize="14"
+                                            Foreground="Gray">
+                                            类型：<Run Text="{x:Bind season_type_name}" /></TextBlock>
+                                        <TextBlock
+                                            Margin="0,0,0,4"
+                                            FontSize="14"
+                                            Foreground="Gray">
+                                            地区：<Run Text="{x:Bind areas}" /></TextBlock>
+                                        <TextBlock
+                                            Margin="0,0,0,4"
+                                            FontSize="14"
+                                            Foreground="Gray">
+                                            风格：<Run Text="{x:Bind styles}" /></TextBlock>
+                                        <TextBlock
+                                            Margin="0,0,0,4"
+                                            FontSize="14"
+                                            Foreground="Gray">
+                                            开播时间：<Run Text="{x:Bind Path=pubtime, Converter={StaticResource DatetimeConvert}, ConverterParameter='yyyy-MM-dd'}" /></TextBlock>
+                                        <!--<TextBlock
+                                            Margin="0"
+                                            FontSize="14"
+                                            Foreground="Gray"
+                                            MaxLines="2"
+                                            Text="{x:Bind Path=desc}"
+                                            TextTrimming="CharacterEllipsis"
+                                            TextWrapping="Wrap" />-->
+                                    </StackPanel>
+                                </Grid>
                             </Grid>
                         </DataTemplate>
                     </toolkit:AdaptiveGridView.ItemTemplate>
@@ -258,15 +267,15 @@
                     Visibility="{x:Bind Path=Nothing, Mode=OneWay}">
                     什么都没有找到呢~
                 </TextBlock>
-                <control:RoundButton
+                <Button
                     Margin="12"
-                    Padding="12"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Command="{x:Bind Path=RefreshCommand}"
+                    Style="{StaticResource AccentCircleButtonStyle}"
                     Visibility="{x:Bind Path=Loading, Mode=OneWay, Converter={StaticResource display}}">
-                    <SymbolIcon Foreground="White" Symbol="Refresh" />
-                </control:RoundButton>
+                    <SymbolIcon Symbol="Refresh" />
+                </Button>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="UserTpl" x:DataType="viewModel:SearchUserViewModel">
@@ -382,16 +391,16 @@
                     Visibility="{x:Bind Path=Nothing, Mode=OneWay}">
                     什么都没有找到呢~
                 </TextBlock>
-                <control:RoundButton
+                <Button
                     Grid.RowSpan="2"
-                    Margin="12"
-                    Padding="12"
+                    Margin="15"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Command="{x:Bind Path=RefreshCommand}"
+                    Style="{StaticResource AccentCircleButtonStyle}"
                     Visibility="{x:Bind Path=Loading, Mode=OneWay, Converter={StaticResource display}}">
-                    <SymbolIcon Foreground="White" Symbol="Refresh" />
-                </control:RoundButton>
+                    <SymbolIcon Symbol="Refresh" />
+                </Button>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="LiveRoomTpl" x:DataType="viewModel:SearchLiveRoomViewModel">
@@ -407,6 +416,7 @@
                     DesiredWidth="260"
                     IsItemClickEnabled="True"
                     ItemClick="Search_ItemClick"
+                    ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                     ItemHeight="220"
                     ItemsSource="{x:Bind Path=Rooms, Mode=OneWay}"
                     SelectionMode="None"
@@ -421,7 +431,8 @@
                                 </Grid.RowDefinitions>
                                 <Grid>
                                     <toolkit:ImageEx
-                                        IsCacheEnabled="True"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                         Source="{x:Bind Path=user_cover, Converter={StaticResource imageConvert}, ConverterParameter='200h'}"
                                         Stretch="UniformToFill" />
@@ -462,6 +473,7 @@
                                     <TextBlock
                                         Grid.Column="1"
                                         HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
                                         FontSize="12"
                                         Foreground="Gray">
                                         人气:<Run Text="{x:Bind Path=online, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
@@ -469,12 +481,6 @@
                             </Grid>
                         </DataTemplate>
                     </toolkit:AdaptiveGridView.ItemTemplate>
-                    <toolkit:AdaptiveGridView.ItemContainerStyle>
-                        <Style TargetType="GridViewItem">
-                            <Setter Property="Margin" Value="8" />
-
-                        </Style>
-                    </toolkit:AdaptiveGridView.ItemContainerStyle>
                     <toolkit:AdaptiveGridView.Footer>
                         <StackPanel>
                             <HyperlinkButton
@@ -500,16 +506,16 @@
                     Visibility="{x:Bind Path=Nothing, Mode=OneWay}">
                     什么都没有找到呢~
                 </TextBlock>
-                <control:RoundButton
+                <Button
                     Grid.RowSpan="2"
-                    Margin="12"
-                    Padding="12"
+                    Margin="15"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Command="{x:Bind Path=RefreshCommand}"
+                    Style="{StaticResource AccentCircleButtonStyle}"
                     Visibility="{x:Bind Path=Loading, Mode=OneWay, Converter={StaticResource display}}">
-                    <SymbolIcon Foreground="White" Symbol="Refresh" />
-                </control:RoundButton>
+                    <SymbolIcon Symbol="Refresh" />
+                </Button>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="ArticTpl" x:DataType="viewModel:SearchArticleViewModel">
@@ -548,6 +554,7 @@
                     DesiredWidth="600"
                     IsItemClickEnabled="True"
                     ItemClick="Search_ItemClick"
+                    ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                     ItemHeight="100"
                     ItemsSource="{x:Bind Path=Articles, Mode=OneWay}"
                     SelectionMode="None"
@@ -563,33 +570,36 @@
                                     <toolkit:ImageEx
                                         Width="160"
                                         Height="100"
-                                        IsCacheEnabled="True"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                         Source="{x:Bind Path=cover, Converter={StaticResource imageConvert}, ConverterParameter='160w'}"
                                         Stretch="UniformToFill" />
 
                                 </Grid>
-                                <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                <Grid Grid.Column="1" Margin="8,0,0,0">
                                     <TextBlock
                                         Margin="0,0,0,4"
                                         MaxLines="2"
                                         Text="{x:Bind title}"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />
-                                    <TextBlock
-                                        Margin="0,4"
-                                        FontSize="14"
-                                        Foreground="Gray">
-                                        阅读:<Run Text="{x:Bind Path=view, Converter={StaticResource numberToStringConvert}}" />
-                                        评论:<Run Text="{x:Bind Path=reply, Converter={StaticResource numberToStringConvert}}" />
-                                        喜欢:<Run Text="{x:Bind Path=like, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
-                                    <TextBlock
-                                        Margin="0,4"
-                                        FontSize="14"
-                                        Foreground="Gray"
-                                        MaxLines="2">
-                                        分区:<Run Text="{x:Bind Path=category_name}" /></TextBlock>
-                                </StackPanel>
+                                    <StackPanel VerticalAlignment="Bottom">
+                                        <TextBlock
+                                            Margin="0,4"
+                                            FontSize="14"
+                                            Foreground="Gray">
+                                            阅读:<Run Text="{x:Bind Path=view, Converter={StaticResource numberToStringConvert}}" />
+                                            评论:<Run Text="{x:Bind Path=reply, Converter={StaticResource numberToStringConvert}}" />
+                                            喜欢:<Run Text="{x:Bind Path=like, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
+                                        <TextBlock
+                                            Margin="0,4"
+                                            FontSize="14"
+                                            Foreground="Gray"
+                                            MaxLines="2">
+                                            分区:<Run Text="{x:Bind Path=category_name}" /></TextBlock>
+                                    </StackPanel>
+                                </Grid>
                             </Grid>
                         </DataTemplate>
                     </toolkit:AdaptiveGridView.ItemTemplate>
@@ -619,16 +629,16 @@
                     Visibility="{x:Bind Path=Nothing, Mode=OneWay}">
                     什么都没有找到呢~
                 </TextBlock>
-                <control:RoundButton
+                <Button
                     Grid.RowSpan="2"
-                    Margin="12"
-                    Padding="12"
+                    Margin="15"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Command="{x:Bind Path=RefreshCommand}"
+                    Style="{StaticResource AccentCircleButtonStyle}"
                     Visibility="{x:Bind Path=Loading, Mode=OneWay, Converter={StaticResource display}}">
-                    <SymbolIcon Foreground="White" Symbol="Refresh" />
-                </control:RoundButton>
+                    <SymbolIcon Symbol="Refresh" />
+                </Button>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="TopicTpl" x:DataType="viewModel:SearchTopicViewModel">
@@ -644,6 +654,7 @@
                     DesiredWidth="600"
                     IsItemClickEnabled="True"
                     ItemClick="Search_ItemClick"
+                    ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                     ItemHeight="100"
                     ItemsSource="{x:Bind Path=Topics, Mode=OneWay}"
                     SelectionMode="None"
@@ -659,7 +670,8 @@
                                     <toolkit:ImageEx
                                         Width="80"
                                         Height="100"
-                                        IsCacheEnabled="True"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                         Source="{x:Bind Path=cover, Converter={StaticResource imageConvert}, ConverterParameter='160w'}"
                                         Stretch="UniformToFill" />
@@ -715,16 +727,16 @@
                     Visibility="{x:Bind Path=Nothing, Mode=OneWay}">
                     什么都没有找到呢~
                 </TextBlock>
-                <control:RoundButton
+                <Button
                     Grid.RowSpan="2"
                     Margin="12"
-                    Padding="12"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Command="{x:Bind Path=RefreshCommand}"
+                    Style="{StaticResource AccentCircleButtonStyle}"
                     Visibility="{x:Bind Path=Loading, Mode=OneWay, Converter={StaticResource display}}">
-                    <SymbolIcon Foreground="White" Symbol="Refresh" />
-                </control:RoundButton>
+                    <SymbolIcon Symbol="Refresh" />
+                </Button>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="TestTpl">
@@ -743,11 +755,11 @@
     <Grid>
         <Pivot
             x:Name="pivot"
+            Margin="{x:Bind m_viewModel.PivotMargin, Mode=OneWay}"
             ItemTemplateSelector="{StaticResource ResourceKey=tplSelect}"
             ItemsSource="{x:Bind Path=m_viewModel.SearchItems}"
             SelectedIndex="{x:Bind m_viewModel.PivotIndex, Mode=TwoWay}"
             SelectedItem="{x:Bind Path=m_viewModel.SelectItem, Mode=TwoWay}"
-            Margin="{x:Bind m_viewModel.PivotMargin,Mode=OneWay}"
             SelectionChanged="pivot_SelectionChanged"
             UseSystemFocusVisuals="False">
             <Pivot.HeaderTemplate>
@@ -763,12 +775,12 @@
         </Pivot>
         <Grid
             x:Name="SearchBox"
-            Margin="{x:Bind m_viewModel.SearchBoxMargin,Mode=OneWay}"
-            HorizontalAlignment="{x:Bind m_viewModel.SearchBoxHorizontalAlignment,Mode=OneWay}"
+            Margin="{x:Bind m_viewModel.SearchBoxMargin, Mode=OneWay}"
+            HorizontalAlignment="{x:Bind m_viewModel.SearchBoxHorizontalAlignment, Mode=OneWay}"
             VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <AutoSuggestBox
                 x:Name="txtKeyword"
@@ -784,7 +796,7 @@
                 Margin="8,0,0,0"
                 DisplayMemberPath="name"
                 ItemsSource="{x:Bind Path=m_viewModel.Areas}"
-                PlaceholderText="选择地区"
+                PlaceholderText="{x:Bind Path=m_viewModel.Area.name}"
                 SelectedIndex="{x:Bind m_viewModel.ComboIndex, Mode=TwoWay}"
                 SelectedItem="{x:Bind Path=m_viewModel.Area, Mode=TwoWay}"
                 SelectedValuePath="area"
