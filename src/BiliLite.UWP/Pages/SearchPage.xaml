@@ -192,7 +192,7 @@
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Top"
                                         Background="#FFFB9E60"
-                                        CornerRadius="2"
+                                        CornerRadius="{StaticResource ControlCornerRadius}"
                                         Visibility="{x:Bind showBadge}">
                                         <TextBlock
                                             FontSize="12"

@@ -273,9 +273,7 @@
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
-                                        <Border CornerRadius="{StaticResource ImageCornerRadius}">
-                                            <Image Width="80" Source="{Binding Path=Cover}" />
-                                        </Border>
+                                        <Image Width="80" Source="{Binding Path=Cover}" />
 
                                         <StackPanel Grid.Column="1" Margin="8,0,0,0">
                                             <TextBlock
