@@ -295,27 +295,17 @@
                         Icon="Contact"
                         Visibility="{x:Bind Path=m_viewModel.IsLogin, Converter={StaticResource display}, Mode=OneWay}" />
                     <Grid>
+                        <winui:InfoBadge
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Visibility="{x:Bind Path=m_downloadPageViewModel.Downloadings.Count, Mode=OneWay, Converter={StaticResource countDisplayConvert}}"
+                            Value="{x:Bind Path=m_downloadPageViewModel.Downloadings.Count, Mode=OneWay}" />
                         <AppBarButton
                             x:Name="btnDownlaod"
                             Width="48"
                             Height="48"
                             Click="btnDownlaod_Click"
                             Icon="Download" />
-                        <Border
-                            Width="14"
-                            Height="14"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Top"
-                            Background="Red"
-                            CornerRadius="24"
-                            Visibility="{x:Bind Path=m_downloadPageViewModel.Downloadings.Count, Mode=OneWay, Converter={StaticResource countDisplayConvert}}">
-                            <TextBlock
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                FontSize="10"
-                                Foreground="White"
-                                Text="{x:Bind Path=m_downloadPageViewModel.Downloadings.Count, Mode=OneWay}" />
-                        </Border>
                     </Grid>
                     <AppBarButton
                         x:Name="btnSetting"
