@@ -103,7 +103,7 @@
                                 <Button ToolTipService.ToolTip="自定义" Width="42" Height="40" Margin="7 0 0 0" Padding="0">
                                     <SymbolIcon Symbol="Add"/>
                                     <Button.Flyout>
-                                        <Flyout>
+                                        <Flyout Placement="LeftEdgeAlignedBottom">
                                             <StackPanel>
                                                 <Grid VerticalAlignment="Top" Height="40" Background="{Binding Color,ElementName=cpAddColor,Converter={StaticResource colorConvert}}" CornerRadius="{StaticResource ControlCornerRadius}">
                                                     <Grid.ColumnDefinitions>
