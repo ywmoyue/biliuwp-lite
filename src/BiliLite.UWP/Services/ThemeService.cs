@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -99,7 +100,7 @@ namespace BiliLite.Services
             }
             else
             {
-                m_accentColorsResource["SystemAccentColor"] = Colors.Transparent;
+                m_accentColorsResource["SystemAccentColor"] = new UISettings().GetColorValue(UIColorType.Accent);
                 m_accentColorsResource.Remove("SystemAccentColor");
             }
 
