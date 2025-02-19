@@ -19,6 +19,23 @@ namespace BiliLite.Converters
             {
                 try
                 {
+                    if (!string1.Contains("#"))
+                    {
+                        string1 = "#" + string1;
+                    }
+                    switch (string1.Length)
+                    {
+                        case < 7:
+                            string1 = "#00000000";
+                            break;
+                        case 8:
+                            string1 = string1.Remove(string1.Length - 1);
+                            break;
+                        case > 9:
+                            string1 = string1.Substring(0, 9);
+                            break;
+                    }
+
                     color = Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor(string1);
                 }
                 catch (Exception)
