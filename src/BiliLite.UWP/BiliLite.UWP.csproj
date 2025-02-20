@@ -196,6 +196,7 @@
     <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\LiveLineSliderTooltipConverter.cs" />
     <Compile Include="Converters\LiveQualitySliderTooltipConverter.cs" />
+    <Compile Include="Converters\LiveStatusConverter.cs" />
     <Compile Include="Converters\PlaySpeedSliderTooltipConverter.cs" />
     <Compile Include="Converters\QualitySliderTooltipConverter.cs" />
     <Compile Include="Converters\SoundQualitySliderTooltipConverter.cs" />

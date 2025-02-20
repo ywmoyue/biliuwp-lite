@@ -12,6 +12,7 @@
       xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls" 
       xmlns:winui="using:Microsoft.UI.Xaml.Controls" 
       xmlns:fa="using:FontAwesome5"
+      xmlns:converters="using:BiliLite.Converters"
       xmlns:home="using:BiliLite.Models.Common.Home"
       xmlns:live1="using:BiliLite.Models.Common.Live"
       Background="Transparent">
@@ -82,7 +83,7 @@
                                 </ItemsPanelTemplate>
                             </GridView.ItemsPanel>
                             <GridView.ItemTemplate>
-                                <DataTemplate x:DataType="live1:LiveRoomInfoOldModel">
+                                <DataTemplate x:DataType="live1:LiveInfoModel">
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition />
@@ -96,7 +97,7 @@
                                                 </MenuFlyout>
                                             </Border.ContextFlyout>
                                             <Grid>
-                                                <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Height="160" Width="260" Stretch="UniformToFill" Source="{x:Bind Path=Cover,Converter={StaticResource imageConvert},ConverterParameter='460w_260h_1c'}"></toolkit:ImageEx>
+                                                <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Height="160" Width="260" Stretch="UniformToFill" Source="{x:Bind Path=RoomInfo.Cover,Converter={StaticResource imageConvert},ConverterParameter='460w_260h_1c'}"></toolkit:ImageEx>
                                                 <Grid VerticalAlignment="Bottom" Padding="8">
                                                     <Grid.Background>
                                                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -105,18 +106,21 @@
                                                         </LinearGradientBrush>
                                                     </Grid.Background>
                                                     <StackPanel>
-                                                        <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=UserName}"></TextBlock>
+                                                        <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=AnchorInfo.BaseInfo.Uname}"></TextBlock>
                                                     </StackPanel>
                                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                        <TextBlock FontSize="12" Foreground="White" 
+                                                                   Margin="0 0 8 0"
+                                                                   Text="{x:Bind converters:LiveStatusConverter.Convert(RoomInfo.LiveStatus)}"></TextBlock>
                                                         <fa:FontAwesome Icon="Solid_UserFriends" Foreground="White" FontSize="12" Margin="0 0 8 0"></fa:FontAwesome>
-                                                        <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=Online,Converter={StaticResource numberToStringConvert}}"></TextBlock>
+                                                        <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=RoomInfo.Online,Converter={StaticResource numberToStringConvert}}"></TextBlock>
                                                     </StackPanel>
 
                                                 </Grid>
 
                                             </Grid>
                                         </Border>
-                                        <TextBlock Grid.Row="1" Margin="4 4 4 0" MaxLines="1" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=Title}"></TextBlock>
+                                        <TextBlock Grid.Row="1" Margin="4 4 4 0" MaxLines="1" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=RoomInfo.Title}"></TextBlock>
                                     </Grid>
                                 </DataTemplate>
                             </GridView.ItemTemplate>
