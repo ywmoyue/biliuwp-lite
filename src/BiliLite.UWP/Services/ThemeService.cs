@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
-using BiliLite.ViewModels.Settings;
+using BiliLite.Models.Theme;
 using Microsoft.UI.Xaml.Controls;
+using System.Collections.Generic;
 using System.Linq;
 using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using BiliLite.Models.Theme;
 
 namespace BiliLite.Services
 {
@@ -101,7 +100,7 @@ namespace BiliLite.Services
             }
             else
             {
-                m_accentColorsResource["SystemAccentColor"] = Colors.Transparent;
+                m_accentColorsResource["SystemAccentColor"] = new UISettings().GetColorValue(UIColorType.Accent);
                 m_accentColorsResource.Remove("SystemAccentColor");
             }
 
@@ -131,7 +130,7 @@ namespace BiliLite.Services
                 new(false, "咸蛋黄", "#C5963C", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#C5963C")),
                 new(false, "早苗绿", "#5B8F30", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#5B8F30")),
                 new(false, "基佬紫", "#9664DB", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#9664DB")),
-                new(false, "蓝灰色", "#6D8AA6", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#6D8AA6")),
+                new(false, "绅士灰", "#6D8AA6", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#6D8AA6")),
                 new(false, "高能红", "#D63F41", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#D63F41"))
             ];
         }
