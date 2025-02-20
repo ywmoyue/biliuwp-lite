@@ -62,6 +62,18 @@ namespace BiliLite.Models.Common
             public const string DISPLAY_RECOMMEND_BANNER = "DisplayRecommendBanner";
 
             /// <summary>
+            /// 显示直播页横幅
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string DISPLAY_LIVE_BANNER = "DisplayLiveBanner";
+
+            /// <summary>
+            /// 显示直播页推荐直播
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string DISPLAY_LIVE_PAGE_RECOMMEND_LIVE = "DisplayLivePageRecommendLive";
+
+            /// <summary>
             /// 默认显示推荐页横幅
             /// </summary>
             [SettingDefaultValue]

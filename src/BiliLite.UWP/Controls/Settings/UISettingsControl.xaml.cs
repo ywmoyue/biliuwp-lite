@@ -128,6 +128,27 @@ namespace BiliLite.Controls.Settings
                 };
             };
 
+            // 显示直播页横幅
+            SwitchDisplayLiveBanner.IsOn = SettingService.GetValue(SettingConstants.UI.DISPLAY_LIVE_BANNER, true);
+            SwitchDisplayLiveBanner.Loaded += (sender, e) =>
+            {
+                SwitchDisplayLiveBanner.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.DISPLAY_LIVE_BANNER, SwitchDisplayLiveBanner.IsOn);
+
+                };
+            };
+
+            // 显示直播页推荐直播
+            SwitchDisplayLivePageRecommendLive.IsOn = SettingService.GetValue(SettingConstants.UI.DISPLAY_LIVE_PAGE_RECOMMEND_LIVE, true);
+            SwitchDisplayLivePageRecommendLive.Loaded += (sender, e) =>
+            {
+                SwitchDisplayLivePageRecommendLive.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.DISPLAY_LIVE_PAGE_RECOMMEND_LIVE, SwitchDisplayLivePageRecommendLive.IsOn);
+                };
+            };
+
             //右侧详情宽度
             numRightWidth.Value = SettingService.GetValue<double>(SettingConstants.UI.RIGHT_DETAIL_WIDTH, 320);
             numRightWidth.Loaded += new RoutedEventHandler((sender, e) =>

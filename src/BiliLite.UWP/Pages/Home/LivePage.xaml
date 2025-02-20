@@ -21,7 +21,9 @@
         <winui:RefreshContainer RefreshRequested="RefreshContainer_RefreshRequested">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel Padding="16 8">
-                    <controls:Carousel x:Name="control" ItemsSource="{x:Bind Path=m_viewModel.Banners,Mode=OneWay}" MaxItems="1" SlideInterval="5000" AspectRatio="3.2" MaxHeight="240">
+                    <controls:Carousel x:Name="control" ItemsSource="{x:Bind Path=m_viewModel.Banners,Mode=OneWay}" 
+                                       Visibility="{x:Bind m_viewModel.DisplayRecommendBanners,Mode=OneWay}"
+                                       MaxItems="1" SlideInterval="5000" AspectRatio="3.2" MaxHeight="240">
                         <controls:Carousel.ContentTemplate>
                             <DataTemplate>
                                 <HyperlinkButton Margin="4 0" Padding="0" Click="BannerItem_Click">
@@ -194,7 +196,8 @@
                             </GridView.ItemTemplate>
                         </controls:HorizontalGridView>
                     </StackPanel>
-                    <ItemsControl Margin="0 8 0 0" ItemsSource="{x:Bind Path=m_viewModel.Items,Mode=OneWay}">
+                    <ItemsControl Margin="0 8 0 0" ItemsSource="{x:Bind Path=m_viewModel.Items,Mode=OneWay}" 
+                                  Visibility="{x:Bind m_viewModel.DisplayRecommendLives,Mode=OneWay}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <ItemsStackPanel Orientation="Vertical"></ItemsStackPanel>
