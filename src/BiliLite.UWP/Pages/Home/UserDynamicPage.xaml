@@ -228,52 +228,44 @@
                 VerticalAlignment="Bottom"
                 IsActive="True"
                 Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}" />
-            
+
             <StackPanel
                 Margin="20,12"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
                 Orientation="Vertical">
-                <controls:RoundButton
+                <Button
                     x:Name="BtnGrid"
                     Margin="0,0,0,8"
-                    Padding="12"
                     Click="BtnGrid_OnClick"
+                    Style="{StaticResource AccentCircleButtonStyle}"
                     ToolTipService.ToolTip="切换为瀑布流">
-                    <FontIcon
-                        FontFamily="Segoe MDL2 Assets"
-                        Foreground="White"
-                        Glyph="&#xE80A;" />
-                </controls:RoundButton>
-                <controls:RoundButton
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE80A;" />
+                </Button>
+                <Button
                     x:Name="BtnList"
                     Margin="0,0,0,8"
-                    Padding="12"
                     Click="BtnList_OnClick"
+                    Style="{StaticResource AccentCircleButtonStyle}"
                     ToolTipService.ToolTip="切换为列表"
                     Visibility="Collapsed">
-                    <FontIcon
-                        FontFamily="Segoe MDL2 Assets"
-                        Foreground="White"
-                        Glyph="&#xE292;" />
-                </controls:RoundButton>
-                <controls:RoundButton
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE292;" />
+                </Button>
+                <Button
                     x:Name="BtnTop"
                     Margin="0,0,0,8"
-                    Padding="12"
                     Click="BtnTop_OnClick"
+                    Style="{StaticResource AccentCircleButtonStyle}"
                     ToolTipService.ToolTip="返回顶部">
-                    <FontIcon
-                        FontFamily="Segoe MDL2 Assets"
-                        Foreground="White"
-                        Glyph="&#xE110;" />
-                </controls:RoundButton>
-                <controls:RoundButton
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE110;" />
+                </Button>
+                <Button
                     x:Name="BtnRefresh"
-                    Padding="12"
-                    Click="BtnRefreshDynamic_OnClick">
-                    <SymbolIcon Foreground="White" Symbol="Refresh" />
-                </controls:RoundButton>
+                    Margin="0,0,0,8"
+                    Click="BtnRefreshDynamic_OnClick"
+                    Style="{StaticResource AccentCircleButtonStyle}">
+                    <SymbolIcon Symbol="Refresh" />
+                </Button>
             </StackPanel>
         </Grid>
 
