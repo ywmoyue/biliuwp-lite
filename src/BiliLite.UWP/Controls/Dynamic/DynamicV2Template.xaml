@@ -449,7 +449,7 @@
                     CornerRadius="{StaticResource OverlayCornerRadius}">
                     <Grid>
                         <HyperlinkButton
-                            Padding="2"
+                            Padding="5"
                             Command="{Binding Path=ImageInfos[0].ImageCommand, Mode=OneWay}"
                             CommandParameter="{Binding ImageInfos[0]}"
                             CornerRadius="{StaticResource OverlayCornerRadius}">
@@ -490,7 +490,7 @@
                     <GridView.ItemTemplate>
                         <DataTemplate>
                             <HyperlinkButton
-                                Padding="2"
+                                Padding="5"
                                 Command="{Binding Path=ImageCommand, Mode=OneWay}"
                                 CommandParameter="{Binding}"
                                 CornerRadius="{StaticResource OverlayCornerRadius}">
@@ -521,7 +521,7 @@
                     <GridView.ItemTemplate>
                         <DataTemplate>
                             <HyperlinkButton
-                                Padding="2"
+                                Padding="5"
                                 Command="{Binding Path=ImageCommand, Mode=OneWay}"
                                 CommandParameter="{Binding}"
                                 CornerRadius="{StaticResource OverlayCornerRadius}">
