@@ -121,12 +121,11 @@
                             </ListView>
                         </ScrollViewer>
 
-                        <controls:RoundButton Visibility="{x:Bind Path=m_viewModel.ChatContextLoading,Mode=OneWay,Converter={StaticResource display}}"
-                                              VerticalAlignment="Bottom" 
-                                              Click="RefreshContexts_OnClick"
-                                              Padding="12" Margin="12" HorizontalAlignment="Right">
-                            <SymbolIcon Symbol="Refresh" Foreground="White"></SymbolIcon>
-                        </controls:RoundButton>
+                        <Button Visibility="{x:Bind Path=m_viewModel.ChatContextLoading,Mode=OneWay,Converter={StaticResource display}}"
+                                              Style="{StaticResource RoundAccentButtonStyle}"
+                                              Click="RefreshContexts_OnClick">
+                            <SymbolIcon Symbol="Refresh" ></SymbolIcon>
+                        </Button>
                     </Grid>
                     <Grid Grid.Column="1">
                         <Grid.RowDefinitions>
@@ -157,13 +156,12 @@
                         </ListView>
 
                         <!-- 刷新按钮 -->
-                        <controls:RoundButton Grid.Row="1" 
+                        <Button Grid.Row="1" 
                           Visibility="{x:Bind Path=m_viewModel.ChatContextLoading,Mode=OneWay,Converter={StaticResource display}}" 
-                          VerticalAlignment="Bottom" 
-                          Click="RefreshMessages_OnClick"
-                          Padding="12" Margin="12" HorizontalAlignment="Right">
-                            <SymbolIcon Symbol="Refresh" Foreground="White"></SymbolIcon>
-                        </controls:RoundButton>
+                          Style="{StaticResource RoundAccentButtonStyle}"
+                          Click="RefreshMessages_OnClick">
+                            <SymbolIcon Symbol="Refresh" ></SymbolIcon>
+                        </Button>
 
                         <!-- 工具栏和输入框 -->
                         <Grid Grid.Row="2" Margin="0 8 0 0">
@@ -283,12 +281,12 @@
                         </ListView.Footer>
                     </ListView>
 
-                    <controls:RoundButton Visibility="{x:Bind Path=m_viewModel.ReplyMeLoading,Mode=OneWay,Converter={StaticResource display}}"
+                    <Button Visibility="{x:Bind Path=m_viewModel.ReplyMeLoading,Mode=OneWay,Converter={StaticResource display}}"
                                           VerticalAlignment="Bottom" 
                                           Click="RefreshReplyMeMsgs_OnClick"
                                           Padding="12" Margin="12" HorizontalAlignment="Right">
                         <SymbolIcon Symbol="Refresh" Foreground="White"></SymbolIcon>
-                    </controls:RoundButton>
+                    </Button>
                 </Grid>
             </PivotItem>
             <PivotItem Margin="0">

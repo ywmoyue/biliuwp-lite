@@ -460,11 +460,8 @@
                                 </toolkit:AdaptiveGridView.ItemTemplate>
                             </toolkit:AdaptiveGridView>
                             <Button
-                                Margin="12"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Bottom"
                                 Command="{x:Bind Path=m_viewModel.RefreshDownloadedCommand}"
-                                Style="{StaticResource AccentCircleButtonStyle}"
+                                Style="{StaticResource RoundAccentButtonStyle}"
                                 Visibility="{x:Bind Path=m_viewModel.LoadingDownloaded, Mode=OneWay, Converter={StaticResource display}}">
                                 <SymbolIcon Symbol="Refresh" />
                             </Button>

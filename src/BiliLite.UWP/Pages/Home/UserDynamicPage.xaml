@@ -238,7 +238,7 @@
                     x:Name="BtnGrid"
                     Margin="0,0,0,8"
                     Click="BtnGrid_OnClick"
-                    Style="{StaticResource AccentCircleButtonStyle}"
+                    Style="{StaticResource RoundAccentButtonStyle}"
                     ToolTipService.ToolTip="切换为瀑布流">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE80A;" />
                 </Button>
@@ -246,7 +246,7 @@
                     x:Name="BtnList"
                     Margin="0,0,0,8"
                     Click="BtnList_OnClick"
-                    Style="{StaticResource AccentCircleButtonStyle}"
+                    Style="{StaticResource RoundAccentButtonStyle}"
                     ToolTipService.ToolTip="切换为列表"
                     Visibility="Collapsed">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE292;" />
@@ -255,7 +255,7 @@
                     x:Name="BtnTop"
                     Margin="0,0,0,8"
                     Click="BtnTop_OnClick"
-                    Style="{StaticResource AccentCircleButtonStyle}"
+                    Style="{StaticResource RoundAccentButtonStyle}"
                     ToolTipService.ToolTip="返回顶部">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE110;" />
                 </Button>
@@ -263,7 +263,7 @@
                     x:Name="BtnRefresh"
                     Margin="0,0,0,8"
                     Click="BtnRefreshDynamic_OnClick"
-                    Style="{StaticResource AccentCircleButtonStyle}">
+                    Style="{StaticResource RoundAccentButtonStyle}">
                     <SymbolIcon Symbol="Refresh" />
                 </Button>
             </StackPanel>

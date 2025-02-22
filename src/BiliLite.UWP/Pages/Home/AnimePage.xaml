@@ -453,11 +453,8 @@
         </winui:RefreshContainer>
         <Button
             x:Name="btnRefresh"
-            Margin="15"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"
             Click="btnRefresh_Click"
-            Style="{StaticResource AccentCircleButtonStyle}">
+            Style="{StaticResource RoundAccentButtonStyle}">
             <SymbolIcon Symbol="Refresh" />
         </Button>
         <Grid

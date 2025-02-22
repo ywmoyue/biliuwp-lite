@@ -152,11 +152,8 @@
                     </controls:MyAdaptiveGridView.Footer>
                 </controls:MyAdaptiveGridView>
                 <Button
-                    Margin="15"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom"
                     Command="{x:Bind Path=liveAreaDetailVM.RefreshCommand}"
-                    Style="{StaticResource AccentCircleButtonStyle}"
+                    Style="{StaticResource RoundAccentButtonStyle}"
                     Visibility="{x:Bind Path=liveAreaDetailVM.Loading, Mode=OneWay, Converter={StaticResource display}}">
                     <SymbolIcon Symbol="Refresh" />
                 </Button>

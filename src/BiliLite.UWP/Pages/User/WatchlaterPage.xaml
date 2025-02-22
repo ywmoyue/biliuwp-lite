@@ -99,11 +99,8 @@
         </Grid>
         <Button
             Grid.RowSpan="2"
-            Margin="15"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"
             Command="{x:Bind Path=watchLaterVM.RefreshCommand}"
-            Style="{StaticResource AccentCircleButtonStyle}"
+            Style="{StaticResource RoundAccentButtonStyle}"
             Visibility="{x:Bind Path=watchLaterVM.Loading, Mode=OneWay, Converter={StaticResource display}}">
             <SymbolIcon Symbol="Refresh" />
         </Button>

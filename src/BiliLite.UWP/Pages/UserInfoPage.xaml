@@ -320,11 +320,8 @@
                                 <Button
                                     x:Name="btnRefresh"
                                     Grid.Row="1"
-                                    Margin="15"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Bottom"
                                     Command="{x:Bind Path=m_userSubmitVideoViewModel.RefreshSubmitVideoCommand}"
-                                    Style="{StaticResource AccentCircleButtonStyle}">
+                                    Style="{StaticResource RoundAccentButtonStyle}">
                                     <SymbolIcon Symbol="Refresh" />
                                 </Button>
                             </Grid>
@@ -458,12 +455,7 @@
                                     Foreground="Gray"
                                     Text="这里什么都没有呢..."
                                     Visibility="{x:Bind Path=userSubmitArticleVM.Nothing, Mode=OneWay}" />
-                                <Button
-                                    Margin="15"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Bottom"
-                                    Command="{x:Bind Path=userSubmitArticleVM.RefreshSubmitArticleCommand}"
-                                    Style="{StaticResource AccentCircleButtonStyle}">
+                                <Button Command="{x:Bind Path=userSubmitArticleVM.RefreshSubmitArticleCommand}" Style="{StaticResource RoundAccentButtonStyle}">
                                     <SymbolIcon Symbol="Refresh" />
                                 </Button>
                             </Grid>
@@ -506,9 +498,7 @@
                                                             PlaceholderSource="/Assets/Thumbnails/Placeholde.png"
                                                             Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='360w_200h_1c'}"
                                                             Stretch="UniformToFill" />
-                                                        <Grid
-                                                            Padding="8"
-                                                            VerticalAlignment="Bottom">
+                                                        <Grid Padding="8" VerticalAlignment="Bottom">
                                                             <Grid.Background>
                                                                 <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
                                                                     <GradientStop Offset="0.993" Color="#CC000005" />
@@ -593,12 +583,7 @@
                                     Foreground="Gray"
                                     Text="这里什么都没有呢..."
                                     Visibility="{x:Bind Path=m_userSubmitCollectionViewModel.Nothing, Mode=OneWay}" />
-                                <Button
-                                    Margin="12"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Bottom"
-                                    Command="{x:Bind Path=m_userSubmitCollectionViewModel.RefreshSubmitCollectionCommand}"
-                                    Style="{StaticResource AccentCircleButtonStyle}">
+                                <Button Command="{x:Bind Path=m_userSubmitCollectionViewModel.RefreshSubmitCollectionCommand}" Style="{StaticResource RoundAccentButtonStyle}">
                                     <SymbolIcon Symbol="Refresh" />
                                 </Button>
                             </Grid>
@@ -649,12 +634,7 @@
                                     Foreground="Gray"
                                     Text="这里什么都没有呢..."
                                     Visibility="{x:Bind Path=userFavlistVM.Nothing, Mode=OneWay}" />
-                                <Button
-                                    Margin="15"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Bottom"
-                                    Command="{x:Bind Path=userFavlistVM.RefreshCommand}"
-                                    Style="{StaticResource AccentCircleButtonStyle}">
+                                <Button Command="{x:Bind Path=userFavlistVM.RefreshCommand}" Style="{StaticResource RoundAccentButtonStyle}">
                                     <SymbolIcon Symbol="Refresh" />
                                 </Button>
                             </Grid>
@@ -740,11 +720,8 @@
                                     Visibility="{x:Bind Path=followVM.Nothing, Mode=OneWay}" />
                                 <Button
                                     Grid.Row="1"
-                                    Margin="15"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Bottom"
                                     Command="{x:Bind Path=followVM.RefreshCommand}"
-                                    Style="{StaticResource AccentCircleButtonStyle}">
+                                    Style="{StaticResource RoundAccentButtonStyle}">
                                     <SymbolIcon Symbol="Refresh" />
                                 </Button>
                             </Grid>
@@ -793,12 +770,7 @@
                                     Foreground="Gray"
                                     Text="这里什么都没有呢..."
                                     Visibility="{x:Bind Path=fansVM.Nothing, Mode=OneWay}" />
-                                <Button
-                                    Margin="12"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Bottom"
-                                    Command="{x:Bind Path=fansVM.RefreshCommand}"
-                                    Style="{StaticResource AccentCircleButtonStyle}">
+                                <Button Command="{x:Bind Path=fansVM.RefreshCommand}" Style="{StaticResource RoundAccentButtonStyle}">
                                     <SymbolIcon Symbol="Refresh" />
                                 </Button>
                             </Grid>

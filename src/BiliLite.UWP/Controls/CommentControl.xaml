@@ -817,11 +817,8 @@
         <Button
             x:Name="BtnOpenSendComment"
             Grid.Row="1"
-            Margin="16"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"
             Click="BtnOpenSendComment_Click"
-            Style="{StaticResource AccentCircleButtonStyle}">
+            Style="{StaticResource RoundAccentButtonStyle}">
             <SymbolIcon Symbol="Comment" />
         </Button>
     </Grid>

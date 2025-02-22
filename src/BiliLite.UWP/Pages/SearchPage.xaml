@@ -147,11 +147,8 @@
                 </TextBlock>
                 <Button
                     Grid.RowSpan="2"
-                    Margin="15"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom"
                     Command="{x:Bind Path=RefreshCommand}"
-                    Style="{StaticResource AccentCircleButtonStyle}"
+                    Style="{StaticResource RoundAccentButtonStyle}"
                     Visibility="{x:Bind Path=Loading, Mode=OneWay, Converter={StaticResource display}}">
                     <SymbolIcon Symbol="Refresh" />
                 </Button>
@@ -268,11 +265,8 @@
                     什么都没有找到呢~
                 </TextBlock>
                 <Button
-                    Margin="12"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom"
                     Command="{x:Bind Path=RefreshCommand}"
-                    Style="{StaticResource AccentCircleButtonStyle}"
+                    Style="{StaticResource RoundAccentButtonStyle}"
                     Visibility="{x:Bind Path=Loading, Mode=OneWay, Converter={StaticResource display}}">
                     <SymbolIcon Symbol="Refresh" />
                 </Button>
@@ -393,11 +387,8 @@
                 </TextBlock>
                 <Button
                     Grid.RowSpan="2"
-                    Margin="15"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom"
                     Command="{x:Bind Path=RefreshCommand}"
-                    Style="{StaticResource AccentCircleButtonStyle}"
+                    Style="{StaticResource RoundAccentButtonStyle}"
                     Visibility="{x:Bind Path=Loading, Mode=OneWay, Converter={StaticResource display}}">
                     <SymbolIcon Symbol="Refresh" />
                 </Button>
@@ -508,11 +499,8 @@
                 </TextBlock>
                 <Button
                     Grid.RowSpan="2"
-                    Margin="15"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom"
                     Command="{x:Bind Path=RefreshCommand}"
-                    Style="{StaticResource AccentCircleButtonStyle}"
+                    Style="{StaticResource RoundAccentButtonStyle}"
                     Visibility="{x:Bind Path=Loading, Mode=OneWay, Converter={StaticResource display}}">
                     <SymbolIcon Symbol="Refresh" />
                 </Button>
@@ -631,11 +619,8 @@
                 </TextBlock>
                 <Button
                     Grid.RowSpan="2"
-                    Margin="15"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom"
                     Command="{x:Bind Path=RefreshCommand}"
-                    Style="{StaticResource AccentCircleButtonStyle}"
+                    Style="{StaticResource RoundAccentButtonStyle}"
                     Visibility="{x:Bind Path=Loading, Mode=OneWay, Converter={StaticResource display}}">
                     <SymbolIcon Symbol="Refresh" />
                 </Button>
@@ -729,11 +714,8 @@
                 </TextBlock>
                 <Button
                     Grid.RowSpan="2"
-                    Margin="12"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom"
                     Command="{x:Bind Path=RefreshCommand}"
-                    Style="{StaticResource AccentCircleButtonStyle}"
+                    Style="{StaticResource RoundAccentButtonStyle}"
                     Visibility="{x:Bind Path=Loading, Mode=OneWay, Converter={StaticResource display}}">
                     <SymbolIcon Symbol="Refresh" />
                 </Button>

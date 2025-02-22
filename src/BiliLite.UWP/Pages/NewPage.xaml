@@ -127,11 +127,7 @@
             </StackPanel>
         </ScrollViewer>
 
-        <Button
-            Margin="12"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"
-            Style="{StaticResource AccentCircleButtonStyle}">
+        <Button Style="{StaticResource RoundAccentButtonStyle}">
             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE700;" />
             <Button.Flyout>
                 <MenuFlyout>

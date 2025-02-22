@@ -320,27 +320,33 @@
             Orientation="Vertical">
             <Button
                 x:Name="BtnGrid"
+                Margin="0,0,0,8"
                 Click="BtnGrid_Click"
-                Style="{StaticResource AccentCircleButtonStyle}"
+                Style="{StaticResource RoundAccentButtonStyle}"
                 ToolTipService.ToolTip="切换为网格显示"
                 Visibility="Collapsed">
                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE80A;" />
             </Button>
             <Button
                 x:Name="BtnList"
+                Margin="0,0,0,8"
                 Click="BtnList_Click"
-                Style="{StaticResource AccentCircleButtonStyle}"
+                Style="{StaticResource RoundAccentButtonStyle}"
                 ToolTipService.ToolTip="切换为列表显示">
                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE292;" />
             </Button>
             <Button
                 x:Name="BtnTop"
+                Margin="0,0,0,8"
                 Click="BtnTop_Click"
-                Style="{StaticResource AccentCircleButtonStyle}"
+                Style="{StaticResource RoundAccentButtonStyle}"
                 ToolTipService.ToolTip="返回顶部">
                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE110;" />
             </Button>
-            <Button Command="{x:Bind Path=m_viewModel.RefreshCommand}" Style="{StaticResource AccentCircleButtonStyle}">
+            <Button
+                Margin="0,0,0,8"
+                Command="{x:Bind Path=m_viewModel.RefreshCommand}"
+                Style="{StaticResource RoundAccentButtonStyle}">
                 <SymbolIcon Symbol="Refresh" />
             </Button>
         </StackPanel>

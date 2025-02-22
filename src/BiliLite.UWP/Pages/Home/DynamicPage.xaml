@@ -242,11 +242,8 @@
         </winui:RefreshContainer>
         <Button
             x:Name="BtnRefresh"
-            Margin="20"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"
             Command="{x:Bind Path=m_viewModel.RefreshCommand}"
-            Style="{StaticResource AccentCircleButtonStyle}">
+            Style="{StaticResource RoundAccentButtonStyle}">
             <SymbolIcon Symbol="Refresh" />
         </Button>
 

@@ -155,11 +155,8 @@
             </PivotItem>-->
         </Pivot>
         <Button
-            Margin="15"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"
             Command="{x:Bind Path=m_viewModel.RefreshCommand}"
-            Style="{StaticResource AccentCircleButtonStyle}"
+            Style="{StaticResource RoundAccentButtonStyle}"
             Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay, Converter={StaticResource display}}">
             <SymbolIcon Symbol="Refresh" />
         </Button>

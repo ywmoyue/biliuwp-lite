@@ -65,7 +65,7 @@
                             Margin="20,0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
-                            Style="{StaticResource AccentCircleButtonStyle}"
+                            Style="{StaticResource RoundAccentButtonStyle}"
                             Visibility="Collapsed">
                             <FontIcon
                                 FontFamily="Segoe MDL2 Assets"
@@ -77,7 +77,7 @@
                             Margin="20,0"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
-                            Style="{StaticResource AccentCircleButtonStyle}"
+                            Style="{StaticResource RoundAccentButtonStyle}"
                             Visibility="Collapsed">
                             <FontIcon
                                 FontFamily="Segoe MDL2 Assets"

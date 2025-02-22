@@ -36,14 +36,14 @@
                                 x:Name="left"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
-                                Style="{StaticResource AccentCircleButtonStyle}">
+                                Style="{StaticResource RoundAccentButtonStyle}">
                                 <SymbolIcon Symbol="Back" />
                             </Button>
                             <Button
                                 x:Name="right"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center"
-                                Style="{StaticResource AccentCircleButtonStyle}">
+                                Style="{StaticResource RoundAccentButtonStyle}">
                                 <SymbolIcon Symbol="Forward" />
                             </Button>
                         </Grid>

@@ -114,11 +114,8 @@
 
                     <Button
                         x:Name="btnRefresh"
-                        Margin="12"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Bottom"
                         Command="{x:Bind Path=liveAttentionVM.RefreshCommand}"
-                        Style="{StaticResource AccentCircleButtonStyle}">
+                        Style="{StaticResource RoundAccentButtonStyle}">
                         <SymbolIcon Symbol="Refresh" />
                     </Button>
                 </Grid>
@@ -200,12 +197,7 @@
                         Foreground="Gray"
                         Text="这里什么都没有呢..."
                         Visibility="{x:Bind Path=liveAttentionUnLiveVM.Nothing, Mode=OneWay}" />
-                    <Button
-                        Margin="12"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Bottom"
-                        Command="{x:Bind Path=liveAttentionUnLiveVM.RefreshCommand}"
-                        Style="{StaticResource AccentCircleButtonStyle}">
+                    <Button Command="{x:Bind Path=liveAttentionUnLiveVM.RefreshCommand}" Style="{StaticResource RoundAccentButtonStyle}">
                         <SymbolIcon Symbol="Refresh" />
                     </Button>
                 </Grid>
@@ -288,12 +280,7 @@
                         Foreground="Gray"
                         Text="这里什么都没有呢..."
                         Visibility="{x:Bind Path=liveCenterHistoryVM.Nothing, Mode=OneWay}" />
-                    <Button
-                        Margin="12"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Bottom"
-                        Command="{x:Bind Path=liveCenterHistoryVM.RefreshCommand}"
-                        Style="{StaticResource AccentCircleButtonStyle}">
+                    <Button Command="{x:Bind Path=liveCenterHistoryVM.RefreshCommand}" Style="{StaticResource RoundAccentButtonStyle}">
                         <SymbolIcon Symbol="Refresh" />
                     </Button>
                 </Grid>

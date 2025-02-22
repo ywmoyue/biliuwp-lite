@@ -221,7 +221,7 @@
                                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                 ScrollViewer.VerticalScrollMode="Disabled"
                                 SelectionMode="None"
-                                StretchContentForSingleRow="False" />
+                                StretchContentForSingleRow="False">
                                 <toolkit:AdaptiveGridView.Header>
                                     <Grid Margin="12,8,0,0">
                                         <TextBlock FontSize="18" FontWeight="Bold">我的创建</TextBlock>
@@ -284,11 +284,8 @@
                         IsActive="True"
                         Visibility="{x:Bind Path=m_videoViewModel.Loading, Mode=OneWay}" />
                     <Button
-                        Margin="15"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Bottom"
                         Command="{x:Bind Path=m_videoViewModel.RefreshCommand}"
-                        Style="{StaticResource AccentCircleButtonStyle}"
+                        Style="{StaticResource RoundAccentButtonStyle}"
                         Visibility="{x:Bind Path=m_videoViewModel.Loading, Mode=OneWay, Converter={StaticResource display}}">
                         <SymbolIcon Symbol="Refresh" />
                     </Button>
@@ -393,11 +390,8 @@
                         这里还什么都没有呢~
                     </TextBlock>
                     <Button
-                        Margin="15"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Bottom"
                         Command="{x:Bind Path=animeVM.RefreshCommand}"
-                        Style="{StaticResource AccentCircleButtonStyle}"
+                        Style="{StaticResource RoundAccentButtonStyle}"
                         Visibility="{x:Bind Path=animeVM.Loading, Mode=OneWay, Converter={StaticResource display}}">
                         <SymbolIcon Symbol="Refresh" />
                     </Button>
@@ -500,11 +494,8 @@
                         这里还什么都没有呢~
                     </TextBlock>
                     <Button
-                        Margin="15"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Bottom"
                         Command="{x:Bind Path=cinemaVM.RefreshCommand}"
-                        Style="{StaticResource AccentCircleButtonStyle}"
+                        Style="{StaticResource RoundAccentButtonStyle}"
                         Visibility="{x:Bind Path=cinemaVM.Loading, Mode=OneWay, Converter={StaticResource display}}">
                         <SymbolIcon Symbol="Refresh" />
                     </Button>
