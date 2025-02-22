@@ -1,4 +1,5 @@
-﻿using BiliLite.Models.Common;
+﻿using System;
+using BiliLite.Models.Common;
 using BiliLite.Modules.User;
 using BiliLite.Services;
 using System.Collections.Generic;
@@ -46,7 +47,8 @@ namespace BiliLite.Pages.User
                         Cover = item.pic,
                         Author = item.owner.name,
                         Id = item.aid,
-                        Title = item.title
+                        Title = item.title,
+                        Duration = TimeSpan.FromSeconds(item.duration),
                     });
                 }
 

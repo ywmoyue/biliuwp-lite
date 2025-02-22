@@ -10,6 +10,8 @@ public class FavoriteInfoVideoItemModel
 
     public string Title { get; set; }
 
+    public long Duration { get; set; }
+
     public FavoriteInfoVideoItemUpperModel Upper { get; set; }
 
     [JsonProperty("cnt_info")]

@@ -37,7 +37,7 @@ namespace BiliLite.ViewModels.Comment
 
         [DependsOn(nameof(Action))]
         public Brush LikeColor => Action == 0 ? new SolidColorBrush(Colors.Gray) :
-            new SolidColorBrush((Color)App.ServiceProvider.GetRequiredService<ThemeService>().ThemeResource["SystemAccentColor"]);
+            new SolidColorBrush((Color)App.ServiceProvider.GetRequiredService<ThemeService>().AccentThemeResource["SystemAccentColor"]);
 
         public long RpId { get; set; }
 

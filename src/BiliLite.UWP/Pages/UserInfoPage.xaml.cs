@@ -1,4 +1,5 @@
-﻿using BiliLite.Extensions;
+﻿using System;
+using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.User;
 using BiliLite.Models.Common.Video;
@@ -444,14 +445,15 @@ namespace BiliLite.Pages
                 return;
             }
 
-            foreach (var item in mediaList)
+            foreach (var item in mediaList.MediaList)
             {
                 items.Add(new VideoPlaylistItem()
                 {
                     Cover = item.Cover,
                     Author = item.Upper.Name,
                     Id = item.Id.ToString(),
-                    Title = item.Title
+                    Title = item.Title,
+                    Duration = TimeSpan.FromSeconds(item.Duration),
                 });
             }
 
@@ -467,6 +469,7 @@ namespace BiliLite.Pages
                     Title = $"{m_viewModel.UserSpaceInfo.Name}:全部视频",
                     MediaListId = m_userSubmitVideoViewModel.PlayAllMediaListId,
                     IsOnlineMediaList = true,
+                    Info = $"共{mediaList.TotalCount}集"
                 }
             });
         }

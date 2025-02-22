@@ -6,9 +6,6 @@
         <muxc:XamlControlsResources>
             <muxc:XamlControlsResources.MergedDictionaries>
                 <ResourceDictionary>
-                    <!--蓝色主题色-->
-                    <Color x:Key="SystemAccentColor">#0092D0</Color>
-
                     <SolidColorBrush x:Key="ControlStrongStrokeColorDefaultBrush" Color="{ThemeResource SystemAccentColor}" />
                     <SolidColorBrush x:Key="AccentFillColorDefaultBrush" Color="{ThemeResource SystemAccentColor}" />
                     <SolidColorBrush
@@ -41,6 +38,19 @@
 
                     <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
                     <SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected" Color="Transparent" />
+
+                    <ResourceDictionary.ThemeDictionaries>
+                        <ResourceDictionary x:Key="Light">
+                            <StaticResource x:Key="AccentButtonForeground" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                            <StaticResource x:Key="AccentButtonForegroundPointerOver" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                            <StaticResource x:Key="AccentButtonForegroundPressed" ResourceKey="SystemControlForegroundBaseMediumBrush" />
+                        </ResourceDictionary>
+                        <ResourceDictionary x:Key="Dark">
+                            <StaticResource x:Key="AccentButtonForeground" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                            <StaticResource x:Key="AccentButtonForegroundPointerOver" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                            <StaticResource x:Key="AccentButtonForegroundPressed" ResourceKey="SystemControlForegroundBaseMediumBrush" />
+                        </ResourceDictionary>
+                    </ResourceDictionary.ThemeDictionaries>
                 </ResourceDictionary>
             </muxc:XamlControlsResources.MergedDictionaries>
         </muxc:XamlControlsResources>

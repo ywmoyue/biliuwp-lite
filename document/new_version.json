@@ -1,7 +1,7 @@
 {
-  "version": "4.7.13",
-  "version_num": 40713,
-  "version_desc": "更新内容:\r\n\r\n- 完善消息中心页，支持发送消息和查看回复我的消息列表 \r\n\r\n- 新增自动刷新播放地址设置项，默认关闭 \r\n\r\n- 修复直播间弹幕输入框问题 \r\n\r\n- 放映厅索引筛选不显示文字 \r\n\r\n- 修复拖动标签栏隐藏子项的问题\r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.7.16",
+  "version_num": 40716,
+  "version_desc": "更新内容:\r\n\r\n- 实现自定义主题色功能  \r\n\r\n- 可设置推荐页屏蔽直播功能 \r\n\r\n- 播放列表时长、播放量、集数、描述显示 \r\n\r\n- 修复应用标题栏三大功能键显示错误的颜色  \r\n\r\n- 修复自定义倍速界面和快捷键设置界面在Win10中宽度丢失 \r\n\r\n- 修复无音频视频播放失败 \r\n\r\n- 修复带无损音质的视频下载后导出视频失败 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }

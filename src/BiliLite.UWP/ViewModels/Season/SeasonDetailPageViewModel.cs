@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Windows.UI;
-using Windows.UI.Xaml;
-using AutoMapper;
+﻿using AutoMapper;
 using BiliLite.Extensions;
 using BiliLite.Models;
+using BiliLite.Models.Attributes;
 using BiliLite.Models.Common.Season;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests.Api;
@@ -19,8 +13,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Windows.UI;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
-using BiliLite.Models.Attributes;
 
 namespace BiliLite.ViewModels.Season
 {
@@ -129,7 +129,7 @@ namespace BiliLite.ViewModels.Season
             {
                 if (PageWidth < 1000)
                 {
-                    return (Brush)m_themeService.ThemeResource["PlayerControlAcrylicBrush"];
+                    return (Brush)m_themeService.DefaultThemeResource["PlayerControlAcrylicBrush"];
                 }
                 return new SolidColorBrush(Colors.Transparent);
             }

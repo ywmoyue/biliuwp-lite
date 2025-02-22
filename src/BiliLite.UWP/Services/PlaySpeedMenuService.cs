@@ -13,6 +13,7 @@ namespace BiliLite.Services
         public PlaySpeedMenuService()
         {
             MenuItems = SettingService.GetValue(SettingConstants.Player.PLAY_SPEED_MENU, GetDefaultPlaySpeedMenu());
+            MenuItems = MenuItems.OrderBy(x => x.Value).ToList();
         }
 
         public void SetMenuItems(List<PlaySpeedMenuItem> menuItems)
@@ -26,7 +27,7 @@ namespace BiliLite.Services
             return MenuItems.FindIndex(x => x.Value == speed);
         }
 
-        private List<PlaySpeedMenuItem> GetDefaultPlaySpeedMenu()
+        public List<PlaySpeedMenuItem> GetDefaultPlaySpeedMenu()
         {
             return [.. new ObservableCollection<PlaySpeedMenuItem>()
             {

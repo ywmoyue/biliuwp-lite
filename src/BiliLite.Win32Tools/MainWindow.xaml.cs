@@ -30,6 +30,8 @@ namespace BiliLite.Win32Tools
         ConvertFileInfo convertFileInfo;
         string currentDir = "";
         string ffmpegFile = "";
+        private bool debug = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -37,6 +39,16 @@ namespace BiliLite.Win32Tools
 
         private void LoadInfo()
         {
+            var args = Environment.GetCommandLineArgs();
+            var debugParam = args.FirstOrDefault(arg => arg.StartsWith("--debug="));
+            var param = debugParam != null ? debugParam.Substring("--debug=".Length) : "";
+            if (!string.IsNullOrEmpty(param))
+            {
+                convertFileInfo = System.Text.Json.JsonSerializer.Deserialize<ConvertFileInfo>(param);
+                txtName.Text = convertFileInfo.title;
+                debug = true;
+                return;
+            }
             var str = Windows.Storage.ApplicationData.Current.LocalSettings.Values["VideoConverterInfo"] as string;
             convertFileInfo = System.Text.Json.JsonSerializer.Deserialize<ConvertFileInfo>(str);
             txtName.Text = convertFileInfo.title;
@@ -72,7 +84,14 @@ namespace BiliLite.Win32Tools
 
             var zipDir = Assembly.GetExecutingAssembly().Location;
             zipDir = System.IO.Path.GetDirectoryName(zipDir);
-            currentDir = Windows.Storage.ApplicationData.Current.LocalFolder.Path;
+            if (debug)
+            {
+                currentDir = Environment.CurrentDirectory;
+            }
+            else
+            {
+                currentDir = Windows.Storage.ApplicationData.Current.LocalFolder.Path;
+            }
             return await Task.Run<bool>(() =>
             {
                 try
@@ -142,7 +161,8 @@ namespace BiliLite.Win32Tools
                 var info = await FFMpegArguments.FromFileInput(convertFileInfo.inputFiles.FirstOrDefault(x => x.Contains("video.m4s")))
                     .AddFileInput(convertFileInfo.inputFiles.FirstOrDefault(x => x.Contains("audio.m4s")))
                     .OutputToFile(convertFileInfo.outFile, true, options =>
-                        options.WithVideoCodec("copy").WithAudioCodec("copy").WithFastStart()
+                        options.WithVideoCodec("copy").WithAudioCodec("copy")
+                            .WithArgument(new FFMpegCore.Arguments.CustomArgument("-strict -2")).WithFastStart()
                     ).ProcessAsynchronously();
                 progressBar.Visibility = Visibility.Collapsed;
                 txtStatus.Text = "视频导出成功!";
@@ -186,7 +206,8 @@ namespace BiliLite.Win32Tools
                     .AddFileInput(convertFileInfo.inputFiles.FirstOrDefault(x => x.Contains("audio.m4s")))
                     .AddFileInput(convertFileInfo.subtitle.FirstOrDefault())
                     .OutputToFile(convertFileInfo.outFile, true, options =>
-                      options.WithArgument(new FFMpegCore.Arguments.CustomArgument("-c copy -c:s mov_text")).WithFastStart()
+                      options.WithArgument(new FFMpegCore.Arguments.CustomArgument("-c copy -c:s mov_text"))
+                          .WithArgument(new FFMpegCore.Arguments.CustomArgument("-strict -2")).WithFastStart()
                     ).ProcessAsynchronously();
                 progressBar.Visibility = Visibility.Collapsed;
                 txtStatus.Text = "视频导出成功!";

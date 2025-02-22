@@ -211,6 +211,7 @@
                                 CanReorderItems="True"
                                 DesiredWidth="550"
                                 DragItemsCompleted="VideoFavGridView_OnDragItemsCompleted"
+                                DragItemsStarting="VideoFavGridView_DragItemsStarting"
                                 IsItemClickEnabled="True"
                                 ItemClick="VideoFavorite_ItemClick"
                                 ItemContainerStyle="{StaticResource DefaultGridViewItem}"
@@ -220,7 +221,7 @@
                                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                 ScrollViewer.VerticalScrollMode="Disabled"
                                 SelectionMode="None"
-                                StretchContentForSingleRow="False">
+                                StretchContentForSingleRow="False" />
                                 <toolkit:AdaptiveGridView.Header>
                                     <Grid Margin="12,8,0,0">
                                         <TextBlock FontSize="18" FontWeight="Bold">我的创建</TextBlock>

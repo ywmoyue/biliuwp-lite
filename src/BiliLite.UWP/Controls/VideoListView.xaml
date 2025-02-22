@@ -27,7 +27,7 @@
 
     <Grid>
         <ScrollViewer x:Name="VideoListScrollViewer">
-            <ListView 
+            <ListView Loaded="SectionListView_Loaded"
             x:Name="SectionListView"
             SelectionMode="None"
             ItemsSource="{x:Bind m_viewModel.Sections,Mode=OneWay}">
@@ -38,7 +38,21 @@
                         HorizontalContentAlignment="Left"
                         IsExpanded="{x:Bind Selected,Mode=OneWay}">
                             <muxc:Expander.Header>
-                                <TextBlock Text="{x:Bind Title}"></TextBlock>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{x:Bind Title}"></TextBlock>
+                                    <TextBlock Text="{x:Bind InfoStr}" 
+                                               Margin="0 4 0 0"
+                                               Visibility="{x:Bind ShowInfo}" 
+                                               FontSize="12"
+                                               TextWrapping="Wrap"
+                                               Foreground="Gray"></TextBlock>
+                                    <TextBlock Text="{x:Bind Description}" 
+                                               Margin="0 4 0 0"
+                                               Visibility="{x:Bind ShowDescription}"
+                                               FontSize="12"
+                                               TextWrapping="Wrap"
+                                               Foreground="Gray"></TextBlock>
+                                </StackPanel>
                             </muxc:Expander.Header>
                             <muxc:Expander.Content>
                                 <ListView 
@@ -59,11 +73,18 @@
                                                     <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
                                                 <!--此处不能使用ImageEx，否则程序崩溃，原因未知-->
-                                                <Image
-                                                Grid.Column="0" 
-                                                Width="140" 
-                                                Source="{Binding Cover,Converter={StaticResource imageConvert},ConverterParameter='140w'}">
-                                                </Image>
+                                                <Grid>
+                                                    <Image
+                                                        Grid.Column="0" 
+                                                        Width="140" 
+                                                        Source="{Binding Cover,Converter={StaticResource imageConvert},ConverterParameter='140w'}">
+                                                    </Image>
+                                                    <TextBlock HorizontalAlignment="Left" 
+                                                               VerticalAlignment="Bottom" 
+                                                               FontSize="12"  Foreground="White" 
+                                                               Visibility="{x:Bind Duration,Converter={StaticResource display}}" Text="{x:Bind DurationStr}">
+                                                    </TextBlock>
+                                                </Grid>
 
                                                 <StackPanel Grid.Column="1" Margin="8 0 0 0">
                                                     <TextBlock TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind Title}"></TextBlock>

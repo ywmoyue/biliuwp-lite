@@ -32,6 +32,7 @@ namespace BiliLite.Controls.Settings
             m_viewModel = App.ServiceProvider.GetRequiredService<ShortcutKeySettingsControlViewModel>();
             m_viewModel.ShortcutFunctions = m_mapper.Map<ObservableCollection<ShortcutFunctionViewModel>>(m_shortcutKeyService.ShortcutFunctions);
             m_viewModel.PressActionDelayTime = m_shortcutKeyService.PressActionDelayTime;
+            DataContext = m_viewModel;
             InitializeComponent();
 
             m_shortcutKeyService.OnRecordKeyDown += ShortcutKeyService_OnRecordKeyDown;
@@ -148,6 +149,11 @@ namespace BiliLite.Controls.Settings
             m_viewModel.ShortcutFunctions.Add(m_viewModel.AddShortcutFunctionModel);
             var shortcutFunction = m_mapper.Map<ShortcutFunctionModel>(m_viewModel.AddShortcutFunctionModel);
             m_shortcutKeyService.AddShortcutFunction(shortcutFunction);
+        }
+
+        private void ShortcutKeySettingPanel_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            m_viewModel.ControlWidth = e.NewSize.Width;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Atelier39;
+using BiliLite.Converters;
 using BiliLite.Dialogs;
 using BiliLite.Extensions;
 using BiliLite.Models.Common;
@@ -23,9 +24,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Timers;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Timers;
 using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.Graphics.Imaging;
@@ -44,7 +45,6 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using BiliLite.Converters;
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
 namespace BiliLite.Controls
@@ -64,6 +64,8 @@ namespace BiliLite.Controls
         private DateTime m_startTime = DateTime.Now;
         public event PropertyChangedEventHandler PropertyChanged;
         private GestureRecognizer gestureRecognizer;
+        private bool m_firstMediaOpened;
+
         private void DoPropertyChanged(string name)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -1417,6 +1419,10 @@ namespace BiliLite.Controls
 
         private void InitSoundQuality()
         {
+            if (playUrlInfo.AudioQualites == null || !playUrlInfo.AudioQualites.Any())
+            {
+                return;
+            }
             MinSoundQuality.Text = playUrlInfo.AudioQualites[0].QualityName;
             MaxSoundQuality.Text = playUrlInfo.AudioQualites[playUrlInfo.AudioQualites.Count - 1].QualityName;
 
@@ -1432,6 +1438,7 @@ namespace BiliLite.Controls
 
         private async void SliderSoundQuality_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
+            if (!m_firstMediaOpened) return;
             _postion = Player.Position;
             _autoPlay = Player.PlayState == PlayState.Playing;
 
@@ -1458,6 +1465,7 @@ namespace BiliLite.Controls
 
         private async void SliderQuality_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
+            if (!m_firstMediaOpened) return;
             _postion = Player.Position;
             _autoPlay = Player.PlayState == PlayState.Playing;
 
@@ -2670,6 +2678,7 @@ namespace BiliLite.Controls
             {
                 await Play();
             }
+            m_firstMediaOpened = true;
             m_autoRefreshTimer?.Start();
         }
 
@@ -3118,5 +3127,11 @@ namespace BiliLite.Controls
             if (!(element.DataContext is PlayerInfoViewPoint viewPoint)) return;
             SetPosition(viewPoint.From);
         }
+
+        private void EpisodeList_Loaded(object sender, RoutedEventArgs e) => ScrollToItem();
+
+        private void SplitView_PaneOpening(SplitView sender, object args) => ScrollToItem();
+
+        private void ScrollToItem() => EpisodeList.ScrollIntoView(EpisodeList.SelectedItem);
     }
 }
