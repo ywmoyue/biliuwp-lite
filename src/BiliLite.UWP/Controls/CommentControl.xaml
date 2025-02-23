@@ -445,6 +445,7 @@
                     Margin="0,4"
                     Padding="8"
                     Background="#19AAAAAA"
+                    CornerRadius="{StaticResource ControlCornerRadius}"
                     Visibility="{x:Bind Path=ShowReplies, Mode=OneWay}">
 
                     <StackPanel Margin="0,0,0,4" Visibility="{x:Bind Path=ShowReplyBox, Mode=OneWay}">
@@ -475,12 +476,11 @@
                                 </Button>
                                 <Button
                                     x:Name="BtnFace"
-                                    Margin="4,0"
                                     Padding="4"
-                                    Background="{ThemeResource SystemAccentColor}"
                                     Click="BtnFace_Click"
                                     FontSize="12"
-                                    Foreground="White">
+                                    Foreground="White"
+                                    Style="{StaticResource AccentButtonStyle}">
                                     <StackPanel Orientation="Horizontal">
                                         <FontIcon
                                             FontFamily="Segoe MDL2 Assets"
@@ -497,10 +497,10 @@
                                 Width="64"
                                 Padding="4"
                                 HorizontalAlignment="Right"
-                                Background="{ThemeResource SystemAccentColor}"
                                 Click="BtnSendReply_Click"
                                 FontSize="12"
-                                Foreground="White">
+                                Foreground="White"
+                                Style="{StaticResource AccentButtonStyle}">
                                 回复
                             </Button>
                         </Grid>
@@ -531,6 +531,7 @@
                                         </StackPanel>
                                     </HyperlinkButton>
                                     <TextBlock
+                                        Margin="12,0,0,0"
                                         VerticalAlignment="Center"
                                         FontSize="12"
                                         Foreground="Gray"
@@ -540,11 +541,12 @@
                                         <Run Text="{Binding Path=ReplyControl.Location}" />
                                     </TextBlock>
                                     <!--<TextBlock
+                                        Margin="30,8,0,0"
                                         IsTextSelectionEnabled="True"
                                         Text="{Binding Path=content.message}"
                                         TextWrapping="Wrap" />-->
                                     <ContentControl
-                                        Margin="0,8,0,0"
+                                        Margin="20,8,0,0"
                                         Content="{Binding Path=CommentText, Mode=OneWay}"
                                         Visibility="Visible" />
 
@@ -660,7 +662,7 @@
 
                     </ListView>
                     <muxc:ProgressBar IsIndeterminate="True" Visibility="{x:Bind Path=ShowLoading, Mode=OneWay}" />
-                    <StackPanel HorizontalAlignment="Center">
+                    <StackPanel Margin="0,10,0,0" HorizontalAlignment="Center">
 
                         <HyperlinkButton
                             HorizontalAlignment="Center"
