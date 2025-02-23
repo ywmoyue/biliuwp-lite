@@ -1,12 +1,13 @@
-﻿using BiliLite.Models;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
+using BiliLite.Models;
+using BiliLite.Models.Common;
 using BiliLite.Models.Requests.Api.Live;
+using BiliLite.Services;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
-using BiliLite.Extensions;
-using BiliLite.Models.Common;
-using BiliLite.Services;
 
 namespace BiliLite.Modules.Live.LiveCenter
 {
@@ -46,27 +47,27 @@ namespace BiliLite.Modules.Live.LiveCenter
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                     }
 
                 }
                 else
                 {
-                    Notify.ShowMessageToast(result.message);
+                    NotificationShowExtensions.ShowMessageToast(result.message);
                 }
             }
             catch (Exception ex)
             {
                 logger.Log("读取签到信息失败", LogType.Error, ex);
-                Notify.ShowMessageToast("读取签到信息失败");
+                NotificationShowExtensions.ShowMessageToast("读取签到信息失败");
             }
         }
 
         public async void DoSign()
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录后再操作");
+                NotificationShowExtensions.ShowMessageToast("请先登录后再操作");
                 return;
             }
 
@@ -79,22 +80,22 @@ namespace BiliLite.Modules.Live.LiveCenter
                     if (data.success)
                     {
                         SignInfo.is_signed = true;
-                        Notify.ShowMessageToast(data.data["text"].ToString());
+                        NotificationShowExtensions.ShowMessageToast(data.data["text"].ToString());
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<object>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
 
 

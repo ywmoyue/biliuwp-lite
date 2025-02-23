@@ -1,4 +1,8 @@
-﻿using BiliLite.Models.Requests.Api.Live;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
+using BiliLite.Models.Common;
+using BiliLite.Models.Requests.Api.Live;
+using BiliLite.Services;
 using Microsoft.Toolkit.Collections;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -9,9 +13,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.UI.Xaml.Media.Imaging;
-using BiliLite.Extensions;
-using BiliLite.Models.Common;
-using BiliLite.Services;
 
 namespace BiliLite.Modules.Live
 {
@@ -104,19 +105,19 @@ namespace BiliLite.Modules.Live
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data["message"].ToString());
+                        NotificationShowExtensions.ShowMessageToast(data["message"].ToString());
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
 
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<LiveRecommendVM>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {
@@ -174,20 +175,20 @@ namespace BiliLite.Modules.Live
                     }
                     else
                     {
-                        Notify.ShowMessageToast(obj.message);
+                        NotificationShowExtensions.ShowMessageToast(obj.message);
                         return new List<LiveRecommendItemModel>();
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(result.message);
+                    NotificationShowExtensions.ShowMessageToast(result.message);
                     return new List<LiveRecommendItemModel>();
                 }
             }
             catch (Exception ex)
             {
                 logger.Log("加载直播推荐信息失败", LogType.Error, ex);
-                Notify.ShowMessageToast("加载直播推荐信息失败");
+                NotificationShowExtensions.ShowMessageToast("加载直播推荐信息失败");
                 return new List<LiveRecommendItemModel>();
             }
         }

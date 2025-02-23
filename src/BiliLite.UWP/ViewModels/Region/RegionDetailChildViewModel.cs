@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Common.Home;
 using BiliLite.Models.Common.Region;
@@ -13,6 +9,11 @@ using BiliLite.ViewModels.Common;
 using BiliLite.ViewModels.Rank;
 using Newtonsoft.Json;
 using PropertyChanged;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace BiliLite.ViewModels.Region
 {
@@ -150,19 +151,19 @@ namespace BiliLite.ViewModels.Region
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data["message"].ToString());
+                        NotificationShowExtensions.ShowMessageToast(data["message"].ToString());
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
 
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<ApiDataModel<List<RankRegionViewModel>>>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {
@@ -198,19 +199,19 @@ namespace BiliLite.ViewModels.Region
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data["message"].ToString());
+                        NotificationShowExtensions.ShowMessageToast(data["message"].ToString());
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
 
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<ApiDataModel<List<RankRegionViewModel>>>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {

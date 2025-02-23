@@ -1,27 +1,27 @@
-﻿using System;
+﻿using AutoMapper;
+using Bilibili.App.Dynamic.V2;
+using BiliLite.Dialogs;
+using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
+using BiliLite.Models;
+using BiliLite.Models.Common;
+using BiliLite.Models.Common.UserDynamic;
+using BiliLite.Models.Exceptions;
+using BiliLite.Models.Requests.Api.User;
+using BiliLite.Modules;
+using BiliLite.Modules.User;
+using BiliLite.Pages;
+using BiliLite.Pages.User;
+using BiliLite.Services;
+using BiliLite.ViewModels.Common;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.UI.Xaml.Controls;
-using AutoMapper;
-using Bilibili.App.Dynamic.V2;
-using BiliLite.Extensions;
-using BiliLite.Models.Common;
-using BiliLite.Models.Exceptions;
-using BiliLite.Modules;
-using BiliLite.Pages;
-using BiliLite.Services;
-using BiliLite.ViewModels.Common;
-using BiliLite.Models.Common.UserDynamic;
-using BiliLite.Pages.User;
-using BiliLite.Models;
-using BiliLite.Models.Requests.Api.User;
-using BiliLite.Dialogs;
-using BiliLite.Modules.User;
-using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 
 namespace BiliLite.ViewModels.UserDynamic
 {
@@ -221,13 +221,13 @@ namespace BiliLite.ViewModels.UserDynamic
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<object>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
         }
 
@@ -246,7 +246,7 @@ namespace BiliLite.ViewModels.UserDynamic
         private void CopyDyn(DynamicV2ItemViewModel data)
         {
             var dataStr = data.SourceJson;
-            Notify.ShowMessageToast(dataStr.SetClipboard() ? "已复制" : "复制失败");
+            NotificationShowExtensions.ShowMessageToast(dataStr.SetClipboard() ? "已复制" : "复制失败");
         }
 
         #endregion
@@ -283,13 +283,13 @@ namespace BiliLite.ViewModels.UserDynamic
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<UserDynamicViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {

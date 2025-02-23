@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Requests.Api;
 using BiliLite.ViewModels.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BiliLite.ViewModels
 {
@@ -40,19 +41,19 @@ namespace BiliLite.ViewModels
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
 
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<EmoteViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {

@@ -1,16 +1,17 @@
 ﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Modules.User;
 using BiliLite.Services;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.Web.WebView2.Core;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.Web.WebView2.Core;
-using Windows.Storage;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 
@@ -123,7 +124,7 @@ namespace BiliLite.Dialogs
                 {
                     //验证失败
                     webView.Visibility = Visibility.Collapsed;
-                    Notify.ShowMessageToast("验证失败");
+                    NotificationShowExtensions.ShowMessageToast("验证失败");
                 }
                 else if (success == 1)
                 {
@@ -167,7 +168,7 @@ namespace BiliLite.Dialogs
                 }
                 else
                 {
-                    Notify.ShowMessageToast("登录失败，请重试");
+                    NotificationShowExtensions.ShowMessageToast("登录失败，请重试");
                 }
                 return;
             }

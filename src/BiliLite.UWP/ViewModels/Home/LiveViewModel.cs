@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Attributes;
 using BiliLite.Models.Common.Home;
@@ -13,6 +9,11 @@ using BiliLite.Modules.Live.LiveCenter;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BiliLite.ViewModels.Home
 {
@@ -87,13 +88,13 @@ namespace BiliLite.ViewModels.Home
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<LiveViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {
@@ -117,13 +118,13 @@ namespace BiliLite.ViewModels.Home
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<LiveViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {

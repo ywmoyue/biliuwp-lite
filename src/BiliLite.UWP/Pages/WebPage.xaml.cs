@@ -1,7 +1,8 @@
 ﻿using BiliLite.Controls;
-using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Services;
+using BiliLite.ViewModels.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
@@ -13,7 +14,6 @@ using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.ViewModels.Common;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -179,14 +179,14 @@ namespace BiliLite.Pages
                 var re = await MessageCenter.HandelUrl(args.Uri.AbsoluteUri);
                 if (!re)
                 {
-                    Notify.ShowMessageToast("不支持打开的链接" + args.Uri.AbsoluteUri);
+                    NotificationShowExtensions.ShowMessageToast("不支持打开的链接" + args.Uri.AbsoluteUri);
                 }
             }
         }
 
         private void btnInfo_Click(object sender, RoutedEventArgs e)
         {
-            Notify.ShowMessageToast("虽然看起来像个浏览器，但这完全这不是个浏览器啊！ ╰（‵□′）╯");
+            NotificationShowExtensions.ShowMessageToast("虽然看起来像个浏览器，但这完全这不是个浏览器啊！ ╰（‵□′）╯");
         }
 
         private void WebView_OnNavigationStarting(WebView2 sender, CoreWebView2NavigationStartingEventArgs args)

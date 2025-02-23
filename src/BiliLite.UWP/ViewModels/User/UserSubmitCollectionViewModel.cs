@@ -1,5 +1,5 @@
-﻿using AutoMapper;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common.User;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests.Api.User;
@@ -128,13 +128,13 @@ namespace BiliLite.ViewModels.User
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error("获取用户合集失败", ex);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<UserSubmitCollectionViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
                 _logger.Error("获取用户合集失败", ex);
             }
             finally

@@ -1,4 +1,5 @@
 ﻿using BiliLite.Dialogs;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Player;
 using BiliLite.Services;
@@ -350,7 +351,7 @@ namespace BiliLite.Controls.Settings
         private async void BtnEditPlaySpeedMenu_OnClick(object sender, RoutedEventArgs e)
         {
             var dialog = App.ServiceProvider.GetRequiredService<EditPlaySpeedMenuDialog>();
-            await dialog.ShowAsync();
+            await NotificationShowExtensions.ShowContentDialog(dialog);
         }
 
         private void RoamingSettingTestCDN_Click(object sender, RoutedEventArgs e)

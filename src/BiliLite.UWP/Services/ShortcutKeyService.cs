@@ -1,15 +1,15 @@
-﻿using System;
+﻿using AutoMapper;
+using BiliLite.Extensions.Notifications;
+using BiliLite.Models.Common;
 using BiliLite.Models.Functions;
+using BiliLite.Pages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
-using AutoMapper;
-using BiliLite.Extensions;
-using BiliLite.Models.Common;
-using BiliLite.Pages;
 
 namespace BiliLite.Services
 {
@@ -58,15 +58,15 @@ namespace BiliLite.Services
 
         public void StartRecord()
         {
-            Notify.ShowMessageToast("按键录制开始，在录制结束前请勿离开当前页面");
+            NotificationShowExtensions.ShowMessageToast("按键录制开始，在录制结束前请勿离开当前页面");
             m_recording = true;
         }
 
         public void StopRecord()
         {
-            Notify.ShowMessageToast("按键录制结束");
+            NotificationShowExtensions.ShowMessageToast("按键录制结束");
             m_recording = false;
-            OnRecordStoped?.Invoke(this,EventArgs.Empty);
+            OnRecordStoped?.Invoke(this, EventArgs.Empty);
         }
 
         public async void HandleKeyDown(VirtualKey virtualKey)
@@ -118,7 +118,8 @@ namespace BiliLite.Services
                             {
                                 // m_releaseMapsCache.Remove(shortcutKeyFunction);
                             }
-                        };
+                        }
+                        ;
                     }
                 }
                 else
@@ -195,7 +196,7 @@ namespace BiliLite.Services
 
         public void ExecuteAction(string name)
         {
-            var function = DefaultShortcuts.GetDefaultShortcutFunctions().FirstOrDefault(x => x.TypeName==name);
+            var function = DefaultShortcuts.GetDefaultShortcutFunctions().FirstOrDefault(x => x.TypeName == name);
             function?.Action(m_mainPage.CurrentPage);
         }
 

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Attributes;
 using BiliLite.Models.Common;
@@ -12,6 +9,10 @@ using BiliLite.Models.Requests.Api.Home;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using PropertyChanged;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BiliLite.ViewModels.Season
 {
@@ -88,13 +89,13 @@ namespace BiliLite.ViewModels.Season
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<AnimeTimelineViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {

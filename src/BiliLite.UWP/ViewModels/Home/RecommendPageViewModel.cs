@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Recommend;
 using BiliLite.Models.Common.Settings;
@@ -16,6 +11,12 @@ using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using Newtonsoft.Json;
 using PropertyChanged;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace BiliLite.ViewModels.Home
 {
@@ -98,7 +99,7 @@ namespace BiliLite.ViewModels.Home
             catch (Exception ex)
             {
                 _logger.Error(ex.Message, ex);
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
             }
         }
 
@@ -214,11 +215,11 @@ namespace BiliLite.ViewModels.Home
                 if (ex is CustomizedErrorException)
                 {
                     _logger.Error(ex.Message, ex);
-                    Notify.ShowMessageToast(ex.Message);
+                    NotificationShowExtensions.ShowMessageToast(ex.Message);
                     return;
                 }
                 var handel = HandelError<RecommendPageViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {
@@ -230,7 +231,7 @@ namespace BiliLite.ViewModels.Home
         {
             if (Loading)
             {
-                Notify.ShowMessageToast("正在加载中....");
+                NotificationShowExtensions.ShowMessageToast("正在加载中....");
                 return;
             }
             // Banner = null;
@@ -242,9 +243,9 @@ namespace BiliLite.ViewModels.Home
         {
             try
             {
-                if (!SettingService.Account.Logined && await Notify.ShowLoginDialog())
+                if (!SettingService.Account.Logined && await NotificationShowExtensions.ShowLoginDialog())
                 {
-                    Notify.ShowMessageToast("请先登录");
+                    NotificationShowExtensions.ShowMessageToast("请先登录");
                     return;
                 }
                 var recommendItem = Items.FirstOrDefault(x => x.Idx == idx);
@@ -280,11 +281,11 @@ namespace BiliLite.ViewModels.Home
                 if (ex is CustomizedErrorException)
                 {
                     _logger.Error(ex.Message, ex);
-                    Notify.ShowMessageToast(ex.Message);
+                    NotificationShowExtensions.ShowMessageToast(ex.Message);
                     return;
                 }
                 var handel = HandelError<RecommendPageViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
         }
 

@@ -1,5 +1,4 @@
-﻿using BiliLite.Extensions;
-using BiliLite.Extensions.Notifications;
+﻿using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Home;
 using BiliLite.Models.Theme;
@@ -81,7 +80,7 @@ namespace BiliLite.Controls.Settings
             {
                 if (m_UISettingsControlViewModel.Colors.Any(item => item.Color == cpAddColor.Color))
                 {
-                    Notify.ShowMessageToast("已重复添加");
+                    NotificationShowExtensions.ShowMessageToast("已重复添加");
                     return;
                 }
 
@@ -95,7 +94,7 @@ namespace BiliLite.Controls.Settings
                     gvColor.SelectedIndex = m_UISettingsControlViewModel.Colors.Count - 1;
 
                 m_settingSqlService.SetValue(SettingConstants.UI.THEME_COLOR_MENU, m_UISettingsControlViewModel.Colors);
-                Notify.ShowMessageToast($"已添加：{name} {hexCode}");
+                NotificationShowExtensions.ShowMessageToast($"已添加：{name} {hexCode}");
             };
 
             //显示模式
@@ -107,11 +106,11 @@ namespace BiliLite.Controls.Settings
                     SettingService.SetValue(SettingConstants.UI.DISPLAY_MODE, cbDisplayMode.SelectedIndex);
                     if (cbDisplayMode.SelectedIndex == 2)
                     {
-                        Notify.ShowMessageToast("多窗口模式正在开发测试阶段，可能会有一堆问题");
+                        NotificationShowExtensions.ShowMessageToast("多窗口模式正在开发测试阶段，可能会有一堆问题");
                     }
                     else
                     {
-                        Notify.ShowMessageToast("重启生效");
+                        NotificationShowExtensions.ShowMessageToast("重启生效");
                     }
 
                 });
@@ -384,7 +383,7 @@ namespace BiliLite.Controls.Settings
         {
             if (!(gridHomeCustom.ItemsSource is ObservableCollection<HomeNavItem> navItems)) return;
             SettingService.SetValue(SettingConstants.UI.HOEM_ORDER, navItems.ToList());
-            Notify.ShowMessageToast("更改成功,重启生效");
+            NotificationShowExtensions.ShowMessageToast("更改成功,重启生效");
         }
 
         private void gridHomeNavItem_ItemClick(object sender, ItemClickEventArgs e)
@@ -394,7 +393,7 @@ namespace BiliLite.Controls.Settings
             navItems.Add(item);
             SettingService.SetValue(SettingConstants.UI.HOEM_ORDER, navItems.ToList());
             ExceptHomeNavItems();
-            Notify.ShowMessageToast("更改成功,重启生效");
+            NotificationShowExtensions.ShowMessageToast("更改成功,重启生效");
         }
 
         private void menuRemoveHomeItem_Click(object sender, RoutedEventArgs e)
@@ -402,13 +401,13 @@ namespace BiliLite.Controls.Settings
             var item = (sender as MenuFlyoutItem).DataContext as HomeNavItem;
             if (gridHomeCustom.Items.Count == 1)
             {
-                Notify.ShowMessageToast("至少要留一个页面");
+                NotificationShowExtensions.ShowMessageToast("至少要留一个页面");
                 return;
             }
             (gridHomeCustom.ItemsSource as ObservableCollection<HomeNavItem>).Remove(item);
             SettingService.SetValue(SettingConstants.UI.HOEM_ORDER, gridHomeCustom.ItemsSource as ObservableCollection<HomeNavItem>);
             ExceptHomeNavItems();
-            Notify.ShowMessageToast("更改成功,重启生效");
+            NotificationShowExtensions.ShowMessageToast("更改成功,重启生效");
         }
 
         private void RegisterBackgroundTask()

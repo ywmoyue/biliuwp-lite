@@ -1,4 +1,5 @@
-﻿using BiliLite.Models;
+﻿using BiliLite.Extensions.Notifications;
+using BiliLite.Models;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Season;
 using BiliLite.Models.Exceptions;
@@ -92,8 +93,8 @@ namespace BiliLite.Extensions
 
         public static async Task<bool> ActionCheckLogin()
         {
-            if (SettingService.Account.Logined || await Notify.ShowLoginDialog()) return true;
-            Notify.ShowMessageToast("请先登录后再操作");
+            if (SettingService.Account.Logined || await NotificationShowExtensions.ShowLoginDialog()) return true;
+            NotificationShowExtensions.ShowMessageToast("请先登录后再操作");
             return false;
         }
 

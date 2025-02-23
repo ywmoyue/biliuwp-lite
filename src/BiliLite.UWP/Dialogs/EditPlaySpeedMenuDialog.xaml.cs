@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions;
+﻿using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common.Player;
 using BiliLite.Services;
 using BiliLite.ViewModels.Settings;
@@ -44,12 +44,12 @@ namespace BiliLite.Dialogs
         {
             if (m_viewModel.PlaySpeedMenuItems.Any(item => item.Value == m_viewModel.AddPlaySpeedValue))
             {
-                Notify.ShowMessageToast("已重复添加");
+                NotificationShowExtensions.ShowMessageToast("已重复添加");
                 return;
             }
             if (m_viewModel.AddPlaySpeedValue == 0)
             {
-                Notify.ShowMessageToast("非法参数");
+                NotificationShowExtensions.ShowMessageToast("非法参数");
                 return;
             }
 

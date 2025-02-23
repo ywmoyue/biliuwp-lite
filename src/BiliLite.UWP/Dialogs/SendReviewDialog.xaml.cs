@@ -1,8 +1,8 @@
-﻿using BiliLite.Extensions;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+﻿using BiliLite.Extensions.Notifications;
 using BiliLite.ViewModels.Season;
 using Microsoft.Extensions.DependencyInjection;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 
@@ -23,7 +23,7 @@ namespace BiliLite.Dialogs
         {
             if (string.IsNullOrEmpty(txtBoxContent.Text.Trim()))
             {
-                Notify.ShowMessageToast("内容不能为空");
+                NotificationShowExtensions.ShowMessageToast("内容不能为空");
                 return;
             }
             int score = (int)rating.Value * 2;

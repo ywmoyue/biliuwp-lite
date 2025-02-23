@@ -2,6 +2,7 @@
 using BiliLite.Converters;
 using BiliLite.Dialogs;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Danmaku;
 using BiliLite.Models.Common.Player;
@@ -216,7 +217,7 @@ namespace BiliLite.Controls
                 InitSoundQuality();
                 InitQuality();
             }
-            Notify.ShowMessageToast("已根据设置自动刷新播放地址");
+            NotificationShowExtensions.ShowMessageToast("已根据设置自动刷新播放地址");
             m_startTime = DateTime.Now;
         }
 
@@ -1065,7 +1066,7 @@ namespace BiliLite.Controls
             }
             catch (Exception)
             {
-                Notify.ShowMessageToast("加载字幕失败了");
+                NotificationShowExtensions.ShowMessageToast("加载字幕失败了");
             }
 
 
@@ -1233,7 +1234,7 @@ namespace BiliLite.Controls
             TopTitle.Text = interactionVideoVM.Select.title;
             //if ((interactionVideoVM.Info.edges?.questions?.Count ?? 0) <= 0)
             //{
-            //    Notify.ShowMessageToast("播放完毕，请点击右下角节点，重新开始");
+            //    NotificationShowExtensions.ShowMessageToast("播放完毕，请点击右下角节点，重新开始");
             //    return;
             //}
             _postion = 0;
@@ -1295,7 +1296,7 @@ namespace BiliLite.Controls
                     {
                         var segIndex = Math.Ceiling(Player.Position / (60 * 6d));
                         await LoadDanmaku(segIndex.ToInt32());
-                        Notify.ShowMessageToast($"已更新弹幕");
+                        NotificationShowExtensions.ShowMessageToast($"已更新弹幕");
                     }
                     else
                     {
@@ -1314,7 +1315,7 @@ namespace BiliLite.Controls
             }
             catch (Exception ex)
             {
-                Notify.ShowMessageToast("弹幕加载失败");
+                NotificationShowExtensions.ShowMessageToast("弹幕加载失败");
                 _logger.Error("弹幕加载失败", ex);
             }
         }
@@ -1536,7 +1537,7 @@ namespace BiliLite.Controls
             var index = (int)SliderPlaySpeed.Value;
             if (index <= 0)
             {
-                Notify.ShowMessageToast("不能再慢啦");
+                NotificationShowExtensions.ShowMessageToast("不能再慢啦");
                 return;
             }
 
@@ -1550,7 +1551,7 @@ namespace BiliLite.Controls
             var index = (int)SliderPlaySpeed.Value;
             if (index >= m_playSpeedMenuService.MenuItems.Count - 1)
             {
-                Notify.ShowMessageToast("不能再快啦");
+                NotificationShowExtensions.ShowMessageToast("不能再快啦");
                 return;
             }
 
@@ -2499,7 +2500,7 @@ namespace BiliLite.Controls
             {
                 if (interactionVideoVM.Info.is_leaf == 1)
                 {
-                    Notify.ShowMessageToast("播放完毕，请点击右下角节点，重新开始");
+                    NotificationShowExtensions.ShowMessageToast("播放完毕，请点击右下角节点，重新开始");
                     return;
                 }
                 m_danmakuController.Pause();
@@ -2532,7 +2533,7 @@ namespace BiliLite.Controls
                     }
                     else
                     {
-                        Notify.ShowMessageToast("播放完毕");
+                        NotificationShowExtensions.ShowMessageToast("播放完毕");
                     }
 
                 }
@@ -2545,7 +2546,7 @@ namespace BiliLite.Controls
                     }
                     else
                     {
-                        Notify.ShowMessageToast("本P播放完成");
+                        NotificationShowExtensions.ShowMessageToast("本P播放完成");
                     }
 
                 }
@@ -2564,7 +2565,7 @@ namespace BiliLite.Controls
             {
                 if (!PlayerSettingAutoNext.IsOn)
                 {
-                    Notify.ShowMessageToast("本P播放完成");
+                    NotificationShowExtensions.ShowMessageToast("本P播放完成");
                     return;
                 }
                 //只有一P,重新播放
@@ -2628,11 +2629,11 @@ namespace BiliLite.Controls
                          pixelBuffer.ToArray());
                     await encoder.FlushAsync();
                 }
-                Notify.ShowMessageToast("截图已经保存至图片库");
+                NotificationShowExtensions.ShowMessageToast("截图已经保存至图片库");
             }
             catch (Exception)
             {
-                Notify.ShowMessageToast("截图失败");
+                NotificationShowExtensions.ShowMessageToast("截图失败");
             }
         }
 
@@ -2710,7 +2711,7 @@ namespace BiliLite.Controls
         {
             if (string.IsNullOrEmpty(DanmuSettingTxtWord.Text))
             {
-                Notify.ShowMessageToast("关键词不能为空");
+                NotificationShowExtensions.ShowMessageToast("关键词不能为空");
                 return;
             }
             m_danmakuSettingsControlViewModel.ShieldWords.Add(DanmuSettingTxtWord.Text);
@@ -2719,7 +2720,7 @@ namespace BiliLite.Controls
             DanmuSettingTxtWord.Text = "";
             if (!result)
             {
-                Notify.ShowMessageToast("已经添加到本地，但远程同步失败");
+                NotificationShowExtensions.ShowMessageToast("已经添加到本地，但远程同步失败");
             }
         }
 
@@ -2919,7 +2920,7 @@ namespace BiliLite.Controls
         {
             if (EpisodeList.SelectedIndex == 0)
             {
-                Notify.ShowMessageToast("已经是第一P了");
+                NotificationShowExtensions.ShowMessageToast("已经是第一P了");
             }
             else
             {
@@ -2931,7 +2932,7 @@ namespace BiliLite.Controls
         {
             if (EpisodeList.SelectedIndex == EpisodeList.Items.Count - 1)
             {
-                Notify.ShowMessageToast("已经是最后一P了");
+                NotificationShowExtensions.ShowMessageToast("已经是最后一P了");
             }
             else
             {
@@ -2982,7 +2983,7 @@ namespace BiliLite.Controls
                         InitSoundQuality();
                         InitQuality();
                     }
-                    Notify.ShowMessageToast("检测到视频地址失效，已自动刷新");
+                    NotificationShowExtensions.ShowMessageToast("检测到视频地址失效，已自动刷新");
                     m_startTime = DateTime.Now;
                     return;
                 }
@@ -3062,7 +3063,7 @@ namespace BiliLite.Controls
                 PlayerSettingABPlaySetPointB.Content = "设置B点";
                 PlayerSettingABPlaySetPointB.Visibility = Visibility.Collapsed;
 
-                Notify.ShowMessageToast("已取消设置A点");
+                NotificationShowExtensions.ShowMessageToast("已取消设置A点");
             }
             else
             {
@@ -3073,7 +3074,7 @@ namespace BiliLite.Controls
                 PlayerSettingABPlaySetPointA.Content = "A: " + TimeSpan.FromSeconds(Player.ABPlay.PointA).ToString(@"hh\:mm\:ss\.fff");
                 PlayerSettingABPlaySetPointB.Visibility = Visibility.Visible;
 
-                Notify.ShowMessageToast("已设置A点, 再次点击可取消设置");
+                NotificationShowExtensions.ShowMessageToast("已设置A点, 再次点击可取消设置");
             }
         }
 
@@ -3084,13 +3085,13 @@ namespace BiliLite.Controls
                 Player.ABPlay.PointB = double.MaxValue;
                 PlayerSettingABPlaySetPointB.Content = "设置B点";
 
-                Notify.ShowMessageToast("已取消设置B点");
+                NotificationShowExtensions.ShowMessageToast("已取消设置B点");
             }
             else
             {
                 if (Player.Position <= Player.ABPlay.PointA)
                 {
-                    Notify.ShowMessageToast("B点必须在A点之后");
+                    NotificationShowExtensions.ShowMessageToast("B点必须在A点之后");
                 }
                 else
                 {
@@ -3098,7 +3099,7 @@ namespace BiliLite.Controls
                     VideoPlayHistoryHelper.SetABPlayHistory(CurrentPlayItem, Player.ABPlay);
                     PlayerSettingABPlaySetPointB.Content = "B: " + TimeSpan.FromSeconds(Player.ABPlay.PointB).ToString(@"hh\:mm\:ss\.fff");
 
-                    Notify.ShowMessageToast("已设置B点, 再次点击可取消设置");
+                    NotificationShowExtensions.ShowMessageToast("已设置B点, 再次点击可取消设置");
                 }
             }
         }

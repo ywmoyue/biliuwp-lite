@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Attributes;
 using BiliLite.Models.Common.Other;
 using BiliLite.Models.Requests.Api;
 using BiliLite.ViewModels.Common;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BiliLite.ViewModels.Other
 {
@@ -37,14 +38,14 @@ namespace BiliLite.ViewModels.Other
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
 
                 }
             }
             catch (Exception ex)
             {
-                var handel = HandelError<FindMoreViewModel> (ex);
-                Notify.ShowMessageToast(handel.message);
+                var handel = HandelError<FindMoreViewModel>(ex);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {

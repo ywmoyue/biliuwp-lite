@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Attributes;
 using BiliLite.Models.Common.Season;
@@ -233,7 +234,7 @@ namespace BiliLite.ViewModels.Season
             catch (Exception ex)
             {
                 var handel = HandelError<SeasonDetailPageViewModel>(ex);
-                //Notify.ShowMessageToast(handel.message);
+                //NotificationShowExtensions.ShowMessageToast(handel.message);
                 ShowError = true;
                 ErrorMsg = handel.message;
             }
@@ -245,9 +246,9 @@ namespace BiliLite.ViewModels.Season
 
         public async void DoFollow()
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录后再操作");
+                NotificationShowExtensions.ShowMessageToast("请先登录后再操作");
                 return;
             }
             try
@@ -264,24 +265,24 @@ namespace BiliLite.ViewModels.Season
                     if (data.success)
                     {
                         Detail.UserStatus.Follow = Detail.UserStatus.Follow == 1 ? 0 : 1;
-                        Notify.ShowMessageToast(!string.IsNullOrEmpty(data.result["toast"]?.ToString())
+                        NotificationShowExtensions.ShowMessageToast(!string.IsNullOrEmpty(data.result["toast"]?.ToString())
                             ? data.result["toast"].ToString()
                             : "操作成功");
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<object>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
         }
 

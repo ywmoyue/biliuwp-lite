@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Common.Home;
 using BiliLite.Models.Common.Region;
@@ -16,6 +12,11 @@ using BiliLite.ViewModels.Rank;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace BiliLite.ViewModels.Region
 {
@@ -120,13 +121,13 @@ namespace BiliLite.ViewModels.Region
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<ApiDataModel<List<RankRegionViewModel>>>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {

@@ -1,4 +1,5 @@
 ﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Recommend;
 using BiliLite.Modules.User;
@@ -64,7 +65,7 @@ namespace BiliLite.Pages.Home
             await m_viewModel.GetRecommend();
             if (!SettingService.GetValue<bool>("推荐右键提示", true)) return;
             SettingService.SetValue("推荐右键提示", false);
-            Notify.ShowMessageToast("右键或长按项目可以进行更多操作哦~", 5);
+            NotificationShowExtensions.ShowMessageToast("右键或长按项目可以进行更多操作哦~", 5);
         }
 
         #endregion

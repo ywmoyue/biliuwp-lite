@@ -1,4 +1,13 @@
-﻿using BiliLite.Models;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
+using BiliLite.Models;
+using BiliLite.Models.Common;
+using BiliLite.Models.Common.Account;
+using BiliLite.Models.Requests.Api;
+using BiliLite.Models.Responses;
+using BiliLite.Services;
+using HtmlAgilityPack;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,14 +20,6 @@ using System.Web;
 using Windows.Security.Cryptography.Core;
 using Windows.Storage.Streams;
 using Windows.Web.Http.Filters;
-using BiliLite.Extensions;
-using BiliLite.Models.Common;
-using BiliLite.Models.Responses;
-using BiliLite.Models.Requests.Api;
-using BiliLite.Services;
-using BiliLite.Models.Common.Account;
-using HtmlAgilityPack;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite.Modules
 {
@@ -244,7 +245,7 @@ namespace BiliLite.Modules
             var userId = cookies.FirstOrDefault(x => x.Name == "DedeUserID")?.Value;
             if (userId == null)
             {
-                Notify.ShowMessageToast("登录失败，获取用户Id失败");
+                NotificationShowExtensions.ShowMessageToast("登录失败，获取用户Id失败");
                 _logger.Error("登录失败，获取用户Id失败");
                 return;
             }
@@ -524,7 +525,7 @@ namespace BiliLite.Modules
             catch (Exception ex)
             {
                 _logger.Error("刷新Cookie失败", ex);
-                Notify.ShowMessageToast("刷新Cookie失败，建议手动重新登录");
+                NotificationShowExtensions.ShowMessageToast("刷新Cookie失败，建议手动重新登录");
             }
         }
 

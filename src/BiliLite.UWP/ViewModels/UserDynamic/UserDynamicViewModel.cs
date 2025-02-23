@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Windows.UI.Popups;
-using Windows.UI.Xaml.Controls;
-using AutoMapper;
+﻿using AutoMapper;
 using Bilibili.App.Dynamic.V2;
 using BiliLite.Dialogs;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Builders;
 using BiliLite.Models.Common;
@@ -28,6 +21,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Windows.UI.Popups;
+using Windows.UI.Xaml.Controls;
 using DynamicItemDataTemplateSelector = BiliLite.Controls.DataTemplateSelectors.DynamicItemDataTemplateSelector;
 using DynamicType = BiliLite.Models.Common.DynamicType;
 
@@ -140,7 +141,7 @@ namespace BiliLite.ViewModels.UserDynamic
             var result = await MessageCenter.HandelUrl(url.ToString());
             if (!result)
             {
-                Notify.ShowMessageToast("无法打开Url");
+                NotificationShowExtensions.ShowMessageToast("无法打开Url");
             }
         }
 
@@ -270,13 +271,13 @@ namespace BiliLite.ViewModels.UserDynamic
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<object>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
         }
 
@@ -316,13 +317,13 @@ namespace BiliLite.ViewModels.UserDynamic
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<object>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
         }
 
@@ -460,7 +461,7 @@ namespace BiliLite.ViewModels.UserDynamic
             var result = await m_grpcService.GetDynVideo(0, string.Empty, string.Empty);
             var dynItems = m_mapper.Map<IEnumerable<FollowListItem>, List<UserDynamicItemDisplayViewModel>>(
                 result.VideoFollowList.List);
-            dynItems.ForEach(x=>x.UserDynamicItemDisplayCommands=new UserDynamicItemDisplayCommands()
+            dynItems.ForEach(x => x.UserDynamicItemDisplayCommands = new UserDynamicItemDisplayCommands()
             {
                 LaunchUrlCommand = LaunchUrlCommand
             });
@@ -523,13 +524,13 @@ namespace BiliLite.ViewModels.UserDynamic
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<UserDynamicViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {
@@ -547,13 +548,13 @@ namespace BiliLite.ViewModels.UserDynamic
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<UserDynamicViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {

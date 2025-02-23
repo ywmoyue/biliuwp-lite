@@ -1,20 +1,21 @@
 ﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Home;
+using BiliLite.Models.Common.Live;
 using BiliLite.Modules.Live.LiveCenter;
 using BiliLite.Pages.Live;
 using BiliLite.Services;
+using BiliLite.Services.Biz;
+using BiliLite.ViewModels.Home;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Models.Common.Home;
-using BiliLite.ViewModels.Home;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.Extensions.DependencyInjection;
-using BiliLite.Services.Biz;
-using BiliLite.Models.Common.Live;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -23,7 +24,7 @@ namespace BiliLite.Pages.Home
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class LivePage : Page,IRefreshablePage
+    public sealed partial class LivePage : Page, IRefreshablePage
     {
         private LiveViewModel m_viewModel;
         public LivePage()
@@ -78,7 +79,7 @@ namespace BiliLite.Pages.Home
             var result = await MessageCenter.HandelUrl(((sender as HyperlinkButton).DataContext as LiveHomeBannerModel).Link);
             if (!result)
             {
-                Notify.ShowMessageToast("不支持打开的链接");
+                NotificationShowExtensions.ShowMessageToast("不支持打开的链接");
             }
         }
 
@@ -99,7 +100,7 @@ namespace BiliLite.Pages.Home
                     parameters = data.roomid
                 });
             }
-            else if(e.ClickedItem is LiveRoomInfoOldModel info)
+            else if (e.ClickedItem is LiveRoomInfoOldModel info)
             {
                 MessageCenter.NavigateToPage(this, new NavigationInfo()
                 {
@@ -193,9 +194,9 @@ namespace BiliLite.Pages.Home
 
         private async void btnOpenLiveCenter_Click(object sender, RoutedEventArgs e)
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录");
+                NotificationShowExtensions.ShowMessageToast("请先登录");
                 return;
             }
             MessageCenter.NavigateToPage(this, new NavigationInfo()
@@ -213,7 +214,7 @@ namespace BiliLite.Pages.Home
             {
                 return;
             }
-            
+
             var localAttentionUserService = App.ServiceProvider.GetRequiredService<LocalAttentionUserService>();
             localAttentionUserService.CancelAttention(roomInfo.UserId);
             m_viewModel.LiveAttentionVm.LocalFollows.Remove(roomInfo);

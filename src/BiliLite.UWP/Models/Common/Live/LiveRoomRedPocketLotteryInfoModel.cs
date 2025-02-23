@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions;
+﻿using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Exceptions;
 using BiliLite.Services;
 using Newtonsoft.Json;
@@ -34,7 +34,7 @@ namespace BiliLite.Models.Common.Live
         /// 发送者头像
         /// </summary>
         [JsonProperty("sender_face")]
-        public string SenderFace {  get; set; }
+        public string SenderFace { get; set; }
 
         /// <summary>
         /// 抽取条件? 未知
@@ -152,7 +152,7 @@ namespace BiliLite.Models.Common.Live
             }
             catch (Exception ex)
             {
-                Notify.ShowMessageToast("红包奖品富文本转换失败");
+                NotificationShowExtensions.ShowMessageToast("红包奖品富文本转换失败");
                 _logger.Error("红包奖品富文本转换失败", ex);
                 var tx = new RichTextBlock();
                 Paragraph paragraph = new Paragraph();

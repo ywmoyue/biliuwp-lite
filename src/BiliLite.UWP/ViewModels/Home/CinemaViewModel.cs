@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
-using AutoMapper;
+﻿using AutoMapper;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Attributes;
 using BiliLite.Models.Common;
@@ -21,6 +16,12 @@ using BiliLite.Pages.User;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
 
 namespace BiliLite.ViewModels.Home
 {
@@ -157,7 +158,7 @@ namespace BiliLite.ViewModels.Home
             {
                 var weblink = e.ClickedItem.GetType().GetProperty("link").GetValue(e.ClickedItem, null) ?? "";
                 var result = await MessageCenter.HandelUrl(weblink.ToString());
-                if (!result) Notify.ShowMessageToast("无法打开此链接");
+                if (!result) NotificationShowExtensions.ShowMessageToast("无法打开此链接");
             }
         }
 
@@ -189,13 +190,13 @@ namespace BiliLite.ViewModels.Home
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<CinemaViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {
@@ -217,13 +218,13 @@ namespace BiliLite.ViewModels.Home
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<CinemaViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {
@@ -246,13 +247,13 @@ namespace BiliLite.ViewModels.Home
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<List<CinemaHomeFallItemModel>>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {

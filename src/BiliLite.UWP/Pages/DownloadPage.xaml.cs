@@ -1,4 +1,5 @@
 ﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Download;
 using BiliLite.Models.Common.Video;
@@ -68,7 +69,7 @@ namespace BiliLite.Pages
             var data = e.ClickedItem as DownloadedItem;
             if (data.Epsidoes == null || data.Epsidoes.Count == 0)
             {
-                Notify.ShowMessageToast("没有可以播放的视频");
+                NotificationShowExtensions.ShowMessageToast("没有可以播放的视频");
                 return;
             }
             if (data.Epsidoes.Count > 1)
@@ -179,7 +180,7 @@ namespace BiliLite.Pages
         {
             var data = Pane.DataContext as DownloadedItem;
             var item = (sender as AppBarButton).DataContext as DownloadedSubItem;
-            var result = await Notify.ShowDialog("删除下载", $"确定要删除《{item.Title}》吗?\r\n文件将会被永久删除!");
+            var result = await NotificationShowExtensions.ShowMessageDialog("删除下载", $"确定要删除《{item.Title}》吗?\r\n文件将会被永久删除!");
             if (!result)
             {
                 return;
@@ -193,7 +194,7 @@ namespace BiliLite.Pages
             }
             catch (Exception ex)
             {
-                Notify.ShowMessageToast("目录删除失败，请检查是否文件是否被占用");
+                NotificationShowExtensions.ShowMessageToast("目录删除失败，请检查是否文件是否被占用");
                 logger.Log("删除下载视频失败", LogType.Fatal, ex);
             }
         }
@@ -209,7 +210,7 @@ namespace BiliLite.Pages
             var data = (sender as MenuFlyoutItem).DataContext as DownloadedItem;
             if (data.Epsidoes == null || data.Epsidoes.Count == 0)
             {
-                Notify.ShowMessageToast("没有可以播放的视频");
+                NotificationShowExtensions.ShowMessageToast("没有可以播放的视频");
                 return;
             }
             OpenPlayer(data, 0);
@@ -239,7 +240,7 @@ namespace BiliLite.Pages
         private async void btnMenuDetele_Click(object sender, RoutedEventArgs e)
         {
             var data = (sender as MenuFlyoutItem).DataContext as DownloadedItem;
-            var result = await Notify.ShowDialog("删除下载", $"确定要删除《{data.Title}》吗?\r\n目录下共有{data.Epsidoes.Count}个视频,将会被永久删除。");
+            var result = await NotificationShowExtensions.ShowMessageDialog("删除下载", $"确定要删除《{data.Title}》吗?\r\n目录下共有{data.Epsidoes.Count}个视频,将会被永久删除。");
             if (!result)
             {
                 return;
@@ -253,7 +254,7 @@ namespace BiliLite.Pages
             }
             catch (Exception ex)
             {
-                Notify.ShowMessageToast("目录删除失败，请检查是否文件是否被占用");
+                NotificationShowExtensions.ShowMessageToast("目录删除失败，请检查是否文件是否被占用");
                 logger.Log("删除下载视频失败", LogType.Fatal, ex);
             }
 
@@ -288,12 +289,12 @@ namespace BiliLite.Pages
             var data = (sender as MenuFlyoutItem).DataContext as DownloadedItem;
             if (data.Epsidoes == null || data.Epsidoes.Count == 0)
             {
-                Notify.ShowMessageToast("没有可以导出的视频");
+                NotificationShowExtensions.ShowMessageToast("没有可以导出的视频");
                 return;
             }
             if (data.Epsidoes.Count > 1)
             {
-                Notify.ShowMessageToast("多集视频，请选择指定集数导出");
+                NotificationShowExtensions.ShowMessageToast("多集视频，请选择指定集数导出");
                 Pane.DataContext = data;
                 splitView.IsPaneOpen = true;
                 return;
@@ -323,7 +324,7 @@ namespace BiliLite.Pages
                 }
                 catch (Exception ex)
                 {
-                    Notify.ShowMessageToast("转换SRT字幕失败");
+                    NotificationShowExtensions.ShowMessageToast("转换SRT字幕失败");
                     logger.Log("转换字幕失败", LogType.Error, ex);
                 }
 

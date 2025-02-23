@@ -1,4 +1,5 @@
 ﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Live;
@@ -438,7 +439,7 @@ namespace BiliLite.ViewModels.Live
         {
             if (!ShowBag && !SettingService.Account.Logined)
             {
-                Notify.ShowMessageToast("请先登录");
+                NotificationShowExtensions.ShowMessageToast("请先登录");
                 return;
             }
             ShowBag = !ShowBag;
@@ -448,7 +449,7 @@ namespace BiliLite.ViewModels.Live
         {
             if (!SettingService.Account.Logined)
             {
-                Notify.ShowMessageToast("请先登录");
+                NotificationShowExtensions.ShowMessageToast("请先登录");
                 return;
             }
             await LoadBag();
@@ -511,9 +512,9 @@ namespace BiliLite.ViewModels.Live
 
         private async Task<bool> JoinRedPocketLotteryRequest(long uid, int room_id, long ruid, int lot_id)
         {
-            if (!Logined && !await Notify.ShowLoginDialog())
+            if (!Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录");
+                NotificationShowExtensions.ShowMessageToast("请先登录");
                 return false;
             }
             try
@@ -535,23 +536,23 @@ namespace BiliLite.ViewModels.Live
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
                 return false;
             }
             catch (Exception ex)
             {
                 _logger.Log("参加红包抽奖出现错误", LogType.Error, ex);
-                Notify.ShowMessageToast("参加红包抽奖出现错误");
+                NotificationShowExtensions.ShowMessageToast("参加红包抽奖出现错误");
                 return false;
             }
         }
 
         private async Task<bool> JoinAnchorLotteryRequest(int lottery_id, int gift_id, int gift_num)
         {
-            if (!Logined && !await Notify.ShowLoginDialog())
+            if (!Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录");
+                NotificationShowExtensions.ShowMessageToast("请先登录");
                 return false;
             }
             try
@@ -572,14 +573,14 @@ namespace BiliLite.ViewModels.Live
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
                 return false;
             }
             catch (Exception ex)
             {
                 _logger.Log("参加天选抽奖出现错误", LogType.Error, ex);
-                Notify.ShowMessageToast("参加天选抽奖出现错误");
+                NotificationShowExtensions.ShowMessageToast("参加天选抽奖出现错误");
                 return false;
             }
         }
@@ -641,7 +642,7 @@ namespace BiliLite.ViewModels.Live
             }
             catch (Exception ex)
             {
-                Notify.ShowMessageToast($"读取播放地址失败:{ex.Message}");
+                NotificationShowExtensions.ShowMessageToast($"读取播放地址失败:{ex.Message}");
                 _logger.Error($"读取播放地址失败:{ex.Message}", ex);
             }
             finally
@@ -753,13 +754,13 @@ namespace BiliLite.ViewModels.Live
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
                 var result = HandelError<object>(ex);
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
             }
             finally
             {
@@ -815,13 +816,13 @@ namespace BiliLite.ViewModels.Live
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
                 var result = HandelError<object>(ex);
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
             }
         }
 
@@ -872,13 +873,13 @@ namespace BiliLite.ViewModels.Live
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
                 var result = HandelError<object>(ex);
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
             }
         }
 
@@ -930,13 +931,13 @@ namespace BiliLite.ViewModels.Live
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
                 var result = HandelError<object>(ex);
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
             }
         }
 
@@ -965,13 +966,13 @@ namespace BiliLite.ViewModels.Live
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
                 var result = HandelError<object>(ex);
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
             }
         }
 
@@ -1010,7 +1011,7 @@ namespace BiliLite.ViewModels.Live
             }
             catch (Exception ex)
             {
-                Notify.ShowMessageToast("读取礼物信息失败");
+                NotificationShowExtensions.ShowMessageToast("读取礼物信息失败");
                 _logger.Log("读取礼物信息失败", LogType.Error, ex);
             }
         }
@@ -1062,7 +1063,7 @@ namespace BiliLite.ViewModels.Live
             }
             catch (Exception ex)
             {
-                Notify.ShowMessageToast("读取舰队失败");
+                NotificationShowExtensions.ShowMessageToast("读取舰队失败");
                 _logger.Log("读取舰队失败", LogType.Error, ex);
             }
             finally
@@ -1117,7 +1118,7 @@ namespace BiliLite.ViewModels.Live
             }
             catch (Exception ex)
             {
-                Notify.ShowMessageToast("读取直播免费瓜子时间失败");
+                NotificationShowExtensions.ShowMessageToast("读取直播免费瓜子时间失败");
                 _logger.Log("读取直播免费瓜子时间失败", LogType.Error, ex);
             }
         }
@@ -1135,7 +1136,7 @@ namespace BiliLite.ViewModels.Live
                 var data = await result.GetData<JObject>();
                 if (data.success)
                 {
-                    Notify.ShowMessageToast("宝箱领取成功,瓜子+" + data.data["awardSilver"]);
+                    NotificationShowExtensions.ShowMessageToast("宝箱领取成功,瓜子+" + data.data["awardSilver"]);
                     //GetFreeSilverTime();
                     await LoadWalletInfo();
                 }
@@ -1146,16 +1147,16 @@ namespace BiliLite.ViewModels.Live
             }
             catch (Exception ex)
             {
-                Notify.ShowMessageToast("读取直播免费瓜子时间失败");
+                NotificationShowExtensions.ShowMessageToast("读取直播免费瓜子时间失败");
                 _logger.Log("读取直播免费瓜子时间失败", LogType.Error, ex);
             }
         }
 
         public async Task SendGift(LiveGiftItem liveGiftItem)
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录");
+                NotificationShowExtensions.ShowMessageToast("请先登录");
                 return;
             }
             try
@@ -1172,27 +1173,27 @@ namespace BiliLite.ViewModels.Live
                     throw new CustomizedErrorException(data.message);
                 }
 
-                Notify.ShowMessageToast(data.data?["send_tips"].ToString().Length > 0 ? data.data?["send_tips"].ToString() : "赠送成功"); // 鬼知道怎么有时候有返回提示有时候没有
+                NotificationShowExtensions.ShowMessageToast(data.data?["send_tips"].ToString().Length > 0 ? data.data?["send_tips"].ToString() : "赠送成功"); // 鬼知道怎么有时候有返回提示有时候没有
                 await LoadWalletInfo();
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
                 _logger.Log("赠送礼物出现错误", LogType.Error, ex);
-                Notify.ShowMessageToast("赠送礼物出现错误");
+                NotificationShowExtensions.ShowMessageToast("赠送礼物出现错误");
             }
 
         }
 
         public async Task SendBagGift(LiveGiftItem liveGiftItem)
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录");
+                NotificationShowExtensions.ShowMessageToast("请先登录");
                 return;
             }
             try
@@ -1208,27 +1209,27 @@ namespace BiliLite.ViewModels.Live
                 {
                     throw new CustomizedErrorException(data.message);
                 }
-                Notify.ShowMessageToast(data.data?["send_tips"].ToString().Length > 0 ? data.data?["send_tips"].ToString() : "赠送成功");
+                NotificationShowExtensions.ShowMessageToast(data.data?["send_tips"].ToString().Length > 0 ? data.data?["send_tips"].ToString() : "赠送成功");
                 await LoadBag();
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
                 _logger.Log("赠送礼物出现错误", LogType.Error, ex);
-                Notify.ShowMessageToast("赠送礼物出现错误");
+                NotificationShowExtensions.ShowMessageToast("赠送礼物出现错误");
             }
 
         }
 
         public async Task<bool> SendDanmu(string text)
         {
-            if (!Logined && !await Notify.ShowLoginDialog())
+            if (!Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录");
+                NotificationShowExtensions.ShowMessageToast("请先登录");
                 return false;
             }
             try
@@ -1249,28 +1250,28 @@ namespace BiliLite.ViewModels.Live
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
                 return false;
             }
             catch (Exception ex)
             {
                 _logger.Log("发送弹幕出现错误", LogType.Error, ex);
-                Notify.ShowMessageToast("发送弹幕出现错误");
+                NotificationShowExtensions.ShowMessageToast("发送弹幕出现错误");
                 return false;
             }
         }
 
         public async Task SendDanmu(LiveRoomEmoticon emoji)
         {
-            if (!Logined && !await Notify.ShowLoginDialog())
+            if (!Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录");
+                NotificationShowExtensions.ShowMessageToast("请先登录");
                 return;
             }
             if (emoji.Perm != 1)
             {
-                Notify.ShowMessageToast("权限不足哦~\n" + $"需要: {emoji.UnlockShowText}");
+                NotificationShowExtensions.ShowMessageToast("权限不足哦~\n" + $"需要: {emoji.UnlockShowText}");
                 return;
             }
             try
@@ -1289,13 +1290,13 @@ namespace BiliLite.ViewModels.Live
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
                 _logger.Log("发送表情弹幕出现错误", LogType.Error, ex);
-                Notify.ShowMessageToast("发送表情弹幕出现错误");
+                NotificationShowExtensions.ShowMessageToast("发送表情弹幕出现错误");
             }
         }
 
@@ -1319,14 +1320,14 @@ namespace BiliLite.ViewModels.Live
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
                 return false;
             }
             catch (Exception ex)
             {
                 _logger.Log("参与天选抽奖出现错误", LogType.Error, ex);
-                Notify.ShowMessageToast("参与天选抽奖出现错误");
+                NotificationShowExtensions.ShowMessageToast("参与天选抽奖出现错误");
                 return false;
             }
 
@@ -1355,14 +1356,14 @@ namespace BiliLite.ViewModels.Live
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
                 return false;
             }
             catch (Exception ex)
             {
                 _logger.Log("参与红包抽奖出现错误", LogType.Error, ex);
-                Notify.ShowMessageToast("参与红包抽奖出现错误");
+                NotificationShowExtensions.ShowMessageToast("参与红包抽奖出现错误");
                 return false;
             }
 
@@ -1370,9 +1371,9 @@ namespace BiliLite.ViewModels.Live
 
         public async Task GetEmoticons()
         {
-            if (!Logined && !await Notify.ShowLoginDialog())
+            if (!Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录");
+                NotificationShowExtensions.ShowMessageToast("请先登录");
                 return;
             }
             try
@@ -1387,13 +1388,13 @@ namespace BiliLite.ViewModels.Live
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
                 _logger.Log("获取表情包出现错误", LogType.Error, ex);
-                Notify.ShowMessageToast("获取表情包出现错误");
+                NotificationShowExtensions.ShowMessageToast("获取表情包出现错误");
             }
         }
 

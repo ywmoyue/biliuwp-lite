@@ -1,13 +1,13 @@
-﻿using BiliLite.Extensions;
+﻿using BiliLite.Extensions.Notifications;
+using BiliLite.Models.Common.User.SendDynamic;
 using BiliLite.Models.Requests.Api;
+using BiliLite.ViewModels;
+using BiliLite.ViewModels.User.SendDynamic;
+using BiliLite.ViewModels.UserDynamic;
 using System;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using BiliLite.Models.Common.User.SendDynamic;
-using BiliLite.ViewModels;
-using BiliLite.ViewModels.User.SendDynamic;
-using BiliLite.ViewModels.UserDynamic;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 
@@ -119,7 +119,7 @@ namespace BiliLite.Dialogs
         {
             if (m_viewModel.Images.Count == 9)
             {
-                Notify.ShowMessageToast("只能上传9张图片哦");
+                NotificationShowExtensions.ShowMessageToast("只能上传9张图片哦");
                 return;
             }
             var picker = new FileOpenPicker();

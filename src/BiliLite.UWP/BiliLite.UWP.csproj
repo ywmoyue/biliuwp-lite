@@ -716,7 +716,6 @@
     <Compile Include="Extensions\BiliExtensions.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Extensions\HttpResultsExtensions.cs" />
-    <Compile Include="Extensions\Notify.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\ObservableCollectionExtension.cs" />
     <Compile Include="Extensions\StreamExtensions.cs" />

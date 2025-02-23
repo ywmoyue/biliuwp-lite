@@ -1,9 +1,9 @@
-﻿using BiliLite.Extensions;
+﻿using BiliLite.Extensions.Notifications;
+using BiliLite.Models.Common;
 using BiliLite.Models.Requests.Api;
+using BiliLite.ViewModels.UserDynamic;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Models.Common;
-using BiliLite.ViewModels.UserDynamic;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -69,7 +69,7 @@ namespace BiliLite.Pages.User
                     id = e.DynamicID;
                     break;
             }
-            Notify.ShowComment(id, (int)commentType, CommentApi.CommentSort.Hot);
+            NotificationShowExtensions.ShowCommentDialog(id, (int)commentType, CommentApi.CommentSort.Hot);
             //comment.LoadComment(new Controls.LoadCommentInfo()
             //{
             //    CommentMode = (int)commentType,

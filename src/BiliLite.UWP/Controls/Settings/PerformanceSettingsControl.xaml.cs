@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions;
+﻿using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using Microsoft.Toolkit.Uwp.UI;
@@ -89,7 +89,7 @@ namespace BiliLite.Controls.Settings
         private async void btnCleanImageCache_Click(object sender, RoutedEventArgs e)
         {
             await ImageCache.Instance.ClearAsync();
-            Notify.ShowMessageToast("已清除图片缓存");
+            NotificationShowExtensions.ShowMessageToast("已清除图片缓存");
         }
     }
 }

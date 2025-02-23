@@ -1,18 +1,19 @@
-﻿using BiliLite.Modules;
+﻿using AutoMapper;
+using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
+using BiliLite.Models.Common;
+using BiliLite.Models.Common.Video;
+using BiliLite.Models.Common.Video.PlayUrlInfos;
+using BiliLite.Models.Download;
+using BiliLite.Modules;
 using BiliLite.Services;
+using BiliLite.ViewModels.Download;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using BiliLite.Models.Common;
-using BiliLite.Models.Download;
-using BiliLite.Extensions;
-using BiliLite.Models.Common.Video;
-using BiliLite.Models.Common.Video.PlayUrlInfos;
-using BiliLite.ViewModels.Download;
-using AutoMapper;
-using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 
@@ -29,7 +30,7 @@ namespace BiliLite.Dialogs
 
         public DownloadDialog(DownloadItem downloadItem)
         {
-            this.InitializeComponent(); 
+            this.InitializeComponent();
             playerVM = new PlayerVM(true);
 
             m_viewModel = App.ServiceProvider.GetService<DownloadDialogViewModel>();
@@ -79,7 +80,7 @@ namespace BiliLite.Dialogs
             }, 0);
             if (!data.Success)
             {
-                Notify.ShowMessageToast("读取可下载清晰度时失败：" + data.Message);
+                NotificationShowExtensions.ShowMessageToast("读取可下载清晰度时失败：" + data.Message);
                 return;
             }
             if (data.Qualites == null || data.Qualites.Count < 1)
@@ -98,7 +99,7 @@ namespace BiliLite.Dialogs
             bool hide = true;
             if (listView.SelectedItems == null || listView.SelectedItems.Count == 0)
             {
-                Notify.ShowMessageToast("请选择要下载的剧集");
+                NotificationShowExtensions.ShowMessageToast("请选择要下载的剧集");
                 return;
             }
             IsPrimaryButtonEnabled = false;
@@ -237,12 +238,12 @@ namespace BiliLite.Dialogs
             IsPrimaryButtonEnabled = true;
             if (hide)
             {
-                Notify.ShowMessageToast("已添加至下载列表");
+                NotificationShowExtensions.ShowMessageToast("已添加至下载列表");
                 this.Hide();
             }
             else
             {
-                Notify.ShowMessageToast("有视频下载失败");
+                NotificationShowExtensions.ShowMessageToast("有视频下载失败");
             }
 
         }

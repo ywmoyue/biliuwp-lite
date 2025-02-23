@@ -1,8 +1,9 @@
-﻿using BiliLite.Models.Requests.Api;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
+using BiliLite.Models.Requests.Api;
+using BiliLite.Services;
 using System;
 using Windows.UI.Xaml.Controls;
-using BiliLite.Extensions;
-using BiliLite.Services;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 
@@ -34,12 +35,12 @@ namespace BiliLite.Dialogs
         {
             if (Send_text_Comment.Text.Length == 0)
             {
-                Notify.ShowMessageToast("弹幕内容不能为空!");
+                NotificationShowExtensions.ShowMessageToast("弹幕内容不能为空!");
                 return;
             }
             if (!SettingService.Account.Logined)
             {
-                Notify.ShowMessageToast("请先登录后再操作");
+                NotificationShowExtensions.ShowMessageToast("请先登录后再操作");
                 return;
             }
             try
@@ -59,7 +60,7 @@ namespace BiliLite.Dialogs
                 var result = await playerAPI.SendDanmu(aid, cid, ((ComboBoxItem)Send_cb_Color.SelectedItem).Tag.ToString(), Send_text_Comment.Text, position).Request();
                 if (!result.status)
                 {
-                    Notify.ShowMessageToast("弹幕发送失败" + result.message);
+                    NotificationShowExtensions.ShowMessageToast("弹幕发送失败" + result.message);
                     return;
                 }
                 var obj = result.GetJObject();
@@ -74,19 +75,19 @@ namespace BiliLite.Dialogs
                             text = Send_text_Comment.Text
                         });
                     }
-                    Notify.ShowMessageToast("弹幕成功发射");
+                    NotificationShowExtensions.ShowMessageToast("弹幕成功发射");
 
                     Send_text_Comment.Text = string.Empty;
                 }
                 else
                 {
-                    Notify.ShowMessageToast("弹幕发送失败" + obj["message"].ToString());
+                    NotificationShowExtensions.ShowMessageToast("弹幕发送失败" + obj["message"].ToString());
                 }
             }
             catch (Exception ex)
             {
 
-                Notify.ShowMessageToast("发送弹幕发生错误！\r\n" + ex.HResult);
+                NotificationShowExtensions.ShowMessageToast("发送弹幕发生错误！\r\n" + ex.HResult);
             }
 
 

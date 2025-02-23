@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.User;
@@ -240,18 +241,18 @@ namespace BiliLite.Modules
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<VideoDetailPageViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
         }
 
@@ -340,7 +341,7 @@ namespace BiliLite.Modules
                 }
 
                 var handel = HandelError<VideoDetailPageViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
                 ShowError = true;
                 ErrorMsg = handel.message;
             }
@@ -357,9 +358,9 @@ namespace BiliLite.Modules
 
         public async void DoLike()
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录后再操作");
+                NotificationShowExtensions.ShowMessageToast("请先登录后再操作");
                 return;
             }
             try
@@ -383,36 +384,36 @@ namespace BiliLite.Modules
                         }
                         if (!string.IsNullOrEmpty(data.data["toast"]?.ToString()))
                         {
-                            Notify.ShowMessageToast(data.data["toast"].ToString());
+                            NotificationShowExtensions.ShowMessageToast(data.data["toast"].ToString());
                         }
                         else
                         {
-                            Notify.ShowMessageToast("操作成功");
+                            NotificationShowExtensions.ShowMessageToast("操作成功");
                         }
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<object>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
 
 
         }
         public async void DoDislike()
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录后再操作");
+                NotificationShowExtensions.ShowMessageToast("请先登录后再操作");
                 return;
             }
             try
@@ -441,27 +442,27 @@ namespace BiliLite.Modules
                         if (data.data == null) { }
                         else if (!string.IsNullOrEmpty(data.data["toast"]?.ToString()))
                         {
-                            Notify.ShowMessageToast(data.data["toast"].ToString());
+                            NotificationShowExtensions.ShowMessageToast(data.data["toast"].ToString());
                         }
                         else
                         {
-                            Notify.ShowMessageToast("操作成功");
+                            NotificationShowExtensions.ShowMessageToast("操作成功");
                         }
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<object>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
 
 
@@ -469,9 +470,9 @@ namespace BiliLite.Modules
         }
         public async void DoTriple()
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录后再操作");
+                NotificationShowExtensions.ShowMessageToast("请先登录后再操作");
                 return;
             }
             try
@@ -493,22 +494,22 @@ namespace BiliLite.Modules
                             VideoInfo.ReqUser.Dislike = 0;
                         }
 
-                        Notify.ShowMessageToast("三连完成");
+                        NotificationShowExtensions.ShowMessageToast("三连完成");
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<object>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
 
 
@@ -517,9 +518,9 @@ namespace BiliLite.Modules
 
         public async void DoCoin(string num)
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录后再操作");
+                NotificationShowExtensions.ShowMessageToast("请先登录后再操作");
                 return;
             }
             var coinNum = Convert.ToInt32(num);
@@ -543,27 +544,27 @@ namespace BiliLite.Modules
                         }
                         if (!string.IsNullOrEmpty(data.data["toast"]?.ToString()))
                         {
-                            Notify.ShowMessageToast(data.data["toast"].ToString());
+                            NotificationShowExtensions.ShowMessageToast(data.data["toast"].ToString());
                         }
                         else
                         {
-                            Notify.ShowMessageToast("操作成功");
+                            NotificationShowExtensions.ShowMessageToast("操作成功");
                         }
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<object>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
         }
 
@@ -587,9 +588,9 @@ namespace BiliLite.Modules
 
         public async Task<bool> AttentionUP(string mid, int mode)
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录后再操作");
+                NotificationShowExtensions.ShowMessageToast("请先登录后再操作");
                 return false;
             }
 
@@ -603,34 +604,34 @@ namespace BiliLite.Modules
                     if (data.success)
                     {
 
-                        Notify.ShowMessageToast("操作成功");
+                        NotificationShowExtensions.ShowMessageToast("操作成功");
                         return true;
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                         return false;
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
                     return false;
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<object>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
                 return false;
             }
         }
 
         public async Task UpdateFav(string avid, bool favDefault = false)
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录后再操作");
+                NotificationShowExtensions.ShowMessageToast("请先登录后再操作");
                 return;
             }
 
@@ -666,7 +667,7 @@ namespace BiliLite.Modules
 
                 if (!string.IsNullOrEmpty(data.data["toast"]?.ToString()))
                     throw new CustomizedErrorException(data.data["toast"].ToString());
-                Notify.ShowMessageToast("操作成功");
+                NotificationShowExtensions.ShowMessageToast("操作成功");
                 //立即刷新可能导致取到旧数据
                 await Task.Delay(500);
                 await LoadFavorite(avid);
@@ -674,12 +675,12 @@ namespace BiliLite.Modules
             catch (CustomizedErrorException ex)
             {
                 _logger.Error(ex.Message, ex);
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<object>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
         }
 
@@ -697,13 +698,13 @@ namespace BiliLite.Modules
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                         return "";
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
                     return "";
                 }
             }
@@ -711,7 +712,7 @@ namespace BiliLite.Modules
             {
 
                 var handel = HandelError<string>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
                 return "";
             }
         }

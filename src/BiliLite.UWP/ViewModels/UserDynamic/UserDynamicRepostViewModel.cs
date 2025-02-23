@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Windows.UI.Xaml.Controls;
-using BiliLite.Controls.Dynamic;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.UserDynamic;
 using BiliLite.Models.Dynamic;
@@ -19,6 +12,13 @@ using BiliLite.ViewModels.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Windows.UI.Xaml.Controls;
 
 namespace BiliLite.ViewModels.UserDynamic
 {
@@ -73,13 +73,13 @@ namespace BiliLite.ViewModels.UserDynamic
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<UserDynamicRepostViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {

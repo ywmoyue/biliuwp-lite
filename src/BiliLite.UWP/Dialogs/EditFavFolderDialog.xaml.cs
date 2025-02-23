@@ -1,7 +1,8 @@
-﻿using BiliLite.Models.Requests.Api.User;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
+using BiliLite.Models.Requests.Api.User;
 using System;
 using Windows.UI.Xaml.Controls;
-using BiliLite.Extensions;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 
@@ -25,7 +26,7 @@ namespace BiliLite.Dialogs
         {
             if (string.IsNullOrEmpty(txtTitle.Text))
             {
-                Notify.ShowMessageToast("请输入收藏夹名称");
+                NotificationShowExtensions.ShowMessageToast("请输入收藏夹名称");
                 return;
             }
             try
@@ -37,26 +38,26 @@ namespace BiliLite.Dialogs
                     var data = await result.GetData<object>();
                     if (data.success)
                     {
-                        Notify.ShowMessageToast("修改成功");
+                        NotificationShowExtensions.ShowMessageToast("修改成功");
                         Success = true;
                         this.Hide();
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                     }
 
                 }
                 else
                 {
-                    Notify.ShowMessageToast(result.message);
+                    NotificationShowExtensions.ShowMessageToast(result.message);
                 }
 
 
             }
             catch (Exception ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
             }
             finally
             {

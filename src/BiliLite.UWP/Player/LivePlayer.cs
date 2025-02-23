@@ -1,14 +1,13 @@
-﻿using System;
+﻿using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common.Player;
-using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
-using BiliLite.Extensions;
 using BiliLite.Models.Exceptions;
 using BiliLite.Player.Controllers;
+using BiliLite.Player.MediaInfos;
 using BiliLite.Player.SubPlayers;
 using BiliLite.Services;
-using FFmpegInteropX;
-using BiliLite.Player.MediaInfos;
+using System;
+using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
 
 namespace BiliLite.Player
 {
@@ -64,7 +63,7 @@ namespace BiliLite.Player
                 return;
             }
             await m_playerController.PlayState.Fault();
-            Notify.ShowMessageToast($"播放失败: {e.Description}");
+            NotificationShowExtensions.ShowMessageToast($"播放失败: {e.Description}");
             _logger.Error($"播放失败: {e.Description}");
             if (e.RetryStrategy == PlayerError.RetryStrategy.Normal)
             {

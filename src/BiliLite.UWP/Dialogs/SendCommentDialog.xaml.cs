@@ -1,20 +1,21 @@
-﻿using BiliLite.Models.Requests.Api;
-using System;
-using System.IO;
-using System.Linq;
-using Windows.Storage.Pickers;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using BiliLite.Extensions;
-using BiliLite.ViewModels;
-using static BiliLite.Models.Requests.Api.CommentApi;
-using Microsoft.Extensions.DependencyInjection;
-using Windows.Storage;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.UserDynamic;
 using BiliLite.Models.Exceptions;
+using BiliLite.Models.Requests.Api;
 using BiliLite.Services;
+using BiliLite.ViewModels;
 using BiliLite.ViewModels.Comment;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.IO;
+using System.Linq;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using static BiliLite.Models.Requests.Api.CommentApi;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 
@@ -43,7 +44,7 @@ namespace BiliLite.Dialogs
         {
             if (string.IsNullOrEmpty(txt_Comment.Text.Trim()))
             {
-                Notify.ShowMessageToast("检查下你的输入哦");
+                NotificationShowExtensions.ShowMessageToast("检查下你的输入哦");
                 return;
             }
             try
@@ -54,20 +55,20 @@ namespace BiliLite.Dialogs
                 var data = await result.GetData<object>();
                 if (data.code == 0)
                 {
-                    Notify.ShowMessageToast("发表评论成功");
+                    NotificationShowExtensions.ShowMessageToast("发表评论成功");
                     this.Hide();
 
                 }
                 else
                 {
-                    Notify.ShowMessageToast(data.message.ToString());
+                    NotificationShowExtensions.ShowMessageToast(data.message.ToString());
                 }
 
             }
             catch (Exception)
             {
                 IsPrimaryButtonEnabled = true;
-                Notify.ShowMessageToast("发送评论失败");
+                NotificationShowExtensions.ShowMessageToast("发送评论失败");
                 // throw;
             }
         }
@@ -124,7 +125,7 @@ namespace BiliLite.Dialogs
             catch (Exception ex)
             {
                 _logger.Error(ex.Message, ex);
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
             }
         }
 
