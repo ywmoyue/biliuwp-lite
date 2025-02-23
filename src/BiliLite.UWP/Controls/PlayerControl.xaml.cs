@@ -1578,7 +1578,10 @@ namespace BiliLite.Controls
             var info = CurrentPlayItem.LocalPlayInfo.Info;
             if (info.PlayUrlType == BiliPlayUrlType.DASH)
             {
-                result = await Player.PlayDashUseFFmpegInterop(info.DashInfo, "", "", positon: _postion, isLocal: true);
+                var playInfo = CurrentPlayItem.LocalPlayInfo.VideoTrackInfos.FirstOrDefault();
+                playInfo.DashInfo.Audio = CurrentPlayItem.LocalPlayInfo.AudioTrackInfos.FirstOrDefault()?.Audio;
+                result = await Player.PlayDashUseFFmpegInterop(playInfo.DashInfo, "", "", positon: _postion,
+                    isLocal: true);
             }
             else if (CurrentPlayItem.LocalPlayInfo.Info.PlayUrlType == BiliPlayUrlType.SingleFLV)
             {

@@ -89,23 +89,49 @@ namespace BiliLite.Pages
             foreach (var item in data.Epsidoes)
             {
                 IDictionary<string, string> subtitles = new Dictionary<string, string>();
+                var videoTrackInfos = new List<BiliPlayUrlInfo>();
+                var audioTrackInfos = new List<BiliDashAudioPlayUrlInfo>();
                 foreach (var subtitle in item.SubtitlePath)
                 {
                     subtitles.Add(subtitle.Name, subtitle.Url);
                 }
-                BiliPlayUrlInfo info = new BiliPlayUrlInfo();
+                var info = new BiliPlayUrlInfo();
                 if (item.IsDash)
                 {
                     info.PlayUrlType = BiliPlayUrlType.DASH;
-                    info.DashInfo = new BiliDashPlayUrlInfo();
-                    info.DashInfo.Video = new BiliDashItem()
+
+                    var videoPaths = item.Paths.Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("video")).ToList();
+                    var audioPaths = item.Paths.Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("audio")).ToList();
+
+                    foreach (var videoPath in videoPaths)
                     {
-                        Url = item.Paths.FirstOrDefault(x => x.Contains("video.m4s"))
-                    };
-                    info.DashInfo.Audio = new BiliDashItem()
+                        var infoItem = new BiliPlayUrlInfo();
+
+                        infoItem.PlayUrlType = BiliPlayUrlType.DASH;
+                        infoItem.DashInfo = new BiliDashPlayUrlInfo();
+                        infoItem.DashInfo.Video = new BiliDashItem()
+                        {
+                            Url = videoPath,
+                        };
+                        var (trackId, trackName) = videoPath.GetDownloadedTrackIdName();
+                        infoItem.QualityID = trackId;
+                        infoItem.QualityName = trackName;
+                        videoTrackInfos.Add(infoItem);
+                    }
+
+                    foreach (var audioPath in audioPaths)
                     {
-                        Url = item.Paths.FirstOrDefault(x => x.Contains("audio.m4s")),
-                    };
+                        var infoItem = new BiliDashAudioPlayUrlInfo();
+
+                        infoItem.Audio = new BiliDashItem()
+                        {
+                            Url = audioPath,
+                        };
+                        var (trackId, trackName) = audioPath.GetDownloadedTrackIdName(true);
+                        infoItem.QualityID = trackId;
+                        infoItem.QualityName = trackName;
+                        audioTrackInfos.Add(infoItem);
+                    }
                 }
                 else if (item.Paths.Count == 1)
                 {
@@ -147,7 +173,9 @@ namespace BiliLite.Pages
                         DanmakuPath = item.DanmakuPath,
                         Quality = item.QualityName,
                         Subtitles = subtitles,
-                        Info = info
+                        Info = info,
+                        VideoTrackInfos = videoTrackInfos,
+                        AudioTrackInfos = audioTrackInfos,
                     }
                 });
             }

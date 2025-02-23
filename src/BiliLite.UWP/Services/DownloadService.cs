@@ -21,6 +21,7 @@ using AutoMapper;
 using BiliLite.Models.Databases;
 using BiliLite.Modules;
 using Microsoft.EntityFrameworkCore;
+using Path = System.IO.Path;
 
 namespace BiliLite.Services
 {
@@ -388,6 +389,22 @@ namespace BiliLite.Services
 
             // If neither condition is met, return 0
             return 0;
+        }
+
+        public DownloadedSubItem FindDownloadSubItemById(string id, bool isSeason = false)
+        {
+            if (m_downloadPageViewModel.Downloadings.Any(x => x.EpisodeID == id))
+            {
+                return null; // Item is downloading
+            }
+
+            var downloadedPredicate = isSeason
+                ? (Func<DownloadedSubItem, bool>)(subItem => subItem.EpisodeID == id)
+                : (Func<DownloadedSubItem, bool>)(subItem => subItem.CID == id);
+
+            return m_downloadPageViewModel.DownloadedViewModels
+                .Select(downloadedItem => downloadedItem.Epsidoes.FirstOrDefault(downloadedPredicate))
+                .FirstOrDefault(subItem => subItem != null);
         }
 
         /// <summary>
@@ -766,6 +783,19 @@ namespace BiliLite.Services
                 item.TransferGroup.TransferBehavior = parallelDownload ? BackgroundTransferBehavior.Parallel : BackgroundTransferBehavior.Serialized;
                 item.CostPolicy = allowCostNetwork ? BackgroundTransferCostPolicy.Always : BackgroundTransferCostPolicy.UnrestrictedOnly;
             }
+        }
+
+        public async Task AddOtherTracksToDownloadedSubItemIndex(DownloadInfo info,DownloadSaveEpisodeInfo downloadSaveEpisodeInfo)
+        {
+            var downloadedSubItem = await m_biliLiteDbContext.DownloadedSubItems.FirstOrDefaultAsync(x => x.CID == info.CID);
+
+            foreach (var item in info.Urls)
+            {
+                downloadSaveEpisodeInfo.VideoPath.Add(item.FileName);
+                downloadedSubItem.Paths.Add(Path.Combine(downloadSaveEpisodeInfo.Path, item.FileName));
+            }
+
+            await m_biliLiteDbContext.SaveChangesAsync();
         }
 
         public void AddDownloadItemsIndex(DownloadSaveInfo downloadSaveInfo, DownloadSaveEpisodeInfo downloadSaveEpisodeInfo)
