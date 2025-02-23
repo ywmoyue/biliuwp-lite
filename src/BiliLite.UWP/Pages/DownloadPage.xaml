@@ -249,7 +249,7 @@
                 </PivotItem.Header>
                 <SplitView
                     x:Name="splitView"
-                    OpenPaneLength="360"
+                    OpenPaneLength="400"
                     PaneBackground="Transparent"
                     PanePlacement="Right">
                     <SplitView.Pane>
@@ -273,7 +273,12 @@
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
-                                        <Image Width="80" Source="{Binding Path=Cover}" />
+                                        <Border CornerRadius="{StaticResource OverlayCornerRadius}">
+                                            <Image
+                                                Width="130"
+                                                Source="{Binding Path=Cover}"
+                                                Stretch="Fill" />
+                                        </Border>
 
                                         <StackPanel Grid.Column="1" Margin="8,0,0,0">
                                             <TextBlock
@@ -301,11 +306,6 @@
                                         ItemClick="listDownloadedEpisodes_ItemClick"
                                         ItemsSource="{Binding Path=Epsidoes}"
                                         SelectionMode="None">
-                                        <ListView.ItemContainerStyle>
-                                            <Style TargetType="ListViewItem">
-                                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                            </Style>
-                                        </ListView.ItemContainerStyle>
                                         <ListView.ItemTemplate>
                                             <DataTemplate>
                                                 <Grid>
@@ -322,32 +322,29 @@
                                                         TextTrimming="CharacterEllipsis" />
                                                     <AppBarButton
                                                         Grid.Column="1"
-                                                        Width="40"
-                                                        Height="40"
+                                                        Width="48"
+                                                        Height="48"
                                                         Click="btnEpisodesOutput_Click"
                                                         Icon="Save"
                                                         ToolTipService.ToolTip="导出视频" />
                                                     <AppBarButton
                                                         Grid.Column="2"
-                                                        Width="40"
-                                                        Height="40"
+                                                        Width="48"
+                                                        Height="48"
                                                         Click="btnEpisodesPlay_Click"
                                                         Icon="Play"
                                                         Visibility="Collapsed" />
                                                     <AppBarButton
                                                         Grid.Column="3"
-                                                        Width="40"
-                                                        Height="40"
+                                                        Width="48"
+                                                        Height="48"
                                                         Click="btnEpisodesFolder_Click"
-                                                        ToolTipService.ToolTip="打开目录">
-                                                        <AppBarButton.Icon>
-                                                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8B7;" />
-                                                        </AppBarButton.Icon>
-                                                    </AppBarButton>
+                                                        Icon="MoveToFolder"
+                                                        ToolTipService.ToolTip="打开目录" />
                                                     <AppBarButton
                                                         Grid.Column="4"
-                                                        Width="40"
-                                                        Height="40"
+                                                        Width="48"
+                                                        Height="48"
                                                         Click="btnEpisodesDelete_Click"
                                                         Icon="Delete"
                                                         ToolTipService.ToolTip="删除" />
@@ -395,11 +392,8 @@
                                                     <MenuFlyoutItem
                                                         x:Name="btnMenuFolder"
                                                         Click="btnMenuFolder_Click"
-                                                        Text="打开目录">
-                                                        <MenuFlyoutItem.Icon>
-                                                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8B7;" />
-                                                        </MenuFlyoutItem.Icon>
-                                                    </MenuFlyoutItem>
+                                                        Icon="MoveToFolder"
+                                                        Text="打开目录" />
                                                     <MenuFlyoutSeparator />
                                                     <MenuFlyoutItem
                                                         x:Name="btnMenuDetele"
