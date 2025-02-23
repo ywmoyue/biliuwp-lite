@@ -75,7 +75,7 @@
                 <TextBlock VerticalAlignment="Center" Text="{x:Bind Path=m_viewModel.FavoriteInfo.Title, Mode=OneWay}" />
                 <TextBlock Margin="0,4" Foreground="Gray">
                     创建者:<Run Text="{x:Bind Path=m_viewModel.FavoriteInfo.Upper.Name, Mode=OneWay}" />
-                    ,共<Run Text="{x:Bind Path=m_viewModel.FavoriteInfo.MediaCount, Mode=OneWay}" />
+                    ，共<Run Text="{x:Bind Path=m_viewModel.FavoriteInfo.MediaCount, Mode=OneWay}" />
                     个视频</TextBlock>
             </StackPanel>
             <StackPanel
@@ -86,7 +86,7 @@
                 Visibility="{x:Bind Path=m_viewModel.IsItemClickEnabled, Mode=OneWay}">
                 <AutoSuggestBox
                     x:Name="searchBox"
-                    Width="160"
+                    MinWidth="200"
                     Margin="12,0"
                     VerticalAlignment="Center"
                     PlaceholderText="输入关键字"
@@ -94,35 +94,30 @@
                     QuerySubmitted="AutoSuggestBox_QuerySubmitted" />
                 <AppBarButton
                     x:Name="PlayAll"
-                    Width="40"
-                    Height="40"
+                    Height="48"
                     Click="PlayAll_Click"
                     Icon="Play"
                     ToolTipService.ToolTip="播放全部" />
                 <AppBarButton
-                    Width="40"
-                    Height="40"
+                    Height="48"
                     Command="{x:Bind Path=m_viewModel.CollectCommand}"
                     Icon="OutlineStar"
                     ToolTipService.ToolTip="收藏"
                     Visibility="{x:Bind Path=m_viewModel.ShowCollect, Mode=OneWay}" />
                 <AppBarButton
-                    Width="40"
-                    Height="40"
+                    Height="48"
                     Command="{x:Bind Path=m_viewModel.CancelCollectCommand}"
                     Icon="SolidStar"
                     ToolTipService.ToolTip="取消收藏"
                     Visibility="{x:Bind Path=m_viewModel.ShowCancelCollect, Mode=OneWay}" />
                 <AppBarButton
-                    Width="40"
-                    Height="40"
+                    Height="48"
                     Click="btnClean_Click"
                     Icon="Delete"
                     ToolTipService.ToolTip="清除失效"
                     Visibility="{x:Bind Path=m_viewModel.IsSelf, Mode=OneWay}" />
                 <AppBarButton
-                    Width="40"
-                    Height="40"
+                    Height="48"
                     Command="{x:Bind Path=m_viewModel.SelectCommand}"
                     CommandParameter="1"
                     Icon="List"
@@ -161,8 +156,7 @@
                     复制到...
                 </Button>
                 <AppBarButton
-                    Width="40"
-                    Height="40"
+                    Height="48"
                     Command="{x:Bind Path=m_viewModel.SelectCommand}"
                     Icon="Cancel"
                     ToolTipService.ToolTip="退出批量操作" />
