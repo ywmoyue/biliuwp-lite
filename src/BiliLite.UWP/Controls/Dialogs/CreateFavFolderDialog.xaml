@@ -6,9 +6,14 @@
     xmlns:local="using:BiliLite.Controls.Dialogs"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="创建收藏夹"
+    Background="{ThemeResource SystemControlAcrylicElementBrush}"
+    CloseButtonStyle="{StaticResource DefaultButtonStyle}"
+    CornerRadius="{StaticResource OverlayCornerRadius}"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
     PrimaryButtonText="提交"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
+    SecondaryButtonStyle="{StaticResource DefaultButtonStyle}"
     SecondaryButtonText="取消"
     mc:Ignorable="d">
 

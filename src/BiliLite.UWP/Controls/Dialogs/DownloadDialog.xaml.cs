@@ -90,7 +90,7 @@ namespace BiliLite.Controls.Dialogs
             m_viewModel.Qualities = data.Qualites;
             m_viewModel.SelectedQualityIndex = 0;
 
-            m_viewModel.AudioQualities = data.AudioQualites;
+            m_viewModel.AudioQualities = [.. data.AudioQualites.OrderBy(x => x.QualityID)];
             m_viewModel.SelectedAudioQuality = data.AudioQualites?.FirstOrDefault();
         }
         private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)

@@ -8,19 +8,19 @@
     xmlns:modules="using:BiliLite.Modules"
     xmlns:user="using:BiliLite.ViewModels.User"
     Title="复制到"
+    Background="{ThemeResource SystemControlAcrylicElementBrush}"
+    CloseButtonStyle="{StaticResource DefaultButtonStyle}"
+    CornerRadius="{StaticResource OverlayCornerRadius}"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
     PrimaryButtonText="提交"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
+    SecondaryButtonStyle="{StaticResource DefaultButtonStyle}"
     SecondaryButtonText="取消"
     mc:Ignorable="d">
 
     <Grid>
         <ListView x:Name="listView" SelectionMode="Single">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                </Style>
-            </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="user:FavoriteItemViewModel">
                     <Grid>
@@ -44,7 +44,6 @@
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
-
         </ListView>
         <ProgressRing x:Name="prLoading" IsActive="True" />
     </Grid>

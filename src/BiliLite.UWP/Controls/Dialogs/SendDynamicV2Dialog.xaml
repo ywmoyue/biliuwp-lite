@@ -8,6 +8,11 @@
     xmlns:modules="using:BiliLite.Modules"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:viewModels="using:BiliLite.ViewModels"
+    Background="{ThemeResource SystemControlAcrylicElementBrush}"
+    CloseButtonStyle="{StaticResource DefaultButtonStyle}"
+    CornerRadius="{StaticResource OverlayCornerRadius}"
+    PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
+    SecondaryButtonStyle="{StaticResource DefaultButtonStyle}"
     mc:Ignorable="d">
     <ContentDialog.Resources>
         <Flyout x:Key="FaceFlyout" x:Name="FaceFlyout">
@@ -132,7 +137,6 @@
         </Flyout>
     </ContentDialog.Resources>
     <Grid>
-
         <StackPanel x:Name="st" Width="440">
             <TextBlock Margin="4,0" Visibility="{x:Bind Path=m_viewModel.IsRepost, Mode=OneWay}">转发动态</TextBlock>
             <TextBlock Margin="4,0" Visibility="{x:Bind Path=m_viewModel.IsRepost, Mode=OneWay, Converter={StaticResource display}}">发表动态</TextBlock>
@@ -150,6 +154,7 @@
                 Margin="0,8"
                 Padding="8"
                 Background="#33808080"
+                CornerRadius="{StaticResource ControlCornerRadius}"
                 Visibility="{x:Bind Path=m_viewModel.IsRepost, Mode=OneWay}">
                 <TextBlock
                     MaxLines="1"
@@ -171,8 +176,8 @@
 
                     <Button
                         x:Name="btnEmoji"
-                        Width="36"
-                        Height="36"
+                        Width="40"
+                        Height="40"
                         Click="btnEmoji_Click"
                         ToolTipService.ToolTip="表情">
                         <StackPanel Orientation="Horizontal">
@@ -182,15 +187,24 @@
                                 Glyph="&#xE170;" />
                         </StackPanel>
                     </Button>
-                    <!--<Button Width="36" Height="36" x:Name="btnVote" Visibility="{x:Bind Path=sendDynamicVM.IsRepost,Mode=OneWay,Converter={StaticResource display}}" ToolTipService.ToolTip="发起投票"  Margin="4 0 0 0"   >
+                    <!--<Button
+                        x:Name="btnVote"
+                        Width="40"
+                        Height="40"
+                        Margin="4,0,0,0"
+                        ToolTipService.ToolTip="发起投票"
+                        Visibility="{x:Bind Path=sendDynamicVM.IsRepost, Mode=OneWay, Converter={StaticResource display}}">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon FontFamily="Segoe MDL2 Assets" FontSize="14"  Glyph="&#xE1E9;" />
+                            <FontIcon
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="14"
+                                Glyph="&#xE1E9;" />
                         </StackPanel>
                     </Button>-->
                     <Button
                         x:Name="btnImage"
-                        Width="36"
-                        Height="36"
+                        Width="40"
+                        Height="40"
                         Margin="4,0,0,0"
                         Click="btnImage_Click"
                         ToolTipService.ToolTip="上传图片"
@@ -205,8 +219,8 @@
                     </Button>
                     <Button
                         x:Name="btnAt"
-                        Width="36"
-                        Height="36"
+                        Width="40"
+                        Height="40"
                         Margin="4,0,0,0"
                         Click="btnAt_Click"
                         ToolTipService.ToolTip="@">
@@ -220,8 +234,8 @@
                     </Button>
                     <Button
                         x:Name="btnTopic"
-                        Width="36"
-                        Height="36"
+                        Width="40"
+                        Height="40"
                         Margin="4,0,0,0"
                         Click="btnTopic_Click"
                         ToolTipService.ToolTip="话题"
@@ -231,9 +245,18 @@
                         </StackPanel>
 
                     </Button>
-                    <!--<Button Width="36" Height="36"  Visibility="{x:Bind Path=sendDynamicVM.IsRepost,Mode=OneWay,Converter={StaticResource display}}" x:Name="btnTime" ToolTipService.ToolTip="定时发布" Margin="4 0 0 0" >
+                    <!--<Button
+                        x:Name="btnTime"
+                        Width="40"
+                        Height="40"
+                        Margin="4,0,0,0"
+                        ToolTipService.ToolTip="定时发布"
+                        Visibility="{x:Bind Path=sendDynamicVM.IsRepost, Mode=OneWay, Converter={StaticResource display}}">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon FontFamily="Segoe MDL2 Assets" FontSize="14"  Glyph="&#xE916;" />
+                            <FontIcon
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="14"
+                                Glyph="&#xE916;" />
                         </StackPanel>
                     </Button>-->
                 </StackPanel>
@@ -254,9 +277,9 @@
                     <Button
                         x:Name="btnSend"
                         Width="64"
-                        Background="{ThemeResource SystemAccentColor}"
                         Click="btnSend_Click"
-                        Foreground="White">
+                        Foreground="White"
+                        Style="{StaticResource AccentButtonStyle}">
                         发表
                     </Button>
                 </StackPanel>
@@ -280,8 +303,9 @@
                 Margin="0,4"
                 Padding="4"
                 Background="#33808080"
+                CornerRadius="{StaticResource ControlCornerRadius}"
                 Visibility="{x:Bind Path=m_viewModel.ShowImage, Mode=OneWay}">
-                <TextBlock Margin="0,4"><Run Text="{x:Bind Path=m_viewModel.Images.Count, Mode=OneWay}" />
+                <TextBlock><Run Text="{x:Bind Path=m_viewModel.Images.Count, Mode=OneWay}" />
                     /9张图片</TextBlock>
                 <GridView
                     x:Name="gv_Pics"

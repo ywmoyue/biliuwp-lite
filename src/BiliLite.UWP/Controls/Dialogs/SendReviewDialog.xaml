@@ -7,9 +7,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:my="using:Microsoft.UI.Xaml.Controls"
     Title="点评"
+    Background="{ThemeResource SystemControlAcrylicElementBrush}"
+    CloseButtonStyle="{StaticResource DefaultButtonStyle}"
+    CornerRadius="{StaticResource OverlayCornerRadius}"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
     PrimaryButtonText="发表"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
+    SecondaryButtonStyle="{StaticResource DefaultButtonStyle}"
     SecondaryButtonText="取消"
     mc:Ignorable="d">
     <ContentDialog.Resources>

@@ -8,6 +8,11 @@
     xmlns:modules="using:BiliLite.Modules"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:viewModels="using:BiliLite.ViewModels"
+    Background="{ThemeResource SystemControlAcrylicElementBrush}"
+    CloseButtonStyle="{StaticResource DefaultButtonStyle}"
+    CornerRadius="{StaticResource OverlayCornerRadius}"
+    PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
+    SecondaryButtonStyle="{StaticResource DefaultButtonStyle}"
     mc:Ignorable="d">
     <ContentDialog.Resources>
         <Flyout x:Key="FaceFlyout" x:Name="FaceFlyout">
@@ -26,13 +31,6 @@
                                 ItemClick="gvEmoji_ItemClick"
                                 ItemsSource="{Binding Path=emote, Mode=OneWay}"
                                 SelectionMode="None">
-                                <!--<GridView.ItemContainerStyle>
-                                -->
-                                <!--<Style TargetType="GridViewItem">
-                                                    <Setter Property="Margin" Value="5"></Setter>
-                                                </Style>-->
-                                <!--
-                                            </GridView.ItemContainerStyle>-->
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="viewModels:EmotePackageItemModel">
                                         <StackPanel>
@@ -48,7 +46,6 @@
                                                 Text="{Binding Text}"
                                                 TextAlignment="Center"
                                                 Visibility="{Binding Path=showImage, Converter={StaticResource display}}" />
-
 
                                         </StackPanel>
                                     </DataTemplate>
@@ -182,9 +179,18 @@
                                 Glyph="&#xE170;" />
                         </StackPanel>
                     </Button>
-                    <!--<Button Width="36" Height="36" x:Name="btnVote" Visibility="{x:Bind Path=sendDynamicVM.IsRepost,Mode=OneWay,Converter={StaticResource display}}" ToolTipService.ToolTip="发起投票"  Margin="4 0 0 0"   >
+                    <!--<Button
+                        x:Name="btnVote"
+                        Width="36"
+                        Height="36"
+                        Margin="4,0,0,0"
+                        ToolTipService.ToolTip="发起投票"
+                        Visibility="{x:Bind Path=sendDynamicVM.IsRepost, Mode=OneWay, Converter={StaticResource display}}">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon FontFamily="Segoe MDL2 Assets" FontSize="14"  Glyph="&#xE1E9;" />
+                            <FontIcon
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="14"
+                                Glyph="&#xE1E9;" />
                         </StackPanel>
                     </Button>-->
                     <Button
@@ -231,9 +237,18 @@
                         </StackPanel>
 
                     </Button>
-                    <!--<Button Width="36" Height="36"  Visibility="{x:Bind Path=sendDynamicVM.IsRepost,Mode=OneWay,Converter={StaticResource display}}" x:Name="btnTime" ToolTipService.ToolTip="定时发布" Margin="4 0 0 0" >
+                    <!--<Button
+                        x:Name="btnTime"
+                        Width="36"
+                        Height="36"
+                        Margin="4,0,0,0"
+                        ToolTipService.ToolTip="定时发布"
+                        Visibility="{x:Bind Path=sendDynamicVM.IsRepost, Mode=OneWay, Converter={StaticResource display}}">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon FontFamily="Segoe MDL2 Assets" FontSize="14"  Glyph="&#xE916;" />
+                            <FontIcon
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="14"
+                                Glyph="&#xE916;" />
                         </StackPanel>
                     </Button>-->
                 </StackPanel>

@@ -6,9 +6,14 @@
     xmlns:local="using:BiliLite.Controls.Dialogs"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="编辑收藏夹"
+    Background="{ThemeResource SystemControlAcrylicElementBrush}"
+    CloseButtonStyle="{StaticResource DefaultButtonStyle}"
+    CornerRadius="{StaticResource OverlayCornerRadius}"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
     PrimaryButtonText="提交"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
+    SecondaryButtonStyle="{StaticResource DefaultButtonStyle}"
     SecondaryButtonText="取消"
     mc:Ignorable="d">
 
@@ -19,7 +24,7 @@
             x:Name="txtTitle"
             Margin="0,8"
             PlaceholderText="请输入名称" />
-        <TextBlock>简介</TextBlock>
+        <TextBlock Margin="0,10,0,0">简介</TextBlock>
         <TextBox
             x:Name="txtDesc"
             Height="64"

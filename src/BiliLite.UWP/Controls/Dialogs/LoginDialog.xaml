@@ -8,10 +8,15 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:user="using:BiliLite.Modules.User"
     Title="{x:Bind Path=loginVM.Title, Mode=OneWay}"
+    Background="{ThemeResource SystemControlAcrylicElementBrush}"
+    CloseButtonStyle="{StaticResource DefaultButtonStyle}"
+    CornerRadius="{StaticResource OverlayCornerRadius}"
     IsPrimaryButtonEnabled="{x:Bind Path=loginVM.PrimaryButtonEnable, Mode=OneWay}"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
     PrimaryButtonText="登录"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
+    SecondaryButtonStyle="{StaticResource DefaultButtonStyle}"
     SecondaryButtonText="取消"
     mc:Ignorable="d">
     <Grid>
@@ -99,14 +104,14 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
                 <!--  手机号  -->
-                <TextBlock Margin="0,4">手机号</TextBlock>
+                <TextBlock Margin="0,10,0,4">手机号</TextBlock>
                 <TextBox
                     x:Name="txt_Password"
                     MaxLength="11"
                     PlaceholderText="请输入手机号"
                     Text="{x:Bind Path=loginVM.Phone, Mode=TwoWay}" />
                 <!--  验证码  -->
-                <TextBlock Margin="0,4">验证码</TextBlock>
+                <TextBlock Margin="0,10,0,4">验证码</TextBlock>
                 <Grid>
                     <TextBox PlaceholderText="请输入验证码" Text="{x:Bind Path=loginVM.Code, Mode=TwoWay}" />
                     <HyperlinkButton

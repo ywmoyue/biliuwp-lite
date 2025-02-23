@@ -27,6 +27,7 @@
                 x:Name="btnClose"
                 Width="40"
                 Height="40"
+                Margin="0,0,40,0"
                 HorizontalAlignment="Right"
                 Click="btnClose_Click">
                 <AppBarButton.Icon>

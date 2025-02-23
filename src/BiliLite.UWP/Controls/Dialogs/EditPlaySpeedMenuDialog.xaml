@@ -8,15 +8,20 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:player="using:BiliLite.Models.Common.Player"
     Title="自定义播放倍速"
+    Background="{ThemeResource SystemControlAcrylicElementBrush}"
+    CloseButtonStyle="{StaticResource DefaultButtonStyle}"
     CloseButtonText="取消"
+    CornerRadius="{StaticResource OverlayCornerRadius}"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
     PrimaryButtonText="确定"
+    SecondaryButtonStyle="{StaticResource DefaultButtonStyle}"
     mc:Ignorable="d">
 
     <Grid>
         <ListView
             MaxHeight="{x:Bind DialogHeight, Mode=OneWay}"
-            Margin="-16,0,0,70"
+            Margin="-16,0,0,80"
             ItemsSource="{x:Bind m_viewModel.PlaySpeedMenuItems, Mode=OneWay}"
             SelectionMode="None">
             <ListView.ItemTemplate>
@@ -73,6 +78,7 @@
             <Button
                 Grid.Row="1"
                 Grid.ColumnSpan="2"
+                Margin="0,10,0,0"
                 HorizontalAlignment="Stretch"
                 Click="BtnBackToDefault_OnClick">
                 恢复默认

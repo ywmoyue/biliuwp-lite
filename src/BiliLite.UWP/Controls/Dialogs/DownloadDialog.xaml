@@ -8,9 +8,14 @@
     xmlns:local="using:BiliLite.Controls.Dialogs"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="下载视频"
+    Background="{ThemeResource SystemControlAcrylicElementBrush}"
+    CloseButtonStyle="{StaticResource DefaultButtonStyle}"
+    CornerRadius="{StaticResource OverlayCornerRadius}"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
     PrimaryButtonText="开始"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
+    SecondaryButtonStyle="{StaticResource DefaultButtonStyle}"
     SecondaryButtonText="取消"
     mc:Ignorable="d">
 
@@ -34,7 +39,7 @@
                 SelectedValuePath="Value" />
 
         </StackPanel>
-        <StackPanel Grid.Row="1" Margin="0,8,0,0">
+        <StackPanel Grid.Row="1" Margin="0,10,0,0">
             <TextBlock>优先清晰度</TextBlock>
             <ComboBox
                 x:Name="cbQuality"
@@ -48,7 +53,7 @@
 
         <StackPanel
             Grid.Row="2"
-            Margin="0,8,0,0"
+            Margin="0,10,0,0"
             Visibility="{x:Bind m_viewModel.ShowAudioQualityComboBox, Mode=OneWay}">
             <TextBlock>优先音质</TextBlock>
             <ComboBox
@@ -60,13 +65,13 @@
                 SelectedItem="{x:Bind m_viewModel.SelectedAudioQuality, Mode=TwoWay}" />
         </StackPanel>
 
-        <StackPanel Grid.Row="3" Margin="0,8,0,0">
+        <StackPanel Grid.Row="3" Margin="0,10,0,0">
             <TextBlock>选集</TextBlock>
             <Border
                 Margin="0,4"
                 BorderBrush="{ThemeResource ComboBoxBorderBrush}"
                 BorderThickness="{ThemeResource ComboBoxBorderThemeThickness}"
-                CornerRadius="2">
+                CornerRadius="{StaticResource ControlCornerRadius}">
                 <ListView
                     x:Name="listView"
                     Height="200"
@@ -137,42 +142,6 @@
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="ListViewItem">
-                                        <ListViewItemPresenter
-                                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                            CheckBoxBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
-                                            CheckBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
-                                            CheckMode="Inline"
-                                            ContentMargin="{TemplateBinding Padding}"
-                                            ContentTransitions="{TemplateBinding ContentTransitions}"
-                                            DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
-                                            DragBackground="{ThemeResource ListViewItemDragBackgroundThemeBrush}"
-                                            DragForeground="{ThemeResource ListViewItemDragForegroundThemeBrush}"
-                                            DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}"
-                                            FocusBorderBrush="{ThemeResource SystemControlForegroundAltHighBrush}"
-                                            FocusSecondaryBorderBrush="{ThemeResource SystemControlForegroundBaseHighBrush}"
-                                            PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}"
-                                            PointerOverBackground="{ThemeResource SystemControlHighlightListLowBrush}"
-                                            PointerOverForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
-                                            PressedBackground="{ThemeResource SystemControlHighlightListMediumBrush}"
-                                            ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}"
-                                            SelectedBackground="{ThemeResource SystemControlHighlightListAccentLowBrush}"
-                                            SelectedForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
-                                            SelectedPointerOverBackground="{ThemeResource SystemControlHighlightListAccentMediumBrush}"
-                                            SelectedPressedBackground="{ThemeResource SystemControlHighlightListAccentHighBrush}"
-                                            SelectionCheckMarkVisualEnabled="True" />
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-
                 </ListView>
             </Border>
             <StackPanel Orientation="Horizontal">
