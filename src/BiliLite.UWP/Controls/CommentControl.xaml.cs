@@ -1,4 +1,4 @@
-﻿using BiliLite.Dialogs;
+﻿using BiliLite.Controls.Dialogs;
 using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
@@ -563,7 +563,7 @@ namespace BiliLite.Controls
         private async void BtnOpenSendComment_Click(object sender, RoutedEventArgs e)
         {
             SendCommentDialog sendCommentDialog = new SendCommentDialog(m_loadCommentInfo.Oid, (CommentType)m_loadCommentInfo.CommentMode);
-            await sendCommentDialog.ShowAsync();
+            await NotificationShowExtensions.ShowContentDialog(sendCommentDialog);
         }
 
         private void BtnRefresh_Click(object sender, RoutedEventArgs e)

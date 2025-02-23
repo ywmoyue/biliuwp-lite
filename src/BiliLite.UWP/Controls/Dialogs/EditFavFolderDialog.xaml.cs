@@ -6,15 +6,20 @@ using Windows.UI.Xaml.Controls;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 
-namespace BiliLite.Dialogs
+namespace BiliLite.Controls.Dialogs
 {
-    public sealed partial class CreateFavFolderDialog : ContentDialog
+    public sealed partial class EditFavFolderDialog : ContentDialog
     {
         readonly FavoriteApi favoriteApi;
-        public CreateFavFolderDialog()
+        readonly string id;
+        public EditFavFolderDialog(string id, string title, string desc, bool isOpen)
         {
             this.InitializeComponent();
             favoriteApi = new FavoriteApi();
+            this.id = id;
+            txtTitle.Text = title;
+            txtDesc.Text = desc;
+            checkPrivacy.IsChecked = isOpen;
         }
         public bool Success { get; set; } = false;
         private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
@@ -27,13 +32,13 @@ namespace BiliLite.Dialogs
             try
             {
                 IsPrimaryButtonEnabled = false;
-                var result = await favoriteApi.CreateFavorite(txtTitle.Text, txtDesc.Text, checkPrivacy.IsChecked.Value).Request();
+                var result = await favoriteApi.EditFavorite(txtTitle.Text, txtDesc.Text, checkPrivacy.IsChecked.Value, id).Request();
                 if (result.status)
                 {
                     var data = await result.GetData<object>();
                     if (data.success)
                     {
-                        NotificationShowExtensions.ShowMessageToast("创建成功");
+                        NotificationShowExtensions.ShowMessageToast("修改成功");
                         Success = true;
                         this.Hide();
                     }
@@ -41,11 +46,14 @@ namespace BiliLite.Dialogs
                     {
                         NotificationShowExtensions.ShowMessageToast(data.message);
                     }
+
                 }
                 else
                 {
                     NotificationShowExtensions.ShowMessageToast(result.message);
                 }
+
+
             }
             catch (Exception ex)
             {

@@ -1,4 +1,5 @@
-﻿using BiliLite.Dialogs;
+﻿
+using BiliLite.Controls.Dialogs;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Player;
@@ -371,9 +372,9 @@ namespace BiliLite.Controls.Settings
             m_viewModel.FFmpegOptions.Add(new KeyValuePairViewModel());
         }
 
-        private void BtnOpenFFmpegOptionsPanel_OnClick(object sender, RoutedEventArgs e)
+        private async Task BtnOpenFFmpegOptionsPanel_OnClick(object sender, RoutedEventArgs e)
         {
-            FFmpegOptionsDialog.ShowAsync();
+            await NotificationShowExtensions.ShowContentDialog(FFmpegOptionsDialog);
         }
     }
 }

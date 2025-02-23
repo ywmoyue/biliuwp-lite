@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Bilibili.App.Dynamic.V2;
-using BiliLite.Dialogs;
+using BiliLite.Controls.Dialogs;
 using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
@@ -240,7 +240,7 @@ namespace BiliLite.ViewModels.UserDynamic
             {
                 sendDynamicDialog.SetRepost(data);
             }
-            await sendDynamicDialog.ShowAsync();
+            await NotificationShowExtensions.ShowContentDialog(sendDynamicDialog);
         }
 
         private void CopyDyn(DynamicV2ItemViewModel data)

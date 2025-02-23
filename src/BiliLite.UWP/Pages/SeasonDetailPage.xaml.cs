@@ -1,5 +1,6 @@
 ﻿using BiliLite.Controls;
-using BiliLite.Dialogs;
+
+using BiliLite.Controls.Dialogs;
 using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
@@ -481,7 +482,7 @@ namespace BiliLite.Pages
             }
 
             SendReviewDialog sendReviewDialog = new SendReviewDialog(m_seasonReviewViewModel.MediaID);
-            await sendReviewDialog.ShowAsync();
+            await NotificationShowExtensions.ShowContentDialog(sendReviewDialog);
         }
 
         private async void btnOpenWeb_Click(object sender, RoutedEventArgs e)
@@ -537,7 +538,7 @@ namespace BiliLite.Pages
             }
 
             DownloadDialog downloadDialog = new DownloadDialog(downloadItem);
-            await downloadDialog.ShowAsync();
+            await NotificationShowExtensions.ShowContentDialog(downloadDialog);
         }
 
         private async void btnRefresh_Click(object sender, RoutedEventArgs e)

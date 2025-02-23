@@ -1,6 +1,6 @@
 ﻿using Atelier39;
+using BiliLite.Controls.Dialogs;
 using BiliLite.Converters;
-using BiliLite.Dialogs;
 using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
@@ -2698,7 +2698,7 @@ namespace BiliLite.Controls
                     Time = Player.Position
                 }, true);
             });
-            await sendDanmakuDialog.ShowAsync();
+            await NotificationShowExtensions.ShowContentDialog(sendDanmakuDialog);
             await Play();
         }
 

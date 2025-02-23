@@ -10,7 +10,7 @@ using Windows.UI.Xaml.Input;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 
-namespace BiliLite.Dialogs
+namespace BiliLite.Controls.Dialogs
 {
     public sealed partial class EditPlaySpeedMenuDialog : ContentDialog
     {

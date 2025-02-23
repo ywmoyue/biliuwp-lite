@@ -236,7 +236,7 @@ namespace BiliLite.Controls.Settings
 
         private async void BtnSettingPlugin_OnClick(object sender, RoutedEventArgs e)
         {
-            await PluginsDialog.ShowAsync();
+            await NotificationShowExtensions.ShowContentDialog(PluginsDialog);
         }
 
         private async void BtnImportPluginInfo_OnClick(object sender, RoutedEventArgs e)

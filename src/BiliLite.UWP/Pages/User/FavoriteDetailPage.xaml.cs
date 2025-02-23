@@ -1,4 +1,4 @@
-﻿using BiliLite.Dialogs;
+﻿using BiliLite.Controls.Dialogs;
 using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
@@ -131,7 +131,7 @@ namespace BiliLite.Pages.User
                     ls.Add(item);
                 }
                 CopyOrMoveFavVideoDialog copyOrMoveFavVideoDialog = new CopyOrMoveFavVideoDialog(m_viewModel.Id, m_viewModel.FavoriteInfo.Mid, true, ls);
-                await copyOrMoveFavVideoDialog.ShowAsync();
+                await NotificationShowExtensions.ShowContentDialog(copyOrMoveFavVideoDialog);
                 m_viewModel.Refresh();
             }
         }
@@ -146,7 +146,7 @@ namespace BiliLite.Pages.User
                     ls.Add(item);
                 }
                 CopyOrMoveFavVideoDialog copyOrMoveFavVideoDialog = new CopyOrMoveFavVideoDialog(m_viewModel.Id, m_viewModel.FavoriteInfo.Mid, false, ls);
-                await copyOrMoveFavVideoDialog.ShowAsync();
+                await NotificationShowExtensions.ShowContentDialog(copyOrMoveFavVideoDialog);
             }
         }
 

@@ -1,5 +1,5 @@
 ﻿using BiliLite.Controls;
-using BiliLite.Dialogs;
+using BiliLite.Controls.Dialogs;
 using BiliLite.Models.Common.Notifications.Template;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Services;
@@ -80,7 +80,7 @@ namespace BiliLite.Extensions.Notifications
             {
                 LoginDialog ms = new LoginDialog();
                 dialogShowing = true;
-                await ms.ShowAsync();
+                await ShowContentDialog(ms);
                 dialogShowing = false;
             }
             if (SettingService.Account.Logined)

@@ -1,6 +1,6 @@
 ﻿using BiliLite.Controls;
+using BiliLite.Controls.Dialogs;
 using BiliLite.Converters;
-using BiliLite.Dialogs;
 using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
@@ -582,7 +582,7 @@ namespace BiliLite.Pages
                 return;
             }
             CreateFavFolderDialog createFavFolderDialog = new CreateFavFolderDialog();
-            await createFavFolderDialog.ShowAsync();
+            await NotificationShowExtensions.ShowContentDialog(createFavFolderDialog);
             await m_viewModel.LoadFavorite(m_viewModel.VideoInfo.Aid);
         }
 
@@ -675,7 +675,7 @@ namespace BiliLite.Pages
             }
 
             DownloadDialog downloadDialog = new DownloadDialog(downloadItem);
-            await downloadDialog.ShowAsync();
+            await NotificationShowExtensions.ShowContentDialog(downloadDialog);
         }
 
         public async Task Refresh()
