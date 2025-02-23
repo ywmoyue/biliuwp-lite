@@ -372,7 +372,7 @@ namespace BiliLite.Controls.Settings
             m_viewModel.FFmpegOptions.Add(new KeyValuePairViewModel());
         }
 
-        private async Task BtnOpenFFmpegOptionsPanel_OnClick(object sender, RoutedEventArgs e)
+        private async void BtnOpenFFmpegOptionsPanel_OnClick(object sender, RoutedEventArgs e)
         {
             await NotificationShowExtensions.ShowContentDialog(FFmpegOptionsDialog);
         }
