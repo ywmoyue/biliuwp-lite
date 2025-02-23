@@ -198,6 +198,7 @@
     <Compile Include="Converters\LiveQualitySliderTooltipConverter.cs" />
     <Compile Include="Converters\PlaySpeedSliderTooltipConverter.cs" />
     <Compile Include="Converters\QualitySliderTooltipConverter.cs" />
+    <Compile Include="Converters\SingleCornerRadiusConverter.cs" />
     <Compile Include="Converters\SoundQualitySliderTooltipConverter.cs" />
     <Compile Include="Converters\TimeSpanStrFormatConverter.cs" />
     <Compile Include="Controls\Dialogs\EditPlaySpeedMenuDialog.xaml.cs">

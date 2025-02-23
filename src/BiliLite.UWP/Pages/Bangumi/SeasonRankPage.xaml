@@ -16,6 +16,7 @@
         <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent" />
         <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White" />
         <convert:RankColorConvert x:Key="RankConvert" />
+        <convert:SingleCornerRadiusConverter x:Key="SingleCornerRadiusConverter" />
     </Page.Resources>
     <Grid>
         <Pivot
@@ -82,13 +83,15 @@
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Top"
                                             Background="{x:Bind Path=Rank, Converter={StaticResource RankConvert}}"
-                                            CornerRadius="0 0 4 0"
+                                            CornerRadius="{Binding Text, ElementName=CornerRadiusValue, Converter={StaticResource SingleCornerRadiusConverter}, ConverterParameter=8}"
                                             Opacity="0.8">
-                                            <!--  备注  -->
-                                            <TextBlock
-                                                FontWeight="Bold"
-                                                Foreground="White"
-                                                Text="{x:Bind Path=Rank}" />
+                                            <StackPanel>
+                                                <TextBlock
+                                                    FontWeight="Bold"
+                                                    Foreground="White"
+                                                    Text="{x:Bind Path=Rank}" />
+                                                <TextBlock x:Name="CornerRadiusValue" Visibility="Collapsed">3</TextBlock>
+                                            </StackPanel>
                                         </Border>
                                     </Grid>
 

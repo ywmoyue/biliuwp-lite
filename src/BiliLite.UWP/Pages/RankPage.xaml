@@ -113,19 +113,21 @@
                                                 Text="{x:Bind Path=Duration, Converter={StaticResource progressToTimeConverter}}" />
                                         </Grid>
 
-                                        <!--  备注❗：需要做圆角转换器  -->
                                         <Border
                                             Margin="-4"
                                             Padding="14,6,12,4"
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Top"
                                             Background="{x:Bind Path=Rank, Converter={StaticResource RankConvert}}"
-                                            CornerRadius="{StaticResource ControlCornerRadius}"
+                                            CornerRadius="{Binding Text, ElementName=CornerRadiusValue, Converter={StaticResource SingleCornerRadiusConverter}, ConverterParameter=8}"
                                             Opacity="0.8">
-                                            <TextBlock
-                                                FontWeight="Bold"
-                                                Foreground="White"
-                                                Text="{x:Bind Path=Rank}" />
+                                            <StackPanel>
+                                                <TextBlock
+                                                    FontWeight="Bold"
+                                                    Foreground="White"
+                                                    Text="{x:Bind Path=Rank}" />
+                                                <TextBlock x:Name="CornerRadiusValue" Visibility="Collapsed">3</TextBlock>
+                                            </StackPanel>
                                         </Border>
                                     </Grid>
 
