@@ -8,7 +8,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:font="using:FontAwesome5" xmlns:converters="using:CommunityToolkit.WinUI.Converters"
-    xmlns:home="using:BiliLite.Models.Common.Home" xmlns:theme="using:BiliLite.Models.Theme" xmlns:localconverters="using:BiliLite.Converters"
+    xmlns:home="using:BiliLite.Models.Common.Home" xmlns:theme="using:BiliLite.Models.Theme" xmlns:localconverters="using:BiliLite.Converters" xmlns:controls1="using:BiliLite.Controls"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400" x:Name="rootPanel">
@@ -172,21 +172,11 @@
                 <controls:SettingsCard>
                     <controls:SettingsCard.Header>
                         <StackPanel>
-                            <GridView x:Name="gridHomeCustom"
+                            <controls1:MyAdaptiveGridView x:Name="gridHomeCustom"
                           SelectionMode="None" 
                           Margin="0 8 0 0"
                           IsItemClickEnabled="True"  CanDragItems="True" CanReorderItems="True" AllowDrop="True" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" DragItemsCompleted="gridHomeCustom_DragItemsCompleted">
-                                <GridView.ItemContainerStyle>
-                                    <Style TargetType="GridViewItem">
-                                        <Setter Property="BorderBrush" Value="#cecece"></Setter>
-                                        <Setter Property="Foreground" Value="{ThemeResource TextColor}"></Setter>
-                                        <Setter Property="Width" Value="100"></Setter>
-                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-                                        <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
-                                        <Setter Property="BorderThickness" Value="1"></Setter>
-                                    </Style>
-                                </GridView.ItemContainerStyle>
-                                <GridView.ItemTemplate>
+                                <controls1:MyAdaptiveGridView.ItemTemplate>
                                     <DataTemplate x:DataType="home:HomeNavItem">
                                         <Grid Background="#00FFFFFF">
                                             <Grid.ContextFlyout>
@@ -201,22 +191,12 @@
                                         </Grid>
 
                                     </DataTemplate>
-                                </GridView.ItemTemplate>
+                                </controls1:MyAdaptiveGridView.ItemTemplate>
 
-                            </GridView>
+                            </controls1:MyAdaptiveGridView>
                             <TextBlock  Margin="0 0 0 8" >点击添加</TextBlock>
-                            <GridView x:Name="gridHomeNavItem" SelectionMode="None" IsItemClickEnabled="True" ItemClick="gridHomeNavItem_ItemClick" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                                <GridView.ItemContainerStyle>
-                                    <Style TargetType="GridViewItem">
-                                        <Setter Property="BorderBrush" Value="#cecece"></Setter>
-                                        <Setter Property="Foreground" Value="{ThemeResource TextColor}"></Setter>
-                                        <Setter Property="Width" Value="100"></Setter>
-                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-                                        <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
-                                        <Setter Property="BorderThickness" Value="1"></Setter>
-                                    </Style>
-                                </GridView.ItemContainerStyle>
-                                <GridView.ItemTemplate>
+                            <controls1:MyAdaptiveGridView x:Name="gridHomeNavItem" SelectionMode="None" IsItemClickEnabled="True" ItemClick="gridHomeNavItem_ItemClick" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                                <controls1:MyAdaptiveGridView.ItemTemplate>
                                     <DataTemplate x:DataType="home:HomeNavItem">
                                         <Grid>
                                             <StackPanel Orientation="Horizontal"  VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -225,8 +205,8 @@
                                             </StackPanel>
                                         </Grid>
                                     </DataTemplate>
-                                </GridView.ItemTemplate>
-                            </GridView>
+                                </controls1:MyAdaptiveGridView.ItemTemplate>
+                            </controls1:MyAdaptiveGridView>
                         </StackPanel>
                     </controls:SettingsCard.Header>
                 </controls:SettingsCard>
