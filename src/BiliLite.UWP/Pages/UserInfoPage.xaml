@@ -852,7 +852,7 @@
                                                             <Border
                                                                 Margin="8,0"
                                                                 Background="{x:Bind Path=m_viewModel.UserSpaceInfo.LevelColor, Mode=OneWay}"
-                                                                CornerRadius="2"
+                                                                CornerRadius="{StaticResource ControlCornerRadius}"
                                                                 Opacity=".8">
                                                                 <TextBlock
                                                                     Margin="4,2"
@@ -862,7 +862,7 @@
                                                             </Border>
                                                             <Border
                                                                 Background="{ThemeResource SystemAccentColor}"
-                                                                CornerRadius="2"
+                                                                CornerRadius="{StaticResource ControlCornerRadius}"
                                                                 Opacity=".8"
                                                                 Visibility="{x:Bind Path=m_viewModel.UserSpaceInfo.Vip.Status, Mode=OneWay, Converter={StaticResource display}, ConverterParameter=1}">
                                                                 <TextBlock

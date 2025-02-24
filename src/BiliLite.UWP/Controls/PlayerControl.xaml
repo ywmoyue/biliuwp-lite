@@ -303,7 +303,7 @@
                                                     <Border
                                                         Padding="8,4"
                                                         Background="Gray"
-                                                        CornerRadius="4">
+                                                        CornerRadius="{StaticResource ControlCornerRadius}">
                                                         <TextBlock FontSize="12" Text="{Binding}" />
                                                     </Border>
                                                 </HyperlinkButton>
@@ -886,7 +886,7 @@
                                                             Width="64"
                                                             Margin="4,0,0,0"
                                                             Background="{Binding ElementName=SendDanmakuColorText, Path=Text, Converter={StaticResource color}, Mode=OneWay}"
-                                                            CornerRadius="4" />
+                                                            CornerRadius="{StaticResource ControlCornerRadius}" />
                                                     </Grid>
                                                     <GridView
                                                         MaxWidth="240"
@@ -901,7 +901,7 @@
                                                                     Width="24"
                                                                     Height="24"
                                                                     Background="{x:Bind Converter={StaticResource color}}"
-                                                                    CornerRadius="4" />
+                                                                    CornerRadius="{StaticResource ControlCornerRadius}" />
                                                             </DataTemplate>
                                                         </GridView.ItemTemplate>
                                                         <GridView.ItemContainerStyle>

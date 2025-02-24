@@ -18,7 +18,7 @@
             Background="{ThemeResource SystemControlChromeLowAcrylicElementBrush}"
             BorderBrush="#31808080"
             BorderThickness="1"
-            CornerRadius="8"
+            CornerRadius="{StaticResource OverlayCornerRadius}"
             Tapped="RootBorder_Tapped">
 
             <controls:CommentControl x:Name="comment" HorizontalAlignment="Stretch" />

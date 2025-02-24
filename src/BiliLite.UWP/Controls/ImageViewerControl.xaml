@@ -16,7 +16,7 @@
                 <Image x:Name="image" Stretch="None" ></Image>
             </ScrollViewer>
             <StackPanel  Orientation="Horizontal" Margin="12" VerticalAlignment="Bottom" HorizontalAlignment="Center">
-                <Border CornerRadius="8"  Background="#7F000000" >
+                <Border CornerRadius="{StaticResource OverlayCornerRadius}"  Background="#7F000000" >
                     <StackPanel Orientation="Horizontal">
                         <AppBarButton x:Name="btnSave" Click="btnSave_Click" ToolTipService.ToolTip="保存" Width="40" Height="40" Foreground="White">
                             <AppBarButton.Icon>
@@ -30,7 +30,7 @@
                         </AppBarButton>
                     </StackPanel>
                 </Border>
-                <Border Margin="12 0 0 0" CornerRadius="8"  Background="#7F000000" >
+                <Border Margin="12 0 0 0" CornerRadius="{StaticResource OverlayCornerRadius}"  Background="#7F000000" >
                     <StackPanel Orientation="Horizontal">
                         <AppBarButton ToolTipService.ToolTip="原始大小" x:Name="btnOrigin" Click="btnOrigin_Click" Margin="0 0 0 0" Width="40" Height="40"  Foreground="White">
                             <AppBarButton.Icon>
@@ -56,7 +56,7 @@
                         </AppBarButton>
                     </StackPanel>
                 </Border>
-                <Border Margin="12 0 0 0" CornerRadius="8"  Background="#7F000000" >
+                <Border Margin="12 0 0 0" CornerRadius="{StaticResource OverlayCornerRadius}"  Background="#7F000000" >
                     <StackPanel Orientation="Horizontal">
                         <AppBarButton ToolTipService.ToolTip="上一张" x:Name="btnPrevious" Click="btnPrevious_Click" Width="40" Height="40" Foreground="White">
                             <AppBarButton.Icon>
@@ -79,7 +79,7 @@
                         </AppBarButton>
                     </StackPanel>
                 </Border>
-                <Border Margin="12 0 0 0" CornerRadius="8"  Background="#7F000000" >
+                <Border Margin="12 0 0 0" CornerRadius="{StaticResource OverlayCornerRadius}"  Background="#7F000000" >
                     <StackPanel Orientation="Horizontal">
                         <AppBarButton x:Name="btnHelp" Click="btnHelp_Click" ToolTipService.ToolTip="帮助" Width="40" Height="40" Foreground="White">
                             <AppBarButton.Icon>

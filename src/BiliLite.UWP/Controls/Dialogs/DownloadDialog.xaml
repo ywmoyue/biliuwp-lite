@@ -96,7 +96,7 @@
                                     Grid.Column="1"
                                     HorizontalAlignment="Right"
                                     Background="{ThemeResource SystemAccentColor}"
-                                    CornerRadius="4"
+                                    CornerRadius="{StaticResource ControlCornerRadius}"
                                     Visibility="{x:Bind Path=ShowBadge, Mode=OneWay}">
                                     <TextBlock
                                         Margin="4"
@@ -130,7 +130,7 @@
                                     Grid.Column="2"
                                     HorizontalAlignment="Right"
                                     Background="Gray"
-                                    CornerRadius="4"
+                                    CornerRadius="{StaticResource ControlCornerRadius}"
                                     Visibility="{x:Bind Path=State, Mode=OneWay, Converter={StaticResource display}, ConverterParameter=3}">
                                     <TextBlock
                                         Margin="4"

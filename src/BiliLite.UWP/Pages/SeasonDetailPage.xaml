@@ -179,7 +179,7 @@
                                     <Border CornerRadius="{StaticResource OverlayCornerRadius}">
                                         <Grid>
                                             <Image Tapped="Image_Tapped" Source="{x:Bind Path=m_viewModel.Detail.Cover,Mode=OneWay,Converter={StaticResource imageConvert2},ConverterParameter='200w'}"></Image>
-                                            <Border Visibility="{x:Bind Path=m_viewModel.Detail.ShowBadge,Mode=OneWay}" VerticalAlignment="Top" Background="#FFFB9E60" Opacity="1" HorizontalAlignment="Right" Margin="4" Padding="4 2" CornerRadius="4">
+                                            <Border Visibility="{x:Bind Path=m_viewModel.Detail.ShowBadge,Mode=OneWay}" VerticalAlignment="Top" Background="#FFFB9E60" Opacity="1" HorizontalAlignment="Right" Margin="4" Padding="4 2" CornerRadius="{StaticResource ControlCornerRadius}">
                                                 <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#FFFFFFFF" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=m_viewModel.Detail.Badge,Mode=OneWay}"></TextBlock>
                                             </Border>
                                         </Grid>
@@ -312,7 +312,7 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate x:DataType="model:SeasonDetailAreaItemModel">
                                             <HyperlinkButton x:Name="btnOpenIndexWithArea" Click="btnOpenIndexWithArea_Click" Margin="0 0 8 0" Foreground="{ThemeResource TextColor}">
-                                                <Border CornerRadius="4" Padding="8 4" Background="Transparent">
+                                                <Border CornerRadius="{StaticResource ControlCornerRadius}" Padding="8 4" Background="Transparent">
                                                     <TextBlock FontSize="14" Text="{x:Bind Path=Name}"></TextBlock>
                                                 </Border>
                                             </HyperlinkButton>
@@ -329,7 +329,7 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate x:DataType="model:SeasonDetailStyleItemModel">
                                             <HyperlinkButton x:Name="btnOpenIndexWithStyle" Click="btnOpenIndexWithStyle_Click" Margin="0 0 8 0" Foreground="{ThemeResource TextColor}">
-                                                <Border CornerRadius="4" Padding="8 4" Background="Transparent">
+                                                <Border CornerRadius="{StaticResource ControlCornerRadius}" Padding="8 4" Background="Transparent">
                                                     <TextBlock FontSize="14" Text="{x:Bind Path=Name}"></TextBlock>
                                                 </Border>
                                             </HyperlinkButton>
@@ -464,7 +464,7 @@
                 </toolkit:GridSplitter.RenderTransform>
             </toolkit:GridSplitter>
         </Grid>
-        <Border Visibility="{x:Bind Path=m_viewModel.ShowError,Mode=OneWay}" CornerRadius="4" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="48 24" Background="#33FFFFFF">
+        <Border Visibility="{x:Bind Path=m_viewModel.ShowError,Mode=OneWay}" CornerRadius="{StaticResource ControlCornerRadius}" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="48 24" Background="#33FFFFFF">
             <StackPanel VerticalAlignment="Center">
                 <FontIcon  FontFamily="{StaticResource BiliIconFont}"  HorizontalAlignment="Center" FontSize="36" Glyph="&#xE68E;" />
                 <TextBlock Text="{x:Bind Path=m_viewModel.ErrorMsg,Mode=OneWay}" TextAlignment="Center" Margin="0 8 0 0"></TextBlock>

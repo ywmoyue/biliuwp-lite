@@ -125,7 +125,7 @@
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top"
                         Background="{ThemeResource SystemAccentColor}"
-                        CornerRadius="2">
+                        CornerRadius="{StaticResource ControlCornerRadius}">
                         <TextBlock FontSize="12" Foreground="White">投稿视频</TextBlock>
                     </Border>
                     <Grid Padding="5" VerticalAlignment="Bottom">
@@ -177,7 +177,7 @@
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top"
                         Background="{ThemeResource SystemAccentColor}"
-                        CornerRadius="2">
+                        CornerRadius="{StaticResource ControlCornerRadius}">
                         <TextBlock
                             FontSize="12"
                             Foreground="White"
