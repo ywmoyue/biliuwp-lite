@@ -29,6 +29,11 @@
         <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="Transparent" />
         <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="Transparent" />
         <SolidColorBrush x:Key="ListViewItemForegroundSelected" Color="{ThemeResource SystemAccentColor}" />
+        <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
+            <Style.Setters>
+                <Setter Property="BorderThickness" Value="0" />
+            </Style.Setters>
+        </Style>
     </UserControl.Resources>
     <Grid Background="Black">
         <SplitView
