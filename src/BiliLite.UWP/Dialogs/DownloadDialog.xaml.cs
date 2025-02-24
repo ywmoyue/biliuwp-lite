@@ -63,6 +63,9 @@ namespace BiliLite.Dialogs
         }
         private async void LoadQuality()
         {
+            var settingDownloadQuality = SettingService.GetValue(SettingConstants.Download.DOWNLOAD_QUALITY, -1);
+            var settingDownloadSoundQuality = SettingService.GetValue(SettingConstants.Download.DOWNLOAD_SOUND_QUALITY, -1);
+
             var episode = downloadItem.Episodes.OrderByDescending(x => x.Index).FirstOrDefault(x => !x.IsPreview);
             if (episode == null)
             {
@@ -88,10 +91,18 @@ namespace BiliLite.Dialogs
                 return;
             }
             m_viewModel.Qualities = data.Qualites;
-            m_viewModel.SelectedQualityIndex = 0;
+
+            var quality = m_viewModel.Qualities.FirstOrDefault(x => x.QualityID == settingDownloadQuality);
+            if (quality != null)
+                m_viewModel.SelectedQualityIndex = m_viewModel.Qualities.IndexOf(quality);
+            else m_viewModel.SelectedQualityIndex = m_viewModel.Qualities.Count - 1;
 
             m_viewModel.AudioQualities = data.AudioQualites;
-            m_viewModel.SelectedAudioQuality = data.AudioQualites?.FirstOrDefault();
+            var audioQuality =
+                m_viewModel.AudioQualities.FirstOrDefault(x => x.QualityID == settingDownloadSoundQuality);
+            if (audioQuality != null)
+                m_viewModel.SelectedAudioQuality = audioQuality;
+            else m_viewModel.SelectedAudioQuality = m_viewModel.AudioQualities.LastOrDefault();
         }
 
         private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
@@ -167,6 +178,9 @@ namespace BiliLite.Dialogs
             IsPrimaryButtonEnabled = true;
 
             Notify.ShowMessageToast(hide ? "已添加至下载列表" : "有视频下载失败");
+
+            SettingService.SetValue(SettingConstants.Download.DOWNLOAD_QUALITY, m_viewModel.Qualities[m_viewModel.SelectedQualityIndex].QualityID);
+            SettingService.SetValue(SettingConstants.Download.DOWNLOAD_SOUND_QUALITY, m_viewModel.SelectedAudioQuality.QualityID);
 
             if (hide)
             {
