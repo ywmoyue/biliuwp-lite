@@ -424,7 +424,7 @@
                                 <Border
                                     x:Name="VideoCover"
                                     Margin="0,0,0,8"
-                                    CornerRadius="{StaticResource ControlCornerRadius}">
+                                    CornerRadius="{StaticResource OverlayCornerRadius}">
                                     <toolkit:ImageEx
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                         Source="{x:Bind Path=m_viewModel.VideoInfo.Pic, Mode=OneWay, Converter={StaticResource imageConvert}, ConverterParameter='400w'}"
@@ -693,7 +693,7 @@
                                             Margin="0,2,0,3"
                                             Source="{x:Bind Path=Pic, Converter={StaticResource imageConvert}, ConverterParameter='100h'}"
                                             Stretch="UniformToFill" />
-                                        <StackPanel Grid.Column="1" Margin="8,8,8,0">
+                                        <StackPanel Grid.Column="1" Margin="8,2,0,2">
                                             <TextBlock
                                                 MaxLines="2"
                                                 Text="{x:Bind Title}"
