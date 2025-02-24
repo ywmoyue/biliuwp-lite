@@ -34,6 +34,7 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System.Display;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.Input;
 using Windows.UI.Popups;
 using Windows.UI.Text;
@@ -204,21 +205,24 @@ namespace BiliLite.Controls
 
         private async void AutoRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            m_autoRefreshTimer.Stop();
-            _postion = Player.Position;
-            var info = await GetPlayUrlQualitesInfo();
-            if (!info.Success)
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, async () =>
             {
-                ShowDialog($"请求信息:\r\n{info.Message}", "读取视频播放地址失败");
-            }
-            else
-            {
-                playUrlInfo = info;
-                InitSoundQuality();
-                InitQuality();
-            }
-            Notify.ShowMessageToast("已根据设置自动刷新播放地址");
-            m_startTime = DateTime.Now;
+                m_autoRefreshTimer.Stop();
+                _postion = Player.Position;
+                var info = await GetPlayUrlQualitesInfo();
+                if (!info.Success)
+                {
+                    ShowDialog($"请求信息:\r\n{info.Message}", "读取视频播放地址失败");
+                }
+                else
+                {
+                    playUrlInfo = info;
+                    InitSoundQuality();
+                    InitQuality();
+                }
+                Notify.ShowMessageToast("已根据设置自动刷新播放地址");
+                m_startTime = DateTime.Now;
+            });
         }
 
         private void Timer_focus_Tick(object sender, object e)

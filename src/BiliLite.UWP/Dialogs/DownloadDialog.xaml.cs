@@ -188,7 +188,7 @@ namespace BiliLite.Dialogs
 
             var needDownloadVideoTrack = !downloadSubItem.GetVideoDownloadTrackInfoList()
                 .Any(x => x.CodecId == m_viewModel.SelectedVideoType.Value.CodecModeToCodecId() &&
-                          x.QualityId == m_viewModel.SelectedQuality.QualityID);
+                          x.QualityId == m_viewModel.Qualities[m_viewModel.SelectedQualityIndex].QualityID);
 
             var needDownloadAudioTrack = downloadSubItem.GetAudioDownloadTrackInfoList()
                 .All(x => x.QualityId != m_viewModel.SelectedAudioQuality.QualityID);
