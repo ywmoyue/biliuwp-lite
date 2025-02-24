@@ -19,6 +19,7 @@
         <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White" />
         <convert:RankColorConvert x:Key="RankConvert" />
         <convert:ProgressToTimeConverter x:Key="progressToTimeConverter" />
+        <convert:SingleCornerRadiusConverter x:Key="SingleCornerRadiusConverter" />
         <Style TargetType="PivotItem">
             <Setter Property="Margin" Value="0" />
         </Style>
@@ -113,8 +114,7 @@
                                         </Grid>
 
                                         <Border
-                                            Margin="-4"
-                                            Padding="14,6,12,4"
+                                            Padding="12,2"
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Top"
                                             Background="{x:Bind Path=Rank, Converter={StaticResource RankConvert}}"
