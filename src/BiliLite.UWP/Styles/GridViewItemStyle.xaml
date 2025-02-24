@@ -11,11 +11,13 @@
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 
-    <Style x:Key="DefaultGridViewItem" TargetType="GridViewItem">
+    <!--  仅供 Win11 使用  -->
+    <Style x:Key="LocalGridViewItemStyle" TargetType="GridViewItem">
         <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
         <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
         <Setter Property="Background" Value="{ThemeResource CardBackground}" />
-        <Setter Property="Foreground" Value="{ThemeResource GridViewItemForeground}" />
+        <Setter Property="TabNavigation" Value="Local" />
+
         <Setter Property="TabNavigation" Value="Local" />
         <Setter Property="IsHoldingEnabled" Value="True" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -37,6 +39,7 @@
                         x:Name="Root"
                         HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                         VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                        Background="{TemplateBinding Background}"
                         CheckBoxBrush="{ThemeResource GridViewItemCheckBoxBrush}"
                         CheckBrush="{ThemeResource GridViewItemCheckBrush}"
                         CheckMode="{ThemeResource GridViewItemCheckMode}"
@@ -68,8 +71,4 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-    <!--<Style TargetType="FlyoutPresenter">
-        <Setter Property="MaxWidth" Value="100"/>
-    </Style>-->
 </ResourceDictionary>

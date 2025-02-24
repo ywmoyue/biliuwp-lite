@@ -53,11 +53,10 @@
             </Pivot.ItemContainerStyle>
             <Pivot.ItemTemplate>
                 <DataTemplate x:DataType="anime:AnimeTimelineModel">
-                    <toolkit:AdaptiveGridView
+                    <controls:MyAdaptiveGridView
                         DesiredWidth="180"
                         IsItemClickEnabled="True"
                         ItemClick="AdaptiveGridView_ItemClick"
-                        ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                         ItemHeight="288"
                         ItemsSource="{x:Bind Path=Seasons}"
                         OneRowModeEnabled="False"
@@ -119,7 +118,7 @@
                                 </Grid>
                             </DataTemplate>
                         </GridView.ItemTemplate>
-                    </toolkit:AdaptiveGridView>
+                    </controls:MyAdaptiveGridView>
                 </DataTemplate>
             </Pivot.ItemTemplate>
         </Pivot>

@@ -34,23 +34,26 @@
                                     Foreground="Gray"
                                     Text="{x:Bind Subtitle}" />
                             </TextBlock>
-                            <GridView
+                            <controls:MyAdaptiveGridView
                                 Margin="0,8,0,0"
                                 Padding="0"
                                 IsItemClickEnabled="True"
                                 ItemClick="ListDislike_ItemClick"
-                                ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                                 ItemsSource="{x:Bind Reasons}"
                                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                 ScrollViewer.VerticalScrollMode="Disabled"
                                 SelectionMode="None"
                                 Visibility="{x:Bind Path=Reasons, Converter={StaticResource display}}">
-                                <GridView.ItemTemplate>
+                                <controls:MyAdaptiveGridView.ItemTemplate>
                                     <DataTemplate x:DataType="recommend:RecommendThreePointV2ItemReasonsModel">
-                                        <TextBlock Text="{x:Bind Name}" TextTrimming="CharacterEllipsis" />
+                                        <TextBlock
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Text="{x:Bind Name}"
+                                            TextTrimming="CharacterEllipsis" />
                                     </DataTemplate>
-                                </GridView.ItemTemplate>
-                            </GridView>
+                                </controls:MyAdaptiveGridView.ItemTemplate>
+                            </controls:MyAdaptiveGridView>
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -261,11 +264,6 @@
                     Loading="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}"
                     OneRowModeEnabled="False"
                     SelectionMode="None">
-                    <controls:MyAdaptiveGridView.ItemContainerStyle>
-                        <Style BasedOn="{StaticResource DefaultGridViewItem}" TargetType="GridViewItem">
-                            <Setter Property="Margin" Value="10" />
-                        </Style>
-                    </controls:MyAdaptiveGridView.ItemContainerStyle>
                     <controls:MyAdaptiveGridView.Header>
                         <controls:Carousel
                             x:Name="control"

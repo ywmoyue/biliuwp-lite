@@ -359,17 +359,16 @@
                     </SplitView.Pane>
                     <SplitView.Content>
                         <Grid>
-                            <toolkit:AdaptiveGridView
+                            <controls:MyAdaptiveGridView
                                 x:Name="listDowned"
                                 Padding="8"
                                 DesiredWidth="460"
                                 IsItemClickEnabled="True"
                                 ItemClick="listDowned_ItemClick"
-                                ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                                 ItemsSource="{x:Bind Path=m_viewModel.DownloadedViewModels, Mode=OneWay}"
                                 SelectionMode="None"
                                 StretchContentForSingleRow="false">
-                                <toolkit:AdaptiveGridView.ItemTemplate>
+                                <controls:MyAdaptiveGridView.ItemTemplate>
                                     <DataTemplate x:DataType="download:DownloadedItem">
                                         <Grid>
                                             <Grid.ContextFlyout>
@@ -451,8 +450,8 @@
                                             </Grid>
                                         </Grid>
                                     </DataTemplate>
-                                </toolkit:AdaptiveGridView.ItemTemplate>
-                            </toolkit:AdaptiveGridView>
+                                </controls:MyAdaptiveGridView.ItemTemplate>
+                            </controls:MyAdaptiveGridView>
                             <Button
                                 Command="{x:Bind Path=m_viewModel.RefreshDownloadedCommand}"
                                 Style="{StaticResource RoundAccentButtonStyle}"

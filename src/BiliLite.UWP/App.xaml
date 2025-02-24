@@ -12,7 +12,7 @@
                 <ResourceDictionary Source="Styles/TabViewStyle.xaml" />
                 <ResourceDictionary Source="Styles/ButtonStyle.xaml" />
                 <ResourceDictionary Source="Styles/TextBlockStyle.xaml" />
-                <ResourceDictionary Source="Styles/RevealStyle.xaml" />
+                <ResourceDictionary Source="Styles/GridViewItemStyle.xaml" />
                 <ResourceDictionary Source="Styles/Breakpoint.xaml" />
                 <ResourceDictionary Source="Styles/Converter.xaml" />
                 <ResourceDictionary Source="Styles/Fonts.xaml" />

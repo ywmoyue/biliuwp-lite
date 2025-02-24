@@ -109,20 +109,19 @@
                     <TextBlock FontSize="15">视频</TextBlock>
                 </PivotItem.Header>
                 <Grid>
-                    <toolkit:AdaptiveGridView
+                    <controls:MyAdaptiveGridView
                         Grid.ColumnSpan="2"
                         Padding="15,0"
                         DesiredWidth="550"
                         IsItemClickEnabled="True"
                         ItemClick="Video_ItemClick"
-                        ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                         ItemHeight="110"
                         ItemTemplate="{StaticResource VideoDataTemplate}"
                         ItemsSource="{x:Bind Path=m_viewModel.Videos, Mode=OneWay}"
                         SelectionMode="None"
                         StretchContentForSingleRow="False">
 
-                        <toolkit:AdaptiveGridView.Footer>
+                        <controls:MyAdaptiveGridView.Footer>
                             <StackPanel>
                                 <HyperlinkButton
                                     x:Name="btnLoadMore"
@@ -137,8 +136,8 @@
                                     IsActive="True"
                                     Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}" />
                             </StackPanel>
-                        </toolkit:AdaptiveGridView.Footer>
-                    </toolkit:AdaptiveGridView>
+                        </controls:MyAdaptiveGridView.Footer>
+                    </controls:MyAdaptiveGridView>
                     <TextBlock
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"

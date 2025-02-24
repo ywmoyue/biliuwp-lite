@@ -165,7 +165,7 @@
         </Grid>
 
         <Grid Grid.Row="1">
-            <toolkit:AdaptiveGridView
+            <controls:MyAdaptiveGridView
                 x:Name="listView"
                 Grid.ColumnSpan="2"
                 AllowDrop="True"
@@ -175,7 +175,6 @@
                 DragItemsCompleted="FavItemGridView_OnDragItemsCompleted"
                 IsItemClickEnabled="{x:Bind Path=m_viewModel.IsItemClickEnabled, Mode=OneWay}"
                 ItemClick="Video_ItemClick"
-                ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                 ItemHeight="80"
                 ItemTemplate="{StaticResource VideoDataTemplate}"
                 ItemsSource="{x:Bind Path=m_viewModel.Videos, Mode=TwoWay}"
@@ -183,7 +182,7 @@
                 SelectionMode="{x:Bind Path=m_viewModel.SelectionMode, Mode=OneWay}"
                 StretchContentForSingleRow="False">
 
-                <toolkit:AdaptiveGridView.Footer>
+                <controls:MyAdaptiveGridView.Footer>
                     <StackPanel>
                         <HyperlinkButton
                             x:Name="btnLoadMore"
@@ -198,8 +197,8 @@
                             IsActive="True"
                             Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}" />
                     </StackPanel>
-                </toolkit:AdaptiveGridView.Footer>
-            </toolkit:AdaptiveGridView>
+                </controls:MyAdaptiveGridView.Footer>
+            </controls:MyAdaptiveGridView>
             <TextBlock
                 Margin="444,0,0,0"
                 HorizontalAlignment="Left"

@@ -59,20 +59,19 @@
                         SelectedValuePath="value"
                         SelectionChanged="ComboBox_SelectionChanged" />
                 </Grid>
-                <toolkit:AdaptiveGridView
+                <control:MyAdaptiveGridView
                     Grid.Row="1"
                     Grid.ColumnSpan="2"
                     Padding="8"
                     DesiredWidth="600"
                     IsItemClickEnabled="True"
                     ItemClick="Search_ItemClick"
-                    ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                     ItemHeight="100"
                     ItemsSource="{x:Bind Path=Videos, Mode=OneWay}"
                     PointerPressed="Search_ItemPressed"
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
-                    <toolkit:AdaptiveGridView.ItemTemplate>
+                    <control:MyAdaptiveGridView.ItemTemplate>
                         <DataTemplate x:DataType="model:SearchVideoItem">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -118,8 +117,8 @@
                                 </Grid>
                             </Grid>
                         </DataTemplate>
-                    </toolkit:AdaptiveGridView.ItemTemplate>
-                    <toolkit:AdaptiveGridView.Footer>
+                    </control:MyAdaptiveGridView.ItemTemplate>
+                    <control:MyAdaptiveGridView.Footer>
                         <StackPanel>
                             <HyperlinkButton
                                 x:Name="btnLoadMore"
@@ -134,8 +133,8 @@
                                 IsActive="True"
                                 Visibility="{x:Bind Path=Loading, Mode=OneWay}" />
                         </StackPanel>
-                    </toolkit:AdaptiveGridView.Footer>
-                </toolkit:AdaptiveGridView>
+                    </control:MyAdaptiveGridView.Footer>
+                </control:MyAdaptiveGridView>
 
                 <TextBlock
                     Grid.Row="1"
@@ -156,18 +155,17 @@
         </DataTemplate>
         <DataTemplate x:Key="AnimeTpl" x:DataType="viewModel:SearchAnimeViewModel">
             <Grid>
-                <toolkit:AdaptiveGridView
+                <control:MyAdaptiveGridView
                     Grid.Row="1"
                     Padding="8"
                     DesiredWidth="600"
                     IsItemClickEnabled="True"
                     ItemClick="Search_ItemClick"
-                    ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                     ItemHeight="140"
                     ItemsSource="{x:Bind Path=Animes, Mode=OneWay}"
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
-                    <toolkit:AdaptiveGridView.ItemTemplate>
+                    <control:MyAdaptiveGridView.ItemTemplate>
                         <DataTemplate x:DataType="model:SearchAnimeItem">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -239,8 +237,8 @@
                                 </Grid>
                             </Grid>
                         </DataTemplate>
-                    </toolkit:AdaptiveGridView.ItemTemplate>
-                    <toolkit:AdaptiveGridView.Footer>
+                    </control:MyAdaptiveGridView.ItemTemplate>
+                    <control:MyAdaptiveGridView.Footer>
                         <StackPanel>
                             <HyperlinkButton
                                 x:Name="btnLoadMore"
@@ -255,8 +253,8 @@
                                 IsActive="True"
                                 Visibility="{x:Bind Path=Loading, Mode=OneWay}" />
                         </StackPanel>
-                    </toolkit:AdaptiveGridView.Footer>
-                </toolkit:AdaptiveGridView>
+                    </control:MyAdaptiveGridView.Footer>
+                </control:MyAdaptiveGridView>
                 <TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
@@ -302,7 +300,7 @@
                         SelectionChanged="ComboBox_SelectionChanged" />
 
                 </Grid>
-                <toolkit:AdaptiveGridView
+                <control:MyAdaptiveGridView
                     Grid.Row="1"
                     Padding="8"
                     DesiredWidth="600"
@@ -312,7 +310,7 @@
                     ItemsSource="{x:Bind Path=Users, Mode=OneWay}"
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
-                    <toolkit:AdaptiveGridView.ItemTemplate>
+                    <control:MyAdaptiveGridView.ItemTemplate>
                         <DataTemplate x:DataType="model:SearchUserItem">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -359,8 +357,8 @@
                                 </StackPanel>
                             </Grid>
                         </DataTemplate>
-                    </toolkit:AdaptiveGridView.ItemTemplate>
-                    <toolkit:AdaptiveGridView.Footer>
+                    </control:MyAdaptiveGridView.ItemTemplate>
+                    <control:MyAdaptiveGridView.Footer>
                         <StackPanel>
                             <HyperlinkButton
                                 x:Name="btnLoadMore"
@@ -375,8 +373,8 @@
                                 IsActive="True"
                                 Visibility="{x:Bind Path=Loading, Mode=OneWay}" />
                         </StackPanel>
-                    </toolkit:AdaptiveGridView.Footer>
-                </toolkit:AdaptiveGridView>
+                    </control:MyAdaptiveGridView.Footer>
+                </control:MyAdaptiveGridView>
                 <TextBlock
                     Grid.Row="1"
                     HorizontalAlignment="Center"
@@ -401,18 +399,17 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <toolkit:AdaptiveGridView
+                <control:MyAdaptiveGridView
                     Grid.Row="1"
                     Padding="8"
                     DesiredWidth="260"
                     IsItemClickEnabled="True"
                     ItemClick="Search_ItemClick"
-                    ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                     ItemHeight="220"
                     ItemsSource="{x:Bind Path=Rooms, Mode=OneWay}"
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
-                    <toolkit:AdaptiveGridView.ItemTemplate>
+                    <control:MyAdaptiveGridView.ItemTemplate>
                         <DataTemplate x:DataType="model:SearchLiveRoomItem">
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -471,8 +468,8 @@
                                 </Grid>
                             </Grid>
                         </DataTemplate>
-                    </toolkit:AdaptiveGridView.ItemTemplate>
-                    <toolkit:AdaptiveGridView.Footer>
+                    </control:MyAdaptiveGridView.ItemTemplate>
+                    <control:MyAdaptiveGridView.Footer>
                         <StackPanel>
                             <HyperlinkButton
                                 x:Name="btnLoadMore"
@@ -487,8 +484,8 @@
                                 IsActive="True"
                                 Visibility="{x:Bind Path=Loading, Mode=OneWay}" />
                         </StackPanel>
-                    </toolkit:AdaptiveGridView.Footer>
-                </toolkit:AdaptiveGridView>
+                    </control:MyAdaptiveGridView.Footer>
+                </control:MyAdaptiveGridView>
                 <TextBlock
                     Grid.Row="1"
                     HorizontalAlignment="Center"
@@ -535,19 +532,18 @@
                         SelectedValuePath="value"
                         SelectionChanged="ComboBox_SelectionChanged" />
                 </Grid>
-                <toolkit:AdaptiveGridView
+                <control:MyAdaptiveGridView
                     Grid.Row="1"
                     Grid.ColumnSpan="2"
                     Padding="8"
                     DesiredWidth="600"
                     IsItemClickEnabled="True"
                     ItemClick="Search_ItemClick"
-                    ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                     ItemHeight="100"
                     ItemsSource="{x:Bind Path=Articles, Mode=OneWay}"
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
-                    <toolkit:AdaptiveGridView.ItemTemplate>
+                    <control:MyAdaptiveGridView.ItemTemplate>
                         <DataTemplate x:DataType="model:SearchArticleItem">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -590,8 +586,8 @@
                                 </Grid>
                             </Grid>
                         </DataTemplate>
-                    </toolkit:AdaptiveGridView.ItemTemplate>
-                    <toolkit:AdaptiveGridView.Footer>
+                    </control:MyAdaptiveGridView.ItemTemplate>
+                    <control:MyAdaptiveGridView.Footer>
                         <StackPanel>
                             <HyperlinkButton
                                 x:Name="btnLoadMore"
@@ -606,8 +602,8 @@
                                 IsActive="True"
                                 Visibility="{x:Bind Path=Loading, Mode=OneWay}" />
                         </StackPanel>
-                    </toolkit:AdaptiveGridView.Footer>
-                </toolkit:AdaptiveGridView>
+                    </control:MyAdaptiveGridView.Footer>
+                </control:MyAdaptiveGridView>
 
                 <TextBlock
                     Grid.Row="1"
@@ -632,19 +628,18 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <toolkit:AdaptiveGridView
+                <control:MyAdaptiveGridView
                     Grid.Row="1"
                     Grid.ColumnSpan="2"
                     Padding="8"
                     DesiredWidth="600"
                     IsItemClickEnabled="True"
                     ItemClick="Search_ItemClick"
-                    ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                     ItemHeight="100"
                     ItemsSource="{x:Bind Path=Topics, Mode=OneWay}"
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
-                    <toolkit:AdaptiveGridView.ItemTemplate>
+                    <control:MyAdaptiveGridView.ItemTemplate>
                         <DataTemplate x:DataType="model:SearchTopicItem">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -685,8 +680,8 @@
                                 </StackPanel>
                             </Grid>
                         </DataTemplate>
-                    </toolkit:AdaptiveGridView.ItemTemplate>
-                    <toolkit:AdaptiveGridView.Footer>
+                    </control:MyAdaptiveGridView.ItemTemplate>
+                    <control:MyAdaptiveGridView.Footer>
                         <StackPanel>
                             <HyperlinkButton
                                 x:Name="btnLoadMore"
@@ -701,8 +696,8 @@
                                 IsActive="True"
                                 Visibility="{x:Bind Path=Loading, Mode=OneWay}" />
                         </StackPanel>
-                    </toolkit:AdaptiveGridView.Footer>
-                </toolkit:AdaptiveGridView>
+                    </control:MyAdaptiveGridView.Footer>
+                </control:MyAdaptiveGridView>
 
                 <TextBlock
                     Grid.Row="1"

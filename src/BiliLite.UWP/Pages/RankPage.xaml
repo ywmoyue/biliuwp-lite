@@ -47,19 +47,18 @@
             </Pivot.HeaderTemplate>
             <Pivot.ItemTemplate>
                 <DataTemplate x:DataType="rank1:RankRegionViewModel">
-                    <toolkit:AdaptiveGridView
+                    <controls:MyAdaptiveGridView
                         Padding="10,0"
                         DesiredWidth="550"
                         IsItemClickEnabled="True"
                         ItemClick="AdaptiveGridView_ItemClick"
-                        ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                         ItemHeight="100"
                         ItemsSource="{x:Bind Path=Items, Mode=OneWay}"
                         OneRowModeEnabled="False"
                         PointerPressed="AdaptiveGridView_PointerPressed"
                         SelectionMode="None"
                         StretchContentForSingleRow="False">
-                        <toolkit:AdaptiveGridView.Header>
+                        <controls:MyAdaptiveGridView.Header>
                             <Grid Padding="8">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto" />
@@ -75,8 +74,8 @@
                                     Foreground="Gray"
                                     Text="{x:Bind Path=ToolTip, Mode=OneWay}" />
                             </Grid>
-                        </toolkit:AdaptiveGridView.Header>
-                        <toolkit:AdaptiveGridView.ItemTemplate>
+                        </controls:MyAdaptiveGridView.Header>
+                        <controls:MyAdaptiveGridView.ItemTemplate>
                             <DataTemplate x:DataType="rank:RankItemModel">
                                 <Grid Background="#00FFFFFF">
                                     <Grid.ContextFlyout>
@@ -151,8 +150,8 @@
                                     </Grid>
                                 </Grid>
                             </DataTemplate>
-                        </toolkit:AdaptiveGridView.ItemTemplate>
-                    </toolkit:AdaptiveGridView>
+                        </controls:MyAdaptiveGridView.ItemTemplate>
+                    </controls:MyAdaptiveGridView>
                 </DataTemplate>
             </Pivot.ItemTemplate>
         </Pivot>

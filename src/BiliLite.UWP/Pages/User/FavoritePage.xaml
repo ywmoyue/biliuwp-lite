@@ -204,7 +204,7 @@
                 <Grid>
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <StackPanel>
-                            <toolkit:AdaptiveGridView
+                            <controls:MyAdaptiveGridView
                                 Padding="10,0"
                                 AllowDrop="True"
                                 CanDragItems="True"
@@ -214,7 +214,6 @@
                                 DragItemsStarting="VideoFavGridView_DragItemsStarting"
                                 IsItemClickEnabled="True"
                                 ItemClick="VideoFavorite_ItemClick"
-                                ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                                 ItemHeight="80"
                                 ItemTemplate="{StaticResource VideoDataTemplate}"
                                 ItemsSource="{x:Bind Path=m_videoViewModel.MyFavorite, Mode=TwoWay}"
@@ -222,7 +221,7 @@
                                 ScrollViewer.VerticalScrollMode="Disabled"
                                 SelectionMode="None"
                                 StretchContentForSingleRow="False">
-                                <toolkit:AdaptiveGridView.Header>
+                                <controls:MyAdaptiveGridView.Header>
                                     <Grid Margin="12,8,0,0">
                                         <TextBlock FontSize="18" FontWeight="Bold">我的创建</TextBlock>
                                         <HyperlinkButton
@@ -233,8 +232,8 @@
                                             <TextBlock>创建收藏夹</TextBlock>
                                         </HyperlinkButton>
                                     </Grid>
-                                </toolkit:AdaptiveGridView.Header>
-                                <toolkit:AdaptiveGridView.Footer>
+                                </controls:MyAdaptiveGridView.Header>
+                                <controls:MyAdaptiveGridView.Footer>
                                     <Grid>
                                         <HyperlinkButton
                                             HorizontalAlignment="Center"
@@ -244,14 +243,13 @@
                                             <TextBlock>加载更多</TextBlock>
                                         </HyperlinkButton>
                                     </Grid>
-                                </toolkit:AdaptiveGridView.Footer>
-                            </toolkit:AdaptiveGridView>
-                            <toolkit:AdaptiveGridView
+                                </controls:MyAdaptiveGridView.Footer>
+                            </controls:MyAdaptiveGridView>
+                            <controls:MyAdaptiveGridView
                                 Padding="10,0"
                                 DesiredWidth="550"
                                 IsItemClickEnabled="True"
                                 ItemClick="VideoFavorite_ItemClick"
-                                ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                                 ItemHeight="80"
                                 ItemTemplate="{StaticResource CollectedDataTemplate}"
                                 ItemsSource="{x:Bind Path=m_videoViewModel.CollectFavorite, Mode=OneWay}"
@@ -259,12 +257,12 @@
                                 ScrollViewer.VerticalScrollMode="Disabled"
                                 SelectionMode="None"
                                 StretchContentForSingleRow="False">
-                                <toolkit:AdaptiveGridView.Header>
+                                <controls:MyAdaptiveGridView.Header>
                                     <Grid Margin="12,8,0,0">
                                         <TextBlock FontSize="18" FontWeight="Bold">我的收藏与订阅</TextBlock>
                                     </Grid>
-                                </toolkit:AdaptiveGridView.Header>
-                                <toolkit:AdaptiveGridView.Footer>
+                                </controls:MyAdaptiveGridView.Header>
+                                <controls:MyAdaptiveGridView.Footer>
                                     <Grid Margin="12,8,20,0">
                                         <HyperlinkButton
                                             x:Name="BtnShowAllCollected"
@@ -273,9 +271,9 @@
                                             查看全部订阅
                                         </HyperlinkButton>
                                     </Grid>
-                                </toolkit:AdaptiveGridView.Footer>
+                                </controls:MyAdaptiveGridView.Footer>
 
-                            </toolkit:AdaptiveGridView>
+                            </controls:MyAdaptiveGridView>
                         </StackPanel>
                     </ScrollViewer>
 
@@ -303,7 +301,6 @@
                         DesiredWidth="550"
                         IsItemClickEnabled="True"
                         ItemClick="BangumiSeason_ItemClick"
-                        ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                         ItemHeight="140"
                         ItemTemplate="{StaticResource SeasonDataTemplate}"
                         ItemsSource="{x:Bind Path=animeVM.Follows, Mode=OneWay}"
@@ -365,7 +362,7 @@
                                 </StackPanel>
                             </Grid>
                         </GridView.Header>
-                        <toolkit:AdaptiveGridView.Footer>
+                        <controls:MyAdaptiveGridView.Footer>
                             <StackPanel>
                                 <HyperlinkButton
                                     x:Name="btnLoadMore"
@@ -380,7 +377,7 @@
                                     IsActive="True"
                                     Visibility="{x:Bind Path=animeVM.Loading, Mode=OneWay}" />
                             </StackPanel>
-                        </toolkit:AdaptiveGridView.Footer>
+                        </controls:MyAdaptiveGridView.Footer>
                     </controls:MyAdaptiveGridView>
                     <TextBlock
                         HorizontalAlignment="Center"
@@ -408,7 +405,6 @@
                         DesiredWidth="550"
                         IsItemClickEnabled="True"
                         ItemClick="BangumiSeason_ItemClick"
-                        ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                         ItemHeight="140"
                         ItemTemplate="{StaticResource SeasonDataTemplate}"
                         ItemsSource="{x:Bind Path=cinemaVM.Follows, Mode=OneWay}"
@@ -470,7 +466,7 @@
                                 </StackPanel>
                             </Grid>
                         </GridView.Header>
-                        <toolkit:AdaptiveGridView.Footer>
+                        <controls:MyAdaptiveGridView.Footer>
                             <StackPanel>
                                 <HyperlinkButton
                                     HorizontalAlignment="Center"
@@ -484,7 +480,7 @@
                                     IsActive="True"
                                     Visibility="{x:Bind Path=cinemaVM.Loading, Mode=OneWay}" />
                             </StackPanel>
-                        </toolkit:AdaptiveGridView.Footer>
+                        </controls:MyAdaptiveGridView.Footer>
                     </controls:MyAdaptiveGridView>
                     <TextBlock
                         HorizontalAlignment="Center"

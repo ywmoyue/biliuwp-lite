@@ -81,7 +81,6 @@
                             AlwaysShowButton="False"
                             IsItemClickEnabled="True"
                             ItemClick="FollowLive_ItemClick"
-                            ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                             ItemsSource="{x:Bind Path=m_viewModel.LiveAttentionVm.LocalFollows, Mode=OneWay}"
                             MoveOffset="600"
                             SelectionMode="None">
@@ -166,7 +165,6 @@
                             AlwaysShowButton="False"
                             IsItemClickEnabled="True"
                             ItemClick="FollowLive_ItemClick"
-                            ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                             ItemsSource="{x:Bind Path=m_viewModel.LiveAttentionVm.Follow, Mode=OneWay}"
                             MoveOffset="600"
                             SelectionMode="None">
@@ -278,7 +276,6 @@
                                         AlwaysShowButton="False"
                                         IsItemClickEnabled="True"
                                         ItemClick="LiveItems_ItemClick"
-                                        ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                                         ItemsSource="{x:Bind Path=List, Mode=OneWay}"
                                         MoveOffset="600"
                                         SelectionMode="None">

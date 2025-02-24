@@ -2,6 +2,7 @@
     x:Class="BiliLite.Pages.Bangumi.SeasonRankPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:BiliLite.Controls"
     xmlns:convert="using:BiliLite.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:BiliLite.Pages.Bangumi"
@@ -37,19 +38,18 @@
             </Pivot.ItemContainerStyle>
             <Pivot.ItemTemplate>
                 <DataTemplate x:DataType="viewModel:SeasonRankDataViewModel">
-                    <toolkit:AdaptiveGridView
+                    <controls:MyAdaptiveGridView
                         Padding="12,0"
                         DesiredWidth="550"
                         IsItemClickEnabled="True"
                         ItemClick="AdaptiveGridView_ItemClick"
-                        ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                         ItemHeight="100"
                         ItemsSource="{x:Bind Path=Items, Mode=OneWay}"
                         OneRowModeEnabled="False"
                         PointerPressed="AdaptiveGridView_PointerPressed"
                         SelectionMode="None"
                         StretchContentForSingleRow="False">
-                        <toolkit:AdaptiveGridView.ItemTemplate>
+                        <controls:MyAdaptiveGridView.ItemTemplate>
                             <DataTemplate x:DataType="season:SeasonRankItemModel">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -117,8 +117,8 @@
                                     </StackPanel>
                                 </Grid>
                             </DataTemplate>
-                        </toolkit:AdaptiveGridView.ItemTemplate>
-                    </toolkit:AdaptiveGridView>
+                        </controls:MyAdaptiveGridView.ItemTemplate>
+                    </controls:MyAdaptiveGridView>
                 </DataTemplate>
             </Pivot.ItemTemplate>
         </Pivot>

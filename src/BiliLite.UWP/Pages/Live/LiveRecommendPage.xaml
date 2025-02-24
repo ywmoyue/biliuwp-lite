@@ -45,7 +45,6 @@
                                 DesiredWidth="260"
                                 IsItemClickEnabled="True"
                                 ItemClick="AdaptiveGridView_ItemClick"
-                                ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                                 ItemHeight="196"
                                 ItemsSource="{x:Bind Path=Items, Mode=OneWay}"
                                 LoadMoreCommand="{x:Bind Path=LoadMoreCommand, Mode=OneWay}"

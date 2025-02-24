@@ -24,7 +24,6 @@
             DesiredWidth="550"
             IsItemClickEnabled="True"
             ItemClick="gridHot_ItemClick"
-            ItemContainerStyle="{StaticResource DefaultGridViewItem}"
             ItemsSource="{x:Bind Path=m_viewModel.HotItems, Mode=OneWay}"
             LoadMoreBottomOffset="0"
             LoadMoreCommand="{x:Bind Path=m_viewModel.LoadMoreCommand}"

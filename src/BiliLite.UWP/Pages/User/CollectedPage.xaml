@@ -62,22 +62,21 @@
         </DataTemplate>
     </Page.Resources>
     <Grid>
-        <toolkit:AdaptiveGridView
+        <controls:MyAdaptiveGridView
             DesiredWidth="500"
             IsItemClickEnabled="True"
             ItemClick="VideoFavorite_ItemClick"
-            ItemContainerStyle="{StaticResource DefaultGridViewItem}"
             ItemHeight="80"
             ItemTemplate="{StaticResource CollectedDataTemplate}"
             ItemsSource="{x:Bind Path=m_viewModel.CollectedItems, Mode=OneWay}"
             SelectionMode="None"
             StretchContentForSingleRow="False">
-            <toolkit:AdaptiveGridView.Header>
+            <controls:MyAdaptiveGridView.Header>
                 <Grid Margin="12,8,0,0">
                     <TextBlock FontSize="18" FontWeight="Bold">我的收藏与订阅</TextBlock>
                 </Grid>
-            </toolkit:AdaptiveGridView.Header>
-            <toolkit:AdaptiveGridView.Footer>
+            </controls:MyAdaptiveGridView.Header>
+            <controls:MyAdaptiveGridView.Footer>
                 <Grid>
                     <HyperlinkButton
                         HorizontalAlignment="Center"
@@ -87,9 +86,9 @@
                         <TextBlock>加载更多</TextBlock>
                     </HyperlinkButton>
                 </Grid>
-            </toolkit:AdaptiveGridView.Footer>
+            </controls:MyAdaptiveGridView.Footer>
 
-        </toolkit:AdaptiveGridView>
+        </controls:MyAdaptiveGridView>
         <ProgressRing
             HorizontalAlignment="Center"
             IsActive="True"

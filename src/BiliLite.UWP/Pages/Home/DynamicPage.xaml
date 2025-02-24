@@ -212,7 +212,6 @@
                 DesiredWidth="700"
                 IsItemClickEnabled="True"
                 ItemClick="AdaptiveGridView_ItemClick"
-                ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                 ItemTemplateSelector="{x:Bind Path=m_viewModel.DynamicItemDataTemplateSelector, Mode=OneWay}"
                 ItemsSource="{x:Bind Path=m_viewModel.Items, Mode=OneWay}"
                 LoadMoreCommand="{x:Bind Path=m_viewModel.LoadMoreCommand, Mode=OneWay}"

@@ -73,13 +73,12 @@
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">
-            <toolkit:AdaptiveGridView
+            <controls:MyAdaptiveGridView
                 Grid.ColumnSpan="2"
                 Padding="10,0"
                 DesiredWidth="550"
                 IsItemClickEnabled="True"
                 ItemClick="Video_ItemClick"
-                ItemContainerStyle="{StaticResource DefaultGridViewItem}"
                 ItemHeight="90"
                 ItemTemplate="{StaticResource VideoDataTemplate}"
                 ItemsSource="{x:Bind Path=watchLaterVM.Videos, Mode=OneWay}"

@@ -47,7 +47,6 @@
             DesiredWidth="180"
             IsItemClickEnabled="True"
             ItemClick="ListResult_ItemClick"
-            ItemContainerStyle="{StaticResource DefaultGridViewItem}"
             ItemHeight="288"
             ItemsSource="{x:Bind Path=m_viewModel.Result, Mode=OneWay}"
             LoadMoreCommand="{x:Bind Path=m_viewModel.LoadMoreCommand, Mode=OneWay}"
