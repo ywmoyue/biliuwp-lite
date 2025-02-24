@@ -172,13 +172,13 @@
                 <controls:SettingsCard>
                     <controls:SettingsCard.Header>
                         <StackPanel>
-                            <controls1:MyAdaptiveGridView x:Name="gridHomeCustom"
+                            <GridView x:Name="gridHomeCustom"
                           SelectionMode="None" 
                           Margin="0 8 0 0"
                           IsItemClickEnabled="True"  CanDragItems="True" CanReorderItems="True" AllowDrop="True" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" DragItemsCompleted="gridHomeCustom_DragItemsCompleted">
-                                <controls1:MyAdaptiveGridView.ItemTemplate>
+                                <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="home:HomeNavItem">
-                                        <Grid Background="#00FFFFFF">
+                                        <Grid MinWidth="115" Background="{ThemeResource CardBackground}" MinHeight="42">
                                             <Grid.ContextFlyout>
                                                 <MenuFlyout>
                                                     <MenuFlyoutItem x:Name="menuRemoveHomeItem" Click="menuRemoveHomeItem_Click">移除</MenuFlyoutItem>
@@ -191,22 +191,22 @@
                                         </Grid>
 
                                     </DataTemplate>
-                                </controls1:MyAdaptiveGridView.ItemTemplate>
+                                </GridView.ItemTemplate>
 
-                            </controls1:MyAdaptiveGridView>
+                            </GridView>
                             <TextBlock  Margin="0 0 0 8" >点击添加</TextBlock>
-                            <controls1:MyAdaptiveGridView x:Name="gridHomeNavItem" SelectionMode="None" IsItemClickEnabled="True" ItemClick="gridHomeNavItem_ItemClick" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                                <controls1:MyAdaptiveGridView.ItemTemplate>
+                            <GridView x:Name="gridHomeNavItem" SelectionMode="None" IsItemClickEnabled="True" ItemClick="gridHomeNavItem_ItemClick" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                                <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="home:HomeNavItem">
-                                        <Grid>
+                                        <Grid MinWidth="115" Background="{ThemeResource CardBackground}" MinHeight="42">
                                             <StackPanel Orientation="Horizontal"  VerticalAlignment="Center" HorizontalAlignment="Center">
                                                 <font:FontAwesome FontSize="14" VerticalAlignment="Bottom" Icon="{x:Bind Path=Icon}"></font:FontAwesome>
                                                 <TextBlock Margin="8 0 0 0" Text="{x:Bind Title}"></TextBlock>
                                             </StackPanel>
                                         </Grid>
                                     </DataTemplate>
-                                </controls1:MyAdaptiveGridView.ItemTemplate>
-                            </controls1:MyAdaptiveGridView>
+                                </GridView.ItemTemplate>
+                            </GridView>
                         </StackPanel>
                     </controls:SettingsCard.Header>
                 </controls:SettingsCard>

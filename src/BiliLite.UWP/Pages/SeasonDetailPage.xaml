@@ -348,7 +348,7 @@
                                     </GridView.Header>
                                     <GridView.ItemTemplate>
                                         <DataTemplate x:DataType="model:SeasonDetailEpisodeModel">
-                                            <Grid ToolTipService.ToolTip="{x:Bind Path=LongTitle}">
+                                            <Grid ToolTipService.ToolTip="{x:Bind Path=LongTitle}" Background="{ThemeResource CardBackground}">
                                                 <TextBlock
                                                     VerticalAlignment="Center"
                                                     TextAlignment="Center"
@@ -391,7 +391,7 @@
                                     </GridView.Header>
                                     <GridView.ItemTemplate>
                                         <DataTemplate x:DataType="model:SeasonDetailEpisodeModel">
-                                            <Grid ToolTipService.ToolTip="{x:Bind Path=LongTitle}">
+                                            <Grid ToolTipService.ToolTip="{x:Bind Path=LongTitle}" Background="{ThemeResource CardBackground}">
                                                 <TextBlock
                                                     VerticalAlignment="Center"
                                                     TextAlignment="Center"
@@ -436,7 +436,7 @@
                                     </GridView.Header>
                                     <GridView.ItemTemplate>
                                         <DataTemplate x:DataType="model:SeasonDetailSeasonItemModel">
-                                            <Grid Padding="4,0" ToolTipService.ToolTip="{x:Bind Path=Title}">
+                                            <Grid Padding="4,0" ToolTipService.ToolTip="{x:Bind Path=Title}" Background="{ThemeResource CardBackground}">
                                                 <TextBlock
                                                     VerticalAlignment="Center"
                                                     TextAlignment="Center"
