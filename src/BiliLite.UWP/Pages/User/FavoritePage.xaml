@@ -132,7 +132,7 @@
                         公开
                     </TextBlock>
                     <TextBlock
-                        Margin="0,4"
+                        VerticalAlignment="Bottom"
                         FontSize="14"
                         Foreground="Gray"
                         Visibility="{x:Bind Path=Privacy}">
