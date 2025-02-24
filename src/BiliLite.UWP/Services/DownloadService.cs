@@ -791,7 +791,6 @@ namespace BiliLite.Services
 
             foreach (var item in info.Urls)
             {
-                downloadSaveEpisodeInfo.VideoPath.Add(item.FileName);
                 downloadedSubItem.Paths.Add(Path.Combine(downloadSaveEpisodeInfo.Path, item.FileName));
             }
 

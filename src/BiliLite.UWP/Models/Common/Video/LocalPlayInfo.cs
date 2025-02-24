@@ -11,6 +11,10 @@ namespace BiliLite.Models.Common.Video
 
         public List<BiliDashAudioPlayUrlInfo> AudioTrackInfos { get; set; }
 
+        public BiliDashAudioPlayUrlInfo CurrentAudioTrack { get; set; }
+
+        public BiliPlayUrlInfo CurrentVideoTrack { get; set; }
+
         public BiliPlayUrlInfo Info { get; set; }
         public IDictionary<string, string> Subtitles { get; set; }
         public string DanmakuPath { get; set; }

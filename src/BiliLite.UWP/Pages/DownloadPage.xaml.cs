@@ -360,7 +360,7 @@ namespace BiliLite.Pages
             var savePicker = new Windows.Storage.Pickers.FileSavePicker();
             savePicker.SuggestedStartLocation =
                 Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary;
-            savePicker.FileTypeChoices.Add("MP4", new List<string>() { ".mp4" });
+            savePicker.FileTypeChoices.Add("MKV", new List<string>() { ".mkv" });
             var fileName = Regex.Replace(data.Title + "-" + item.Title, "[<>/\\\\|:\":?*]", "");
             savePicker.SuggestedFileName = fileName;
             var file = await savePicker.PickSaveFileAsync();
