@@ -487,31 +487,29 @@
                                                     <ColumnDefinition Width="180" />
                                                     <ColumnDefinition />
                                                 </Grid.ColumnDefinitions>
-                                                <Border Grid.Column="0" CornerRadius="{StaticResource ImageCornerRadius}">
-                                                    <Grid>
-                                                        <toolkit:ImageEx
-                                                            HorizontalAlignment="Stretch"
-                                                            VerticalAlignment="Stretch"
-                                                            PlaceholderSource="/Assets/Thumbnails/Placeholde.png"
-                                                            Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='360w_200h_1c'}"
-                                                            Stretch="UniformToFill" />
-                                                        <Grid Padding="8" VerticalAlignment="Bottom">
-                                                            <Grid.Background>
-                                                                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                                                                    <GradientStop Offset="0.993" Color="#CC000005" />
-                                                                    <GradientStop Offset="0" Color="#00000000" />
-                                                                </LinearGradientBrush>
-                                                            </Grid.Background>
-                                                            <TextBlock
-                                                                HorizontalAlignment="Right"
-                                                                FontSize="12"
-                                                                Foreground="White">
-                                                                <Run>🎞️</Run>
-                                                                <Run Text="{x:Bind Count}" />
-                                                            </TextBlock>
-                                                        </Grid>
+                                                <Grid>
+                                                    <toolkit:ImageEx
+                                                        HorizontalAlignment="Stretch"
+                                                        VerticalAlignment="Stretch"
+                                                        PlaceholderSource="/Assets/Thumbnails/Placeholde.png"
+                                                        Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='360w_200h_1c'}"
+                                                        Stretch="UniformToFill" />
+                                                    <Grid Padding="8" VerticalAlignment="Bottom">
+                                                        <Grid.Background>
+                                                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                                                <GradientStop Offset="0.993" Color="#CC000005" />
+                                                                <GradientStop Offset="0" Color="#00000000" />
+                                                            </LinearGradientBrush>
+                                                        </Grid.Background>
+                                                        <TextBlock
+                                                            HorizontalAlignment="Right"
+                                                            FontSize="12"
+                                                            Foreground="White">
+                                                            <Run>🎞️</Run>
+                                                            <Run Text="{x:Bind Count}" />
+                                                        </TextBlock>
                                                     </Grid>
-                                                </Border>
+                                                </Grid>
                                                 <Grid Grid.Column="1">
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition Height="Auto" />

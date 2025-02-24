@@ -185,19 +185,6 @@ namespace BiliLite.Controls.Settings
                 };
             };
 
-            //图片圆角半径
-            numImageCornerRadius.Value = SettingService.GetValue<double>(SettingConstants.UI.IMAGE_CORNER_RADIUS, 0);
-            ImageCornerRadiusExample.CornerRadius = new CornerRadius(numImageCornerRadius.Value);
-            numImageCornerRadius.Loaded += new RoutedEventHandler((sender, e) =>
-            {
-                numImageCornerRadius.ValueChanged += new TypedEventHandler<NumberBox, NumberBoxValueChangedEventArgs>((obj, args) =>
-                {
-                    SettingService.SetValue(SettingConstants.UI.IMAGE_CORNER_RADIUS, args.NewValue);
-                    ImageCornerRadiusExample.CornerRadius = new CornerRadius(args.NewValue);
-                    App.Current.Resources["ImageCornerRadius"] = new CornerRadius(args.NewValue);
-                });
-            });
-
             //显示视频封面
             swVideoDetailShowCover.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.SHOW_DETAIL_COVER, true);
             swVideoDetailShowCover.Loaded += new RoutedEventHandler((sender, e) =>

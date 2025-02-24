@@ -19,8 +19,6 @@
                 <ResourceDictionary Source="Themes/Default.xaml" />
                 <ResourceDictionary Source="Themes/Accent.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-            <CornerRadius x:Key="ImageCornerRadius">4</CornerRadius>
         </ResourceDictionary>
     </Application.Resources>
 

@@ -76,7 +76,7 @@ namespace BiliLite.Services
 
         public void InitStyle()
         {
-            App.Current.Resources["ImageCornerRadius"] = new CornerRadius(SettingService.GetValue<double>(SettingConstants.UI.IMAGE_CORNER_RADIUS, 0));
+
         }
 
         public void SetTheme(ElementTheme theme)

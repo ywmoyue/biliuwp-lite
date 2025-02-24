@@ -282,26 +282,6 @@
             <ToggleSwitch x:Name="SwitchTile"></ToggleSwitch>
         </controls:SettingsCard>
 
-        <controls:SettingsExpander Header="图片圆角半径"
-                                   Description="重启生效"
-                                   IsExpanded="True" Visibility="Collapsed">
-            <controls:SettingsExpander.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Images"></font:FontAwesome>
-            </controls:SettingsExpander.HeaderIcon>
-            <muxc:NumberBox x:Name="numImageCornerRadius" Minimum="0" Margin="0 0 0 8" Width="200" HorizontalAlignment="Left" Value="0" SpinButtonPlacementMode="Compact" SmallChange="2" ></muxc:NumberBox>
-
-            <controls:SettingsExpander.Items>
-                <controls:SettingsCard>
-                    <controls:SettingsCard.Header>
-                        <Border x:Name="ImageCornerRadiusExample" Width="120" Height="120" HorizontalAlignment="Left" Background="#99808080"
-                                >
-                            <Image Source="/Assets/Image/background.jpg" Stretch="UniformToFill"></Image>
-                        </Border>
-                    </controls:SettingsCard.Header>
-                </controls:SettingsCard>
-            </controls:SettingsExpander.Items>
-        </controls:SettingsExpander>
-
         <controls:SettingsExpander Header="启用长评论折叠"
                                    Description="评论过长时自动折叠，需要点击展开按钮显示全部评论">
             <controls:SettingsExpander.HeaderIcon>

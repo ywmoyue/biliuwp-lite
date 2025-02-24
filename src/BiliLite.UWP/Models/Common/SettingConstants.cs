@@ -86,12 +86,6 @@ namespace BiliLite.Models.Common
             public const double DEFAULT_DYNAMIC_COMMENT_WIDTH = 480;
 
             /// <summary>
-            /// 图片圆角半径
-            /// </summary>
-            [SettingKey(typeof(double))]
-            public const string IMAGE_CORNER_RADIUS = "ImageCornerRadius";
-
-            /// <summary>
             /// 视频详情显示封面
             /// </summary>
             [SettingKey(typeof(bool))]

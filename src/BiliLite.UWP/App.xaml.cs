@@ -187,7 +187,7 @@ namespace BiliLite
                 var themeService = ServiceProvider.GetRequiredService<ThemeService>();
                 themeService.InitTitleBar();
                 themeService.InitAccentColor();
-                themeService.InitStyle();
+                // themeService.InitStyle();
             }
         }
 

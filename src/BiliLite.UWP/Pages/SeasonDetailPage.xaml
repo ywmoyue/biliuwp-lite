@@ -176,7 +176,7 @@
 
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
-                                    <Border CornerRadius="{StaticResource ImageCornerRadius}">
+                                    <Border CornerRadius="{StaticResource OverlayCornerRadius}">
                                         <Grid>
                                             <Image Tapped="Image_Tapped" Source="{x:Bind Path=m_viewModel.Detail.Cover,Mode=OneWay,Converter={StaticResource imageConvert2},ConverterParameter='200w'}"></Image>
                                             <Border Visibility="{x:Bind Path=m_viewModel.Detail.ShowBadge,Mode=OneWay}" VerticalAlignment="Top" Background="#FFFB9E60" Opacity="1" HorizontalAlignment="Right" Margin="4" Padding="4 2" CornerRadius="4">
