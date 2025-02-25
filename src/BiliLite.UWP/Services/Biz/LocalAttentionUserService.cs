@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using BiliLite.Extensions;
 using BiliLite.Models.Common.Live;
 using BiliLite.Models.Requests.Api.Live;
+using BiliLite.Models.Exceptions;
 
 namespace BiliLite.Services.Biz;
 
@@ -65,7 +66,7 @@ public class LocalAttentionUserService : BaseBizService
         Notify.ShowMessageToast("已取消关注");
     }
 
-    public async Task<List<LiveRoomInfoOldModel>> GetLiveRooms()
+    public async Task<List<LiveInfoModel>> GetLiveRooms()
     {
 
         var localAttentionUsers = SettingService.GetValue<List<LocalAttentionUser>>(SettingConstants.UI.LOCAL_ATTENTION_USER, null);
@@ -74,11 +75,13 @@ public class LocalAttentionUserService : BaseBizService
             return null;
         }
 
-        var roomList = new List<LiveRoomInfoOldModel>();
+        var roomList = new List<LiveInfoModel>();
+
+        var liveRoomApi = new LiveRoomAPI();
 
         foreach (var user in localAttentionUsers)
         {
-            var api = new LiveRoomAPI().GetRoomInfoOld(user.Id);
+            var api = liveRoomApi.GetRoomInfoOld(user.Id);
             var results = await api.Request();
             if (!results.status)
             {
@@ -95,10 +98,20 @@ public class LocalAttentionUserService : BaseBizService
 
             if (data.data.RoomStatus == 0) continue;
 
-            data.data.UserName = user.Name;
-            data.data.UserId = user.Id;
+            var result = await liveRoomApi.LiveRoomInfo(data.data.RoomId.ToString()).Request();
+            if (!result.status)
+            {
+                throw new CustomizedErrorException(result.message);
+            }
 
-            roomList.Add(data.data);
+            var realRoomData = await result.GetData<LiveInfoModel>();
+            if (!realRoomData.success)
+            {
+                _logger.Warn(data.message);
+                continue;
+            }
+
+            roomList.Add(realRoomData.data);
         }
 
         return roomList;

@@ -103,7 +103,7 @@
                                 <Button ToolTipService.ToolTip="自定义" Width="42" Height="40" Margin="7 0 0 0" Padding="0">
                                     <SymbolIcon Symbol="Add"/>
                                     <Button.Flyout>
-                                        <Flyout>
+                                        <Flyout Placement="LeftEdgeAlignedBottom">
                                             <StackPanel>
                                                 <Grid VerticalAlignment="Top" Height="40" Background="{Binding Color,ElementName=cpAddColor,Converter={StaticResource colorConvert}}" CornerRadius="{StaticResource ControlCornerRadius}">
                                                     <Grid.ColumnDefinitions>
@@ -239,6 +239,22 @@
                 <font:FontAwesome Icon="Solid_AlignRight"></font:FontAwesome>
             </controls:SettingsCard.HeaderIcon>
             <ToggleSwitch x:Name="SwitchDisplayRecommendBanner"></ToggleSwitch>
+        </controls:SettingsCard>
+
+        <controls:SettingsCard Header="显示直播页横幅"
+                               Description="是否显示直播页横幅">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_AlignRight"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch x:Name="SwitchDisplayLiveBanner"></ToggleSwitch>
+        </controls:SettingsCard>
+
+        <controls:SettingsCard Header="显示直播页推荐直播"
+                               Description="是否显示直播页推荐直播">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Tv"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch x:Name="SwitchDisplayLivePageRecommendLive"></ToggleSwitch>
         </controls:SettingsCard>
 
         <controls:SettingsExpander Header="右侧视频详情"

@@ -62,6 +62,18 @@ namespace BiliLite.Models.Common
             public const string DISPLAY_RECOMMEND_BANNER = "DisplayRecommendBanner";
 
             /// <summary>
+            /// 显示直播页横幅
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string DISPLAY_LIVE_BANNER = "DisplayLiveBanner";
+
+            /// <summary>
+            /// 显示直播页推荐直播
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string DISPLAY_LIVE_PAGE_RECOMMEND_LIVE = "DisplayLivePageRecommendLive";
+
+            /// <summary>
             /// 默认显示推荐页横幅
             /// </summary>
             [SettingDefaultValue]
@@ -1075,6 +1087,21 @@ namespace BiliLite.Models.Common
             [SettingKey(typeof(int))]
             public const string DEFAULT_VIDEO_TYPE = "DownloadDefaultVideoType";
 
+            /// <summary>
+            /// 下载画质
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const string DOWNLOAD_QUALITY = "DownloadQuality";
+
+            /// <summary>
+            /// 下载音质
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const string DOWNLOAD_SOUND_QUALITY = "DownloadSoundQuality";
+
+            /// <summary>
+            /// 使用下载索引
+            /// </summary>
             [SettingKey(typeof(bool))]
             public const string USE_DOWNLOAD_INDEX = "UseDownloadIndex";
 

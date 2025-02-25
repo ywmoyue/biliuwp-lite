@@ -196,6 +196,7 @@
     <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\LiveLineSliderTooltipConverter.cs" />
     <Compile Include="Converters\LiveQualitySliderTooltipConverter.cs" />
+    <Compile Include="Converters\LiveStatusConverter.cs" />
     <Compile Include="Converters\PlaySpeedSliderTooltipConverter.cs" />
     <Compile Include="Converters\QualitySliderTooltipConverter.cs" />
     <Compile Include="Converters\SoundQualitySliderTooltipConverter.cs" />
@@ -209,6 +210,7 @@
     <Compile Include="Extensions\AppExtensions.cs" />
     <Compile Include="Extensions\BizServicesExtensions.cs" />
     <Compile Include="Extensions\ControlsExtensions.cs" />
+    <Compile Include="Extensions\DownloadExtensions.cs" />
     <Compile Include="Extensions\FileExtensions.cs" />
     <Compile Include="Extensions\QrCodeExtensions.cs" />
     <Compile Include="Extensions\RegexExtensions.cs" />
@@ -217,6 +219,8 @@
     <Compile Include="Models\Attributes\RegisterServiceAttributes.cs" />
     <Compile Include="Models\Attributes\SettingDefaultValueAttribute.cs" />
     <Compile Include="Models\Attributes\SettingKeyAttribute.cs" />
+    <Compile Include="Models\Common\Download\DownloadTrackInfo.cs" />
+    <Compile Include="Models\Common\Video\QualityDictonary.cs" />
     <Compile Include="Models\Theme\ColorItemModel.cs" />
     <Compile Include="Models\Common\Anime\ISeasonItem.cs" />
     <Compile Include="Models\Common\Comment\HotReply.cs" />

@@ -22,5 +22,7 @@ namespace BiliLite.ViewModels.Download
 
         [DependsOn(nameof(SelectedVideoType))]
         public bool ShowAudioQualityComboBox { get => SelectedVideoType.Value > 0; }
+
+        public bool OnlyLoadCurrentVideoQuality { get; set; }
     }
 }

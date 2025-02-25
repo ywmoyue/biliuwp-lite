@@ -209,13 +209,13 @@ namespace BiliLite.Pages.Home
 
         private void CancelLocalAttention_OnClick(object sender, RoutedEventArgs e)
         {
-            if (sender is not FrameworkElement { DataContext: LiveRoomInfoOldModel roomInfo })
+            if (sender is not FrameworkElement { DataContext: LiveInfoModel roomInfo })
             {
                 return;
             }
             
             var localAttentionUserService = App.ServiceProvider.GetRequiredService<LocalAttentionUserService>();
-            localAttentionUserService.CancelAttention(roomInfo.UserId);
+            localAttentionUserService.CancelAttention(roomInfo.RoomInfo.Uid + "");
             m_viewModel.LiveAttentionVm.LocalFollows.Remove(roomInfo);
         }
     }

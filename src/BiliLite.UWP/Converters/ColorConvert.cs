@@ -19,6 +19,18 @@ namespace BiliLite.Converters
             {
                 try
                 {
+                    if (!string1.Contains("#"))
+                    {
+                        if (long.TryParse(string1, out var c))
+                        {
+                            string1 = c.ToString("X2");
+                        }
+                        int desiredLength = string1.Length <= 6 ? 6 : 8;
+                        string1 = string1.PadLeft(desiredLength, '0');
+
+                        string1 = "#" + string1;
+                    }
+
                     color = Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor(string1);
                 }
                 catch (Exception)
