@@ -165,7 +165,7 @@ namespace BiliLite.Controls
                 var timeMin = SettingService.GetValue(SettingConstants.Player.AUTO_REFRESH_PLAY_URL_TIME,
                     SettingConstants.Player.DEFAULT_AUTO_REFRESH_PLAY_URL_TIME);
                 m_autoRefreshTimer = new Timer();
-                m_autoRefreshTimer.Interval = timeMin * 1000;
+                m_autoRefreshTimer.Interval = timeMin * 1000 * 60;
                 m_autoRefreshTimer.Elapsed += AutoRefreshTimer_Elapsed;
             }
 
