@@ -66,10 +66,18 @@ namespace BiliLite.Dialogs
             var settingDownloadQuality = SettingService.GetValue(SettingConstants.Download.DOWNLOAD_QUALITY, -1);
             var settingDownloadSoundQuality = SettingService.GetValue(SettingConstants.Download.DOWNLOAD_SOUND_QUALITY, -1);
 
-            var episode = downloadItem.Episodes.OrderByDescending(x => x.Index).FirstOrDefault(x => !x.IsPreview);
-            if (episode == null)
+            DownloadEpisodeItemViewModel episode;
+            if (m_viewModel.OnlyLoadCurrentVideoQuality)
             {
-                episode = downloadItem.Episodes.OrderByDescending(x => x.Index).FirstOrDefault();
+                episode = downloadItem.Episodes.FirstOrDefault(x => x.AVID == downloadItem.ID);
+            }
+            else
+            {
+                episode = downloadItem.Episodes.OrderByDescending(x => x.Index).FirstOrDefault(x => !x.IsPreview);
+                if (episode == null)
+                {
+                    episode = downloadItem.Episodes.OrderByDescending(x => x.Index).FirstOrDefault();
+                }
             }
             var data = await playerVM.GetPlayUrls(new PlayInfo()
             {
@@ -367,6 +375,13 @@ namespace BiliLite.Dialogs
         private void checkHidePreview_Unchecked(object sender, RoutedEventArgs e)
         {
             downloadItem.Episodes = allEpisodes;
+        }
+
+        private async void SwOnlyCurrentVideoQuality_OnToggled(object sender, RoutedEventArgs e)
+        {
+            // 等待viewModel数据变更
+            await Task.Delay(100);
+            LoadQuality();
         }
     }
 }
