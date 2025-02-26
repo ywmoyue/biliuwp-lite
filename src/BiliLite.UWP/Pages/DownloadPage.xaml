@@ -25,7 +25,7 @@
         <Pivot x:Name="pivot">
             <Pivot.RightHeader>
                 <StackPanel Background="{StaticResource PivotHeaderBackground}" Orientation="Horizontal">
-                    <TextBlock Margin="8,16" Visibility="{x:Bind m_viewModel.LoadingDownloaded, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                    <TextBlock Margin="8,16" Visibility="{x:Bind m_viewModel.LoadingDownloaded, Mode=OneWay}">
                         加载中<Run Text="{x:Bind m_viewModel.LoadingDownloadedPercent, Mode=OneWay}" />
                         %</TextBlock>
 
