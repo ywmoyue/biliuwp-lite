@@ -110,19 +110,19 @@
                                     FontSize="12"
                                     Foreground="Red"
                                     Text="{x:Bind Path=ErrorMessage, Mode=OneWay}"
-                                    Visibility="{x:Bind Path=State, Mode=OneWay, Converter={StaticResource display}, ConverterParameter=99}" />
+                                    Visibility="{x:Bind Path=State, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=99}" />
                                 <ProgressRing
                                     Grid.Column="2"
                                     HorizontalAlignment="Right"
                                     IsActive="True"
-                                    Visibility="{x:Bind Path=State, Mode=OneWay, Converter={StaticResource display}, ConverterParameter=1}" />
+                                    Visibility="{x:Bind Path=State, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=1}" />
 
                                 <TextBlock
                                     Grid.Column="2"
                                     Margin="4"
                                     FontSize="12"
                                     Foreground="Gray"
-                                    Visibility="{x:Bind Path=State, Mode=OneWay, Converter={StaticResource display}, ConverterParameter=2}">
+                                    Visibility="{x:Bind Path=State, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=2}">
                                     下载中
                                 </TextBlock>
 
@@ -131,7 +131,7 @@
                                     HorizontalAlignment="Right"
                                     Background="Gray"
                                     CornerRadius="{StaticResource ControlCornerRadius}"
-                                    Visibility="{x:Bind Path=State, Mode=OneWay, Converter={StaticResource display}, ConverterParameter=3}">
+                                    Visibility="{x:Bind Path=State, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=3}">
                                     <TextBlock
                                         Margin="4"
                                         FontSize="12"

@@ -2,32 +2,31 @@
     x:Class="BiliLite.Pages.SettingPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BiliLite.Pages"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    xmlns:modules="using:BiliLite.Modules"
-    xmlns:font="using:FontAwesome5"
-    xmlns:covert="using:BiliLite.Converters" xmlns:controls="using:Microsoft.UI.Xaml.Controls" xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:common="using:BiliLite.Models.Common"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
+    xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:font="using:FontAwesome5"
     xmlns:home="using:BiliLite.Models.Common.Home"
+    xmlns:local="using:BiliLite.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:modules="using:BiliLite.Modules"
     xmlns:settings="using:BiliLite.Controls.Settings"
-    Background="Transparent">
+    Background="Transparent"
+    mc:Ignorable="d">
     <Page.Resources>
-        <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent"></SolidColorBrush>
-        <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White"></SolidColorBrush>
-
-        <covert:ColorConvert x:Key="color"/>
+        <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent" />
+        <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White" />
     </Page.Resources>
     <Grid>
         <Pivot x:Name="pivot">
-            <PivotItem Margin="0" >
+            <PivotItem Margin="0">
                 <PivotItem.Header>
                     <TextBlock FontSize="15">个性化</TextBlock>
                 </PivotItem.Header>
-                <ScrollViewer Padding="12 0" VerticalScrollBarVisibility="Auto">
-                    <StackPanel >
-                        <settings:UISettingsControl></settings:UISettingsControl>
+                <ScrollViewer Padding="12,0" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <settings:UISettingsControl />
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
@@ -35,19 +34,19 @@
                 <PivotItem.Header>
                     <TextBlock FontSize="15">播放</TextBlock>
                 </PivotItem.Header>
-                <ScrollViewer Padding="12 0" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Padding="12,0" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
-                        <settings:PlaySettingsControl></settings:PlaySettingsControl>
+                        <settings:PlaySettingsControl />
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
-            <PivotItem Margin="0" >
+            <PivotItem Margin="0">
                 <PivotItem.Header>
                     <TextBlock FontSize="15">性能</TextBlock>
                 </PivotItem.Header>
-                <ScrollViewer Padding="12 0" VerticalScrollBarVisibility="Auto">
-                    <StackPanel >
-                        <settings:PerformanceSettingsControl></settings:PerformanceSettingsControl>
+                <ScrollViewer Padding="12,0" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <settings:PerformanceSettingsControl />
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
@@ -55,9 +54,9 @@
                 <PivotItem.Header>
                     <TextBlock FontSize="15">代理</TextBlock>
                 </PivotItem.Header>
-                <ScrollViewer Padding="12 0" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Padding="12,0" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
-                        <settings:ProxySettingsControl></settings:ProxySettingsControl>
+                        <settings:ProxySettingsControl />
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
@@ -65,9 +64,9 @@
                 <PivotItem.Header>
                     <TextBlock FontSize="15">视频弹幕</TextBlock>
                 </PivotItem.Header>
-                <ScrollViewer Padding="12 0" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Padding="12,0" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
-                        <settings:VideoDanmakuSettingsControl></settings:VideoDanmakuSettingsControl>
+                        <settings:VideoDanmakuSettingsControl />
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
@@ -75,9 +74,9 @@
                 <PivotItem.Header>
                     <TextBlock FontSize="15">直播</TextBlock>
                 </PivotItem.Header>
-                <ScrollViewer Padding="12 0" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Padding="12,0" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
-                        <settings:LiveSettingsControl></settings:LiveSettingsControl>
+                        <settings:LiveSettingsControl />
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
@@ -85,9 +84,9 @@
                 <PivotItem.Header>
                     <TextBlock FontSize="15">下载</TextBlock>
                 </PivotItem.Header>
-                <ScrollViewer Padding="12 0" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Padding="12,0" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
-                        <settings:DownloadSettingsControl></settings:DownloadSettingsControl>
+                        <settings:DownloadSettingsControl />
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
@@ -95,25 +94,31 @@
                 <PivotItem.Header>
                     <TextBlock FontSize="15">过滤</TextBlock>
                 </PivotItem.Header>
-                <ScrollViewer Padding="12 0" VerticalScrollBarVisibility="Auto" VerticalAlignment="Top">
-                    <settings:FilterSettingsControl></settings:FilterSettingsControl>
+                <ScrollViewer
+                    Padding="12,0"
+                    VerticalAlignment="Top"
+                    VerticalScrollBarVisibility="Auto">
+                    <settings:FilterSettingsControl />
                 </ScrollViewer>
             </PivotItem>
             <PivotItem Margin="0">
                 <PivotItem.Header>
                     <TextBlock FontSize="15">快捷键</TextBlock>
                 </PivotItem.Header>
-                <ScrollViewer Padding="12 0" VerticalScrollBarVisibility="Auto" VerticalAlignment="Top">
-                    <settings:ShortcutKeySettingsControl></settings:ShortcutKeySettingsControl>
+                <ScrollViewer
+                    Padding="12,0"
+                    VerticalAlignment="Top"
+                    VerticalScrollBarVisibility="Auto">
+                    <settings:ShortcutKeySettingsControl />
                 </ScrollViewer>
             </PivotItem>
             <PivotItem Margin="0">
                 <PivotItem.Header>
                     <TextBlock FontSize="15">开发者选项</TextBlock>
                 </PivotItem.Header>
-                <ScrollViewer Padding="12 0" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Padding="12,0" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
-                        <settings:DevSettingsControl></settings:DevSettingsControl>
+                        <settings:DevSettingsControl />
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
@@ -122,21 +127,35 @@
                     <TextBlock FontSize="15">帮助</TextBlock>
                 </PivotItem.Header>
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <controls1:MarkdownTextBlock x:Name="txtHelp" Background="Transparent" Padding="16" LinkClicked="txtHelp_LinkClicked" IsTextSelectionEnabled="True" ></controls1:MarkdownTextBlock>
+                    <controls1:MarkdownTextBlock
+                        x:Name="txtHelp"
+                        Padding="16"
+                        Background="Transparent"
+                        IsTextSelectionEnabled="True"
+                        LinkClicked="txtHelp_LinkClicked" />
                 </ScrollViewer>
             </PivotItem>
             <PivotItem Margin="0">
                 <PivotItem.Header>
                     <TextBlock FontSize="15">关于</TextBlock>
                 </PivotItem.Header>
-                <ScrollViewer Padding="12 0" VerticalScrollBarVisibility="Auto">
-                    <StackPanel >
-                        <settings:AboutSettingsControl></settings:AboutSettingsControl>
+                <ScrollViewer Padding="12,0" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <settings:AboutSettingsControl />
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
             <Pivot.RightHeader>
-                <Button ToolTipService.ToolTip="Ctrl + R" x:Name="RestartButton" Click="RestartButton_Click" Margin="8" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top">重启应用</Button>
+                <Button
+                    x:Name="RestartButton"
+                    Margin="8"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Click="RestartButton_Click"
+                    Style="{StaticResource AccentButtonStyle}"
+                    ToolTipService.ToolTip="Ctrl + R">
+                    重启应用
+                </Button>
             </Pivot.RightHeader>
         </Pivot>
     </Grid>

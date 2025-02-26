@@ -592,7 +592,6 @@
     <Compile Include="Models\Common\UserDynamic\UserDynamicItemDisplayImageInfo.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicItemDisplayShortVideoInfo.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicItemDisplayCommands.cs" />
-    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Extensions\ColorExtensions.cs" />
     <Compile Include="Extensions\DanmakuExtensions.cs" />
     <Compile Include="Models\Builders\DynamicItemDisplayModelBuilder.cs" />

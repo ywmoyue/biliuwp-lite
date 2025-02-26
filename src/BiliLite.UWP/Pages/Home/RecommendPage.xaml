@@ -43,7 +43,7 @@
                                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                 ScrollViewer.VerticalScrollMode="Disabled"
                                 SelectionMode="None"
-                                Visibility="{x:Bind Path=Reasons, Converter={StaticResource display}}">
+                                Visibility="{x:Bind Path=Reasons, Converter={StaticResource DisplayConvert}}">
                                 <controls:MyAdaptiveGridView.ItemTemplate>
                                     <DataTemplate x:DataType="recommend:RecommendThreePointV2ItemReasonsModel">
                                         <TextBlock
@@ -74,7 +74,7 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                        Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='200h'}"
+                        Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='200h'}"
                         Stretch="UniformToFill" />
                     <Grid
                         Padding="8"
@@ -165,7 +165,7 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                        Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='200h'}"
+                        Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='200h'}"
                         Stretch="UniformToFill" />
                     <Grid
                         Padding="8"
@@ -286,7 +286,7 @@
                                             VerticalAlignment="Stretch"
                                             CornerRadius="{ThemeResource OverlayCornerRadius}"
                                             PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                            Source="{x:Bind Path=Image, Converter={StaticResource imageConvert}, ConverterParameter='240h'}"
+                                            Source="{x:Bind Path=Image, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='240h'}"
                                             Stretch="Fill" />
                                     </HyperlinkButton>
                                 </DataTemplate>
@@ -299,7 +299,7 @@
                                 HorizontalAlignment="Center"
                                 Command="{x:Bind Path=m_viewModel.LoadMoreCommand}"
                                 Foreground="Gray"
-                                Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay, Converter={StaticResource display}}">
+                                Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                 <TextBlock>加载更多</TextBlock>
                             </HyperlinkButton>
                             <ProgressRing

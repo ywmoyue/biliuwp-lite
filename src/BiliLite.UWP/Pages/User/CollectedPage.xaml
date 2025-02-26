@@ -28,7 +28,7 @@
                     Width="120"
                     Height="80"
                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png"
-                    Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='160w'}"
+                    Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
                     Stretch="UniformToFill" />
 
                 <StackPanel Grid.Column="1" Margin="8,0,0,0">
@@ -47,7 +47,7 @@
                         Margin="0,4"
                         FontSize="14"
                         Foreground="Gray"
-                        Visibility="{x:Bind Path=Privacy, Converter={StaticResource display}}">
+                        Visibility="{x:Bind Path=Privacy, Converter={StaticResource DisplayConvert}}">
                         公开
                     </TextBlock>
                     <TextBlock
@@ -96,7 +96,7 @@
         <Button
             Style="{StaticResource RoundAccentButtonStyle}"
             Tapped="BtnRefresh_OnTapped"
-            Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay, Converter={StaticResource display}}">
+            Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
             <SymbolIcon Symbol="Refresh" />
         </Button>
     </Grid>

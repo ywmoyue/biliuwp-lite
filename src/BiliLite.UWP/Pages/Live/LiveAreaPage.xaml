@@ -45,7 +45,7 @@
                                             Margin="0,4"
                                             PlaceholderSource="/assets/Thumbnails/Placeholde1x1.png"
                                             PlaceholderStretch="UniformToFill"
-                                            Source="{x:Bind Path=pic, Converter={StaticResource imageConvert}, ConverterParameter='120w'}" />
+                                            Source="{x:Bind Path=pic, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120w'}" />
                                         <TextBlock
                                             Margin="0,0,0,8"
                                             Text="{x:Bind name}"

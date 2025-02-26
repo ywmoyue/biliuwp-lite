@@ -32,7 +32,7 @@
                         <TextBlock
                             Grid.Column="1"
                             Foreground="Gray"
-                            Visibility="{x:Bind Path=Privacy, Converter={StaticResource display}}">
+                            Visibility="{x:Bind Path=Privacy, Converter={StaticResource DisplayConvert}}">
                             公开
                         </TextBlock>
                         <TextBlock

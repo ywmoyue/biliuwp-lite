@@ -101,7 +101,7 @@
                         <CompositeTransform/>
                     </Button.RenderTransform>
                     <ToolTipService.ToolTip>
-                        <ToolTip Content="{x:Bind SecondBtnToolTip,Mode=OneWay}" Visibility="{x:Bind SecondBtnToolTip,Converter={StaticResource display}}"/>
+                        <ToolTip Content="{x:Bind SecondBtnToolTip,Mode=OneWay}" Visibility="{x:Bind SecondBtnToolTip,Converter={StaticResource DisplayConvert}}"/>
                     </ToolTipService.ToolTip>
                     <ContentPresenter Padding="0 4 0 0" 
                                       Content="{x:Bind Path=SecondBtnIcon,Mode=OneWay}"
@@ -115,7 +115,7 @@
                         <CompositeTransform TranslateX="40" TranslateY="50"/>
                     </Button.RenderTransform>
                     <ToolTipService.ToolTip>
-                        <ToolTip Content="{x:Bind ThirdBtnToolTip,Mode=OneWay}" Visibility="{x:Bind ThirdBtnToolTip,Converter={StaticResource display}}"/>
+                        <ToolTip Content="{x:Bind ThirdBtnToolTip,Mode=OneWay}" Visibility="{x:Bind ThirdBtnToolTip,Converter={StaticResource DisplayConvert}}"/>
                     </ToolTipService.ToolTip>
                     <ContentPresenter Padding="0 4 0 0" 
                                       Content="{x:Bind Path=ThirdBtnIcon,Mode=OneWay}"
@@ -129,7 +129,7 @@
                         <CompositeTransform TranslateX="40" TranslateY="-50"/>
                     </Button.RenderTransform>
                     <ToolTipService.ToolTip>
-                        <ToolTip Content="{x:Bind FirstBtnToolTip,Mode=OneWay}" Visibility="{x:Bind FirstBtnToolTip,Converter={StaticResource display}}"/>
+                        <ToolTip Content="{x:Bind FirstBtnToolTip,Mode=OneWay}" Visibility="{x:Bind FirstBtnToolTip,Converter={StaticResource DisplayConvert}}"/>
                     </ToolTipService.ToolTip>
                     <ContentPresenter Padding="0 4 0 0" 
                                       Content="{x:Bind Path=FirstBtnIcon,Mode=OneWay}" 

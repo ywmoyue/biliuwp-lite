@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:BiliLite.Controls"
-    xmlns:convert="using:BiliLite.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:download="using:BiliLite.Models.Common.Download"
     xmlns:local="using:BiliLite.Pages"
@@ -17,9 +16,6 @@
     <Page.Resources>
         <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent" />
         <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White" />
-        <convert:ByteSizeConvert x:Key="byteSizeConvert" />
-        <convert:DownloadStatusConvert x:Key="downloadStatusConvert" />
-
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -42,7 +38,7 @@
                         SelectedIndex="0"
                         SelectedValuePath="Value"
                         SelectionChanged="SortOptions_OnSelectionChanged"
-                        Visibility="{x:Bind m_viewModel.LoadingDownloaded, Mode=OneWay, Converter={StaticResource display}}" />
+                        Visibility="{x:Bind m_viewModel.LoadingDownloaded, Mode=OneWay, Converter={StaticResource DisplayConvert}}" />
 
                     <Button Click="BtnClearSearch_OnClick" Visibility="{x:Bind m_viewModel.IsSearching, Mode=OneWay}">清除搜索</Button>
                     <AutoSuggestBox
@@ -134,14 +130,14 @@
                                                                 <TextBlock
                                                                     FontSize="12"
                                                                     Foreground="Gray"
-                                                                    Text="{x:Bind Path=Status, Mode=OneWay, Converter={StaticResource downloadStatusConvert}}"
+                                                                    Text="{x:Bind Path=Status, Mode=OneWay, Converter={StaticResource DownloadStatusConvert}}"
                                                                     TextAlignment="Right" />
                                                                 <TextBlock
                                                                     FontSize="12"
                                                                     Foreground="Gray"
                                                                     TextAlignment="Right">
-                                                                    <Run Text="{x:Bind Path=ProgressBytes, Mode=OneWay, Converter={StaticResource byteSizeConvert}, ConverterParameter='MB,--'}" />
-                                                                    /<Run Text="{x:Bind Path=TotalBytes, Mode=OneWay, Converter={StaticResource byteSizeConvert}, ConverterParameter='MB,未知'}" />
+                                                                    <Run Text="{x:Bind Path=ProgressBytes, Mode=OneWay, Converter={StaticResource ByteSizeConvert}, ConverterParameter='MB,--'}" />
+                                                                    /<Run Text="{x:Bind Path=TotalBytes, Mode=OneWay, Converter={StaticResource ByteSizeConvert}, ConverterParameter='MB,未知'}" />
                                                                 </TextBlock>
                                                             </StackPanel>
                                                         </Grid>
@@ -455,7 +451,7 @@
                             <Button
                                 Command="{x:Bind Path=m_viewModel.RefreshDownloadedCommand}"
                                 Style="{StaticResource RoundAccentButtonStyle}"
-                                Visibility="{x:Bind Path=m_viewModel.LoadingDownloaded, Mode=OneWay, Converter={StaticResource display}}">
+                                Visibility="{x:Bind Path=m_viewModel.LoadingDownloaded, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                 <SymbolIcon Symbol="Refresh" />
                             </Button>
                         </Grid>
@@ -467,10 +463,10 @@
         <StackPanel Grid.Row="1" Padding="12,4">
             <Grid>
                 <TextBlock>
-                    磁盘可用空间<Run Text="{x:Bind Path=m_viewModel.DiskFree, Mode=OneWay, Converter={StaticResource numberToStringConvert}}" />
+                    磁盘可用空间<Run Text="{x:Bind Path=m_viewModel.DiskFree, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" />
                     GB</TextBlock>
-                <TextBlock HorizontalAlignment="Right" Foreground="Gray"><Run Text="{x:Bind Path=m_viewModel.DiskUse, Mode=OneWay, Converter={StaticResource numberToStringConvert}}" />
-                    GB/<Run Text="{x:Bind Path=m_viewModel.DiskTotal, Mode=OneWay, Converter={StaticResource numberToStringConvert}}" />
+                <TextBlock HorizontalAlignment="Right" Foreground="Gray"><Run Text="{x:Bind Path=m_viewModel.DiskUse, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" />
+                    GB/<Run Text="{x:Bind Path=m_viewModel.DiskTotal, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" />
                     GB</TextBlock>
             </Grid>
 

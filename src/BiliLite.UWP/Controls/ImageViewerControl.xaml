@@ -45,7 +45,7 @@
                                 <KeyboardAccelerator  Modifiers="None"  Key="Down" />
                             </AppBarButton.KeyboardAccelerators>
                         </AppBarButton>
-                        <TextBlock VerticalAlignment="Center" FontSize="16" Margin="8 0" Foreground="White" Text="{Binding ElementName=scrollViewer,Path=ZoomFactor,Mode=OneWay,Converter={StaticResource numberToStringConvert},ConverterParameter='p00'}"></TextBlock>
+                        <TextBlock VerticalAlignment="Center" FontSize="16" Margin="8 0" Foreground="White" Text="{Binding ElementName=scrollViewer,Path=ZoomFactor,Mode=OneWay,Converter={StaticResource NumberToStringConvert},ConverterParameter='p00'}"></TextBlock>
                         <AppBarButton ToolTipService.ToolTip="放大" x:Name="btnZoomIn" Click="btnZoomIn_Click" Width="40" Height="40" Foreground="White">
                             <AppBarButton.KeyboardAccelerators>
                                 <KeyboardAccelerator  Modifiers="None"  Key="Up" />

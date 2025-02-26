@@ -127,7 +127,7 @@
                         Command="{Binding Path=Parent.LaunchUrlCommand}"
                         CommandParameter="{Binding Path=Dynamic.DynPgc.Uri}"
                         CornerRadius="{StaticResource OverlayCornerRadius}"
-                        Visibility="{Binding Dynamic.DynPgc, Converter={StaticResource display}}">
+                        Visibility="{Binding Dynamic.DynPgc, Converter={StaticResource DisplayConvert}}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -183,7 +183,7 @@
                         Command="{Binding Path=Parent.LaunchUrlCommand}"
                         CommandParameter="{Binding Path=Dynamic.DynArchive.Uri}"
                         CornerRadius="{StaticResource OverlayCornerRadius}"
-                        Visibility="{Binding Dynamic.DynArchive, Converter={StaticResource display}}">
+                        Visibility="{Binding Dynamic.DynArchive, Converter={StaticResource DisplayConvert}}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -311,7 +311,7 @@
                     <Border
                         BorderThickness="1"
                         CornerRadius="{StaticResource OverlayCornerRadius}"
-                        Visibility="{Binding ForwardMissed, Converter={StaticResource display}}">
+                        Visibility="{Binding ForwardMissed, Converter={StaticResource DisplayConvert}}">
                         <ListView
                             Margin="-20,0"
                             IsItemClickEnabled="false"
@@ -499,7 +499,7 @@
                                     Height="120"
                                     CornerRadius="{StaticResource OverlayCornerRadius}"
                                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png"
-                                    Source="{Binding Path=ImageUrl, Converter={StaticResource imageConvert}, ConverterParameter='200w_200h_1c'}"
+                                    Source="{Binding Path=ImageUrl, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='200w_200h_1c'}"
                                     Stretch="UniformToFill" />
                             </HyperlinkButton>
                         </DataTemplate>
@@ -530,7 +530,7 @@
                                     Height="100"
                                     CornerRadius="{StaticResource OverlayCornerRadius}"
                                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png"
-                                    Source="{Binding Path=ImageUrl, Converter={StaticResource imageConvert}, ConverterParameter='200w_200h_1c'}"
+                                    Source="{Binding Path=ImageUrl, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='200w_200h_1c'}"
                                     Stretch="UniformToFill" />
                             </HyperlinkButton>
                         </DataTemplate>

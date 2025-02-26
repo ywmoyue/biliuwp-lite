@@ -29,7 +29,7 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                        Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='200w'}"
+                        Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='200w'}"
                         Stretch="UniformToFill" />
                     <Grid Padding="8" VerticalAlignment="Bottom">
                         <Grid.Background>
@@ -92,7 +92,7 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                        Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='200w'}"
+                        Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='200w'}"
                         Stretch="UniformToFill" />
                     <Grid Padding="8" VerticalAlignment="Bottom">
                         <Grid.Background>
@@ -168,7 +168,7 @@
                                         VerticalAlignment="Stretch"
                                         CornerRadius="{ThemeResource OverlayCornerRadius}"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                        Source="{Binding Path=Img, Converter={StaticResource imageConvert}, ConverterParameter='240h'}"
+                                        Source="{Binding Path=Img, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='240h'}"
                                         Stretch="Fill" />
 
                                 </HyperlinkButton>
@@ -238,7 +238,7 @@
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch"
                                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                                Source="{x:Bind Path=NewEp.cover, Converter={StaticResource imageConvert}, ConverterParameter='320w_200h_1c'}"
+                                                Source="{x:Bind Path=NewEp.cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='320w_200h_1c'}"
                                                 Stretch="UniformToFill" />
                                             <Grid Padding="8" VerticalAlignment="Bottom">
                                                 <Grid.Background>
@@ -317,7 +317,7 @@
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch"
                                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                                Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='200w'}"
+                                                Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='200w'}"
                                                 Stretch="UniformToFill" />
                                             <Grid Padding="8" VerticalAlignment="Bottom">
                                                 <Grid.Background>
@@ -525,7 +525,7 @@
                                                         HorizontalAlignment="Stretch"
                                                         VerticalAlignment="Stretch"
                                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                                        Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='180h'}"
+                                                        Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='180h'}"
                                                         Stretch="UniformToFill" />
                                                     <TextBlock
                                                         Grid.Row="1"
@@ -559,7 +559,7 @@
                                         <ProgressRing
                                             HorizontalAlignment="Center"
                                             IsActive="True"
-                                            Visibility="{x:Bind Path=ShowMore, Converter={StaticResource display}, Mode=OneWay}" />
+                                            Visibility="{x:Bind Path=ShowMore, Converter={StaticResource DisplayConvert}, Mode=OneWay}" />
                                     </Grid>
                                 </StackPanel>
                             </DataTemplate>

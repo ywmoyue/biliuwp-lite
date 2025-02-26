@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:control="using:BiliLite.Controls"
     xmlns:controls="using:Microsoft.UI.Xaml.Controls"
-    xmlns:convert="using:BiliLite.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="using:FontAwesome5"
@@ -30,7 +29,6 @@
             <Style TargetType="HyperlinkButton">
                 <Setter Property="Foreground" Value="#178bcf" />
             </Style>
-            <convert:DatetimeConvert x:Key="time" />
 
             <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White" />
             <ItemsPanelTemplate x:Key="GridPanel">
@@ -56,7 +54,7 @@
                             Height="48"
                             Margin="4,0,0,0">
                             <Ellipse.Fill>
-                                <ImageBrush ImageSource="{x:Bind Path=face, Converter={StaticResource imageConvert2}, ConverterParameter='56w'}" Stretch="UniformToFill" />
+                                <ImageBrush ImageSource="{x:Bind Path=face, Converter={StaticResource ImageSourceConvert}, ConverterParameter='56w'}" Stretch="UniformToFill" />
                             </Ellipse.Fill>
                         </Ellipse>
                         <Image
@@ -248,7 +246,7 @@
                                                         HorizontalAlignment="Stretch"
                                                         VerticalAlignment="Stretch"
                                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                                        Source="{x:Bind Path=Pic, Converter={StaticResource imageConvert}, ConverterParameter='360w_200h_1c'}"
+                                                        Source="{x:Bind Path=Pic, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='360w_200h_1c'}"
                                                         Stretch="UniformToFill" />
 
                                                     <Grid Padding="8" VerticalAlignment="Bottom">
@@ -274,10 +272,10 @@
                                                         TextWrapping="Wrap" />
                                                     <StackPanel VerticalAlignment="Bottom">
                                                         <TextBlock Margin="0,4,0,0" Foreground="Gray">
-                                                            观看:<Run Text="{x:Bind Path=Play, Converter={StaticResource numberToStringConvert}}" />
-                                                            弹幕:<Run Text="{x:Bind Path=VideoReview, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
+                                                            观看:<Run Text="{x:Bind Path=Play, Converter={StaticResource NumberToStringConvert}}" />
+                                                            弹幕:<Run Text="{x:Bind Path=VideoReview, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
                                                         <TextBlock Margin="0,4,0,0" Foreground="Gray">
-                                                            发表于<Run Text="{x:Bind Path=Created, Converter={StaticResource time}, ConverterParameter='ts'}" /></TextBlock>
+                                                            发表于<Run Text="{x:Bind Path=Created, Converter={StaticResource DatetimeConvert}, ConverterParameter='ts'}" /></TextBlock>
                                                     </StackPanel>
                                                     <!--<TextBlock
                                                         Grid.Row="2"
@@ -383,7 +381,7 @@
                                                         HorizontalAlignment="Stretch"
                                                         VerticalAlignment="Stretch"
                                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                                        Source="{x:Bind Path=cover, Converter={StaticResource imageConvert}, ConverterParameter='120h'}"
+                                                        Source="{x:Bind Path=cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
                                                         Stretch="UniformToFill" />
                                                     <Grid Padding="8" VerticalAlignment="Bottom">
                                                         <Grid.Background>
@@ -413,11 +411,11 @@
                                                         Text="{x:Bind Path=summary}"
                                                         TextTrimming="CharacterEllipsis" />
                                                     <TextBlock Margin="0,4,0,0" Foreground="Gray">
-                                                        观看:<Run Text="{x:Bind Path=stats.view, Converter={StaticResource numberToStringConvert}}" />
-                                                        点赞:<Run Text="{x:Bind Path=stats.like, Converter={StaticResource numberToStringConvert}}" />
-                                                        评论:<Run Text="{x:Bind Path=stats.reply, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
+                                                        观看:<Run Text="{x:Bind Path=stats.view, Converter={StaticResource NumberToStringConvert}}" />
+                                                        点赞:<Run Text="{x:Bind Path=stats.like, Converter={StaticResource NumberToStringConvert}}" />
+                                                        评论:<Run Text="{x:Bind Path=stats.reply, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
                                                     <TextBlock Margin="0,4,0,0" Foreground="Gray">
-                                                        发表于<Run Text="{x:Bind Path=publish_time, Converter={StaticResource time}, ConverterParameter='ts'}" /></TextBlock>
+                                                        发表于<Run Text="{x:Bind Path=publish_time, Converter={StaticResource DatetimeConvert}, ConverterParameter='ts'}" /></TextBlock>
                                                 </StackPanel>
                                                 <!--<TextBlock
                                                     Grid.Row="2"
@@ -492,7 +490,7 @@
                                                         HorizontalAlignment="Stretch"
                                                         VerticalAlignment="Stretch"
                                                         PlaceholderSource="/Assets/Thumbnails/Placeholde.png"
-                                                        Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='360w_200h_1c'}"
+                                                        Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='360w_200h_1c'}"
                                                         Stretch="UniformToFill" />
                                                     <Grid Padding="8" VerticalAlignment="Bottom">
                                                         <Grid.Background>
@@ -549,7 +547,7 @@
                                                             FontSize="14"
                                                             Foreground="Gray">
                                                             <Run>最后更新:</Run>
-                                                            <Run Text="{x:Bind Path=LatestUpdateTime, Converter={StaticResource time}, ConverterParameter='ts'}" />
+                                                            <Run Text="{x:Bind Path=LatestUpdateTime, Converter={StaticResource DatetimeConvert}, ConverterParameter='ts'}" />
                                                         </TextBlock>
                                                     </StackPanel>
                                                 </Grid>
@@ -782,7 +780,7 @@
                                     <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
                                         <Ellipse Width="36" Height="36">
                                             <Ellipse.Fill>
-                                                <ImageBrush ImageSource="{x:Bind Path=m_viewModel.UserSpaceInfo.Face, Mode=OneWay, Converter={StaticResource imageConvert2}, ConverterParameter='56h'}" />
+                                                <ImageBrush ImageSource="{x:Bind Path=m_viewModel.UserSpaceInfo.Face, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='56h'}" />
                                             </Ellipse.Fill>
                                         </Ellipse>
                                         <TextBlock
@@ -798,12 +796,12 @@
                                                 <RowDefinition />
                                             </Grid.RowDefinitions>
                                             <Grid Visibility="{x:Bind m_viewModel.NeedCaptcha, Mode=OneWay}" />
-                                            <Grid Visibility="{x:Bind m_viewModel.NeedCaptcha, Mode=OneWay, Converter={StaticResource display}}">
+                                            <Grid Visibility="{x:Bind m_viewModel.NeedCaptcha, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                                 <Image
                                                     Width="340"
                                                     Height="100"
                                                     VerticalAlignment="Top"
-                                                    Source="{x:Bind Path=m_viewModel.UserSpaceInfo.TopImage, Mode=OneWay, Converter={StaticResource imageConvert2}, ConverterParameter='400w_120h_1c'}"
+                                                    Source="{x:Bind Path=m_viewModel.UserSpaceInfo.TopImage, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='400w_120h_1c'}"
                                                     Stretch="UniformToFill" />
                                                 <Grid Margin="0,80,0,0" VerticalAlignment="Top">
                                                     <Grid.ColumnDefinitions>
@@ -818,7 +816,7 @@
                                                             Stroke="White"
                                                             StrokeThickness="2">
                                                             <Ellipse.Fill>
-                                                                <ImageBrush ImageSource="{x:Bind Path=m_viewModel.UserSpaceInfo.Face, Mode=OneWay, Converter={StaticResource imageConvert2}, ConverterParameter='56h'}" />
+                                                                <ImageBrush ImageSource="{x:Bind Path=m_viewModel.UserSpaceInfo.Face, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='56h'}" />
                                                             </Ellipse.Fill>
                                                         </Ellipse>
                                                         <Image
@@ -843,12 +841,12 @@
                                                                 FontWeight="Bold"
                                                                 Foreground="{ThemeResource SystemAccentColor}"
                                                                 Text="{x:Bind Path=m_viewModel.UserSpaceInfo.Name, Mode=OneWay}"
-                                                                Visibility="{x:Bind Path=m_viewModel.UserSpaceInfo.Vip.Status, Mode=OneWay, Converter={StaticResource display}, ConverterParameter=1}" />
+                                                                Visibility="{x:Bind Path=m_viewModel.UserSpaceInfo.Vip.Status, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=1}" />
                                                             <TextBlock
                                                                 VerticalAlignment="Center"
                                                                 FontWeight="Bold"
                                                                 Text="{x:Bind Path=m_viewModel.UserSpaceInfo.Name, Mode=OneWay}"
-                                                                Visibility="{x:Bind Path=m_viewModel.UserSpaceInfo.Vip.Status, Mode=OneWay, Converter={StaticResource display}, ConverterParameter=0}" />
+                                                                Visibility="{x:Bind Path=m_viewModel.UserSpaceInfo.Vip.Status, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=0}" />
                                                             <Border
                                                                 Margin="8,0"
                                                                 Background="{x:Bind Path=m_viewModel.UserSpaceInfo.LevelColor, Mode=OneWay}"
@@ -864,7 +862,7 @@
                                                                 Background="{ThemeResource SystemAccentColor}"
                                                                 CornerRadius="{StaticResource ControlCornerRadius}"
                                                                 Opacity=".8"
-                                                                Visibility="{x:Bind Path=m_viewModel.UserSpaceInfo.Vip.Status, Mode=OneWay, Converter={StaticResource display}, ConverterParameter=1}">
+                                                                Visibility="{x:Bind Path=m_viewModel.UserSpaceInfo.Vip.Status, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=1}">
                                                                 <TextBlock
                                                                     Margin="4,2"
                                                                     FontSize="12"
@@ -880,8 +878,8 @@
                                                             TextWrapping="Wrap"
                                                             Visibility="{x:Bind Path=m_viewModel.UserSpaceInfo.Official.ShowOfficial, Mode=OneWay}" />
                                                         <TextBlock Margin="0,4" Foreground="{ThemeResource TextColor}">
-                                                            关注<Run Text="{x:Bind Path=m_viewModel.Stat.Following, Mode=OneWay, Converter={StaticResource numberToStringConvert}}" />
-                                                            粉丝<Run Text="{x:Bind Path=m_viewModel.Stat.Follower, Mode=OneWay, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
+                                                            关注<Run Text="{x:Bind Path=m_viewModel.Stat.Following, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" />
+                                                            粉丝<Run Text="{x:Bind Path=m_viewModel.Stat.Follower, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
 
                                                         <TextBlock
                                                             FontSize="14"
@@ -913,7 +911,7 @@
                                     Command="{x:Bind Path=m_viewModel.AttentionCommand, Mode=OneWay}"
                                     ContextFlyout="{StaticResource AttentionContextManu}"
                                     Label="关注"
-                                    Visibility="{x:Bind Path=m_viewModel.IsFollowed, Mode=OneWay, Converter={StaticResource display}}">
+                                    Visibility="{x:Bind Path=m_viewModel.IsFollowed, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                     <AppBarButton.Icon>
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE006;" />
                                     </AppBarButton.Icon>

@@ -40,7 +40,7 @@
                                         VerticalAlignment="Stretch"
                                         CornerRadius="{ThemeResource OverlayCornerRadius}"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                        Source="{Binding Path=Pic, Converter={StaticResource imageConvert}, ConverterParameter='240h'}"
+                                        Source="{Binding Path=Pic, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='240h'}"
                                         Stretch="Fill" />
                                 </HyperlinkButton>
                             </DataTemplate>
@@ -66,7 +66,7 @@
                                         CornerRadius="{StaticResource OverlayCornerRadius}"
                                         PlaceholderSource="/assets/Thumbnails/Placeholde1x1.png"
                                         PlaceholderStretch="UniformToFill"
-                                        Source="{x:Bind Path=Pic, Converter={StaticResource imageConvert}, ConverterParameter='96w'}" />
+                                        Source="{x:Bind Path=Pic, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='96w'}" />
                                     <TextBlock Text="{x:Bind Title}" TextAlignment="Center" />
                                 </StackPanel>
                             </DataTemplate>
@@ -109,7 +109,7 @@
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch"
                                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                                Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='460w_260h_1c'}"
+                                                Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='460w_260h_1c'}"
                                                 Stretch="UniformToFill" />
                                             <Grid Padding="8" VerticalAlignment="Bottom">
                                                 <Grid.Background>
@@ -133,7 +133,7 @@
                                                     <TextBlock
                                                         FontSize="12"
                                                         Foreground="White"
-                                                        Text="{x:Bind Path=Online, Converter={StaticResource numberToStringConvert}}" />
+                                                        Text="{x:Bind Path=Online, Converter={StaticResource NumberToStringConvert}}" />
                                                 </StackPanel>
                                             </Grid>
                                         </Grid>
@@ -188,7 +188,7 @@
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch"
                                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                                Source="{x:Bind Path=cover, Converter={StaticResource imageConvert}, ConverterParameter='460w_260h_1c'}"
+                                                Source="{x:Bind Path=cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='460w_260h_1c'}"
                                                 Stretch="UniformToFill" />
                                             <Grid Padding="8" VerticalAlignment="Bottom">
                                                 <Grid.Background>
@@ -212,7 +212,7 @@
                                                     <TextBlock
                                                         FontSize="12"
                                                         Foreground="White"
-                                                        Text="{x:Bind Path=online, Converter={StaticResource numberToStringConvert}}" />
+                                                        Text="{x:Bind Path=online, Converter={StaticResource NumberToStringConvert}}" />
                                                 </StackPanel>
                                             </Grid>
                                             <Grid
@@ -299,7 +299,7 @@
                                                             HorizontalAlignment="Stretch"
                                                             VerticalAlignment="Stretch"
                                                             PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                                            Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='460w_260h_1c'}"
+                                                            Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='460w_260h_1c'}"
                                                             Stretch="UniformToFill" />
                                                         <Grid Padding="8" VerticalAlignment="Bottom">
                                                             <Grid.Background>
@@ -323,7 +323,7 @@
                                                                 <TextBlock
                                                                     FontSize="12"
                                                                     Foreground="White"
-                                                                    Text="{x:Bind Path=Online, Converter={StaticResource numberToStringConvert}}" />
+                                                                    Text="{x:Bind Path=Online, Converter={StaticResource NumberToStringConvert}}" />
                                                             </StackPanel>
                                                         </Grid>
                                                         <Grid

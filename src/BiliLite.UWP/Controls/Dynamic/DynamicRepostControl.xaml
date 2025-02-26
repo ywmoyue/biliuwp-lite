@@ -38,7 +38,7 @@
                                     Height="36"
                                     Margin="0,0,8,0">
                                     <Ellipse.Fill>
-                                        <ImageBrush ImageSource="{x:Bind Path=Photo, Mode=OneWay, Converter={StaticResource imageConvert2}, ConverterParameter='64w'}" />
+                                        <ImageBrush ImageSource="{x:Bind Path=Photo, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='64w'}" />
                                     </Ellipse.Fill>
                                 </Ellipse>
                                 <StackPanel VerticalAlignment="Center">
@@ -50,7 +50,7 @@
                                     <TextBlock
                                         Foreground="{ThemeResource TextColor}"
                                         Text="{x:Bind Path=UserName, Mode=OneWay}"
-                                        Visibility="{x:Bind Path=IsYearVip, Mode=OneWay, Converter={StaticResource display}}" />
+                                        Visibility="{x:Bind Path=IsYearVip, Mode=OneWay, Converter={StaticResource DisplayConvert}}" />
                                     <TextBlock
                                         Margin="0,4,0,0"
                                         FontSize="12"
@@ -80,7 +80,7 @@
                         HorizontalAlignment="Center"
                         Command="{x:Bind Path=UserDynamicRepostViewModel.LoadMoreCommand}"
                         Foreground="Gray"
-                        Visibility="{x:Bind Path=UserDynamicRepostViewModel.Loading, Mode=OneWay, Converter={StaticResource display}}">
+                        Visibility="{x:Bind Path=UserDynamicRepostViewModel.Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                         <TextBlock>加载更多</TextBlock>
                     </HyperlinkButton>
                     <ProgressRing

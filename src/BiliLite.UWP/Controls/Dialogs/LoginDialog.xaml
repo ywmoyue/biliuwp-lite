@@ -22,7 +22,7 @@
     <Grid>
         <StackPanel>
             <!--  密码登录  -->
-            <StackPanel Visibility="{x:Bind Path=loginVM.LoginType, Mode=OneWay, Converter={StaticResource display}, ConverterParameter=0}">
+            <StackPanel Visibility="{x:Bind Path=loginVM.LoginType, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=0}">
                 <Grid>
                     <Grid x:Name="show" VerticalAlignment="Top">
                         <Grid.ColumnDefinitions>
@@ -88,7 +88,7 @@
                 </StackPanel>
             </StackPanel>
             <!--  短信登录  -->
-            <StackPanel Visibility="{x:Bind Path=loginVM.LoginType, Mode=OneWay, Converter={StaticResource display}, ConverterParameter=1}">
+            <StackPanel Visibility="{x:Bind Path=loginVM.LoginType, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=1}">
                 <!--  地区  -->
                 <TextBlock Margin="0,4">国家/地区</TextBlock>
                 <ComboBox
@@ -120,7 +120,7 @@
                         IsEnabled="{x:Bind Path=loginVM.EnableSendSMS, Mode=OneWay}">
                         <Grid>
                             <TextBlock Margin="8,0" Visibility="{x:Bind Path=loginVM.EnableSendSMS, Mode=OneWay}">发送验证码</TextBlock>
-                            <TextBlock Margin="8,0" Visibility="{x:Bind Path=loginVM.EnableSendSMS, Mode=OneWay, Converter={StaticResource display}}"><Run Text="{x:Bind Path=loginVM.SMSCountDown, Mode=OneWay}" />
+                            <TextBlock Margin="8,0" Visibility="{x:Bind Path=loginVM.EnableSendSMS, Mode=OneWay, Converter={StaticResource DisplayConvert}}"><Run Text="{x:Bind Path=loginVM.SMSCountDown, Mode=OneWay}" />
                                 秒后可再发送</TextBlock>
                         </Grid>
                     </HyperlinkButton>
@@ -143,7 +143,7 @@
                 </StackPanel>
             </StackPanel>
             <!--  二维码登录  -->
-            <StackPanel Visibility="{x:Bind Path=loginVM.LoginType, Mode=OneWay, Converter={StaticResource display}, ConverterParameter=2}">
+            <StackPanel Visibility="{x:Bind Path=loginVM.LoginType, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=2}">
                 <Grid>
                     <Image
                         x:Name="imgQR"
@@ -184,7 +184,7 @@
                 </StackPanel>
             </StackPanel>
             <!--  登录验证码  -->
-            <StackPanel Visibility="{x:Bind Path=loginVM.LoginType, Mode=OneWay, Converter={StaticResource display}, ConverterParameter=3}">
+            <StackPanel Visibility="{x:Bind Path=loginVM.LoginType, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=3}">
                 <!--  验证码  -->
                 <TextBlock Margin="0,4">
                     验证码已发送至<Run Text="{x:Bind Path=loginVM.HideTel, Mode=OneWay}" /></TextBlock>
@@ -196,7 +196,7 @@
                         IsEnabled="{x:Bind Path=loginVM.EnableSendSMS, Mode=OneWay}">
                         <Grid>
                             <TextBlock Margin="8,0" Visibility="{x:Bind Path=loginVM.EnableSendSMS, Mode=OneWay}">发送验证码</TextBlock>
-                            <TextBlock Margin="8,0" Visibility="{x:Bind Path=loginVM.EnableSendSMS, Mode=OneWay, Converter={StaticResource display}}"><Run Text="{x:Bind Path=loginVM.SMSCountDown, Mode=OneWay}" />
+                            <TextBlock Margin="8,0" Visibility="{x:Bind Path=loginVM.EnableSendSMS, Mode=OneWay, Converter={StaticResource DisplayConvert}}"><Run Text="{x:Bind Path=loginVM.SMSCountDown, Mode=OneWay}" />
                                 秒后可再发送</TextBlock>
                         </Grid>
                     </HyperlinkButton>

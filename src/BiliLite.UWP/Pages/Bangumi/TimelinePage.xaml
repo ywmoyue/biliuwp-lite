@@ -76,7 +76,7 @@
                                             HorizontalAlignment="Stretch"
                                             VerticalAlignment="Stretch"
                                             PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                            Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='300w'}"
+                                            Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='300w'}"
                                             Stretch="UniformToFill" />
                                         <Grid Padding="8" VerticalAlignment="Bottom">
                                             <Grid.Background>

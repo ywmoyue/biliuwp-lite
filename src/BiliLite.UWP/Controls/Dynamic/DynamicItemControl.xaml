@@ -21,7 +21,7 @@
         Background="{ThemeResource ControlFillColorDefaultBrush}"
         CornerRadius="{StaticResource OverlayCornerRadius}">
         <!--  用户信息  -->
-        <Grid Height="64" Visibility="{x:Bind Path=ViewModel.IsRepost, Converter={StaticResource display}, Mode=OneWay}">
+        <Grid Height="64" Visibility="{x:Bind Path=ViewModel.IsRepost, Converter={StaticResource DisplayConvert}, Mode=OneWay}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
@@ -32,7 +32,7 @@
                 VerticalAlignment="Top"
                 Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.UserCommand, Mode=OneWay}"
                 CommandParameter="{x:Bind Path=ViewModel.Mid, Mode=OneWay}"
-                Visibility="{x:Bind Path=ViewModel.IsRepost, Converter={StaticResource display}, Mode=OneWay}">
+                Visibility="{x:Bind Path=ViewModel.IsRepost, Converter={StaticResource DisplayConvert}, Mode=OneWay}">
                 <Grid>
                     <Ellipse
                         Width="40"
@@ -40,7 +40,7 @@
                         Stroke="WhiteSmoke"
                         StrokeThickness="1">
                         <Ellipse.Fill>
-                            <ImageBrush ImageSource="{x:Bind Path=ViewModel.Photo, Mode=OneWay, Converter={StaticResource imageConvert2}, ConverterParameter='64h'}" />
+                            <ImageBrush ImageSource="{x:Bind Path=ViewModel.Photo, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='64h'}" />
                         </Ellipse.Fill>
                     </Ellipse>
                     <Image
@@ -84,7 +84,7 @@
                             <TextBlock
                                 Foreground="{ThemeResource TextColor}"
                                 Text="{x:Bind Path=ViewModel.UserName, Mode=OneWay}"
-                                Visibility="{x:Bind Path=ViewModel.IsYearVip, Mode=OneWay, Converter={StaticResource display}}" />
+                                Visibility="{x:Bind Path=ViewModel.IsYearVip, Mode=OneWay, Converter={StaticResource DisplayConvert}}" />
                         </StackPanel>
                         <TextBlock
                             Margin="0,4,0,0"
@@ -101,7 +101,7 @@
                 VerticalAlignment="Center"
                 ToolTipService.ToolTip="{x:Bind Path=ViewModel.DecorateName, Mode=OneWay}"
                 Visibility="{x:Bind Path=ViewModel.ShowDecorate, Mode=OneWay}">
-                <Image Height="44" Source="{x:Bind Path=ViewModel.DecorateImage, Mode=OneWay, Converter={StaticResource imageConvert2}, ConverterParameter='64h.png'}" />
+                <Image Height="44" Source="{x:Bind Path=ViewModel.DecorateImage, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='64h.png'}" />
                 <TextBlock
                     Margin="0,0,40,0"
                     HorizontalAlignment="Right"
@@ -173,7 +173,7 @@
                         Height="24"
                         Margin="0,0,8,0">
                         <Ellipse.Fill>
-                            <ImageBrush ImageSource="{x:Bind Path=ViewModel.Photo, Mode=OneWay, Converter={StaticResource imageConvert2}, ConverterParameter='64w'}" />
+                            <ImageBrush ImageSource="{x:Bind Path=ViewModel.Photo, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='64w'}" />
                         </Ellipse.Fill>
                     </Ellipse>
                     <TextBlock VerticalAlignment="Center" Foreground="#178bcf">
@@ -206,7 +206,7 @@
         <StackPanel
             Margin="0,4,0,0"
             Orientation="Horizontal"
-            Visibility="{x:Bind Path=ViewModel.IsRepost, Converter={StaticResource display}, Mode=OneWay}">
+            Visibility="{x:Bind Path=ViewModel.IsRepost, Converter={StaticResource DisplayConvert}, Mode=OneWay}">
             <StackPanel.Resources>
                 <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
                     <Setter Property="Margin" Value="0,8,12,0" />
@@ -237,7 +237,7 @@
             <Button
                 Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.LikeCommand, Mode=OneWay}"
                 CommandParameter="{x:Bind Path=ViewModel, Mode=OneWay}"
-                Visibility="{x:Bind Path=ViewModel.Liked, Mode=OneWay, Converter={StaticResource display}}">
+                Visibility="{x:Bind Path=ViewModel.Liked, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                 <StackPanel Orientation="Horizontal">
                     <fa:FontAwesome
                         Margin="0,2,0,0"

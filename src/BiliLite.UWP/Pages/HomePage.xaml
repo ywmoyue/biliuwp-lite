@@ -51,7 +51,7 @@
                         Visibility="{x:Bind Path=m_viewModel.IsLogin, Mode=OneWay}">
                         <Ellipse Width="22" Height="22">
                             <Ellipse.Fill>
-                                <ImageBrush x:Name="imgPhoto" ImageSource="{x:Bind Path=m_viewModel.Profile.face, Mode=OneWay, Converter={StaticResource imageConvert2}, ConverterParameter='100w'}" />
+                                <ImageBrush x:Name="imgPhoto" ImageSource="{x:Bind Path=m_viewModel.Profile.face, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='100w'}" />
                             </Ellipse.Fill>
                         </Ellipse>
                         <Button.Flyout>
@@ -65,7 +65,7 @@
                                     <Grid>
                                         <Ellipse Width="48" Height="48">
                                             <Ellipse.Fill>
-                                                <ImageBrush ImageSource="{x:Bind Path=m_viewModel.Profile.face, Mode=OneWay, Converter={StaticResource imageConvert2}, ConverterParameter='100w'}" />
+                                                <ImageBrush ImageSource="{x:Bind Path=m_viewModel.Profile.face, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='100w'}" />
                                             </Ellipse.Fill>
                                         </Ellipse>
                                         <Image
@@ -125,7 +125,7 @@
                                                 <TextBlock TextAlignment="Center">关注</TextBlock>
                                                 <TextBlock
                                                     FontSize="12"
-                                                    Text="{x:Bind Path=m_viewModel.Profile.follow, Mode=OneWay, Converter={StaticResource numberToStringConvert}}"
+                                                    Text="{x:Bind Path=m_viewModel.Profile.follow, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}"
                                                     TextAlignment="Center" />
                                             </StackPanel>
                                         </HyperlinkButton>
@@ -138,7 +138,7 @@
                                                 <TextBlock TextAlignment="Center">粉丝</TextBlock>
                                                 <TextBlock
                                                     FontSize="12"
-                                                    Text="{x:Bind Path=m_viewModel.Profile.fans, Mode=OneWay, Converter={StaticResource numberToStringConvert}}"
+                                                    Text="{x:Bind Path=m_viewModel.Profile.fans, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}"
                                                     TextAlignment="Center" />
                                             </StackPanel>
                                         </HyperlinkButton>
@@ -151,7 +151,7 @@
                                                 <TextBlock TextAlignment="Center">动态</TextBlock>
                                                 <TextBlock
                                                     FontSize="12"
-                                                    Text="{x:Bind Path=m_viewModel.Profile.dynamic, Mode=OneWay, Converter={StaticResource numberToStringConvert}}"
+                                                    Text="{x:Bind Path=m_viewModel.Profile.dynamic, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}"
                                                     TextAlignment="Center" />
                                             </StackPanel>
                                         </HyperlinkButton>
@@ -293,7 +293,7 @@
                         Height="48"
                         Click="btnLogin_Click"
                         Icon="Contact"
-                        Visibility="{x:Bind Path=m_viewModel.IsLogin, Converter={StaticResource display}, Mode=OneWay}" />
+                        Visibility="{x:Bind Path=m_viewModel.IsLogin, Converter={StaticResource DisplayConvert}, Mode=OneWay}" />
                     <Grid>
                         <winui:InfoBadge
                             HorizontalAlignment="Right"

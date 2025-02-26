@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:comment="using:BiliLite.ViewModels.Comment"
     xmlns:common="using:BiliLite.Models.Common"
-    xmlns:convert="using:BiliLite.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="using:FontAwesome5"
     xmlns:local="using:BiliLite.Controls"
@@ -21,7 +20,6 @@
 
     <UserControl.Resources>
         <Style BasedOn="{StaticResource DefaultHyperlinkButtonStyle}" TargetType="HyperlinkButton" />
-        <convert:DatetimeConvert x:Name="Datetime" />
         <Style x:Key="commentStyle" TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="BorderThickness" Value="0,0,0,1" />
@@ -41,8 +39,6 @@
             <Setter Property="BorderBrush" Value="#33808080" />
             <Setter Property="Padding" Value="0" />
         </Style>
-        <convert:ColorSelectedConvert x:Key="colorSelct" />
-        <convert:ColorConvert x:Key="colorConvert" />
         <Flyout x:Key="FaceFlyout" x:Name="FaceFlyout">
             <Grid Width="320">
                 <Pivot x:Name="PivotFace" ItemsSource="{x:Bind Path=emoteVM.Packages, Mode=OneWay}">
@@ -73,7 +69,7 @@
                                                 FontSize="12"
                                                 Text="{Binding text}"
                                                 TextAlignment="Center"
-                                                Visibility="{Binding Path=showImage, Converter={StaticResource display}}" />
+                                                Visibility="{Binding Path=showImage, Converter={StaticResource DisplayConvert}}" />
                                         </StackPanel>
                                     </DataTemplate>
                                 </GridView.ItemTemplate>
@@ -148,14 +144,14 @@
                     </Grid.RowDefinitions>
                     <Border
                         HorizontalAlignment="Center"
-                        BorderBrush="{x:Bind Path=Member.FansDetail.MedalColorBorder, Converter={StaticResource colorConvert}, Mode=OneWay}"
+                        BorderBrush="{x:Bind Path=Member.FansDetail.MedalColorBorder, Converter={StaticResource ColorConvert}, Mode=OneWay}"
                         BorderThickness="1"
                         CornerRadius="{StaticResource ControlCornerRadius}"
                         Visibility="{x:Bind Path=Member.ShowFansDetail, Mode=OneWay}">
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
-                                <GradientStop Color="{x:Bind Path=Member.FansDetail.MedalColor, Converter={StaticResource colorConvert}, Mode=OneWay, ConverterParameter=1}" />
-                                <GradientStop Offset="1" Color="{x:Bind Path=Member.FansDetail.MedalColorEnd, Converter={StaticResource colorConvert}, Mode=OneWay, ConverterParameter=1}" />
+                                <GradientStop Color="{x:Bind Path=Member.FansDetail.MedalColor, Converter={StaticResource ColorConvert}, Mode=OneWay, ConverterParameter=1}" />
+                                <GradientStop Offset="1" Color="{x:Bind Path=Member.FansDetail.MedalColorEnd, Converter={StaticResource ColorConvert}, Mode=OneWay, ConverterParameter=1}" />
                             </LinearGradientBrush>
                         </Border.Background>
 
@@ -168,18 +164,18 @@
                             <TextBlock
                                 Margin="4,0"
                                 FontSize="10"
-                                Foreground="{x:Bind Path=Member.FansDetail.MedalColorName, Converter={StaticResource colorConvert}, Mode=OneWay}"
+                                Foreground="{x:Bind Path=Member.FansDetail.MedalColorName, Converter={StaticResource ColorConvert}, Mode=OneWay}"
                                 Text="{x:Bind Path=Member.FansDetail.MedalName, Mode=OneWay}" />
                             <Grid
                                 Grid.Column="1"
                                 Width="1"
                                 VerticalAlignment="Stretch"
-                                Background="{x:Bind Path=Member.FansDetail.MedalColorBorder, Converter={StaticResource colorConvert}, Mode=OneWay}" />
+                                Background="{x:Bind Path=Member.FansDetail.MedalColorBorder, Converter={StaticResource ColorConvert}, Mode=OneWay}" />
                             <Grid Grid.Column="2" Background="White">
                                 <TextBlock
                                     Margin="4,0"
                                     FontSize="10"
-                                    Foreground="{x:Bind Path=Member.FansDetail.MedalColorLevel, Converter={StaticResource colorConvert}, Mode=OneWay}"
+                                    Foreground="{x:Bind Path=Member.FansDetail.MedalColorLevel, Converter={StaticResource ColorConvert}, Mode=OneWay}"
                                     Text="{x:Bind Path=Member.FansDetail.Level, Mode=OneWay}" />
                             </Grid>
                         </Grid>
@@ -201,7 +197,7 @@
                     </TextBlock>
                     <TextBlock
                         VerticalAlignment="Center"
-                        Foreground="{x:Bind Path=Member.Vip.VipType, Converter={StaticResource colorSelct}, ConverterParameter=2}"
+                        Foreground="{x:Bind Path=Member.Vip.VipType, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=2}"
                         Text="{x:Bind Path=Member.Uname}" />
                     <Image
                         Height="12"
@@ -214,14 +210,14 @@
                         VerticalAlignment="Center"
                         Visibility="{Binding ElementName=m_viewModel, Path=IsWideMode, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                         <Border
-                            BorderBrush="{x:Bind Path=Member.FansDetail.MedalColorBorder, Converter={StaticResource colorConvert}, Mode=OneWay}"
+                            BorderBrush="{x:Bind Path=Member.FansDetail.MedalColorBorder, Converter={StaticResource ColorConvert}, Mode=OneWay}"
                             BorderThickness="1"
                             CornerRadius="{StaticResource ControlCornerRadius}"
                             Visibility="{x:Bind Path=Member.ShowFansDetail, Mode=OneWay}">
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
-                                    <GradientStop Color="{x:Bind Path=Member.FansDetail.MedalColor, Converter={StaticResource colorConvert}, Mode=OneWay, ConverterParameter=1}" />
-                                    <GradientStop Offset="1" Color="{x:Bind Path=Member.FansDetail.MedalColorEnd, Converter={StaticResource colorConvert}, Mode=OneWay, ConverterParameter=1}" />
+                                    <GradientStop Color="{x:Bind Path=Member.FansDetail.MedalColor, Converter={StaticResource ColorConvert}, Mode=OneWay, ConverterParameter=1}" />
+                                    <GradientStop Offset="1" Color="{x:Bind Path=Member.FansDetail.MedalColorEnd, Converter={StaticResource ColorConvert}, Mode=OneWay, ConverterParameter=1}" />
                                 </LinearGradientBrush>
                             </Border.Background>
 
@@ -234,18 +230,18 @@
                                 <TextBlock
                                     Margin="4,0"
                                     FontSize="10"
-                                    Foreground="{x:Bind Path=Member.FansDetail.MedalColorName, Converter={StaticResource colorConvert}, Mode=OneWay}"
+                                    Foreground="{x:Bind Path=Member.FansDetail.MedalColorName, Converter={StaticResource ColorConvert}, Mode=OneWay}"
                                     Text="{x:Bind Path=Member.FansDetail.MedalName, Mode=OneWay}" />
                                 <Grid
                                     Grid.Column="1"
                                     Width="1"
                                     VerticalAlignment="Stretch"
-                                    Background="{x:Bind Path=Member.FansDetail.MedalColorBorder, Converter={StaticResource colorConvert}, Mode=OneWay}" />
+                                    Background="{x:Bind Path=Member.FansDetail.MedalColorBorder, Converter={StaticResource ColorConvert}, Mode=OneWay}" />
                                 <Grid Grid.Column="2" Background="White">
                                     <TextBlock
                                         Margin="4,0"
                                         FontSize="10"
-                                        Foreground="{x:Bind Path=Member.FansDetail.MedalColorLevel, Converter={StaticResource colorConvert}, Mode=OneWay}"
+                                        Foreground="{x:Bind Path=Member.FansDetail.MedalColorLevel, Converter={StaticResource ColorConvert}, Mode=OneWay}"
                                         Text="{x:Bind Path=Member.FansDetail.Level, Mode=OneWay}" />
                                 </Grid>
                             </Grid>
@@ -266,7 +262,7 @@
                                 Width="288"
                                 Height="48"
                                 Margin="-200,0,0,0"
-                                Source="{x:Bind Path=Member.UserSailing.Cardbg.Image, Mode=OneWay, Converter={StaticResource imageConvert2}, ConverterParameter='64h.png'}"
+                                Source="{x:Bind Path=Member.UserSailing.Cardbg.Image, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='64h.png'}"
                                 Stretch="UniformToFill" />
                         </Grid>
                         <StackPanel
@@ -276,12 +272,12 @@
                             <TextBlock
                                 FontFamily="{StaticResource FansNum}"
                                 FontSize="10"
-                                Foreground="{x:Bind Path=Member.UserSailing.Cardbg.Fan.Color, Mode=OneWay, Converter={StaticResource colorConvert}}"
+                                Foreground="{x:Bind Path=Member.UserSailing.Cardbg.Fan.Color, Mode=OneWay, Converter={StaticResource ColorConvert}}"
                                 Text="NO." />
                             <TextBlock
                                 FontFamily="{StaticResource FansNum}"
                                 FontSize="10"
-                                Foreground="{x:Bind Path=Member.UserSailing.Cardbg.Fan.Color, Mode=OneWay, Converter={StaticResource colorConvert}}"
+                                Foreground="{x:Bind Path=Member.UserSailing.Cardbg.Fan.Color, Mode=OneWay, Converter={StaticResource ColorConvert}}"
                                 Text="{x:Bind Path=Member.UserSailing.Cardbg.Fan.NumDesc, Mode=OneWay}" />
                         </StackPanel>
                     </StackPanel>
@@ -295,7 +291,7 @@
                     VerticalAlignment="Top"
                     FontSize="12"
                     Foreground="Gray"
-                    ToolTipService.ToolTip="{x:Bind Path=Ctime, Converter={StaticResource Datetime}}">
+                    ToolTipService.ToolTip="{x:Bind Path=Ctime, Converter={StaticResource DatetimeConvert}}">
                     <!--#<Run Text="{Binding Path=floor}"></Run>-->
                     <Run Text="{x:Bind Path=Time}" />
                     <Run Text="{x:Bind Path=Content.PlatStr}" />
@@ -520,7 +516,7 @@
 
                                     <HyperlinkButton
                                         Click="BtnUser_Click"
-                                        Foreground="{Binding Path=Member.Vip.VipType, Converter={StaticResource colorSelct}, ConverterParameter=2}"
+                                        Foreground="{Binding Path=Member.Vip.VipType, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=2}"
                                         Tag="{Binding Path=Mid}">
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock VerticalAlignment="Center" Text="{Binding Path=Member.Uname}" />
@@ -536,7 +532,7 @@
                                         FontSize="12"
                                         Foreground="Gray"
                                         IsTextSelectionEnabled="True"
-                                        ToolTipService.ToolTip="{Binding Path=Ctime, Converter={StaticResource Datetime}}">
+                                        ToolTipService.ToolTip="{Binding Path=Ctime, Converter={StaticResource DatetimeConvert}}">
                                         <Run Text="{Binding Path=Time}" />
                                         <Run Text="{Binding Path=ReplyControl.Location}" />
                                     </TextBlock>

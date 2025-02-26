@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Player="using:BiliLite.Models.Common.Player"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
-    xmlns:convert="using:BiliLite.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:danmaku="using:NSDanmaku.Controls"
     xmlns:fa="using:FontAwesome5"
@@ -19,9 +18,6 @@
     Background="Transparent"
     mc:Ignorable="d">
     <Page.Resources>
-        <convert:DatetimeConvert x:Key="datetime" />
-        <convert:ColorConvert x:Key="colorConvert" />
-        <convert:DanmakuStyleConvert x:Key="styleConvert" />
         <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource SystemAccentColor}" />
         <SolidColorBrush x:Key="GridViewItemForegroundSelected" Color="{ThemeResource SystemAccentColor}" />
         <DataTemplate
@@ -57,7 +53,7 @@
                                 Stroke="{ThemeResource TextColor}"
                                 StrokeThickness="1">
                                 <Ellipse.Fill>
-                                    <ImageBrush ImageSource="{x:Bind Path=Face, Converter={StaticResource imageConvert2}, ConverterParameter='128h', Mode=OneWay}" Stretch="UniformToFill" />
+                                    <ImageBrush ImageSource="{x:Bind Path=Face, Converter={StaticResource ImageSourceConvert}, ConverterParameter='128h', Mode=OneWay}" Stretch="UniformToFill" />
                                 </Ellipse.Fill>
                             </Ellipse>
                         </HyperlinkButton>
@@ -100,7 +96,7 @@
                                     Grid.Column="0"
                                     Margin="1,0,4,0"
                                     VerticalAlignment="Center"
-                                    BorderBrush="{x:Bind Path=MedalColor, Converter={StaticResource colorConvert}}"
+                                    BorderBrush="{x:Bind Path=MedalColor, Converter={StaticResource ColorConvert}}"
                                     BorderThickness="1"
                                     CornerRadius="{StaticResource ControlCornerRadius}"
                                     Visibility="{x:Bind ShowMedal}">
@@ -109,7 +105,7 @@
                                             <ColumnDefinition />
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
-                                        <Grid Padding="2,0" Background="{x:Bind Path=MedalColor, Converter={StaticResource colorConvert}}">
+                                        <Grid Padding="2,0" Background="{x:Bind Path=MedalColor, Converter={StaticResource ColorConvert}}">
                                             <TextBlock
                                                 FontSize="12"
                                                 Foreground="White"
@@ -121,7 +117,7 @@
                                             Background="White">
                                             <TextBlock
                                                 FontSize="12"
-                                                Foreground="{x:Bind Path=MedalColor, Converter={StaticResource colorConvert}}"
+                                                Foreground="{x:Bind Path=MedalColor, Converter={StaticResource ColorConvert}}"
                                                 Text="{x:Bind MedalLevel}" />
                                         </Grid>
                                     </Grid>
@@ -133,7 +129,7 @@
                                 <TextBlock
                                     Margin="2,0,0,0"
                                     FontWeight="{x:Bind Path=UserNameFontWeight}"
-                                    Foreground="{x:Bind Path=UserNameColor, Converter={StaticResource colorConvert}}"
+                                    Foreground="{x:Bind Path=UserNameColor, Converter={StaticResource ColorConvert}}"
                                     IsTextSelectionEnabled="True"
                                     Text="{x:Bind UserName}" />
                             </Grid>
@@ -162,7 +158,7 @@
                             Visibility="{x:Bind ShowRichText}">
                             <Grid>
                                 <StackPanel Orientation="Vertical">
-                                    <ContentControl Content="{Binding Path=RichText, Mode=OneWay}" Visibility="{x:Bind ShowBigSticker, Converter={StaticResource display}}" />
+                                    <ContentControl Content="{Binding Path=RichText, Mode=OneWay}" Visibility="{x:Bind ShowBigSticker, Converter={StaticResource DisplayConvert}}" />
                                     <Image
                                         Width="{x:Bind BigSticker.Width}"
                                         Height="{x:Bind BigSticker.Height}"
@@ -306,7 +302,7 @@
                         VerticalAlignment="Center"
                         FontSize="24"
                         Foreground="Gray"
-                        Visibility="{x:Bind Path=m_viewModel.Living, Mode=OneWay, Converter={StaticResource display}}">
+                        Visibility="{x:Bind Path=m_viewModel.Living, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                         主播正在换女装
                     </TextBlock>
                     <StackPanel
@@ -433,10 +429,10 @@
                                                             <TextBlock FontSize="18">设置</TextBlock>
                                                         </PivotItem.Header>
                                                         <StackPanel HorizontalAlignment="Left">
-                                                            <!--<TextBlock >弹幕接收延迟(毫秒) <Run Text="{x:Bind Path=LiveSettingDelay.Value,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/></TextBlock>
+                                                            <!--<TextBlock >弹幕接收延迟(毫秒) <Run Text="{x:Bind Path=LiveSettingDelay.Value,Mode=OneWay,Converter={StaticResource NumberToStringConvert}}"/></TextBlock>
                                                             <Slider x:Name="LiveSettingDelay" Width="240" Minimum="10" Maximum="5000" StepFrequency="1"></Slider>-->
                                                             <TextBlock>
-                                                                互动区自动清理条数<Run Text="{x:Bind Path=LiveSettingCount.Value, Mode=OneWay, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
+                                                                互动区自动清理条数<Run Text="{x:Bind Path=LiveSettingCount.Value, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
                                                             <Slider
                                                                 x:Name="LiveSettingCount"
                                                                 Width="240"
@@ -723,7 +719,7 @@
                                             Background="Transparent"
                                             BorderThickness="0"
                                             Click="TopBtnCloseDanmaku_Click"
-                                            Visibility="{x:Bind Path=m_danmakuController.DanmakuViewModel.IsHide, Mode=OneWay, Converter={StaticResource display}}">
+                                            Visibility="{x:Bind Path=m_danmakuController.DanmakuViewModel.IsHide, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                             <Image
                                                 Width="28"
                                                 Height="28"
@@ -744,14 +740,14 @@
                                                 <Flyout>
                                                     <StackPanel>
                                                         <TextBlock Margin="0,4,0,0">
-                                                            弹幕顶部距离<Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.MarginTop, Mode=OneWay, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
+                                                            弹幕顶部距离<Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.MarginTop, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
                                                         <Slider
                                                             x:Name="DanmuTopMargin"
                                                             Minimum="0"
                                                             StepFrequency="4"
                                                             Value="0" />
                                                         <TextBlock Margin="0,4,0,0" Visibility="{x:Bind m_danmakuController.DanmakuViewModel.ShowAreaControl}">
-                                                            弹幕显示区域<Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.Area, Mode=OneWay, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
+                                                            弹幕显示区域<Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.Area, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
                                                         <Slider
                                                             x:Name="DanmuSettingArea"
                                                             Maximum="1"
@@ -760,7 +756,7 @@
                                                             Visibility="{x:Bind m_danmakuController.DanmakuViewModel.ShowAreaControl}"
                                                             Value="{x:Bind Path=m_danmakuController.DanmakuViewModel.Area, Mode=OneWay}" />
                                                         <TextBlock Margin="0,4,0,0">
-                                                            弹幕缩放<Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.SizeZoom, Mode=OneWay, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
+                                                            弹幕缩放<Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.SizeZoom, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
                                                         <Slider
                                                             x:Name="DanmuSettingFontZoom"
                                                             Maximum="2"
@@ -768,7 +764,7 @@
                                                             StepFrequency="0.05"
                                                             Value="{x:Bind Path=m_danmakuController.DanmakuViewModel.SizeZoom, Mode=OneWay}" />
                                                         <TextBlock Margin="0,4,0,0">
-                                                            弹幕速度<Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.Speed, Mode=OneWay, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
+                                                            弹幕速度<Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.Speed, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
                                                         <Slider
                                                             x:Name="DanmuSettingSpeed"
                                                             Maximum="25"
@@ -776,7 +772,7 @@
                                                             StepFrequency="1"
                                                             Value="{x:Bind Path=m_danmakuController.DanmakuViewModel.Speed, Mode=OneWay}" />
                                                         <TextBlock Margin="0,4,0,0">
-                                                            弹幕透明度<Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.Opacity, Mode=OneWay, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
+                                                            弹幕透明度<Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.Opacity, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
                                                         <Slider
                                                             x:Name="DanmuSettingOpacity"
                                                             Maximum="1"
@@ -791,7 +787,7 @@
 
                                                         <StackPanel Visibility="{x:Bind m_danmakuController.DanmakuViewModel.ShowBoldStyleControl}">
                                                             <TextBlock Margin="0,4">弹幕样式</TextBlock>
-                                                            <ComboBox x:Name="DanmuSettingStyle" SelectedIndex="{x:Bind Path=m_danmakuController.DanmakuViewModel.BolderStyle, Converter={StaticResource styleConvert}, Mode=TwoWay}">
+                                                            <ComboBox x:Name="DanmuSettingStyle" SelectedIndex="{x:Bind Path=m_danmakuController.DanmakuViewModel.BolderStyle, Converter={StaticResource DanmakuStyleConvert}, Mode=TwoWay}">
                                                                 <ComboBox.Items>
                                                                     <ComboBoxItem>重叠</ComboBoxItem>
                                                                     <ComboBoxItem>无边</ComboBoxItem>
@@ -1083,7 +1079,7 @@
                                     Background="Transparent"
                                     BorderThickness="0"
                                     Click="TopBtnCloseDanmaku_Click"
-                                    Visibility="{x:Bind Path=m_danmakuController.DanmakuViewModel.IsHide, Mode=OneWay, Converter={StaticResource display}}">
+                                    Visibility="{x:Bind Path=m_danmakuController.DanmakuViewModel.IsHide, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                     <Image
                                         Width="28"
                                         Height="28"
@@ -1297,7 +1293,7 @@
                                             Margin="0,4,0,0"
                                             HorizontalAlignment="Stretch"
                                             Click="BtnSendAnchorLotteryDanmu_Click"
-                                            Visibility="{x:Bind Path=m_liveRoomViewModel.ShowAnchorLotteryWinnerList, Mode=OneWay, Converter={StaticResource display}}">
+                                            Visibility="{x:Bind Path=m_liveRoomViewModel.ShowAnchorLotteryWinnerList, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                             一键参与
                                         </Button>
                                     </StackPanel>
@@ -1356,7 +1352,7 @@
                                                 Orientation="Horizontal">
                                                 <Ellipse Width="36" Height="36">
                                                     <Ellipse.Fill>
-                                                        <ImageBrush ImageSource="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryInfo.SenderFace, Converter={StaticResource imageConvert2}, ConverterParameter='128h', Mode=OneWay}" Stretch="UniformToFill" />
+                                                        <ImageBrush ImageSource="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryInfo.SenderFace, Converter={StaticResource ImageSourceConvert}, ConverterParameter='128h', Mode=OneWay}" Stretch="UniformToFill" />
                                                     </Ellipse.Fill>
                                                 </Ellipse>
                                                 <TextBlock
@@ -1420,7 +1416,7 @@
                                                 TextWrapping="Wrap" />
                                         </Grid>
 
-                                        <Grid Margin="0,0,0,4" Visibility="{x:Bind Path=m_liveRoomViewModel.Attention, Mode=OneWay, Converter={StaticResource display}}">
+                                        <Grid Margin="0,0,0,4" Visibility="{x:Bind Path=m_liveRoomViewModel.Attention, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
@@ -1461,7 +1457,7 @@
                                             Margin="0,0,0,4"
                                             HorizontalAlignment="Stretch"
                                             Click="BtnSendRedPocketLotteryDanmu_Click"
-                                            Visibility="{x:Bind Path=m_liveRoomViewModel.ShowRedPocketLotteryWinnerList, Mode=OneWay, Converter={StaticResource display}}">
+                                            Visibility="{x:Bind Path=m_liveRoomViewModel.ShowRedPocketLotteryWinnerList, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                             <TextBlock Text="{x:Bind Path=m_liveRoomViewModel.RedPocketSendDanmuBtnText, Mode=OneWay}" />
                                         </Button>
                                     </StackPanel>
@@ -1491,7 +1487,7 @@
                                     Margin="8,0"
                                     VerticalAlignment="Center"
                                     FontSize="12"
-                                    Text="{x:Bind Path=m_liveRoomViewModel.WalletInfo.Silver, Converter={StaticResource numberToStringConvert}, Mode=OneWay}" />
+                                    Text="{x:Bind Path=m_liveRoomViewModel.WalletInfo.Silver, Converter={StaticResource NumberToStringConvert}, Mode=OneWay}" />
                             </StackPanel>
                             <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
                                 <Image Width="16" Source="ms-appx:///Assets/Icon/ic_live_center_gold_recharge.png" />
@@ -1499,7 +1495,7 @@
                                     Margin="8,0"
                                     VerticalAlignment="Center"
                                     FontSize="12"
-                                    Text="{x:Bind Path=m_liveRoomViewModel.WalletInfo.Gold, Converter={StaticResource numberToStringConvert}, Mode=OneWay}" />
+                                    Text="{x:Bind Path=m_liveRoomViewModel.WalletInfo.Gold, Converter={StaticResource NumberToStringConvert}, Mode=OneWay}" />
                             </StackPanel>
 
                         </StackPanel>
@@ -1538,7 +1534,7 @@
                                         FontSize="12"
                                         Text="我的礼物"
                                         TextAlignment="Center"
-                                        Visibility="{x:Bind Path=m_liveRoomViewModel.ShowBag, Mode=OneWay, Converter={StaticResource display}}" />
+                                        Visibility="{x:Bind Path=m_liveRoomViewModel.ShowBag, Mode=OneWay, Converter={StaticResource DisplayConvert}}" />
                                     <TextBlock
                                         Margin="0,4,0,0"
                                         FontSize="12"
@@ -1556,7 +1552,7 @@
                             HorizontalScrollMode="Enabled"
                             VerticalScrollBarVisibility="Disabled"
                             VerticalScrollMode="Disabled"
-                            Visibility="{x:Bind Path=m_liveRoomViewModel.ShowBag, Mode=OneWay, Converter={StaticResource display}}">
+                            Visibility="{x:Bind Path=m_liveRoomViewModel.ShowBag, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                             <ItemsControl ItemsSource="{x:Bind Path=m_liveRoomViewModel.Gifts, Mode=OneWay}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -1571,7 +1567,7 @@
                                                     <Image
                                                         Width="32"
                                                         Height="32"
-                                                        Source="{x:Bind Path=ImgBasic, Converter={StaticResource imageConvert2}, ConverterParameter='48h.png'}" />
+                                                        Source="{x:Bind Path=ImgBasic, Converter={StaticResource ImageSourceConvert}, ConverterParameter='48h.png'}" />
 
                                                     <TextBlock
                                                         Margin="0,4,0,0"
@@ -1601,7 +1597,7 @@
                                                                         Width="16"
                                                                         Margin="8,0,0,0"
                                                                         Source="ms-appx:///Assets/Icon/ic_live_center_silver_recharge.png"
-                                                                        Visibility="{x:Bind Path=IsGold, Converter={StaticResource display}}" />
+                                                                        Visibility="{x:Bind Path=IsGold, Converter={StaticResource DisplayConvert}}" />
                                                                     <TextBlock
                                                                         Margin="4,0,0,0"
                                                                         Foreground="Gray"
@@ -1671,7 +1667,7 @@
                                                     <Image
                                                         Width="32"
                                                         Height="32"
-                                                        Source="{x:Bind Path=ImgBasic, Converter={StaticResource imageConvert2}, ConverterParameter='48h.png'}" />
+                                                        Source="{x:Bind Path=ImgBasic, Converter={StaticResource ImageSourceConvert}, ConverterParameter='48h.png'}" />
 
                                                     <TextBlock
                                                         Margin="0,4,0,0"
@@ -1765,7 +1761,7 @@
                     <HyperlinkButton Padding="0" Click="BtnOpenUser_Click">
                         <Ellipse Width="48" Height="48">
                             <Ellipse.Fill>
-                                <ImageBrush ImageSource="{x:Bind Path=m_liveRoomViewModel.LiveInfo.AnchorInfo.BaseInfo.Face, Converter={StaticResource imageConvert2}, ConverterParameter='128h', Mode=OneWay}" Stretch="UniformToFill" />
+                                <ImageBrush ImageSource="{x:Bind Path=m_liveRoomViewModel.LiveInfo.AnchorInfo.BaseInfo.Face, Converter={StaticResource ImageSourceConvert}, ConverterParameter='128h', Mode=OneWay}" Stretch="UniformToFill" />
                             </Ellipse.Fill>
                         </Ellipse>
                     </HyperlinkButton>
@@ -1778,7 +1774,7 @@
                             Margin="0,4,0,0"
                             FontSize="12"
                             Foreground="Gray"><Run Text="{x:Bind Path=m_liveRoomViewModel.ViewerNumCount, Mode=OneWay}" />
-                            粉丝:<Run Text="{x:Bind Path=m_liveRoomViewModel.LiveInfo.AnchorInfo.RelationInfo.Attention, Converter={StaticResource numberToStringConvert}, Mode=OneWay}" /></TextBlock>
+                            粉丝:<Run Text="{x:Bind Path=m_liveRoomViewModel.LiveInfo.AnchorInfo.RelationInfo.Attention, Converter={StaticResource NumberToStringConvert}, Mode=OneWay}" /></TextBlock>
                     </StackPanel>
                     <Button
                         x:Name="BtnAttention"
@@ -1786,7 +1782,7 @@
                         Click="BtnAttention_Click"
                         FontSize="12"
                         Style="{StaticResource AccentButtonStyle}"
-                        Visibility="{x:Bind Path=m_liveRoomViewModel.Attention, Mode=OneWay, Converter={StaticResource display}}">
+                        Visibility="{x:Bind Path=m_liveRoomViewModel.Attention, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                         关注
                     </Button>
                     <Button
@@ -1835,7 +1831,7 @@
 
                                                 <Border
                                                     Height="36"
-                                                    Background="{x:Bind Path=BackgroundColor, Mode=OneWay, Converter={StaticResource colorConvert}}"
+                                                    Background="{x:Bind Path=BackgroundColor, Mode=OneWay, Converter={StaticResource ColorConvert}}"
                                                     BorderThickness="0"
                                                     CornerRadius="18">
                                                     <Grid>
@@ -1848,7 +1844,7 @@
                                                             Height="48"
                                                             MinHeight="48"
                                                             Background="Transparent"
-                                                            Foreground="{x:Bind Path=BackgroundBottomColor, Mode=OneWay, Converter={StaticResource colorConvert}}"
+                                                            Foreground="{x:Bind Path=BackgroundBottomColor, Mode=OneWay, Converter={StaticResource ColorConvert}}"
                                                             Maximum="{x:Bind Path=MaxTime, Mode=OneWay}"
                                                             Value="{x:Bind Path=Time, Mode=OneWay}" />
 
@@ -1859,7 +1855,7 @@
                                                             Stroke="Gray"
                                                             StrokeThickness="1">
                                                             <Ellipse.Fill>
-                                                                <ImageBrush ImageSource="{x:Bind Path=Face, Converter={StaticResource imageConvert2}, ConverterParameter='128w'}" />
+                                                                <ImageBrush ImageSource="{x:Bind Path=Face, Converter={StaticResource ImageSourceConvert}, ConverterParameter='128w'}" />
                                                             </Ellipse.Fill>
                                                         </Ellipse>
 
@@ -1874,7 +1870,7 @@
                                                 <Button.Flyout>
                                                     <Flyout>
                                                         <StackPanel Width="280" Margin="-12">
-                                                            <Grid Height="56" Background="{x:Bind Path=BackgroundColor, Mode=OneWay, Converter={StaticResource colorConvert}}">
+                                                            <Grid Height="56" Background="{x:Bind Path=BackgroundColor, Mode=OneWay, Converter={StaticResource ColorConvert}}">
                                                                 <Grid.ColumnDefinitions>
                                                                     <ColumnDefinition Width="Auto" />
                                                                     <ColumnDefinition />
@@ -1892,7 +1888,7 @@
                                                                         Stroke="Gray"
                                                                         StrokeThickness="1">
                                                                         <Ellipse.Fill>
-                                                                            <ImageBrush ImageSource="{x:Bind Path=Face, Converter={StaticResource imageConvert2}, ConverterParameter='128w'}" />
+                                                                            <ImageBrush ImageSource="{x:Bind Path=Face, Converter={StaticResource ImageSourceConvert}, ConverterParameter='128w'}" />
                                                                         </Ellipse.Fill>
                                                                     </Ellipse>
                                                                     <Image Source="{x:Bind Path=FaceFrame}" />
@@ -1912,14 +1908,14 @@
                                                                         <Run
                                                                             FontSize="12"
                                                                             Foreground="Gray"
-                                                                            Text="{x:Bind Path=PriceGold, Converter={StaticResource numberToStringConvert}}" /><Run
+                                                                            Text="{x:Bind Path=PriceGold, Converter={StaticResource NumberToStringConvert}}" /><Run
                                                                             FontSize="12"
                                                                             Foreground="Gray"
                                                                             Text="金瓜子)" />
                                                                     </TextBlock>
                                                                 </StackPanel>
                                                             </Grid>
-                                                            <Grid Padding="12" Background="{x:Bind Path=BackgroundBottomColor, Mode=OneWay, Converter={StaticResource colorConvert}}">
+                                                            <Grid Padding="12" Background="{x:Bind Path=BackgroundBottomColor, Mode=OneWay, Converter={StaticResource ColorConvert}}">
                                                                 <TextBlock
                                                                     FontSize="14"
                                                                     Foreground="white"
@@ -2031,7 +2027,7 @@
                                 <Grid HorizontalAlignment="Center">
                                     <Ellipse Width="56" Height="56">
                                         <Ellipse.Fill>
-                                            <ImageBrush ImageSource="{x:Bind Path=m_liveRoomViewModel.Profile.Face, Mode=OneWay, Converter={StaticResource imageConvert2}, ConverterParameter='128h'}" Stretch="UniformToFill" />
+                                            <ImageBrush ImageSource="{x:Bind Path=m_liveRoomViewModel.Profile.Face, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='128h'}" Stretch="UniformToFill" />
                                         </Ellipse.Fill>
                                     </Ellipse>
                                     <Image
@@ -2139,7 +2135,7 @@
                                                             <Border
                                                                 Margin="8,0,0,0"
                                                                 VerticalAlignment="Center"
-                                                                BorderBrush="{x:Bind Path=Color, Converter={StaticResource colorConvert}}"
+                                                                BorderBrush="{x:Bind Path=Color, Converter={StaticResource ColorConvert}}"
                                                                 BorderThickness="1"
                                                                 CornerRadius="{StaticResource ControlCornerRadius}"
                                                                 Visibility="{x:Bind ShowMedal}">
@@ -2148,7 +2144,7 @@
                                                                         <ColumnDefinition />
                                                                         <ColumnDefinition />
                                                                     </Grid.ColumnDefinitions>
-                                                                    <Grid Padding="2,0" Background="{x:Bind Path=Color, Converter={StaticResource colorConvert}}">
+                                                                    <Grid Padding="2,0" Background="{x:Bind Path=Color, Converter={StaticResource ColorConvert}}">
                                                                         <TextBlock
                                                                             FontSize="12"
                                                                             Foreground="White"
@@ -2160,7 +2156,7 @@
                                                                         Background="White">
                                                                         <TextBlock
                                                                             FontSize="12"
-                                                                            Foreground="{x:Bind Path=Color, Converter={StaticResource colorConvert}}"
+                                                                            Foreground="{x:Bind Path=Color, Converter={StaticResource ColorConvert}}"
                                                                             Text="{x:Bind Level}" />
                                                                     </Grid>
                                                                 </Grid>
@@ -2170,7 +2166,7 @@
                                                                 Height="30"
                                                                 Margin="8,0,0,0">
                                                                 <Ellipse.Fill>
-                                                                    <ImageBrush ImageSource="{x:Bind Path=Face, Converter={StaticResource imageConvert2}, ConverterParameter='128h'}" />
+                                                                    <ImageBrush ImageSource="{x:Bind Path=Face, Converter={StaticResource ImageSourceConvert}, ConverterParameter='128h'}" />
                                                                 </Ellipse.Fill>
                                                             </Ellipse>
                                                             <TextBlock
@@ -2209,7 +2205,7 @@
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     Foreground="Gray"
-                                    Visibility="{x:Bind Path=m_liveRoomViewModel.SelectRank.Items.Count, Mode=OneWay, Converter={StaticResource display}, ConverterParameter=0}">
+                                    Visibility="{x:Bind Path=m_liveRoomViewModel.SelectRank.Items.Count, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=0}">
                                     好像还没有榜单啊
                                 </TextBlock>
                             </Grid>
@@ -2249,7 +2245,7 @@
                                                         Height="30"
                                                         Margin="4,0">
                                                         <Ellipse.Fill>
-                                                            <ImageBrush ImageSource="{x:Bind Face, Converter={StaticResource imageConvert2}, ConverterParameter='128h', Mode=OneWay}" Stretch="UniformToFill" />
+                                                            <ImageBrush ImageSource="{x:Bind Face, Converter={StaticResource ImageSourceConvert}, ConverterParameter='128h', Mode=OneWay}" Stretch="UniformToFill" />
                                                         </Ellipse.Fill>
                                                     </Ellipse>
                                                     <TextBlock
@@ -2264,7 +2260,7 @@
                                         HorizontalAlignment="Center"
                                         Command="{x:Bind Path=m_liveRoomViewModel.LoadMoreGuardCommand}"
                                         Foreground="Gray"
-                                        Visibility="{x:Bind Path=m_liveRoomViewModel.LoadingGuard, Mode=OneWay, Converter={StaticResource display}}">
+                                        Visibility="{x:Bind Path=m_liveRoomViewModel.LoadingGuard, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                         <TextBlock>加载更多</TextBlock>
                                     </HyperlinkButton>
                                     <ProgressRing
@@ -2278,7 +2274,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Foreground="Gray"
-                                Visibility="{x:Bind Path=m_liveRoomViewModel.Guards.Count, Mode=OneWay, Converter={StaticResource display}, ConverterParameter=0}">
+                                Visibility="{x:Bind Path=m_liveRoomViewModel.Guards.Count, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=0}">
                                 好像没有人上船啊
                             </TextBlock>
                         </Grid>

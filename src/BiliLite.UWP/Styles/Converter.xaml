@@ -3,10 +3,19 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:convert="using:BiliLite.Converters">
 
-    <convert:NumberToStringConvert x:Key="numberToStringConvert" />
-    <convert:ImageCompressionConvert x:Key="imageConvert" />
-    <convert:ImageSourceConvert x:Key="imageConvert2" />
-    <convert:DisplayConvert x:Key="display" />
-    <convert:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    <convert:NumberToStringConvert x:Key="NumberToStringConvert" />
+    <convert:ImageCompressionConvert x:Key="ImageCompressionConvert" />
+    <convert:ImageSourceConvert x:Key="ImageSourceConvert" />
+    <convert:DisplayConvert x:Key="DisplayConvert" />
     <convert:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+    <convert:RankColorConvert x:Key="RankConvert" />
+    <convert:ProgressToTimeConverter x:Key="ProgressToTimeConverter" />
+    <convert:SingleCornerRadiusConverter x:Key="SingleCornerRadiusConverter" />
+    <convert:ByteSizeConvert x:Key="ByteSizeConvert" />
+    <convert:DownloadStatusConvert x:Key="DownloadStatusConvert" />
+    <convert:DatetimeConvert x:Key="DatetimeConvert" />
+    <convert:ColorSelectedConvert x:Key="ColorSelectedConvert" />
+    <convert:DanmakuStyleConvert x:Key="DanmakuStyleConvert" />
+    <convert:BooleanConvert x:Name="BooleanConvert" />
+    <convert:ColorConvert x:Key="ColorConvert" />
 </ResourceDictionary>

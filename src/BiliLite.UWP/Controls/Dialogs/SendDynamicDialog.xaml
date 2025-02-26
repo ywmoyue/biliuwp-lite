@@ -45,7 +45,7 @@
                                                 FontSize="12"
                                                 Text="{Binding Text}"
                                                 TextAlignment="Center"
-                                                Visibility="{Binding Path=showImage, Converter={StaticResource display}}" />
+                                                Visibility="{Binding Path=showImage, Converter={StaticResource DisplayConvert}}" />
 
                                         </StackPanel>
                                     </DataTemplate>
@@ -86,7 +86,7 @@
                                 HorizontalAlignment="Center"
                                 Command="{x:Bind Path=atVM.LoadMoreCommand}"
                                 Foreground="Gray"
-                                Visibility="{x:Bind Path=atVM.Loading, Mode=OneWay, Converter={StaticResource display}}">
+                                Visibility="{x:Bind Path=atVM.Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                 <TextBlock>加载更多</TextBlock>
                             </HyperlinkButton>
                             <ProgressRing
@@ -132,7 +132,7 @@
 
         <StackPanel x:Name="st" Width="440">
             <TextBlock Margin="4,0" Visibility="{x:Bind Path=m_viewModel.IsRepost, Mode=OneWay}">转发动态</TextBlock>
-            <TextBlock Margin="4,0" Visibility="{x:Bind Path=m_viewModel.IsRepost, Mode=OneWay, Converter={StaticResource display}}">发表动态</TextBlock>
+            <TextBlock Margin="4,0" Visibility="{x:Bind Path=m_viewModel.IsRepost, Mode=OneWay, Converter={StaticResource DisplayConvert}}">发表动态</TextBlock>
             <TextBox
                 x:Name="txtContent"
                 MinHeight="120"
@@ -185,7 +185,7 @@
                         Height="36"
                         Margin="4,0,0,0"
                         ToolTipService.ToolTip="发起投票"
-                        Visibility="{x:Bind Path=sendDynamicVM.IsRepost, Mode=OneWay, Converter={StaticResource display}}">
+                        Visibility="{x:Bind Path=sendDynamicVM.IsRepost, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon
                                 FontFamily="Segoe MDL2 Assets"
@@ -200,7 +200,7 @@
                         Margin="4,0,0,0"
                         Click="btnImage_Click"
                         ToolTipService.ToolTip="上传图片"
-                        Visibility="{x:Bind Path=m_viewModel.IsRepost, Mode=OneWay, Converter={StaticResource display}}">
+                        Visibility="{x:Bind Path=m_viewModel.IsRepost, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon
                                 FontFamily="Segoe MDL2 Assets"
@@ -231,7 +231,7 @@
                         Margin="4,0,0,0"
                         Click="btnTopic_Click"
                         ToolTipService.ToolTip="话题"
-                        Visibility="{x:Bind Path=m_viewModel.IsRepost, Mode=OneWay, Converter={StaticResource display}}">
+                        Visibility="{x:Bind Path=m_viewModel.IsRepost, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock FontSize="18" Text="#" />
                         </StackPanel>
@@ -243,7 +243,7 @@
                         Height="36"
                         Margin="4,0,0,0"
                         ToolTipService.ToolTip="定时发布"
-                        Visibility="{x:Bind Path=sendDynamicVM.IsRepost, Mode=OneWay, Converter={StaticResource display}}">
+                        Visibility="{x:Bind Path=sendDynamicVM.IsRepost, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon
                                 FontFamily="Segoe MDL2 Assets"

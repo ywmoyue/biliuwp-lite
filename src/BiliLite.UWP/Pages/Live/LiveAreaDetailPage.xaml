@@ -72,7 +72,7 @@
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                        Source="{x:Bind Path=cover, Converter={StaticResource imageConvert}, ConverterParameter='460w_260h_1c'}"
+                                        Source="{x:Bind Path=cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='460w_260h_1c'}"
                                         Stretch="UniformToFill" />
                                     <Grid Padding="8" VerticalAlignment="Bottom">
                                         <Grid.Background>
@@ -96,7 +96,7 @@
                                             <TextBlock
                                                 FontSize="12"
                                                 Foreground="White"
-                                                Text="{x:Bind Path=online, Converter={StaticResource numberToStringConvert}}" />
+                                                Text="{x:Bind Path=online, Converter={StaticResource NumberToStringConvert}}" />
                                         </StackPanel>
 
                                     </Grid>
@@ -153,7 +153,7 @@
                 <Button
                     Command="{x:Bind Path=liveAreaDetailVM.RefreshCommand}"
                     Style="{StaticResource RoundAccentButtonStyle}"
-                    Visibility="{x:Bind Path=liveAreaDetailVM.Loading, Mode=OneWay, Converter={StaticResource display}}">
+                    Visibility="{x:Bind Path=liveAreaDetailVM.Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                     <SymbolIcon Symbol="Refresh" />
                 </Button>
                 <ProgressRing

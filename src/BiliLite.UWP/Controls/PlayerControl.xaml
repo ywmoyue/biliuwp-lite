@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     xmlns:common="using:BiliLite.Models.Common"
-    xmlns:convert="using:BiliLite.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:danmaku="using:NSDanmaku.Controls"
     xmlns:fa="using:FontAwesome5"
@@ -22,9 +21,6 @@
     <UserControl.Resources>
         <SolidColorBrush x:Key="HyperlinkButtonForegroundPointerOver" Color="{ThemeResource SystemAccentColor}" />
         <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="{ThemeResource SystemAccentColor}" />
-        <convert:ProgressToTimeConverter x:Key="progress" />
-        <convert:ColorConvert x:Key="color" />
-        <convert:DanmakuStyleConvert x:Key="styleConvert" />
         <SolidColorBrush x:Key="ListViewItemForegroundPointerOver" Color="{ThemeResource SystemAccentColor}" />
         <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="Transparent" />
         <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="Transparent" />
@@ -81,7 +77,7 @@
                                                     Text="{Binding title}"
                                                     TextWrapping="Wrap"
                                                     ToolTipService.ToolTip="{Binding title}"
-                                                    Visibility="{Binding ShowTitlePart, Converter={StaticResource display}}" />
+                                                    Visibility="{Binding ShowTitlePart, Converter={StaticResource DisplayConvert}}" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
@@ -155,7 +151,7 @@
                                         </ToggleSwitch>-->
                                     </Grid>
                                     <TextBlock Margin="0,4,0,0" Visibility="{x:Bind m_danmakuController.DanmakuViewModel.ShowAreaControl}">
-                                        弹幕显示区域<Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.Area, Mode=OneWay, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
+                                        弹幕显示区域<Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.Area, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
                                     <Slider
                                         x:Name="DanmuSettingArea"
                                         Maximum="1"
@@ -164,7 +160,7 @@
                                         Visibility="{x:Bind m_danmakuController.DanmakuViewModel.ShowAreaControl}"
                                         Value="{x:Bind Path=m_danmakuController.DanmakuViewModel.Area, Mode=OneWay}" />
                                     <TextBlock Margin="0,4,0,0">
-                                        弹幕缩放<Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.SizeZoom, Mode=OneWay, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
+                                        弹幕缩放<Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.SizeZoom, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
                                     <Slider
                                         x:Name="DanmuSettingFontZoom"
                                         Maximum="2"
@@ -172,7 +168,7 @@
                                         StepFrequency="0.05"
                                         Value="{x:Bind Path=m_danmakuController.DanmakuViewModel.SizeZoom, Mode=OneWay}" />
                                     <TextBlock Margin="0,4,0,0">
-                                        弹幕速度<Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.Speed, Mode=OneWay, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
+                                        弹幕速度<Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.Speed, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
                                     <Slider
                                         x:Name="DanmuSettingSpeed"
                                         Maximum="25"
@@ -180,7 +176,7 @@
                                         StepFrequency="1"
                                         Value="{x:Bind Path=m_danmakuController.DanmakuViewModel.Speed, Mode=OneWay}" />
                                     <TextBlock Margin="0,4,0,0">
-                                        弹幕透明度<Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.Opacity, Mode=OneWay, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
+                                        弹幕透明度<Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.Opacity, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
                                     <Slider
                                         x:Name="DanmuSettingOpacity"
                                         Maximum="1"
@@ -188,7 +184,7 @@
                                         StepFrequency="0.1"
                                         Value="{x:Bind Path=m_danmakuController.DanmakuViewModel.Opacity, Mode=OneWay}" />
                                     <TextBlock Margin="0,4,0,0">
-                                        弹幕顶部距离<Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.MarginTop, Mode=OneWay, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
+                                        弹幕顶部距离<Run Text="{x:Bind Path=m_danmakuController.DanmakuViewModel.MarginTop, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
                                     <Slider
                                         x:Name="DanmuTopMargin"
                                         Maximum="200"
@@ -196,7 +192,7 @@
                                         StepFrequency="4"
                                         Value="0" />
                                     <TextBlock Margin="0,4,0,0">
-                                        弹幕同屏密度(0为不限制)<Run Text="{x:Bind Path=DanmuSettingMaxNum.Value, Mode=OneWay, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
+                                        弹幕同屏密度(0为不限制)<Run Text="{x:Bind Path=DanmuSettingMaxNum.Value, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
                                     <Slider
                                         x:Name="DanmuSettingMaxNum"
                                         Maximum="50"
@@ -218,7 +214,7 @@
                                             <ComboBox
                                                 x:Name="DanmuSettingStyle"
                                                 Foreground="White"
-                                                SelectedIndex="{x:Bind Path=m_danmakuController.DanmakuViewModel.BolderStyle, Converter={StaticResource styleConvert}, Mode=TwoWay}">
+                                                SelectedIndex="{x:Bind Path=m_danmakuController.DanmakuViewModel.BolderStyle, Converter={StaticResource DanmakuStyleConvert}, Mode=TwoWay}">
                                                 <ComboBox.Items>
                                                     <ComboBoxItem>重叠</ComboBoxItem>
                                                     <ComboBoxItem>无边</ComboBoxItem>
@@ -251,7 +247,7 @@
 
                                     </Grid>
                                     <TextBlock Margin="0,8">
-                                        屏蔽等级(0为不屏蔽)<Run Text="{x:Bind Path=DanmuSettingShieldLevel.Value, Mode=OneWay, Converter={StaticResource numberToStringConvert}}" />
+                                        屏蔽等级(0为不屏蔽)<Run Text="{x:Bind Path=DanmuSettingShieldLevel.Value, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" />
                                         级</TextBlock>
                                     <Slider
                                         x:Name="DanmuSettingShieldLevel"
@@ -740,7 +736,7 @@
                                 Margin="8,0"
                                 Foreground="{ThemeResource SystemAccentColor}"
                                 Maximum="{Binding ElementName=Player, Path=Duration, Mode=OneWay}"
-                                ThumbToolTipValueConverter="{StaticResource progress}"
+                                ThumbToolTipValueConverter="{StaticResource ProgressToTimeConverter}"
                                 Value="{Binding ElementName=Player, Path=Position, Mode=TwoWay}" />
                             <Grid Grid.Row="1" Padding="4,8">
                                 <Grid.ColumnDefinitions>
@@ -791,8 +787,8 @@
                                         Margin="8,0"
                                         VerticalAlignment="Center"
                                         FontSize="18"
-                                        Foreground="White"><Run Text="{Binding ElementName=Player, Path=Position, Mode=OneWay, Converter={StaticResource progress}}" />
-                                        /<Run Text="{Binding ElementName=Player, Path=Duration, Mode=OneWay, Converter={StaticResource progress}}" /></TextBlock>
+                                        Foreground="White"><Run Text="{Binding ElementName=Player, Path=Position, Mode=OneWay, Converter={StaticResource ProgressToTimeConverter}}" />
+                                        /<Run Text="{Binding ElementName=Player, Path=Duration, Mode=OneWay, Converter={StaticResource ProgressToTimeConverter}}" /></TextBlock>
                                     <Button
                                         x:Name="BottomBtnSelctSubtitle"
                                         Width="48"
@@ -824,7 +820,7 @@
                                         Padding="0"
                                         Background="Transparent"
                                         Click="TopBtnCloseDanmaku_Click"
-                                        Visibility="{x:Bind convert:BoolToVisibilityConverter.AntiConvert(m_danmakuController.DanmakuViewModel.IsHide), Mode=OneWay}">
+                                        Visibility="{x:Bind m_danmakuController.DanmakuViewModel.IsHide, Converter={StaticResource DisplayConvert}, Mode=OneWay}">
                                         <Image
                                             Width="28"
                                             Height="28"
@@ -890,7 +886,7 @@
                                                             Grid.Column="1"
                                                             Width="64"
                                                             Margin="4,0,0,0"
-                                                            Background="{Binding ElementName=SendDanmakuColorText, Path=Text, Converter={StaticResource color}, Mode=OneWay}"
+                                                            Background="{Binding ElementName=SendDanmakuColorText, Path=Text, Converter={StaticResource ColorSelectedConvert}, Mode=OneWay}"
                                                             CornerRadius="{StaticResource ControlCornerRadius}" />
                                                     </Grid>
                                                     <GridView
@@ -905,7 +901,7 @@
                                                                 <Border
                                                                     Width="24"
                                                                     Height="24"
-                                                                    Background="{x:Bind Converter={StaticResource color}}"
+                                                                    Background="{x:Bind Converter={StaticResource ColorSelectedConvert}}"
                                                                     CornerRadius="{StaticResource ControlCornerRadius}" />
                                                             </DataTemplate>
                                                         </GridView.ItemTemplate>
@@ -1200,7 +1196,7 @@
                                 Background="Transparent"
                                 Click="TopBtnOpenDanmaku_Click"
                                 ToolTipService.ToolTip="打开弹幕"
-                                Visibility="{x:Bind Path=DanmuControl.Visibility, Mode=OneWay, Converter={StaticResource display}}">
+                                Visibility="{x:Bind Path=DanmuControl.Visibility, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                 <Image
                                     Width="28"
                                     Height="28"
@@ -1277,8 +1273,8 @@
                                                 Orientation="Vertical">
                                                 <TextBlock Text="{x:Bind Content}" TextWrapping="Wrap" />
                                                 <TextBlock>
-                                                    <Run Text="{x:Bind From, Converter={StaticResource progress}}" />
-                                                    -<Run Text="{x:Bind To, Converter={StaticResource progress}}" />
+                                                    <Run Text="{x:Bind From, Converter={StaticResource ProgressToTimeConverter}}" />
+                                                    -<Run Text="{x:Bind To, Converter={StaticResource ProgressToTimeConverter}}" />
                                                 </TextBlock>
                                             </StackPanel>
                                         </StackPanel>

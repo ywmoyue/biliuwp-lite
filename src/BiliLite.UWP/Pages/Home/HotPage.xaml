@@ -54,7 +54,7 @@
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='120h'}"
+                                Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
                                 Stretch="UniformToFill" />
                             <Grid>
                                 <Grid.Background>
@@ -151,7 +151,7 @@
                         HorizontalAlignment="Center"
                         Command="{x:Bind Path=m_viewModel.LoadMoreCommand}"
                         Foreground="Gray"
-                        Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay, Converter={StaticResource display}}">
+                        Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                         <TextBlock>加载更多</TextBlock>
                     </HyperlinkButton>
                     <ProgressRing
@@ -165,7 +165,7 @@
         <Button
             Command="{x:Bind Path=m_viewModel.RefreshCommand}"
             Style="{StaticResource RoundAccentButtonStyle}"
-            Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay, Converter={StaticResource display}}">
+            Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
             <SymbolIcon Symbol="Refresh" />
         </Button>
     </Grid>

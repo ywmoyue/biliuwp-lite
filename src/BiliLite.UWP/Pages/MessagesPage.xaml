@@ -41,7 +41,7 @@
                                         <DataTemplate x:DataType="viewModels:EmotePackageItemModel">
                                             <StackPanel >
                                                 <Image Visibility="{Binding Path=showImage}"  Source="{Binding url}" Width="36" Margin="4 0"></Image>
-                                                <TextBlock Width="90" TextAlignment="Center" Visibility="{Binding Path=showImage,Converter={StaticResource display}}" FontSize="12" HorizontalAlignment="Center" Text="{Binding text}"></TextBlock>
+                                                <TextBlock Width="90" TextAlignment="Center" Visibility="{Binding Path=showImage,Converter={StaticResource DisplayConvert}}" FontSize="12" HorizontalAlignment="Center" Text="{Binding text}"></TextBlock>
 
 
                                             </StackPanel>
@@ -91,7 +91,7 @@
                                                  Margin="0 0 8 0"
                                                  Grid.RowSpan="2">
                                                 <Ellipse.Fill>
-                                                    <ImageBrush ImageSource="{x:Bind Path=Cover,Mode=OneWay,Converter={StaticResource imageConvert2},ConverterParameter='42w'}"></ImageBrush>
+                                                    <ImageBrush ImageSource="{x:Bind Path=Cover,Mode=OneWay,Converter={StaticResource ImageSourceConvert},ConverterParameter='42w'}"></ImageBrush>
                                                 </Ellipse.Fill>
                                             </Ellipse>
                                             <TextBlock Grid.Column="1" Text="{x:Bind Title}"></TextBlock>
@@ -121,7 +121,7 @@
                             </ListView>
                         </ScrollViewer>
 
-                        <Button Visibility="{x:Bind Path=m_viewModel.ChatContextLoading,Mode=OneWay,Converter={StaticResource display}}"
+                        <Button Visibility="{x:Bind Path=m_viewModel.ChatContextLoading,Mode=OneWay,Converter={StaticResource DisplayConvert}}"
                                               Style="{StaticResource RoundAccentButtonStyle}"
                                               Click="RefreshContexts_OnClick">
                             <SymbolIcon Symbol="Refresh" ></SymbolIcon>
@@ -157,7 +157,7 @@
 
                         <!-- 刷新按钮 -->
                         <Button Grid.Row="1" 
-                          Visibility="{x:Bind Path=m_viewModel.ChatContextLoading,Mode=OneWay,Converter={StaticResource display}}" 
+                          Visibility="{x:Bind Path=m_viewModel.ChatContextLoading,Mode=OneWay,Converter={StaticResource DisplayConvert}}" 
                           Style="{StaticResource RoundAccentButtonStyle}"
                           Click="RefreshMessages_OnClick">
                             <SymbolIcon Symbol="Refresh" ></SymbolIcon>
@@ -219,7 +219,7 @@
                                              Margin="0 0 14 0"
                                              VerticalAlignment="Top">
                                         <Ellipse.Fill>
-                                            <ImageBrush ImageSource="{x:Bind UserFace,Mode=OneWay,Converter={StaticResource imageConvert2},ConverterParameter='46w'}"></ImageBrush>
+                                            <ImageBrush ImageSource="{x:Bind UserFace,Mode=OneWay,Converter={StaticResource ImageSourceConvert},ConverterParameter='46w'}"></ImageBrush>
                                         </Ellipse.Fill>
                                     </Ellipse>
 
@@ -281,7 +281,7 @@
                         </ListView.Footer>
                     </ListView>
 
-                    <Button Visibility="{x:Bind Path=m_viewModel.ReplyMeLoading,Mode=OneWay,Converter={StaticResource display}}"
+                    <Button Visibility="{x:Bind Path=m_viewModel.ReplyMeLoading,Mode=OneWay,Converter={StaticResource DisplayConvert}}"
                                           VerticalAlignment="Bottom" 
                                           Click="RefreshReplyMeMsgs_OnClick"
                                           Padding="12" Margin="12" HorizontalAlignment="Right">

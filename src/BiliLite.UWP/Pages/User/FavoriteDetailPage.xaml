@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:BiliLite.Controls"
-    xmlns:convert="using:BiliLite.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="using:FontAwesome5"
     xmlns:favorites="using:BiliLite.Models.Common.Favorites"
@@ -38,7 +37,7 @@
                     Width="120"
                     Height="80"
                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                    Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='160w'}"
+                    Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
                     Stretch="UniformToFill" />
                 <StackPanel Grid.Column="1" Margin="8,0,0,0">
                     <TextBlock
@@ -55,8 +54,8 @@
                         Margin="0,4"
                         FontSize="14"
                         Foreground="Gray">
-                        播放:<Run Text="{x:Bind Path=CntInfo.Play, Converter={StaticResource numberToStringConvert}}" />
-                        弹幕:<Run Text="{x:Bind Path=CntInfo.Danmaku, Converter={StaticResource numberToStringConvert}}" /></TextBlock>
+                        播放:<Run Text="{x:Bind Path=CntInfo.Play, Converter={StaticResource NumberToStringConvert}}" />
+                        弹幕:<Run Text="{x:Bind Path=CntInfo.Danmaku, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -128,7 +127,7 @@
                 Margin="12,0"
                 VerticalAlignment="Center"
                 Orientation="Horizontal"
-                Visibility="{x:Bind Path=m_viewModel.IsItemClickEnabled, Converter={StaticResource display}, Mode=OneWay}">
+                Visibility="{x:Bind Path=m_viewModel.IsItemClickEnabled, Converter={StaticResource DisplayConvert}, Mode=OneWay}">
                 <CheckBox
                     Checked="CheckBox_Checked"
                     Unchecked="CheckBox_Unchecked"
@@ -213,7 +212,7 @@
             Grid.RowSpan="2"
             Command="{x:Bind Path=m_viewModel.RefreshCommand}"
             Style="{StaticResource RoundAccentButtonStyle}"
-            Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay, Converter={StaticResource display}}">
+            Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
             <SymbolIcon Symbol="Refresh" />
         </Button>
     </Grid>

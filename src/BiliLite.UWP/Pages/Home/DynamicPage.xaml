@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:BiliLite.Controls"
-    xmlns:convert="using:BiliLite.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dynamic="using:BiliLite.Models.Common.Dynamic"
     xmlns:fa="using:FontAwesome5"
@@ -14,8 +13,6 @@
     Background="Transparent"
     mc:Ignorable="d">
     <Page.Resources>
-        <convert:DatetimeConvert x:Key="time" />
-        <convert:ProgressToTimeConverter x:Key="ProgressToTimeConverter" />
         <DataTemplate x:Key="DynamicVideo" x:DataType="dynamic:DynamicItemModel">
             <Grid>
                 <Grid.ContextFlyout>
@@ -37,7 +34,7 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                        Source="{x:Bind Path=Video.Pic, Converter={StaticResource imageConvert}, ConverterParameter='120h'}"
+                        Source="{x:Bind Path=Video.Pic, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
                         Stretch="UniformToFill" />
 
                     <Grid Padding="8" VerticalAlignment="Bottom">
@@ -73,7 +70,7 @@
                         <StackPanel Orientation="Horizontal">
                             <Ellipse Width="24" Height="24">
                                 <Ellipse.Fill>
-                                    <ImageBrush ImageSource="{x:Bind Path=Video.Owner.Face, Converter={StaticResource imageConvert2}, ConverterParameter='36h'}" />
+                                    <ImageBrush ImageSource="{x:Bind Path=Video.Owner.Face, Converter={StaticResource ImageSourceConvert}, ConverterParameter='36h'}" />
                                 </Ellipse.Fill>
                             </Ellipse>
                             <TextBlock
@@ -117,7 +114,7 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                        Source="{x:Bind Path=UgcSeason.Pic, Converter={StaticResource imageConvert}, ConverterParameter='120h'}"
+                        Source="{x:Bind Path=UgcSeason.Pic, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
                         Stretch="UniformToFill" />
                     <Border
                         Margin="4"
@@ -169,7 +166,7 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                        Source="{x:Bind Path=Season.Cover, Converter={StaticResource imageConvert}, ConverterParameter='120h'}"
+                        Source="{x:Bind Path=Season.Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
                         Stretch="UniformToFill" />
                     <Border
                         Margin="4"
@@ -228,7 +225,7 @@
                             HorizontalAlignment="Center"
                             Command="{x:Bind Path=m_viewModel.LoadMoreCommand}"
                             Foreground="Gray"
-                            Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay, Converter={StaticResource display}}">
+                            Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                             <TextBlock>加载更多</TextBlock>
                         </HyperlinkButton>
                         <ProgressRing

@@ -68,7 +68,7 @@
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                Source="{x:Bind Path=Cover, Converter={StaticResource imageConvert}, ConverterParameter='300w'}"
+                                Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='300w'}"
                                 Stretch="UniformToFill" />
                             <Grid Padding="8" VerticalAlignment="Bottom">
                                 <Grid.Background>
@@ -82,7 +82,7 @@
                                         FontSize="12"
                                         Foreground="White"
                                         Text="{x:Bind Path=Order}"
-                                        Visibility="{x:Bind Path=ShowScore, Converter={StaticResource display}}" />
+                                        Visibility="{x:Bind Path=ShowScore, Converter={StaticResource DisplayConvert}}" />
                                     <TextBlock
                                         FontSize="14"
                                         FontWeight="Bold"
@@ -133,7 +133,7 @@
                         HorizontalAlignment="Center"
                         Command="{x:Bind Path=m_viewModel.LoadMoreCommand}"
                         Foreground="Gray"
-                        Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay, Converter={StaticResource display}}">
+                        Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                         <TextBlock>加载更多</TextBlock>
                     </HyperlinkButton>
                     <ProgressRing
@@ -147,7 +147,7 @@
             Grid.RowSpan="2"
             Command="{x:Bind Path=m_viewModel.RefreshCommand}"
             Style="{StaticResource RoundAccentButtonStyle}"
-            Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay, Converter={StaticResource display}}">
+            Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
             <SymbolIcon Symbol="Refresh" />
         </Button>
     </Grid>

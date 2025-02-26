@@ -83,7 +83,7 @@
                                                     <Image
                                                         Grid.Column="0"
                                                         Width="140"
-                                                        Source="{Binding Cover, Converter={StaticResource imageConvert}, ConverterParameter='140w'}" />
+                                                        Source="{Binding Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='140w'}" />
                                                     <Grid Padding="8" VerticalAlignment="Bottom">
                                                         <Grid.Background>
                                                             <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
@@ -97,7 +97,7 @@
                                                             FontSize="12"
                                                             Foreground="White"
                                                             Text="{x:Bind DurationStr}"
-                                                            Visibility="{x:Bind Duration, Converter={StaticResource display}}" />
+                                                            Visibility="{x:Bind Duration, Converter={StaticResource DisplayConvert}}" />
                                                     </Grid>
                                                 </Grid>
 

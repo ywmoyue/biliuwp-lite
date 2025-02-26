@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:control="using:BiliLite.Controls"
-    xmlns:convert="using:BiliLite.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="using:FontAwesome5"
     xmlns:local="using:BiliLite.Pages"
@@ -16,9 +15,6 @@
     SizeChanged="SeasonDetailPage_OnSizeChanged"
     mc:Ignorable="d">
     <Page.Resources>
-        <convert:DatetimeConvert x:Key="datetime" />
-        <convert:ColorSelectedConvert x:Key="colorSelct" />
-        <convert:SingleCornerRadiusConverter x:Key="SingleCornerRadiusConverter" />
         <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource SystemAccentColor}" />
         <SolidColorBrush x:Key="GridViewItemForegroundSelected" Color="{ThemeResource HighLightTextColor}" />
         <SolidColorBrush x:Key="RatingControlSelectedForeground" Color="Orange" />
@@ -57,19 +53,19 @@
                             Padding="0,8"
                             Background="Transparent"
                             Command="{x:Bind Path=m_viewModel.FollowCommand}"
-                            Foreground="{x:Bind Path=m_viewModel.Detail.UserStatus.Follow, Mode=OneWay, Converter={StaticResource colorSelct}, ConverterParameter=1}">
+                            Foreground="{x:Bind Path=m_viewModel.Detail.UserStatus.Follow, Mode=OneWay, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=1}">
                             <StackPanel>
                                 <FontIcon
                                     FontFamily="{StaticResource BiliIconFont}"
                                     Glyph="&#xE66B;"
-                                    Visibility="{x:Bind Path=m_viewModel.Detail.UserStatus.Follow, Mode=OneWay, Converter={StaticResource display}, ConverterParameter=0}" />
+                                    Visibility="{x:Bind Path=m_viewModel.Detail.UserStatus.Follow, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=0}" />
                                 <FontIcon
                                     FontFamily="{StaticResource BiliIconFont}"
                                     Glyph="&#xE6DB;"
-                                    Visibility="{x:Bind Path=m_viewModel.Detail.UserStatus.Follow, Mode=OneWay, Converter={StaticResource display}, ConverterParameter=1}" />
+                                    Visibility="{x:Bind Path=m_viewModel.Detail.UserStatus.Follow, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=1}" />
                                 <TextBlock
                                     FontSize="12"
-                                    Text="{x:Bind Path=m_viewModel.Detail.Stat.Favorites, Mode=OneWay, Converter={StaticResource numberToStringConvert}}"
+                                    Text="{x:Bind Path=m_viewModel.Detail.Stat.Favorites, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}"
                                     TextAlignment="Center" />
                             </StackPanel>
                         </Button>
@@ -275,7 +271,7 @@
                                     </Grid.ColumnDefinitions>
                                     <Border CornerRadius="{StaticResource OverlayCornerRadius}">
                                         <Grid>
-                                            <Image Source="{x:Bind Path=m_viewModel.Detail.Cover, Mode=OneWay, Converter={StaticResource imageConvert2}, ConverterParameter='200w'}" Tapped="Image_Tapped" />
+                                            <Image Source="{x:Bind Path=m_viewModel.Detail.Cover, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='200w'}" Tapped="Image_Tapped" />
                                             <Border
                                                 Margin="4"
                                                 Padding="4,2"
@@ -315,7 +311,7 @@
                                         <TextBlock
                                             FontSize="12"
                                             Foreground="Gray"
-                                            Visibility="{x:Bind Path=m_viewModel.Detail.ShowRating, Mode=OneWay}"><Run Text="{x:Bind Path=m_viewModel.Detail.Rating.Count, Mode=OneWay, Converter={StaticResource numberToStringConvert}}" />
+                                            Visibility="{x:Bind Path=m_viewModel.Detail.ShowRating, Mode=OneWay}"><Run Text="{x:Bind Path=m_viewModel.Detail.Rating.Count, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" />
                                             人评分</TextBlock>
                                     </StackPanel>
                                 </Grid>
@@ -348,7 +344,7 @@
                                     </GridView.Header>
                                     <GridView.ItemTemplate>
                                         <DataTemplate x:DataType="model:SeasonDetailEpisodeModel">
-                                            <Grid ToolTipService.ToolTip="{x:Bind Path=LongTitle}" Background="{ThemeResource CardBackground}">
+                                            <Grid Background="{ThemeResource CardBackground}" ToolTipService.ToolTip="{x:Bind Path=LongTitle}">
                                                 <TextBlock
                                                     VerticalAlignment="Center"
                                                     TextAlignment="Center"
@@ -391,7 +387,7 @@
                                     </GridView.Header>
                                     <GridView.ItemTemplate>
                                         <DataTemplate x:DataType="model:SeasonDetailEpisodeModel">
-                                            <Grid ToolTipService.ToolTip="{x:Bind Path=LongTitle}" Background="{ThemeResource CardBackground}">
+                                            <Grid Background="{ThemeResource CardBackground}" ToolTipService.ToolTip="{x:Bind Path=LongTitle}">
                                                 <TextBlock
                                                     VerticalAlignment="Center"
                                                     TextAlignment="Center"
@@ -436,7 +432,10 @@
                                     </GridView.Header>
                                     <GridView.ItemTemplate>
                                         <DataTemplate x:DataType="model:SeasonDetailSeasonItemModel">
-                                            <Grid Padding="4,0" ToolTipService.ToolTip="{x:Bind Path=Title}" Background="{ThemeResource CardBackground}">
+                                            <Grid
+                                                Padding="4,0"
+                                                Background="{ThemeResource CardBackground}"
+                                                ToolTipService.ToolTip="{x:Bind Path=Title}">
                                                 <TextBlock
                                                     VerticalAlignment="Center"
                                                     TextAlignment="Center"
@@ -608,7 +607,7 @@
                                                 </Grid.ColumnDefinitions>
                                                 <Ellipse Width="36" Height="36">
                                                     <Ellipse.Fill>
-                                                        <ImageBrush ImageSource="{x:Bind Path=Author.Avatar, Converter={StaticResource imageConvert2}, ConverterParameter='56h'}" Stretch="UniformToFill" />
+                                                        <ImageBrush ImageSource="{x:Bind Path=Author.Avatar, Converter={StaticResource ImageSourceConvert}, ConverterParameter='56h'}" Stretch="UniformToFill" />
                                                     </Ellipse.Fill>
                                                 </Ellipse>
                                                 <StackPanel Grid.Column="1" Margin="8,0">
@@ -618,12 +617,12 @@
                                                     </StackPanel>-->
                                                     <TextBlock
                                                         VerticalAlignment="Center"
-                                                        Foreground="{x:Bind Path=Author.Vip.VipType, Converter={StaticResource colorSelct}, ConverterParameter=2}"
+                                                        Foreground="{x:Bind Path=Author.Vip.VipType, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=2}"
                                                         Text="{x:Bind Path=Author.Uname}" />
                                                     <TextBlock
                                                         FontSize="12"
                                                         Foreground="Gray"
-                                                        Text="{x:Bind Path=Ctime, Converter={StaticResource datetime}, ConverterParameter='ts'}" />
+                                                        Text="{x:Bind Path=Ctime, Converter={StaticResource DatetimeConvert}, ConverterParameter='ts'}" />
 
                                                 </StackPanel>
                                                 <Viewbox Grid.Column="2" Height="20">
@@ -642,7 +641,7 @@
                                                     HorizontalContentAlignment="Left"
                                                     Click="btnReviewLike_Click"
                                                     Foreground="{ThemeResource SystemAccentColor}"
-                                                    Visibility="{x:Bind Path=Stat.Liked, Mode=OneWay, Converter={StaticResource display}, ConverterParameter=1}">
+                                                    Visibility="{x:Bind Path=Stat.Liked, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=1}">
                                                     <StackPanel Orientation="Horizontal">
                                                         <fa:FontAwesome FontSize="14" Icon="Regular_ThumbsUp" />
                                                         <TextBlock Margin="4,0" Text="{x:Bind Path=Stat.Likes, Mode=OneWay}" />
@@ -653,7 +652,7 @@
                                                     HorizontalContentAlignment="Left"
                                                     Click="btnReviewLike_Click"
                                                     Foreground="Gray"
-                                                    Visibility="{x:Bind Path=Stat.Liked, Mode=OneWay, Converter={StaticResource display}, ConverterParameter=0}">
+                                                    Visibility="{x:Bind Path=Stat.Liked, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=0}">
                                                     <StackPanel Orientation="Horizontal">
                                                         <fa:FontAwesome FontSize="14" Icon="Regular_ThumbsUp" />
                                                         <TextBlock Margin="4,0" Text="{x:Bind Path=Stat.Likes, Mode=OneWay}" />

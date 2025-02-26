@@ -52,7 +52,7 @@
                                                 FontSize="12"
                                                 Text="{Binding text}"
                                                 TextAlignment="Center"
-                                                Visibility="{Binding Path=showImage, Converter={StaticResource display}}" />
+                                                Visibility="{Binding Path=showImage, Converter={StaticResource DisplayConvert}}" />
 
                                         </StackPanel>
                                     </DataTemplate>

@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:control="using:BiliLite.Controls"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:convert="using:BiliLite.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:detail="using:BiliLite.Models.Common.Video.Detail"
     xmlns:fa="using:FontAwesome5"
@@ -24,8 +23,6 @@
                 <Setter Property="BorderThickness" Value="0" />
             </Style.Setters>
         </Style>
-        <convert:DatetimeConvert x:Key="datetime" />
-        <convert:ColorSelectedConvert x:Key="colorSelct" />
         <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="#64B0B0B0" />
         <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="{ThemeResource SystemListLowColor}" />
         <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource SystemAccentColor}" />
@@ -104,12 +101,12 @@
                             <StackPanel>
                                 <FontIcon
                                     FontFamily="{StaticResource BiliIconFont}"
-                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Like, Mode=OneWay, Converter={StaticResource colorSelct}, ConverterParameter=1}"
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Like, Mode=OneWay, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=1}"
                                     Glyph="&#xE6C6;" />
                                 <TextBlock
                                     FontSize="12"
-                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Like, Mode=OneWay, Converter={StaticResource colorSelct}, ConverterParameter=1}"
-                                    Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Like, Mode=OneWay, Converter={StaticResource numberToStringConvert}}"
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Like, Mode=OneWay, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=1}"
+                                    Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Like, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}"
                                     TextAlignment="Center" />
                                 <!--<fa:FontAwesome Icon="Solid_ThumbsUp"></fa:FontAwesome>-->
                             </StackPanel>
@@ -124,11 +121,11 @@
                                 <FontIcon
                                     Margin="0,-2,0,2"
                                     FontFamily="{StaticResource BiliIconFont}"
-                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Dislike, Mode=OneWay, Converter={StaticResource colorSelct}, ConverterParameter=1}"
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Dislike, Mode=OneWay, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=1}"
                                     Glyph="&#xE6C5;" />
                                 <TextBlock
                                     FontSize="12"
-                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Dislike, Mode=OneWay, Converter={StaticResource colorSelct}, ConverterParameter=1}"
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Dislike, Mode=OneWay, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=1}"
                                     Text="不喜欢"
                                     TextAlignment="Center" />
                             </StackPanel>
@@ -142,12 +139,12 @@
                             <StackPanel>
                                 <FontIcon
                                     FontFamily="{StaticResource BiliIconFont}"
-                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Favorite, Mode=OneWay, Converter={StaticResource colorSelct}, ConverterParameter=1}"
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Favorite, Mode=OneWay, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=1}"
                                     Glyph="&#xE673;" />
                                 <TextBlock
                                     FontSize="12"
-                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Favorite, Mode=OneWay, Converter={StaticResource colorSelct}, ConverterParameter=1}"
-                                    Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Favorite, Mode=OneWay, Converter={StaticResource numberToStringConvert}}"
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Favorite, Mode=OneWay, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=1}"
+                                    Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Favorite, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}"
                                     TextAlignment="Center" />
                             </StackPanel>
                             <Button.Flyout>
@@ -205,7 +202,7 @@
                                                                     HorizontalAlignment="Right"
                                                                     FontSize="14"
                                                                     Foreground="Gray"
-                                                                    Visibility="{x:Bind Path=Privacy, Converter={StaticResource display}}">
+                                                                    Visibility="{x:Bind Path=Privacy, Converter={StaticResource DisplayConvert}}">
                                                                     公开
                                                                 </TextBlock>
                                                                 <TextBlock
@@ -242,12 +239,12 @@
                             <StackPanel>
                                 <FontIcon
                                     FontFamily="{StaticResource BiliIconFont}"
-                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Coin, Mode=OneWay, Converter={StaticResource colorSelct}, ConverterParameter=1}"
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Coin, Mode=OneWay, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=1}"
                                     Glyph="&#xE670;" />
                                 <TextBlock
                                     FontSize="12"
-                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Coin, Mode=OneWay, Converter={StaticResource colorSelct}, ConverterParameter=1}"
-                                    Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Coin, Mode=OneWay, Converter={StaticResource numberToStringConvert}}"
+                                    Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Coin, Mode=OneWay, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=1}"
+                                    Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Coin, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}"
                                     TextAlignment="Center" />
                             </StackPanel>
                             <Button.Flyout>
@@ -427,7 +424,7 @@
                                     CornerRadius="{StaticResource OverlayCornerRadius}">
                                     <toolkit:ImageEx
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                        Source="{x:Bind Path=m_viewModel.VideoInfo.Pic, Mode=OneWay, Converter={StaticResource imageConvert}, ConverterParameter='400w'}"
+                                        Source="{x:Bind Path=m_viewModel.VideoInfo.Pic, Mode=OneWay, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='400w'}"
                                         Stretch="UniformToFill"
                                         Tapped="ImageEx_Tapped" />
                                 </Border>
@@ -463,8 +460,8 @@
                                 <TextBlock
                                     Margin="0,4,0,0"
                                     Foreground="Gray"
-                                    IsTextSelectionEnabled="True"><Run Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.View, Mode=OneWay, Converter={StaticResource numberToStringConvert}}" />
-                                    播放 ·<Run Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Danmaku, Mode=OneWay, Converter={StaticResource numberToStringConvert}}" />
+                                    IsTextSelectionEnabled="True"><Run Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.View, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" />
+                                    播放 ·<Run Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Danmaku, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" />
                                     弹幕<Run Text="{x:Bind Path=m_viewModel.VideoInfo.Bvid, Mode=OneWay}" /></TextBlock>
                                 <HyperlinkButton
                                     x:Name="btnOpenUser"
@@ -474,7 +471,7 @@
                                     HorizontalContentAlignment="Stretch"
                                     Click="btnOpenUser_Click"
                                     Foreground="{ThemeResource TextColor}"
-                                    Visibility="{x:Bind Path=m_viewModel.VideoInfo.ShowStaff, Mode=OneWay, Converter={StaticResource display}}">
+                                    Visibility="{x:Bind Path=m_viewModel.VideoInfo.ShowStaff, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="auto" />
@@ -483,7 +480,7 @@
                                         </Grid.ColumnDefinitions>
                                         <Ellipse Width="36" Height="36">
                                             <Ellipse.Fill>
-                                                <ImageBrush ImageSource="{x:Bind Path=m_viewModel.VideoInfo.Owner.Face, Mode=OneWay, Converter={StaticResource imageConvert2}, ConverterParameter='48h'}" />
+                                                <ImageBrush ImageSource="{x:Bind Path=m_viewModel.VideoInfo.Owner.Face, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='48h'}" />
                                             </Ellipse.Fill>
                                         </Ellipse>
                                         <StackPanel Grid.Column="1">
@@ -491,7 +488,7 @@
                                             <TextBlock
                                                 Margin="8,0"
                                                 FontSize="12"
-                                                Foreground="Gray"><Run Text="{x:Bind Path=m_viewModel.VideoInfo.OwnerExt.Fans, Mode=OneWay, Converter={StaticResource numberToStringConvert}}" />
+                                                Foreground="Gray"><Run Text="{x:Bind Path=m_viewModel.VideoInfo.OwnerExt.Fans, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" />
                                                 粉丝</TextBlock>
                                         </StackPanel>
                                         <control:AttentionButton
@@ -523,7 +520,7 @@
                                                         </Grid.ColumnDefinitions>
                                                         <Ellipse Width="36" Height="36">
                                                             <Ellipse.Fill>
-                                                                <ImageBrush ImageSource="{x:Bind Path=Face, Converter={StaticResource imageConvert2}, ConverterParameter='48h'}" />
+                                                                <ImageBrush ImageSource="{x:Bind Path=Face, Converter={StaticResource ImageSourceConvert}, ConverterParameter='48h'}" />
                                                             </Ellipse.Fill>
                                                         </Ellipse>
                                                         <StackPanel Grid.Column="1">
@@ -549,7 +546,7 @@
                                         Command="{x:Bind Path=m_viewModel.SetStaffHeightCommand}"
                                         CommandParameter="2000.0"
                                         Foreground="Gray"
-                                        Visibility="{x:Bind Path=m_viewModel.ShowMoreStaff, Mode=OneWay, Converter={StaticResource display}}">
+                                        Visibility="{x:Bind Path=m_viewModel.ShowMoreStaff, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                         <StackPanel>
                                             <TextBlock>
                                                 制作团队(<Run Text="{x:Bind Path=m_viewModel.VideoInfo.Staff.Count, Mode=OneWay, TargetNullValue='0'}" />
@@ -573,7 +570,7 @@
                                     Margin="0,4,0,0"
                                     Foreground="Gray"
                                     IsTextSelectionEnabled="True">
-                                    发布于<Run Text="{x:Bind Path=m_viewModel.VideoInfo.PubDate, Mode=OneWay, Converter={StaticResource datetime}}" /></TextBlock>
+                                    发布于<Run Text="{x:Bind Path=m_viewModel.VideoInfo.PubDate, Mode=OneWay, Converter={StaticResource DatetimeConvert}}" /></TextBlock>
                                 <StackPanel x:Name="stDesc" Margin="0,8,0,0">
                                     <TextBlock
                                         x:Name="txtDesc"
@@ -691,7 +688,7 @@
                                         <toolkit:ImageEx
                                             MaxHeight="80"
                                             Margin="0,2,0,3"
-                                            Source="{x:Bind Path=Pic, Converter={StaticResource imageConvert}, ConverterParameter='100h'}"
+                                            Source="{x:Bind Path=Pic, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='100h'}"
                                             Stretch="UniformToFill" />
                                         <StackPanel Grid.Column="1" Margin="8,2,0,2">
                                             <TextBlock
@@ -708,8 +705,8 @@
                                             <TextBlock
                                                 FontFamily="12"
                                                 Foreground="Gray"
-                                                TextTrimming="CharacterEllipsis"><Run Text="{x:Bind Path=Stat.View, Converter={StaticResource numberToStringConvert}}" />
-                                                播放<Run Text="{x:Bind Path=Stat.Danmaku, Converter={StaticResource numberToStringConvert}}" />
+                                                TextTrimming="CharacterEllipsis"><Run Text="{x:Bind Path=Stat.View, Converter={StaticResource NumberToStringConvert}}" />
+                                                播放<Run Text="{x:Bind Path=Stat.Danmaku, Converter={StaticResource NumberToStringConvert}}" />
                                                 弹幕</TextBlock>
                                         </StackPanel>
                                     </Grid>

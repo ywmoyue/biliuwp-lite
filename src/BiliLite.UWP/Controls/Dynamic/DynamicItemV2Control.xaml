@@ -33,7 +33,7 @@
                 VerticalAlignment="Top"
                 Command="{x:Bind Path=ViewModel.Parent.UserCommand, Mode=OneWay}"
                 CommandParameter="{x:Bind Path=ViewModel, Mode=OneWay}"
-                Visibility="{x:Bind ViewModel.IsRepost, Converter={StaticResource display}, Mode=OneWay}">
+                Visibility="{x:Bind ViewModel.IsRepost, Converter={StaticResource DisplayConvert}, Mode=OneWay}">
                 <Grid>
                     <Ellipse
                         Width="40"
@@ -41,7 +41,7 @@
                         Stroke="WhiteSmoke"
                         StrokeThickness="1">
                         <Ellipse.Fill>
-                            <ImageBrush ImageSource="{x:Bind Path=ViewModel.Author.Author.Face, Mode=OneWay, Converter={StaticResource imageConvert2}, ConverterParameter='64h'}" />
+                            <ImageBrush ImageSource="{x:Bind Path=ViewModel.Author.Author.Face, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='64h'}" />
                         </Ellipse.Fill>
                     </Ellipse>
                     <Image
@@ -64,7 +64,7 @@
                 VerticalAlignment="Top"
                 Command="{x:Bind Path=ViewModel.Parent.UserCommand, Mode=OneWay}"
                 CommandParameter="{x:Bind Path=ViewModel, Mode=OneWay}"
-                Visibility="{x:Bind ViewModel.IsRepost, Converter={StaticResource display}, Mode=OneWay}">
+                Visibility="{x:Bind ViewModel.IsRepost, Converter={StaticResource DisplayConvert}, Mode=OneWay}">
                 <Grid Height="56">
                     <StackPanel VerticalAlignment="Center">
                         <StackPanel Orientation="Horizontal">
@@ -76,7 +76,7 @@
                             <TextBlock
                                 Foreground="{ThemeResource TextColor}"
                                 Text="{x:Bind Path=ViewModel.Author.Author.Name, Mode=OneWay}"
-                                Visibility="{x:Bind ViewModel.AuthorIsVip, Mode=OneWay, Converter={StaticResource display}}" />
+                                Visibility="{x:Bind ViewModel.AuthorIsVip, Mode=OneWay, Converter={StaticResource DisplayConvert}}" />
                         </StackPanel>
                         <TextBlock
                             Margin="0,4,0,0"
@@ -90,8 +90,8 @@
                 Grid.Column="1"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
-                Visibility="{x:Bind Path=ViewModel.Author.DecorateCard, Mode=OneWay, Converter={StaticResource display}}">
-                <Image Height="44" Source="{x:Bind Path=ViewModel.Author.DecorateCard.CardUrl, Mode=OneWay, Converter={StaticResource imageConvert2}, ConverterParameter='64h.png'}" />
+                Visibility="{x:Bind Path=ViewModel.Author.DecorateCard, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
+                <Image Height="44" Source="{x:Bind Path=ViewModel.Author.DecorateCard.CardUrl, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='64h.png'}" />
                 <TextBlock
                     Margin="0,0,40,0"
                     HorizontalAlignment="Right"
@@ -100,7 +100,7 @@
                     FontSize="12"
                     Foreground="{x:Bind Path=ViewModel.Author.DecorateCard.Fan.Color, Mode=OneWay, Converter={StaticResource colorConvert}}"
                     Text="{x:Bind Path=ViewModel.Author.DecorateCard.Fan.NumberStr, Mode=OneWay}"
-                    Visibility="{x:Bind Path=ViewModel.Author.DecorateCard.Fan, Mode=OneWay, Converter={StaticResource display}}" />
+                    Visibility="{x:Bind Path=ViewModel.Author.DecorateCard.Fan, Mode=OneWay, Converter={StaticResource DisplayConvert}}" />
             </Grid>
             <AppBarButton
                 Grid.Column="2"
@@ -111,7 +111,7 @@
                 Foreground="Gray"
                 Icon="More"
                 Style="{StaticResource AppBarButtonNoChevronStyle}"
-                Visibility="{x:Bind ViewModel.IsRepost, Converter={StaticResource display}, Mode=OneWay}">
+                Visibility="{x:Bind ViewModel.IsRepost, Converter={StaticResource DisplayConvert}, Mode=OneWay}">
                 <AppBarButton.Flyout>
                     <MenuFlyout>
                         <MenuFlyoutItem
@@ -154,7 +154,7 @@
                             Height="24"
                             Margin="0,0,8,0">
                             <Ellipse.Fill>
-                                <ImageBrush ImageSource="{x:Bind Path=ViewModel.AuthorForward.FaceUrl, Mode=OneWay, Converter={StaticResource imageConvert2}, ConverterParameter='64w'}" />
+                                <ImageBrush ImageSource="{x:Bind Path=ViewModel.AuthorForward.FaceUrl, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='64w'}" />
                             </Ellipse.Fill>
                         </Ellipse>
                         <TextBlock VerticalAlignment="Center" Foreground="#178bcf">
@@ -182,11 +182,11 @@
 
         <ContentPresenter Padding="0,4,0,0" Content="{x:Bind Path=CardContent, Mode=OneWay}" />
 
-        <StackPanel Visibility="{x:Bind ViewModel.Stat, Converter={StaticResource display}}">
+        <StackPanel Visibility="{x:Bind ViewModel.Stat, Converter={StaticResource DisplayConvert}}">
             <StackPanel
                 Margin="0,4,0,0"
                 Orientation="Horizontal"
-                Visibility="{x:Bind ViewModel.IsRepost, Mode=OneWay, Converter={StaticResource display}}">
+                Visibility="{x:Bind ViewModel.IsRepost, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                 <StackPanel.Resources>
                     <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
                         <Setter Property="Margin" Value="0,8,12,0" />
@@ -217,7 +217,7 @@
                 <Button
                     Command="{x:Bind Path=ViewModel.Parent.LikeCommand, Mode=OneWay}"
                     CommandParameter="{x:Bind Path=ViewModel, Mode=OneWay}"
-                    Visibility="{x:Bind Path=ViewModel.Liked, Mode=OneWay, Converter={StaticResource display}}">
+                    Visibility="{x:Bind Path=ViewModel.Liked, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                     <StackPanel Orientation="Horizontal">
                         <fontAwesome5:FontAwesome
                             Margin="0,2,0,0"

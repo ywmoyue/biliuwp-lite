@@ -186,7 +186,7 @@
                                     Height="100"
                                     CornerRadius="{StaticResource OverlayCornerRadius}"
                                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png"
-                                    Source="{Binding Path=ImageUrl, Converter={StaticResource imageConvert}, ConverterParameter='200w_200h_1c'}"
+                                    Source="{Binding Path=ImageUrl, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='200w_200h_1c'}"
                                     Stretch="UniformToFill" />
                             </HyperlinkButton>
                         </DataTemplate>
@@ -215,7 +215,7 @@
                                     Height="120"
                                     CornerRadius="{StaticResource OverlayCornerRadius}"
                                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png"
-                                    Source="{Binding Path=ImageUrl, Converter={StaticResource imageConvert}, ConverterParameter='200w_200h_1c'}"
+                                    Source="{Binding Path=ImageUrl, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='200w_200h_1c'}"
                                     Stretch="UniformToFill" />
                             </HyperlinkButton>
                         </DataTemplate>

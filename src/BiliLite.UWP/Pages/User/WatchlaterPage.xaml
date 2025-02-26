@@ -30,7 +30,7 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                    Source="{x:Bind Path=pic, Converter={StaticResource imageConvert}, ConverterParameter='160w'}"
+                    Source="{x:Bind Path=pic, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
                     Stretch="UniformToFill" />
                 <Grid Grid.Column="1" Margin="10,5">
                     <TextBlock
@@ -100,7 +100,7 @@
             Grid.RowSpan="2"
             Command="{x:Bind Path=watchLaterVM.RefreshCommand}"
             Style="{StaticResource RoundAccentButtonStyle}"
-            Visibility="{x:Bind Path=watchLaterVM.Loading, Mode=OneWay, Converter={StaticResource display}}">
+            Visibility="{x:Bind Path=watchLaterVM.Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
             <SymbolIcon Symbol="Refresh" />
         </Button>
     </Grid>
