@@ -26,10 +26,6 @@
                 <ResourceDictionary Source="/Controls/Dynamic/DynamicTemplate.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <Style TargetType="HyperlinkButton">
-                <Setter Property="Foreground" Value="#178bcf" />
-            </Style>
-
             <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White" />
             <ItemsPanelTemplate x:Key="GridPanel">
                 <toolkit:StaggeredPanel
