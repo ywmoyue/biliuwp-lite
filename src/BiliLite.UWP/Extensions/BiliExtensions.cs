@@ -4,19 +4,11 @@ using BiliLite.Models.Common;
 using BiliLite.Models.Common.Season;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests.Api;
-using BiliLite.Models.Responses;
 using BiliLite.Services;
-using Microsoft.Toolkit.Uwp.Helpers;
-using Microsoft.Toolkit.Uwp.UI.Controls;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Windows.System;
-using Windows.UI;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 
 namespace BiliLite.Extensions
 {
@@ -100,6 +92,9 @@ namespace BiliLite.Extensions
 
         public static async Task CheckVersion()
         {
+#if DEBUG
+            NotificationShowExtensions.ShowMessageToast("现处于 Debug 环境");
+#else
             try
             {
                 var num = $"{SystemInformation.ApplicationVersion.Major}{SystemInformation.ApplicationVersion.Minor.ToString("00")}{SystemInformation.ApplicationVersion.Build.ToString("00")}";
@@ -146,6 +141,7 @@ namespace BiliLite.Extensions
             {
                 _logger.Error($"检查更新失败：{ex.Message}", ex);
             }
+#endif
         }
     }
 }
