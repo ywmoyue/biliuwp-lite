@@ -147,9 +147,6 @@ namespace BiliLite
                     NotificationShowExtensions.ShowMessageToast("无法打开链接:" + e.Parameter.ToString());
                 }
             }
-#if !DEBUG
-            await BiliExtensions.CheckVersion();
-#endif
         }
 
         private void MessageCenter_ChangeTitleEvent(object sender, string e)
