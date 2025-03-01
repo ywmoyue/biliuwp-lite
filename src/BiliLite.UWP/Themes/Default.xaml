@@ -6,7 +6,7 @@
     <!--在此自定义颜色-->
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">
-            <Color x:Key="TextColor">#CC000000</Color>
+            <Color x:Key="TextColor">#000000</Color>
             <Color x:Key="CardColor">#0F000000</Color>
             <Color x:Key="HighLightTextColor">#FF000000</Color>
             <Color x:Key="DefaultTextColor">#CC000000</Color>
@@ -36,7 +36,7 @@
                 TintTransitionDuration="0:0:0.5" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
-            <Color x:Key="TextColor">#CCFFFFFF</Color>
+            <Color x:Key="TextColor">#FFFFFF</Color>
             <Color x:Key="CardColor">#19000000</Color>
             <Color x:Key="HighLightTextColor">#FFFFFFFF</Color>
             <Color x:Key="DefaultTextColor">#CC000000</Color>

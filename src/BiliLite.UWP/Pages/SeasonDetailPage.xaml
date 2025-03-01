@@ -91,7 +91,6 @@
                             Width="56"
                             Margin="0,0,4,0"
                             Background="Transparent"
-                            Foreground="{ThemeResource TextColor}"
                             Visibility="{x:Bind m_viewModel.ShowNormalShareBtn, Mode=OneWay}">
                             <StackPanel>
                                 <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE671;" />
@@ -123,7 +122,6 @@
                             Margin="0,0,4,0"
                             Background="Transparent"
                             Click="btnDownload_Click"
-                            Foreground="{ThemeResource TextColor}"
                             Visibility="{x:Bind m_viewModel.ShowNormalDownloadBtn, Mode=OneWay}">
                             <StackPanel>
                                 <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE672;" />
@@ -170,7 +168,6 @@
                         <AppBarButton
                             x:Name="btnOpenWeb"
                             Click="btnOpenWeb_Click"
-                            Foreground="{ThemeResource TextColor}"
                             Label="浏览器"
                             Visibility="Collapsed">
                             <AppBarButton.Icon>
@@ -180,7 +177,6 @@
                         <AppBarButton
                             x:Name="btnRefresh"
                             Click="btnRefresh_Click"
-                            Foreground="{ThemeResource TextColor}"
                             Label="刷新"
                             Visibility="Collapsed">
                             <AppBarButton.Icon>
@@ -194,8 +190,7 @@
                             x:Name="btnMore"
                             Width="56"
                             Margin="0"
-                            Background="Transparent"
-                            Foreground="{ThemeResource TextColor}">
+                            Background="Transparent">
                             <StackPanel>
                                 <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE680;" />
                                 <TextBlock
@@ -232,7 +227,6 @@
                             Margin="0,0,4,0"
                             Background="Transparent"
                             Command="{x:Bind m_viewModel.OpenRightInfoCommand}"
-                            Foreground="{ThemeResource TextColor}"
                             Visibility="{x:Bind m_viewModel.ShowOpenRightInfoBtn, Mode=OneWay}">
                             <StackPanel>
                                 <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xe68a;" />
@@ -322,7 +316,7 @@
                                     BorderBrush="#FFFB9E60"
                                     Foreground="#FFFB9E60"
                                     Visibility="{x:Bind Path=m_viewModel.Detail.ShowPayment, Mode=OneWay}">
-                                    <TextBlock Foreground="{ThemeResource TextColor}" Text="{x:Bind Path=m_viewModel.Detail.Payment.Dialog.Title, Mode=OneWay}" />
+                                    <TextBlock Text="{x:Bind Path=m_viewModel.Detail.Payment.Dialog.Title, Mode=OneWay}" />
                                 </Button>
                                 <toolkit:AdaptiveGridView
                                     x:Name="listEpisode"
@@ -354,7 +348,7 @@
                                                     HorizontalAlignment="Right"
                                                     VerticalAlignment="Top"
                                                     Background="{ThemeResource SystemControlForegroundBaseHighBrush}"
-                                                    CornerRadius="{Binding Text, ElementName=CornerRadiusValue, Converter={StaticResource SingleCornerRadiusConverter}, ConverterParameter=8}"
+                                                    CornerRadius="{Binding Text, ElementName=CornerRadiusValue, Converter={StaticResource SingleCornerRadiusConverter}, ConverterParameter=4}"
                                                     Visibility="{x:Bind Path=ShowBadge}">
                                                     <StackPanel>
                                                         <TextBlock
@@ -509,8 +503,7 @@
                                             <HyperlinkButton
                                                 x:Name="btnOpenIndexWithArea"
                                                 Margin="0,0,8,0"
-                                                Click="btnOpenIndexWithArea_Click"
-                                                Foreground="{ThemeResource TextColor}">
+                                                Click="btnOpenIndexWithArea_Click">
                                                 <Border
                                                     Padding="8,4"
                                                     Background="Transparent"
@@ -538,8 +531,7 @@
                                             <HyperlinkButton
                                                 x:Name="btnOpenIndexWithStyle"
                                                 Margin="0,0,8,0"
-                                                Click="btnOpenIndexWithStyle_Click"
-                                                Foreground="{ThemeResource TextColor}">
+                                                Click="btnOpenIndexWithStyle_Click">
                                                 <Border
                                                     Padding="8,4"
                                                     Background="Transparent"
@@ -648,14 +640,13 @@
                                                     </StackPanel>
                                                 </HyperlinkButton>
                                                 <HyperlinkButton
-                                                    Width="64"
                                                     HorizontalContentAlignment="Left"
                                                     Click="btnReviewLike_Click"
                                                     Foreground="Gray"
                                                     Visibility="{x:Bind Path=Stat.Liked, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=0}">
                                                     <StackPanel Orientation="Horizontal">
                                                         <fa:FontAwesome FontSize="14" Icon="Regular_ThumbsUp" />
-                                                        <TextBlock Margin="4,0" Text="{x:Bind Path=Stat.Likes, Mode=OneWay}" />
+                                                        <TextBlock Margin="5,0,0,0" Text="{x:Bind Path=Stat.Likes, Mode=OneWay}" />
                                                     </StackPanel>
                                                 </HyperlinkButton>
 
