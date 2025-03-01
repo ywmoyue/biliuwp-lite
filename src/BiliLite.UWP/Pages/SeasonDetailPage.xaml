@@ -8,7 +8,7 @@
     xmlns:local="using:BiliLite.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:BiliLite.Models.Common.Season"
-    xmlns:my="using:Microsoft.UI.Xaml.Controls"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:viewModel="using:BiliLite.ViewModels.Season"
     Background="Transparent"
@@ -583,7 +583,7 @@
                             <ListView ItemsSource="{x:Bind Path=m_seasonReviewViewModel.Items, Mode=OneWay}" SelectionMode="None">
                                 <ListView.Header>
                                     <StackPanel Margin="0,8">
-                                        <my:RatingControl
+                                        <muxc:RatingControl
                                             Caption="{x:Bind Path=m_viewModel.Detail.Rating.Score, Mode=OneWay}"
                                             FontSize="36"
                                             IsReadOnly="True"
@@ -626,7 +626,7 @@
 
                                                 </StackPanel>
                                                 <Viewbox Grid.Column="2" Height="20">
-                                                    <my:RatingControl IsReadOnly="True" Value="{x:Bind Path=Score5}" />
+                                                    <muxc:RatingControl IsReadOnly="True" Value="{x:Bind Path=Score5}" />
                                                 </Viewbox>
                                             </Grid>
                                             <TextBlock

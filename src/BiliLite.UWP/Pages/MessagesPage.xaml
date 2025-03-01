@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:messages="using:BiliLite.ViewModels.Messages"
-    xmlns:mucx="using:Microsoft.UI.Xaml.Controls"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:controls="using:BiliLite.Controls"
     xmlns:fontAwesome5="using:FontAwesome5"
     xmlns:viewModels="using:BiliLite.ViewModels"
@@ -96,7 +96,7 @@
                                             </Ellipse>
                                             <TextBlock Grid.Column="1" Text="{x:Bind Title}"></TextBlock>
 
-                                            <mucx:InfoBadge Grid.Column="2" 
+                                            <muxc:InfoBadge Grid.Column="2" 
                                                         Grid.Row="0" 
                                                         Value="{x:Bind UnreadMsgCount,Mode=OneWay}" 
                                                         Visibility="{x:Bind HasUnreadMsg,Mode=OneWay}"/>

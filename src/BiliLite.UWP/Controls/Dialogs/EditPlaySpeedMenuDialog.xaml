@@ -2,10 +2,10 @@
     x:Class="BiliLite.Controls.Dialogs.EditPlaySpeedMenuDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:BiliLite.Controls.Dialogs"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:player="using:BiliLite.Models.Common.Player"
     Title="自定义播放倍速"
     Background="{ThemeResource SystemControlAcrylicElementBrush}"
@@ -70,7 +70,7 @@
                 Tapped="BtnAddPlaySpeed_OnTapped">
                 添加
             </Button>
-            <controls:NumberBox
+            <muxc:NumberBox
                 Grid.Column="1"
                 MinWidth="0.01"
                 Maximum="20"

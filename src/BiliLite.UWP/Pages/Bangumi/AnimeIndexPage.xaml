@@ -7,10 +7,10 @@
     xmlns:fa="using:FontAwesome5"
     xmlns:local="using:BiliLite.Pages.Bangumi"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pages="using:BiliLite.Pages"
     xmlns:season="using:BiliLite.Models.Common.Season"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     Background="Transparent"
     mc:Ignorable="d">
     <Grid>

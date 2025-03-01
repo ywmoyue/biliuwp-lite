@@ -7,16 +7,16 @@
     xmlns:fa="using:FontAwesome5"
     xmlns:local="using:BiliLite"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:muxm="using:Microsoft.UI.Xaml.Media"
     xmlns:pages="using:BiliLite.Pages"
-    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
-    winui:BackdropMaterial.ApplyToRootOrPageBackground="True"
+    muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
     Loaded="MainPage_OnLoaded"
     mc:Ignorable="d">
 
     <Grid>
         <Grid x:Name="CustomDragRegion" Width="{Binding ElementName=AvailableDragRegion, Path=Width}" />
-        <winui:TabView
+        <muxc:TabView
             x:Name="tabView"
             VerticalAlignment="Stretch"
             VerticalContentAlignment="Stretch"
@@ -28,7 +28,7 @@
             TabCloseRequested="TabView_TabCloseRequested"
             TabDragCompleted="TabView_TabDragCompleted"
             TabWidthMode="SizeToContent">
-            <winui:TabView.KeyboardAccelerators>
+            <muxc:TabView.KeyboardAccelerators>
                 <KeyboardAccelerator
                     Key="T"
                     Invoked="NewTabKeyboardAccelerator_Invoked"
@@ -37,22 +37,22 @@
                     Key="W"
                     Invoked="CloseSelectedTabKeyboardAccelerator_Invoked"
                     Modifiers="Control" />
-            </winui:TabView.KeyboardAccelerators>
-            <winui:TabView.TabItems>
-                <winui:TabViewItem Header="首页" IsClosable="False">
-                    <winui:TabViewItem.IconSource>
-                        <winui:SymbolIconSource Symbol="Home" />
-                    </winui:TabViewItem.IconSource>
-                </winui:TabViewItem>
-            </winui:TabView.TabItems>
+            </muxc:TabView.KeyboardAccelerators>
+            <muxc:TabView.TabItems>
+                <muxc:TabViewItem Header="首页" IsClosable="False">
+                    <muxc:TabViewItem.IconSource>
+                        <muxc:SymbolIconSource Symbol="Home" />
+                    </muxc:TabViewItem.IconSource>
+                </muxc:TabViewItem>
+            </muxc:TabView.TabItems>
 
-            <winui:TabView.TabStripHeader>
+            <muxc:TabView.TabStripHeader>
                 <Grid x:Name="ShellTitlebarInset" />
-            </winui:TabView.TabStripHeader>
-            <winui:TabView.TabStripFooter>
+            </muxc:TabView.TabStripHeader>
+            <muxc:TabView.TabStripFooter>
                 <Grid x:Name="AvailableDragRegion" Background="Transparent" />
-            </winui:TabView.TabStripFooter>
-        </winui:TabView>
+            </muxc:TabView.TabStripFooter>
+        </muxc:TabView>
         <Border
             x:Name="MiniWindowsTitleBar"
             Height="36"

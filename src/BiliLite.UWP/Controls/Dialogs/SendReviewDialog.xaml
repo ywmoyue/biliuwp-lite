@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:BiliLite.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:my="using:Microsoft.UI.Xaml.Controls"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     Title="点评"
     Background="{ThemeResource SystemControlAcrylicElementBrush}"
     CloseButtonStyle="{StaticResource DefaultButtonStyle}"
@@ -21,7 +21,7 @@
         <SolidColorBrush x:Key="RatingControlSelectedForeground" Color="Orange" />
     </ContentDialog.Resources>
     <StackPanel>
-        <my:RatingControl
+        <muxc:RatingControl
             x:Name="rating"
             HorizontalAlignment="Left"
             ValueChanged="RatingControl_ValueChanged"

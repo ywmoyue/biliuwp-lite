@@ -9,8 +9,8 @@
     xmlns:local="using:BiliLite.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:modules="using:BiliLite.Modules"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pages="using:BiliLite.Pages.Home"
-    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     Background="Transparent"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
@@ -21,7 +21,7 @@
     </Page.Resources>
 
     <Grid>
-        <winui:NavigationView
+        <muxc:NavigationView
             x:Name="navView"
             IsBackButtonVisible="Collapsed"
             IsSettingsVisible="False"
@@ -29,7 +29,7 @@
             PaneDisplayMode="Top"
             SelectedItem="{x:Bind Path=m_viewModel.SelectItem, Mode=TwoWay}"
             SelectionChanged="navView_SelectionChanged">
-            <winui:NavigationView.AutoSuggestBox>
+            <muxc:NavigationView.AutoSuggestBox>
                 <AutoSuggestBox
                     x:Name="SearchBox"
                     MinWidth="140"
@@ -38,8 +38,8 @@
                     QueryIcon="Find"
                     QuerySubmitted="SearchBox_QuerySubmitted"
                     TextChanged="SearchBox_TextChanged" />
-            </winui:NavigationView.AutoSuggestBox>
-            <winui:NavigationView.PaneFooter>
+            </muxc:NavigationView.AutoSuggestBox>
+            <muxc:NavigationView.PaneFooter>
                 <StackPanel Orientation="Horizontal">
                     <Button
                         x:Name="btnUser"
@@ -106,7 +106,7 @@
                                             Foreground="Gray"><Run Text="{x:Bind Path=m_viewModel.Profile.current_exp, Mode=OneWay}" />
                                             /<Run Text="{x:Bind Path=m_viewModel.Profile.next_exp, Mode=OneWay}" /></TextBlock>
                                     </Grid>
-                                    <winui:ProgressBar
+                                    <muxc:ProgressBar
                                         Margin="12,4"
                                         Maximum="{x:Bind Path=m_viewModel.Profile.next_exp, Mode=OneWay}"
                                         Value="{x:Bind Path=m_viewModel.Profile.current_exp, Mode=OneWay}" />
@@ -295,7 +295,7 @@
                         Icon="Contact"
                         Visibility="{x:Bind Path=m_viewModel.IsLogin, Converter={StaticResource DisplayConvert}, Mode=OneWay}" />
                     <Grid>
-                        <winui:InfoBadge
+                        <muxc:InfoBadge
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"
                             Visibility="{x:Bind Path=m_downloadPageViewModel.Downloadings.Count, Mode=OneWay, Converter={StaticResource countDisplayConvert}}"
@@ -314,24 +314,24 @@
                         Click="btnSetting_Click"
                         Icon="Setting" />
                 </StackPanel>
-            </winui:NavigationView.PaneFooter>
-            <winui:NavigationView.MenuItemTemplate>
+            </muxc:NavigationView.PaneFooter>
+            <muxc:NavigationView.MenuItemTemplate>
                 <DataTemplate x:DataType="home:HomeNavItemViewModel">
-                    <winui:NavigationViewItem
+                    <muxc:NavigationViewItem
                         Content="{x:Bind Title}"
                         ToolTipService.ToolTip="{x:Bind Title}"
                         UseSystemFocusVisuals="False"
                         Visibility="{x:Bind Path=Show, Mode=OneWay}">
-                        <winui:NavigationViewItem.Icon>
+                        <muxc:NavigationViewItem.Icon>
                             <fa:FontAwesome Margin="0,2,0,0" Icon="{x:Bind Icon}" />
-                        </winui:NavigationViewItem.Icon>
-                    </winui:NavigationViewItem>
+                        </muxc:NavigationViewItem.Icon>
+                    </muxc:NavigationViewItem>
                 </DataTemplate>
 
-            </winui:NavigationView.MenuItemTemplate>
+            </muxc:NavigationView.MenuItemTemplate>
 
             <Frame x:Name="frame" />
-        </winui:NavigationView>
+        </muxc:NavigationView>
 
         <!--<Grid x:Name="appbarTitle" Visibility="{Binding ElementName=navView,Path=IsPaneOpen}" Height="36" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="48 0 0 0">
             <TextBlock VerticalAlignment="Center">哔哩哔哩Lite</TextBlock>

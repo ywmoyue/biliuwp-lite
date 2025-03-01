@@ -11,8 +11,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:BiliLite.Modules"
     xmlns:models="using:BiliLite.Models"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     Background="Transparent"
     mc:Ignorable="d">
     <Page.Resources>
@@ -81,7 +81,7 @@
         </DataTemplate>
     </Page.Resources>
     <Grid>
-        <winui:RefreshContainer RefreshRequested="RefreshContainer_RefreshRequested">
+        <muxc:RefreshContainer RefreshRequested="RefreshContainer_RefreshRequested">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel Padding="15,0">
                     <controls:Carousel
@@ -445,7 +445,7 @@
                     </ItemsControl>
                 </StackPanel>
             </ScrollViewer>
-        </winui:RefreshContainer>
+        </muxc:RefreshContainer>
         <Button
             x:Name="btnRefresh"
             Click="btnRefresh_Click"
