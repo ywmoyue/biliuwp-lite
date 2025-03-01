@@ -347,9 +347,7 @@
                     Grid.Row="2"
                     IsItemClickEnabled="True"
                     ItemClick="NotePicturesView_ItemClick"
-                    ItemHeight="250"
                     ItemsSource="{x:Bind Path=Content.Pictures}"
-                    OneRowModeEnabled="True"
                     SelectionMode="None"
                     StretchContentForSingleRow="False"
                     Visibility="{x:Bind Path=ShowPics}">
@@ -360,8 +358,7 @@
                                 Margin="10"
                                 CornerRadius="{StaticResource ControlCornerRadius}"
                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                Source="{x:Bind ImgSrc}"
-                                Stretch="Fill" />
+                                Source="{x:Bind ImgSrc}" />
                         </DataTemplate>
                     </toolkit:AdaptiveGridView.ItemTemplate>
                 </toolkit:AdaptiveGridView>
