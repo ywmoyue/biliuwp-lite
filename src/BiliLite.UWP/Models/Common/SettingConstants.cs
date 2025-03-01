@@ -28,7 +28,7 @@ namespace BiliLite.Models.Common
             [SettingDefaultValue]
             public const int DEFAULT_THEME_COLOR = 0;
 
-            [SettingKey(typeof(string), useSqlDb: true)]
+            [SettingKey(typeof(object), useSqlDb: true)]
             public const string THEME_COLOR_MENU = "themeColorMenu";
 
             /// <summary>
