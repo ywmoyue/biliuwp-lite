@@ -7,20 +7,17 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    xmlns:font="using:FontAwesome5" xmlns:converters="using:CommunityToolkit.WinUI.Converters"
-    xmlns:home="using:BiliLite.Models.Common.Home" xmlns:theme="using:BiliLite.Models.Theme" xmlns:localconverters="using:BiliLite.Converters" xmlns:controls1="using:BiliLite.Controls"
+    xmlns:font="using:FontAwesome5"
+    xmlns:home="using:BiliLite.Models.Common.Home" xmlns:theme="using:BiliLite.Models.Theme"  xmlns:controls1="using:BiliLite.Controls"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400" x:Name="rootPanel">
     <UserControl.Resources>
-        <localconverters:ColorConvert x:Key="colorConvert" />
-        <localconverters:BooleanConvert x:Name="boolConvert" />
-        <converters:ColorToDisplayNameConverter x:Key="ColorToDisplayNameConverter" />
         <DataTemplate x:Key="ColorItemTemplate" x:DataType="theme:ColorItemModel">
             <Border Padding="0"
                 Width="40"
                 Height="40"
-                Background="{x:Bind Color, Converter={StaticResource colorConvert}}"
+                Background="{x:Bind Color, Converter={StaticResource ColorConvert}}"
                 CornerRadius="{StaticResource ControlCornerRadius}"
                 ToolTipService.ToolTip="{x:Bind Name}">
                 <SymbolIcon Symbol="Accept" Visibility="{x:Bind IsActived, Mode=OneWay}" />
@@ -105,7 +102,7 @@
                                     <Button.Flyout>
                                         <Flyout Placement="LeftEdgeAlignedBottom">
                                             <StackPanel>
-                                                <Grid VerticalAlignment="Top" Height="40" Background="{Binding Color,ElementName=cpAddColor,Converter={StaticResource colorConvert}}" CornerRadius="{StaticResource ControlCornerRadius}">
+                                                <Grid VerticalAlignment="Top" Height="40" Background="{Binding Color,ElementName=cpAddColor,Converter={StaticResource ColorConvert}}" CornerRadius="{StaticResource ControlCornerRadius}">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition/>
                                                         <ColumnDefinition/>
@@ -133,13 +130,13 @@
                                         </Flyout>
                                     </Button.Flyout>
                                 </Button>
-                                <Button ToolTipService.ToolTip="跟随系统" x:Name="btnSysColor" Style="{StaticResource AccentButtonStyle}" Background="{x:Bind m_UISettingsControlViewModel.SysColor, Converter={StaticResource colorConvert}}" Width="40" Height="40" Margin="7 0 0 0" Padding="0">
+                                <Button ToolTipService.ToolTip="跟随系统" x:Name="btnSysColor" Style="{StaticResource AccentButtonStyle}" Background="{x:Bind m_UISettingsControlViewModel.SysColor, Converter={StaticResource ColorConvert}}" Width="40" Height="40" Margin="7 0 0 0" Padding="0">
                                     <Button.Resources>
                                         <!--<StaticResource x:Key="AccentButtonBackground" ResourceKey="SystemAccent" />-->
                                         <StaticResource x:Key="AccentButtonBackgroundPointerOver" ResourceKey="SystemAccentColorLight1" />
                                         <StaticResource x:Key="AccentButtonBackgroundPressed" ResourceKey="SystemAccentColorDark1" />
                                     </Button.Resources>
-                                    <SymbolIcon Visibility="{Binding SelectedIndex, ElementName=gvColor,Converter={StaticResource boolConvert},ConverterParameter=-1}" Symbol="Accept"/>
+                                    <SymbolIcon Visibility="{Binding SelectedIndex, ElementName=gvColor,Converter={StaticResource BooleanConvert},ConverterParameter=-1}" Symbol="Accept"/>
                                 </Button>
                             </StackPanel>
                         </Grid>

@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:converters="using:BiliLite.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fontAwesome5="using:FontAwesome5"
     xmlns:local="using:BiliLite.Controls.Dynamic"
@@ -12,8 +11,6 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <converters:CountOrTextConvert x:Name="countConvert" />
-        <converters:ColorConvert x:Name="colorConvert" />
         <Style BasedOn="{StaticResource DefaultHyperlinkButtonStyle}" TargetType="HyperlinkButton" />
     </UserControl.Resources>
 
@@ -98,7 +95,7 @@
                     VerticalAlignment="Center"
                     FontFamily="{StaticResource FansNum}"
                     FontSize="12"
-                    Foreground="{x:Bind Path=ViewModel.Author.DecorateCard.Fan.Color, Mode=OneWay, Converter={StaticResource colorConvert}}"
+                    Foreground="{x:Bind Path=ViewModel.Author.DecorateCard.Fan.Color, Mode=OneWay, Converter={StaticResource ColorConvert}}"
                     Text="{x:Bind Path=ViewModel.Author.DecorateCard.Fan.NumberStr, Mode=OneWay}"
                     Visibility="{x:Bind Path=ViewModel.Author.DecorateCard.Fan, Mode=OneWay, Converter={StaticResource DisplayConvert}}" />
             </Grid>
@@ -202,7 +199,7 @@
                             Margin="0,2,0,0"
                             FontSize="14"
                             Icon="Solid_Share" />
-                        <TextBlock Margin="8,0,0,0" Text="{x:Bind Path=ViewModel.Stat.Repost, Mode=OneWay, Converter={StaticResource countConvert}, ConverterParameter='转发'}" />
+                        <TextBlock Margin="8,0,0,0" Text="{x:Bind Path=ViewModel.Stat.Repost, Mode=OneWay, Converter={StaticResource CountOrTextConvert}, ConverterParameter='转发'}" />
                     </StackPanel>
                 </Button>
                 <Button Command="{x:Bind Path=ViewModel.Parent.CommentCommand, Mode=OneWay}" CommandParameter="{x:Bind Path=ViewModel, Mode=OneWay}">
@@ -211,7 +208,7 @@
                             Margin="0,2,0,0"
                             FontSize="14"
                             Icon="Regular_Comment" />
-                        <TextBlock Margin="8,0,0,0" Text="{x:Bind Path=ViewModel.Stat.Reply, Mode=OneWay, Converter={StaticResource countConvert}, ConverterParameter='评论'}" />
+                        <TextBlock Margin="8,0,0,0" Text="{x:Bind Path=ViewModel.Stat.Reply, Mode=OneWay, Converter={StaticResource CountOrTextConvert}, ConverterParameter='评论'}" />
                     </StackPanel>
                 </Button>
                 <Button
@@ -223,7 +220,7 @@
                             Margin="0,2,0,0"
                             FontSize="14"
                             Icon="Regular_ThumbsUp" />
-                        <TextBlock Margin="8,0,0,0" Text="{x:Bind Path=ViewModel.LikeCount, Mode=OneWay, Converter={StaticResource countConvert}, ConverterParameter='点赞'}" />
+                        <TextBlock Margin="8,0,0,0" Text="{x:Bind Path=ViewModel.LikeCount, Mode=OneWay, Converter={StaticResource CountOrTextConvert}, ConverterParameter='点赞'}" />
                     </StackPanel>
                 </Button>
                 <Button
@@ -239,7 +236,7 @@
                         <TextBlock
                             Margin="8,0,0,0"
                             Foreground="{ThemeResource SystemAccentColor}"
-                            Text="{x:Bind Path=ViewModel.LikeCount, Mode=OneWay, Converter={StaticResource countConvert}, ConverterParameter='点赞'}" />
+                            Text="{x:Bind Path=ViewModel.LikeCount, Mode=OneWay, Converter={StaticResource CountOrTextConvert}, ConverterParameter='点赞'}" />
                     </StackPanel>
                 </Button>
             </StackPanel>
