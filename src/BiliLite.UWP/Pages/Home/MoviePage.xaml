@@ -492,7 +492,7 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="home:CinemaHomeFallViewModel">
                                 <StackPanel>
-                                    <toolkit:AdaptiveGridView
+                                    <controls:MyAdaptiveGridView
                                         Margin="-5,0,0,0"
                                         DesiredWidth="540"
                                         IsItemClickEnabled="True"
@@ -504,7 +504,7 @@
                                         ScrollViewer.VerticalScrollMode="Disabled"
                                         SelectionMode="None"
                                         StretchContentForSingleRow="False">
-                                        <toolkit:AdaptiveGridView.Header>
+                                        <controls:MyAdaptiveGridView.Header>
                                             <Grid>
                                                 <TextBlock
                                                     Margin="4,0,0,0"
@@ -512,8 +512,8 @@
                                                     FontWeight="Bold"
                                                     Text="{Binding Title}" />
                                             </Grid>
-                                        </toolkit:AdaptiveGridView.Header>
-                                        <toolkit:AdaptiveGridView.ItemTemplate>
+                                        </controls:MyAdaptiveGridView.Header>
+                                        <controls:MyAdaptiveGridView.ItemTemplate>
                                             <DataTemplate x:DataType="homeModel:CinemaHomeFallItemModel">
                                                 <Grid>
                                                     <Grid.RowDefinitions>
@@ -545,8 +545,8 @@
                                                         TextWrapping="Wrap" />-->
                                                 </Grid>
                                             </DataTemplate>
-                                        </toolkit:AdaptiveGridView.ItemTemplate>
-                                    </toolkit:AdaptiveGridView>
+                                        </controls:MyAdaptiveGridView.ItemTemplate>
+                                    </controls:MyAdaptiveGridView>
                                     <Grid>
                                         <HyperlinkButton
                                             x:Name="btnLoadMoreFall"
