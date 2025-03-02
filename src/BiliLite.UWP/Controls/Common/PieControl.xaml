@@ -2,64 +2,72 @@
     x:Class="BiliLite.Controls.Common.PieControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BiliLite.Controls.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BiliLite.Controls.Common"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
     d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignWidth="400"
+    mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
             <Storyboard x:Name="ExtentPieStory">
-                <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True" 
-                                               Storyboard.TargetName="PieExtendGrid" 
-                                               Storyboard.TargetProperty="(FrameworkElement.Width)">
-                    <EasingDoubleKeyFrame KeyTime="00:00:00" Value="{x:Bind m_viewModel.PieExtendGridLittleWidth,Mode=OneWay}"/>
-                    <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="{x:Bind m_viewModel.PieExtendGridExtendWidth,Mode=OneWay}"/>
+                <DoubleAnimationUsingKeyFrames
+                    EnableDependentAnimation="True"
+                    Storyboard.TargetName="PieExtendGrid"
+                    Storyboard.TargetProperty="(FrameworkElement.Width)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00" Value="{x:Bind m_viewModel.PieExtendGridLittleWidth, Mode=OneWay}" />
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="{x:Bind m_viewModel.PieExtendGridExtendWidth, Mode=OneWay}" />
                 </DoubleAnimationUsingKeyFrames>
-                <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True" 
-                                               Storyboard.TargetName="PieExtendGrid" 
-                                               Storyboard.TargetProperty="(FrameworkElement.Height)">
-                    <EasingDoubleKeyFrame KeyTime="00:00:00" Value="{x:Bind m_viewModel.PieExtendGridLittleHeight,Mode=OneWay}"/>
-                    <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="{x:Bind m_viewModel.PieExtendGridExtendHeight,Mode=OneWay}"/>
+                <DoubleAnimationUsingKeyFrames
+                    EnableDependentAnimation="True"
+                    Storyboard.TargetName="PieExtendGrid"
+                    Storyboard.TargetProperty="(FrameworkElement.Height)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00" Value="{x:Bind m_viewModel.PieExtendGridLittleHeight, Mode=OneWay}" />
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="{x:Bind m_viewModel.PieExtendGridExtendHeight, Mode=OneWay}" />
                 </DoubleAnimationUsingKeyFrames>
-                <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True" 
-                                               Storyboard.TargetName="PieExtendSubGrid" 
-                                               Storyboard.TargetProperty="(FrameworkElement.Width)">
-                    <EasingDoubleKeyFrame KeyTime="00:00:00" Value="{x:Bind m_viewModel.PieExtendGridLittleHeight,Mode=OneWay}"/>
-                    <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="{x:Bind m_viewModel.PieExtendGridExtendHeight,Mode=OneWay}"/>
+                <DoubleAnimationUsingKeyFrames
+                    EnableDependentAnimation="True"
+                    Storyboard.TargetName="PieExtendSubGrid"
+                    Storyboard.TargetProperty="(FrameworkElement.Width)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00" Value="{x:Bind m_viewModel.PieExtendGridLittleHeight, Mode=OneWay}" />
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="{x:Bind m_viewModel.PieExtendGridExtendHeight, Mode=OneWay}" />
                 </DoubleAnimationUsingKeyFrames>
-                <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True" 
-                                               Storyboard.TargetName="PieExtendSubGrid" 
-                                               Storyboard.TargetProperty="(FrameworkElement.Height)">
-                    <EasingDoubleKeyFrame KeyTime="00:00:00" Value="{x:Bind m_viewModel.PieExtendGridLittleHeight,Mode=OneWay}"/>
-                    <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="{x:Bind m_viewModel.PieExtendGridExtendHeight,Mode=OneWay}"/>
+                <DoubleAnimationUsingKeyFrames
+                    EnableDependentAnimation="True"
+                    Storyboard.TargetName="PieExtendSubGrid"
+                    Storyboard.TargetProperty="(FrameworkElement.Height)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00" Value="{x:Bind m_viewModel.PieExtendGridLittleHeight, Mode=OneWay}" />
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="{x:Bind m_viewModel.PieExtendGridExtendHeight, Mode=OneWay}" />
                 </DoubleAnimationUsingKeyFrames>
             </Storyboard>
             <Storyboard x:Name="ClosePieStory">
-                <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True" 
-                                               Storyboard.TargetName="PieExtendGrid" 
-                                               Storyboard.TargetProperty="(FrameworkElement.Width)">
-                    <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="{x:Bind m_viewModel.PieExtendGridLittleWidth,Mode=OneWay}"/>
-                    <EasingDoubleKeyFrame KeyTime="00:00:00" Value="{x:Bind m_viewModel.PieExtendGridExtendWidth,Mode=OneWay}"/>
+                <DoubleAnimationUsingKeyFrames
+                    EnableDependentAnimation="True"
+                    Storyboard.TargetName="PieExtendGrid"
+                    Storyboard.TargetProperty="(FrameworkElement.Width)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="{x:Bind m_viewModel.PieExtendGridLittleWidth, Mode=OneWay}" />
+                    <EasingDoubleKeyFrame KeyTime="00:00:00" Value="{x:Bind m_viewModel.PieExtendGridExtendWidth, Mode=OneWay}" />
                 </DoubleAnimationUsingKeyFrames>
-                <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True" 
-                                               Storyboard.TargetName="PieExtendGrid" 
-                                               Storyboard.TargetProperty="(FrameworkElement.Height)">
-                    <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="{x:Bind m_viewModel.PieExtendGridLittleHeight,Mode=OneWay}"/>
-                    <EasingDoubleKeyFrame KeyTime="00:00:00" Value="{x:Bind m_viewModel.PieExtendGridExtendHeight,Mode=OneWay}"/>
+                <DoubleAnimationUsingKeyFrames
+                    EnableDependentAnimation="True"
+                    Storyboard.TargetName="PieExtendGrid"
+                    Storyboard.TargetProperty="(FrameworkElement.Height)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="{x:Bind m_viewModel.PieExtendGridLittleHeight, Mode=OneWay}" />
+                    <EasingDoubleKeyFrame KeyTime="00:00:00" Value="{x:Bind m_viewModel.PieExtendGridExtendHeight, Mode=OneWay}" />
                 </DoubleAnimationUsingKeyFrames>
-                <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True" 
-                                               Storyboard.TargetName="PieExtendSubGrid" 
-                                               Storyboard.TargetProperty="(FrameworkElement.Width)">
-                    <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="{x:Bind m_viewModel.PieExtendGridLittleHeight,Mode=OneWay}"/>
-                    <EasingDoubleKeyFrame KeyTime="00:00:00" Value="{x:Bind m_viewModel.PieExtendGridExtendHeight,Mode=OneWay}"/>
+                <DoubleAnimationUsingKeyFrames
+                    EnableDependentAnimation="True"
+                    Storyboard.TargetName="PieExtendSubGrid"
+                    Storyboard.TargetProperty="(FrameworkElement.Width)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="{x:Bind m_viewModel.PieExtendGridLittleHeight, Mode=OneWay}" />
+                    <EasingDoubleKeyFrame KeyTime="00:00:00" Value="{x:Bind m_viewModel.PieExtendGridExtendHeight, Mode=OneWay}" />
                 </DoubleAnimationUsingKeyFrames>
-                <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True" 
-                                               Storyboard.TargetName="PieExtendSubGrid" 
-                                               Storyboard.TargetProperty="(FrameworkElement.Height)">
-                    <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="{x:Bind m_viewModel.PieExtendGridLittleHeight,Mode=OneWay}"/>
-                    <EasingDoubleKeyFrame KeyTime="00:00:00" Value="{x:Bind m_viewModel.PieExtendGridExtendHeight,Mode=OneWay}"/>
+                <DoubleAnimationUsingKeyFrames
+                    EnableDependentAnimation="True"
+                    Storyboard.TargetName="PieExtendSubGrid"
+                    Storyboard.TargetProperty="(FrameworkElement.Height)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="{x:Bind m_viewModel.PieExtendGridLittleHeight, Mode=OneWay}" />
+                    <EasingDoubleKeyFrame KeyTime="00:00:00" Value="{x:Bind m_viewModel.PieExtendGridExtendHeight, Mode=OneWay}" />
                 </DoubleAnimationUsingKeyFrames>
             </Storyboard>
         </ResourceDictionary>
@@ -67,84 +75,108 @@
 
     <Grid x:Name="PieControlGrid" HorizontalAlignment="Right">
         <Grid.RenderTransform>
-            <CompositeTransform TranslateY="200"/>
+            <CompositeTransform TranslateY="200" />
         </Grid.RenderTransform>
-        <Grid Height="{x:Bind m_viewModel.PieExtendGridLittleHeight,Mode=OneWay}" 
-              Width="{x:Bind m_viewModel.PieExtendGridLittleWidth,Mode=OneWay}" >
-            <Button CornerRadius="50" 
-                    Height="{x:Bind m_viewModel.LittleBtnHeight}" 
-                    Width="{x:Bind m_viewModel.LittleBtnWidth}" 
-                    Background="{ThemeResource PieControlColor}"
-                    Tapped="BtnExtentPie_OnTapped">
-                <FontIcon Foreground="{ThemeResource PieControlIconColor}"
-                          FontFamily="Segoe MDL2 Assets"
-                          Glyph="&#xE760;">
+        <Grid Width="{x:Bind m_viewModel.PieExtendGridLittleWidth, Mode=OneWay}" Height="{x:Bind m_viewModel.PieExtendGridLittleHeight, Mode=OneWay}">
+            <Button
+                Width="{x:Bind m_viewModel.LittleBtnWidth}"
+                Height="{x:Bind m_viewModel.LittleBtnHeight}"
+                Background="{ThemeResource PieControlColor}"
+                CornerRadius="50"
+                Tapped="BtnExtentPie_OnTapped">
+                <FontIcon
+                    FontFamily="Segoe MDL2 Assets"
+                    Foreground="{ThemeResource PieControlIconColor}"
+                    Glyph="&#xE760;">
                     <FontIcon.RenderTransform>
-                        <CompositeTransform TranslateX="-9" ScaleX="0.8" ScaleY="0.8" TranslateY="3"/>
+                        <CompositeTransform
+                            ScaleX="0.8"
+                            ScaleY="0.8"
+                            TranslateX="-9"
+                            TranslateY="3" />
                     </FontIcon.RenderTransform>
                 </FontIcon>
             </Button>
         </Grid>
-        <Grid x:Name="PieExtendGrid"
-              Height="{x:Bind m_viewModel.PieExtendGridLittleHeight,Mode=OneWay}" 
-              Width="{x:Bind m_viewModel.PieExtendGridLittleWidth,Mode=OneWay}" 
-              Visibility="{x:Bind m_viewModel.ExtendVisibility,Mode=OneWay}">
-            <Grid x:Name="PieExtendSubGrid" Background="{ThemeResource PieControlColor}" 
-                  Height="{x:Bind m_viewModel.PieExtendGridLittleHeight,Mode=OneWay}" 
-                  Width="{x:Bind m_viewModel.PieExtendGridLittleHeight,Mode=OneWay}" 
-                  CornerRadius="999">
-                <Button x:Name="SecondBtn" CornerRadius="999"
-                        Tapped="SecondBtn_OnTapped" Background="{ThemeResource PieControlColor}"
-                  Height="50" 
-                  Width="50" RenderTransformOrigin="0.5,0.5" >
+        <Grid
+            x:Name="PieExtendGrid"
+            Width="{x:Bind m_viewModel.PieExtendGridLittleWidth, Mode=OneWay}"
+            Height="{x:Bind m_viewModel.PieExtendGridLittleHeight, Mode=OneWay}"
+            Visibility="{x:Bind m_viewModel.ExtendVisibility, Mode=OneWay}">
+            <Grid
+                x:Name="PieExtendSubGrid"
+                Width="{x:Bind m_viewModel.PieExtendGridLittleHeight, Mode=OneWay}"
+                Height="{x:Bind m_viewModel.PieExtendGridLittleHeight, Mode=OneWay}"
+                Background="{ThemeResource PieControlColor}"
+                CornerRadius="999">
+                <Button
+                    x:Name="SecondBtn"
+                    Width="50"
+                    Height="50"
+                    Background="{ThemeResource PieControlColor}"
+                    CornerRadius="999"
+                    RenderTransformOrigin="0.5,0.5"
+                    Tapped="SecondBtn_OnTapped">
                     <Button.RenderTransform>
-                        <CompositeTransform/>
+                        <CompositeTransform />
                     </Button.RenderTransform>
                     <ToolTipService.ToolTip>
-                        <ToolTip Content="{x:Bind SecondBtnToolTip,Mode=OneWay}" Visibility="{x:Bind SecondBtnToolTip,Converter={StaticResource DisplayConvert}}"/>
+                        <ToolTip Content="{x:Bind SecondBtnToolTip, Mode=OneWay}" Visibility="{x:Bind SecondBtnToolTip, Converter={StaticResource DisplayConvert}}" />
                     </ToolTipService.ToolTip>
-                    <ContentPresenter Padding="0 4 0 0" 
-                                      Content="{x:Bind Path=SecondBtnIcon,Mode=OneWay}"
-                                      Foreground="{ThemeResource PieControlIconColor}"></ContentPresenter>
+                    <ContentPresenter
+                        Padding="0,4,0,0"
+                        Content="{x:Bind Path=SecondBtnIcon, Mode=OneWay}"
+                        Foreground="{ThemeResource PieControlIconColor}" />
                 </Button>
-                <Button x:Name="ThirdBtn" CornerRadius="999"
-                        Tapped="ThirdBtn_OnTapped" Background="{ThemeResource PieControlColor}"
-                  Height="50" 
-                  Width="50" >
+                <Button
+                    x:Name="ThirdBtn"
+                    Width="50"
+                    Height="50"
+                    Background="{ThemeResource PieControlColor}"
+                    CornerRadius="999"
+                    Tapped="ThirdBtn_OnTapped">
                     <Button.RenderTransform>
-                        <CompositeTransform TranslateX="40" TranslateY="50"/>
+                        <CompositeTransform TranslateX="40" TranslateY="50" />
                     </Button.RenderTransform>
                     <ToolTipService.ToolTip>
-                        <ToolTip Content="{x:Bind ThirdBtnToolTip,Mode=OneWay}" Visibility="{x:Bind ThirdBtnToolTip,Converter={StaticResource DisplayConvert}}"/>
+                        <ToolTip Content="{x:Bind ThirdBtnToolTip, Mode=OneWay}" Visibility="{x:Bind ThirdBtnToolTip, Converter={StaticResource DisplayConvert}}" />
                     </ToolTipService.ToolTip>
-                    <ContentPresenter Padding="0 4 0 0" 
-                                      Content="{x:Bind Path=ThirdBtnIcon,Mode=OneWay}"
-                                      Foreground="{ThemeResource PieControlIconColor}"></ContentPresenter>
+                    <ContentPresenter
+                        Padding="0,4,0,0"
+                        Content="{x:Bind Path=ThirdBtnIcon, Mode=OneWay}"
+                        Foreground="{ThemeResource PieControlIconColor}" />
                 </Button>
-                <Button x:Name="FirstBtn" CornerRadius="999"
-                        Tapped="FirstBtn_OnTapped" Background="{ThemeResource PieControlColor}"
-                  Height="50" 
-                  Width="50" >
+                <Button
+                    x:Name="FirstBtn"
+                    Width="50"
+                    Height="50"
+                    Background="{ThemeResource PieControlColor}"
+                    CornerRadius="999"
+                    Tapped="FirstBtn_OnTapped">
                     <Button.RenderTransform>
-                        <CompositeTransform TranslateX="40" TranslateY="-50"/>
+                        <CompositeTransform TranslateX="40" TranslateY="-50" />
                     </Button.RenderTransform>
                     <ToolTipService.ToolTip>
-                        <ToolTip Content="{x:Bind FirstBtnToolTip,Mode=OneWay}" Visibility="{x:Bind FirstBtnToolTip,Converter={StaticResource DisplayConvert}}"/>
+                        <ToolTip Content="{x:Bind FirstBtnToolTip, Mode=OneWay}" Visibility="{x:Bind FirstBtnToolTip, Converter={StaticResource DisplayConvert}}" />
                     </ToolTipService.ToolTip>
-                    <ContentPresenter Padding="0 4 0 0" 
-                                      Content="{x:Bind Path=FirstBtnIcon,Mode=OneWay}" 
-                                      Foreground="{ThemeResource PieControlIconColor}"></ContentPresenter>
+                    <ContentPresenter
+                        Padding="0,4,0,0"
+                        Content="{x:Bind Path=FirstBtnIcon, Mode=OneWay}"
+                        Foreground="{ThemeResource PieControlIconColor}" />
                 </Button>
-                <Button CornerRadius="999"
-                  Height="50"  Background="{ThemeResource PieControlColor}"
-                  Width="50" 
-                  Click="BtnClosePie_Click">
+                <Button
+                    Width="50"
+                    Height="50"
+                    Background="{ThemeResource PieControlColor}"
+                    Click="BtnClosePie_Click"
+                    CornerRadius="999">
                     <Button.RenderTransform>
-                        <CompositeTransform TranslateX="40"/>
+                        <CompositeTransform TranslateX="40" />
                     </Button.RenderTransform>
-                    <FontIcon Foreground="{ThemeResource PieControlIconColor}"
-                              FontFamily="Segoe MDL2 Assets"
-                              Glyph="&#xE761;"></FontIcon>
+                    <FontIcon
+                        FontFamily="Segoe MDL2 Assets"
+                        Foreground="{ThemeResource PieControlIconColor}"
+                        Glyph="&#xE761;" />
                 </Button>
             </Grid>
         </Grid>
