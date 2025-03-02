@@ -40,6 +40,15 @@ namespace BiliLite.Controls.Settings
                     m_mapper.Map<List<FilterRuleViewModel>>(m_contentFilterService.DynamicFilterRules)
                 );
             InitializeComponent();
+            FilterRecommendLiveSwitch.IsOn =
+                SettingService.GetValue(SettingConstants.Filter.FILTER_RECOMMEND_LIVE, false);
+            FilterRecommendLiveSwitch.Loaded += (_, _) =>
+            {
+                FilterRecommendLiveSwitch.Toggled += (_, _) =>
+                {
+                    SettingService.SetValue(SettingConstants.Filter.FILTER_RECOMMEND_LIVE, FilterRecommendLiveSwitch.IsOn);
+                };
+            };
         }
 
         private FilterRule CreateNewFilterRule(FilterRuleType filterRuleType)

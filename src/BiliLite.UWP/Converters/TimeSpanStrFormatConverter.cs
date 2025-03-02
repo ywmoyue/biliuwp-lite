@@ -38,4 +38,12 @@ public static class TimeSpanStrFormatConverter
         // 根据指定格式格式化 TimeSpan
         return timeSpan.ToString(format);
     }
+
+    public static string Convert(TimeSpan timeSpan)
+    {
+        // 根据小时是否为0来动态调整格式字符串
+        var format = timeSpan.Hours == 0 ? @"mm\:ss" : @"hh\:mm\:ss";
+        // 根据指定格式格式化 TimeSpan
+        return timeSpan.ToString(format);
+    }
 }

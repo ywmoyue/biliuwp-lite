@@ -1,4 +1,7 @@
-﻿namespace BiliLite.Models.Common.Video
+﻿using System;
+using BiliLite.Converters;
+
+namespace BiliLite.Models.Common.Video
 {
     public class VideoListItem
     {
@@ -9,5 +12,9 @@
         public string Author { get; set; }
 
         public string Cover { get; set; }
+
+        public TimeSpan? Duration { get; set; }
+
+        public string DurationStr => !Duration.HasValue ? "" : TimeSpanStrFormatConverter.Convert(Duration.Value);
     }
 }

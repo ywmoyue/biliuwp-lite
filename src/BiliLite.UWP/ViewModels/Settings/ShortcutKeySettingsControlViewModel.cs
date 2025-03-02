@@ -29,5 +29,7 @@ namespace BiliLite.ViewModels.Settings
         }
 
         public string AddShortcutFunctionTypeName { get; set; }
+
+        public double ControlWidth { get; set; }
     }
 }

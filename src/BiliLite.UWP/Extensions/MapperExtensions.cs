@@ -86,7 +86,10 @@ namespace BiliLite.Extensions
                 expression.CreateMap<MediaListItem, VideoListItem>()
                     .ForMember(dest => dest.Author,
                         opt => opt.MapFrom(src =>
-                            src.Upper.Name));
+                            src.Upper.Name))
+                    .ForMember(dest => dest.Duration,
+                        opt => opt.MapFrom(src =>
+                            TimeSpan.FromSeconds(src.Duration)));
                 expression.CreateMap<FilterRule, FilterRuleViewModel>().ReverseMap();
 
                 var danmakuModeConvertDic = new Dictionary<DanmakuLocation, DanmakuMode>()

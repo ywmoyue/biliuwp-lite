@@ -13,7 +13,6 @@ using BiliLite.Services;
 using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels;
 using BiliLite.ViewModels.Settings;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Geometry;
@@ -35,6 +34,7 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System.Display;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.Input;
 using Windows.UI.Popups;
 using Windows.UI.Text;
@@ -45,6 +45,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+using PlayInfo = BiliLite.Models.Common.Video.PlayInfo;
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
 namespace BiliLite.Controls
@@ -65,6 +66,7 @@ namespace BiliLite.Controls
         public event PropertyChangedEventHandler PropertyChanged;
         private GestureRecognizer gestureRecognizer;
         private bool m_firstMediaOpened;
+        private bool m_isLocalFileMode;
 
         private void DoPropertyChanged(string name)
         {
@@ -163,7 +165,7 @@ namespace BiliLite.Controls
                 var timeMin = SettingService.GetValue(SettingConstants.Player.AUTO_REFRESH_PLAY_URL_TIME,
                     SettingConstants.Player.DEFAULT_AUTO_REFRESH_PLAY_URL_TIME);
                 m_autoRefreshTimer = new Timer();
-                m_autoRefreshTimer.Interval = timeMin * 1000;
+                m_autoRefreshTimer.Interval = timeMin * 1000 * 60;
                 m_autoRefreshTimer.Elapsed += AutoRefreshTimer_Elapsed;
             }
 
@@ -203,21 +205,24 @@ namespace BiliLite.Controls
 
         private async void AutoRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            m_autoRefreshTimer.Stop();
-            _postion = Player.Position;
-            var info = await GetPlayUrlQualitesInfo();
-            if (!info.Success)
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, async () =>
             {
-                ShowDialog($"请求信息:\r\n{info.Message}", "读取视频播放地址失败");
-            }
-            else
-            {
-                playUrlInfo = info;
-                InitSoundQuality();
-                InitQuality();
-            }
-            Notify.ShowMessageToast("已根据设置自动刷新播放地址");
-            m_startTime = DateTime.Now;
+                m_autoRefreshTimer.Stop();
+                _postion = Player.Position;
+                var info = await GetPlayUrlQualitesInfo();
+                if (!info.Success)
+                {
+                    ShowDialog($"请求信息:\r\n{info.Message}", "读取视频播放地址失败");
+                }
+                else
+                {
+                    playUrlInfo = info;
+                    InitSoundQuality();
+                    InitQuality();
+                }
+                Notify.ShowMessageToast("已根据设置自动刷新播放地址");
+                m_startTime = DateTime.Now;
+            });
         }
 
         private void Timer_focus_Tick(object sender, object e)
@@ -976,9 +981,13 @@ namespace BiliLite.Controls
                 else
                 {
                     playUrlInfo = info;
-                    InitSoundQuality();
-                    InitQuality();
                 }
+            }
+
+            if (m_isLocalFileMode || playUrlInfo != null)
+            {
+                InitSoundQuality();
+                InitQuality();
             }
 
             await GetPlayerInfo();
@@ -1395,7 +1404,6 @@ namespace BiliLite.Controls
             {
                 return false;
             }
-            BottomBtnQuality.Visibility = Visibility.Collapsed;
 
             await PlayLocalFile();
             return true;
@@ -1419,14 +1427,27 @@ namespace BiliLite.Controls
 
         private void InitSoundQuality()
         {
-            MinSoundQuality.Text = playUrlInfo.AudioQualites[0].QualityName;
-            MaxSoundQuality.Text = playUrlInfo.AudioQualites[playUrlInfo.AudioQualites.Count - 1].QualityName;
+            var audioTrackInfos = m_isLocalFileMode
+                ? CurrentPlayItem.LocalPlayInfo?.AudioTrackInfos
+                : playUrlInfo?.AudioQualites;
 
-            BottomBtnSoundQuality.IsEnabled = playUrlInfo.AudioQualites.Count > 1;
-            BottomBtnSoundQuality.Content = playUrlInfo.CurrentAudioQuality.QualityName;
-            SliderSoundQuality.Maximum = playUrlInfo.AudioQualites.Count - 1;
-            SliderSoundQuality.Value = playUrlInfo.AudioQualites.IndexOf(playUrlInfo.CurrentAudioQuality);
-            m_soundQualitySliderTooltipConverter.AudioQualites = playUrlInfo.AudioQualites;
+            if (audioTrackInfos == null || !audioTrackInfos.Any())
+            {
+                return;
+            }
+
+            var currentAudioTrack = m_isLocalFileMode
+                ? CurrentPlayItem.LocalPlayInfo.CurrentAudioTrack
+                : playUrlInfo.CurrentAudioQuality;
+
+            MinSoundQuality.Text = audioTrackInfos.First().QualityName;
+            MaxSoundQuality.Text = audioTrackInfos.Last().QualityName;
+
+            BottomBtnSoundQuality.IsEnabled = audioTrackInfos.Count > 1;
+            BottomBtnSoundQuality.Content = currentAudioTrack.QualityName;
+            SliderSoundQuality.Maximum = audioTrackInfos.Count - 1;
+            SliderSoundQuality.Value = audioTrackInfos.IndexOf(currentAudioTrack);
+            m_soundQualitySliderTooltipConverter.AudioQualites = audioTrackInfos;
             SliderSoundQuality.ThumbToolTipValueConverter = m_soundQualitySliderTooltipConverter;
 
             // ChangeQuality(current_quality_info, playUrlInfo.CurrentAudioQuality).RunWithoutAwait();
@@ -1437,26 +1458,56 @@ namespace BiliLite.Controls
             if (!m_firstMediaOpened) return;
             _postion = Player.Position;
             _autoPlay = Player.PlayState == PlayState.Playing;
-
-            var latestChoice = playUrlInfo.AudioQualites[(int)SliderSoundQuality.Value];
-            SettingService.SetValue<int>(SettingConstants.Player.DEFAULT_SOUND_QUALITY, latestChoice.QualityID);
-            await ChangeQuality(current_quality_info, latestChoice);
+            BiliDashAudioPlayUrlInfo latestChoice = null;
+            if (m_isLocalFileMode)
+            {
+                latestChoice = CurrentPlayItem.LocalPlayInfo.AudioTrackInfos[(int)SliderSoundQuality.Value];
+                CurrentPlayItem.LocalPlayInfo.Info.DashInfo.Audio = latestChoice.Audio;
+                await ChangeQualityPlayLocalVideo(CurrentPlayItem.LocalPlayInfo.Info.DashInfo);
+            }
+            else
+            { 
+                latestChoice = playUrlInfo.AudioQualites[(int)SliderSoundQuality.Value];
+                SettingService.SetValue<int>(SettingConstants.Player.DEFAULT_SOUND_QUALITY, latestChoice.QualityID);
+                await ChangeQuality(current_quality_info, latestChoice);
+            }
             BottomBtnSoundQuality.Content = latestChoice.QualityName;
         }
 
         private void InitQuality()
         {
-            MinQuality.Text = playUrlInfo.Qualites[0].QualityName;
-            MaxQuality.Text = playUrlInfo.Qualites[playUrlInfo.Qualites.Count - 1].QualityName;
+            var videoTrackInfos = m_isLocalFileMode
+                ? CurrentPlayItem.LocalPlayInfo?.VideoTrackInfos
+                : playUrlInfo?.Qualites;
 
-            BottomBtnQuality.IsEnabled = playUrlInfo.Qualites.Count > 1;
-            BottomBtnQuality.Content = playUrlInfo.CurrentQuality.QualityName;
-            SliderQuality.Maximum = playUrlInfo.Qualites.Count - 1;
-            SliderQuality.Value = playUrlInfo.Qualites.IndexOf(playUrlInfo.CurrentQuality);
-            m_qualitySliderTooltipConverter.Qualites = playUrlInfo.Qualites;
+            if (videoTrackInfos == null || !videoTrackInfos.Any())
+            {
+                return;
+            }
+
+            var currentVideoTrack = m_isLocalFileMode
+                ? CurrentPlayItem.LocalPlayInfo.CurrentVideoTrack
+                : playUrlInfo.CurrentQuality;
+
+            SetQualityControls(videoTrackInfos, currentVideoTrack);
+
+            if (!m_isLocalFileMode)
+            {
+                ChangeQuality(playUrlInfo.CurrentQuality, playUrlInfo.CurrentAudioQuality).RunWithoutAwait();
+            }
+        }
+
+        private void SetQualityControls(List<BiliPlayUrlInfo> videoTrackInfos, BiliPlayUrlInfo currentVideoTrack)
+        {
+            MinQuality.Text = videoTrackInfos.First().QualityName;
+            MaxQuality.Text = videoTrackInfos.Last().QualityName;
+
+            BottomBtnQuality.IsEnabled = videoTrackInfos.Count > 1;
+            BottomBtnQuality.Content = currentVideoTrack.QualityName;
+            SliderQuality.Maximum = videoTrackInfos.Count - 1;
+            SliderQuality.Value = videoTrackInfos.IndexOf(currentVideoTrack);
+            m_qualitySliderTooltipConverter.Qualites = videoTrackInfos;
             SliderQuality.ThumbToolTipValueConverter = m_qualitySliderTooltipConverter;
-
-            ChangeQuality(playUrlInfo.CurrentQuality, playUrlInfo.CurrentAudioQuality).RunWithoutAwait();
         }
 
         private async void SliderQuality_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
@@ -1465,9 +1516,21 @@ namespace BiliLite.Controls
             _postion = Player.Position;
             _autoPlay = Player.PlayState == PlayState.Playing;
 
-            var latestChoice = playUrlInfo.Qualites[(int)SliderQuality.Value];
-            SettingService.SetValue<int>(SettingConstants.Player.DEFAULT_QUALITY, latestChoice.QualityID);
-            await ChangeQuality(latestChoice, current_audio_quality_info);
+            BiliPlayUrlInfo latestChoice = null;
+
+            if (m_isLocalFileMode)
+            {
+                latestChoice = CurrentPlayItem.LocalPlayInfo.VideoTrackInfos[(int)SliderQuality.Value];
+                CurrentPlayItem.LocalPlayInfo.Info.DashInfo.Video = latestChoice.DashInfo.Video;
+                await ChangeQualityPlayLocalVideo(CurrentPlayItem.LocalPlayInfo.Info.DashInfo);
+            }
+            else
+            {
+                latestChoice = playUrlInfo.Qualites[(int)SliderQuality.Value];
+                SettingService.SetValue<int>(SettingConstants.Player.DEFAULT_QUALITY, latestChoice.QualityID);
+                await ChangeQuality(latestChoice, current_audio_quality_info);
+            }
+
             BottomBtnQuality.Content = latestChoice.QualityName;
         }
 
@@ -1567,6 +1630,7 @@ namespace BiliLite.Controls
         private async Task PlayLocalFile()
         {
             VideoLoading.Visibility = Visibility.Visible;
+            m_isLocalFileMode = true;
             PlayerOpenResult result = new PlayerOpenResult()
             {
                 result = false
@@ -1574,7 +1638,14 @@ namespace BiliLite.Controls
             var info = CurrentPlayItem.LocalPlayInfo.Info;
             if (info.PlayUrlType == BiliPlayUrlType.DASH)
             {
-                result = await Player.PlayDashUseFFmpegInterop(info.DashInfo, "", "", positon: _postion, isLocal: true);
+                var playInfo = CurrentPlayItem.LocalPlayInfo.VideoTrackInfos.FirstOrDefault();
+                CurrentPlayItem.LocalPlayInfo.CurrentAudioTrack = CurrentPlayItem.LocalPlayInfo.AudioTrackInfos.FirstOrDefault();
+                CurrentPlayItem.LocalPlayInfo.CurrentVideoTrack = CurrentPlayItem.LocalPlayInfo.VideoTrackInfos.FirstOrDefault();
+                CurrentPlayItem.LocalPlayInfo.Info.DashInfo = playInfo.DashInfo;
+                playInfo.DashInfo.Audio = CurrentPlayItem.LocalPlayInfo.CurrentAudioTrack?.Audio;
+                playInfo.DashInfo.Video = CurrentPlayItem.LocalPlayInfo.CurrentVideoTrack?.DashInfo.Video;
+                result = await Player.PlayDashUseFFmpegInterop(playInfo.DashInfo, "", "", positon: _postion,
+                    isLocal: true);
             }
             else if (CurrentPlayItem.LocalPlayInfo.Info.PlayUrlType == BiliPlayUrlType.SingleFLV)
             {
@@ -1744,6 +1815,22 @@ namespace BiliLite.Controls
             }
             quality = info.CurrentQuality;
             return true;
+        }
+
+        private async Task ChangeQualityPlayLocalVideo(BiliDashPlayUrlInfo dashInfo)
+        {
+            Pause();
+            VideoLoading.Visibility = Visibility.Visible;
+            var result = await Player.PlayDashUseFFmpegInterop(dashInfo, "", "", positon: _postion,
+            isLocal: true);
+            if (result.result)
+            {
+                VideoLoading.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                ShowErrorDialog(result.message + "[LocalFile]");
+            }
         }
 
         private async Task<PlayerOpenResult> ChangeQualityPlayVideo(BiliPlayUrlInfo quality, BiliDashAudioPlayUrlInfo audioQuality)

@@ -29,12 +29,12 @@ namespace BiliLite.Services.Biz
             videoListSectionViewModel.Items.AddRange(moreItems);
         }
 
-        public async Task<List<MediaListItem>> GetMediaList(string mediaListId)
+        public async Task<MediaListResources> GetMediaList(string mediaListId)
         {
             var api = new VideoAPI().GetMediaList(mediaListId, "");
             var results = await api.Request();
             var data = await results.GetData<MediaListResources>();
-            return data.data.MediaList;
+            return data.data;
         }
     }
 }

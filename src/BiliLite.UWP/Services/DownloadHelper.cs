@@ -26,6 +26,17 @@ namespace BiliLite.Services
             StorageFolder folder = await GetDownloadFolder();
             folder = await folder.CreateFolderAsync((downloadInfo.Type == DownloadType.Season ? ("ss" + downloadInfo.SeasonID) : downloadInfo.AVID), CreationCollisionOption.OpenIfExists);
             StorageFolder episodeFolder = await folder.CreateFolderAsync(downloadInfo.Type == DownloadType.Season ? downloadInfo.EpisodeID : downloadInfo.CID, CreationCollisionOption.OpenIfExists);
+
+            if (downloadInfo.AddOthersTrack)
+            {
+                foreach (var item in downloadInfo.Urls)
+                {
+                    DownloadVideo(downloadInfo, item, episodeFolder);
+                }
+                await SaveInfo(downloadInfo, folder, episodeFolder);
+                return;
+            }
+
             //下载封面
             await DownloadCover(downloadInfo.CoverUrl, folder);
             //下载弹幕
@@ -103,56 +114,84 @@ namespace BiliLite.Services
         {
             try
             {
-                DownloadSaveInfo downloadSaveInfo = new DownloadSaveInfo()
+                if (info.AddOthersTrack)
                 {
-                    Cover = info.CoverUrl,
-                    SeasonType = info.SeasonType,
-                    Title = info.Title,
-                    Type = info.Type,
-                    ID = info.Type == DownloadType.Season ? info.SeasonID.ToString() : info.AVID,
-                    Path = folder.Path,
-                    CreatedTime = DateTime.Now,
-                };
-                DownloadSaveEpisodeInfo downloadSaveEpisodeInfo = new DownloadSaveEpisodeInfo()
-                {
-                    CID = info.CID,
-                    DanmakuPath = "danmaku.xml",
-                    EpisodeID = info.EpisodeID,
-                    EpisodeTitle = info.EpisodeTitle,
-                    AVID = info.AVID,
-                    SubtitlePath = new List<DownloadSubtitleInfo>(),
-                    Index = info.Index,
-                    VideoPath = new List<string>(),
-                    QualityID = info.QualityID,
-                    QualityName = info.QualityName,
-                    Path = episodeFolder.Path,
-                };
-                if (info.Subtitles != null)
-                {
-                    foreach (var item in info.Subtitles)
+                    var episodeFile = await episodeFolder.GetFileAsync("info.json");
+                    var text = await FileIO.ReadTextAsync(episodeFile);
+                    var downloadSaveEpisodeInfo = await text.DeserializeJson<DownloadSaveEpisodeInfo>();
+
+                    foreach (var item in info.Urls)
                     {
-                        downloadSaveEpisodeInfo.SubtitlePath.Add(new DownloadSubtitleInfo()
-                        {
-                            Name = item.Name,
-                            Url = item.Name + ".json"
-                        });
+                        downloadSaveEpisodeInfo.VideoPath.Add(item.FileName);
                     }
+                    await FileIO.WriteTextAsync(episodeFile, JsonConvert.SerializeObject(downloadSaveEpisodeInfo));
+
+                    if (SettingService.GetValue(SettingConstants.Download.USE_DOWNLOAD_INDEX,
+                            SettingConstants.Download.DEFAULT_USE_DOWNLOAD_INDEX))
+                    {
+                        var downloadService = App.ServiceProvider.GetRequiredService<DownloadService>();
+                        await downloadService.AddOtherTracksToDownloadedSubItemIndex(info, downloadSaveEpisodeInfo);
+                    }
+                    return;
                 }
-                foreach (var item in info.Urls)
+
                 {
-                    downloadSaveEpisodeInfo.VideoPath.Add(item.FileName);
-                }
-                downloadSaveEpisodeInfo.IsDash = downloadSaveEpisodeInfo.VideoPath.FirstOrDefault(x => x.Contains(".m4s")) != null;
-                StorageFile file = await folder.CreateFileAsync("info.json", CreationCollisionOption.ReplaceExisting);
-                await FileIO.WriteTextAsync(file, JsonConvert.SerializeObject(downloadSaveInfo));
-                StorageFile episodeFile = await episodeFolder.CreateFileAsync("info.json", CreationCollisionOption.ReplaceExisting);
-                await FileIO.WriteTextAsync(episodeFile, JsonConvert.SerializeObject(downloadSaveEpisodeInfo));
-                
-                if (SettingService.GetValue(SettingConstants.Download.USE_DOWNLOAD_INDEX,
-                        SettingConstants.Download.DEFAULT_USE_DOWNLOAD_INDEX))
-                {
-                    var downloadService = App.ServiceProvider.GetRequiredService<DownloadService>();
-                    downloadService.AddDownloadItemsIndex(downloadSaveInfo, downloadSaveEpisodeInfo);
+                    DownloadSaveInfo downloadSaveInfo = new DownloadSaveInfo()
+                    {
+                        Cover = info.CoverUrl,
+                        SeasonType = info.SeasonType,
+                        Title = info.Title,
+                        Type = info.Type,
+                        ID = info.Type == DownloadType.Season ? info.SeasonID.ToString() : info.AVID,
+                        Path = folder.Path,
+                        CreatedTime = DateTime.Now,
+                    };
+                    DownloadSaveEpisodeInfo downloadSaveEpisodeInfo = new DownloadSaveEpisodeInfo()
+                    {
+                        CID = info.CID,
+                        DanmakuPath = "danmaku.xml",
+                        EpisodeID = info.EpisodeID,
+                        EpisodeTitle = info.EpisodeTitle,
+                        AVID = info.AVID,
+                        SubtitlePath = new List<DownloadSubtitleInfo>(),
+                        Index = info.Index,
+                        VideoPath = new List<string>(),
+                        QualityID = info.QualityID,
+                        QualityName = info.QualityName,
+                        Path = episodeFolder.Path,
+                    };
+                    if (info.Subtitles != null)
+                    {
+                        foreach (var item in info.Subtitles)
+                        {
+                            downloadSaveEpisodeInfo.SubtitlePath.Add(new DownloadSubtitleInfo()
+                            {
+                                Name = item.Name,
+                                Url = item.Name + ".json"
+                            });
+                        }
+                    }
+
+                    foreach (var item in info.Urls)
+                    {
+                        downloadSaveEpisodeInfo.VideoPath.Add(item.FileName);
+                    }
+
+                    downloadSaveEpisodeInfo.IsDash =
+                        downloadSaveEpisodeInfo.VideoPath.FirstOrDefault(x => x.Contains(".m4s")) != null;
+                    StorageFile file =
+                        await folder.CreateFileAsync("info.json", CreationCollisionOption.ReplaceExisting);
+                    await FileIO.WriteTextAsync(file, JsonConvert.SerializeObject(downloadSaveInfo));
+                    StorageFile episodeFile =
+                        await episodeFolder.CreateFileAsync("info.json", CreationCollisionOption.ReplaceExisting);
+                    await FileIO.WriteTextAsync(episodeFile, JsonConvert.SerializeObject(downloadSaveEpisodeInfo));
+
+                    if (SettingService.GetValue(SettingConstants.Download.USE_DOWNLOAD_INDEX,
+                            SettingConstants.Download.DEFAULT_USE_DOWNLOAD_INDEX))
+                    {
+                        var downloadService = App.ServiceProvider.GetRequiredService<DownloadService>();
+                        downloadService.AddDownloadItemsIndex(downloadSaveInfo, downloadSaveEpisodeInfo);
+                    }
                 }
             }
             catch (Exception ex)

@@ -6,28 +6,147 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
-    xmlns:font="using:FontAwesome5"
-    xmlns:home="using:BiliLite.Models.Common.Home"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:font="using:FontAwesome5" xmlns:converters="using:CommunityToolkit.WinUI.Converters"
+    xmlns:home="using:BiliLite.Models.Common.Home" xmlns:theme="using:BiliLite.Models.Theme" xmlns:localconverters="using:BiliLite.Converters"
     mc:Ignorable="d"
     d:DesignHeight="300"
-    d:DesignWidth="400">
-
+    d:DesignWidth="400" x:Name="rootPanel">
+    <UserControl.Resources>
+        <localconverters:ColorConvert x:Key="colorConvert" />
+        <localconverters:BooleanConvert x:Name="boolConvert" />
+        <converters:ColorToDisplayNameConverter x:Key="ColorToDisplayNameConverter" />
+        <DataTemplate x:Key="ColorItemTemplate" x:DataType="theme:ColorItemModel">
+            <Border Padding="0"
+                Width="40"
+                Height="40"
+                Background="{x:Bind Color, Converter={StaticResource colorConvert}}"
+                CornerRadius="{StaticResource ControlCornerRadius}"
+                ToolTipService.ToolTip="{x:Bind Name}">
+                <SymbolIcon Symbol="Accept" Visibility="{x:Bind IsActived, Mode=OneWay}" />
+                <Border.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem
+                            Click="ColorItemMenuFlyoutItem_Click"
+                            Tag="delete"
+                            Text="移除">
+                            <MenuFlyoutItem.Icon>
+                                <SymbolIcon Symbol="Delete" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </Border.ContextFlyout>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+    
     <StackPanel
         MaxWidth="1200">
-        <controls:SettingsCard Header="应用程序主题"
-                               Description="选择要显示的应用主题">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_FillDrip"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ComboBox x:Name="cbTheme"  MinWidth="200" >
-                <ComboBox.Items>
-                    <ComboBoxItem>跟随系统</ComboBoxItem>
-                    <ComboBoxItem>浅色</ComboBoxItem>
-                    <ComboBoxItem>深色</ComboBoxItem>
-                </ComboBox.Items>
-            </ComboBox>
-        </controls:SettingsCard>
+        <controls:SettingsExpander Header="主题" IsExpanded="True">
+            <controls:SettingsExpander.HeaderIcon>
+                <font:FontAwesome Icon="Solid_FillDrip" />
+            </controls:SettingsExpander.HeaderIcon>
+            <controls:SettingsExpander.Items>
+                <controls:SettingsCard Description="更改应用的日夜主题" Header="外观">
+                    <controls:SettingsCard.HeaderIcon>
+                        <font:FontAwesome Icon="Solid_PaintBrush" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <ComboBox x:Name="cbTheme" MinWidth="200" Margin="0 0 -4 0">
+                        <ComboBox.Items>
+                            <ComboBoxItem>跟随系统</ComboBoxItem>
+                            <ComboBoxItem>浅色</ComboBoxItem>
+                            <ComboBoxItem>深色</ComboBoxItem>
+                        </ComboBox.Items>
+                    </ComboBox>
+                </controls:SettingsCard>
+
+                <controls:SettingsCard HorizontalContentAlignment="Stretch"
+                                ContentAlignment="Vertical"  x:Name="rootColor">
+                    <controls:SettingsCard.HeaderIcon>
+                        <font:FontAwesome Icon="Solid_Palette"/>
+                    </controls:SettingsCard.HeaderIcon>
+                    <controls:SettingsCard.Header>
+                        <StackPanel>
+                            <TextBlock>色彩</TextBlock>
+                            <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap">更改应用的强调色彩</TextBlock>
+                        </StackPanel>
+                    </controls:SettingsCard.Header>
+                    <controls:SettingsCard.Description>
+                        <Grid Margin="0 6 -28 0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <GridView
+                                x:Name="gvColor"
+                                Margin="0 0 0 -4"
+                                Padding="0"
+                                ItemTemplate="{StaticResource ColorItemTemplate}"
+                                ItemsSource="{x:Bind m_UISettingsControlViewModel.Colors}">
+                                <GridView.Resources>
+                                    <ResourceDictionary>
+                                        <ResourceDictionary.ThemeDictionaries>
+                                            <ResourceDictionary x:Key="Default">
+                                                <StaticResource x:Key="GridViewItemSelectedPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                                                <StaticResource x:Key="GridViewItemPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                                            </ResourceDictionary>
+                                            <ResourceDictionary x:Key="Light">
+                                                <StaticResource x:Key="GridViewItemSelectedPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                                                <StaticResource x:Key="GridViewItemPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
+                                            </ResourceDictionary>
+                                        </ResourceDictionary.ThemeDictionaries>
+                                    </ResourceDictionary>
+                                </GridView.Resources>
+                            </GridView>
+                            <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                <Border Background="{ThemeResource SeparatorColor}" Margin="5" Width="1"></Border>
+                                <Button ToolTipService.ToolTip="自定义" Width="42" Height="40" Margin="7 0 0 0" Padding="0">
+                                    <SymbolIcon Symbol="Add"/>
+                                    <Button.Flyout>
+                                        <Flyout Placement="LeftEdgeAlignedBottom">
+                                            <StackPanel>
+                                                <Grid VerticalAlignment="Top" Height="40" Background="{Binding Color,ElementName=cpAddColor,Converter={StaticResource colorConvert}}" CornerRadius="{StaticResource ControlCornerRadius}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition/>
+                                                        <ColumnDefinition/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center">预览字体</TextBlock>
+                                                    <TextBlock Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1">预览字体</TextBlock>
+                                                </Grid>
+                                                <Grid>
+                                                    <muxc:ColorPicker x:Name="cpAddColor" IsColorPreviewVisible="False" Color="#8764B8" Margin="0 10 -55 0"/>
+
+                                                </Grid>
+                                                <Grid VerticalAlignment="Bottom">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Button x:Name="btnAddColor" Style="{StaticResource AccentButtonStyle}">
+                                                        添加
+                                                    </Button>
+                                                    <CheckBox IsChecked="True" Grid.Column="1" x:Name="cbSetColor" Content="立即生效" Margin="10 0 -25 0"></CheckBox>
+                                                    <TextBox Grid.Column="2" x:Name="tbAddColorName" HorizontalAlignment="Stretch"  PlaceholderText="{Binding Color,ElementName=cpAddColor, Converter={StaticResource ColorToDisplayNameConverter}}"/>
+                                                </Grid>
+                                            </StackPanel>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+                                <Button ToolTipService.ToolTip="跟随系统" x:Name="btnSysColor" Style="{StaticResource AccentButtonStyle}" Background="{x:Bind m_UISettingsControlViewModel.SysColor, Converter={StaticResource colorConvert}}" Width="40" Height="40" Margin="7 0 0 0" Padding="0">
+                                    <Button.Resources>
+                                        <!--<StaticResource x:Key="AccentButtonBackground" ResourceKey="SystemAccent" />-->
+                                        <StaticResource x:Key="AccentButtonBackgroundPointerOver" ResourceKey="SystemAccentColorLight1" />
+                                        <StaticResource x:Key="AccentButtonBackgroundPressed" ResourceKey="SystemAccentColorDark1" />
+                                    </Button.Resources>
+                                    <SymbolIcon Visibility="{Binding SelectedIndex, ElementName=gvColor,Converter={StaticResource boolConvert},ConverterParameter=-1}" Symbol="Accept"/>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </controls:SettingsCard.Description>
+                </controls:SettingsCard>
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>
 
         <controls:SettingsCard Header="显示模式"
                                Description="选择应用的显示模式(重启生效)">
@@ -53,7 +172,7 @@
                 <controls:SettingsCard>
                     <controls:SettingsCard.Header>
                         <StackPanel>
-                            <GridView x:Name="gridHomeCustom" 
+                            <GridView x:Name="gridHomeCustom"
                           SelectionMode="None" 
                           Margin="0 8 0 0"
                           IsItemClickEnabled="True"  CanDragItems="True" CanReorderItems="True" AllowDrop="True" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" DragItemsCompleted="gridHomeCustom_DragItemsCompleted">
@@ -122,6 +241,22 @@
             <ToggleSwitch x:Name="SwitchDisplayRecommendBanner"></ToggleSwitch>
         </controls:SettingsCard>
 
+        <controls:SettingsCard Header="显示直播页横幅"
+                               Description="是否显示直播页横幅">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_AlignRight"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch x:Name="SwitchDisplayLiveBanner"></ToggleSwitch>
+        </controls:SettingsCard>
+
+        <controls:SettingsCard Header="显示直播页推荐直播"
+                               Description="是否显示直播页推荐直播">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Tv"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch x:Name="SwitchDisplayLivePageRecommendLive"></ToggleSwitch>
+        </controls:SettingsCard>
+
         <controls:SettingsExpander Header="右侧视频详情"
                                    Description="自定义视频详情页右侧视频详情样式"
                                    IsExpanded="True">
@@ -131,7 +266,7 @@
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard Header="右侧视频详情宽度"
                                        Description="下次打开视频生效">
-                    <controls1:NumberBox x:Name="numRightWidth" Minimum="40" Margin="0 0 0 8" Width="200" HorizontalAlignment="Left" Value="320" SpinButtonPlacementMode="Compact" SmallChange="20" ></controls1:NumberBox>
+                    <muxc:NumberBox x:Name="numRightWidth" Minimum="40" Margin="0 0 0 8" Width="200" HorizontalAlignment="Left" Value="320" SpinButtonPlacementMode="Compact" SmallChange="20" ></muxc:NumberBox>
                 </controls:SettingsCard>
 
                 <controls:SettingsCard Header="右侧视频详情宽度可调整"
@@ -141,7 +276,7 @@
 
                 <controls:SettingsCard Header="视频详情页分集列表设计宽度"
                                        Description="下次打开视频生效">
-                    <controls1:NumberBox x:Name="NumListEpisodeDesiredWidth" Minimum="40" Margin="0 0 0 8" Width="200" HorizontalAlignment="Left" Value="180" SpinButtonPlacementMode="Compact" SmallChange="20" ></controls1:NumberBox>
+                    <muxc:NumberBox x:Name="NumListEpisodeDesiredWidth" Minimum="40" Margin="0 0 0 8" Width="200" HorizontalAlignment="Left" Value="180" SpinButtonPlacementMode="Compact" SmallChange="20" ></muxc:NumberBox>
                 </controls:SettingsCard>
 
                 <controls:SettingsCard Header="视频详情显示封面"
@@ -170,7 +305,7 @@
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard Header="动态评论宽度"
                                        Description="下次打开应用生效">
-                    <controls1:NumberBox x:Name="NumBoxDynamicCommentWidth" Minimum="40" Margin="0 0 0 8" Width="200" HorizontalAlignment="Left" Value="320" SpinButtonPlacementMode="Compact" SmallChange="20" ></controls1:NumberBox>
+                    <muxc:NumberBox x:Name="NumBoxDynamicCommentWidth" Minimum="40" Margin="0 0 0 8" Width="200" HorizontalAlignment="Left" Value="320" SpinButtonPlacementMode="Compact" SmallChange="20" ></muxc:NumberBox>
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
@@ -189,7 +324,7 @@
             <controls:SettingsExpander.HeaderIcon>
                 <font:FontAwesome Icon="Solid_Images"></font:FontAwesome>
             </controls:SettingsExpander.HeaderIcon>
-            <controls1:NumberBox x:Name="numImageCornerRadius" Minimum="0" Margin="0 0 0 8" Width="200" HorizontalAlignment="Left" Value="0" SpinButtonPlacementMode="Compact" SmallChange="2" ></controls1:NumberBox>
+            <muxc:NumberBox x:Name="numImageCornerRadius" Minimum="0" Margin="0 0 0 8" Width="200" HorizontalAlignment="Left" Value="0" SpinButtonPlacementMode="Compact" SmallChange="2" ></muxc:NumberBox>
 
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard>
@@ -213,7 +348,7 @@
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard Header="评论折叠长度"
                                        Description="大于多少字数时折叠">
-                    <controls1:NumberBox x:Name="numCommentShrinkLength" Minimum="0"  Width="200" HorizontalAlignment="Left" Value="0" SpinButtonPlacementMode="Compact" SmallChange="1" ></controls1:NumberBox>
+                    <muxc:NumberBox x:Name="numCommentShrinkLength" Minimum="0"  Width="200" HorizontalAlignment="Left" Value="0" SpinButtonPlacementMode="Compact" SmallChange="1" ></muxc:NumberBox>
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
@@ -279,20 +414,20 @@
                                        Description="下次打开应用生效">
                     <StackPanel Orientation="Horizontal">
                         <ToggleSwitch x:Name="SwitchTabItemFixedWidth" ></ToggleSwitch>
-                        <controls1:NumberBox x:Name="NumTabItemFixedWidth" Minimum="200" MinWidth="200" IsEnabled="{Binding IsOn, ElementName=SwitchTabItemFixedWidth}" Margin="30 5 0 5"></controls1:NumberBox>
+                        <muxc:NumberBox x:Name="NumTabItemFixedWidth" Minimum="200" MinWidth="200" IsEnabled="{Binding IsOn, ElementName=SwitchTabItemFixedWidth}" Margin="30 5 0 5"></muxc:NumberBox>
                     </StackPanel>
                 </controls:SettingsCard>
                 <controls:SettingsCard Header="设置标签页最小宽度"
                                        Description="下次打开应用生效">
-                    <controls1:NumberBox x:Name="NumTabItemMinWidth" Minimum="0" MinWidth="200" IsEnabled="{Binding IsOn, ElementName=SwitchTabItemFixedWidth, Converter={StaticResource InverseBooleanConverter}}"></controls1:NumberBox>
+                    <muxc:NumberBox x:Name="NumTabItemMinWidth" Minimum="0" MinWidth="200" IsEnabled="{Binding IsOn, ElementName=SwitchTabItemFixedWidth, Converter={StaticResource InverseBooleanConverter}}"></muxc:NumberBox>
                 </controls:SettingsCard>
                 <controls:SettingsCard Header="设置标签页最大宽度"
                                        Description="下次打开应用生效">
-                    <controls1:NumberBox x:Name="NumTabItemMaxWidth" Minimum="200" MinWidth="200" IsEnabled="{Binding IsOn, ElementName=SwitchTabItemFixedWidth, Converter={StaticResource InverseBooleanConverter}}"></controls1:NumberBox>
+                    <muxc:NumberBox x:Name="NumTabItemMaxWidth" Minimum="200" MinWidth="200" IsEnabled="{Binding IsOn, ElementName=SwitchTabItemFixedWidth, Converter={StaticResource InverseBooleanConverter}}"></muxc:NumberBox>
                 </controls:SettingsCard>
                 <controls:SettingsCard Header="设置标签页高度"
                                        Description="下次打开应用生效，建议立即重启应用，否则会出现奇怪的bug">
-                    <controls1:NumberBox x:Name="NumTabHeight" Minimum="32" MinWidth="200"></controls1:NumberBox>
+                    <muxc:NumberBox x:Name="NumTabHeight" Minimum="32" MinWidth="200"></muxc:NumberBox>
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>

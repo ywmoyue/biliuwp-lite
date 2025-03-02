@@ -1,5 +1,21 @@
-﻿using BiliLite.Models;
+﻿using AutoMapper;
+using BiliLite.Extensions;
+using BiliLite.Models;
+using BiliLite.Models.Common;
+using BiliLite.Models.Common.User;
+using BiliLite.Models.Common.Video;
+using BiliLite.Models.Common.Video.Detail;
+using BiliLite.Models.Exceptions;
+using BiliLite.Models.Requests.Api;
+using BiliLite.Models.Requests.Api.User;
+using BiliLite.Models.Responses;
+using BiliLite.Services;
+using BiliLite.ViewModels.Common;
+using BiliLite.ViewModels.User;
+using BiliLite.ViewModels.Video;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
+using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,22 +25,6 @@ using System.Windows.Input;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
-using AutoMapper;
-using BiliLite.Extensions;
-using BiliLite.Models.Common;
-using BiliLite.Models.Common.Video;
-using BiliLite.Models.Common.Video.Detail;
-using BiliLite.Models.Exceptions;
-using BiliLite.Models.Responses;
-using BiliLite.Models.Requests.Api;
-using BiliLite.Models.Requests.Api.User;
-using BiliLite.Services;
-using BiliLite.ViewModels.Common;
-using BiliLite.ViewModels.User;
-using BiliLite.ViewModels.Video;
-using Microsoft.Extensions.DependencyInjection;
-using PropertyChanged;
-using BiliLite.Models.Common.User;
 
 namespace BiliLite.Modules
 {
@@ -133,7 +133,7 @@ namespace BiliLite.Modules
         [DependsOn(nameof(PageWidth))]
         public bool ShowOpenRightInfoBtn => (PageWidth < 1000);
 
-        [DependsOn(nameof(PageWidth),nameof(IsOpenRightInfo))]
+        [DependsOn(nameof(PageWidth), nameof(IsOpenRightInfo))]
         public GridLength RightInfoWidth
         {
             get
@@ -154,7 +154,7 @@ namespace BiliLite.Modules
             {
                 if (PageWidth < 1000)
                 {
-                    return (Brush)m_themeService.ThemeResource["PlayerControlAcrylicBrush"];
+                    return (Brush)m_themeService.DefaultThemeResource["PlayerControlAcrylicBrush"];
                 }
 
                 return new SolidColorBrush(Colors.Transparent);
@@ -236,7 +236,7 @@ namespace BiliLite.Modules
                     {
                         var myFavorite = await data.data["list"].ToString().DeserializeJson<List<FavoriteItemModel>>();
                         MyFavorite = m_mapper.Map<ObservableCollection<FavoriteItemViewModel>>(myFavorite);
-                        ExistFavIdList = myFavorite.Where(x => x.FavState == 1).Select(x=>x.Id).ToList();
+                        ExistFavIdList = myFavorite.Where(x => x.FavState == 1).Select(x => x.Id).ToList();
                     }
                     else
                     {
@@ -259,7 +259,7 @@ namespace BiliLite.Modules
         {
             try
             {
-                if (id.Length == 0) { throw new ArgumentException(nameof(id)); } 
+                if (id.Length == 0) { throw new ArgumentException(nameof(id)); }
                 Loaded = false;
                 Loading = true;
                 ShowError = false;
@@ -438,7 +438,7 @@ namespace BiliLite.Modules
 
 
                         }
-                        if(data.data==null){}
+                        if (data.data == null) { }
                         else if (!string.IsNullOrEmpty(data.data["toast"]?.ToString()))
                         {
                             Notify.ShowMessageToast(data.data["toast"].ToString());

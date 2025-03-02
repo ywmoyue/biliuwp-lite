@@ -20,8 +20,16 @@
 
     <StackPanel x:Name="FilterSettingsControlGrid" Orientation="Vertical"
                 MaxWidth="1200">
+        <controls:SettingsCard Header="是否过滤推荐页直播" Description="是否过滤推荐页直播">
+            <ToggleSwitch x:Name="FilterRecommendLiveSwitch"></ToggleSwitch>
+        </controls:SettingsCard>
+
         <ListView ItemsSource="{x:Bind m_viewModel.RecommendFilterRules,Mode=OneWay}"
                   x:Name="RecommendFilterRuleListView"
+                  BorderThickness="0 1 0 0"
+                  BorderBrush="{ThemeResource SeparatorColor}"
+                  Margin="0 8 0 0"
+                  Padding="0 8 0 0"
                   SelectionMode="None">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">

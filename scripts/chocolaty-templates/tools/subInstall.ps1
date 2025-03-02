@@ -2,10 +2,15 @@
 
 # 在 $TempPath 目录下新建文件 error
 function Create-ErrorFile {
+    param (
+        [string]$ErrorMessage
+    )
     $errorFilePath = Join-Path $TempPath "error"
     if (-not (Test-Path $errorFilePath)) {
         New-Item -ItemType File -Path $errorFilePath | Out-Null
     }
+    # 将错误信息写入文件
+    $ErrorMessage | Out-File -FilePath $errorFilePath -Encoding UTF8
     Write-Host "错误文件已创建: $errorFilePath"
 }
 
@@ -91,8 +96,9 @@ try{
             Expand-Archive -Path $PackageZipPath -DestinationPath $UnpackPath -Force
             Write-Host "文件已解压到 $UnpackPath"
         } catch {
-            Write-Host "下载或解压失败: $_"
-            Create-ErrorFile
+            $errorMessage = "下载或解压失败: $_"
+            Write-Host $errorMessage
+            Create-ErrorFile -ErrorMessage $errorMessage
             exit 1
         }
     }
@@ -121,8 +127,9 @@ try{
         $store.Close()
         Write-Host "证书安装完成"
     } catch {
-        Write-Host "证书安装失败: $_"
-        Create-ErrorFile
+        $errorMessage = "证书安装失败: $_"
+        Write-Host $errorMessage
+        Create-ErrorFile -ErrorMessage $errorMessage
         exit 1
     }
 
@@ -131,8 +138,9 @@ try{
         . "$installScriptPath" -Force
         Write-Host "安装脚本执行成功"
     } catch {
-        Write-Host "安装脚本执行失败: $_"
-        Create-ErrorFile
+        $errorMessage = "安装脚本执行失败: $_"
+        Write-Host $errorMessage
+        Create-ErrorFile -ErrorMessage $errorMessage
         exit 1
     }
 
@@ -144,15 +152,17 @@ try{
     # 检测是否安装成功
     $PackageFullName = (Get-AppxPackage | Where-Object { $_.PackageFullName -like "$PackageNamePrefix*" }).PackageFullName
     if (-not $PackageFullName) {
-        Write-Host "应用安装后验证失败，请检查安装日志"
-        Create-ErrorFile
+        $errorMessage = "应用安装后验证失败，请检查安装日志"
+        Write-Host $errorMessage
+        Create-ErrorFile -ErrorMessage $errorMessage
         exit 1
     } else {
-        Write-Host "应用已安装"
+        $successMessage = "应用已安装"
+        Write-Host $successMessage
         Create-SuccessFile
     }
 } catch {
-    Write-Host "发生错误："
-    Write-Host $_.Exception.Message
-    #Read-Host -Prompt "按任意键继续..."
+    $errorMessage = "发生错误：" + $_.Exception.Message
+    Write-Host $errorMessage
+    Read-Host -Prompt "按任意键继续..."
 }

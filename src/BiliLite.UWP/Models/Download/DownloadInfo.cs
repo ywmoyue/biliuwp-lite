@@ -33,5 +33,6 @@ namespace BiliLite.Models.Download
         public int QualityID { get; set; }
         public string QualityName { get; set; }
 
+        public bool AddOthersTrack { get; set; }
     }
 }
