@@ -43,7 +43,7 @@
                                 </Ellipse>
                                 <StackPanel VerticalAlignment="Center">
                                     <TextBlock
-                                        Foreground="DeepPink"
+                                        Foreground="{ThemeResource SystemAccentColor}"
                                         Opacity=".8"
                                         Text="{x:Bind Path=UserName, Mode=OneWay}"
                                         Visibility="{x:Bind Path=IsYearVip, Mode=OneWay}" />
