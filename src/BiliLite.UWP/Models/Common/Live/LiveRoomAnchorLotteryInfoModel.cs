@@ -50,6 +50,11 @@ namespace BiliLite.Models.Common.Live
         public string Danmu { get; set; }
 
         /// <summary>
+        /// 是否显示弹幕, 有时无须弹幕即可抽奖
+        /// </summary>
+        public bool ShowDanmu => !string.IsNullOrEmpty(Danmu);
+
+        /// <summary>
         /// 需要发礼物才能参与的抽奖中, 需要的礼物Id
         /// </summary>
         [JsonProperty("gift_id")]
