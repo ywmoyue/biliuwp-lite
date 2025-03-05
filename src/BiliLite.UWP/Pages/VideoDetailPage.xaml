@@ -175,14 +175,6 @@
                                             Margin="0,8,0,0"
                                             Padding="0,0,8,0">
                                             <ListView ItemsSource="{x:Bind Path=m_viewModel.MyFavorite, Mode=OneWay}" SelectionMode="None">
-                                                <ListView.ItemContainerStyle>
-                                                    <Style TargetType="ListViewItem">
-                                                        <Setter Property="Padding" Value="4" />
-                                                        <Setter Property="MinWidth" Value="200" />
-                                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                                    </Style>
-                                                </ListView.ItemContainerStyle>
-
                                                 <ListView.ItemTemplate>
                                                     <DataTemplate x:DataType="user:FavoriteItemViewModel">
                                                         <CheckBox
@@ -600,14 +592,6 @@
                                             分集(共<Run Text="{x:Bind Path=m_viewModel.VideoInfo.Pages.Count, Mode=OneWay}" />
                                             P)</TextBlock>
                                     </GridView.Header>
-                                    <GridView.ItemContainerStyle>
-                                        <Style TargetType="GridViewItem">
-                                            <Setter Property="BorderThickness" Value="1" />
-                                            <Setter Property="BorderBrush" Value="Transparent" />
-                                            <Setter Property="VerticalContentAlignment" Value="Stretch" />
-                                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                        </Style>
-                                    </GridView.ItemContainerStyle>
                                     <GridView.ItemTemplate>
                                         <DataTemplate x:DataType="detail:VideoDetailPagesModel">
                                             <StackPanel VerticalAlignment="Center" ToolTipService.ToolTip="{x:Bind Path=Part}">
