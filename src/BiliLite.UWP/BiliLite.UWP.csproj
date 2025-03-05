@@ -315,7 +315,6 @@
     <Compile Include="Models\Common\Home\CinemaHomeFallModel.cs" />
     <Compile Include="Models\Common\Home\RegionChildrenItem.cs" />
     <Compile Include="Models\Common\Home\RegionItem.cs" />
-    <Compile Include="Models\Common\Other\FindMoreEntranceModel.cs" />
     <Compile Include="Models\Common\Favorites\FavoriteDetailModel.cs" />
     <Compile Include="Models\Common\Favorites\FavoriteInfoModel.cs" />
     <Compile Include="Models\Common\Favorites\FavoriteInfoVideoItemModel.cs" />
@@ -908,7 +907,6 @@
     <Compile Include="Modules\Live\LiveCenter\LiveCenterVM.cs" />
     <Compile Include="Modules\Live\LiveMessage.cs" />
     <Compile Include="Modules\Live\LiveRecommendVM.cs" />
-    <Compile Include="ViewModels\Other\FindMoreViewModel.cs" />
     <Compile Include="Modules\Player\InteractionVideoVM.cs" />
     <Compile Include="Modules\Player\Playurl\BiliPlayUrlRequest.cs" />
     <Compile Include="Modules\Player\Playurl\BiliPlayUrl.cs" />
@@ -1012,9 +1010,6 @@
     </Compile>
     <Compile Include="Pages\LocalPlayerPage.xaml.cs">
       <DependentUpon>LocalPlayerPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\Other\FindMorePage.xaml.cs">
-      <DependentUpon>FindMorePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Other\ImageViewerPage.xaml.cs">
       <DependentUpon>ImageViewerPage.xaml</DependentUpon>
@@ -1510,10 +1505,6 @@
     <Page Include="Pages\NewPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Pages\Other\FindMorePage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\Other\ImageViewerPage.xaml">
       <SubType>Designer</SubType>
