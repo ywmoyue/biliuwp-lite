@@ -13,6 +13,7 @@
     xmlns:model="using:BiliLite.Modules"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:converters="using:BiliLite.Converters"
     Background="Transparent"
     mc:Ignorable="d">
 
@@ -25,6 +26,7 @@
                         MaxHeight="240"
                         AspectRatio="3.2"
                         ItemsSource="{x:Bind Path=m_viewModel.Banners, Mode=OneWay}"
+                        Visibility="{x:Bind m_viewModel.DisplayRecommendBanners,Mode=OneWay}"
                         MaxItems="1"
                         SlideInterval="5000">
                         <controls:Carousel.ContentTemplate>
@@ -90,7 +92,7 @@
                                 </ItemsPanelTemplate>
                             </GridView.ItemsPanel>
                             <GridView.ItemTemplate>
-                                <DataTemplate x:DataType="live1:LiveRoomInfoOldModel">
+                                <DataTemplate x:DataType="live1:LiveInfoModel">
                                     <Grid>
                                         <Grid.ContextFlyout>
                                             <MenuFlyout>
@@ -109,7 +111,7 @@
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch"
                                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                                Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='460w_260h_1c'}"
+                                                Source="{x:Bind Path=RoomInfo.Cover,Converter={StaticResource imageConvert},ConverterParameter='460w_260h_1c'}"
                                                 Stretch="UniformToFill" />
                                             <Grid Padding="8" VerticalAlignment="Bottom">
                                                 <Grid.Background>
@@ -122,9 +124,13 @@
                                                     <TextBlock
                                                         FontSize="12"
                                                         Foreground="White"
-                                                        Text="{x:Bind Path=UserName}" />
+                                                        Text="{x:Bind Path=AnchorInfo.BaseInfo.Uname}" />
                                                 </StackPanel>
                                                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                                    <TextBlock FontSize="12" 
+                                                        Foreground="White" 
+                                                        Margin="0 0 8 0"
+                                                        Text="{x:Bind converters:LiveStatusConverter.Convert(RoomInfo.LiveStatus)}"></TextBlock>
                                                     <fa:FontAwesome
                                                         Margin="0,0,8,0"
                                                         FontSize="12"
@@ -133,7 +139,7 @@
                                                     <TextBlock
                                                         FontSize="12"
                                                         Foreground="White"
-                                                        Text="{x:Bind Path=Online, Converter={StaticResource NumberToStringConvert}}" />
+                                                        Text="{x:Bind Path=RoomInfo.Online,Converter={StaticResource numberToStringConvert}}"/>
                                                 </StackPanel>
                                             </Grid>
                                         </Grid>
@@ -142,7 +148,7 @@
                                             Grid.Row="1"
                                             Margin="4,4,4,0"
                                             MaxLines="1"
-                                            Text="{x:Bind Path=Title}"
+                                            Text="{x:Bind Path=RoomInfo.Title}"
                                             TextTrimming="CharacterEllipsis"
                                             TextWrapping="Wrap" />
                                     </Grid>
@@ -250,7 +256,8 @@
                             </GridView.ItemTemplate>
                         </controls:HorizontalGridView>
                     </StackPanel>
-                    <ItemsControl ItemsSource="{x:Bind Path=m_viewModel.Items, Mode=OneWay}">
+                    <ItemsControl ItemsSource="{x:Bind Path=m_viewModel.Items, Mode=OneWay}"
+                                  Visibility="{x:Bind m_viewModel.DisplayRecommendLives,Mode=OneWay}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <ItemsStackPanel Orientation="Vertical" />

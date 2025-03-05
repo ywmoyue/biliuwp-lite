@@ -44,27 +44,34 @@ namespace BiliLite.Services
             var fields = settingsType.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
             foreach (var field in fields)
             {
-                var attributes = field.GetCustomAttributes(false);
-                var keyAttribute = attributes.FirstOrDefault(x => x.GetType() == typeof(SettingKeyAttribute));
-                if (!(keyAttribute is SettingKeyAttribute settingKeyAttribute)) continue;
-                var key = field.GetRawConstantValue().ToString();
-
-                object value = null;
-
-                if (settingKeyAttribute.UseSqlDb)
+                try
                 {
-                    if (!m_settingSqlService.HasValue(key)) continue;
+                    var attributes = field.GetCustomAttributes(false);
+                    var keyAttribute = attributes.FirstOrDefault(x => x.GetType() == typeof(SettingKeyAttribute));
+                    if (!(keyAttribute is SettingKeyAttribute settingKeyAttribute)) continue;
+                    var key = field.GetRawConstantValue().ToString();
 
-                    value = GetSettingSqlValueCore(settingKeyAttribute, key);
+                    object value = null;
+
+                    if (settingKeyAttribute.UseSqlDb)
+                    {
+                        if (!m_settingSqlService.HasValue(key)) continue;
+
+                        value = GetSettingSqlValueCore(settingKeyAttribute, key);
+                    }
+                    else
+                    {
+                        if (!SettingService.HasValue(key)) continue;
+
+                        value = GetSettingValueCore(settingKeyAttribute, key);
+                    }
+
+                    model[key] = value;
                 }
-                else
+                catch (Exception ex)
                 {
-                    if (!SettingService.HasValue(key)) continue;
-
-                    value = GetSettingValueCore(settingKeyAttribute, key);
+                    throw new Exception($"{field.Name} export failed: {ex.Message}");
                 }
-
-                model[key] = value;
             }
         }
 

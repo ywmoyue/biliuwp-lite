@@ -1226,7 +1226,7 @@
                                             </TextBlock>
                                         </Grid>
 
-                                        <Grid Margin="0,0,0,4">
+                                        <Grid Margin="0 0 0 4" Visibility="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.ShowDanmu,Mode=OneWay}">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />

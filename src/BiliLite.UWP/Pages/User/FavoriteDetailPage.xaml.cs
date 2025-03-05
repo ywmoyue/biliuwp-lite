@@ -226,5 +226,17 @@ namespace BiliLite.Pages.User
 
             await m_viewModel.Sort(favVideo.Id, targetId);
         }
+
+        private async void CancelFav_OnClick(object sender, RoutedEventArgs e)
+        {
+            var ls = new List<FavoriteInfoVideoItemModel>();
+
+            if (sender is FrameworkElement { DataContext: FavoriteInfoVideoItemModel item })
+            {
+                ls.Add(item);
+            }
+
+            await m_viewModel.Delete(ls);
+        }
     }
 }
