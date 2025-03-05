@@ -208,11 +208,11 @@
                     <Grid
                         Margin="0,4,0,0"
                         VerticalAlignment="Center"
+                        CornerRadius="{StaticResource ControlCornerRadius}"
                         Visibility="{Binding ElementName=m_viewModel, Path=IsWideMode, Mode=OneWay}">
                         <Border
                             BorderBrush="{x:Bind Path=Member.FansDetail.MedalColorBorder, Converter={StaticResource ColorConvert}, Mode=OneWay}"
                             BorderThickness="1"
-                            CornerRadius="{StaticResource ControlCornerRadius}"
                             Visibility="{x:Bind Path=Member.ShowFansDetail, Mode=OneWay}">
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
@@ -237,7 +237,10 @@
                                     Width="1"
                                     VerticalAlignment="Stretch"
                                     Background="{x:Bind Path=Member.FansDetail.MedalColorBorder, Converter={StaticResource ColorConvert}, Mode=OneWay}" />
-                                <Grid Grid.Column="2" Background="White">
+                                <Grid
+                                    Grid.Column="2"
+                                    Margin="-1"
+                                    Background="White">
                                     <TextBlock
                                         Margin="4,0"
                                         FontSize="10"
