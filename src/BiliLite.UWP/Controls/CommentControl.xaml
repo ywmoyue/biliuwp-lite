@@ -201,7 +201,7 @@
                         Text="{x:Bind Path=Member.Uname}" />
                     <Image
                         Height="12"
-                        Margin="8,4,8,0"
+                        Margin="8,2,8,0"
                         VerticalAlignment="Center"
                         Source="{Binding Path=Member.LV}" />
                     <!--  粉丝牌  -->
@@ -504,6 +504,7 @@
 
 
                     <ListView
+                        Margin="-6,0,0,0"
                         IsItemClickEnabled="False"
                         ItemContainerStyle="{StaticResource replyStyle}"
                         ItemsSource="{x:Bind Path=Replies, Mode=OneWay}"
@@ -515,6 +516,7 @@
                                 <StackPanel>
 
                                     <HyperlinkButton
+                                        Padding="5"
                                         Click="BtnUser_Click"
                                         Foreground="{Binding Path=Member.Vip.VipType, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=2}"
                                         Tag="{Binding Path=Mid}">
@@ -522,12 +524,12 @@
                                             <TextBlock VerticalAlignment="Center" Text="{Binding Path=Member.Uname}" />
                                             <Image
                                                 Height="12"
-                                                Margin="8,0"
+                                                Margin="8,2,0,0"
                                                 Source="{Binding Path=Member.LV}" />
                                         </StackPanel>
                                     </HyperlinkButton>
                                     <TextBlock
-                                        Margin="12,0,0,0"
+                                        Margin="6,0,0,0"
                                         VerticalAlignment="Center"
                                         FontSize="12"
                                         Foreground="Gray"
@@ -542,7 +544,7 @@
                                         Text="{Binding Path=content.message}"
                                         TextWrapping="Wrap" />-->
                                     <ContentControl
-                                        Margin="20,8,0,0"
+                                        Margin="6,8,0,0"
                                         Content="{Binding Path=CommentText, Mode=OneWay}"
                                         Visibility="Visible" />
 
@@ -562,7 +564,7 @@
                                                 Foreground="{Binding LikeColor}">
                                                 <StackPanel Orientation="Horizontal">
                                                     <fa:FontAwesome FontSize="14" Icon="Regular_ThumbsUp" />
-                                                    <TextBlock Margin="4,0" Text="{Binding Path=LikeStr}" />
+                                                    <TextBlock Margin="4,0,0,0" Text="{Binding Path=LikeStr}" />
                                                 </StackPanel>
                                             </HyperlinkButton>
 
@@ -679,6 +681,7 @@
 
                 <ListView
                     Grid.Row="6"
+                    Margin="-3,0,0,0"
                     CornerRadius="{StaticResource ControlCornerRadius}"
                     IsItemClickEnabled="False"
                     ItemsSource="{x:Bind HotReplies, Mode=OneWay}"
