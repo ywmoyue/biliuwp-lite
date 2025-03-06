@@ -340,6 +340,7 @@
 
                 <HyperlinkButton
                     Grid.Row="1"
+                    Padding="17,5"
                     HorizontalContentAlignment="Left"
                     Command="{x:Bind CommentExpandCommand}"
                     Content="{x:Bind ExtendBtnText, Mode=OneWay}"
@@ -351,6 +352,8 @@
                     IsItemClickEnabled="True"
                     ItemClick="NotePicturesView_ItemClick"
                     ItemsSource="{x:Bind Path=Content.Pictures}"
+                    ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                    ScrollViewer.VerticalScrollMode="Disabled"
                     SelectionMode="None"
                     StretchContentForSingleRow="False"
                     Visibility="{x:Bind Path=ShowPics}">
@@ -423,7 +426,7 @@
                         </HyperlinkButton>
 
                         <Border
-                            Background="#3C808080"
+                            Background="{ThemeResource CardColor}"
                             CornerRadius="{StaticResource ControlCornerRadius}"
                             Visibility="{x:Bind Path=UpAction.Like, Mode=OneWay}">
                             <TextBlock
@@ -694,10 +697,18 @@
                             <Grid
                                 Margin="5"
                                 Padding="5"
-                                Background="{ThemeResource CardColor}"
-                                BorderBrush="{ThemeResource SystemAccentColor}"
-                                BorderThickness="2,0,0,0"
                                 CornerRadius="{StaticResource ControlCornerRadius}">
+                                <Grid.Background>
+                                    <LinearGradientBrush MappingMode="Absolute" StartPoint="0,0" EndPoint="2,0">
+                                        <LinearGradientBrush.RelativeTransform>
+                                            <ScaleTransform CenterY="0.5" ScaleY="-1" />
+                                        </LinearGradientBrush.RelativeTransform>
+                                        <LinearGradientBrush.GradientStops>
+                                            <GradientStop Offset="1.0" Color="{ThemeResource SystemAccentColor}" />
+                                            <GradientStop Offset="1.0" Color="{ThemeResource CardColor}" />
+                                        </LinearGradientBrush.GradientStops>
+                                    </LinearGradientBrush>
+                                </Grid.Background>
                                 <ContentControl
                                     Margin="2"
                                     Content="{Binding Path=Content, Mode=OneWay}"
