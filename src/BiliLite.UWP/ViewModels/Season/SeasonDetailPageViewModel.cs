@@ -143,7 +143,7 @@ namespace BiliLite.ViewModels.Season
             {
                 if (PageWidth < 1000)
                 {
-                    return PageHeight - BottomActionBarHeight;
+                    return Math.Max(0, PageHeight - BottomActionBarHeight);
                 }
 
                 return PageHeight;
