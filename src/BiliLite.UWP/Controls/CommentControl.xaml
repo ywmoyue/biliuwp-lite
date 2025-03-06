@@ -194,8 +194,14 @@
                     </TextBlock>
                     <TextBlock
                         VerticalAlignment="Center"
-                        Foreground="{x:Bind Path=Member.Vip.VipType, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=2}"
-                        Text="{x:Bind Path=Member.Uname}" />
+                        Text="{x:Bind Path=Member.Uname}"
+                        Visibility="{Binding Visibility, ElementName=VipUserName1, Converter={StaticResource DisplayConvert}}" />
+                    <TextBlock
+                        x:Name="VipUserName1"
+                        VerticalAlignment="Center"
+                        Foreground="{ThemeResource SystemAccentColor}"
+                        Text="{x:Bind Path=Member.Uname}"
+                        Visibility="{x:Bind Member.Vip.IsVip}" />
                     <Image
                         Height="12"
                         Margin="8,2,8,0"
@@ -514,12 +520,26 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel>
-
                                     <HyperlinkButton
                                         Padding="5"
                                         Click="BtnUser_Click"
-                                        Foreground="{Binding Path=Member.Vip.VipType, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=2}"
-                                        Tag="{Binding Path=Mid}">
+                                        Tag="{Binding Path=Mid}"
+                                        Visibility="{Binding Visibility, ElementName=VipUserName2, Converter={StaticResource DisplayConvert}}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock VerticalAlignment="Center" Text="{Binding Path=Member.Uname}" />
+                                            <Image
+                                                Height="12"
+                                                Margin="8,2,0,0"
+                                                Source="{Binding Path=Member.LV}" />
+                                        </StackPanel>
+                                    </HyperlinkButton>
+                                    <HyperlinkButton
+                                        x:Name="VipUserName2"
+                                        Padding="5"
+                                        Click="BtnUser_Click"
+                                        Foreground="{ThemeResource SystemAccentColor}"
+                                        Tag="{Binding Path=Mid}"
+                                        Visibility="{Binding Member.Vip.IsVip}">
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock VerticalAlignment="Center" Text="{Binding Path=Member.Uname}" />
                                             <Image
