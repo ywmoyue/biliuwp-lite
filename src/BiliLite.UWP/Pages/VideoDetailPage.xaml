@@ -452,9 +452,12 @@
                                 <TextBlock
                                     Margin="0,4,0,0"
                                     Foreground="Gray"
-                                    IsTextSelectionEnabled="True"><Run Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.View, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" />
-                                    播放 ·<Run Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Danmaku, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" />
-                                    弹幕<Run Text="{x:Bind Path=m_viewModel.VideoInfo.Bvid, Mode=OneWay}" /></TextBlock>
+                                    IsTextSelectionEnabled="True">
+                                    <Run Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.View, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" />
+                                    <Run Text="播放 /" />
+                                    <Run Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Danmaku, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" />
+                                    <Run Text="弹幕 /" />
+                                    <Run Text="{x:Bind Path=m_viewModel.VideoInfo.Bvid, Mode=OneWay}" /></TextBlock>
                                 <HyperlinkButton
                                     x:Name="btnOpenUser"
                                     Margin="0,8,0,0"
