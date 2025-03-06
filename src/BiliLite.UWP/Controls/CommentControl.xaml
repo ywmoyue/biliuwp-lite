@@ -101,7 +101,7 @@
                 </Grid.ColumnDefinitions>
                 <HyperlinkButton
                     Grid.RowSpan="2"
-                    Margin="10,0,0,0"
+                    Margin="8,0,0,0"
                     Padding="-7"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top"
@@ -254,40 +254,39 @@
                         </Border>
                     </Grid>
                 </StackPanel>
-                <StackPanel
+                <Grid
                     Grid.RowSpan="2"
                     Grid.Column="2"
                     VerticalAlignment="Top"
-                    Orientation="Horizontal">
+                    Visibility="{x:Bind Path=Member.ShowCardBg, Mode=OneWay}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
                     <StackPanel
+                        Margin="8,0,0,0"
                         VerticalAlignment="Center"
-                        Orientation="Horizontal"
-                        Visibility="{x:Bind Path=Member.ShowCardBg, Mode=OneWay}">
-                        <Grid Width="40" Height="48">
-                            <Image
-                                Width="288"
-                                Height="48"
-                                Margin="-200,0,0,0"
-                                Source="{x:Bind Path=Member.UserSailing.Cardbg.Image, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='64h.png'}"
-                                Stretch="UniformToFill" />
-                        </Grid>
-                        <StackPanel
-                            Margin="8,0,0,0"
-                            VerticalAlignment="Center"
-                            Visibility="{x:Bind Path=Member.UserSailing.Cardbg.Show, Mode=OneWay}">
-                            <TextBlock
-                                FontFamily="{StaticResource FansNum}"
-                                FontSize="10"
-                                Foreground="{x:Bind Path=Member.UserSailing.Cardbg.Fan.Color, Mode=OneWay, Converter={StaticResource ColorConvert}}"
-                                Text="NO." />
-                            <TextBlock
-                                FontFamily="{StaticResource FansNum}"
-                                FontSize="10"
-                                Foreground="{x:Bind Path=Member.UserSailing.Cardbg.Fan.Color, Mode=OneWay, Converter={StaticResource ColorConvert}}"
-                                Text="{x:Bind Path=Member.UserSailing.Cardbg.Fan.NumDesc, Mode=OneWay}" />
-                        </StackPanel>
+                        Visibility="{x:Bind Path=Member.UserSailing.Cardbg.Show, Mode=OneWay}">
+                        <TextBlock
+                            FontFamily="{StaticResource FansNum}"
+                            FontSize="10"
+                            Foreground="{x:Bind Path=Member.UserSailing.Cardbg.Fan.Color, Mode=OneWay, Converter={StaticResource ColorConvert}}"
+                            Text="NO." />
+                        <TextBlock
+                            FontFamily="{StaticResource FansNum}"
+                            FontSize="10"
+                            Foreground="{x:Bind Path=Member.UserSailing.Cardbg.Fan.Color, Mode=OneWay, Converter={StaticResource ColorConvert}}"
+                            Text="{x:Bind Path=Member.UserSailing.Cardbg.Fan.NumDesc, Mode=OneWay}" />
                     </StackPanel>
-                </StackPanel>
+
+                    <Grid Grid.Column="1" Background="Transparent">
+                        <Image
+                            Height="48"
+                            Margin="-200,0,-50,0"
+                            Source="{x:Bind Path=Member.UserSailing.Cardbg.Image, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='64h.png'}"
+                            Stretch="UniformToFill" />
+                    </Grid>
+                </Grid>
 
                 <TextBlock
                     Grid.Row="1"
