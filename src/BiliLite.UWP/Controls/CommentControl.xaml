@@ -101,17 +101,14 @@
                 </Grid.ColumnDefinitions>
                 <HyperlinkButton
                     Grid.RowSpan="2"
-                    Margin="0"
-                    Padding="0"
+                    Margin="10,0,0,0"
+                    Padding="-7"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top"
                     Click="BtnUser_Click"
                     Tag="{x:Bind Mid}">
                     <Grid>
-                        <Ellipse
-                            Width="36"
-                            Height="36"
-                            Margin="12">
+                        <Ellipse Width="36" Height="36">
                             <Ellipse.Fill>
                                 <ImageBrush ImageSource="{x:Bind Path=Member.Avatar}" Stretch="UniformToFill" />
                             </Ellipse.Fill>
