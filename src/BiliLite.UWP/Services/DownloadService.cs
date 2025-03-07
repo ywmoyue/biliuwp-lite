@@ -785,13 +785,13 @@ namespace BiliLite.Services
             }
         }
 
-        public async Task AddOtherTracksToDownloadedSubItemIndex(DownloadInfo info,DownloadSaveEpisodeInfo downloadSaveEpisodeInfo)
+        public async Task AddOtherTracksToDownloadedSubItemIndex(DownloadInfo info, DownloadSaveEpisodeInfo downloadSaveEpisodeInfo)
         {
             var downloadedSubItemDTO = await m_biliLiteDbContext.DownloadedSubItems.FirstOrDefaultAsync(x => x.CID == info.CID);
 
             foreach (var item in info.Urls)
             {
-                var paths = downloadedSubItemDTO.Paths; 
+                var paths = downloadedSubItemDTO.Paths;
                 paths.Add(Path.Combine(downloadSaveEpisodeInfo.Path, item.FileName));
                 downloadedSubItemDTO.Paths = paths;
             }

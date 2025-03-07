@@ -53,6 +53,20 @@ namespace BiliLite.Extensions.Notifications
             return (bool)result.Id;
         }
 
+        public static async void ShowVideoErrorMessageDialog(string message)
+        {
+            await ShowMessageDialog($@"播放失败:{message}
+你可以进行以下尝试:
+1、切换视频清晰度
+2、到⌈设置⌋-⌈播放⌋中修改⌈优先视频编码⌋选项
+3、到⌈设置⌋-⌈播放⌋中打开或关闭⌈替换PCDN链接⌋选项
+4、到⌈设置⌋-⌈代理⌋中打开或关闭⌈尝试替换视频的CDN⌋选项
+5、如果视频编码选择了HEVC，请检查是否安装了HEVC扩展
+6、如果视频编码选择了AV1，请检查是否安装了AV1扩展
+7、如果是付费视频，请在手机或网页端购买后观看
+8、尝试更新您的显卡驱动或使用核显打开应用", "播放失败");
+        }
+
         public static void ShowMessageToast(string message, int seconds = 2)
         {
             MessageToast ms = new MessageToast(message, TimeSpan.FromSeconds(seconds));

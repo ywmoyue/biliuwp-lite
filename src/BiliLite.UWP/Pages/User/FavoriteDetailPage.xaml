@@ -17,8 +17,16 @@
             <Grid Background="#00FFFFFF">
                 <Grid.ContextFlyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem x:Name="CancelFav" Click="CancelFav_OnClick" Icon="Delete"  Text="取消收藏"></MenuFlyoutItem>
-                        <MenuFlyoutItem x:Name="AddToWatchLater" Click="AddToWatchLater_Click" Icon="Add" Text="添加到稍后再看"/>
+                        <MenuFlyoutItem
+                            x:Name="CancelFav"
+                            Click="CancelFav_OnClick"
+                            Icon="Delete"
+                            Text="取消收藏" />
+                        <MenuFlyoutItem
+                            x:Name="AddToWatchLater"
+                            Click="AddToWatchLater_Click"
+                            Icon="Add"
+                            Text="添加到稍后再看" />
                     </MenuFlyout>
                 </Grid.ContextFlyout>
                 <Grid.ColumnDefinitions>

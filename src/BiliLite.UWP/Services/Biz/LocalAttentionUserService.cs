@@ -4,6 +4,7 @@ using BiliLite.Models.Attributes;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Live;
 using BiliLite.Models.Common.User;
+using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests.Api.Live;
 using System.Collections.Generic;
 using System.Linq;

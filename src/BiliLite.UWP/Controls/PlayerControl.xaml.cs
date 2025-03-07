@@ -37,7 +37,6 @@ using Windows.System.Display;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Input;
-using Windows.UI.Popups;
 using Windows.UI.Text;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -213,7 +212,7 @@ namespace BiliLite.Controls
                 var info = await GetPlayUrlQualitesInfo();
                 if (!info.Success)
                 {
-                    ShowDialog($"请求信息:\r\n{info.Message}", "读取视频播放地址失败");
+                    await NotificationShowExtensions.ShowMessageDialog($"请求信息:\r\n{info.Message}", "读取视频播放地址失败");
                 }
                 else
                 {
@@ -221,7 +220,7 @@ namespace BiliLite.Controls
                     InitSoundQuality();
                     InitQuality();
                 }
-                Notify.ShowMessageToast("已根据设置自动刷新播放地址");
+                NotificationShowExtensions.ShowMessageToast("已根据设置自动刷新播放地址");
                 m_startTime = DateTime.Now;
             });
         }
@@ -977,7 +976,7 @@ namespace BiliLite.Controls
                 var info = await GetPlayUrlQualitesInfo();
                 if (!info.Success)
                 {
-                    ShowDialog($"请求信息:\r\n{info.Message}", "读取视频播放地址失败");
+                    await NotificationShowExtensions.ShowMessageDialog($"请求信息:\r\n{info.Message}", "读取视频播放地址失败");
                 }
                 else
                 {
@@ -1257,7 +1256,7 @@ namespace BiliLite.Controls
                 var info = await GetPlayUrlQualitesInfo();
                 if (!info.Success)
                 {
-                    ShowDialog($"请求信息:\r\n{info.Message}", "读取视频播放地址失败");
+                    await NotificationShowExtensions.ShowMessageDialog($"请求信息:\r\n{info.Message}", "读取视频播放地址失败");
                 }
                 else
                 {
@@ -1467,7 +1466,7 @@ namespace BiliLite.Controls
                 await ChangeQualityPlayLocalVideo(CurrentPlayItem.LocalPlayInfo.Info.DashInfo);
             }
             else
-            { 
+            {
                 latestChoice = playUrlInfo.AudioQualites[(int)SliderSoundQuality.Value];
                 SettingService.SetValue<int>(SettingConstants.Player.DEFAULT_SOUND_QUALITY, latestChoice.QualityID);
                 await ChangeQuality(current_quality_info, latestChoice);
@@ -1663,7 +1662,7 @@ namespace BiliLite.Controls
             }
             else
             {
-                ShowErrorDialog(result.message + "[LocalFile]");
+                NotificationShowExtensions.ShowVideoErrorMessageDialog(result.message + "[LocalFile]");
             }
         }
 
@@ -1806,12 +1805,12 @@ namespace BiliLite.Controls
             var info = await playerHelper.GetPlayUrls(CurrentPlayItem, quality.QualityID, soundQualityId.Value);
             if (!info.Success)
             {
-                ShowDialog(info.Message, "切换清晰度失败");
+                await NotificationShowExtensions.ShowMessageDialog(info.Message, "切换清晰度失败");
                 return false;
             }
             if (!info.CurrentQuality.HasPlayUrl)
             {
-                ShowDialog("无法读取到播放地址，试试换个清晰度?", "播放失败");
+                await NotificationShowExtensions.ShowMessageDialog("无法读取到播放地址，试试换个清晰度?", "播放失败");
                 return false;
             }
             quality = info.CurrentQuality;
@@ -1830,7 +1829,7 @@ namespace BiliLite.Controls
             }
             else
             {
-                ShowErrorDialog(result.message + "[LocalFile]");
+                NotificationShowExtensions.ShowVideoErrorMessageDialog(result.message + "[LocalFile]");
             }
         }
 
@@ -1901,26 +1900,8 @@ namespace BiliLite.Controls
             }
             else
             {
-                ShowErrorDialog(result.message + "[ChangeQuality]");
+                NotificationShowExtensions.ShowVideoErrorMessageDialog(result.message + "[ChangeQuality]");
             }
-        }
-        private void ShowErrorDialog(string message)
-        {
-            ShowDialog($@"播放失败:{message}
-你可以进行以下尝试:
-1、切换视频清晰度
-2、到⌈设置⌋-⌈播放⌋中修改⌈优先视频编码⌋选项
-3、到⌈设置⌋-⌈播放⌋中打开或关闭⌈替换PCDN链接⌋选项
-4、到⌈设置⌋-⌈代理⌋中打开或关闭⌈尝试替换视频的CDN⌋选项
-5、如果视频编码选择了HEVC，请检查是否安装了HEVC扩展
-6、如果视频编码选择了AV1，请检查是否安装了AV1扩展
-7、如果是付费视频，请在手机或网页端购买后观看
-8、尝试更新您的显卡驱动或使用核显打开应用", "播放失败");
-        }
-        private async void ShowDialog(string content, string title)
-        {
-            MessageDialog dislog = new MessageDialog(content, title);
-            await dislog.ShowAsync();
         }
 
         #region 全屏处理
@@ -2673,10 +2654,10 @@ namespace BiliLite.Controls
 
 
         }
-        private void Player_PlayMediaError(object sender, string e)
+        private async void Player_PlayMediaError(object sender, string e)
         {
             _logger.Error($"播放失败:{e}");
-            ShowDialog(e, "播放失败");
+            await NotificationShowExtensions.ShowMessageDialog(e, "播放失败");
         }
 
         private async void DanmuSettingUpdateDanmaku_Click(object sender, RoutedEventArgs e)
@@ -2744,7 +2725,7 @@ namespace BiliLite.Controls
             if (!result.result)
             {
                 _logger.Error($"播放失败:{result.message}");
-                ShowDialog(result.message, "播放失败");
+                await NotificationShowExtensions.ShowMessageDialog(result.message, "播放失败");
                 return;
             }
 
@@ -2814,7 +2795,7 @@ namespace BiliLite.Controls
 
         public void ToggleSubtitle()
         {
-            if (!(BottomBtnSelctSubtitle.Flyout is MenuFlyout subtitleMenu)) return;
+            if (BottomBtnSelctSubtitle.Flyout is not MenuFlyout subtitleMenu) return;
 
             var targetItem = subtitleMenu.Items.OfType<ToggleMenuFlyoutItem>().FirstOrDefault(item =>
                 (CurrentSubtitleName == "无" && item.Text != "无") ||
@@ -3064,7 +3045,7 @@ namespace BiliLite.Controls
                     var info = await GetPlayUrlQualitesInfo();
                     if (!info.Success)
                     {
-                        ShowDialog($"请求信息:\r\n{info.Message}", "读取视频播放地址失败");
+                        await NotificationShowExtensions.ShowMessageDialog($"请求信息:\r\n{info.Message}", "读取视频播放地址失败");
                     }
                     else
                     {

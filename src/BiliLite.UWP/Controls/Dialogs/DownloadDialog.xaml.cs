@@ -1,19 +1,20 @@
-﻿﻿using BiliLite.Modules;
+﻿using AutoMapper;
+using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
+using BiliLite.Models.Common;
+using BiliLite.Models.Common.Video;
+using BiliLite.Models.Common.Video.PlayUrlInfos;
+using BiliLite.Models.Download;
+using BiliLite.Modules;
 using BiliLite.Services;
+using BiliLite.ViewModels.Download;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using BiliLite.Models.Common;
-using BiliLite.Models.Download;
-using BiliLite.Extensions;
-using BiliLite.Models.Common.Video;
-using BiliLite.Models.Common.Video.PlayUrlInfos;
-using BiliLite.ViewModels.Download;
-using AutoMapper;
-using Microsoft.Extensions.DependencyInjection;
-using System.Threading.Tasks;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 
@@ -30,7 +31,7 @@ namespace BiliLite.Controls.Dialogs
 
         public DownloadDialog(DownloadItem downloadItem)
         {
-            this.InitializeComponent(); 
+            this.InitializeComponent();
             playerVM = new PlayerVM(true);
 
             m_viewModel = App.ServiceProvider.GetService<DownloadDialogViewModel>();
@@ -91,7 +92,7 @@ namespace BiliLite.Controls.Dialogs
             }, 0);
             if (!data.Success)
             {
-                Notify.ShowMessageToast("读取可下载清晰度时失败：" + data.Message);
+                NotificationShowExtensions.ShowMessageToast("读取可下载清晰度时失败：" + data.Message);
                 return;
             }
             if (data.Qualites == null || data.Qualites.Count < 1)
@@ -105,7 +106,7 @@ namespace BiliLite.Controls.Dialogs
                 m_viewModel.SelectedQualityIndex = m_viewModel.Qualities.IndexOf(quality);
             else m_viewModel.SelectedQualityIndex = m_viewModel.Qualities.Count - 1;
 
-            m_viewModel.AudioQualities = data.AudioQualites;
+            m_viewModel.AudioQualities = [.. data.AudioQualites.OrderBy(x => x.QualityID)];
             var audioQuality =
                 m_viewModel.AudioQualities.FirstOrDefault(x => x.QualityID == settingDownloadSoundQuality);
             if (audioQuality != null)
@@ -119,7 +120,7 @@ namespace BiliLite.Controls.Dialogs
 
             if (listView.SelectedItems == null || listView.SelectedItems.Count == 0)
             {
-                Notify.ShowMessageToast("请选择要下载的剧集");
+                NotificationShowExtensions.ShowMessageToast("请选择要下载的剧集");
                 return;
             }
 
@@ -185,7 +186,7 @@ namespace BiliLite.Controls.Dialogs
             m_downloadService.LoadDownloading();
             IsPrimaryButtonEnabled = true;
 
-            Notify.ShowMessageToast(hide ? "已添加至下载列表" : "有视频下载失败");
+            NotificationShowExtensions.ShowMessageToast(hide ? "已添加至下载列表" : "有视频下载失败");
 
             SettingService.SetValue(SettingConstants.Download.DOWNLOAD_QUALITY, m_viewModel.Qualities[m_viewModel.SelectedQualityIndex].QualityID);
             SettingService.SetValue(SettingConstants.Download.DOWNLOAD_SOUND_QUALITY, m_viewModel.SelectedAudioQuality.QualityID);
