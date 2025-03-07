@@ -658,7 +658,7 @@
                             SelectionMode="None">
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="video:VideoDetailRelatesViewModel">
-                                    <Grid Background="#00FFFFFF">
+                                    <Grid Margin="0,4">
                                         <Grid.ContextFlyout>
                                             <MenuFlyout>
                                                 <MenuFlyoutItem
