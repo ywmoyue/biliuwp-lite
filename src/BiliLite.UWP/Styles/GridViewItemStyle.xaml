@@ -20,7 +20,7 @@
         <Setter Property="IsHoldingEnabled" Value="True" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="Margin" Value="5" />
+        <Setter Property="Margin" Value="10" />
         <Setter Property="MinWidth" Value="165" />
         <Setter Property="MinHeight" Value="{ThemeResource GridViewItemMinHeight}" />
         <Setter Property="AllowDrop" Value="True" />
