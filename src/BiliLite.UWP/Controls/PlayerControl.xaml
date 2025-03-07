@@ -886,7 +886,7 @@
                                                             Grid.Column="1"
                                                             Width="64"
                                                             Margin="4,0,0,0"
-                                                            Background="{Binding ElementName=SendDanmakuColorText, Path=Text, Converter={StaticResource ColorSelectedConvert}, Mode=OneWay}"
+                                                            Background="{Binding ElementName=SendDanmakuColorText, Path=Text, Converter={StaticResource ColorConvert}, Mode=OneWay}"
                                                             CornerRadius="{StaticResource ControlCornerRadius}" />
                                                     </Grid>
                                                     <GridView
@@ -901,18 +901,10 @@
                                                                 <Border
                                                                     Width="24"
                                                                     Height="24"
-                                                                    Background="{x:Bind Converter={StaticResource ColorSelectedConvert}}"
+                                                                    Background="{x:Bind Converter={StaticResource ColorConvert}}"
                                                                     CornerRadius="{StaticResource ControlCornerRadius}" />
                                                             </DataTemplate>
                                                         </GridView.ItemTemplate>
-                                                        <GridView.ItemContainerStyle>
-                                                            <Style TargetType="GridViewItem">
-                                                                <Setter Property="MinHeight" Value="24" />
-                                                                <Setter Property="Margin" Value="4,4" />
-                                                                <Setter Property="BorderThickness" Value="0" />
-                                                                <Setter Property="MinWidth" Value="0" />
-                                                            </Style>
-                                                        </GridView.ItemContainerStyle>
                                                     </GridView>
                                                 </StackPanel>
                                             </Flyout>
