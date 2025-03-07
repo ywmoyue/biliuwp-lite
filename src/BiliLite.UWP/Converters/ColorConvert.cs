@@ -11,41 +11,36 @@ namespace BiliLite.Converters
         {
             if (value == null)
             {
-                return new SolidColorBrush(Colors.Transparent);
+                return new SolidColorBrush(Colors.Red);
             }
 
             Color color = new();
-            if (value is string string1)
+            if (value is Color colorValue)
             {
+                color = colorValue;
+            }
+            else
+            {
+                var stringValue = value.ToString();
                 try
                 {
-                    if (!string1.Contains("#"))
+                    if (!stringValue.Contains("#"))
                     {
-                        string1 = "#" + string1;
-                    }
-                    switch (string1.Length)
-                    {
-                        case < 7:
-                            string1 = "#00000000";
-                            break;
-                        case 8:
-                            string1 = string1.Remove(string1.Length - 1);
-                            break;
-                        case > 9:
-                            string1 = string1.Substring(0, 9);
-                            break;
-                    }
+                        if (long.TryParse(stringValue, out var c))
+                        {
+                            stringValue = c.ToString("X2");
+                        }
+                        int desiredLength = stringValue.Length <= 6 ? 6 : 8;
+                        stringValue = stringValue.PadLeft(desiredLength, '0');
 
-                    color = Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor(string1);
+                        stringValue = "#" + stringValue;
+                    }
+                    color = Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor(stringValue);
                 }
                 catch (Exception)
                 {
-                    color = Colors.Transparent;
+                    color = Colors.Red;
                 }
-            }
-            if (value is Color color1)
-            {
-                color = color1;
             }
 
             if (parameter != null)

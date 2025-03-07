@@ -6,12 +6,14 @@ using BiliLite.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using BiliLite.Models.Common.UserDynamic;
+using BiliLite.Models.Exceptions;
 
 namespace BiliLite.Models.Requests.Api
 {
     public class CommentApi
     {
         private readonly CookieService m_cookieService;
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
 
         public CommentApi()
         {
@@ -66,24 +68,30 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel CommentV2(string oid, CommentSort sort, int pn, int type, int ps = 30, string offsetStr = null)
         {
-            var csrf = m_cookieService.GetCSRFToken();
             var mode = sort == CommentSort.Hot ? 3 : 2;
-            var pagination = new
-            {
-                offset = offsetStr
-            };
+            var pagination = new { offset = offsetStr };
             var paginationStr = JsonConvert.SerializeObject(pagination);
+            var parameters = $"oid={oid}&ps={ps}&mode={mode}&type={type}&pagination_str={paginationStr}";
 
-            var api = new ApiModel()
+            try
+            {
+                var csrf = m_cookieService.GetCSRFToken();
+                parameters += $"&csrf={csrf}";
+            }
+            catch (UnLoginException)
+            {
+                _logger.Warn("获取评论未登录");
+            }
+
+            return new ApiModel
             {
                 method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply/main",
-                parameter = $"oid={oid}&ps={ps}&mode={mode}&type={type}&csrf={csrf}&pagination_str={paginationStr}",
+                parameter = parameters,
                 need_cookie = true,
             };
-            //api.parameter += ApiHelper.GetSign(api.parameter, appKey);
-            return api;
         }
+
 
         public ApiModel Reply(string oid, string root, int pn, int type, int ps = 30)
         {

@@ -8,6 +8,7 @@ using BiliLite.Models;
 using BiliLite.Models.Common;
 using BiliLite.Models.Requests.Api;
 using Newtonsoft.Json;
+using BiliLite.Models.Exceptions;
 
 namespace BiliLite.Services
 {
@@ -98,14 +99,14 @@ namespace BiliLite.Services
             //没有Cookie
             if (Cookies == null || Cookies.Count == 0)
             {
-                throw new Exception("未登录");
+                throw new UnLoginException();
             }
 
             var csrf = Cookies.FirstOrDefault(x => x.Name == "bili_jct")?.Value;
 
             if (string.IsNullOrEmpty(csrf))
             {
-                throw new Exception("未登录");
+                throw new UnLoginException();
             }
 
             return csrf;

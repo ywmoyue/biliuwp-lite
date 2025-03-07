@@ -306,7 +306,7 @@ namespace BiliLite.Pages
                         Author = item.AuthorDesc,
                         Cover = item.Cover,
                         Id = item.Aid,
-                        Duration = TimeSpan.FromSeconds(item.Duration),
+                        Duration = TimeSpan.FromSeconds(item.Page.Duration),
                     };
                     if (item.Aid == m_viewModel.VideoInfo.Aid)
                     {

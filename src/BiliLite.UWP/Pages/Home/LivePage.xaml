@@ -25,7 +25,7 @@
                         MaxHeight="240"
                         AspectRatio="3.2"
                         ItemsSource="{x:Bind Path=m_viewModel.Banners, Mode=OneWay}"
-                        MaxItems="1"
+                        MaxItems="1"  Visibility="{x:Bind m_viewModel.DisplayRecommendBanners,Mode=OneWay}"
                         SlideInterval="5000">
                         <controls:Carousel.ContentTemplate>
                             <DataTemplate>
@@ -90,7 +90,7 @@
                                 </ItemsPanelTemplate>
                             </GridView.ItemsPanel>
                             <GridView.ItemTemplate>
-                                <DataTemplate x:DataType="live1:LiveRoomInfoOldModel">
+                                <DataTemplate x:DataType="live1:LiveInfoModel">
                                     <Grid>
                                         <Grid.ContextFlyout>
                                             <MenuFlyout>
@@ -102,49 +102,37 @@
                                             <RowDefinition Height="24" />
                                             <RowDefinition Height="24" />
                                         </Grid.RowDefinitions>
-                                        <Grid>
-                                            <toolkit:ImageEx
-                                                Width="260"
-                                                Height="160"
-                                                HorizontalAlignment="Stretch"
-                                                VerticalAlignment="Stretch"
-                                                PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                                Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='460w_260h_1c'}"
-                                                Stretch="UniformToFill" />
-                                            <Grid Padding="8" VerticalAlignment="Bottom">
-                                                <Grid.Background>
-                                                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                                                        <GradientStop Offset="0.993" Color="#CC000005" />
-                                                        <GradientStop Offset="0" Color="#00000000" />
-                                                    </LinearGradientBrush>
-                                                </Grid.Background>
-                                                <StackPanel>
-                                                    <TextBlock
-                                                        FontSize="12"
-                                                        Foreground="White"
-                                                        Text="{x:Bind Path=UserName}" />
-                                                </StackPanel>
-                                                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                                                    <fa:FontAwesome
-                                                        Margin="0,0,8,0"
-                                                        FontSize="12"
-                                                        Foreground="White"
-                                                        Icon="Solid_UserFriends" />
-                                                    <TextBlock
-                                                        FontSize="12"
-                                                        Foreground="White"
-                                                        Text="{x:Bind Path=Online, Converter={StaticResource NumberToStringConvert}}" />
-                                                </StackPanel>
-                                            </Grid>
-                                        </Grid>
+                                        <Border CornerRadius="{StaticResource ImageCornerRadius}">
+                                            <Border.ContextFlyout>
+                                                <MenuFlyout>
+                                                    <MenuFlyoutItem Click="CancelLocalAttention_OnClick">取消本地关注</MenuFlyoutItem>
+                                                </MenuFlyout>
+                                            </Border.ContextFlyout>
+                                            <Grid>
+                                                <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Height="160" Width="260" Stretch="UniformToFill" Source="{x:Bind Path=RoomInfo.Cover,Converter={StaticResource imageConvert},ConverterParameter='460w_260h_1c'}"></toolkit:ImageEx>
+                                                <Grid VerticalAlignment="Bottom" Padding="8">
+                                                    <Grid.Background>
+                                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                            <GradientStop Color="#CC000005" Offset="0.993" />
+                                                            <GradientStop Color="#00000000" Offset="0" />
+                                                        </LinearGradientBrush>
+                                                    </Grid.Background>
+                                                    <StackPanel>
+                                                        <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=AnchorInfo.BaseInfo.Uname}"></TextBlock>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                        <TextBlock FontSize="12" Foreground="White" 
+                                                                   Margin="0 0 8 0"
+                                                                   Text="{x:Bind converters:LiveStatusConverter.Convert(RoomInfo.LiveStatus)}"></TextBlock>
+                                                        <fa:FontAwesome Icon="Solid_UserFriends" Foreground="White" FontSize="12" Margin="0 0 8 0"></fa:FontAwesome>
+                                                        <TextBlock FontSize="12" Foreground="White" Text="{x:Bind Path=RoomInfo.Online,Converter={StaticResource numberToStringConvert}}"></TextBlock>
+                                                    </StackPanel>
 
-                                        <TextBlock
-                                            Grid.Row="1"
-                                            Margin="4,4,4,0"
-                                            MaxLines="1"
-                                            Text="{x:Bind Path=Title}"
-                                            TextTrimming="CharacterEllipsis"
-                                            TextWrapping="Wrap" />
+                                                </Grid>
+
+                                            </Grid>
+                                        </Border>
+                                        <TextBlock Grid.Row="1" Margin="4 4 4 0" MaxLines="1" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=RoomInfo.Title}"></TextBlock>
                                     </Grid>
                                 </DataTemplate>
                             </GridView.ItemTemplate>
@@ -250,7 +238,8 @@
                             </GridView.ItemTemplate>
                         </controls:HorizontalGridView>
                     </StackPanel>
-                    <ItemsControl ItemsSource="{x:Bind Path=m_viewModel.Items, Mode=OneWay}">
+                    <ItemsControl Margin="0 8 0 0" ItemsSource="{x:Bind Path=m_viewModel.Items,Mode=OneWay}" 
+                                  Visibility="{x:Bind m_viewModel.DisplayRecommendLives,Mode=OneWay}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <ItemsStackPanel Orientation="Vertical" />

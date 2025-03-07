@@ -510,7 +510,7 @@ namespace BiliLite.Pages
                 Subtitle = m_viewModel.Detail.Subtitle,
                 Title = m_viewModel.Detail.Title,
                 UpMid = m_viewModel.Detail.UpInfo?.Mid ?? 0,
-                Type = DownloadType.Season
+                Type = DownloadType.Season,
             };
             int i = 0;
             foreach (var item in m_viewModel.Detail.Episodes)

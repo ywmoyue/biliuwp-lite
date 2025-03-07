@@ -2,6 +2,7 @@
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Attributes;
+using BiliLite.Models.Common;
 using BiliLite.Models.Common.Home;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests.Api.Home;
@@ -45,6 +46,10 @@ namespace BiliLite.ViewModels.Home
 
         public bool ShowLocalFollows { get; set; }
 
+        public bool DisplayRecommendLives { get; set; }
+
+        public bool DisplayRecommendBanners { get; set; }
+
         public bool Loading { get; set; }
 
         public bool LoadingFollow { get; set; } = true;
@@ -66,13 +71,19 @@ namespace BiliLite.ViewModels.Home
             try
             {
                 Loading = true;
+
+                DisplayRecommendLives =
+                    SettingService.GetValue(SettingConstants.UI.DISPLAY_LIVE_PAGE_RECOMMEND_LIVE, true);
+                DisplayRecommendBanners =
+                    SettingService.GetValue(SettingConstants.UI.DISPLAY_LIVE_BANNER, true);
+
                 var api = m_liveApi.LiveHome();
 
                 var results = await api.Request();
                 if (!results.status) throw new CustomizedErrorException(results.message);
                 var data = await results.GetJson<ApiDataModel<JObject>>();
                 if (!data.success) throw new CustomizedErrorException(data.message);
-                if (data.data["banner"].Any())
+                if (data.data["banner"].Any() && DisplayRecommendBanners)
                 {
                     Banners = await data.data["banner"][0]["list"].ToString()
                         .DeserializeJson<ObservableCollection<LiveHomeBannerModel>>();
@@ -84,7 +95,12 @@ namespace BiliLite.ViewModels.Home
                         .DeserializeJson<ObservableCollection<LiveHomeAreaModel>>();
                 }
 
-                await GetLiveHomeItems();
+                if(DisplayRecommendLives)
+                    await GetLiveHomeItems();
+                else
+                {
+                    Loading = false;
+                }
             }
             catch (CustomizedErrorException ex)
             {
