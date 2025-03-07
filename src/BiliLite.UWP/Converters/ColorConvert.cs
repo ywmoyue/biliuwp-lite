@@ -11,7 +11,7 @@ namespace BiliLite.Converters
         {
             if (value == null)
             {
-                return new SolidColorBrush(Colors.Red);
+                return new SolidColorBrush(Colors.Transparent);
             }
 
             Color color = new();
@@ -39,7 +39,7 @@ namespace BiliLite.Converters
                 }
                 catch (Exception)
                 {
-                    color = Colors.Red;
+                    color = Colors.Transparent;
                 }
             }
 
