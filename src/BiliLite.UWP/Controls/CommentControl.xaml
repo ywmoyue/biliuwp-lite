@@ -700,7 +700,7 @@
 
                 <ListView
                     Grid.Row="6"
-                    Margin="-3,0,0,0"
+                    Margin="-9,0,0,0"
                     CornerRadius="{StaticResource ControlCornerRadius}"
                     IsItemClickEnabled="False"
                     ItemsSource="{x:Bind HotReplies, Mode=OneWay}"
@@ -715,18 +715,17 @@
                                 Padding="5"
                                 CornerRadius="{StaticResource ControlCornerRadius}">
                                 <Grid.Background>
-                                    <LinearGradientBrush MappingMode="Absolute" StartPoint="0,0" EndPoint="2,0">
+                                    <LinearGradientBrush MappingMode="Absolute" StartPoint="0,0" EndPoint="0,2">
                                         <LinearGradientBrush.RelativeTransform>
                                             <ScaleTransform CenterY="0.5" ScaleY="-1" />
                                         </LinearGradientBrush.RelativeTransform>
                                         <LinearGradientBrush.GradientStops>
-                                            <GradientStop Offset="1.0" Color="{ThemeResource SystemAccentColor}" />
-                                            <GradientStop Offset="1.0" Color="{ThemeResource CardColor}" />
+                                            <GradientStop Offset="1.0" Color="{ThemeResource SeparatorColor}" />
+                                            <GradientStop Offset="1.0" Color="Transparent" />
                                         </LinearGradientBrush.GradientStops>
                                     </LinearGradientBrush>
                                 </Grid.Background>
                                 <ContentControl
-                                    Margin="2"
                                     Content="{Binding Path=Content, Mode=OneWay}"
                                     FontSize="13"
                                     Visibility="Visible" />
