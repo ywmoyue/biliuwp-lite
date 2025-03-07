@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Windows.UI;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
@@ -46,7 +45,6 @@ namespace BiliLite.Converters
 
             if (parameter != null)
             {
-                Debug.WriteLine(color);
                 return color;
             }
             return new SolidColorBrush(color);
