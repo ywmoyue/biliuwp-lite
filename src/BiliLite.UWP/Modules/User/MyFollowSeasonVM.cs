@@ -1,14 +1,15 @@
-﻿using BiliLite.Models;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
+using BiliLite.Models;
+using BiliLite.Models.Common.Anime;
 using BiliLite.Models.Requests.Api.User;
+using BiliLite.Services;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BiliLite.Extensions;
-using BiliLite.Models.Common.Anime;
-using BiliLite.Services;
-using Newtonsoft.Json;
 
 namespace BiliLite.Modules
 {
@@ -109,7 +110,7 @@ namespace BiliLite.Modules
                             }
                             else
                             {
-                                Notify.ShowMessageToast("全部加载完了...");
+                                NotificationShowExtensions.ShowMessageToast("全部加载完了...");
                             }
                             return;
                         }
@@ -141,18 +142,18 @@ namespace BiliLite.Modules
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<MyFollowSeasonVM>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {
@@ -196,9 +197,9 @@ namespace BiliLite.Modules
         }
         public async void CancelFollow(object par)
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录后再操作");
+                NotificationShowExtensions.ShowMessageToast("请先登录后再操作");
                 return;
             }
             var item = par as FollowSeasonModel;
@@ -218,27 +219,27 @@ namespace BiliLite.Modules
                         }
                         if (!string.IsNullOrEmpty(data.result["toast"]?.ToString()))
                         {
-                            Notify.ShowMessageToast(data.result["toast"].ToString());
+                            NotificationShowExtensions.ShowMessageToast(data.result["toast"].ToString());
                         }
                         else
                         {
-                            Notify.ShowMessageToast("操作成功");
+                            NotificationShowExtensions.ShowMessageToast("操作成功");
                         }
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<object>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
 
 
@@ -261,9 +262,9 @@ namespace BiliLite.Modules
         }
         private async Task SetSeasonStatus(FollowSeasonModel item, int status)
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录后再操作");
+                NotificationShowExtensions.ShowMessageToast("请先登录后再操作");
                 return;
             }
             try
@@ -280,22 +281,22 @@ namespace BiliLite.Modules
                         {
                             Nothing = true;
                         }
-                        Notify.ShowMessageToast("操作成功");
+                        NotificationShowExtensions.ShowMessageToast("操作成功");
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<object>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
         }
 

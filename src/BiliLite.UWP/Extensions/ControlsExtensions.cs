@@ -1,5 +1,5 @@
 ﻿using BiliLite.Controls;
-using BiliLite.Dialogs;
+using BiliLite.Controls.Dialogs;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using Windows.UI.Xaml.Media;

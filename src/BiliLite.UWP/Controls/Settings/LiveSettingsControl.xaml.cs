@@ -1,10 +1,10 @@
-﻿using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using BiliLite.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -47,7 +47,7 @@ namespace BiliLite.Controls.Settings
         {
             if (string.IsNullOrEmpty(LiveDanmuSettingTxtWord.Text))
             {
-                Notify.ShowMessageToast("关键字不能为空");
+                NotificationShowExtensions.ShowMessageToast("关键字不能为空");
                 return;
             }
             if (!m_viewModel.LiveShieldWords.Contains(LiveDanmuSettingTxtWord.Text))

@@ -1,4 +1,6 @@
-﻿using BiliLite.Dialogs;
+﻿
+using BiliLite.Controls.Dialogs;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Player;
 using BiliLite.Services;
@@ -358,7 +360,7 @@ namespace BiliLite.Controls.Settings
         private async void BtnEditPlaySpeedMenu_OnClick(object sender, RoutedEventArgs e)
         {
             var dialog = App.ServiceProvider.GetRequiredService<EditPlaySpeedMenuDialog>();
-            await dialog.ShowAsync();
+            await NotificationShowExtensions.ShowContentDialog(dialog);
         }
 
         private void RoamingSettingTestCDN_Click(object sender, RoutedEventArgs e)
@@ -378,9 +380,9 @@ namespace BiliLite.Controls.Settings
             m_viewModel.FFmpegOptions.Add(new KeyValuePairViewModel());
         }
 
-        private void BtnOpenFFmpegOptionsPanel_OnClick(object sender, RoutedEventArgs e)
+        private async void BtnOpenFFmpegOptionsPanel_OnClick(object sender, RoutedEventArgs e)
         {
-            FFmpegOptionsDialog.ShowAsync();
+            await NotificationShowExtensions.ShowContentDialog(FFmpegOptionsDialog);
         }
     }
 }

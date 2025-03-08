@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Common.User;
 using BiliLite.Models.Exceptions;
@@ -12,6 +9,10 @@ using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
+using System;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace BiliLite.ViewModels.User
 {
@@ -127,7 +128,8 @@ namespace BiliLite.ViewModels.User
             if (page > 1)
             {
                 Videos.AddRange(data.data.List);
-            }else
+            }
+            else
                 Videos = new ObservableCollection<UserHistoryItem>(data.data.List);
             if (data.data.HasMore)
             {
@@ -151,13 +153,13 @@ namespace BiliLite.ViewModels.User
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<HistoryViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
                 _logger.Error("加载历史记录失败", ex);
             }
             finally
@@ -180,13 +182,13 @@ namespace BiliLite.ViewModels.User
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<HistoryViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
                 _logger.Error("搜索历史记录失败", ex);
             }
             finally
@@ -238,18 +240,18 @@ namespace BiliLite.ViewModels.User
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<HistoryViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
         }
 

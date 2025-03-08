@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
-using Windows.Storage;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.User.SendDynamic;
+using BiliLite.Models.Common.UserDynamic;
 using BiliLite.Models.Exceptions;
+using BiliLite.Models.Requests.Api;
 using BiliLite.Models.Requests.Api.User;
 using BiliLite.Models.Responses;
 using BiliLite.Services;
@@ -17,8 +13,13 @@ using BiliLite.ViewModels.UserDynamic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
-using BiliLite.Models.Common.UserDynamic;
-using BiliLite.Models.Requests.Api;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace BiliLite.ViewModels.User.SendDynamic
 {
@@ -99,7 +100,7 @@ namespace BiliLite.ViewModels.User.SendDynamic
             catch (Exception ex)
             {
                 _logger.Log("图片上传失败", LogType.Fatal, ex);
-                Notify.ShowMessageToast("图片上传失败");
+                NotificationShowExtensions.ShowMessageToast("图片上传失败");
             }
             finally
             {
@@ -152,19 +153,19 @@ namespace BiliLite.ViewModels.User.SendDynamic
                 if (data.code != 0)
                     throw new CustomizedErrorException("发表动态失败:" + data.message);
 
-                Notify.ShowMessageToast("转发成功");
+                NotificationShowExtensions.ShowMessageToast("转发成功");
                 m_atDisplaylist.Clear();
                 return true;
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Log(ex.Message, LogType.Error, ex);
                 return false;
             }
             catch (Exception ex)
             {
-                Notify.ShowMessageToast("转发动态失败" + ex.Message);
+                NotificationShowExtensions.ShowMessageToast("转发动态失败" + ex.Message);
                 _logger.Log("转发动态失败", LogType.Error, ex);
                 return false;
             }
@@ -174,7 +175,7 @@ namespace BiliLite.ViewModels.User.SendDynamic
         {
             if (Content.Trim().Length == 0)
             {
-                Notify.ShowMessageToast("不能发送空白动态");
+                NotificationShowExtensions.ShowMessageToast("不能发送空白动态");
                 return false;
             }
 
@@ -223,19 +224,19 @@ namespace BiliLite.ViewModels.User.SendDynamic
                 if (data.code != 0)
                     throw new CustomizedErrorException("发表动态失败:" + data.message);
 
-                Notify.ShowMessageToast("发表动态成功");
+                NotificationShowExtensions.ShowMessageToast("发表动态成功");
                 m_atDisplaylist.Clear();
                 return true;
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Log(ex.Message, LogType.Error, ex);
                 return false;
             }
             catch (Exception ex)
             {
-                Notify.ShowMessageToast("发表动态发生错误");
+                NotificationShowExtensions.ShowMessageToast("发表动态发生错误");
                 _logger.Log("发表动态失败", LogType.Error, ex);
                 return false;
             }

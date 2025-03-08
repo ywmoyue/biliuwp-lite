@@ -1,11 +1,12 @@
-﻿using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
+﻿using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.UserDynamic;
 using BiliLite.Pages;
 using BiliLite.Services;
 using BiliLite.ViewModels.UserDynamic;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
 
 namespace BiliLite.Extensions
 {
@@ -56,7 +57,7 @@ namespace BiliLite.Extensions
             var result = await MessageCenter.HandelUrl(url);
             if (!result)
             {
-                Notify.ShowMessageToast("无法打开Url");
+                NotificationShowExtensions.ShowMessageToast("无法打开Url");
             }
         }
     }

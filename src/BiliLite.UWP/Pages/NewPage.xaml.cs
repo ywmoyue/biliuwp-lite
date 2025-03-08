@@ -1,4 +1,11 @@
-﻿using BiliLite.Pages.Bangumi;
+﻿using BiliLite.Controls;
+using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
+using BiliLite.Models.Common;
+using BiliLite.Models.Common.Search;
+using BiliLite.Pages.Bangumi;
+using BiliLite.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using Windows.Storage;
@@ -7,13 +14,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Controls;
-using BiliLite.Models.Common;
-using BiliLite.Services;
-using BiliLite.Extensions;
-using BiliLite.Models.Common.Search;
 using NavigationView = Microsoft.UI.Xaml.Controls.NavigationView;
-using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -45,7 +46,7 @@ namespace BiliLite.Pages
             {
                 if (!await background.CheckFileExist())
                 {
-                    Notify.ShowMessageToast("背景图片不存在,请重新设置");
+                    NotificationShowExtensions.ShowMessageToast("背景图片不存在,请重新设置");
                     return;
                 }
                 var file = await StorageFile.GetFileFromPathAsync(background);
@@ -71,9 +72,9 @@ namespace BiliLite.Pages
 
         private async void BtnOpenMyFollow_Click(object sender, RoutedEventArgs e)
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录");
+                NotificationShowExtensions.ShowMessageToast("请先登录");
                 return;
             }
             OpenNewTabPage("我的收藏", Symbol.OutlineStar, typeof(User.FavoritePage), User.OpenFavoriteType.Video);
@@ -88,7 +89,7 @@ namespace BiliLite.Pages
         {
             if (string.IsNullOrEmpty(SearchBox.Text))
             {
-                Notify.ShowMessageToast("关键字不能为空");
+                NotificationShowExtensions.ShowMessageToast("关键字不能为空");
                 return;
             }
             if (await MessageCenter.HandelUrl(SearchBox.Text))
@@ -129,9 +130,9 @@ namespace BiliLite.Pages
 
         private async void BtnOpenHistory_Click(object sender, RoutedEventArgs e)
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录");
+                NotificationShowExtensions.ShowMessageToast("请先登录");
                 return;
             }
             OpenNewTabPage("历史记录", Symbol.Clock, typeof(User.HistoryPage));

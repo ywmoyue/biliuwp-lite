@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Bilibili.App.Dynamic.V2;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Attributes;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Msg;
@@ -20,6 +16,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BiliLite.Services.Biz
 {
@@ -345,7 +346,7 @@ namespace BiliLite.Services.Biz
             var result = await MessageCenter.HandelUrl(url);
             if (!result)
             {
-                Notify.ShowMessageToast("无法打开Url");
+                NotificationShowExtensions.ShowMessageToast("无法打开Url");
             }
         }
 
@@ -353,7 +354,7 @@ namespace BiliLite.Services.Biz
         {
             if (DateTimeOffset.Now - chatMessage.Time > TimeSpan.FromMinutes(3))
             {
-                Notify.ShowMessageToast("发送时间超过两分钟不能撤回");
+                NotificationShowExtensions.ShowMessageToast("发送时间超过两分钟不能撤回");
                 return;
             }
             var viewModel = App.ServiceProvider.GetRequiredService<MessagesViewModel>();
@@ -387,7 +388,7 @@ namespace BiliLite.Services.Biz
                 var data = await results.GetData<JObject>();
                 var codeDic = new BiliSendMessageResultCode();
                 var msg = codeDic[data.code];
-                Notify.ShowMessageToast($"发送消息： {msg}");
+                NotificationShowExtensions.ShowMessageToast($"发送消息： {msg}");
 
                 if (!data.success)
                 {

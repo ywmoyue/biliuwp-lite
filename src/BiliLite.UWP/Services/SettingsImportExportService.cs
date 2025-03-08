@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using Windows.Storage.Pickers;
+﻿using ArtisanCode.SimpleAesEncryption;
+using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Attributes;
 using BiliLite.Models.Common;
 using Newtonsoft.Json;
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Tomlyn;
 using Tomlyn.Model;
-using BiliLite.Extensions;
-using System.Security.Cryptography;
 using Windows.Storage;
-using ArtisanCode.SimpleAesEncryption;
+using Windows.Storage.Pickers;
 
 namespace BiliLite.Services
 {
@@ -288,7 +288,7 @@ namespace BiliLite.Services
             catch (Exception ex)
             {
                 _logger.Error("导出失败", ex);
-                Notify.ShowMessageToast("导出失败，已记录错误");
+                NotificationShowExtensions.ShowMessageToast("导出失败，已记录错误");
                 return false;
             }
         }
@@ -323,7 +323,7 @@ namespace BiliLite.Services
             catch (Exception ex)
             {
                 _logger.Error("导出失败", ex);
-                Notify.ShowMessageToast("导出失败，已记录错误");
+                NotificationShowExtensions.ShowMessageToast("导出失败，已记录错误");
                 return false;
             }
         }
@@ -357,7 +357,7 @@ namespace BiliLite.Services
             catch (Exception ex)
             {
                 _logger.Error("导入失败", ex);
-                Notify.ShowMessageToast("导入失败，已记录错误");
+                NotificationShowExtensions.ShowMessageToast("导入失败，已记录错误");
                 return false;
             }
             return true;

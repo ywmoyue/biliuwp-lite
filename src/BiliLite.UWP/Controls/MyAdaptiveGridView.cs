@@ -1,10 +1,7 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.UI.Xaml;
@@ -12,8 +9,14 @@ using Windows.UI.Xaml.Controls;
 
 namespace BiliLite.Controls
 {
-    public class MyAdaptiveGridView: AdaptiveGridView
+    public class MyAdaptiveGridView : AdaptiveGridView
     {
+        public MyAdaptiveGridView()
+        {
+            //bool isWin11Supported = ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 14);
+            //if (isWin11Supported)
+            ItemContainerStyle = (Style)App.Current.Resources["LocalGridViewItemStyle"];
+        }
 
         private ICommand _LoadMoreCommand;
         public ICommand LoadMoreCommand
@@ -35,11 +38,6 @@ namespace BiliLite.Controls
         public static readonly DependencyProperty LoadMoreBottomOffsetProperty =
             DependencyProperty.Register("LoadMoreBottomOffset", typeof(double), typeof(MyAdaptiveGridView), new PropertyMetadata(100));
 
-
-
-
-
-
         public new bool Loading
         {
             get { return (bool)GetValue(LoadingProperty); }
@@ -50,17 +48,15 @@ namespace BiliLite.Controls
         public static readonly DependencyProperty LoadingProperty =
             DependencyProperty.Register("Loading", typeof(bool), typeof(MyAdaptiveGridView), new PropertyMetadata(true));
 
-
-
-
-
         ScrollViewer scrollViewer;
+
         protected override void OnApplyTemplate()
         {
-            scrollViewer=GetTemplateChild("ScrollViewer") as ScrollViewer;
+            scrollViewer = GetTemplateChild("ScrollViewer") as ScrollViewer;
             scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
-            RegisterPropertyChangedCallback(LoadingProperty, new DependencyPropertyChangedCallback((obj,e)=> {
-                if( !Loading)
+            RegisterPropertyChangedCallback(LoadingProperty, new DependencyPropertyChangedCallback((obj, e) =>
+            {
+                if (!Loading)
                 {
                     if (scrollViewer.ScrollableHeight == 0)
                     {
@@ -68,13 +64,13 @@ namespace BiliLite.Controls
                     }
                 }
             }));
-           
+
             base.OnApplyTemplate();
         }
 
         private void MyAdaptiveGridView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            
+
             Debug.WriteLine("内容变更");
             if (scrollViewer.ScrollableHeight == 0)
             {
@@ -84,16 +80,15 @@ namespace BiliLite.Controls
 
         private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
-            if (scrollViewer.VerticalOffset >= scrollViewer.ScrollableHeight - LoadMoreBottomOffset&& CanLoadMore)
+            if (scrollViewer.VerticalOffset >= scrollViewer.ScrollableHeight - LoadMoreBottomOffset && CanLoadMore)
             {
                 LoadMoreCommand?.Execute(null);
             }
-           
         }
 
         public void ScrollTo(double offset)
         {
-            scrollViewer.ScrollToVerticalOffset(offset);
+            scrollViewer?.ChangeView(null, offset, null);
         }
 
         public async Task ScrollRecover()

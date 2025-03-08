@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions;
+﻿using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Comment;
 using BiliLite.Models.Requests.Api;
@@ -45,7 +45,7 @@ namespace BiliLite.Pages.Home
                 if (SettingService.GetValue<bool>("动态切换提示", true) && SettingService.GetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 0) != 1)
                 {
                     SettingService.SetValue("动态切换提示", false);
-                    Notify.ShowMessageToast("右下角可以切换成瀑布流显示哦~", 5);
+                    NotificationShowExtensions.ShowMessageToast("右下角可以切换成瀑布流显示哦~", 5);
                 }
             }
         }

@@ -2,22 +2,22 @@
     x:Class="BiliLite.Pages.Other.MarkdownViewerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BiliLite.Pages.Other"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    mc:Ignorable="d"
-    Background="Transparent">
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BiliLite.Pages.Other"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Background="Transparent"
+    mc:Ignorable="d">
 
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <controls:MarkdownTextBlock x:Name="MdBlock" 
-                                        Background="Transparent" 
-                                        Padding="16" 
-                                        LinkClicked="MdBlock_OnLinkClicked" 
-                                        ImageResolving="MdBlock_OnImageResolving"
-                                        IsTextSelectionEnabled="True" >
-            </controls:MarkdownTextBlock>
+            <controls:MarkdownTextBlock
+                x:Name="MdBlock"
+                Padding="16"
+                Background="Transparent"
+                ImageResolving="MdBlock_OnImageResolving"
+                IsTextSelectionEnabled="True"
+                LinkClicked="MdBlock_OnLinkClicked" />
         </ScrollViewer>
     </Grid>
 </Page>

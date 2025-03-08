@@ -1,4 +1,5 @@
 ﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Search;
 using BiliLite.Services;
@@ -75,7 +76,7 @@ namespace BiliLite.Pages
             var queryText = args.QueryText;
             if (string.IsNullOrEmpty(queryText))
             {
-                Notify.ShowMessageToast("关键字不能为空啊，喂(#`O′)");
+                NotificationShowExtensions.ShowMessageToast("关键字不能为空啊，喂(#`O′)");
                 return;
             }
 

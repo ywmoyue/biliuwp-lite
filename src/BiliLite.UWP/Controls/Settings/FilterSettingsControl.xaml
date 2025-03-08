@@ -8,15 +8,10 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:settings="using:BiliLite.ViewModels.Settings"
     xmlns:models="using:BiliLite.Models.Common.Settings"
-    xmlns:converters="using:BiliLite.Converters"
+   
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <converters:FilterRuleTypeConverter x:Key="FilterRuleTypeConverter"></converters:FilterRuleTypeConverter>
-        </ResourceDictionary>
-    </UserControl.Resources>
 
     <StackPanel x:Name="FilterSettingsControlGrid" Orientation="Vertical"
                 MaxWidth="1200">

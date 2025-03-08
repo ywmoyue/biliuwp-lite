@@ -1,20 +1,20 @@
-﻿using System;
+﻿using BiliLite.Extensions.Notifications;
+using BiliLite.Models.Common;
+using BiliLite.Pages;
+using Flurl.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Flurl.Http;
-using Windows.System;
-using WebSocket4Net;
 using System.Timers;
+using WebSocket4Net;
+using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
-using BiliLite.Extensions;
-using BiliLite.Models.Common;
-using BiliLite.Pages;
-using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace BiliLite.Services
 {
@@ -148,7 +148,7 @@ namespace BiliLite.Services
             await DisConnect();
         }
 
-        private void OnBroadcastEvent(object sender,object msg)
+        private void OnBroadcastEvent(object sender, object msg)
         {
             // 将msg序列化为json字符串，通过ws发送出去
             var json = JsonConvert.SerializeObject(msg);
@@ -259,8 +259,8 @@ namespace BiliLite.Services
                         var message = msg.Params["message"]?.ToString();
                         var seconds = msg.Params["seconds"]?.ToObject<int>() ?? 2; // 默认值为2秒
 
-                        // 调用Notify.ShowMessageToast方法
-                        Notify.ShowMessageToast(message, seconds);
+                        // 调用NotificationShowExtensions.ShowMessageToast方法
+                        NotificationShowExtensions.ShowMessageToast(message, seconds);
                     }
                     else if (msg.Action == "ExecuteAction")
                     {

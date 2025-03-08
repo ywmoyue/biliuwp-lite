@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions;
+﻿using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using System;
@@ -34,7 +34,7 @@ namespace BiliLite.Pages.Home
             if (e.NavigationMode == NavigationMode.New)
             {
                 web.Navigate(new Uri("https://www.bilibili.com/v/channel"));
-                Notify.ShowMessageToast("这个页面还没有完成");
+                NotificationShowExtensions.ShowMessageToast("这个页面还没有完成");
             }
         }
 

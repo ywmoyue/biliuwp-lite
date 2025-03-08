@@ -1,0 +1,41 @@
+﻿<UserControl
+    x:Class="BiliLite.Controls.Dialogs.CommentDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:BiliLite.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BiliLite.Controls.Dialogs"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="800"
+    d:DesignWidth="1000"
+    mc:Ignorable="d">
+
+    <Grid Background="#00FFFFFF" Tapped="Grid_Tapped">
+        <Grid
+            x:Name="RootBorder"
+            MaxWidth="600"
+            Margin="24,32"
+            Background="{ThemeResource SystemControlChromeLowAcrylicElementBrush}"
+            BorderBrush="#31808080"
+            BorderThickness="1"
+            CornerRadius="{StaticResource OverlayCornerRadius}"
+            Tapped="RootBorder_Tapped">
+
+            <controls:CommentControl x:Name="comment" HorizontalAlignment="Stretch" />
+
+            <AppBarButton
+                x:Name="btnClose"
+                Width="40"
+                Height="40"
+                Margin="0,0,40,0"
+                HorizontalAlignment="Right"
+                Click="btnClose_Click">
+                <AppBarButton.Icon>
+                    <SymbolIcon Margin="0,-4,0,4" Symbol="Cancel" />
+                </AppBarButton.Icon>
+            </AppBarButton>
+
+        </Grid>
+
+    </Grid>
+</UserControl>

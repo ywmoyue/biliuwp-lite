@@ -1,15 +1,16 @@
-﻿using BiliLite.Models;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
+using BiliLite.Models;
+using BiliLite.Models.Common.User.SendDynamic;
 using BiliLite.Models.Requests.Api.User;
+using BiliLite.Modules;
+using BiliLite.ViewModels.Common;
 using Newtonsoft.Json.Linq;
+using PropertyChanged;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BiliLite.Extensions;
-using BiliLite.Models.Common.User.SendDynamic;
-using BiliLite.Modules;
-using BiliLite.ViewModels.Common;
-using PropertyChanged;
 
 namespace BiliLite.ViewModels.User.SendDynamic
 {
@@ -93,19 +94,19 @@ namespace BiliLite.ViewModels.User.SendDynamic
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
 
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<AtViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {

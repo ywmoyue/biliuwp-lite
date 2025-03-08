@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions;
+﻿using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Exceptions;
 using BiliLite.Services;
 using Newtonsoft.Json;
@@ -76,7 +76,7 @@ namespace BiliLite.Models.Common.Live
             }
             catch (Exception ex)
             {
-                Notify.ShowMessageToast("红包中奖名单富文本转换失败");
+                NotificationShowExtensions.ShowMessageToast("红包中奖名单富文本转换失败");
                 _logger.Error("红包中奖名单富文本转换失败", ex);
                 var text = new RichTextBlock();
                 var paragraph = new Paragraph();
@@ -112,6 +112,6 @@ namespace BiliLite.Models.Common.Live
         /// 奖品价格(以金瓜子计算)
         /// </summary>
         [JsonProperty("award_price")]
-        public int AwardPrice {  get; set; }
+        public int AwardPrice { get; set; }
     }
 }

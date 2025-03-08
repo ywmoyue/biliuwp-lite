@@ -1,10 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Windows.UI.Xaml;
-using AutoMapper;
+﻿using AutoMapper;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.User;
@@ -16,6 +12,11 @@ using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Windows.UI.Xaml;
 
 namespace BiliLite.ViewModels.User
 {
@@ -167,7 +168,7 @@ namespace BiliLite.ViewModels.User
             if (!data.success)
                 throw new CustomizedErrorException(data.message);
 
-            Notify.ShowMessageToast("操作成功");
+            NotificationShowExtensions.ShowMessageToast("操作成功");
         }
 
         #endregion
@@ -183,7 +184,7 @@ namespace BiliLite.ViewModels.User
             catch (Exception ex)
             {
                 _logger.Log("读取个人资料失败", LogType.Error, ex);
-                Notify.ShowMessageToast("读取个人资料失败");
+                NotificationShowExtensions.ShowMessageToast("读取个人资料失败");
             }
         }
 
@@ -223,9 +224,9 @@ namespace BiliLite.ViewModels.User
 
         public async Task<bool> AttentionUP(string mid, int mode)
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录后再操作");
+                NotificationShowExtensions.ShowMessageToast("请先登录后再操作");
                 return false;
             }
 
@@ -236,13 +237,13 @@ namespace BiliLite.ViewModels.User
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 return false;
             }
             catch (Exception ex)
             {
                 var handel = HandelError<object>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
                 return false;
             }
         }

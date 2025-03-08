@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
+﻿using BiliLite.Extensions.Notifications;
+using System.Diagnostics;
 using Windows.ApplicationModel.Background;
-using BiliLite.Extensions.Notifications;
 
 namespace BackgroundTasks
 {
@@ -14,7 +14,7 @@ namespace BackgroundTasks
             // while asynchronous code is still running.
             var deferral = taskInstance.GetDeferral();
 
-            NotificationShowExtensions.Tile();
+            using var _ = NotificationShowExtensions.ShowTile();
 
             // Inform the system that the task is finished.
             deferral.Complete();

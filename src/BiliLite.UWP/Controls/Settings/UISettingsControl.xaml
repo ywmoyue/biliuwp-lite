@@ -7,20 +7,17 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    xmlns:font="using:FontAwesome5" xmlns:converters="using:CommunityToolkit.WinUI.Converters"
-    xmlns:home="using:BiliLite.Models.Common.Home" xmlns:theme="using:BiliLite.Models.Theme" xmlns:localconverters="using:BiliLite.Converters"
+    xmlns:font="using:FontAwesome5"
+    xmlns:home="using:BiliLite.Models.Common.Home" xmlns:theme="using:BiliLite.Models.Theme"  xmlns:controls1="using:BiliLite.Controls"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400" x:Name="rootPanel">
     <UserControl.Resources>
-        <localconverters:ColorConvert x:Key="colorConvert" />
-        <localconverters:BooleanConvert x:Name="boolConvert" />
-        <converters:ColorToDisplayNameConverter x:Key="ColorToDisplayNameConverter" />
         <DataTemplate x:Key="ColorItemTemplate" x:DataType="theme:ColorItemModel">
             <Border Padding="0"
                 Width="40"
                 Height="40"
-                Background="{x:Bind Color, Converter={StaticResource colorConvert}}"
+                Background="{x:Bind Color, Converter={StaticResource ColorConvert}}"
                 CornerRadius="{StaticResource ControlCornerRadius}"
                 ToolTipService.ToolTip="{x:Bind Name}">
                 <SymbolIcon Symbol="Accept" Visibility="{x:Bind IsActived, Mode=OneWay}" />
@@ -44,12 +41,12 @@
         MaxWidth="1200">
         <controls:SettingsExpander Header="主题" IsExpanded="True">
             <controls:SettingsExpander.HeaderIcon>
-                <font:FontAwesome Icon="Solid_FillDrip" />
+                <font:FontAwesome Icon="Solid_PaintBrush" />
             </controls:SettingsExpander.HeaderIcon>
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard Description="更改应用的日夜主题" Header="外观">
                     <controls:SettingsCard.HeaderIcon>
-                        <font:FontAwesome Icon="Solid_PaintBrush" />
+                        <font:FontAwesome Icon="Solid_Brush" />
                     </controls:SettingsCard.HeaderIcon>
                     <ComboBox x:Name="cbTheme" MinWidth="200" Margin="0 0 -4 0">
                         <ComboBox.Items>
@@ -59,7 +56,18 @@
                         </ComboBox.Items>
                     </ComboBox>
                 </controls:SettingsCard>
-
+                
+                <controls:SettingsCard  Header="样式">
+                    <controls:SettingsCard.HeaderIcon>
+                        <font:FontAwesome Icon="Solid_FillDrip" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <ComboBox  IsEnabled="False" SelectedIndex="0" x:Name="cbStyle" MinWidth="200" Margin="0 0 -4 0">
+                        <ComboBox.Items>
+                            <ComboBoxItem>Win11</ComboBoxItem>
+                        </ComboBox.Items>
+                    </ComboBox>
+                </controls:SettingsCard>
+                
                 <controls:SettingsCard HorizontalContentAlignment="Stretch"
                                 ContentAlignment="Vertical"  x:Name="rootColor">
                     <controls:SettingsCard.HeaderIcon>
@@ -105,7 +113,7 @@
                                     <Button.Flyout>
                                         <Flyout Placement="LeftEdgeAlignedBottom">
                                             <StackPanel>
-                                                <Grid VerticalAlignment="Top" Height="40" Background="{Binding Color,ElementName=cpAddColor,Converter={StaticResource colorConvert}}" CornerRadius="{StaticResource ControlCornerRadius}">
+                                                <Grid VerticalAlignment="Top" Height="40" Background="{Binding Color,ElementName=cpAddColor,Converter={StaticResource ColorConvert}}" CornerRadius="{StaticResource ControlCornerRadius}">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition/>
                                                         <ColumnDefinition/>
@@ -133,13 +141,13 @@
                                         </Flyout>
                                     </Button.Flyout>
                                 </Button>
-                                <Button ToolTipService.ToolTip="跟随系统" x:Name="btnSysColor" Style="{StaticResource AccentButtonStyle}" Background="{x:Bind m_UISettingsControlViewModel.SysColor, Converter={StaticResource colorConvert}}" Width="40" Height="40" Margin="7 0 0 0" Padding="0">
+                                <Button ToolTipService.ToolTip="跟随系统" x:Name="btnSysColor" Style="{StaticResource AccentButtonStyle}" Background="{x:Bind m_UISettingsControlViewModel.SysColor, Converter={StaticResource ColorConvert}}" Width="40" Height="40" Margin="7 0 0 0" Padding="0">
                                     <Button.Resources>
                                         <!--<StaticResource x:Key="AccentButtonBackground" ResourceKey="SystemAccent" />-->
                                         <StaticResource x:Key="AccentButtonBackgroundPointerOver" ResourceKey="SystemAccentColorLight1" />
                                         <StaticResource x:Key="AccentButtonBackgroundPressed" ResourceKey="SystemAccentColorDark1" />
                                     </Button.Resources>
-                                    <SymbolIcon Visibility="{Binding SelectedIndex, ElementName=gvColor,Converter={StaticResource boolConvert},ConverterParameter=-1}" Symbol="Accept"/>
+                                    <SymbolIcon Visibility="{Binding SelectedIndex, ElementName=gvColor,Converter={StaticResource BooleanConvert},ConverterParameter=-1}" Symbol="Accept"/>
                                 </Button>
                             </StackPanel>
                         </Grid>
@@ -176,19 +184,9 @@
                           SelectionMode="None" 
                           Margin="0 8 0 0"
                           IsItemClickEnabled="True"  CanDragItems="True" CanReorderItems="True" AllowDrop="True" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" DragItemsCompleted="gridHomeCustom_DragItemsCompleted">
-                                <GridView.ItemContainerStyle>
-                                    <Style TargetType="GridViewItem">
-                                        <Setter Property="BorderBrush" Value="#cecece"></Setter>
-                                        <Setter Property="Foreground" Value="{ThemeResource TextColor}"></Setter>
-                                        <Setter Property="Width" Value="100"></Setter>
-                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-                                        <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
-                                        <Setter Property="BorderThickness" Value="1"></Setter>
-                                    </Style>
-                                </GridView.ItemContainerStyle>
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="home:HomeNavItem">
-                                        <Grid Background="#00FFFFFF">
+                                        <Grid MinWidth="115" Background="{ThemeResource CardBackground}" MinHeight="42">
                                             <Grid.ContextFlyout>
                                                 <MenuFlyout>
                                                     <MenuFlyoutItem x:Name="menuRemoveHomeItem" Click="menuRemoveHomeItem_Click">移除</MenuFlyoutItem>
@@ -206,19 +204,9 @@
                             </GridView>
                             <TextBlock  Margin="0 0 0 8" >点击添加</TextBlock>
                             <GridView x:Name="gridHomeNavItem" SelectionMode="None" IsItemClickEnabled="True" ItemClick="gridHomeNavItem_ItemClick" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                                <GridView.ItemContainerStyle>
-                                    <Style TargetType="GridViewItem">
-                                        <Setter Property="BorderBrush" Value="#cecece"></Setter>
-                                        <Setter Property="Foreground" Value="{ThemeResource TextColor}"></Setter>
-                                        <Setter Property="Width" Value="100"></Setter>
-                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-                                        <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
-                                        <Setter Property="BorderThickness" Value="1"></Setter>
-                                    </Style>
-                                </GridView.ItemContainerStyle>
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="home:HomeNavItem">
-                                        <Grid>
+                                        <Grid MinWidth="115" Background="{ThemeResource CardBackground}" MinHeight="42">
                                             <StackPanel Orientation="Horizontal"  VerticalAlignment="Center" HorizontalAlignment="Center">
                                                 <font:FontAwesome FontSize="14" VerticalAlignment="Bottom" Icon="{x:Bind Path=Icon}"></font:FontAwesome>
                                                 <TextBlock Margin="8 0 0 0" Text="{x:Bind Title}"></TextBlock>
@@ -317,26 +305,6 @@
             </controls:SettingsCard.HeaderIcon>
             <ToggleSwitch x:Name="SwitchTile"></ToggleSwitch>
         </controls:SettingsCard>
-
-        <controls:SettingsExpander Header="图片圆角半径"
-                                   Description="重启生效"
-                                   IsExpanded="True">
-            <controls:SettingsExpander.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Images"></font:FontAwesome>
-            </controls:SettingsExpander.HeaderIcon>
-            <muxc:NumberBox x:Name="numImageCornerRadius" Minimum="0" Margin="0 0 0 8" Width="200" HorizontalAlignment="Left" Value="0" SpinButtonPlacementMode="Compact" SmallChange="2" ></muxc:NumberBox>
-
-            <controls:SettingsExpander.Items>
-                <controls:SettingsCard>
-                    <controls:SettingsCard.Header>
-                        <Border x:Name="ImageCornerRadiusExample" Width="120" Height="120" HorizontalAlignment="Left" Background="#99808080"
-                                >
-                            <Image Source="/Assets/Image/background.jpg" Stretch="UniformToFill"></Image>
-                        </Border>
-                    </controls:SettingsCard.Header>
-                </controls:SettingsCard>
-            </controls:SettingsExpander.Items>
-        </controls:SettingsExpander>
 
         <controls:SettingsExpander Header="启用长评论折叠"
                                    Description="评论过长时自动折叠，需要点击展开按钮显示全部评论">

@@ -1,12 +1,12 @@
-﻿using System;
+﻿using BiliLite.Extensions.Notifications;
+using BiliLite.Models.Common;
+using BiliLite.Services;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using BiliLite.Extensions;
-using BiliLite.Models.Common;
-using BiliLite.Services;
-using Microsoft.Extensions.DependencyInjection;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -131,10 +131,10 @@ namespace BiliLite.Controls.Settings
 
         private async void BtnRebuildDownloadIndex_OnClick(object sender, RoutedEventArgs e)
         {
-            Notify.ShowMessageToast("索引重建开始");
+            NotificationShowExtensions.ShowMessageToast("索引重建开始");
             m_downloadService.ClearIndex();
             await m_downloadService.LoadDownloaded(true);
-            Notify.ShowMessageToast("索引重建完成");
+            NotificationShowExtensions.ShowMessageToast("索引重建完成");
         }
     }
 }

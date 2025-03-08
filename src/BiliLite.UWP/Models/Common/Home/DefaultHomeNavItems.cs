@@ -1,8 +1,8 @@
-﻿using System;
-using BiliLite.Services;
+﻿using BiliLite.Services;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace BiliLite.Models.Common.Home
 {
@@ -148,14 +148,6 @@ namespace BiliLite.Models.Common.Home
                     NeedLogin = false,
                     Show = true
                 },
-                new HomeNavItem()
-                {
-                    Icon = FontAwesome5.EFontAwesomeIcon.Solid_Compass,
-                    Page = typeof(Pages.Other.FindMorePage),
-                    Title = "发现",
-                    NeedLogin = false,
-                    Show = true
-                }
             };
         }
 

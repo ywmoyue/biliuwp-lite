@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using AutoMapper;
+﻿using AutoMapper;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common.User;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests.Api.User;
@@ -16,6 +10,13 @@ using BiliLite.ViewModels.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace BiliLite.ViewModels.User
 {
@@ -94,7 +95,8 @@ namespace BiliLite.ViewModels.User
 
         #region Private Methods
 
-        private void GetSubmitVideoCore(JObject data) {
+        private void GetSubmitVideoCore(JObject data)
+        {
             var cursorItems = JsonConvert.DeserializeObject<List<SubmitVideoCursorItem>>(
                 data["data"]["item"].ToString());
             var count = data["data"]["count"].ToInt32();
@@ -188,17 +190,17 @@ namespace BiliLite.ViewModels.User
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error("获取用户投稿失败", ex);
             }
             catch (NotFoundException ex)
             {
-                Notify.ShowMessageToast("(っ °Д °;)っ 没有找到相应的视频~");
+                NotificationShowExtensions.ShowMessageToast("(っ °Д °;)っ 没有找到相应的视频~");
             }
             catch (Exception ex)
             {
                 var handel = HandelError<UserSubmitVideoViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
                 _logger.Error("获取用户投稿失败", ex);
             }
             finally

@@ -1,9 +1,9 @@
-﻿using Windows.Foundation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Services;
+using Windows.Foundation;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -36,7 +36,7 @@ namespace BiliLite.Controls.Settings
                     var text = sender2.Text;
                     if (string.IsNullOrEmpty(text))
                     {
-                        Notify.ShowMessageToast("已取消自定义香港代理服务器");
+                        NotificationShowExtensions.ShowMessageToast("已取消自定义香港代理服务器");
                         SettingService.SetValue<string>(SettingConstants.Roaming.CUSTOM_SERVER_URL_HK, "");
                         return;
                     }
@@ -46,7 +46,7 @@ namespace BiliLite.Controls.Settings
                     }
                     SettingService.SetValue<string>(SettingConstants.Roaming.CUSTOM_SERVER_URL_HK, text);
                     sender2.Text = text;
-                    Notify.ShowMessageToast("保存成功");
+                    NotificationShowExtensions.ShowMessageToast("保存成功");
                 });
             });
 
@@ -59,7 +59,7 @@ namespace BiliLite.Controls.Settings
                     var text = sender2.Text;
                     if (string.IsNullOrEmpty(text))
                     {
-                        Notify.ShowMessageToast("已取消自定义台湾代理服务器");
+                        NotificationShowExtensions.ShowMessageToast("已取消自定义台湾代理服务器");
                         SettingService.SetValue<string>(SettingConstants.Roaming.CUSTOM_SERVER_URL_TW, "");
                         return;
                     }
@@ -69,7 +69,7 @@ namespace BiliLite.Controls.Settings
                     }
                     SettingService.SetValue<string>(SettingConstants.Roaming.CUSTOM_SERVER_URL_TW, text);
                     sender2.Text = text;
-                    Notify.ShowMessageToast("保存成功");
+                    NotificationShowExtensions.ShowMessageToast("保存成功");
                 });
             });
 
@@ -82,7 +82,7 @@ namespace BiliLite.Controls.Settings
                     var text = sender2.Text;
                     if (string.IsNullOrEmpty(text))
                     {
-                        Notify.ShowMessageToast("已取消自定义大陆代理服务器");
+                        NotificationShowExtensions.ShowMessageToast("已取消自定义大陆代理服务器");
                         SettingService.SetValue<string>(SettingConstants.Roaming.CUSTOM_SERVER_URL_CN, "");
                         return;
                     }
@@ -92,7 +92,7 @@ namespace BiliLite.Controls.Settings
                     }
                     SettingService.SetValue<string>(SettingConstants.Roaming.CUSTOM_SERVER_URL_CN, text);
                     sender2.Text = text;
-                    Notify.ShowMessageToast("保存成功");
+                    NotificationShowExtensions.ShowMessageToast("保存成功");
                 });
             });
 
@@ -121,7 +121,7 @@ namespace BiliLite.Controls.Settings
         {
             SettingService.SetValue<string>(SettingConstants.Roaming.CUSTOM_SERVER_URL, ApiHelper.ROMAING_PROXY_URL);
             RoamingSettingCustomServer.Text = ApiHelper.ROMAING_PROXY_URL;
-            Notify.ShowMessageToast("保存成功");
+            NotificationShowExtensions.ShowMessageToast("保存成功");
         }
 
         private void RoamingSettingCustomServer_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
@@ -129,7 +129,7 @@ namespace BiliLite.Controls.Settings
             var text = sender.Text;
             if (text.Length == 0 || !text.Contains("."))
             {
-                Notify.ShowMessageToast("输入服务器链接有误");
+                NotificationShowExtensions.ShowMessageToast("输入服务器链接有误");
                 sender.Text = SettingService.GetValue<string>(SettingConstants.Roaming.CUSTOM_SERVER_URL, ApiHelper.ROMAING_PROXY_URL);
                 return;
             }
@@ -139,7 +139,7 @@ namespace BiliLite.Controls.Settings
             }
             SettingService.SetValue<string>(SettingConstants.Roaming.CUSTOM_SERVER_URL, text);
             sender.Text = text;
-            Notify.ShowMessageToast("保存成功");
+            NotificationShowExtensions.ShowMessageToast("保存成功");
         }
     }
 }

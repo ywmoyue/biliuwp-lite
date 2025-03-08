@@ -1,17 +1,18 @@
 ﻿using AutoMapper;
-using BiliLite.ViewModels.Common;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
+using BiliLite.Models.Common;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests.Api.User;
 using BiliLite.Modules.User.UserDetail;
+using BiliLite.Services;
+using BiliLite.ViewModels.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using BiliLite.Models.Common;
 using System;
-using BiliLite.Services;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BiliLite.ViewModels.User
 {
@@ -110,7 +111,7 @@ namespace BiliLite.ViewModels.User
             catch (Exception ex)
             {
                 _logger.Log("设置关注分组失败", LogType.Error, ex);
-                Notify.ShowMessageToast("设置关注分组失败");
+                NotificationShowExtensions.ShowMessageToast("设置关注分组失败");
             }
         }
 

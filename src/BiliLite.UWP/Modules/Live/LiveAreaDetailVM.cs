@@ -1,4 +1,6 @@
-﻿using BiliLite.Models.Requests.Api.Live;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
+using BiliLite.Models.Requests.Api.Live;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -6,7 +8,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BiliLite.Extensions;
 
 namespace BiliLite.Modules.Live
 {
@@ -91,19 +92,19 @@ namespace BiliLite.Modules.Live
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data["message"].ToString());
+                        NotificationShowExtensions.ShowMessageToast(data["message"].ToString());
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
 
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<LiveAreaDetailVM>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {

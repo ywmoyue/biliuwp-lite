@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions;
+﻿using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common.Player;
 using BiliLite.Services;
 using BiliLite.ViewModels.Settings;
@@ -10,7 +10,7 @@ using Windows.UI.Xaml.Input;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 
-namespace BiliLite.Dialogs
+namespace BiliLite.Controls.Dialogs
 {
     public sealed partial class EditPlaySpeedMenuDialog : ContentDialog
     {
@@ -44,12 +44,12 @@ namespace BiliLite.Dialogs
         {
             if (m_viewModel.PlaySpeedMenuItems.Any(item => item.Value == m_viewModel.AddPlaySpeedValue))
             {
-                Notify.ShowMessageToast("已重复添加");
+                NotificationShowExtensions.ShowMessageToast("已重复添加");
                 return;
             }
             if (m_viewModel.AddPlaySpeedValue == 0)
             {
-                Notify.ShowMessageToast("非法参数");
+                NotificationShowExtensions.ShowMessageToast("非法参数");
                 return;
             }
 

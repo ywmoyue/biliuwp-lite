@@ -6,8 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:BiliLite"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
-    winui:BackdropMaterial.ApplyToRootOrPageBackground="True"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
     Background="Transparent"
     Loaded="NoTabMainPage_OnLoaded"
     mc:Ignorable="d">
@@ -34,7 +34,10 @@
             VerticalAlignment="Top"
             Background="#00FFFFFF"
             Visibility="Collapsed" />
-        <Grid Height="32" Background="Transparent" x:Name="MainWindowsTitleBar">
+        <Grid
+            x:Name="MainWindowsTitleBar"
+            Height="32"
+            Background="Transparent">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
@@ -44,9 +47,9 @@
                 Width="48"
                 Height="40"
                 Margin="0,-4"
-                Click="btnBack_Click"
                 Background="Transparent"
                 BorderThickness="0"
+                Click="btnBack_Click"
                 Visibility="Visible">
                 <FontIcon
                     FontFamily="Segoe MDL2 Assets"

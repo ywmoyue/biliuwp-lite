@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Attributes;
 using BiliLite.Models.Common.Home;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BiliLite.ViewModels.Home
 {
@@ -53,7 +53,7 @@ namespace BiliLite.ViewModels.Home
             {
                 Regions = await AppHelper.GetDefaultRegions();
                 var handel = HandelError<RegionViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {

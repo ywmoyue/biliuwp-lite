@@ -1,5 +1,6 @@
-﻿using BiliLite.Dialogs;
+﻿using BiliLite.Controls.Dialogs;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Modules;
 using BiliLite.Services;
@@ -142,7 +143,7 @@ namespace BiliLite.Pages.User
         private async void btnCreateFavBox_Click(object sender, RoutedEventArgs e)
         {
             CreateFavFolderDialog createFavFolderDialog = new CreateFavFolderDialog();
-            await createFavFolderDialog.ShowAsync();
+            await NotificationShowExtensions.ShowContentDialog(createFavFolderDialog);
             m_videoViewModel.Refresh();
         }
 
@@ -150,7 +151,7 @@ namespace BiliLite.Pages.User
         {
             var data = (sender as MenuFlyoutItem).DataContext as FavoriteItemViewModel;
             EditFavFolderDialog editFavFolderDialog = new EditFavFolderDialog(data.Id, data.Title, data.Intro, data.Privacy ? false : true);
-            await editFavFolderDialog.ShowAsync();
+            await NotificationShowExtensions.ShowContentDialog(editFavFolderDialog);
             m_videoViewModel.Refresh();
         }
 

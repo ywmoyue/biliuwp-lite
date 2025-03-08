@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Common.Search;
 using BiliLite.Models.Exceptions;
@@ -12,6 +8,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BiliLite.ViewModels.Search
 {
@@ -138,12 +139,12 @@ namespace BiliLite.ViewModels.Search
             {
                 if (ex is CustomizedErrorException customizedErrorException)
                 {
-                    Notify.ShowMessageToast(ex.Message);
+                    NotificationShowExtensions.ShowMessageToast(ex.Message);
                     _logger.Error("搜索失败", ex);
                 }
 
                 var handel = HandelError<SearchPageViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {

@@ -1,5 +1,4 @@
-﻿using System;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.User;
 using BiliLite.Models.Common.Video;
@@ -13,6 +12,7 @@ using BiliLite.ViewModels.User;
 using BiliLite.ViewModels.UserDynamic;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -119,7 +119,7 @@ namespace BiliLite.Pages
                     id = e.DynamicID;
                     break;
             }
-            Notify.ShowComment(id, (int)commentType, CommentApi.CommentSort.Hot);
+            NotificationShowExtensions.ShowCommentDialog(id, (int)commentType, CommentApi.CommentSort.Hot);
             //comment.LoadComment(new Controls.LoadCommentInfo()
             //{
             //    CommentMode = (int)commentType,

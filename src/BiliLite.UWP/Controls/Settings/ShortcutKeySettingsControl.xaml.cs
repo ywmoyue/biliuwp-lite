@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Functions;
 using BiliLite.Services;
 using BiliLite.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -131,7 +131,7 @@ namespace BiliLite.Controls.Settings
         {
             m_viewModel.AddShortcutFunctionModel = m_mapper.Map<ShortcutFunctionViewModel>(DefaultShortcuts.GetDefaultShortcutFunctions().First());
             m_viewModel.AddShortcutFunctionTypeName = m_viewModel.AddShortcutFunctionModel.TypeName;
-            await AddActionDialog.ShowAsync();
+            await NotificationShowExtensions.ShowContentDialog(AddActionDialog);
         }
 
         private async void ComboAddAction_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

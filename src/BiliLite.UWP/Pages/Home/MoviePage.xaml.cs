@@ -1,16 +1,16 @@
-﻿using BiliLite.Extensions;
+﻿using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Home;
+using BiliLite.Models.Common.Season;
 using BiliLite.Services;
+using BiliLite.ViewModels.Home;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Models.Common.Home;
-using BiliLite.Models.Common.Season;
-using BiliLite.ViewModels.Home;
-using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -84,7 +84,7 @@ namespace BiliLite.Pages.Home
             var result = await MessageCenter.HandelUrl((e.ClickedItem as CinemaHomeFallItemModel).Link);
             if (!result)
             {
-                Notify.ShowMessageToast("不支持打开的链接");
+                NotificationShowExtensions.ShowMessageToast("不支持打开的链接");
             }
         }
         private async void RefreshContainer_RefreshRequested(Microsoft.UI.Xaml.Controls.RefreshContainer sender, Microsoft.UI.Xaml.Controls.RefreshRequestedEventArgs args)
@@ -97,7 +97,7 @@ namespace BiliLite.Pages.Home
             var result = await MessageCenter.HandelUrl(((sender as HyperlinkButton).DataContext as CinemaHomeBannerModel).Url);
             if (!result)
             {
-                Notify.ShowMessageToast("不支持打开的链接");
+                NotificationShowExtensions.ShowMessageToast("不支持打开的链接");
             }
         }
 
@@ -145,9 +145,9 @@ namespace BiliLite.Pages.Home
 
         private async void btnOpenMyFollow_Click(object sender, RoutedEventArgs e)
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录");
+                NotificationShowExtensions.ShowMessageToast("请先登录");
                 return;
             }
             MessageCenter.NavigateToPage(this, new NavigationInfo()

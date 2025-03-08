@@ -12,28 +12,13 @@ namespace BiliLite.Models.Requests.Api
         /// <returns></returns>
         public ApiModel CheckUpdate()
         {
-            var updateJsonAddress = SettingService.GetValue(SettingConstants.Other.UPDATE_JSON_ADDRESS, 
+            var updateJsonAddress = SettingService.GetValue(SettingConstants.Other.UPDATE_JSON_ADDRESS,
                                                               UpdateJsonAddressOptions.DEFAULT_UPDATE_JSON_ADDRESS);
             updateJsonAddress = updateJsonAddress.Replace("\"", ""); // 解决取出的值有奇怪的转义符
             var api = new ApiModel()
             {
                 method = HttpMethods.Get,
                 baseUrl = $"{updateJsonAddress}/document/new_version.json",
-                parameter = $"ts={TimeExtensions.GetTimestampS()}"
-            };
-            return api;
-        }
-
-        /// <summary>
-        /// 发现页入口
-        /// </summary>
-        /// <returns></returns>
-        public ApiModel FindMoreEntrance()
-        {
-            var api = new ApiModel()
-            {
-                method = HttpMethods.Get,
-                baseUrl = $"{ApiHelper.GIT_RAW_URL}/document/entrance.json",
                 parameter = $"ts={TimeExtensions.GetTimestampS()}"
             };
             return api;

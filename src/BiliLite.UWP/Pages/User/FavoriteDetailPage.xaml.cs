@@ -1,7 +1,13 @@
-﻿using BiliLite.Dialogs;
+﻿using BiliLite.Controls.Dialogs;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Favorites;
+using BiliLite.Models.Common.Video;
 using BiliLite.Services;
+using BiliLite.ViewModels.Favourites;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +16,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Models.Common.Favorites;
-using BiliLite.Models.Common.Video;
-using BiliLite.ViewModels.Favourites;
-using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -108,7 +109,7 @@ namespace BiliLite.Pages.User
         {
             if (listView.SelectedItems.Count > 0)
             {
-                if (!await Notify.ShowDialog("批量取消收藏", $"是否确定要取消收藏选中的{listView.SelectedItems.Count}个视频?"))
+                if (!await NotificationShowExtensions.ShowMessageDialog("批量取消收藏", $"是否确定要取消收藏选中的{listView.SelectedItems.Count}个视频?"))
                 {
                     return;
                 }
@@ -131,7 +132,7 @@ namespace BiliLite.Pages.User
                     ls.Add(item);
                 }
                 CopyOrMoveFavVideoDialog copyOrMoveFavVideoDialog = new CopyOrMoveFavVideoDialog(m_viewModel.Id, m_viewModel.FavoriteInfo.Mid, true, ls);
-                await copyOrMoveFavVideoDialog.ShowAsync();
+                await NotificationShowExtensions.ShowContentDialog(copyOrMoveFavVideoDialog);
                 m_viewModel.Refresh();
             }
         }
@@ -146,13 +147,13 @@ namespace BiliLite.Pages.User
                     ls.Add(item);
                 }
                 CopyOrMoveFavVideoDialog copyOrMoveFavVideoDialog = new CopyOrMoveFavVideoDialog(m_viewModel.Id, m_viewModel.FavoriteInfo.Mid, false, ls);
-                await copyOrMoveFavVideoDialog.ShowAsync();
+                await NotificationShowExtensions.ShowContentDialog(copyOrMoveFavVideoDialog);
             }
         }
 
         private async void btnClean_Click(object sender, RoutedEventArgs e)
         {
-            if (!await Notify.ShowDialog("清除失效", $"是否确定要清除已失效的视频?\r\n失效视频说不定哪天就恢复了哦~"))
+            if (!await NotificationShowExtensions.ShowMessageDialog("清除失效", $"是否确定要清除已失效的视频?\r\n失效视频说不定哪天就恢复了哦~"))
             {
                 return;
             }
@@ -172,7 +173,7 @@ namespace BiliLite.Pages.User
 
             if (m_viewModel.ShowLoadMore)
             {
-                Notify.ShowMessageToast("正在读取全部视频，请稍后");
+                NotificationShowExtensions.ShowMessageToast("正在读取全部视频，请稍后");
                 while (m_viewModel.ShowLoadMore)
                 {
                     await m_viewModel.LoadFavoriteInfo();

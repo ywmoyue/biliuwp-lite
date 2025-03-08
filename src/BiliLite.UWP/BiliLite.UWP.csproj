@@ -199,12 +199,13 @@
     <Compile Include="Converters\LiveStatusConverter.cs" />
     <Compile Include="Converters\PlaySpeedSliderTooltipConverter.cs" />
     <Compile Include="Converters\QualitySliderTooltipConverter.cs" />
+    <Compile Include="Converters\SingleCornerRadiusConverter.cs" />
     <Compile Include="Converters\SoundQualitySliderTooltipConverter.cs" />
     <Compile Include="Converters\TimeSpanStrFormatConverter.cs" />
-    <Compile Include="Dialogs\EditPlaySpeedMenuDialog.xaml.cs">
+    <Compile Include="Controls\Dialogs\EditPlaySpeedMenuDialog.xaml.cs">
       <DependentUpon>EditPlaySpeedMenuDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\SendDynamicV2Dialog.xaml.cs">
+    <Compile Include="Controls\Dialogs\SendDynamicV2Dialog.xaml.cs">
       <DependentUpon>SendDynamicV2Dialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Extensions\AppExtensions.cs" />
@@ -320,7 +321,6 @@
     <Compile Include="Models\Common\Home\CinemaHomeFallModel.cs" />
     <Compile Include="Models\Common\Home\RegionChildrenItem.cs" />
     <Compile Include="Models\Common\Home\RegionItem.cs" />
-    <Compile Include="Models\Common\Other\FindMoreEntranceModel.cs" />
     <Compile Include="Models\Common\Favorites\FavoriteDetailModel.cs" />
     <Compile Include="Models\Common\Favorites\FavoriteInfoModel.cs" />
     <Compile Include="Models\Common\Favorites\FavoriteInfoVideoItemModel.cs" />
@@ -597,7 +597,6 @@
     <Compile Include="Models\Common\UserDynamic\UserDynamicItemDisplayImageInfo.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicItemDisplayShortVideoInfo.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicItemDisplayCommands.cs" />
-    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Extensions\ColorExtensions.cs" />
     <Compile Include="Extensions\DanmakuExtensions.cs" />
     <Compile Include="Models\Builders\DynamicItemDisplayModelBuilder.cs" />
@@ -722,7 +721,6 @@
     <Compile Include="Extensions\BiliExtensions.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Extensions\HttpResultsExtensions.cs" />
-    <Compile Include="Extensions\Notify.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\ObservableCollectionExtension.cs" />
     <Compile Include="Extensions\StreamExtensions.cs" />
@@ -806,13 +804,13 @@
     <Compile Include="Converters\CountDisplayConvert.cs" />
     <Compile Include="Converters\DanmakuStyleConvert.cs" />
     <Compile Include="Converters\DownloadStatusConvert.cs" />
-    <Compile Include="Dialogs\CommentDialog.xaml.cs">
+    <Compile Include="Controls\Dialogs\CommentDialog.xaml.cs">
       <DependentUpon>CommentDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\CopyOrMoveFavVideoDialog.xaml.cs">
+    <Compile Include="Controls\Dialogs\CopyOrMoveFavVideoDialog.xaml.cs">
       <DependentUpon>CopyOrMoveFavVideoDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\CreateFavFolderDialog.xaml.cs">
+    <Compile Include="Controls\Dialogs\CreateFavFolderDialog.xaml.cs">
       <DependentUpon>CreateFavFolderDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Dynamic\DynamicRepostControl.xaml.cs">
@@ -829,10 +827,10 @@
     <Compile Include="Controls\ImageViewerControl.xaml.cs">
       <DependentUpon>ImageViewerControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\DownloadDialog.xaml.cs">
+    <Compile Include="Controls\Dialogs\DownloadDialog.xaml.cs">
       <DependentUpon>DownloadDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\EditFavFolderDialog.xaml.cs">
+    <Compile Include="Controls\Dialogs\EditFavFolderDialog.xaml.cs">
       <DependentUpon>EditFavFolderDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MessageToast.xaml.cs">
@@ -847,18 +845,17 @@
     <Compile Include="Controls\PlayerControl.xaml.cs">
       <DependentUpon>PlayerControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\RoundButton\RoundButton.cs" />
     <Compile Include="Controls\HorizontalGridView\HorizontalGridView.cs" />
-    <Compile Include="Dialogs\SendCommentDialog.xaml.cs">
+    <Compile Include="Controls\Dialogs\SendCommentDialog.xaml.cs">
       <DependentUpon>SendCommentDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\SendDanmakuDialog.xaml.cs">
+    <Compile Include="Controls\Dialogs\SendDanmakuDialog.xaml.cs">
       <DependentUpon>SendDanmakuDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\SendDynamicDialog.xaml.cs">
+    <Compile Include="Controls\Dialogs\SendDynamicDialog.xaml.cs">
       <DependentUpon>SendDynamicDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\SendReviewDialog.xaml.cs">
+    <Compile Include="Controls\Dialogs\SendReviewDialog.xaml.cs">
       <DependentUpon>SendReviewDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BooleanConvert.cs" />
@@ -873,7 +870,7 @@
     <Compile Include="Converters\ProgressToTimeConverter.cs" />
     <Compile Include="Converters\RankColorConvert.cs" />
     <Compile Include="Converters\TimeSpanToDoubleConvert.cs" />
-    <Compile Include="Dialogs\LoginDialog.xaml.cs">
+    <Compile Include="Controls\Dialogs\LoginDialog.xaml.cs">
       <DependentUpon>LoginDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Extensions\PointerRoutedEventArgsExtensions.cs" />
@@ -916,7 +913,6 @@
     <Compile Include="Modules\Live\LiveCenter\LiveCenterVM.cs" />
     <Compile Include="Modules\Live\LiveMessage.cs" />
     <Compile Include="Modules\Live\LiveRecommendVM.cs" />
-    <Compile Include="ViewModels\Other\FindMoreViewModel.cs" />
     <Compile Include="Modules\Player\InteractionVideoVM.cs" />
     <Compile Include="Modules\Player\Playurl\BiliPlayUrlRequest.cs" />
     <Compile Include="Modules\Player\Playurl\BiliPlayUrl.cs" />
@@ -1020,9 +1016,6 @@
     </Compile>
     <Compile Include="Pages\LocalPlayerPage.xaml.cs">
       <DependentUpon>LocalPlayerPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\Other\FindMorePage.xaml.cs">
-      <DependentUpon>FindMorePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Other\ImageViewerPage.xaml.cs">
       <DependentUpon>ImageViewerPage.xaml</DependentUpon>
@@ -1311,11 +1304,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\EditPlaySpeedMenuDialog.xaml">
+    <Page Include="Controls\Dialogs\EditPlaySpeedMenuDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\SendDynamicV2Dialog.xaml">
+    <Page Include="Controls\Dialogs\SendDynamicV2Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1343,19 +1336,27 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Styles\ButtonStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\GridViewItemStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Styles\TabViewStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\CommentDialog.xaml">
+    <Page Include="Controls\Dialogs\CommentDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\CopyOrMoveFavVideoDialog.xaml">
+    <Page Include="Controls\Dialogs\CopyOrMoveFavVideoDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\CreateFavFolderDialog.xaml">
+    <Page Include="Controls\Dialogs\CreateFavFolderDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1379,11 +1380,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\DownloadDialog.xaml">
+    <Page Include="Controls\Dialogs\DownloadDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\EditFavFolderDialog.xaml">
+    <Page Include="Controls\Dialogs\EditFavFolderDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1399,31 +1400,27 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\RoundButton\RoundButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Controls\HorizontalGridView\HorizontalGridView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\SendCommentDialog.xaml">
+    <Page Include="Controls\Dialogs\SendCommentDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\SendDanmakuDialog.xaml">
+    <Page Include="Controls\Dialogs\SendDanmakuDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\SendDynamicDialog.xaml">
+    <Page Include="Controls\Dialogs\SendDynamicDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\SendReviewDialog.xaml">
+    <Page Include="Controls\Dialogs\SendReviewDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\LoginDialog.xaml">
+    <Page Include="Controls\Dialogs\LoginDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1514,10 +1511,6 @@
     <Page Include="Pages\NewPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Pages\Other\FindMorePage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\Other\ImageViewerPage.xaml">
       <SubType>Designer</SubType>

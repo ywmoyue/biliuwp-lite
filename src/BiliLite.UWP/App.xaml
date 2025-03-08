@@ -7,19 +7,18 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Controls/Carousel/Carousel.xaml" />
-                <ResourceDictionary Source="Controls/RoundButton/RoundButton.xaml" />
                 <ResourceDictionary Source="Controls/HorizontalGridView/HorizontalGridView.xaml" />
                 <ResourceDictionary Source="Styles/AppBarButtonNoChevronStyle.xaml" />
                 <ResourceDictionary Source="Styles/TabViewStyle.xaml" />
+                <ResourceDictionary Source="Styles/ButtonStyle.xaml" />
                 <ResourceDictionary Source="Styles/TextBlockStyle.xaml" />
+                <ResourceDictionary Source="Styles/GridViewItemStyle.xaml" />
                 <ResourceDictionary Source="Styles/Breakpoint.xaml" />
                 <ResourceDictionary Source="Styles/Converter.xaml" />
                 <ResourceDictionary Source="Styles/Fonts.xaml" />
                 <ResourceDictionary Source="Themes/Default.xaml" />
                 <ResourceDictionary Source="Themes/Accent.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-            <CornerRadius x:Key="ImageCornerRadius">4</CornerRadius>
         </ResourceDictionary>
     </Application.Resources>
 

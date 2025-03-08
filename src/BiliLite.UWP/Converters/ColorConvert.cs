@@ -15,32 +15,32 @@ namespace BiliLite.Converters
             }
 
             Color color = new();
-            if (value is string string1)
+            if (value is Color colorValue)
             {
+                color = colorValue;
+            }
+            else
+            {
+                var stringValue = value.ToString();
                 try
                 {
-                    if (!string1.Contains("#"))
+                    if (!stringValue.Contains("#"))
                     {
-                        if (long.TryParse(string1, out var c))
+                        if (long.TryParse(stringValue, out var c))
                         {
-                            string1 = c.ToString("X2");
+                            stringValue = c.ToString("X2");
                         }
-                        int desiredLength = string1.Length <= 6 ? 6 : 8;
-                        string1 = string1.PadLeft(desiredLength, '0');
+                        int desiredLength = stringValue.Length <= 6 ? 6 : 8;
+                        stringValue = stringValue.PadLeft(desiredLength, '0');
 
-                        string1 = "#" + string1;
+                        stringValue = "#" + stringValue;
                     }
-
-                    color = Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor(string1);
+                    color = Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor(stringValue);
                 }
                 catch (Exception)
                 {
                     color = Colors.Transparent;
                 }
-            }
-            if (value is Color color1)
-            {
-                color = color1;
             }
 
             if (parameter != null)

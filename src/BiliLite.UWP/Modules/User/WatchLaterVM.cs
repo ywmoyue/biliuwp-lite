@@ -1,5 +1,8 @@
-﻿using BiliLite.Models;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
+using BiliLite.Models;
 using BiliLite.Models.Requests.Api.User;
+using BiliLite.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -7,8 +10,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BiliLite.Extensions;
-using BiliLite.Services;
 
 namespace BiliLite.Modules.User
 {
@@ -62,9 +63,9 @@ namespace BiliLite.Modules.User
         {
             try
             {
-                if (!SettingService.Account.Logined && await Notify.ShowLoginDialog())
+                if (!SettingService.Account.Logined && await NotificationShowExtensions.ShowLoginDialog())
                 {
-                    Notify.ShowMessageToast("请先登录");
+                    NotificationShowExtensions.ShowMessageToast("请先登录");
                     return;
                 }
                 var results = await watchLaterAPI.Add(aid).Request();
@@ -73,22 +74,22 @@ namespace BiliLite.Modules.User
                     var data = await results.GetJson<ApiDataModel<object>>();
                     if (data.success)
                     {
-                        Notify.ShowMessageToast("已添加到稍后再看");
+                        NotificationShowExtensions.ShowMessageToast("已添加到稍后再看");
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<object>(ex);
-                Notify.ShowMessageToast("添加失败");
+                NotificationShowExtensions.ShowMessageToast("添加失败");
             }
 
         }
@@ -148,18 +149,18 @@ namespace BiliLite.Modules.User
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<WatchLaterVM>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {
@@ -181,7 +182,7 @@ namespace BiliLite.Modules.User
             try
             {
 
-                if (!await Notify.ShowDialog("清空稍后再看", "确定要清空全部视频吗?")) return;
+                if (!await NotificationShowExtensions.ShowMessageDialog("清空稍后再看", "确定要清空全部视频吗?")) return;
                 var results = await watchLaterAPI.Clear().Request();
                 if (results.status)
                 {
@@ -192,25 +193,25 @@ namespace BiliLite.Modules.User
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<WatchLaterVM>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
         }
         public async void ClearViewed()
         {
             try
             {
-                if (!await Notify.ShowDialog("清除已观看", "确定要清空已观看视频吗?")) return;
+                if (!await NotificationShowExtensions.ShowMessageDialog("清除已观看", "确定要清空已观看视频吗?")) return;
                 var results = await watchLaterAPI.Del().Request();
                 if (results.status)
                 {
@@ -221,18 +222,18 @@ namespace BiliLite.Modules.User
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<WatchLaterVM>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
         }
 
@@ -251,18 +252,18 @@ namespace BiliLite.Modules.User
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<WatchLaterVM>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
         }
     }
