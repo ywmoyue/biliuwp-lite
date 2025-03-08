@@ -295,6 +295,19 @@ namespace BiliLite.Models.Common
 
             [SettingKey]
             public const string LOCAL_ATTENTION_USER = "LocalAttentionUser";
+
+            /// <summary>
+            /// 滚动视图加载更多触发偏移量
+            /// 过大可能导致无限加载bug被B站风控
+            /// </summary>
+            [SettingKey(typeof(double))]
+            public const string SCROLL_VIEW_LOAD_MORE_BOTTOM_OFFSET = "ScrollViewLoadMoreBottomOffset";
+
+            /// <summary>
+            /// 滚动视图加载更多触发偏移量默认值
+            /// </summary>
+            [SettingDefaultValue]
+            public const double DEFAULT_SCROLL_VIEW_LOAD_MORE_BOTTOM_OFFSET = 0;
         }
 
         public class Account
