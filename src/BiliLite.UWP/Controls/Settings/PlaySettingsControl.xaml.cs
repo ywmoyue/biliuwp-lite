@@ -19,13 +19,21 @@ namespace BiliLite.Controls.Settings
         private readonly PlaySettingsControlViewModel m_viewModel;
         private readonly PlaySpeedMenuService m_playSpeedMenuService;
         private readonly RealPlayerTypes m_realPlayerTypes = new RealPlayerTypes();
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
 
         public PlaySettingsControl()
         {
-            m_viewModel = App.ServiceProvider.GetRequiredService<PlaySettingsControlViewModel>();
-            m_playSpeedMenuService = App.ServiceProvider.GetRequiredService<PlaySpeedMenuService>();
-            InitializeComponent();
-            LoadPlayer();
+            try
+            {
+                m_viewModel = App.ServiceProvider.GetRequiredService<PlaySettingsControlViewModel>();
+                m_playSpeedMenuService = App.ServiceProvider.GetRequiredService<PlaySpeedMenuService>();
+                InitializeComponent();
+                LoadPlayer();
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn("播放设置加载失败", ex);
+            }
         }
 
         private void LoadPlayer()

@@ -988,7 +988,7 @@ namespace BiliLite.Models.Common
             /// <summary>
             /// 自动刷新播放地址时间,单位分钟
             /// </summary>
-            [SettingKey(typeof(bool))]
+            [SettingKey(typeof(double))]
             public const string AUTO_REFRESH_PLAY_URL_TIME = "AutoRefreshPlayUrlTime";
 
             [SettingDefaultValue]
