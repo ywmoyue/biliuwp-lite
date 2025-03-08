@@ -16,7 +16,8 @@
     mc:Ignorable="d">
     <Page.Resources>
         <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource SystemAccentColor}" />
-        <SolidColorBrush x:Key="GridViewItemForegroundSelected" Color="{ThemeResource HighLightTextColor}" />
+        <SolidColorBrush x:Key="ControlSolidFillColorDefaultBrush" Color="{ThemeResource SystemAccentColor}" />
+        <StaticResource x:Key="GridViewItemSelectedInnerBorderBrush" ResourceKey="ControlSolidFillColorDefaultBrush" />
         <SolidColorBrush x:Key="RatingControlSelectedForeground" Color="Orange" />
         <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
             <Style.Setters>
@@ -267,23 +268,23 @@
                                             Source="{x:Bind Path=m_viewModel.Detail.Cover, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='200w'}"
                                             Stretch="Fill"
                                             Tapped="Image_Tapped" />
-                                            <Border
-                                                Margin="4"
-                                                Padding="4,2"
-                                                HorizontalAlignment="Right"
-                                                VerticalAlignment="Top"
-                                                Background="#FFFB9E60"
-                                                CornerRadius="{StaticResource ControlCornerRadius}"
-                                                Opacity="1"
-                                                Visibility="{x:Bind Path=m_viewModel.Detail.ShowBadge, Mode=OneWay}">
-                                                <TextBlock
-                                                    FontSize="12"
-                                                    Foreground="#FFFFFFFF"
-                                                    Text="{x:Bind Path=m_viewModel.Detail.Badge, Mode=OneWay}"
-                                                    TextTrimming="CharacterEllipsis"
-                                                    TextWrapping="Wrap" />
-                                            </Border>
-                                        </Grid>
+                                        <Border
+                                            Margin="4"
+                                            Padding="4,2"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Top"
+                                            Background="#FFFB9E60"
+                                            CornerRadius="{StaticResource ControlCornerRadius}"
+                                            Opacity="1"
+                                            Visibility="{x:Bind Path=m_viewModel.Detail.ShowBadge, Mode=OneWay}">
+                                            <TextBlock
+                                                FontSize="12"
+                                                Foreground="#FFFFFFFF"
+                                                Text="{x:Bind Path=m_viewModel.Detail.Badge, Mode=OneWay}"
+                                                TextTrimming="CharacterEllipsis"
+                                                TextWrapping="Wrap" />
+                                        </Border>
+                                    </Grid>
                                     <StackPanel Grid.Column="1" Margin="8,0,0,0">
                                         <TextBlock Text="{x:Bind Path=m_viewModel.Detail.Title, Mode=OneWay}" TextWrapping="Wrap" />
                                         <TextBlock
@@ -299,21 +300,21 @@
                                             Foreground="Gray"
                                             Text="{x:Bind Path=m_viewModel.Detail.Publish.TimeLengthShow, Mode=OneWay}" />
                                         <StackPanel Orientation="Horizontal">
-                                        <TextBlock
-                                            Margin="0,2,0,0"
-                                            FontSize="18"
-                                            FontWeight="Bold"
-                                            Foreground="Orange"
-                                            Text="{x:Bind Path=m_viewModel.Detail.Rating.Score, Mode=OneWay}"
-                                            Visibility="{x:Bind Path=m_viewModel.Detail.ShowRating, Mode=OneWay}"><Run FontSize="12" FontWeight="Normal">分</Run></TextBlock>
+                                            <TextBlock
+                                                Margin="0,2,0,0"
+                                                FontSize="18"
+                                                FontWeight="Bold"
+                                                Foreground="Orange"
+                                                Text="{x:Bind Path=m_viewModel.Detail.Rating.Score, Mode=OneWay}"
+                                                Visibility="{x:Bind Path=m_viewModel.Detail.ShowRating, Mode=OneWay}"><Run FontSize="12" FontWeight="Normal">分</Run></TextBlock>
                                             <TextBlock
                                                 Margin="5,0,0,2"
                                                 VerticalAlignment="Bottom"
-                                            FontSize="12"
-                                            Foreground="Gray"
-                                            Visibility="{x:Bind Path=m_viewModel.Detail.ShowRating, Mode=OneWay}"><Run Text="{x:Bind Path=m_viewModel.Detail.Rating.Count, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" />
-                                            人评分</TextBlock>
-                                    </StackPanel>
+                                                FontSize="12"
+                                                Foreground="Gray"
+                                                Visibility="{x:Bind Path=m_viewModel.Detail.ShowRating, Mode=OneWay}"><Run Text="{x:Bind Path=m_viewModel.Detail.Rating.Count, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" />
+                                                人评分</TextBlock>
+                                        </StackPanel>
                                     </StackPanel>
                                 </Grid>
                                 <Button

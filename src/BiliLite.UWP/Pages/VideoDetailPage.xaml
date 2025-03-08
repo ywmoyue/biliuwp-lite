@@ -26,7 +26,8 @@
         <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="#64B0B0B0" />
         <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="{ThemeResource SystemListLowColor}" />
         <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource SystemAccentColor}" />
-
+        <SolidColorBrush x:Key="ControlSolidFillColorDefaultBrush" Color="{ThemeResource SystemAccentColor}" />
+        <StaticResource x:Key="GridViewItemSelectedInnerBorderBrush" ResourceKey="ControlSolidFillColorDefaultBrush" />
         <DataTemplate x:Name="PlayListTpl">
             <PivotItem Margin="0">
                 <PivotItem.Header>
@@ -610,6 +611,7 @@
 
                                 </toolkit:AdaptiveGridView>
 
+                                <TextBlock FontSize="16">标签</TextBlock>
                                 <ItemsControl Margin="0,8,0,0" ItemsSource="{x:Bind Path=m_viewModel.Tags, Mode=OneWay}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
