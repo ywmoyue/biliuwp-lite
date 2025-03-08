@@ -213,10 +213,7 @@
                         VerticalAlignment="Center"
                         CornerRadius="{StaticResource ControlCornerRadius}"
                         Visibility="{Binding ElementName=m_viewModel, Path=IsWideMode, Mode=OneWay}">
-                        <Border
-                            BorderBrush="{x:Bind Path=Member.FansDetail.MedalColorBorder, Converter={StaticResource ColorConvert}, Mode=OneWay}"
-                            BorderThickness="1"
-                            Visibility="{x:Bind Path=Member.ShowFansDetail, Mode=OneWay}">
+                        <Border Visibility="{x:Bind Path=Member.ShowFansDetail, Mode=OneWay}">
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
                                     <GradientStop Color="{x:Bind Path=Member.FansDetail.MedalColor, Converter={StaticResource ColorConvert}, Mode=OneWay, ConverterParameter=1}" />
@@ -230,19 +227,20 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock
-                                    Margin="4,0"
-                                    FontSize="10"
-                                    Foreground="{x:Bind Path=Member.FansDetail.MedalColorName, Converter={StaticResource ColorConvert}, Mode=OneWay}"
-                                    Text="{x:Bind Path=Member.FansDetail.MedalName, Mode=OneWay}" />
                                 <Grid
-                                    Grid.Column="1"
-                                    Width="1"
-                                    VerticalAlignment="Stretch"
-                                    Background="{x:Bind Path=Member.FansDetail.MedalColorBorder, Converter={StaticResource ColorConvert}, Mode=OneWay}" />
+                                    BorderBrush="{x:Bind Path=Member.FansDetail.MedalColorBorder, Converter={StaticResource ColorConvert}, Mode=OneWay}"
+                                    BorderThickness="1"
+                                    CornerRadius="{Binding Text, ElementName=CornerRadiusValue, Converter={StaticResource SingleCornerRadiusConverter}, ConverterParameter=4}">
+                                    <TextBlock
+                                        Margin="4,0"
+                                        FontSize="10"
+                                        Foreground="{x:Bind Path=Member.FansDetail.MedalColorName, Converter={StaticResource ColorConvert}, Mode=OneWay}"
+                                        Text="{x:Bind Path=Member.FansDetail.MedalName, Mode=OneWay}" />
+                                    <TextBlock x:Name="CornerRadiusValue" Visibility="Collapsed">14</TextBlock>
+                                </Grid>
                                 <Grid
                                     Grid.Column="2"
-                                    Margin="-1"
+                                    Margin="-1,0,0,0"
                                     Background="White">
                                     <TextBlock
                                         Margin="4,0"
