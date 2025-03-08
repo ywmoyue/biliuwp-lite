@@ -260,12 +260,13 @@
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="120" />
-
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <Border CornerRadius="{StaticResource OverlayCornerRadius}">
-                                        <Grid>
-                                            <Image Source="{x:Bind Path=m_viewModel.Detail.Cover, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='200w'}" Tapped="Image_Tapped" />
+                                    <Grid VerticalAlignment="Stretch" CornerRadius="{StaticResource OverlayCornerRadius}">
+                                        <Image
+                                            Source="{x:Bind Path=m_viewModel.Detail.Cover, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='200w'}"
+                                            Stretch="Fill"
+                                            Tapped="Image_Tapped" />
                                             <Border
                                                 Margin="4"
                                                 Padding="4,2"
@@ -283,10 +284,12 @@
                                                     TextWrapping="Wrap" />
                                             </Border>
                                         </Grid>
-                                    </Border>
                                     <StackPanel Grid.Column="1" Margin="8,0,0,0">
                                         <TextBlock Text="{x:Bind Path=m_viewModel.Detail.Title, Mode=OneWay}" TextWrapping="Wrap" />
-                                        <TextBlock Margin="0,2" Foreground="Gray"><Run Text="{x:Bind Path=m_viewModel.Detail.Stat.Play, Mode=OneWay}" /> <Run Text="{x:Bind Path=m_viewModel.Detail.Stat.Followers, Mode=OneWay}" /></TextBlock>
+                                        <TextBlock
+                                            Margin="0,2"
+                                            Foreground="Gray"
+                                            TextWrapping="Wrap"><Run Text="{x:Bind Path=m_viewModel.Detail.Stat.Play, Mode=OneWay}" /> <Run Text="{x:Bind Path=m_viewModel.Detail.Stat.Followers, Mode=OneWay}" /></TextBlock>
                                         <TextBlock
                                             Margin="0,2"
                                             Foreground="Gray"
@@ -295,6 +298,7 @@
                                             Margin="0,2"
                                             Foreground="Gray"
                                             Text="{x:Bind Path=m_viewModel.Detail.Publish.TimeLengthShow, Mode=OneWay}" />
+                                        <StackPanel Orientation="Horizontal">
                                         <TextBlock
                                             Margin="0,2,0,0"
                                             FontSize="18"
@@ -302,11 +306,14 @@
                                             Foreground="Orange"
                                             Text="{x:Bind Path=m_viewModel.Detail.Rating.Score, Mode=OneWay}"
                                             Visibility="{x:Bind Path=m_viewModel.Detail.ShowRating, Mode=OneWay}"><Run FontSize="12" FontWeight="Normal">分</Run></TextBlock>
-                                        <TextBlock
+                                            <TextBlock
+                                                Margin="5,0,0,2"
+                                                VerticalAlignment="Bottom"
                                             FontSize="12"
                                             Foreground="Gray"
                                             Visibility="{x:Bind Path=m_viewModel.Detail.ShowRating, Mode=OneWay}"><Run Text="{x:Bind Path=m_viewModel.Detail.Rating.Count, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" />
                                             人评分</TextBlock>
+                                    </StackPanel>
                                     </StackPanel>
                                 </Grid>
                                 <Button
