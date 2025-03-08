@@ -1308,11 +1308,9 @@ namespace BiliLite.ViewModels.Live
                     throw new CustomizedErrorException("未登录");
                 }
 
-                if (LotteryViewModel == null ||
-                    LotteryViewModel.AnchorLotteryInfo == null ||
-                    string.IsNullOrEmpty(LotteryViewModel.AnchorLotteryInfo.Danmu))
+                if (LotteryViewModel?.AnchorLotteryInfo == null)
                 {
-                    return false;
+                    throw new CustomizedErrorException("未获取到天选抽奖信息");
                 }
 
                 return await JoinAnchorLotteryRequest(LotteryViewModel.AnchorLotteryInfo.Id, LotteryViewModel.AnchorLotteryInfo.GiftId, LotteryViewModel.AnchorLotteryInfo.GiftNum);

@@ -2858,6 +2858,12 @@ namespace BiliLite.Controls
                 m_positionTimer.Stop();
                 m_positionTimer = null;
             }
+
+            if (m_autoRefreshTimer != null)
+            {
+                m_autoRefreshTimer.Stop();
+                m_autoRefreshTimer = null;
+            }
             danmakuPool = null;
             if (dispRequest != null)
             {

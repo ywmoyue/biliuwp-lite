@@ -68,5 +68,12 @@
             <controls1:NumberBox x:Name="NumberOpenLastPageCount" Minimum="0" />
         </controls:SettingsCard>
 
+        <controls:SettingsCard Description="过大可能导致无限加载bug被B站风控 (当前有效页面： 首页推荐页、首页热门页) 重启应用后生效" 
+                               Header="滚动视图加载更多触发偏移量">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Scroll" />
+            </controls:SettingsCard.HeaderIcon>
+            <controls1:NumberBox x:Name="NumberScrollViewLoadMoreBottomOffset" Minimum="0" Maximum="1080"/>
+        </controls:SettingsCard>
     </StackPanel>
 </UserControl>

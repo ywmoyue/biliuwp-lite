@@ -171,9 +171,8 @@
                                              ItemHeight="240"
                                              DesiredWidth="260"
                                              Padding="8"
-                                         
                                              SelectionMode="None"
-                                             LoadMoreBottomOffset="0"
+                                             LoadMoreBottomOffset="{x:Bind m_viewModel.ScrollViewLoadMoreBottomOffset}"
                                              LoadMoreCommand="{x:Bind Path=m_viewModel.LoadMoreCommand}"
                                              CanLoadMore="True"
                                              Loading="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"

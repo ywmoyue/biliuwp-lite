@@ -24,9 +24,12 @@ namespace BiliLite.ViewModels.Region
             var region = AppHelper.Regions.FirstOrDefault(x => x.Tid == id);
             ls.Add(new RegionDetailHomeViewModel(region));
             Regions = ls;
-            foreach (var item in region.Children)
+            if (region.Children != null)
             {
-                ls.Add(new RegionDetailChildViewModel(item));
+                foreach (var item in region.Children)
+                {
+                    ls.Add(new RegionDetailChildViewModel(item));
+                }
             }
             if (tid == 0)
             {
