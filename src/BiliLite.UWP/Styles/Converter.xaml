@@ -22,6 +22,7 @@
     <Convert:CountDisplayConvert x:Key="CountDisplayConvert" />
     <Convert:FilterRuleTypeConverter x:Key="FilterRuleTypeConverter" />
     <Convert:CountOrTextConvert x:Name="CountOrTextConvert" />
+    <Convert:LiveStatusConverter x:Name="LiveStatusConverter" />
 
     <ToolKitConvert:ColorToDisplayNameConverter x:Key="ColorToDisplayNameConverter" />
 </ResourceDictionary>
