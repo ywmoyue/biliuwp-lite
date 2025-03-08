@@ -19,5 +19,7 @@ namespace BiliLite.Models.Common.Video.Detail
 
         [JsonProperty("download_subtitle")]
         public string DownloadSubtitle { get; set; }
+
+        public string PagePart => Part.StartsWith($"P{Page}") ? Part : $"P{Page} {Part}";
     }
 }
