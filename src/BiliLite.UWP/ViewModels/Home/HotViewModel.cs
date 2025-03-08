@@ -1,6 +1,7 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Attributes;
+using BiliLite.Models.Common;
 using BiliLite.Models.Common.Home;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests.Api.Home;
@@ -9,13 +10,7 @@ using BiliLite.Pages;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
+using PropertyChanged;
 
 namespace BiliLite.ViewModels.Home
 {
@@ -54,31 +49,29 @@ namespace BiliLite.ViewModels.Home
 
         public ICommand LoadMoreCommand { get; private set; }
 
+        [DoNotNotify]
+        public double ScrollViewLoadMoreBottomOffset { get; } = 
+            SettingService.GetValue(SettingConstants.UI.SCROLL_VIEW_LOAD_MORE_BOTTOM_OFFSET, SettingConstants.UI.DEFAULT_SCROLL_VIEW_LOAD_MORE_BOTTOM_OFFSET);
+
         #endregion
 
         #region Private Methods
 
-        private void GetPopularCore(JObject data)
+        private void GetPopularCore(List<HotDataItemModel> hotDataItems)
         {
-            TopItems ??= JsonConvert.DeserializeObject<List<HotTopItemModel>>(data["config"]["top_items"]
-                .ToString());
-
-            var items =
-                JsonConvert.DeserializeObject<ObservableCollection<HotDataItemModel>>(data["data"]
-                    .ToString());
-            for (var i = items.Count - 1; i >= 0; i--)
+            for (var i = hotDataItems.Count - 1; i >= 0; i--)
             {
-                if (items[i].CardGoto != "av")
-                    items.Remove(items[i]);
+                if (hotDataItems[i].CardGoto != "av")
+                    hotDataItems.Remove(hotDataItems[i]);
             }
 
             if (HotItems == null)
             {
-                HotItems = items;
+                HotItems = new ObservableCollection<HotDataItemModel>(hotDataItems);
             }
             else
             {
-                foreach (var item in items)
+                foreach (var item in hotDataItems)
                 {
                     HotItems.Add(item);
                 }
@@ -94,12 +87,29 @@ namespace BiliLite.ViewModels.Home
             try
             {
                 Loading = true;
+                var requestPage = 3;
+                var items = new List<HotDataItemModel>();
 
-                var results = await m_hotApi.Popular(idx, lastParam).Request();
-                if (!results.status) throw new CustomizedErrorException(results.message);
-                var data = results.GetJObject();
-                if (data["code"].ToInt32() != 0) throw new CustomizedErrorException(data["message"].ToString());
-                GetPopularCore(data);
+                for (int i = 0; i < requestPage; i++)
+                {
+                    if (i > 0)
+                    {
+                        idx = items.LastOrDefault()?.Idx;
+                        lastParam = items.LastOrDefault()?.Param;
+                    }
+                    var results = await m_hotApi.Popular(idx, lastParam).Request();
+                    if (!results.status) throw new CustomizedErrorException(results.message);
+                    var data = results.GetJObject();
+                    if (data["code"].ToInt32() != 0) throw new CustomizedErrorException(data["message"].ToString());
+
+                    TopItems ??= JsonConvert.DeserializeObject<List<HotTopItemModel>>(data["config"]["top_items"]
+                        .ToString());
+
+                    items.AddRange(
+                        JsonConvert.DeserializeObject<List<HotDataItemModel>>(data["data"]
+                            .ToString()));
+                }
+                GetPopularCore(items);
             }
             catch (CustomizedErrorException ex)
             {

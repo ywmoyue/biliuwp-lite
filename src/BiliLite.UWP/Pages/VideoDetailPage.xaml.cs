@@ -254,6 +254,7 @@ namespace BiliLite.Pages
             int i = 0;
             foreach (var item in m_viewModel.VideoInfo.Pages)
             {
+                var titlePage = "P" + item.Page;
                 playInfos.Add(new PlayInfo()
                 {
                     avid = m_viewModel.VideoInfo.Aid,
@@ -262,8 +263,8 @@ namespace BiliLite.Pages
                     is_interaction = m_viewModel.VideoInfo.Interaction != null,
                     order = i,
                     play_mode = VideoPlayType.Video,
-                    title = "P" + item.Page + " " + item.Part,
-                    TitlePage = "P" + item.Page,
+                    title = item.Part.StartsWith(titlePage) ? item.Part : titlePage + " " + item.Part,
+                    TitlePage = titlePage,
                     TitlePart = item.Part.TrimStart(' '),
                     area = m_viewModel.VideoInfo.Title.ParseArea(m_viewModel.VideoInfo.Owner.Mid)
                 });

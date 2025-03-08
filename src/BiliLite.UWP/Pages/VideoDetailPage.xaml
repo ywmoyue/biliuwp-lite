@@ -603,8 +603,8 @@
                                                     Margin="8,0"
                                                     Foreground="{ThemeResource TextColor}"
                                                     TextAlignment="Center"
-                                                    TextTrimming="CharacterEllipsis">
-                                                    P<Run Text="{x:Bind Path=Page}" /> <Run Text="{x:Bind Path=Part}" /></TextBlock>
+                                                    TextTrimming="CharacterEllipsis"
+                                                    Text="{x:Bind PagePart}" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </GridView.ItemTemplate>

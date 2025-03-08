@@ -1448,7 +1448,15 @@ namespace BiliLite.Controls
 
         public void Dispose()
         {
-            ClosePlay();
+            try
+            {
+                ClosePlay();
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn("播放器关闭失败，重试", ex);
+                ClosePlay();
+            }
             //try
             //{
             //    _vlcMediaPlayer?.Media?.Dispose();

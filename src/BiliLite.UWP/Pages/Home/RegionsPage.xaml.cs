@@ -44,6 +44,18 @@ namespace BiliLite.Pages.Home
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as RegionItem;
+
+            // TODO: 专栏/VLOG分区临时使用webview处理
+            if (item.Name == "VLOG")
+            {
+                item.Uri = "https://www.bilibili.com/v/life/daily/?tag=530003";
+            }
+
+            if (item.Name == "专栏")
+            {
+                item.Uri = "https://www.bilibili.com/read/home";
+            }
+
             if (item.Uri.Contains("http"))
             {
                 MessageCenter.NavigateToPage(this, new NavigationInfo()

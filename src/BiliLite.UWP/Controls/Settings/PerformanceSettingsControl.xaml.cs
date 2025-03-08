@@ -2,6 +2,7 @@
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using Microsoft.Toolkit.Uwp.UI;
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -11,10 +12,19 @@ namespace BiliLite.Controls.Settings
 {
     public sealed partial class PerformanceSettingsControl : UserControl
     {
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+
         public PerformanceSettingsControl()
         {
-            InitializeComponent();
-            LoadPerformance();
+            try
+            {
+                InitializeComponent();
+                LoadPerformance();
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn("性能设置加载失败", ex);
+            }
         }
 
         private void LoadPerformance()
@@ -71,6 +81,16 @@ namespace BiliLite.Controls.Settings
                         NumberOpenLastPageCount.Value = (int)args.NewValue;
                     }
                     SettingService.SetValue(SettingConstants.UI.OPEN_LAST_PAGE_LIMIT_COUNT, (int)NumberOpenLastPageCount.Value);
+                };
+            };
+
+            //滚动视图加载更多触发偏移量
+            NumberScrollViewLoadMoreBottomOffset.Value = SettingService.GetValue(SettingConstants.UI.SCROLL_VIEW_LOAD_MORE_BOTTOM_OFFSET, SettingConstants.UI.DEFAULT_SCROLL_VIEW_LOAD_MORE_BOTTOM_OFFSET);
+            NumberScrollViewLoadMoreBottomOffset.Loaded += (_, _) =>
+            {
+                NumberScrollViewLoadMoreBottomOffset.ValueChanged += (_, _) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.SCROLL_VIEW_LOAD_MORE_BOTTOM_OFFSET, (double)NumberScrollViewLoadMoreBottomOffset.Value);
                 };
             };
 

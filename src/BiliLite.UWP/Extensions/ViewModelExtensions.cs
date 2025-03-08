@@ -45,7 +45,6 @@ namespace BiliLite.Extensions
             services.AddTransient<UserDynamicAllViewModel>();
             services.AddTransient<PlayerToastViewModel>();
             services.AddTransient<VideoListViewModel>();
-            services.AddTransient<MyFollowVideoViewModel>();
             services.AddTransient<CollectedPageViewModel>();
             services.AddTransient<RankViewModel>();
             services.AddTransient<EditPlaySpeedMenuViewModel>();
