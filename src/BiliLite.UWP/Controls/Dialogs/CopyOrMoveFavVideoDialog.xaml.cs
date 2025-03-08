@@ -1,10 +1,13 @@
-﻿using BiliLite.Extensions;
+﻿using AutoMapper;
+using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Common.Favorites;
+using BiliLite.Models.Common.User;
 using BiliLite.Models.Requests.Api.User;
 using BiliLite.Models.Responses;
 using BiliLite.ViewModels.User;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;

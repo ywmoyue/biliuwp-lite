@@ -11,6 +11,12 @@ using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using Newtonsoft.Json;
 using PropertyChanged;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace BiliLite.ViewModels.Home
 {
@@ -50,7 +56,7 @@ namespace BiliLite.ViewModels.Home
         public ICommand LoadMoreCommand { get; private set; }
 
         [DoNotNotify]
-        public double ScrollViewLoadMoreBottomOffset { get; } = 
+        public double ScrollViewLoadMoreBottomOffset { get; } =
             SettingService.GetValue(SettingConstants.UI.SCROLL_VIEW_LOAD_MORE_BOTTOM_OFFSET, SettingConstants.UI.DEFAULT_SCROLL_VIEW_LOAD_MORE_BOTTOM_OFFSET);
 
         #endregion
