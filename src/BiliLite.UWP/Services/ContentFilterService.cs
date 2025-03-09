@@ -1,11 +1,12 @@
-﻿using BiliLite.Models.Common;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using BiliLite.Models.Common;
 using BiliLite.Models.Common.Recommend;
 using BiliLite.Models.Common.Search;
 using BiliLite.Models.Common.Settings;
 using BiliLite.ViewModels.UserDynamic;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace BiliLite.Services
 {
@@ -122,34 +123,43 @@ namespace BiliLite.Services
             {
                 return recommendItems;
             }
-            var query = recommendItems.AsEnumerable();
-            query = RecommendFilterRules.Where(rule => rule.Enable)
-                .Aggregate(query, (current, rule) => rule.ContentType switch
-                {
-                    FilterContentType.Title => rule.FilterType switch
+
+            try
+            {
+                var query = recommendItems.AsEnumerable();
+                query = RecommendFilterRules.Where(rule => rule.Enable)
+                    .Aggregate(query, (current, rule) => rule.ContentType switch
                     {
-                        FilterType.Word => current.Where(x => !x.Title.Contains(rule.Rule)),
-                        FilterType.Regular => current.Where(x => !new Regex(rule.Rule).IsMatch(x.Title)),
+                        FilterContentType.Title => rule.FilterType switch
+                        {
+                            FilterType.Word => current.Where(x => !x.Title.Contains(rule.Rule)),
+                            FilterType.Regular => current.Where(x => !new Regex(rule.Rule).IsMatch(x.Title)),
+                            _ => current
+                        },
+                        FilterContentType.User => rule.FilterType switch
+                        {
+                            FilterType.Word => current.Where(x => !x.Args.UpName.Contains(rule.Rule)),
+                            FilterType.Regular => current.Where(x => !new Regex(rule.Rule).IsMatch(x.Args.UpName)),
+                            _ => current
+                        },
                         _ => current
-                    },
-                    FilterContentType.User => rule.FilterType switch
-                    {
-                        FilterType.Word => current.Where(x => !x.Args.UpName.Contains(rule.Rule)),
-                        FilterType.Regular => current.Where(x => !new Regex(rule.Rule).IsMatch(x.Args.UpName)),
-                        _ => current
-                    },
-                    _ => current
-                });
+                    });
 
-            var result = query.ToList();
+                var result = query.ToList();
 
-            _logger.Debug($"source recommendItems count:{recommendItems.Count};after filter:{result.Count}");
-            //if (recommendItems.Count - result.Count > 0)
-            //{
-            //    NotificationShowExtensions.ShowMessageToast($"过滤:{recommendItems.Count - result.Count}");
-            //}
+                _logger.Debug($"source recommendItems count:{recommendItems.Count};after filter:{result.Count}");
+                //if (recommendItems.Count - result.Count > 0)
+                //{
+                //    NotificationShowExtensions.ShowMessageToast($"过滤:{recommendItems.Count - result.Count}");
+                //}
 
-            return result;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn("过滤推荐页列表失败", ex);
+                return recommendItems;
+            }
         }
 
         public List<SearchVideoItem> FilterSearchItems(List<SearchVideoItem> searchItems)
