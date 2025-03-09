@@ -113,14 +113,14 @@ namespace BiliLite.Controls.Settings
                 UpdateJsonAddressOptions.DEFAULT_UPDATE_JSON_ADDRESS);
             selectedValue = selectedValue.Replace("\"", ""); // 解决取出的值有奇怪的转义符
             updateJsonAddress.SelectedItem = UpdateJsonAddressOptions.GetOption(selectedValue);
-            mirrorComboboxSelectAction(selectedValue);
+            MirrorComboboxSelectAction(selectedValue);
             updateJsonAddress.Loaded += (sender, e) =>
             {
                 updateJsonAddress.SelectionChanged += (obj, args) =>
                 {
                     SettingService.SetValue(SettingConstants.Other.UPDATE_JSON_ADDRESS,
                         updateJsonAddress.SelectedValue);
-                    mirrorComboboxSelectAction(updateJsonAddress.SelectedValue);
+                    MirrorComboboxSelectAction(updateJsonAddress.SelectedValue);
                 };
             };
         }
@@ -146,7 +146,7 @@ namespace BiliLite.Controls.Settings
             Notify.ShowMessageToast("已恢复默认");
         }
 
-        private void mirrorComboboxSelectAction(object selectedValue)
+        private void MirrorComboboxSelectAction(object selectedValue)
         {
             switch (selectedValue)
             {
@@ -162,9 +162,10 @@ namespace BiliLite.Controls.Settings
                         mirrorDonateUrl.NavigateUri = new Uri("https://help.kkgithub.com/donate");
                         break;
                     }
-                case ApiHelper.GIT_RAW_URL:
+                case ApiHelper.JSDELIVR_GIT_RAW_URL:
                     {
-                        mirrorDonateText.Visibility = Visibility.Collapsed;
+                        mirrorDonateText.Visibility = Visibility.Visible;
+                        mirrorDonateUrl.NavigateUri = new Uri("https://www.jsdelivr.com/become-a-sponsor");
                         break;
                     }
                 default:
