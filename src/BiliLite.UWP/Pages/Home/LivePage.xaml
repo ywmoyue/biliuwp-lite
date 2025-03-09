@@ -26,7 +26,6 @@
                         MaxHeight="240"
                         AspectRatio="3.2"
                         ItemsSource="{x:Bind Path=m_viewModel.Banners, Mode=OneWay}"
-                        Visibility="{x:Bind m_viewModel.DisplayRecommendBanners,Mode=OneWay}"
                         MaxItems="1"
                         SlideInterval="5000"
                         Visibility="{x:Bind m_viewModel.DisplayRecommendBanners, Mode=OneWay}">
