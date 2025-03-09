@@ -136,7 +136,7 @@ namespace BiliLite
                 }
             }
 #if !DEBUG
-             await BiliExtensions.CheckVersion();
+             await BiliExtensions.CheckVersion(isSilentUpdateCheck:true);
 #endif
         }
 
