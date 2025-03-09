@@ -49,6 +49,10 @@ namespace BiliLite.ViewModels.Home
 
         public ICommand LoadMoreCommand { get; private set; }
 
+        [DoNotNotify]
+        public double ScrollViewLoadMoreBottomOffset { get; } =
+            SettingService.GetValue(SettingConstants.UI.SCROLL_VIEW_LOAD_MORE_BOTTOM_OFFSET, SettingConstants.UI.DEFAULT_SCROLL_VIEW_LOAD_MORE_BOTTOM_OFFSET);
+
         public bool Loading { get; set; } = true;
 
         public ObservableCollection<RecommendBannerItemModel> Banner { get; set; }
@@ -136,18 +140,27 @@ namespace BiliLite.ViewModels.Home
             try
             {
                 Loading = true;
-                var result = await m_recommendApi.Recommend(idx).Request();
-                if (!result.status)
-                {
-                    throw new CustomizedErrorException(result.message);
-                }
-                var obj = result.GetJObject();
-                if (obj["code"].ToInt32() != 0)
-                {
-                    throw new CustomizedErrorException(obj["message"].ToString());
-                }
 
-                var recommendItems = JsonConvert.DeserializeObject<List<RecommendItemModel>>(obj["data"]["items"].ToString().Replace("left_bottom_rcmd_reason_style", "rcmd_reason_style"));
+                var recommendItems = new List<RecommendItemModel>();
+                var requestPage = 3;
+                var requestIdx = idx;
+
+                for (int i = 0; i < requestPage; i++)
+                {
+                    if (i > 0) requestIdx = recommendItems.LastOrDefault()?.Idx;
+                    var result = await m_recommendApi.Recommend(requestIdx).Request();
+                    if (!result.status)
+                    {
+                        throw new CustomizedErrorException(result.message);
+                    }
+                    var obj = result.GetJObject();
+                    if (obj["code"].ToInt32() != 0)
+                    {
+                        throw new CustomizedErrorException(obj["message"].ToString());
+                    }
+
+                    recommendItems.AddRange(JsonConvert.DeserializeObject<List<RecommendItemModel>>(obj["data"]["items"].ToString().Replace("left_bottom_rcmd_reason_style", "rcmd_reason_style")));
+                }
 
                 var banner = recommendItems.FirstOrDefault(x => x.CardGoto == "banner");
                 if (banner != null)

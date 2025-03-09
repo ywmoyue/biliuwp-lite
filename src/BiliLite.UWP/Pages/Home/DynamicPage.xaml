@@ -51,7 +51,7 @@
                             Text="{x:Bind Video.Duration, Mode=OneWay, Converter={StaticResource ProgressToTimeConverter}}" />
                         <Border
                             Margin="-2"
-                            Padding="2"
+                            Padding="4,2"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"
                             Background="{ThemeResource SystemAccentColor}"
@@ -182,21 +182,23 @@
                     </Border>
 
                 </Grid>
-                <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                <Grid Grid.Column="1" Margin="8,0,0,0">
                     <TextBlock
                         MaxLines="2"
                         Text="{x:Bind Path=Season.Season.Title}"
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="Wrap" />
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        Foreground="Gray"
-                        Text="{x:Bind Path=Season.NewDesc}" />
-                    <TextBlock
-                        Margin="0,2,0,0"
-                        Foreground="Gray"
-                        Text="{x:Bind Path=Desc.DisplayTimeText}" />
-                </StackPanel>
+                    <StackPanel VerticalAlignment="Bottom">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Foreground="Gray"
+                            Text="{x:Bind Path=Season.NewDesc}" />
+                        <TextBlock
+                            Margin="0,2,0,0"
+                            Foreground="Gray"
+                            Text="{x:Bind Path=Desc.DisplayTimeText}" />
+                    </StackPanel>
+                </Grid>
             </Grid>
         </DataTemplate>
     </Page.Resources>

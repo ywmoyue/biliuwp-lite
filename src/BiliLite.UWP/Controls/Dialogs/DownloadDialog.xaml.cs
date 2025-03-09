@@ -12,9 +12,9 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using System.Threading.Tasks;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 
@@ -106,9 +106,8 @@ namespace BiliLite.Controls.Dialogs
                 m_viewModel.SelectedQualityIndex = m_viewModel.Qualities.IndexOf(quality);
             else m_viewModel.SelectedQualityIndex = m_viewModel.Qualities.Count - 1;
 
-            //m_viewModel.AudioQualities = [.. data.AudioQualites.OrderBy(x => x.QualityID)];
-            //m_viewModel.SelectedAudioQuality = data.AudioQualites?.FirstOrDefault();
-            m_viewModel.AudioQualities = data.AudioQualites;
+            // TODO: 使用QualityID排序将导致无损音质显示比192K更低，之后需特殊处理
+            m_viewModel.AudioQualities = [.. data.AudioQualites.OrderBy(x => x.QualityID)];
             var audioQuality =
                 m_viewModel.AudioQualities.FirstOrDefault(x => x.QualityID == settingDownloadSoundQuality);
             if (audioQuality != null)
@@ -195,7 +194,6 @@ namespace BiliLite.Controls.Dialogs
 
             if (hide)
             {
-                NotificationShowExtensions.ShowMessageToast("已添加至下载列表");
                 this.Hide();
             }
         }
@@ -206,7 +204,6 @@ namespace BiliLite.Controls.Dialogs
             var isSeason = downloadItem.Type == DownloadType.Season;
             if (isSeason)
             {
-                NotificationShowExtensions.ShowMessageToast("有视频下载失败");
                 queryId = item.EpisodeID;
             }
 

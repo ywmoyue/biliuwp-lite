@@ -24,7 +24,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
             <RowDefinition />
 
         </Grid.RowDefinitions>
@@ -40,7 +40,7 @@
                 SelectedValuePath="Value" />
 
         </StackPanel>
-        <StackPanel Grid.Row="1" Margin="0,10,0,0">
+        <StackPanel Grid.Row="1" Margin="0,8,0,0">
             <TextBlock>优先清晰度</TextBlock>
             <ComboBox
                 x:Name="cbQuality"
@@ -54,7 +54,7 @@
 
         <StackPanel
             Grid.Row="2"
-            Margin="0,10,0,0"
+            Margin="0,8,0,0"
             Visibility="{x:Bind m_viewModel.ShowAudioQualityComboBox, Mode=OneWay}">
             <TextBlock>优先音质</TextBlock>
             <ComboBox
@@ -66,29 +66,28 @@
                 SelectedItem="{x:Bind m_viewModel.SelectedAudioQuality, Mode=TwoWay}" />
         </StackPanel>
 
-        <StackPanel  
-            Grid.Row="3" 
-            Margin="0 10 0 0" 
-            Orientation="Horizontal"
+        <StackPanel
+            Grid.Row="3"
+            Margin="0,8,0,0"
             HorizontalAlignment="Stretch"
-            Visibility="{x:Bind m_viewModel.ShowAudioQualityComboBox,Mode=OneWay}">
-            <TextBlock ToolTipService.ToolTip="存在视频列表时的加载质量选项可能不是您需要的选项"
-                       VerticalAlignment="Center">是否仅加载当前视频质量选项</TextBlock>
-            <ToggleSwitch x:Name="SwOnlyCurrentVideoQuality" 
-                      Margin="8 4 0 0" 
-                      IsOn="{x:Bind m_viewModel.OnlyLoadCurrentVideoQuality,Mode=TwoWay}"
-                      Toggled="SwOnlyCurrentVideoQuality_OnToggled"
-                      HorizontalAlignment="Stretch" >
-            </ToggleSwitch>
+            Orientation="Horizontal"
+            Visibility="{x:Bind m_viewModel.ShowAudioQualityComboBox, Mode=OneWay}">
+            <TextBlock VerticalAlignment="Center" ToolTipService.ToolTip="存在视频列表时的加载质量选项可能不是您需要的选项">是否仅加载当前视频质量选项</TextBlock>
+            <ToggleSwitch
+                x:Name="SwOnlyCurrentVideoQuality"
+                Margin="8,4,0,0"
+                HorizontalAlignment="Stretch"
+                IsOn="{x:Bind m_viewModel.OnlyLoadCurrentVideoQuality, Mode=TwoWay}"
+                Toggled="SwOnlyCurrentVideoQuality_OnToggled" />
         </StackPanel>
 
-        <StackPanel Grid.Row="4" Margin="0,10,0,0">
+        <StackPanel Grid.Row="4" Margin="0,8,0,0">
             <TextBlock>选集</TextBlock>
             <Border
                 Margin="0,4"
                 BorderBrush="{ThemeResource ComboBoxBorderBrush}"
                 BorderThickness="{ThemeResource ComboBoxBorderThemeThickness}"
-                CornerRadius="{StaticResource ControlCornerRadius}">
+                CornerRadius="2">
                 <ListView
                     x:Name="listView"
                     Height="200"
@@ -113,7 +112,7 @@
                                     Grid.Column="1"
                                     HorizontalAlignment="Right"
                                     Background="{ThemeResource SystemAccentColor}"
-                                    CornerRadius="{StaticResource ControlCornerRadius}"
+                                    CornerRadius="4"
                                     Visibility="{x:Bind Path=ShowBadge, Mode=OneWay}">
                                     <TextBlock
                                         Margin="4"
@@ -147,7 +146,7 @@
                                     Grid.Column="2"
                                     HorizontalAlignment="Right"
                                     Background="Gray"
-                                    CornerRadius="{StaticResource ControlCornerRadius}"
+                                    CornerRadius="4"
                                     Visibility="{x:Bind Path=State, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=3}">
                                     <TextBlock
                                         Margin="4"

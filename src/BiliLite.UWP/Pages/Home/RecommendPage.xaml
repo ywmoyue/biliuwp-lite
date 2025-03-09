@@ -256,7 +256,7 @@
                     ItemClick="RecommendGridView_ItemClick"
                     ItemHeight="240"
                     ItemsSource="{x:Bind Path=m_viewModel.Items, Mode=OneWay}"
-                    LoadMoreBottomOffset="0"
+                    LoadMoreBottomOffset="{x:Bind m_viewModel.ScrollViewLoadMoreBottomOffset}"
                     LoadMoreCommand="{x:Bind Path=m_viewModel.LoadMoreCommand}"
                     Loading="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}"
                     OneRowModeEnabled="False"

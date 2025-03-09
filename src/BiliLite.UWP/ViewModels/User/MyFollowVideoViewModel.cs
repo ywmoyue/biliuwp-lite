@@ -2,6 +2,7 @@
 using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
+using BiliLite.Models.Attributes;
 using BiliLite.Models.Common.User;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests.Api.User;
@@ -19,6 +20,7 @@ using System.Windows.Input;
 
 namespace BiliLite.ViewModels.User
 {
+    [RegisterTransientViewModel]
     public class MyFollowVideoViewModel : BaseViewModel
     {
         #region Fields

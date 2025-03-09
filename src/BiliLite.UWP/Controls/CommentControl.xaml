@@ -101,17 +101,14 @@
                 </Grid.ColumnDefinitions>
                 <HyperlinkButton
                     Grid.RowSpan="2"
-                    Margin="0"
-                    Padding="0"
+                    Margin="8,0,0,0"
+                    Padding="-7"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top"
                     Click="BtnUser_Click"
                     Tag="{x:Bind Mid}">
                     <Grid>
-                        <Ellipse
-                            Width="36"
-                            Height="36"
-                            Margin="12">
+                        <Ellipse Width="36" Height="36">
                             <Ellipse.Fill>
                                 <ImageBrush ImageSource="{x:Bind Path=Member.Avatar}" Stretch="UniformToFill" />
                             </Ellipse.Fill>
@@ -197,23 +194,26 @@
                     </TextBlock>
                     <TextBlock
                         VerticalAlignment="Center"
-                        Foreground="{x:Bind Path=Member.Vip.VipType, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=2}"
-                        Text="{x:Bind Path=Member.Uname}" />
+                        Text="{x:Bind Path=Member.Uname}"
+                        Visibility="{Binding Visibility, ElementName=VipUserName1, Converter={StaticResource DisplayConvert}}" />
+                    <TextBlock
+                        x:Name="VipUserName1"
+                        VerticalAlignment="Center"
+                        Foreground="{ThemeResource SystemAccentColor}"
+                        Text="{x:Bind Path=Member.Uname}"
+                        Visibility="{x:Bind Member.Vip.IsVip}" />
                     <Image
                         Height="12"
-                        Margin="8,4,8,0"
+                        Margin="8,2,8,0"
                         VerticalAlignment="Center"
                         Source="{Binding Path=Member.LV}" />
                     <!--  粉丝牌  -->
                     <Grid
                         Margin="0,4,0,0"
                         VerticalAlignment="Center"
+                        CornerRadius="{StaticResource ControlCornerRadius}"
                         Visibility="{Binding ElementName=m_viewModel, Path=IsWideMode, Mode=OneWay}">
-                        <Border
-                            BorderBrush="{x:Bind Path=Member.FansDetail.MedalColorBorder, Converter={StaticResource ColorConvert}, Mode=OneWay}"
-                            BorderThickness="1"
-                            CornerRadius="{StaticResource ControlCornerRadius}"
-                            Visibility="{x:Bind Path=Member.ShowFansDetail, Mode=OneWay}">
+                        <Border Visibility="{x:Bind Path=Member.ShowFansDetail, Mode=OneWay}">
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
                                     <GradientStop Color="{x:Bind Path=Member.FansDetail.MedalColor, Converter={StaticResource ColorConvert}, Mode=OneWay, ConverterParameter=1}" />
@@ -227,17 +227,21 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock
-                                    Margin="4,0"
-                                    FontSize="10"
-                                    Foreground="{x:Bind Path=Member.FansDetail.MedalColorName, Converter={StaticResource ColorConvert}, Mode=OneWay}"
-                                    Text="{x:Bind Path=Member.FansDetail.MedalName, Mode=OneWay}" />
                                 <Grid
-                                    Grid.Column="1"
-                                    Width="1"
-                                    VerticalAlignment="Stretch"
-                                    Background="{x:Bind Path=Member.FansDetail.MedalColorBorder, Converter={StaticResource ColorConvert}, Mode=OneWay}" />
-                                <Grid Grid.Column="2" Background="White">
+                                    BorderBrush="{x:Bind Path=Member.FansDetail.MedalColorBorder, Converter={StaticResource ColorConvert}, Mode=OneWay}"
+                                    BorderThickness="1"
+                                    CornerRadius="{Binding Text, ElementName=CornerRadiusValue, Converter={StaticResource SingleCornerRadiusConverter}, ConverterParameter=4}">
+                                    <TextBlock
+                                        Margin="4,0"
+                                        FontSize="10"
+                                        Foreground="{x:Bind Path=Member.FansDetail.MedalColorName, Converter={StaticResource ColorConvert}, Mode=OneWay}"
+                                        Text="{x:Bind Path=Member.FansDetail.MedalName, Mode=OneWay}" />
+                                    <TextBlock x:Name="CornerRadiusValue" Visibility="Collapsed">14</TextBlock>
+                                </Grid>
+                                <Grid
+                                    Grid.Column="2"
+                                    Margin="-1,0,0,0"
+                                    Background="White">
                                     <TextBlock
                                         Margin="4,0"
                                         FontSize="10"
@@ -248,40 +252,39 @@
                         </Border>
                     </Grid>
                 </StackPanel>
-                <StackPanel
+                <Grid
                     Grid.RowSpan="2"
                     Grid.Column="2"
                     VerticalAlignment="Top"
-                    Orientation="Horizontal">
+                    Visibility="{x:Bind Path=Member.ShowCardBg, Mode=OneWay}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
                     <StackPanel
+                        Margin="8,0,0,0"
                         VerticalAlignment="Center"
-                        Orientation="Horizontal"
-                        Visibility="{x:Bind Path=Member.ShowCardBg, Mode=OneWay}">
-                        <Grid Width="40" Height="48">
-                            <Image
-                                Width="288"
-                                Height="48"
-                                Margin="-200,0,0,0"
-                                Source="{x:Bind Path=Member.UserSailing.Cardbg.Image, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='64h.png'}"
-                                Stretch="UniformToFill" />
-                        </Grid>
-                        <StackPanel
-                            Margin="8,0,0,0"
-                            VerticalAlignment="Center"
-                            Visibility="{x:Bind Path=Member.UserSailing.Cardbg.Show, Mode=OneWay}">
-                            <TextBlock
-                                FontFamily="{StaticResource FansNum}"
-                                FontSize="10"
-                                Foreground="{x:Bind Path=Member.UserSailing.Cardbg.Fan.Color, Mode=OneWay, Converter={StaticResource ColorConvert}}"
-                                Text="NO." />
-                            <TextBlock
-                                FontFamily="{StaticResource FansNum}"
-                                FontSize="10"
-                                Foreground="{x:Bind Path=Member.UserSailing.Cardbg.Fan.Color, Mode=OneWay, Converter={StaticResource ColorConvert}}"
-                                Text="{x:Bind Path=Member.UserSailing.Cardbg.Fan.NumDesc, Mode=OneWay}" />
-                        </StackPanel>
+                        Visibility="{x:Bind Path=Member.UserSailing.Cardbg.Show, Mode=OneWay}">
+                        <TextBlock
+                            FontFamily="{StaticResource FansNum}"
+                            FontSize="10"
+                            Foreground="{x:Bind Path=Member.UserSailing.Cardbg.Fan.Color, Mode=OneWay, Converter={StaticResource ColorConvert}}"
+                            Text="NO." />
+                        <TextBlock
+                            FontFamily="{StaticResource FansNum}"
+                            FontSize="10"
+                            Foreground="{x:Bind Path=Member.UserSailing.Cardbg.Fan.Color, Mode=OneWay, Converter={StaticResource ColorConvert}}"
+                            Text="{x:Bind Path=Member.UserSailing.Cardbg.Fan.NumDesc, Mode=OneWay}" />
                     </StackPanel>
-                </StackPanel>
+
+                    <Grid Grid.Column="1" Background="Transparent">
+                        <Image
+                            Height="48"
+                            Margin="-200,0,-50,0"
+                            Source="{x:Bind Path=Member.UserSailing.Cardbg.Image, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='64h.png'}"
+                            Stretch="UniformToFill" />
+                    </Grid>
+                </Grid>
 
                 <TextBlock
                     Grid.Row="1"
@@ -337,6 +340,7 @@
 
                 <HyperlinkButton
                     Grid.Row="1"
+                    Padding="17,5"
                     HorizontalContentAlignment="Left"
                     Command="{x:Bind CommentExpandCommand}"
                     Content="{x:Bind ExtendBtnText, Mode=OneWay}"
@@ -348,6 +352,8 @@
                     IsItemClickEnabled="True"
                     ItemClick="NotePicturesView_ItemClick"
                     ItemsSource="{x:Bind Path=Content.Pictures}"
+                    ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                    ScrollViewer.VerticalScrollMode="Disabled"
                     SelectionMode="None"
                     StretchContentForSingleRow="False"
                     Visibility="{x:Bind Path=ShowPics}">
@@ -420,7 +426,7 @@
                         </HyperlinkButton>
 
                         <Border
-                            Background="#3C808080"
+                            Background="{ThemeResource CardColor}"
                             CornerRadius="{StaticResource ControlCornerRadius}"
                             Visibility="{x:Bind Path=UpAction.Like, Mode=OneWay}">
                             <TextBlock
@@ -501,6 +507,7 @@
 
 
                     <ListView
+                        Margin="-6,0,0,0"
                         IsItemClickEnabled="False"
                         ItemContainerStyle="{StaticResource replyStyle}"
                         ItemsSource="{x:Bind Path=Replies, Mode=OneWay}"
@@ -510,21 +517,36 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel>
-
                                     <HyperlinkButton
+                                        Padding="5"
                                         Click="BtnUser_Click"
-                                        Foreground="{Binding Path=Member.Vip.VipType, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=2}"
-                                        Tag="{Binding Path=Mid}">
+                                        Tag="{Binding Path=Mid}"
+                                        Visibility="{Binding Visibility, ElementName=VipUserName2, Converter={StaticResource DisplayConvert}}">
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock VerticalAlignment="Center" Text="{Binding Path=Member.Uname}" />
                                             <Image
                                                 Height="12"
-                                                Margin="8,0"
+                                                Margin="8,2,0,0"
+                                                Source="{Binding Path=Member.LV}" />
+                                        </StackPanel>
+                                    </HyperlinkButton>
+                                    <HyperlinkButton
+                                        x:Name="VipUserName2"
+                                        Padding="5"
+                                        Click="BtnUser_Click"
+                                        Foreground="{ThemeResource SystemAccentColor}"
+                                        Tag="{Binding Path=Mid}"
+                                        Visibility="{Binding Member.Vip.IsVip}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock VerticalAlignment="Center" Text="{Binding Path=Member.Uname}" />
+                                            <Image
+                                                Height="12"
+                                                Margin="8,2,0,0"
                                                 Source="{Binding Path=Member.LV}" />
                                         </StackPanel>
                                     </HyperlinkButton>
                                     <TextBlock
-                                        Margin="12,0,0,0"
+                                        Margin="6,0,0,0"
                                         VerticalAlignment="Center"
                                         FontSize="12"
                                         Foreground="Gray"
@@ -539,7 +561,7 @@
                                         Text="{Binding Path=content.message}"
                                         TextWrapping="Wrap" />-->
                                     <ContentControl
-                                        Margin="20,8,0,0"
+                                        Margin="6,8,0,0"
                                         Content="{Binding Path=CommentText, Mode=OneWay}"
                                         Visibility="Visible" />
 
@@ -559,7 +581,7 @@
                                                 Foreground="{Binding LikeColor}">
                                                 <StackPanel Orientation="Horizontal">
                                                     <fa:FontAwesome FontSize="14" Icon="Regular_ThumbsUp" />
-                                                    <TextBlock Margin="4,0" Text="{Binding Path=LikeStr}" />
+                                                    <TextBlock Margin="4,0,0,0" Text="{Binding Path=LikeStr}" />
                                                 </StackPanel>
                                             </HyperlinkButton>
 
@@ -676,6 +698,7 @@
 
                 <ListView
                     Grid.Row="6"
+                    Margin="-9,0,0,0"
                     CornerRadius="{StaticResource ControlCornerRadius}"
                     IsItemClickEnabled="False"
                     ItemsSource="{x:Bind HotReplies, Mode=OneWay}"
@@ -688,12 +711,19 @@
                             <Grid
                                 Margin="5"
                                 Padding="5"
-                                Background="{ThemeResource CardColor}"
-                                BorderBrush="{ThemeResource SystemAccentColor}"
-                                BorderThickness="2,0,0,0"
                                 CornerRadius="{StaticResource ControlCornerRadius}">
+                                <Grid.Background>
+                                    <LinearGradientBrush MappingMode="Absolute" StartPoint="0,0" EndPoint="0,2">
+                                        <LinearGradientBrush.RelativeTransform>
+                                            <ScaleTransform CenterY="0.5" ScaleY="-1" />
+                                        </LinearGradientBrush.RelativeTransform>
+                                        <LinearGradientBrush.GradientStops>
+                                            <GradientStop Offset="1.0" Color="{ThemeResource SeparatorColor}" />
+                                            <GradientStop Offset="1.0" Color="Transparent" />
+                                        </LinearGradientBrush.GradientStops>
+                                    </LinearGradientBrush>
+                                </Grid.Background>
                                 <ContentControl
-                                    Margin="2"
                                     Content="{Binding Path=Content, Mode=OneWay}"
                                     FontSize="13"
                                     Visibility="Visible" />

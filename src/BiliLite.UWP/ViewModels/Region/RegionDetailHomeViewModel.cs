@@ -85,7 +85,7 @@ namespace BiliLite.ViewModels.Region
                 }
 
                 Banners = JsonConvert.DeserializeObject<List<RegionHomeBannerItemModel>>(
-                    data["data"]["banner"]["top"].ToString());
+                    data["data"]["banner"]?["top"]?.ToString() ?? "[]");
                 Videos = ls;
             }
             else

@@ -28,7 +28,8 @@
                         ItemsSource="{x:Bind Path=m_viewModel.Banners, Mode=OneWay}"
                         Visibility="{x:Bind m_viewModel.DisplayRecommendBanners,Mode=OneWay}"
                         MaxItems="1"
-                        SlideInterval="5000">
+                        SlideInterval="5000"
+                        Visibility="{x:Bind m_viewModel.DisplayRecommendBanners, Mode=OneWay}">
                         <controls:Carousel.ContentTemplate>
                             <DataTemplate>
                                 <HyperlinkButton
@@ -105,13 +106,16 @@
                                             <RowDefinition Height="24" />
                                         </Grid.RowDefinitions>
                                         <Grid>
+                                            <Grid.ContextFlyout>
+                                                <MenuFlyout>
+                                                    <MenuFlyoutItem Click="CancelLocalAttention_OnClick">取消本地关注</MenuFlyoutItem>
+                                                </MenuFlyout>
+                                            </Grid.ContextFlyout>
                                             <toolkit:ImageEx
                                                 Width="260"
                                                 Height="160"
-                                                HorizontalAlignment="Stretch"
-                                                VerticalAlignment="Stretch"
                                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                                Source="{x:Bind Path=RoomInfo.Cover,Converter={StaticResource imageConvert},ConverterParameter='460w_260h_1c'}"
+                                                Source="{x:Bind Path=RoomInfo.Cover, Converter={StaticResource ImageSourceConvert}, ConverterParameter='460w_260h_1c'}"
                                                 Stretch="UniformToFill" />
                                             <Grid Padding="8" VerticalAlignment="Bottom">
                                                 <Grid.Background>
@@ -127,10 +131,11 @@
                                                         Text="{x:Bind Path=AnchorInfo.BaseInfo.Uname}" />
                                                 </StackPanel>
                                                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                                                    <TextBlock FontSize="12" 
-                                                        Foreground="White" 
-                                                        Margin="0 0 8 0"
-                                                        Text="{x:Bind converters:LiveStatusConverter.Convert(RoomInfo.LiveStatus)}"></TextBlock>
+                                                    <TextBlock
+                                                        Margin="0,0,8,0"
+                                                        FontSize="12"
+                                                        Foreground="White"
+                                                        Text="{x:Bind RoomInfo.LiveStatus, Converter={StaticResource LiveStatusConverter}}" />
                                                     <fa:FontAwesome
                                                         Margin="0,0,8,0"
                                                         FontSize="12"
@@ -139,11 +144,10 @@
                                                     <TextBlock
                                                         FontSize="12"
                                                         Foreground="White"
-                                                        Text="{x:Bind Path=RoomInfo.Online,Converter={StaticResource numberToStringConvert}}"/>
+                                                        Text="{x:Bind Path=RoomInfo.Online, Converter={StaticResource NumberToStringConvert}}" />
                                                 </StackPanel>
                                             </Grid>
                                         </Grid>
-
                                         <TextBlock
                                             Grid.Row="1"
                                             Margin="4,4,4,0"
@@ -256,8 +260,10 @@
                             </GridView.ItemTemplate>
                         </controls:HorizontalGridView>
                     </StackPanel>
-                    <ItemsControl ItemsSource="{x:Bind Path=m_viewModel.Items, Mode=OneWay}"
-                                  Visibility="{x:Bind m_viewModel.DisplayRecommendLives,Mode=OneWay}">
+                    <ItemsControl
+                        Margin="0,8,0,0"
+                        ItemsSource="{x:Bind Path=m_viewModel.Items, Mode=OneWay}"
+                        Visibility="{x:Bind m_viewModel.DisplayRecommendLives, Mode=OneWay}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <ItemsStackPanel Orientation="Vertical" />

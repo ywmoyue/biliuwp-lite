@@ -738,7 +738,7 @@
                                 Maximum="{Binding ElementName=Player, Path=Duration, Mode=OneWay}"
                                 ThumbToolTipValueConverter="{StaticResource ProgressToTimeConverter}"
                                 Value="{Binding ElementName=Player, Path=Position, Mode=TwoWay}" />
-                            <Grid Grid.Row="1" Padding="4,8">
+                            <Grid Grid.Row="1" Padding="0,0,0,8">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition />
@@ -784,11 +784,13 @@
                                     </HyperlinkButton>
                                     <TextBlock
                                         x:Name="BottomTextPostion"
-                                        Margin="8,0"
+                                        Margin="0,0,0,3"
                                         VerticalAlignment="Center"
                                         FontSize="18"
-                                        Foreground="White"><Run Text="{Binding ElementName=Player, Path=Position, Mode=OneWay, Converter={StaticResource ProgressToTimeConverter}}" />
-                                        /<Run Text="{Binding ElementName=Player, Path=Duration, Mode=OneWay, Converter={StaticResource ProgressToTimeConverter}}" /></TextBlock>
+                                        Foreground="White">
+                                        <Run Text="{Binding ElementName=Player, Path=Position, Mode=OneWay, Converter={StaticResource ProgressToTimeConverter}}" />
+                                        <Run>/</Run>
+                                        <Run Text="{Binding ElementName=Player, Path=Duration, Mode=OneWay, Converter={StaticResource ProgressToTimeConverter}}" /></TextBlock>
                                     <Button
                                         x:Name="BottomBtnSelctSubtitle"
                                         Width="48"
@@ -886,7 +888,7 @@
                                                             Grid.Column="1"
                                                             Width="64"
                                                             Margin="4,0,0,0"
-                                                            Background="{Binding ElementName=SendDanmakuColorText, Path=Text, Converter={StaticResource ColorSelectedConvert}, Mode=OneWay}"
+                                                            Background="{Binding ElementName=SendDanmakuColorText, Path=Text, Converter={StaticResource ColorConvert}, Mode=OneWay}"
                                                             CornerRadius="{StaticResource ControlCornerRadius}" />
                                                     </Grid>
                                                     <GridView
@@ -901,18 +903,10 @@
                                                                 <Border
                                                                     Width="24"
                                                                     Height="24"
-                                                                    Background="{x:Bind Converter={StaticResource ColorSelectedConvert}}"
+                                                                    Background="{x:Bind Converter={StaticResource ColorConvert}}"
                                                                     CornerRadius="{StaticResource ControlCornerRadius}" />
                                                             </DataTemplate>
                                                         </GridView.ItemTemplate>
-                                                        <GridView.ItemContainerStyle>
-                                                            <Style TargetType="GridViewItem">
-                                                                <Setter Property="MinHeight" Value="24" />
-                                                                <Setter Property="Margin" Value="4,4" />
-                                                                <Setter Property="BorderThickness" Value="0" />
-                                                                <Setter Property="MinWidth" Value="0" />
-                                                            </Style>
-                                                        </GridView.ItemContainerStyle>
                                                     </GridView>
                                                 </StackPanel>
                                             </Flyout>

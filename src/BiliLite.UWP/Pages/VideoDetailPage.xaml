@@ -26,7 +26,8 @@
         <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="#64B0B0B0" />
         <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="{ThemeResource SystemListLowColor}" />
         <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource SystemAccentColor}" />
-
+        <SolidColorBrush x:Key="ControlSolidFillColorDefaultBrush" Color="{ThemeResource SystemAccentColor}" />
+        <StaticResource x:Key="GridViewItemSelectedInnerBorderBrush" ResourceKey="ControlSolidFillColorDefaultBrush" />
         <DataTemplate x:Name="PlayListTpl">
             <PivotItem Margin="0">
                 <PivotItem.Header>
@@ -175,14 +176,6 @@
                                             Margin="0,8,0,0"
                                             Padding="0,0,8,0">
                                             <ListView ItemsSource="{x:Bind Path=m_viewModel.MyFavorite, Mode=OneWay}" SelectionMode="None">
-                                                <ListView.ItemContainerStyle>
-                                                    <Style TargetType="ListViewItem">
-                                                        <Setter Property="Padding" Value="4" />
-                                                        <Setter Property="MinWidth" Value="200" />
-                                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                                    </Style>
-                                                </ListView.ItemContainerStyle>
-
                                                 <ListView.ItemTemplate>
                                                     <DataTemplate x:DataType="user:FavoriteItemViewModel">
                                                         <CheckBox
@@ -460,9 +453,12 @@
                                 <TextBlock
                                     Margin="0,4,0,0"
                                     Foreground="Gray"
-                                    IsTextSelectionEnabled="True"><Run Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.View, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" />
-                                    播放 ·<Run Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Danmaku, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" />
-                                    弹幕<Run Text="{x:Bind Path=m_viewModel.VideoInfo.Bvid, Mode=OneWay}" /></TextBlock>
+                                    IsTextSelectionEnabled="True">
+                                    <Run Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.View, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" />
+                                    <Run Text="播放 /" />
+                                    <Run Text="{x:Bind Path=m_viewModel.VideoInfo.Stat.Danmaku, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}" />
+                                    <Run Text="弹幕 /" />
+                                    <Run Text="{x:Bind Path=m_viewModel.VideoInfo.Bvid, Mode=OneWay}" /></TextBlock>
                                 <HyperlinkButton
                                     x:Name="btnOpenUser"
                                     Margin="0,8,0,0"
@@ -600,14 +596,6 @@
                                             分集(共<Run Text="{x:Bind Path=m_viewModel.VideoInfo.Pages.Count, Mode=OneWay}" />
                                             P)</TextBlock>
                                     </GridView.Header>
-                                    <GridView.ItemContainerStyle>
-                                        <Style TargetType="GridViewItem">
-                                            <Setter Property="BorderThickness" Value="1" />
-                                            <Setter Property="BorderBrush" Value="Transparent" />
-                                            <Setter Property="VerticalContentAlignment" Value="Stretch" />
-                                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                        </Style>
-                                    </GridView.ItemContainerStyle>
                                     <GridView.ItemTemplate>
                                         <DataTemplate x:DataType="detail:VideoDetailPagesModel">
                                             <StackPanel VerticalAlignment="Center" ToolTipService.ToolTip="{x:Bind Path=Part}">
@@ -615,14 +603,15 @@
                                                     Margin="8,0"
                                                     Foreground="{ThemeResource TextColor}"
                                                     TextAlignment="Center"
-                                                    TextTrimming="CharacterEllipsis">
-                                                    P<Run Text="{x:Bind Path=Page}" /> <Run Text="{x:Bind Path=Part}" /></TextBlock>
+                                                    TextTrimming="CharacterEllipsis"
+                                                    Text="{x:Bind PagePart}" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </GridView.ItemTemplate>
 
                                 </toolkit:AdaptiveGridView>
 
+                                <TextBlock FontSize="16">标签</TextBlock>
                                 <ItemsControl Margin="0,8,0,0" ItemsSource="{x:Bind Path=m_viewModel.Tags, Mode=OneWay}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
@@ -671,7 +660,7 @@
                             SelectionMode="None">
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="video:VideoDetailRelatesViewModel">
-                                    <Grid Background="#00FFFFFF">
+                                    <Grid Margin="0,4">
                                         <Grid.ContextFlyout>
                                             <MenuFlyout>
                                                 <MenuFlyoutItem

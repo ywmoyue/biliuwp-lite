@@ -7,6 +7,9 @@ using Windows.UI.Xaml.Media;
 
 namespace BiliLite.Converters
 {
+    /// <summary>
+    /// DataTemplate 不可用
+    /// </summary>
     public class ColorSelectedConvert : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)

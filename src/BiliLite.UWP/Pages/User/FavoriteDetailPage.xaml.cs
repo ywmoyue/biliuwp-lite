@@ -39,7 +39,8 @@ namespace BiliLite.Pages.User
             this.InitializeComponent();
             Title = "收藏夹详情";
         }
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if (e.NavigationMode == NavigationMode.New && m_viewModel.FavoriteInfo == null)
@@ -158,6 +159,7 @@ namespace BiliLite.Pages.User
             }
 
             await m_viewModel.Clean();
+            await Refresh();
         }
 
         private void AddToWatchLater_Click(object sender, RoutedEventArgs e)

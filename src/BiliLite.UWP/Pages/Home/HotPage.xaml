@@ -12,7 +12,7 @@
     xmlns:viewModel="using:BiliLite.ViewModels.Home"
     d:DataContext="{d:DesignInstance Type=viewModel:HotViewModel}"
     mc:Ignorable="d">
-
+    
     <Grid>
         <controls:MyAdaptiveGridView
             x:Name="HotGridView"
@@ -22,7 +22,7 @@
             IsItemClickEnabled="True"
             ItemClick="gridHot_ItemClick"
             ItemsSource="{x:Bind Path=m_viewModel.HotItems, Mode=OneWay}"
-            LoadMoreBottomOffset="0"
+            LoadMoreBottomOffset="{x:Bind m_viewModel.ScrollViewLoadMoreBottomOffset}"
             LoadMoreCommand="{x:Bind Path=m_viewModel.LoadMoreCommand}"
             Loading="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}"
             OneRowModeEnabled="False"

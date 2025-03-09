@@ -30,7 +30,6 @@ using Windows.Graphics.Display;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.System.Display;
-using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -404,8 +403,7 @@ namespace BiliLite.Pages
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
                 logger.Log("直播加载失败", LogType.Error, new Exception(exception.Description));
-                await new MessageDialog($"啊，直播加载失败了\r\n错误信息:{exception.Description}\r\n请尝试在直播设置中打开/关闭硬解试试", "播放失败")
-                    .ShowAsync();
+                await NotificationShowExtensions.ShowMessageDialog($"啊，直播加载失败了\r\n错误信息:{exception.Description}\r\n请尝试在直播设置中打开/关闭硬解试试", "播放失败");
             });
         }
 
