@@ -14,6 +14,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using BiliLite.ViewModels.Common;
+using Newtonsoft.Json;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -27,6 +28,7 @@ namespace BiliLite.Pages
         private readonly CookieService m_cookieService;
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly WebPageViewModel m_viewModel;
+        private bool m_needCookie = false;
 
         public WebPage()
         {
@@ -73,7 +75,19 @@ namespace BiliLite.Pages
             base.OnNavigatedTo(e);
             await InitWebView2();
             if (e.NavigationMode != NavigationMode.New) return;
-            var uri = e.Parameter.ToString();
+
+            var uri = "";
+            try
+            {
+                var webPageNavigationInfo = JsonConvert.DeserializeObject<WebPageNavigationInfo>(JsonConvert.SerializeObject(e.Parameter));
+                uri = webPageNavigationInfo.Url;
+                m_needCookie = webPageNavigationInfo.NeedCookie;
+            }
+            catch 
+            {
+                uri = e.Parameter.ToString();
+            }
+
             if (uri.Contains("h5/vlog"))
             {
                 webView.MaxWidth = 500;
@@ -95,14 +109,16 @@ namespace BiliLite.Pages
             }
             else
             {
-                if (url.Host.Contains(Constants.BILIBILI_HOST))
+                if (url.Host.Contains(Constants.BILIBILI_HOST) && m_needCookie)
                 {
                     foreach (var cookie in m_cookieService.Cookies)
                     {
-                        var webCookie = webView.CoreWebView2.CookieManager.CreateCookie(cookie.Name, cookie.Value, Constants.BILIBILI_HOST, "/");
+                        var webCookie = webView.CoreWebView2.CookieManager.CreateCookie(cookie.Name, cookie.Value,
+                            Constants.BILIBILI_HOST, "/");
                         webView.CoreWebView2.CookieManager.AddOrUpdateCookie(webCookie);
                     }
                 }
+
                 webView.Source = new Uri(uri);
             }
         }

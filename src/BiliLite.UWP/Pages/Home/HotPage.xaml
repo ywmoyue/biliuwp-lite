@@ -26,7 +26,7 @@
                     StretchContentForSingleRow="False"
                     ItemsSource="{x:Bind Path=m_viewModel.HotItems,Mode=OneWay}"
                     ItemHeight="100" DesiredWidth="560" 
-                    LoadMoreBottomOffset="0"
+                    LoadMoreBottomOffset="{x:Bind m_viewModel.ScrollViewLoadMoreBottomOffset}"
                     LoadMoreCommand="{x:Bind Path=m_viewModel.LoadMoreCommand}"
                     CanLoadMore="True"
                     Loading="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"

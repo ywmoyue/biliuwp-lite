@@ -38,7 +38,8 @@ namespace BiliLite.Pages.User
             this.InitializeComponent();
             Title = "收藏夹详情";
         }
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if (e.NavigationMode == NavigationMode.New && m_viewModel.FavoriteInfo == null)
@@ -157,6 +158,7 @@ namespace BiliLite.Pages.User
             }
 
             await m_viewModel.Clean();
+            await Refresh();
         }
 
         private void AddToWatchLater_Click(object sender, RoutedEventArgs e)
@@ -186,7 +188,8 @@ namespace BiliLite.Pages.User
                         Cover = item.Cover,
                         Author = item.Upper.Name,
                         Id = item.Id,
-                        Title = item.Title
+                        Title = item.Title,
+                        Duration = TimeSpan.FromSeconds(item.Duration),
                     });
                 }
 
@@ -223,6 +226,18 @@ namespace BiliLite.Pages.User
             }
 
             await m_viewModel.Sort(favVideo.Id, targetId);
+        }
+
+        private async void CancelFav_OnClick(object sender, RoutedEventArgs e)
+        {
+            var ls = new List<FavoriteInfoVideoItemModel>();
+
+            if (sender is FrameworkElement { DataContext: FavoriteInfoVideoItemModel item })
+            {
+                ls.Add(item);
+            }
+
+            await m_viewModel.Delete(ls);
         }
     }
 }

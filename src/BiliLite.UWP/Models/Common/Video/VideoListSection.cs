@@ -17,5 +17,9 @@ namespace BiliLite.Models.Common.Video
         public bool IsLazyOnlineList { get; set; }
 
         public string OnlineListId { get; set; }
+
+        public string Info { get; set; }
+
+        public string Description { get; set; }
     }
 }

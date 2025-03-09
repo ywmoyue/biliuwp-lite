@@ -16,7 +16,7 @@
     <Grid>
         <ListView
             MaxHeight="{x:Bind DialogHeight, Mode=OneWay}"
-            Margin="-16,0,0,40"
+            Margin="-16,0,0,70"
             ItemsSource="{x:Bind m_viewModel.PlaySpeedMenuItems, Mode=OneWay}"
             SelectionMode="None">
             <ListView.ItemTemplate>
@@ -55,6 +55,10 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
             <Button
                 x:Name="BtnAddPlaySpeed"
                 Margin="0,0,5,0"
@@ -67,6 +71,7 @@
                 MinWidth="0.01"
                 Maximum="20"
                 Text="{x:Bind m_viewModel.AddPlaySpeedValue, Mode=TwoWay}" />
+            <Button Grid.Row="1" Grid.ColumnSpan="2" Click="BtnBackToDefault_OnClick" HorizontalAlignment="Stretch">恢复默认</Button>
         </Grid>
     </Grid>
 </ContentDialog>

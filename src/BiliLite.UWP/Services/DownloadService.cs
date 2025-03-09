@@ -21,6 +21,7 @@ using AutoMapper;
 using BiliLite.Models.Databases;
 using BiliLite.Modules;
 using Microsoft.EntityFrameworkCore;
+using Path = System.IO.Path;
 
 namespace BiliLite.Services
 {
@@ -381,13 +382,29 @@ namespace BiliLite.Services
                 : (Func<DownloadedSubItem, bool>)(subItem => subItem.CID == id);
 
             // Check if the item is already downloaded
-            if (m_downloadPageViewModel.DownloadedViewModels.Any(x => x.Epsidoes.Any(downloadedPredicate)))
+            if (m_downloadPageViewModel.Downloadeds.Any(x => x.Epsidoes.Any(downloadedPredicate)))
             {
                 return 3; // Item is downloaded
             }
 
             // If neither condition is met, return 0
             return 0;
+        }
+
+        public DownloadedSubItem FindDownloadSubItemById(string id, bool isSeason = false)
+        {
+            if (m_downloadPageViewModel.Downloadings.Any(x => x.EpisodeID == id))
+            {
+                return null; // Item is downloading
+            }
+
+            var downloadedPredicate = isSeason
+                ? (Func<DownloadedSubItem, bool>)(subItem => subItem.EpisodeID == id)
+                : (Func<DownloadedSubItem, bool>)(subItem => subItem.CID == id);
+
+            return m_downloadPageViewModel.Downloadeds
+                .Select(downloadedItem => downloadedItem.Epsidoes.FirstOrDefault(downloadedPredicate))
+                .FirstOrDefault(subItem => subItem != null);
         }
 
         /// <summary>
@@ -766,6 +783,23 @@ namespace BiliLite.Services
                 item.TransferGroup.TransferBehavior = parallelDownload ? BackgroundTransferBehavior.Parallel : BackgroundTransferBehavior.Serialized;
                 item.CostPolicy = allowCostNetwork ? BackgroundTransferCostPolicy.Always : BackgroundTransferCostPolicy.UnrestrictedOnly;
             }
+        }
+
+        public async Task AddOtherTracksToDownloadedSubItemIndex(DownloadInfo info,DownloadSaveEpisodeInfo downloadSaveEpisodeInfo)
+        {
+            var downloadedSubItemDTO = await m_biliLiteDbContext.DownloadedSubItems.FirstOrDefaultAsync(x => x.CID == info.CID);
+
+            foreach (var item in info.Urls)
+            {
+                var paths = downloadedSubItemDTO.Paths; 
+                paths.Add(Path.Combine(downloadSaveEpisodeInfo.Path, item.FileName));
+                downloadedSubItemDTO.Paths = paths;
+            }
+
+            var downloadedSubItem = FindDownloadSubItemById(info.CID, info.Type == DownloadType.Season);
+            downloadedSubItem.Paths = downloadedSubItemDTO.Paths;
+
+            await m_biliLiteDbContext.SaveChangesAsync();
         }
 
         public void AddDownloadItemsIndex(DownloadSaveInfo downloadSaveInfo, DownloadSaveEpisodeInfo downloadSaveEpisodeInfo)

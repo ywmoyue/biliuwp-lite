@@ -42,13 +42,10 @@ namespace BiliLite.Dialogs
 
         private void BtnAddPlaySpeed_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            foreach (PlaySpeedMenuItem item in m_viewModel.PlaySpeedMenuItems)
+            if (m_viewModel.PlaySpeedMenuItems.Any(item => item.Value == m_viewModel.AddPlaySpeedValue))
             {
-                if (item.Value == m_viewModel.AddPlaySpeedValue)
-                {
-                    Notify.ShowMessageToast("已重复添加");
-                    return;
-                }
+                Notify.ShowMessageToast("已重复添加");
+                return;
             }
             if (m_viewModel.AddPlaySpeedValue == 0)
             {
@@ -59,6 +56,12 @@ namespace BiliLite.Dialogs
             m_viewModel.PlaySpeedMenuItems.Add(new PlaySpeedMenuItem(m_viewModel.AddPlaySpeedValue));
             m_viewModel.PlaySpeedMenuItems =
                 new ObservableCollection<PlaySpeedMenuItem>(m_viewModel.PlaySpeedMenuItems.OrderBy(x => x.Value));
+        }
+
+        private void BtnBackToDefault_OnClick(object sender, RoutedEventArgs e)
+        {
+            m_viewModel.PlaySpeedMenuItems =
+                new ObservableCollection<PlaySpeedMenuItem>(m_playSpeedMenuService.GetDefaultPlaySpeedMenu());
         }
     }
 }

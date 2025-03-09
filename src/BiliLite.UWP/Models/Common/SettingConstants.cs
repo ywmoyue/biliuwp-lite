@@ -16,10 +16,20 @@ namespace BiliLite.Models.Common
             public const string ORTGINAL_IMAGE = "originalImage";
 
             /// <summary>
-            /// 主题颜色
+            /// 主题色彩
             /// </summary>
             [SettingKey(typeof(int))]
             public const string THEME_COLOR = "themeColor";
+
+            /// <summary>
+            /// 主题色彩默认值
+            /// -1 为系统色彩
+            /// </summary>
+            [SettingDefaultValue]
+            public const int DEFAULT_THEME_COLOR = 0;
+
+            [SettingKey(typeof(object), useSqlDb: true)]
+            public const string THEME_COLOR_MENU = "themeColorMenu";
 
             /// <summary>
             /// 主题,0为默认，1为浅色，2为深色
@@ -50,6 +60,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string DISPLAY_RECOMMEND_BANNER = "DisplayRecommendBanner";
+
+            /// <summary>
+            /// 显示直播页横幅
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string DISPLAY_LIVE_BANNER = "DisplayLiveBanner";
+
+            /// <summary>
+            /// 显示直播页推荐直播
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string DISPLAY_LIVE_PAGE_RECOMMEND_LIVE = "DisplayLivePageRecommendLive";
 
             /// <summary>
             /// 默认显示推荐页横幅
@@ -273,6 +295,19 @@ namespace BiliLite.Models.Common
 
             [SettingKey]
             public const string LOCAL_ATTENTION_USER = "LocalAttentionUser";
+
+            /// <summary>
+            /// 滚动视图加载更多触发偏移量
+            /// 过大可能导致无限加载bug被B站风控
+            /// </summary>
+            [SettingKey(typeof(double))]
+            public const string SCROLL_VIEW_LOAD_MORE_BOTTOM_OFFSET = "ScrollViewLoadMoreBottomOffset";
+
+            /// <summary>
+            /// 滚动视图加载更多触发偏移量默认值
+            /// </summary>
+            [SettingDefaultValue]
+            public const double DEFAULT_SCROLL_VIEW_LOAD_MORE_BOTTOM_OFFSET = 0;
         }
 
         public class Account
@@ -953,7 +988,7 @@ namespace BiliLite.Models.Common
             /// <summary>
             /// 自动刷新播放地址时间,单位分钟
             /// </summary>
-            [SettingKey(typeof(bool))]
+            [SettingKey(typeof(double))]
             public const string AUTO_REFRESH_PLAY_URL_TIME = "AutoRefreshPlayUrlTime";
 
             [SettingDefaultValue]
@@ -970,6 +1005,12 @@ namespace BiliLite.Models.Common
 
             [SettingKey(typeof(object), useSqlDb: true)]
             public const string DYNAMIC_FILTER_RULE = "DynamicFilterRule";
+
+            /// <summary>
+            /// 是否过滤推荐页直播
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string FILTER_RECOMMEND_LIVE = "FilterRecommendLive";
         }
 
         public class Roaming
@@ -1059,6 +1100,21 @@ namespace BiliLite.Models.Common
             [SettingKey(typeof(int))]
             public const string DEFAULT_VIDEO_TYPE = "DownloadDefaultVideoType";
 
+            /// <summary>
+            /// 下载画质
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const string DOWNLOAD_QUALITY = "DownloadQuality";
+
+            /// <summary>
+            /// 下载音质
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const string DOWNLOAD_SOUND_QUALITY = "DownloadSoundQuality";
+
+            /// <summary>
+            /// 使用下载索引
+            /// </summary>
             [SettingKey(typeof(bool))]
             public const string USE_DOWNLOAD_INDEX = "UseDownloadIndex";
 

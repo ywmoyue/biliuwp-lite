@@ -24,7 +24,7 @@ namespace BiliLite.Modules.Live.LiveCenter
             RefreshCommand = new RelayCommand(Refresh);
         }
 
-        public ObservableCollection<LiveRoomInfoOldModel> LocalFollows { get; set; }
+        public ObservableCollection<LiveInfoModel> LocalFollows { get; set; }
 
         private ObservableCollection<LiveFollowAnchorModel> _Follow;
 
@@ -84,7 +84,7 @@ namespace BiliLite.Modules.Live.LiveCenter
             var localAttentionUserService = App.ServiceProvider.GetRequiredService<LocalAttentionUserService>();
             var roomList = await localAttentionUserService.GetLiveRooms();
             if (roomList == null) return;
-            LocalFollows = new ObservableCollection<LiveRoomInfoOldModel>(roomList);
+            LocalFollows = new ObservableCollection<LiveInfoModel>(roomList);
         }
 
         public async void Refresh()

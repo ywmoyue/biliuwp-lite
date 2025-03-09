@@ -10,6 +10,9 @@ using BiliLite.Extensions;
 using BiliLite.Models.Common.Favorites;
 using BiliLite.Models.Responses;
 using BiliLite.ViewModels.User;
+using BiliLite.Models.Common.User;
+using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 
@@ -21,8 +24,11 @@ namespace BiliLite.Dialogs
         readonly bool isMove;
         readonly List<FavoriteInfoVideoItemModel> selectItems;
         readonly FavoriteApi favoriteApi;
+        private readonly IMapper m_mapper;
+
         public CopyOrMoveFavVideoDialog(string fid, string mid, bool isMove, List<FavoriteInfoVideoItemModel> items)
         {
+            m_mapper = App.ServiceProvider.GetRequiredService<IMapper>();
             this.InitializeComponent();
             favoriteApi = new FavoriteApi();
             this.fid = fid;
@@ -96,17 +102,15 @@ namespace BiliLite.Dialogs
             {
                 prLoading.Visibility = Visibility.Visible;
 
-                var results = await favoriteApi.MyFavorite().Request();
+                var results = await favoriteApi.MyCreatedFavorite("").Request();
                 if (results.status)
                 {
-                    var data = await results.GetJson<ApiDataModel<JArray>>();
+                    var data = await results.GetJson<ApiDataModel<JObject>>();
                     if (data.success)
                     {
-                        if (data.data[0]["mediaListResponse"] != null)
-                        {
-                            var list = await data.data[0]["mediaListResponse"]["list"].ToString().DeserializeJson<List<FavoriteItemViewModel>>();
-                            listView.ItemsSource = list.Where(x => x.Id != fid).ToList();
-                        }
+                        var myFavorite = await data.data["list"].ToString().DeserializeJson<List<FavoriteItemModel>>();
+                        var list = m_mapper.Map<List<FavoriteItemViewModel>>(myFavorite);
+                        listView.ItemsSource = list.Where(x => x.Id != fid).ToList();
                     }
                     else
                     {

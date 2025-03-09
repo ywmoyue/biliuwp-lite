@@ -1,4 +1,6 @@
-﻿namespace BiliLite.Models.Common.Video
+﻿using System;
+
+namespace BiliLite.Models.Common.Video
 {
     public class VideoPlaylistItem
     {
@@ -9,5 +11,7 @@
         public string Cover { get; set; }
 
         public string Title { get; set; }
+
+        public TimeSpan? Duration { get; set; }
     }
 }

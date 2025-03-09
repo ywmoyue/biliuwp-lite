@@ -19,6 +19,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
           
         </Grid.RowDefinitions>
@@ -45,7 +46,7 @@
                       HorizontalAlignment="Stretch" >
             </ComboBox>
         </StackPanel>
-
+        
         <StackPanel  Grid.Row="2" Margin="0 8 0 0" 
                      Visibility="{x:Bind m_viewModel.ShowAudioQualityComboBox,Mode=OneWay}">
             <TextBlock>优先音质</TextBlock>
@@ -58,7 +59,21 @@
             </ComboBox>
         </StackPanel>
 
-        <StackPanel Grid.Row="3" Margin="0 8 0 0">
+        <StackPanel  Grid.Row="3" Margin="0 8 0 0" 
+                     Orientation="Horizontal"
+                     HorizontalAlignment="Stretch"
+                     Visibility="{x:Bind m_viewModel.ShowAudioQualityComboBox,Mode=OneWay}">
+            <TextBlock ToolTipService.ToolTip="存在视频列表时的加载质量选项可能不是您需要的选项"
+                       VerticalAlignment="Center">是否仅加载当前视频质量选项</TextBlock>
+            <ToggleSwitch x:Name="SwOnlyCurrentVideoQuality" 
+                      Margin="8 4 0 0" 
+                      IsOn="{x:Bind m_viewModel.OnlyLoadCurrentVideoQuality,Mode=TwoWay}"
+                      Toggled="SwOnlyCurrentVideoQuality_OnToggled"
+                      HorizontalAlignment="Stretch" >
+            </ToggleSwitch>
+        </StackPanel>
+
+        <StackPanel Grid.Row="4" Margin="0 8 0 0">
             <TextBlock>选集</TextBlock>
             <Border BorderBrush="{ThemeResource ComboBoxBorderBrush}" 
                     CornerRadius="2"

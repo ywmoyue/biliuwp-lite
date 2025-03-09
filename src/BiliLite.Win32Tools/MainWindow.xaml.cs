@@ -19,6 +19,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Path = System.IO.Path;
 
 namespace BiliLite.Win32Tools
 {
@@ -30,6 +31,8 @@ namespace BiliLite.Win32Tools
         ConvertFileInfo convertFileInfo;
         string currentDir = "";
         string ffmpegFile = "";
+        private bool debug = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -37,6 +40,16 @@ namespace BiliLite.Win32Tools
 
         private void LoadInfo()
         {
+            var args = Environment.GetCommandLineArgs();
+            var debugParam = args.FirstOrDefault(arg => arg.StartsWith("--debug="));
+            var param = debugParam != null ? debugParam.Substring("--debug=".Length) : "";
+            if (!string.IsNullOrEmpty(param))
+            {
+                convertFileInfo = System.Text.Json.JsonSerializer.Deserialize<ConvertFileInfo>(param);
+                txtName.Text = convertFileInfo.title;
+                debug = true;
+                return;
+            }
             var str = Windows.Storage.ApplicationData.Current.LocalSettings.Values["VideoConverterInfo"] as string;
             convertFileInfo = System.Text.Json.JsonSerializer.Deserialize<ConvertFileInfo>(str);
             txtName.Text = convertFileInfo.title;
@@ -72,7 +85,14 @@ namespace BiliLite.Win32Tools
 
             var zipDir = Assembly.GetExecutingAssembly().Location;
             zipDir = System.IO.Path.GetDirectoryName(zipDir);
-            currentDir = Windows.Storage.ApplicationData.Current.LocalFolder.Path;
+            if (debug)
+            {
+                currentDir = Environment.CurrentDirectory;
+            }
+            else
+            {
+                currentDir = Windows.Storage.ApplicationData.Current.LocalFolder.Path;
+            }
             return await Task.Run<bool>(() =>
             {
                 try
@@ -139,11 +159,51 @@ namespace BiliLite.Win32Tools
         {
             try
             {
-                var info = await FFMpegArguments.FromFileInput(convertFileInfo.inputFiles.FirstOrDefault(x => x.Contains("video.m4s")))
-                    .AddFileInput(convertFileInfo.inputFiles.FirstOrDefault(x => x.Contains("audio.m4s")))
+                var audioPaths = convertFileInfo.inputFiles
+                    .Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("audio")).ToList();
+                var videoPaths = convertFileInfo.inputFiles
+                    .Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("video")).ToList();
+
+                var ffmpegArgs = FFMpegArguments.FromFileInput(videoPaths.FirstOrDefault());
+
+                foreach (var videoPath in videoPaths.Skip(1))
+                {
+                    ffmpegArgs = ffmpegArgs.AddFileInput(videoPath);
+                }
+                foreach (var audioPath in audioPaths)
+                {
+                    ffmpegArgs = ffmpegArgs.AddFileInput(audioPath);
+                }
+
+                // 构建-map参数
+                var mapArguments = new StringBuilder();
+                int videoIndex = 0, audioIndex = videoPaths.Count, subtitleIndex = videoPaths.Count + audioPaths.Count;
+
+                // 映射视频流
+                for (int i = 0; i < videoPaths.Count; i++)
+                {
+                    mapArguments.Append($"-map {videoIndex}:v ");
+                    videoIndex++;
+                }
+                // 映射音频流
+                for (int i = 0; i < audioPaths.Count; i++)
+                {
+                    mapArguments.Append($"-map {audioIndex}:a ");
+                    audioIndex++;
+                }
+
+                // 输出文件并添加-map参数
+                var info = ffmpegArgs
                     .OutputToFile(convertFileInfo.outFile, true, options =>
-                        options.WithVideoCodec("copy").WithAudioCodec("copy").WithFastStart()
+                            options
+                                .WithArgument(new FFMpegCore.Arguments.CustomArgument(mapArguments.ToString())) // 添加-map参数
+                                .WithArgument(new FFMpegCore.Arguments.CustomArgument("-c copy")) // 直接复制流
+                                .WithArgument(new FFMpegCore.Arguments.CustomArgument("-strict -2")) // 允许实验性编码器
+                                .WithFastStart() // 启用快速启动
                     ).ProcessAsynchronously();
+
+                await info;
+
                 progressBar.Visibility = Visibility.Collapsed;
                 txtStatus.Text = "视频导出成功!";
             }
@@ -152,7 +212,6 @@ namespace BiliLite.Win32Tools
                 progressBar.Visibility = Visibility.Collapsed;
                 txtStatus.Text = $"视频导出失败：\r\n{ex.Message}";
             }
-
         }
         private async Task ConvertToMp4()
         {
@@ -182,13 +241,64 @@ namespace BiliLite.Win32Tools
         {
             try
             {
-                var info = await FFMpegArguments.FromFileInput(convertFileInfo.inputFiles.FirstOrDefault(x => x.Contains("video.m4s")))
-                    .AddFileInput(convertFileInfo.inputFiles.FirstOrDefault(x => x.Contains("audio.m4s")))
-                    .AddFileInput(convertFileInfo.subtitle.FirstOrDefault())
+                var audioPaths = convertFileInfo.inputFiles
+                    .Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("audio")).ToList();
+                var videoPaths = convertFileInfo.inputFiles
+                    .Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("video")).ToList();
+
+                var ffmpegArgs = FFMpegArguments.FromFileInput(videoPaths.FirstOrDefault());
+
+                foreach (var videoPath in videoPaths.Skip(1))
+                {
+                    ffmpegArgs = ffmpegArgs.AddFileInput(videoPath);
+                }
+                foreach (var audioPath in audioPaths)
+                {
+                    ffmpegArgs = ffmpegArgs.AddFileInput(audioPath);
+                }
+                foreach (var subtitle in convertFileInfo.subtitle)
+                {
+                    ffmpegArgs = ffmpegArgs.AddFileInput(subtitle);
+                }
+
+                // 构建-map参数
+                var mapArguments = new StringBuilder();
+                int videoIndex = 0, audioIndex = videoPaths.Count, subtitleIndex = videoPaths.Count + audioPaths.Count;
+
+                // 映射视频流
+                for (int i = 0; i < videoPaths.Count; i++)
+                {
+                    mapArguments.Append($"-map {videoIndex}:v ");
+                    videoIndex++;
+                }
+                // 映射音频流
+                for (int i = 0; i < audioPaths.Count; i++)
+                {
+                    mapArguments.Append($"-map {audioIndex}:a ");
+                    audioIndex++;
+                }
+                // 映射字幕流
+                for (int i = 0; i < convertFileInfo.subtitle.Count; i++)
+                {
+                    mapArguments.Append($"-map {subtitleIndex}:s ");
+                    subtitleIndex++;
+                }
+
+                // 输出文件并添加-map参数
+                var info = ffmpegArgs
                     .OutputToFile(convertFileInfo.outFile, true, options =>
-                      options.WithArgument(new FFMpegCore.Arguments.CustomArgument("-c copy -c:s mov_text")).WithFastStart()
+                            options
+                                .WithArgument(new FFMpegCore.Arguments.CustomArgument(mapArguments.ToString())) // 添加-map参数
+                                .WithArgument(new FFMpegCore.Arguments.CustomArgument("-c copy")) // 直接复制流
+                                //.WithArgument(new FFMpegCore.Arguments.CustomArgument("-c:s mov_text")) // 字幕编码器
+                                .WithArgument(new FFMpegCore.Arguments.CustomArgument("-strict -2")) // 允许实验性编码器
+                                .WithFastStart() // 启用快速启动
                     ).ProcessAsynchronously();
+
                 progressBar.Visibility = Visibility.Collapsed;
+
+                await info;
+
                 txtStatus.Text = "视频导出成功!";
             }
             catch (Exception ex)
