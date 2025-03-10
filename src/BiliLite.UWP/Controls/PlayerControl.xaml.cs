@@ -123,7 +123,7 @@ namespace BiliLite.Controls
         }
 
         private readonly bool m_autoSkipOpEdFlag = false;
-        private Timer m_autoRefreshTimer;
+        private DispatcherTimer m_autoRefreshTimer;
         private DispatcherTimer m_positionTimer;
         DispatcherTimer danmuTimer;
         /// <summary>
@@ -164,9 +164,9 @@ namespace BiliLite.Controls
             {
                 var timeMin = SettingService.GetValue(SettingConstants.Player.AUTO_REFRESH_PLAY_URL_TIME,
                     SettingConstants.Player.DEFAULT_AUTO_REFRESH_PLAY_URL_TIME);
-                m_autoRefreshTimer = new Timer();
-                m_autoRefreshTimer.Interval = timeMin * 1000 * 60;
-                m_autoRefreshTimer.Elapsed += AutoRefreshTimer_Elapsed;
+                m_autoRefreshTimer = new DispatcherTimer();
+                m_autoRefreshTimer.Interval = TimeSpan.FromMinutes(timeMin);
+                m_autoRefreshTimer.Tick += AutoRefreshTimer_Tick; ;
             }
 
             danmuTimer = new DispatcherTimer();
@@ -203,28 +203,24 @@ namespace BiliLite.Controls
             }
         }
 
-        private async void AutoRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private async void AutoRefreshTimer_Tick(object sender, object e)
         {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, async () =>
+            m_autoRefreshTimer.Stop();
+            _postion = Player.Position;
+            var info = await GetPlayUrlQualitesInfo();
+            if (!info.Success)
             {
-                m_autoRefreshTimer.Stop();
-                _postion = Player.Position;
-                var info = await GetPlayUrlQualitesInfo();
-                if (!info.Success)
-                {
-                    ShowDialog($"请求信息:\r\n{info.Message}", "读取视频播放地址失败");
-                }
-                else
-                {
-                    playUrlInfo = info;
-                    InitSoundQuality();
-                    InitQuality();
-                }
-                Notify.ShowMessageToast("已根据设置自动刷新播放地址");
-                m_startTime = DateTime.Now;
-            });
+                ShowDialog($"请求信息:\r\n{info.Message}", "读取视频播放地址失败");
+            }
+            else
+            {
+                playUrlInfo = info;
+                InitSoundQuality();
+                InitQuality();
+            }
+            Notify.ShowMessageToast("已根据设置自动刷新播放地址");
+            m_startTime = DateTime.Now;
         }
-
         private void Timer_focus_Tick(object sender, object e)
         {
             var elent = FocusManager.GetFocusedElement();
@@ -919,6 +915,9 @@ namespace BiliLite.Controls
             subtitleTimer?.Stop();
             subtitleTimer = null;
             Player.ClosePlay();
+
+            m_autoRefreshTimer?.Stop();
+
             if (index >= PlayInfos.Count)
             {
                 index = PlayInfos.Count - 1;
