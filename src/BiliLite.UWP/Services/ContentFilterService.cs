@@ -115,6 +115,7 @@ namespace BiliLite.Services
 
         public List<RecommendItemModel> FilterRecommendItems(List<RecommendItemModel> recommendItems)
         {
+            recommendItems = recommendItems.Where(x => x.Args is { UpName: not null }).ToList();
             if (SettingService.GetValue(SettingConstants.Filter.FILTER_RECOMMEND_LIVE, false))
             {
                 recommendItems = recommendItems.Where(x => x.CardGoto != "live").ToList();
