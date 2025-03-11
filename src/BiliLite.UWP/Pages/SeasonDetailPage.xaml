@@ -15,9 +15,6 @@
     SizeChanged="SeasonDetailPage_OnSizeChanged"
     mc:Ignorable="d">
     <Page.Resources>
-        <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource SystemAccentColor}" />
-        <SolidColorBrush x:Key="ControlSolidFillColorDefaultBrush" Color="{ThemeResource SystemAccentColor}" />
-        <StaticResource x:Key="GridViewItemSelectedInnerBorderBrush" ResourceKey="ControlSolidFillColorDefaultBrush" />
         <SolidColorBrush x:Key="RatingControlSelectedForeground" Color="Orange" />
         <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
             <Style.Setters>
@@ -355,13 +352,13 @@
                                                     Padding="4,2"
                                                     HorizontalAlignment="Right"
                                                     VerticalAlignment="Top"
-                                                    Background="{ThemeResource SystemControlForegroundBaseHighBrush}"
+                                                    Background="Orange"
                                                     CornerRadius="{Binding Text, ElementName=CornerRadiusValue, Converter={StaticResource SingleCornerRadiusConverter}, ConverterParameter=4}"
                                                     Visibility="{x:Bind Path=ShowBadge}">
                                                     <StackPanel>
                                                         <TextBlock
                                                             FontSize="12"
-                                                            Foreground="{ThemeResource SystemAccentColor}"
+                                                            Foreground="White"
                                                             Text="{x:Bind Path=Badge}" />
                                                         <TextBlock x:Name="CornerRadiusValue" Visibility="Collapsed">24</TextBlock>
                                                     </StackPanel>
@@ -398,13 +395,13 @@
                                                     Padding="4,2"
                                                     HorizontalAlignment="Right"
                                                     VerticalAlignment="Top"
-                                                    Background="{ThemeResource SystemControlForegroundBaseHighBrush}"
+                                                    Background="Orange"
                                                     CornerRadius="{Binding Text, ElementName=CornerRadiusValue, Converter={StaticResource SingleCornerRadiusConverter}, ConverterParameter=8}"
                                                     Visibility="{x:Bind Path=ShowBadge}">
                                                     <StackPanel>
                                                         <TextBlock
                                                             FontSize="12"
-                                                            Foreground="{ThemeResource SystemAccentColor}"
+                                                            Foreground="White"
                                                             Text="{x:Bind Path=Badge}" />
                                                         <TextBlock x:Name="CornerRadiusValue" Visibility="Collapsed">24</TextBlock>
                                                     </StackPanel>
