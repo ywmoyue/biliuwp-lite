@@ -10,7 +10,6 @@ using BiliLite.Services;
 using BiliLite.ViewModels;
 using BiliLite.ViewModels.Comment;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Uwp.UI.Controls;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -579,7 +578,7 @@ namespace BiliLite.Controls
                 return;
             }
             var notePicture = e.ClickedItem as NotePicture;
-            var notePicturesView = sender as AdaptiveGridView;
+            var notePicturesView = sender as GridView;
             if (notePicture == null || notePicturesView == null) return;
             var comment = notePicturesView.DataContext as CommentViewModel;
             if (comment == null) return;
