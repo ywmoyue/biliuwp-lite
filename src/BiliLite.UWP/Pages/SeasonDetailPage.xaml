@@ -681,7 +681,7 @@
                                             Visibility="{x:Bind Path=m_seasonReviewViewModel.CanLoadMore, Mode=OneWay}">
                                             <TextBlock>加载更多</TextBlock>
                                         </HyperlinkButton>
-                                        <ProgressRing
+                                        <muxc:ProgressRing
                                             Width="24"
                                             VerticalAlignment="Center"
                                             IsActive="True"
@@ -736,7 +736,7 @@
                 </HyperlinkButton>
             </StackPanel>
         </Border>
-        <ProgressRing
+        <muxc:ProgressRing
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             IsActive="True"

@@ -296,7 +296,7 @@
                                                 Visibility="{x:Bind Path=m_userSubmitVideoViewModel.SubmitVideoCanLoadMore, Mode=OneWay}">
                                                 <TextBlock>加载更多</TextBlock>
                                             </HyperlinkButton>
-                                            <ProgressRing
+                                            <muxc:ProgressRing
                                                 HorizontalAlignment="Center"
                                                 IsActive="True"
                                                 Visibility="{x:Bind Path=m_userSubmitVideoViewModel.LoadingSubmitVideo, Mode=OneWay}" />
@@ -434,7 +434,7 @@
                                                 Visibility="{x:Bind Path=userSubmitArticleVM.SubmitArticleCanLoadMore, Mode=OneWay}">
                                                 <TextBlock>加载更多</TextBlock>
                                             </HyperlinkButton>
-                                            <ProgressRing
+                                            <muxc:ProgressRing
                                                 HorizontalAlignment="Center"
                                                 IsActive="True"
                                                 Visibility="{x:Bind Path=userSubmitArticleVM.LoadingSubmitArticle, Mode=OneWay}" />
@@ -559,7 +559,7 @@
                                                 Visibility="{x:Bind Path=m_userSubmitCollectionViewModel.SubmitCollectionCanLoadMore, Mode=OneWay}">
                                                 <TextBlock>加载更多</TextBlock>
                                             </HyperlinkButton>
-                                            <ProgressRing
+                                            <muxc:ProgressRing
                                                 HorizontalAlignment="Center"
                                                 IsActive="True"
                                                 Visibility="{x:Bind Path=m_userSubmitCollectionViewModel.LoadingSubmitCollection, Mode=OneWay}" />
@@ -693,7 +693,7 @@
                                                 Visibility="{x:Bind Path=followVM.CanLoadMore, Mode=OneWay}">
                                                 <TextBlock>加载更多</TextBlock>
                                             </HyperlinkButton>
-                                            <ProgressRing
+                                            <muxc:ProgressRing
                                                 HorizontalAlignment="Center"
                                                 IsActive="True"
                                                 Visibility="{x:Bind Path=followVM.Loading, Mode=OneWay}" />
@@ -746,7 +746,7 @@
                                                 Visibility="{x:Bind Path=fansVM.CanLoadMore, Mode=OneWay}">
                                                 <TextBlock>加载更多</TextBlock>
                                             </HyperlinkButton>
-                                            <ProgressRing
+                                            <muxc:ProgressRing
                                                 HorizontalAlignment="Center"
                                                 IsActive="True"
                                                 Visibility="{x:Bind Path=fansVM.Loading, Mode=OneWay}" />

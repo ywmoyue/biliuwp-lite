@@ -55,7 +55,7 @@
                         </DataTemplate>
                     </Pivot.ItemTemplate>
                 </Pivot>
-                <ProgressRing
+                <muxc:ProgressRing
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Visibility="{x:Bind Path=emoteVM.Loading, Mode=OneWay}" />
@@ -89,7 +89,7 @@
                                 Visibility="{x:Bind Path=atVM.Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                 <TextBlock>加载更多</TextBlock>
                             </HyperlinkButton>
-                            <ProgressRing
+                            <muxc:ProgressRing
                                 HorizontalAlignment="Center"
                                 IsActive="True"
                                 Visibility="{x:Bind Path=atVM.Loading, Mode=OneWay}" />
@@ -118,7 +118,7 @@
                     SelectionMode="None">
                     <ListView.Footer>
                         <Grid>
-                            <ProgressRing
+                            <muxc:ProgressRing
                                 HorizontalAlignment="Center"
                                 IsActive="True"
                                 Visibility="{x:Bind Path=topicVM.Loading, Mode=OneWay}" />

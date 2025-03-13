@@ -101,7 +101,7 @@
                         </control:MyAdaptiveGridView.ItemTemplate>
                         <toolkit:AdaptiveGridView.Footer>
                             <StackPanel>
-                                <ProgressRing
+                                <muxc:ProgressRing
                                     HorizontalAlignment="Center"
                                     IsActive="True"
                                     Visibility="{x:Bind Path=liveAttentionVM.Loading, Mode=OneWay}" />
@@ -181,7 +181,7 @@
                                     Visibility="{x:Bind Path=liveAttentionUnLiveVM.CanLoadMore, Mode=OneWay}">
                                     <TextBlock>加载更多</TextBlock>
                                 </HyperlinkButton>
-                                <ProgressRing
+                                <muxc:ProgressRing
                                     HorizontalAlignment="Center"
                                     IsActive="True"
                                     Visibility="{x:Bind Path=liveAttentionUnLiveVM.Loading, Mode=OneWay}" />
@@ -263,7 +263,7 @@
                                     Visibility="{x:Bind Path=liveCenterHistoryVM.CanLoadMore, Mode=OneWay}">
                                     <TextBlock>加载更多</TextBlock>
                                 </HyperlinkButton>
-                                <ProgressRing
+                                <muxc:ProgressRing
                                     HorizontalAlignment="Center"
                                     IsActive="True"
                                     Visibility="{x:Bind Path=liveCenterHistoryVM.Loading, Mode=OneWay}" />

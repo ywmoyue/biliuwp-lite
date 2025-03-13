@@ -12,7 +12,7 @@
     xmlns:viewModel="using:BiliLite.ViewModels.Home"
     d:DataContext="{d:DesignInstance Type=viewModel:HotViewModel}"
     mc:Ignorable="d">
-    
+
     <Grid>
         <controls:MyAdaptiveGridView
             x:Name="HotGridView"
@@ -151,7 +151,7 @@
                         Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                         <TextBlock>加载更多</TextBlock>
                     </HyperlinkButton>
-                    <ProgressRing
+                    <muxc:ProgressRing
                         HorizontalAlignment="Center"
                         IsActive="True"
                         Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}" />

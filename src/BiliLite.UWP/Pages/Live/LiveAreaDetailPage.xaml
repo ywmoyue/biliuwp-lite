@@ -142,7 +142,7 @@
                                 Visibility="{x:Bind Path=liveAreaDetailVM.CanLoadMore, Mode=OneWay}">
                                 <TextBlock>加载更多</TextBlock>
                             </HyperlinkButton>
-                            <ProgressRing
+                            <muxc:ProgressRing
                                 Width="24"
                                 VerticalAlignment="Center"
                                 IsActive="True"
@@ -156,7 +156,7 @@
                     Visibility="{x:Bind Path=liveAreaDetailVM.Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                     <SymbolIcon Symbol="Refresh" />
                 </Button>
-                <ProgressRing
+                <muxc:ProgressRing
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     IsActive="True"

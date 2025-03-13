@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:BiliLite.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:userDynamic="using:BiliLite.ViewModels.UserDynamic"
     d:DesignHeight="300"
     d:DesignWidth="400"
@@ -83,7 +84,7 @@
                         Visibility="{x:Bind Path=UserDynamicRepostViewModel.Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                         <TextBlock>加载更多</TextBlock>
                     </HyperlinkButton>
-                    <ProgressRing
+                    <muxc:ProgressRing
                         HorizontalAlignment="Center"
                         IsActive="True"
                         Visibility="{x:Bind Path=UserDynamicRepostViewModel.Loading, Mode=OneWay}" />

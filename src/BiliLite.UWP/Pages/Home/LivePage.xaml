@@ -389,7 +389,7 @@
             x:Name="gridLoading"
             Background="Transparent"
             Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}">
-            <ProgressRing
+            <muxc:ProgressRing
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 IsActive="True" />

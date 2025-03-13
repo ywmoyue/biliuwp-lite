@@ -311,7 +311,7 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Visibility="{x:Bind m_viewModel.ShowLoading, Mode=OneWay}">
-                        <ProgressRing
+                        <muxc:ProgressRing
                             Width="56"
                             Height="56"
                             IsActive="True" />
@@ -2203,7 +2203,7 @@
                                             Visibility="{x:Bind Path=m_liveRoomViewModel.SelectRank.CanLoadMore, Mode=OneWay}">
                                             <TextBlock>加载更多</TextBlock>
                                         </HyperlinkButton>
-                                        <ProgressRing
+                                        <muxc:ProgressRing
                                             HorizontalAlignment="Center"
                                             IsActive="True"
                                             Visibility="{x:Bind Path=m_liveRoomViewModel.SelectRank.Loading, Mode=OneWay}" />
@@ -2271,7 +2271,7 @@
                                         Visibility="{x:Bind Path=m_liveRoomViewModel.LoadingGuard, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                         <TextBlock>加载更多</TextBlock>
                                     </HyperlinkButton>
-                                    <ProgressRing
+                                    <muxc:ProgressRing
                                         HorizontalAlignment="Center"
                                         IsActive="True"
                                         Visibility="{x:Bind Path=m_liveRoomViewModel.LoadingGuard, Mode=OneWay}" />
@@ -2311,7 +2311,7 @@
                 </toolkit:GridSplitter.RenderTransform>
             </toolkit:GridSplitter>
         </Grid>
-        <ProgressRing
+        <muxc:ProgressRing
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             IsActive="True"

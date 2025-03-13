@@ -10,6 +10,7 @@
     xmlns:local="using:BiliLite.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:modules="using:BiliLite.Modules"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:user="using:BiliLite.ViewModels.User"
     xmlns:video="using:BiliLite.ViewModels.Video"
@@ -25,9 +26,6 @@
         </Style>
         <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="#64B0B0B0" />
         <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="{ThemeResource SystemListLowColor}" />
-        <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource SystemAccentColor}" />
-        <SolidColorBrush x:Key="ControlSolidFillColorDefaultBrush" Color="{ThemeResource SystemAccentColor}" />
-        <StaticResource x:Key="GridViewItemSelectedInnerBorderBrush" ResourceKey="ControlSolidFillColorDefaultBrush" />
         <DataTemplate x:Name="PlayListTpl">
             <PivotItem Margin="0">
                 <PivotItem.Header>
@@ -602,9 +600,9 @@
                                                 <TextBlock
                                                     Margin="8,0"
                                                     Foreground="{ThemeResource TextColor}"
+                                                    Text="{x:Bind PagePart}"
                                                     TextAlignment="Center"
-                                                    TextTrimming="CharacterEllipsis"
-                                                    Text="{x:Bind PagePart}" />
+                                                    TextTrimming="CharacterEllipsis" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </GridView.ItemTemplate>
@@ -743,7 +741,7 @@
                 </HyperlinkButton>
             </StackPanel>
         </Grid>
-        <ProgressRing
+        <muxc:ProgressRing
             Grid.ColumnSpan="2"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"

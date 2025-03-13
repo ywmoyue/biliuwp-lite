@@ -115,7 +115,7 @@
                                         <HyperlinkButton Click="LoadMore_OnClick" Visibility="{x:Bind Path=m_viewModel.HasMoreContexts,Mode=OneWay}" Foreground="Gray" HorizontalAlignment="Center" >
                                             <TextBlock>加载更多</TextBlock>
                                         </HyperlinkButton>
-                                        <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.ChatContextLoading,Mode=OneWay}"></ProgressRing>
+                                        <muxc:ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.ChatContextLoading,Mode=OneWay}"></muxc:ProgressRing>
                                     </StackPanel>
                                 </ListView.Footer>
                             </ListView>
@@ -150,7 +150,7 @@
                                     <HyperlinkButton Click="LoadMoreMessages_OnClick"  Visibility="{x:Bind Path=m_viewModel.HasMoreMessages,Mode=OneWay}" Foreground="Gray" HorizontalAlignment="Center" >
                                         <TextBlock>加载更多</TextBlock>
                                     </HyperlinkButton>
-                                    <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.ChatMessagesLoading,Mode=OneWay}"></ProgressRing>
+                                    <muxc:ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.ChatMessagesLoading,Mode=OneWay}"></muxc:ProgressRing>
                                 </StackPanel>
                             </ListView.Header>
                         </ListView>
@@ -276,7 +276,7 @@
                                 <HyperlinkButton Click="BtnLoadMoreReplyMeMsg_OnClick"  Visibility="{x:Bind Path=m_viewModel.HasMoreReplyMe,Mode=OneWay}" Foreground="Gray" HorizontalAlignment="Center" >
                                     <TextBlock>加载更多</TextBlock>
                                 </HyperlinkButton>
-                                <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.ReplyMeLoading,Mode=OneWay}"></ProgressRing>
+                                <muxc:ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.ReplyMeLoading,Mode=OneWay}"></muxc:ProgressRing>
                             </StackPanel>
                         </ListView.Footer>
                     </ListView>

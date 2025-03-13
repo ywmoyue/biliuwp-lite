@@ -10,6 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:BiliLite.Models.Common.Search"
     xmlns:modules="using:BiliLite.Modules"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:viewModel="using:BiliLite.ViewModels.Search"
     Background="Transparent"
@@ -126,7 +127,7 @@
                                 Visibility="{x:Bind Path=ShowLoadMore, Mode=OneWay}">
                                 <TextBlock>加载更多</TextBlock>
                             </HyperlinkButton>
-                            <ProgressRing
+                            <muxc:ProgressRing
                                 HorizontalAlignment="Center"
                                 IsActive="True"
                                 Visibility="{x:Bind Path=Loading, Mode=OneWay}" />
@@ -246,7 +247,7 @@
                                 Visibility="{x:Bind Path=ShowLoadMore, Mode=OneWay}">
                                 <TextBlock>加载更多</TextBlock>
                             </HyperlinkButton>
-                            <ProgressRing
+                            <muxc:ProgressRing
                                 HorizontalAlignment="Center"
                                 IsActive="True"
                                 Visibility="{x:Bind Path=Loading, Mode=OneWay}" />
@@ -366,7 +367,7 @@
                                 Visibility="{x:Bind Path=ShowLoadMore, Mode=OneWay}">
                                 <TextBlock>加载更多</TextBlock>
                             </HyperlinkButton>
-                            <ProgressRing
+                            <muxc:ProgressRing
                                 HorizontalAlignment="Center"
                                 IsActive="True"
                                 Visibility="{x:Bind Path=Loading, Mode=OneWay}" />
@@ -477,7 +478,7 @@
                                 Visibility="{x:Bind Path=ShowLoadMore, Mode=OneWay}">
                                 <TextBlock>加载更多</TextBlock>
                             </HyperlinkButton>
-                            <ProgressRing
+                            <muxc:ProgressRing
                                 HorizontalAlignment="Center"
                                 IsActive="True"
                                 Visibility="{x:Bind Path=Loading, Mode=OneWay}" />
@@ -595,7 +596,7 @@
                                 Visibility="{x:Bind Path=ShowLoadMore, Mode=OneWay}">
                                 <TextBlock>加载更多</TextBlock>
                             </HyperlinkButton>
-                            <ProgressRing
+                            <muxc:ProgressRing
                                 HorizontalAlignment="Center"
                                 IsActive="True"
                                 Visibility="{x:Bind Path=Loading, Mode=OneWay}" />
@@ -689,7 +690,7 @@
                                 Visibility="{x:Bind Path=ShowLoadMore, Mode=OneWay}">
                                 <TextBlock>加载更多</TextBlock>
                             </HyperlinkButton>
-                            <ProgressRing
+                            <muxc:ProgressRing
                                 HorizontalAlignment="Center"
                                 IsActive="True"
                                 Visibility="{x:Bind Path=Loading, Mode=OneWay}" />

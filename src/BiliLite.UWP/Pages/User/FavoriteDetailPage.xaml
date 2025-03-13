@@ -8,6 +8,7 @@
     xmlns:favorites="using:BiliLite.Models.Common.Favorites"
     xmlns:local="using:BiliLite.Pages.User"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pages="using:BiliLite.Pages"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     Background="Transparent"
@@ -196,7 +197,7 @@
                             Visibility="{x:Bind Path=m_viewModel.ShowLoadMore, Mode=OneWay}">
                             <TextBlock>加载更多</TextBlock>
                         </HyperlinkButton>
-                        <ProgressRing
+                        <muxc:ProgressRing
                             HorizontalAlignment="Center"
                             IsActive="True"
                             Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}" />

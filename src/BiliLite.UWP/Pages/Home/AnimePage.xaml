@@ -434,7 +434,7 @@
                                             Visibility="{x:Bind Path=ShowMore, Mode=OneWay}">
                                             <TextBlock>加载更多</TextBlock>
                                         </HyperlinkButton>
-                                        <ProgressRing
+                                        <muxc:ProgressRing
                                             HorizontalAlignment="Center"
                                             IsActive="True"
                                             Visibility="{x:Bind Path=ShowMore, Converter={StaticResource DisplayConvert}, Mode=OneWay}" />
@@ -456,7 +456,7 @@
             x:Name="gridLoading"
             Background="Transparent"
             Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}">
-            <ProgressRing
+            <muxc:ProgressRing
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 IsActive="True" />

@@ -9,6 +9,7 @@
     xmlns:fa="using:FontAwesome5"
     xmlns:local="using:BiliLite.Pages.Home"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:user="using:BiliLite.Modules.User"
     Background="Transparent"
     mc:Ignorable="d">
@@ -221,7 +222,7 @@
                 </Pivot>
             </Grid>
 
-            <ProgressRing
+            <muxc:ProgressRing
                 Margin="8"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Bottom"

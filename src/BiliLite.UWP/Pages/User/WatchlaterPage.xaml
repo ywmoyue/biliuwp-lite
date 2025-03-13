@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:BiliLite.Pages.User"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pages="using:BiliLite.Pages"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:user="using:BiliLite.Modules.User"
@@ -84,7 +85,7 @@
                 ItemsSource="{x:Bind Path=watchLaterVM.Videos, Mode=OneWay}"
                 SelectionMode="None"
                 StretchContentForSingleRow="False" />
-            <ProgressRing
+            <muxc:ProgressRing
                 HorizontalAlignment="Center"
                 IsActive="True"
                 Visibility="{x:Bind Path=watchLaterVM.Loading, Mode=OneWay}" />

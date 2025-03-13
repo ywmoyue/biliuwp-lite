@@ -7,6 +7,7 @@
     xmlns:local="using:BiliLite.Pages.Live"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:modules="using:BiliLite.Modules.Live"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pages="using:BiliLite.Pages"
     Background="Transparent"
     mc:Ignorable="d">
@@ -59,7 +60,7 @@
                 </DataTemplate>
             </Pivot.ItemTemplate>
         </Pivot>
-        <ProgressRing
+        <muxc:ProgressRing
             Width="56"
             Height="56"
             HorizontalAlignment="Center"

@@ -6,6 +6,7 @@
     xmlns:home="using:BiliLite.Models.Common.Home"
     xmlns:local="using:BiliLite.Pages.Home"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     Background="Transparent"
     mc:Ignorable="d">
 
@@ -38,7 +39,7 @@
             </GridView>
         </ScrollViewer>
 
-        <ProgressRing
+        <muxc:ProgressRing
             Width="56"
             Height="56"
             HorizontalAlignment="Center"

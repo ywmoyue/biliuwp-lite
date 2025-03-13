@@ -535,7 +535,7 @@
                         x:Name="GridBuffering"
                         VerticalAlignment="Center"
                         Visibility="{Binding ElementName=Player, Path=Buffering, Mode=OneWay}">
-                        <ProgressRing
+                        <muxc:ProgressRing
                             Width="36"
                             Height="36"
                             Foreground="{ThemeResource SystemAccentColor}"
@@ -548,7 +548,7 @@
                             TextAlignment="Center" />
                     </StackPanel>
                     <StackPanel x:Name="VideoLoading" VerticalAlignment="Center">
-                        <ProgressRing
+                        <muxc:ProgressRing
                             Width="36"
                             Height="36"
                             Foreground="{ThemeResource SystemAccentColor}"
@@ -764,7 +764,7 @@
                                         Foreground="White">
                                         <fa:FontAwesome FontSize="20" Icon="Solid_Play" />
                                     </HyperlinkButton>
-                                    <ProgressRing
+                                    <muxc:ProgressRing
                                         x:Name="BottomBtnLoading"
                                         Width="48"
                                         Height="48"
