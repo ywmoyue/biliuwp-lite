@@ -130,7 +130,7 @@ namespace BiliLite.Pages
         {
             string targetUrl = args.Uri;
             string pattern = @"^https://([a-zA-Z0-9]{2,})\.bilibili\.com";
-            if (!Regex.IsMatch(targetUrl, pattern))
+            if (!Regex.IsMatch(targetUrl, pattern) && !targetUrl.StartsWith("https://m.bilibili.com"))
             {
                 NotificationShowExtensions.ShowMessageToast("检测到未知的重定向，已自动切换到移动版网站");
 
