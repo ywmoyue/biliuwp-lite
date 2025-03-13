@@ -2807,7 +2807,7 @@ namespace BiliLite.Controls
 
         public void SetPosition(double position)
         {
-            Player.SetPosition(position);
+            Player.SetPosition(position,Player.PlayState == PlayState.Pause);
         }
 
         public void ToggleSubtitle()

@@ -39,6 +39,7 @@ namespace BiliLite.Controls
         private string m_userAgent;
         private BiliDashPlayUrlInfo m_dashInfo;
         private PlayEngine m_currentEngine;
+        public DispatcherTimer PositionDebounceTimer;
 
         private FFmpegMediaSource m_ffmpegMssVideo;
         private MediaPlayer m_playerVideo;
@@ -66,6 +67,8 @@ namespace BiliLite.Controls
             }
             //_ffmpegConfig.StreamBufferSize = 655360;//1024 * 30;
 
+            PositionDebounceTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(300) };
+            PositionDebounceTimer.Tick += PositionDebounceTimer_Tick; ;
         }
 
         #endregion
@@ -201,6 +204,11 @@ namespace BiliLite.Controls
 
         #region Private Methods
 
+        private void PositionDebounceTimer_Tick(object sender, object e)
+        {
+            PositionDebounceTimer.Stop();
+        }
+
         private void DoPropertyChanged(string name)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -209,6 +217,9 @@ namespace BiliLite.Controls
         private static void OnPositionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var sender = d as Player;
+
+            if (sender.PositionDebounceTimer.IsEnabled) return;
+
             if (sender.ABPlay != null && sender.ABPlay.PointB != 0 && (double)e.NewValue > sender.ABPlay.PointB)
             {
                 sender.Position = sender.ABPlay.PointA;
@@ -218,9 +229,13 @@ namespace BiliLite.Controls
             {
                 if (sender.PlayState == PlayState.Playing || sender.PlayState == PlayState.Pause)
                 {
-                    sender.SetPosition((double)e.NewValue);
+                    var isPause = sender.PlayState == PlayState.Pause;
+                    sender.SetPosition((double)e.NewValue, isPause);
                 }
             }
+            
+            sender.PositionDebounceTimer.Stop();
+            sender.PositionDebounceTimer.Start();
         }
 
         private static void OnVolumeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -1198,8 +1213,9 @@ namespace BiliLite.Controls
         /// <summary>
         /// 设置进度
         /// </summary>
-        public void SetPosition(double position)
+        public void SetPosition(double position, bool isPause = true)
         {
+            Pause();
             if (m_mediaTimelineController != null)
             {
                 m_mediaTimelineController.Position = TimeSpan.FromSeconds(position);
@@ -1209,6 +1225,10 @@ namespace BiliLite.Controls
                 m_playerVideo.PlaybackSession.Position = TimeSpan.FromSeconds(position);
             }
 
+            if (!isPause)
+            {
+                Play();
+            }
         }
 
         /// <summary>
