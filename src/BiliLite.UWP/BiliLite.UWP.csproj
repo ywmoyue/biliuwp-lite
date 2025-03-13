@@ -352,7 +352,6 @@
     <Compile Include="Models\Common\Msg\BiliSessionMessageSource.cs" />
     <Compile Include="Models\Common\Msg\BiliSessionMessagesResponse.cs" />
     <Compile Include="Models\Common\Msg\BiliSessionPrivateMessage.cs" />
-    <Compile Include="ViewModels\Common\WebPageViewModel.cs" />
     <Compile Include="ViewModels\Messages\ChatContextViewModel.cs" />
     <Compile Include="Models\Common\Msg\ChatMessage.cs" />
     <Compile Include="Models\Common\Msg\MsgContent\IChatMsgContent.cs" />
