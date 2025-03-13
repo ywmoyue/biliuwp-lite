@@ -101,8 +101,8 @@
                 </Grid.ColumnDefinitions>
                 <HyperlinkButton
                     Grid.RowSpan="2"
-                    Margin="8,0,0,0"
-                    Padding="-7"
+                    Margin="1,0,0,0"
+                    Padding="-2"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top"
                     Click="BtnUser_Click"
@@ -127,11 +127,11 @@
                     </Grid>
                 </HyperlinkButton>
                 <!--  粉丝牌  -->
-                <Grid
+                <!--<Grid
                     x:Name="FansNarrow"
                     Grid.Row="2"
                     Grid.RowSpan="1"
-                    Margin="8,0"
+                    Margin="6,0"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Stretch"
                     Visibility="{Binding ElementName=CommentControlContent, Path=DataContext.IsWideMode, Mode=OneWay}">
@@ -177,11 +177,11 @@
                             </Grid>
                         </Grid>
                     </Border>
-                </Grid>
+                </Grid>-->
 
                 <StackPanel
                     Grid.Column="1"
-                    Margin="4,0"
+                    Margin="0,10,4,0"
                     ContextFlyout="{StaticResource menu}"
                     Orientation="Horizontal">
                     <TextBlock
@@ -204,12 +204,12 @@
                         Visibility="{x:Bind Member.Vip.IsVip}" />
                     <Image
                         Height="12"
-                        Margin="8,2,8,0"
+                        Margin="6,2,6,0"
                         VerticalAlignment="Center"
                         Source="{Binding Path=Member.LV}" />
                     <!--  粉丝牌  -->
                     <Grid
-                        Margin="0,4,0,0"
+                        Margin="0,2,0,0"
                         VerticalAlignment="Center"
                         CornerRadius="{StaticResource ControlCornerRadius}"
                         Visibility="{Binding ElementName=m_viewModel, Path=IsWideMode, Mode=OneWay}">
@@ -238,10 +238,7 @@
                                         Text="{x:Bind Path=Member.FansDetail.MedalName, Mode=OneWay}" />
                                     <TextBlock x:Name="CornerRadiusValue" Visibility="Collapsed">14</TextBlock>
                                 </Grid>
-                                <Grid
-                                    Grid.Column="2"
-                                    Margin="-1,0,0,0"
-                                    Background="White">
+                                <Grid Grid.Column="2" Background="White">
                                     <TextBlock
                                         Margin="4,0"
                                         FontSize="10"
@@ -255,7 +252,6 @@
                 <Grid
                     Grid.RowSpan="2"
                     Grid.Column="2"
-                    VerticalAlignment="Top"
                     Visibility="{x:Bind Path=Member.ShowCardBg, Mode=OneWay}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -277,7 +273,7 @@
                             Text="{x:Bind Path=Member.UserSailing.Cardbg.Fan.NumDesc, Mode=OneWay}" />
                     </StackPanel>
 
-                    <Grid Grid.Column="1" Background="Transparent">
+                    <Grid Grid.Column="1" VerticalAlignment="Center">
                         <Image
                             Height="48"
                             Margin="-200,0,-50,0"
@@ -290,7 +286,7 @@
                     Grid.Row="1"
                     Grid.Column="1"
                     Grid.ColumnSpan="2"
-                    Margin="4,0"
+                    Margin="0,0,4,0"
                     VerticalAlignment="Top"
                     FontSize="12"
                     Foreground="Gray"
@@ -334,40 +330,45 @@
 
                 <ContentControl
                     Grid.Row="0"
-                    Margin="4,0"
+                    Margin="1,0"
                     Content="{Binding Path=CommentText, Mode=OneWay}"
                     Visibility="Visible" />
 
                 <HyperlinkButton
                     Grid.Row="1"
+                    Margin="0,5,0,0"
                     Padding="17,5"
                     HorizontalContentAlignment="Left"
                     Command="{x:Bind CommentExpandCommand}"
                     Content="{x:Bind ExtendBtnText, Mode=OneWay}"
                     Visibility="{x:Bind Path=IsContentNeedExpand, Mode=OneWay}" />
 
-                <toolkit:AdaptiveGridView
+                <GridView
                     x:Name="NotePicturesView"
                     Grid.Row="2"
+                    Margin="0,0,4,0"
                     IsItemClickEnabled="True"
                     ItemClick="NotePicturesView_ItemClick"
                     ItemsSource="{x:Bind Path=Content.Pictures}"
                     ScrollViewer.VerticalScrollBarVisibility="Disabled"
                     ScrollViewer.VerticalScrollMode="Disabled"
                     SelectionMode="None"
-                    StretchContentForSingleRow="False"
                     Visibility="{x:Bind Path=ShowPics}">
-                    <toolkit:AdaptiveGridView.ItemTemplate>
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <toolkit:StaggeredPanel DesiredColumnWidth="240" />
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                    <GridView.ItemTemplate>
                         <DataTemplate x:DataType="common:NotePicture">
                             <toolkit:ImageEx
-                                MaxWidth="280"
                                 Margin="10"
                                 CornerRadius="{StaticResource ControlCornerRadius}"
                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                 Source="{x:Bind ImgSrc}" />
                         </DataTemplate>
-                    </toolkit:AdaptiveGridView.ItemTemplate>
-                </toolkit:AdaptiveGridView>
+                    </GridView.ItemTemplate>
+                </GridView>
 
                 <Grid Grid.Row="3" Margin="0,4">
                     <StackPanel VerticalAlignment="Center" Orientation="{Binding ElementName=CommentControlContent, Path=DataContext.CommentActionOrientation}">
@@ -443,7 +444,7 @@
                     Grid.Row="4"
                     Margin="0,4"
                     Padding="8"
-                    Background="#19AAAAAA"
+                    Background="{ThemeResource CardBackground}"
                     CornerRadius="{StaticResource ControlCornerRadius}"
                     Visibility="{x:Bind Path=ShowReplies, Mode=OneWay}">
 
@@ -575,7 +576,7 @@
                                         <StackPanel Margin="0,4" Orientation="Horizontal">
 
                                             <HyperlinkButton
-                                                Margin="8,0"
+                                                Margin="4,0"
                                                 HorizontalContentAlignment="Left"
                                                 Click="BtnLike_Click"
                                                 Foreground="{Binding LikeColor}">
@@ -698,7 +699,8 @@
 
                 <ListView
                     Grid.Row="6"
-                    Margin="-9,0,0,0"
+                    Margin="0,0,8,0"
+                    Background="{ThemeResource CardBackground}"
                     CornerRadius="{StaticResource ControlCornerRadius}"
                     IsItemClickEnabled="False"
                     ItemsSource="{x:Bind HotReplies, Mode=OneWay}"
@@ -708,25 +710,8 @@
                     Visibility="{x:Bind ShowHotReplies, Mode=OneWay}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <Grid
-                                Margin="5"
-                                Padding="5"
-                                CornerRadius="{StaticResource ControlCornerRadius}">
-                                <Grid.Background>
-                                    <LinearGradientBrush MappingMode="Absolute" StartPoint="0,0" EndPoint="0,2">
-                                        <LinearGradientBrush.RelativeTransform>
-                                            <ScaleTransform CenterY="0.5" ScaleY="-1" />
-                                        </LinearGradientBrush.RelativeTransform>
-                                        <LinearGradientBrush.GradientStops>
-                                            <GradientStop Offset="1.0" Color="{ThemeResource SeparatorColor}" />
-                                            <GradientStop Offset="1.0" Color="Transparent" />
-                                        </LinearGradientBrush.GradientStops>
-                                    </LinearGradientBrush>
-                                </Grid.Background>
-                                <ContentControl
-                                    Content="{Binding Path=Content, Mode=OneWay}"
-                                    FontSize="13"
-                                    Visibility="Visible" />
+                            <Grid Padding="0,9" HorizontalAlignment="Left">
+                                <ContentControl Content="{Binding Path=Content, Mode=OneWay}" FontSize="13" />
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>

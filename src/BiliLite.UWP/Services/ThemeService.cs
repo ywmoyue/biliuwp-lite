@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -37,9 +38,7 @@ namespace BiliLite.Services
             ? m_defaultColorsResource.ThemeDictionaries["Light"] as ResourceDictionary
             : m_defaultColorsResource.ThemeDictionaries["Dark"] as ResourceDictionary;
 
-        public ResourceDictionary AccentThemeResource => m_theme == ElementTheme.Light
-            ? m_accentColorsResource.ThemeDictionaries["Light"] as ResourceDictionary
-            : m_accentColorsResource.ThemeDictionaries["Dark"] as ResourceDictionary;
+        public ResourceDictionary AccentThemeResource => m_accentColorsResource;
 
         public ThemeService(SettingSqlService settingSqlService)
         {
@@ -114,11 +113,11 @@ namespace BiliLite.Services
         /// <returns></returns>
         public void RefreshTheme()
         {
-            Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Wait, 1);
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Wait, 1);
             rootFrame.RequestedTheme = ElementTheme.Light;
             rootFrame.RequestedTheme = ElementTheme.Dark;
             rootFrame.RequestedTheme = (ElementTheme)SettingService.GetValue<int>(SettingConstants.UI.THEME, 0);
-            Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 1);
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
         }
 
         public List<ColorItemModel> GetDefaultThemeColorMenu()

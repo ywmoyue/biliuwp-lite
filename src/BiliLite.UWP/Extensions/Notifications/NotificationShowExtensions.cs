@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Windows.System;
 using Windows.UI.Notifications;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
@@ -44,10 +45,19 @@ namespace BiliLite.Extensions.Notifications
 
         }
 
-        public static async Task<bool> ShowMessageDialog(string title, string content)
+        public static async Task<bool> ShowMessageDialog(string title, string content, Uri uri = null)
         {
             MessageDialog messageDialog = new MessageDialog(content, title);
-            messageDialog.Commands.Add(new UICommand() { Label = "确定", Id = true });
+            messageDialog.Commands.Add(new UICommand()
+            {
+                Label = "确定",
+                Id = true,
+                Invoked = async (cmd) =>
+                {
+                    if (uri != null)
+                        await Launcher.LaunchUriAsync(uri);
+                }
+            });
             messageDialog.Commands.Add(new UICommand() { Label = "取消", Id = false });
             var result = await messageDialog.ShowAsync();
             return (bool)result.Id;

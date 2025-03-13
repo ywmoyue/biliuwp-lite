@@ -91,20 +91,6 @@
                                 Padding="0"
                                 ItemTemplate="{StaticResource ColorItemTemplate}"
                                 ItemsSource="{x:Bind m_UISettingsControlViewModel.Colors}">
-                                <GridView.Resources>
-                                    <ResourceDictionary>
-                                        <ResourceDictionary.ThemeDictionaries>
-                                            <ResourceDictionary x:Key="Default">
-                                                <StaticResource x:Key="GridViewItemSelectedPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
-                                                <StaticResource x:Key="GridViewItemPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
-                                            </ResourceDictionary>
-                                            <ResourceDictionary x:Key="Light">
-                                                <StaticResource x:Key="GridViewItemSelectedPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
-                                                <StaticResource x:Key="GridViewItemPointerOverBorderBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
-                                            </ResourceDictionary>
-                                        </ResourceDictionary.ThemeDictionaries>
-                                    </ResourceDictionary>
-                                </GridView.Resources>
                             </GridView>
                             <StackPanel Orientation="Horizontal" Grid.Column="1">
                                 <Border Background="{ThemeResource SeparatorColor}" Margin="5" Width="1"></Border>

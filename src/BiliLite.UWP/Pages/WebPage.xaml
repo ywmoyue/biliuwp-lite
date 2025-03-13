@@ -2,7 +2,10 @@
     x:Class="BiliLite.Pages.WebPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
+    xmlns:IsWin11="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:font="using:FontAwesome5"
     xmlns:local="using:BiliLite.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -22,49 +25,68 @@
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal">
                 <AppBarButton
-                    x:Name="btnBack"
-                    Click="btnBack_Click"
+                    Click="AppBarButton_Click"
                     Icon="Back"
-                    IsEnabled="{x:Bind m_viewModel.IsEnableGoBack, Mode=OneWay}"
+                    IsEnabled="{Binding CanGoBack, ElementName=webView, Mode=OneWay}"
+                    Tag="Back"
                     ToolTipService.ToolTip="上一页" />
                 <AppBarButton
-                    x:Name="btnForword"
-                    Click="btnForword_Click"
+                    Click="AppBarButton_Click"
                     Icon="Forward"
-                    IsEnabled="{x:Bind m_viewModel.IsEnableGoForward, Mode=OneWay}"
-                    ToolTipService.ToolTip="下一页" />
+                    IsEnabled="{Binding CanGoForward, ElementName=webView, Mode=OneWay}"
+                    Tag="Forword"
+                    ToolTipService.ToolTip="下一页"
+                    Visibility="{Binding CanGoForward, ElementName=webView, Mode=OneWay}" />
                 <AppBarButton
-                    x:Name="btnRefresh"
-                    Click="btnRefresh_Click"
+                    Click="AppBarButton_Click"
                     Icon="Refresh"
+                    Tag="Refresh"
                     ToolTipService.ToolTip="刷新" />
                 <AppBarButton
-                    x:Name="btnInfo"
                     Margin="24,0"
-                    Click="btnInfo_Click"
+                    Click="AppBarButton_Click"
                     Foreground="Transparent"
                     Icon="Emoji2"
+                    Tag="Info"
                     Visibility="Collapsed" />
             </StackPanel>
             <AutoSuggestBox
+                x:Name="AutoSuggestBox"
                 Grid.Column="1"
                 VerticalAlignment="Center"
-                PlaceholderText="地址栏"
-                QueryIcon="Go"
-                Visibility="Collapsed" />
+                PlaceholderText="{Binding Source, ElementName=webView, Mode=OneWay}"
+                QueryIcon="Find"
+                QuerySubmitted="AutoSuggestBox_QuerySubmitted"
+                TextChanged="AutoSuggestBox_TextChanged" />
             <StackPanel
                 Grid.Column="2"
                 HorizontalAlignment="Right"
                 Orientation="Horizontal">
                 <AppBarButton
-                    x:Name="btnShare"
-                    Click="btnShare_Click"
+                    x:Name="Desktop"
+                    Click="AppBarButton_Click"
+                    Tag="Desktop"
+                    ToolTipService.ToolTip="浏览桌面版网站"
+                    Visibility="{Binding Visibility, ElementName=Moblie, Converter={StaticResource DisplayConvert}, Mode=OneWay}">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE7F4;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton
+                    x:Name="Moblie"
+                    Click="AppBarButton_Click"
+                    Icon="CellPhone"
+                    Tag="Mobile"
+                    ToolTipService.ToolTip="浏览移动版网站" />
+                <AppBarButton
+                    Click="AppBarButton_Click"
                     Icon="Share"
+                    Tag="Share"
                     ToolTipService.ToolTip="分享" />
                 <AppBarButton
-                    x:Name="btnOpenBrowser"
-                    Click="btnOpenBrowser_Click"
+                    Click="AppBarButton_Click"
                     Icon="World"
+                    Tag="OpenBrowser"
                     ToolTipService.ToolTip="使用浏览器打开" />
             </StackPanel>
         </Grid>
