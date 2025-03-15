@@ -501,12 +501,16 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <Slider Margin="8 0" 
-                                x:Name="BottomProgress" 
-                                Value="{Binding ElementName=Player,Path=Position,Mode=TwoWay}"
-                                Maximum="{Binding ElementName=Player,Path=Duration,Mode=OneWay}"
-                                Foreground="{ThemeResource SystemAccentColor}"
-                                ThumbToolTipValueConverter="{StaticResource progress}" ></Slider>
+                            <Grid Margin="8 0" >
+                                <Slider
+                                        x:Name="BottomProgress" 
+                                        Value="{Binding ElementName=Player,Path=Position,Mode=TwoWay}"
+                                        Maximum="{Binding ElementName=Player,Path=Duration,Mode=OneWay}"
+                                        Foreground="{ThemeResource SystemAccentColor}"
+                                        ThumbToolTipValueConverter="{StaticResource progress}" ></Slider>
+                                <Canvas x:Name="BottomProgressCanvas">
+                                </Canvas>
+                            </Grid>
                             <Grid Grid.Row="1" Padding="4 8">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>

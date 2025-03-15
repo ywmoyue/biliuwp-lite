@@ -45,6 +45,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.UI.Xaml.Shapes;
 using PlayInfo = BiliLite.Models.Common.Video.PlayInfo;
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -66,6 +67,7 @@ namespace BiliLite.Controls
         public event PropertyChangedEventHandler PropertyChanged;
         private GestureRecognizer gestureRecognizer;
         private bool m_firstMediaOpened;
+        private ThemeService m_themeService;
         private bool m_isLocalFileMode;
 
         private void DoPropertyChanged(string name)
@@ -147,6 +149,7 @@ namespace BiliLite.Controls
             m_viewModel = new PlayControlViewModel();
             m_playSpeedMenuService = App.ServiceProvider.GetRequiredService<PlaySpeedMenuService>();
             m_playerToastService = App.ServiceProvider.GetRequiredService<PlayerToastService>();
+            m_themeService = App.ServiceProvider.GetRequiredService<ThemeService>();
             m_playerToastService.Init(this);
             InitializeComponent();
             dispRequest = new DisplayRequest();
@@ -1769,6 +1772,7 @@ namespace BiliLite.Controls
             {
                 m_viewModel.ViewPoints = player_info.ViewPoints;
                 m_viewModel.ShowViewPointsBtn = true;
+                UpdateViewPointPosition();
             }
 
             TopOnline.Text = await playerHelper.GetOnline(CurrentPlayItem.avid, CurrentPlayItem.cid);
@@ -3197,6 +3201,34 @@ namespace BiliLite.Controls
             m_danmakuController.UpdateSize(SplitView.ActualWidth, SplitView.ActualHeight);
             // 更新画面比例
             Player.SetRatioMode(PlayerSettingRatio.SelectedIndex);
+
+            UpdateViewPointPosition();
+        }
+
+        private void UpdateViewPointPosition()
+        {
+            if (m_viewModel.ViewPoints == null || m_viewModel.ViewPoints.Count <= 1) return;
+
+            BottomProgressCanvas.Children.Clear();
+            var duration = CurrentPlayItem.duration;
+            var accentColor = (Color)m_themeService.AccentThemeResource["SystemAccentColor"];
+            var brush = new SolidColorBrush(accentColor);
+
+            foreach (var viewPoint in m_viewModel.ViewPoints.Skip(1))
+            {
+                var x = (((double)viewPoint.From / duration) * BottomProgress.ActualWidth) / 2;
+                var line = new Line
+                {
+                    X1 = x,
+                    X2 = x,
+                    Y1 = 5,
+                    Y2 = 15,
+                    Stroke = brush,
+                    StrokeThickness = 1,
+                };
+                BottomProgressCanvas.Children.Add(line);
+                Canvas.SetLeft(line, x);
+            }
         }
 
         private void TopBtnViewPoints_OnClick(object sender, RoutedEventArgs e)
