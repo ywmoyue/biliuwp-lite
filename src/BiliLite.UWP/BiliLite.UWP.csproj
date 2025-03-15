@@ -344,6 +344,7 @@
     <Compile Include="Services\Biz\BaseBizService.cs" />
     <Compile Include="Services\Biz\LocalAttentionUserService.cs" />
     <Compile Include="Services\Biz\MessagesService.cs" />
+    <Compile Include="Services\Biz\UserDynamicService.cs" />
     <Compile Include="Services\Interfaces\IUpdatePivotLayout.cs" />
     <Compile Include="Services\PageSaveService.cs" />
     <Compile Include="Models\Common\Msg\BiliMessageSession.cs" />
@@ -427,6 +428,7 @@
     <Compile Include="ViewModels\Settings\ShortcutKeySettingsControlViewModel.cs" />
     <Compile Include="ViewModels\Settings\UISettingsControlViewModel.cs" />
     <Compile Include="ViewModels\Settings\VideoDanmakuSettingsControlViewModel.cs" />
+    <Compile Include="ViewModels\UserDynamic\UserDynamicDetailViewModel.cs" />
     <Compile Include="ViewModels\User\FavoriteItemViewModel.cs" />
     <Compile Include="Pages\Home\UserDynamicPage.xaml.cs">
       <DependentUpon>UserDynamicPage.xaml</DependentUpon>

@@ -63,13 +63,13 @@ namespace BiliLite.ViewModels.UserDynamic
 
         #region Public Methods
 
-        public async Task GetDynamicItems()
+        public async Task GetDynamicItemReposts()
         {
             try
             {
                 CanLoadMore = false;
                 Loading = true;
-                await GetDynamicItemsCore();
+                await GetDynamicItemRepostsCore();
             }
             catch (CustomizedErrorException ex)
             {
@@ -95,7 +95,7 @@ namespace BiliLite.ViewModels.UserDynamic
             }
             m_next = "";
             Items = null;
-            await GetDynamicItems();
+            await GetDynamicItemReposts();
         }
 
         public async void LoadMore()
@@ -109,7 +109,7 @@ namespace BiliLite.ViewModels.UserDynamic
                 return;
             }
             var last = Items.LastOrDefault();
-            await GetDynamicItems();
+            await GetDynamicItemReposts();
         }
 
         public void OpenUser(object id)
@@ -133,7 +133,7 @@ namespace BiliLite.ViewModels.UserDynamic
 
         #region Private Methods
 
-        private async Task GetDynamicItemsCore()
+        private async Task GetDynamicItemRepostsCore()
         {
             var api = m_dynamicApi.DynamicRepost(ID, m_next);
 

@@ -79,12 +79,8 @@ namespace BiliLite.Models.Requests.Api.User
                 method = HttpMethods.Get,
                 baseUrl = "https://api.vc.bilibili.com/dynamic_repost/v1/dynamic_repost/repost_detail",
                 parameter = $"dynamic_id={id}&offset={offset}",
+                need_cookie = true,
             };
-            //使用Web的API
-            if (SettingService.Account.Logined)
-            {
-                api.parameter += $"&access_key={SettingService.Account.AccessKey}";
-            }
 
             return api;
         }

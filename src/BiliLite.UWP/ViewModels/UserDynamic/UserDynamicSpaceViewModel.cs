@@ -4,24 +4,16 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Windows.UI.Xaml.Controls;
 using AutoMapper;
 using Bilibili.App.Dynamic.V2;
 using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Models.Exceptions;
 using BiliLite.Modules;
-using BiliLite.Pages;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using BiliLite.Models.Common.UserDynamic;
-using BiliLite.Pages.User;
-using BiliLite.Models;
-using BiliLite.Models.Requests.Api.User;
-using BiliLite.Dialogs;
 using BiliLite.Modules.User;
-using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 
 namespace BiliLite.ViewModels.UserDynamic
 {
@@ -32,7 +24,6 @@ namespace BiliLite.ViewModels.UserDynamic
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly GrpcService m_grpcService;
         private readonly IMapper m_mapper;
-        private readonly DynamicAPI m_dynamicApi;
         private readonly WatchLaterVM m_watchLaterVm;
         private int m_page = 1;
         private string m_offset = null;
@@ -45,19 +36,18 @@ namespace BiliLite.ViewModels.UserDynamic
         {
             m_grpcService = grpcService;
             m_mapper = mapper;
-            m_dynamicApi = new DynamicAPI();
             m_watchLaterVm = new WatchLaterVM();
             LoadMoreCommand = new RelayCommand(LoadMore);
             UserCommand = new RelayCommand<object>(OpenUser);
-            DetailCommand = new RelayCommand<string>(OpenDetail);
-            ImageCommand = new RelayCommand<object>(OpenImage);
-            WebDetailCommand = new RelayCommand<string>(OpenWebDetail);
+            DetailCommand = new RelayCommand<string>(DynamicExtensions.OpenDetail);
+            ImageCommand = new RelayCommand<object>(DynamicExtensions.OpenImage);
+            WebDetailCommand = new RelayCommand<string>(DynamicExtensions.OpenWebDetail);
             CommentCommand = new RelayCommand<DynamicV2ItemViewModel>(OpenComment);
-            LikeCommand = new RelayCommand<DynamicV2ItemViewModel>(DoLike);
-            RepostCommand = new RelayCommand<DynamicV2ItemViewModel>(OpenSendDynamicDialog);
-            LaunchUrlCommand = new RelayCommand<string>(LaunchUrl);
-            CopyDynCommand = new RelayCommand<DynamicV2ItemViewModel>(CopyDyn);
-            TagCommand = new RelayCommand<object>(OpenTag);
+            LikeCommand = new RelayCommand<DynamicV2ItemViewModel>(DynamicExtensions.DoLike);
+            RepostCommand = new RelayCommand<DynamicV2ItemViewModel>(DynamicExtensions.OpenSendDynamicDialog);
+            LaunchUrlCommand = new RelayCommand<string>(DynamicExtensions.LaunchUrl);
+            CopyDynCommand = new RelayCommand<DynamicV2ItemViewModel>(DynamicExtensions.CopyDyn);
+            TagCommand = new RelayCommand<object>(DynamicExtensions.OpenTag);
             WatchLaterCommand = m_watchLaterVm.AddCommandWithAvId;
         }
 
@@ -119,50 +109,6 @@ namespace BiliLite.ViewModels.UserDynamic
             OpenCommentEvent?.Invoke(this, data);
         }
 
-        private void OpenWebDetail(string dynId)
-        {
-            var url = $"https://www.bilibili.com/opus/{dynId}";
-            MessageCenter.NavigateToPage(null, new NavigationInfo()
-            {
-                icon = Symbol.World,
-                page = typeof(WebPage),
-                title = "加载中...",
-                parameters = url
-            });
-        }
-
-        private void OpenTag(object name)
-        {
-            //TODO 打开话题
-            MessageCenter.NavigateToPage(this, new NavigationInfo()
-            {
-                icon = Symbol.World,
-                page = typeof(WebPage),
-                title = name.ToString(),
-                parameters = "https://t.bilibili.com/topic/name/" + Uri.EscapeDataString(name.ToString())
-            });
-        }
-
-        private void OpenImage(object data)
-        {
-            if (!(data is UserDynamicItemDisplayImageInfo imageInfo))
-            {
-                return;
-            }
-            MessageCenter.OpenImageViewer(imageInfo.AllImages, imageInfo.Index);
-        }
-
-        private void OpenDetail(string dynId)
-        {
-            MessageCenter.NavigateToPage(this, new NavigationInfo()
-            {
-                icon = Symbol.Document,
-                page = typeof(DynamicDetailPage),
-                title = "动态详情",
-                parameters = dynId
-            });
-        }
-
         private void HandleDynamicResults(DynSpaceRsp results)
         {
             CanLoadMore = results.HasMore;
@@ -178,75 +124,6 @@ namespace BiliLite.ViewModels.UserDynamic
             {
                 DynamicItems.AddRange(items);
             }
-        }
-
-        private async void LaunchUrl(string url)
-        {
-            await this.LaunchUrlEx(url);
-        }
-
-        private async Task DoLikeCore(DynamicV2ItemViewModel item)
-        {
-            var results = await m_dynamicApi.Like(item.Extend.DynIdStr, item.Liked ? 2 : 1).Request();
-            if (!results.status)
-            {
-                throw new CustomizedErrorException(results.message);
-            }
-
-            var data = await results.GetJson<ApiDataModel<object>>();
-            if (!data.success)
-            {
-                throw new CustomizedErrorException(data.message);
-            }
-
-            if (item.Liked)
-            {
-                item.Liked = false;
-                item.LikeCount -= 1;
-            }
-            else
-            {
-                item.Liked = true;
-                item.LikeCount += 1;
-            }
-        }
-
-        private async void DoLike(DynamicV2ItemViewModel item)
-        {
-            if (!await BiliExtensions.ActionCheckLogin()) return;
-
-            try
-            {
-                await DoLikeCore(item);
-            }
-            catch (CustomizedErrorException ex)
-            {
-                Notify.ShowMessageToast(ex.Message);
-                _logger.Error(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                var handel = HandelError<object>(ex);
-                Notify.ShowMessageToast(handel.message);
-            }
-        }
-
-        private async void OpenSendDynamicDialog(DynamicV2ItemViewModel data)
-        {
-            if (!await BiliExtensions.ActionCheckLogin()) return;
-
-            var sendDynamicDialog = App.ServiceProvider.GetRequiredService<SendDynamicV2Dialog>();
-            if (data != null)
-            {
-                sendDynamicDialog.SetRepost(data);
-            }
-            await sendDynamicDialog.ShowAsync();
-        }
-
-        private void CopyDyn(DynamicV2ItemViewModel data)
-        {
-            var dataStr = data.SourceJson;
-            Notify.ShowMessageToast(dataStr.SetClipboard() ? "已复制" : "复制失败");
         }
 
         #endregion

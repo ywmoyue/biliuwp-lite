@@ -18,7 +18,7 @@ namespace BiliLite.Controls
         public async void LoadData(string id)
         {
             UserDynamicRepostViewModel.ID = id;
-            await UserDynamicRepostViewModel.GetDynamicItems();
+            await UserDynamicRepostViewModel.GetDynamicItemReposts();
         }
     }
 }
