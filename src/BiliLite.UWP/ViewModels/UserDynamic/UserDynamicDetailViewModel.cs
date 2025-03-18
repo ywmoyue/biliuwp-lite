@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using AutoMapper;
@@ -10,6 +11,7 @@ using BiliLite.Modules.User;
 using BiliLite.Modules;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
+using PropertyChanged;
 
 namespace BiliLite.ViewModels.UserDynamic;
 
@@ -40,6 +42,26 @@ public class UserDynamicDetailViewModel : BaseViewModel, IUserDynamicCommands
     }
 
     public ObservableCollection<DynamicV2ItemViewModel> DynamicItems { get; set; }
+
+    [DependsOn(nameof(DynamicItems))]
+    public long ReplyCount
+    {
+        get
+        {
+            var item = DynamicItems.FirstOrDefault();
+            return item == null ? 0 : item.Stat.Reply;
+        }
+    }
+
+    [DependsOn(nameof(DynamicItems))]
+    public long RepostCount
+    {
+        get
+        {
+            var item = DynamicItems.FirstOrDefault();
+            return item == null ? 0 : item.Stat.Repost;
+        }
+    }
 
     public bool Loading { get; set; }
 

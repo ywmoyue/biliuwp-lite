@@ -87,13 +87,14 @@ namespace BiliLite.Pages.User
             base.OnNavigatedTo(e);
             if (e.NavigationMode == NavigationMode.New)
             {
+                dynamic_id = e.Parameter.ToString();
                 await m_viewModel.LoadData(e.Parameter.ToString());
             }
         }
 
         private void pivotRight_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (pivotRight.SelectedIndex == 0 && splitView.IsPaneOpen && (repost.UserDynamicRepostViewModel.Items == null || repost.UserDynamicRepostViewModel.Items.Count == 0))
+            if (pivotRight.SelectedIndex == 0 && splitView.IsPaneOpen && (repost.UserDynamicRepostViewModel.DynamicItems == null || repost.UserDynamicRepostViewModel.DynamicItems.Count == 0))
             {
                 repost.LoadData(dynamic_id);
             }

@@ -41,13 +41,13 @@
                             <Pivot x:Name="pivotRight" SelectionChanged="pivotRight_SelectionChanged">
                                 <PivotItem Margin="0">
                                     <PivotItem.Header>
-                                        <TextBlock FontSize="15">转发(<Run x:Name="repostCount"/>)</TextBlock>
+                                        <TextBlock FontSize="15">转发(<Run Text="{x:Bind m_viewModel.RepostCount,Mode=OneWay}"/>)</TextBlock>
                                     </PivotItem.Header>
                                     <controls:DynamicRepostControl x:Name="repost"></controls:DynamicRepostControl>
                                 </PivotItem>
                                 <PivotItem Margin="0">
                                     <PivotItem.Header>
-                                        <TextBlock FontSize="15">评论(<Run x:Name="commentCount"/>)</TextBlock>
+                                        <TextBlock FontSize="15">评论(<Run Text="{x:Bind m_viewModel.ReplyCount,Mode=OneWay}"/>)</TextBlock>
                                     </PivotItem.Header>
                                     <controls:CommentControl x:Name="Comment"></controls:CommentControl>
                                 </PivotItem>

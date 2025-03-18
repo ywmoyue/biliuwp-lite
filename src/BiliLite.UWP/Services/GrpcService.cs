@@ -149,5 +149,32 @@ namespace BiliLite.Services
                 throw new Exception(result.message);
             }
         }
+
+        public async Task<RepostListRsp> GetDynRepostList(string id, string historyOffset)
+        {
+            var message = new RepostListReq()
+            {
+                DynamicId = id
+            };
+            if (!string.IsNullOrEmpty(historyOffset))
+            {
+                message.Offset = historyOffset;
+            }
+            var requestUserInfo = new GrpcBiliUserInfo(
+                SettingService.Account.AccessKey,
+                SettingService.Account.UserID,
+                SettingService.Account.GetLoginAppKeySecret().Appkey);
+
+            var result = await GrpcRequest.Instance.SendMessage("https://grpc.biliapi.net:443/bilibili.app.dynamic.v2.Dynamic/RepostList", message, requestUserInfo);
+            if (result.status)
+            {
+                var reply = RepostListRsp.Parser.ParseFrom(result.results);
+                return reply;
+            }
+            else
+            {
+                throw new Exception(result.message);
+            }
+        }
     }
 }
