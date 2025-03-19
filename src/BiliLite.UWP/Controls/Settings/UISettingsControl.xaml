@@ -20,7 +20,7 @@
                 Background="{x:Bind Color, Converter={StaticResource ColorConvert}}"
                 CornerRadius="{StaticResource ControlCornerRadius}"
                 ToolTipService.ToolTip="{x:Bind Name}">
-                <SymbolIcon Symbol="Accept" Visibility="{x:Bind IsActived, Mode=OneWay}" />
+                <SymbolIcon Foreground="White" Symbol="Accept" Visibility="{x:Bind IsActived, Mode=OneWay}" />
                 <Border.ContextFlyout>
                     <MenuFlyout>
                         <MenuFlyoutItem
@@ -76,7 +76,7 @@
                     <controls:SettingsCard.Header>
                         <StackPanel>
                             <TextBlock>色彩</TextBlock>
-                            <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap">更改应用的强调色彩</TextBlock>
+                            <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" TextAlignment="Justify">更改应用的强调色彩</TextBlock>
                         </StackPanel>
                     </controls:SettingsCard.Header>
                     <controls:SettingsCard.Description>
@@ -133,7 +133,7 @@
                                         <StaticResource x:Key="AccentButtonBackgroundPointerOver" ResourceKey="SystemAccentColorLight1" />
                                         <StaticResource x:Key="AccentButtonBackgroundPressed" ResourceKey="SystemAccentColorDark1" />
                                     </Button.Resources>
-                                    <SymbolIcon Visibility="{Binding SelectedIndex, ElementName=gvColor,Converter={StaticResource BooleanConvert},ConverterParameter=-1}" Symbol="Accept"/>
+                                    <SymbolIcon Foreground="White" Visibility="{Binding SelectedIndex, ElementName=gvColor,Converter={StaticResource BooleanConvert},ConverterParameter=-1}" Symbol="Accept"/>
                                 </Button>
                             </StackPanel>
                         </Grid>

@@ -19,7 +19,7 @@
         <DataTemplate x:Key="VideoDataTemplate" x:DataType="userModel:UserHistoryItem">
             <Grid Background="#00FFFFFF">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="180" />
+                    <ColumnDefinition Width="200" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.ContextFlyout>
@@ -33,27 +33,21 @@
                     PlaceholderSource="/Assets/Thumbnails/Placeholde.png"
                     Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='180w_100h_1c'}"
                     Stretch="UniformToFill" />
-                <Grid Grid.Column="1" Margin="5">
+                <Grid Grid.Column="1" Margin="10,5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <StackPanel
+                    <TextBlock
                         Grid.Row="0"
-                        Margin="8,0,0,0"
-                        VerticalAlignment="Top">
-                        <TextBlock
-                            Margin="0,0,0,0"
-                            MaxLines="2"
-                            Text="{x:Bind Title}"
-                            TextTrimming="CharacterEllipsis"
-                            TextWrapping="Wrap" />
-                    </StackPanel>
-                    <StackPanel
-                        Grid.Row="1"
-                        Margin="8,0,0,0"
-                        VerticalAlignment="Bottom">
+                        VerticalAlignment="Top"
+                        MaxLines="2"
+                        Text="{x:Bind Title}"
+                        TextAlignment="Justify"
+                        TextTrimming="CharacterEllipsis"
+                        TextWrapping="Wrap" />
+                    <StackPanel Grid.Row="1" VerticalAlignment="Bottom">
                         <TextBlock
                             Margin="0,3,0,0"
                             VerticalAlignment="Bottom"
@@ -69,7 +63,6 @@
                     </StackPanel>
                     <StackPanel
                         Grid.Row="2"
-                        Margin="8,0,0,0"
                         VerticalAlignment="Bottom"
                         ToolTipService.ToolTip="{x:Bind Path=ViewAtDate}">
                         <TextBlock
@@ -114,7 +107,7 @@
                         DesiredWidth="550"
                         IsItemClickEnabled="True"
                         ItemClick="Video_ItemClick"
-                        ItemHeight="110"
+                        
                         ItemTemplate="{StaticResource VideoDataTemplate}"
                         ItemsSource="{x:Bind Path=m_viewModel.Videos, Mode=OneWay}"
                         SelectionMode="None"

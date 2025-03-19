@@ -141,7 +141,7 @@
                 MaxLength="233"
                 PlaceholderText="说点什么吧..."
                 TextChanged="txtContent_TextChanged"
-                TextWrapping="Wrap" />
+                TextWrapping="Wrap" TextAlignment="Justify" />
 
             <StackPanel
                 Margin="0,8"

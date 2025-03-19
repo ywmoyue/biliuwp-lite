@@ -44,7 +44,7 @@
             Grid.Row="1"
             Padding="12,0"
             CanLoadMore="True"
-            DesiredWidth="180"
+            DesiredWidth="200"
             IsItemClickEnabled="True"
             ItemClick="ListResult_ItemClick"
             ItemHeight="288"
@@ -56,7 +56,7 @@
             StretchContentForSingleRow="False">
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="season:SeasonIndexResultItemModel">
-                    <Grid>
+                    <Grid Background="{ThemeResource CardBackground}">
                         <Grid.RowDefinitions>
                             <RowDefinition />
                             <RowDefinition Height="24" />
@@ -103,6 +103,7 @@
                                     FontSize="12"
                                     Foreground="#FFFFFFFF"
                                     Text="{x:Bind Path=Badge}"
+                                    TextAlignment="Justify"
                                     TextTrimming="CharacterEllipsis"
                                     TextWrapping="Wrap" />
                             </Border>
@@ -113,6 +114,7 @@
                             Margin="4,4,4,0"
                             MaxLines="1"
                             Text="{x:Bind Path=Title}"
+                            TextAlignment="Justify"
                             TextTrimming="CharacterEllipsis"
                             TextWrapping="Wrap" />
                         <TextBlock
@@ -121,6 +123,7 @@
                             FontSize="12"
                             Foreground="Gray"
                             Text="{x:Bind Path=IndexShow}"
+                            TextAlignment="Justify"
                             TextTrimming="CharacterEllipsis"
                             TextWrapping="Wrap" />
                     </Grid>

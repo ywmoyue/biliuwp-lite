@@ -48,14 +48,14 @@
                                         FontSize="12"
                                         Foreground="Gray"
                                         Text="{x:Bind InfoStr}"
-                                        TextWrapping="Wrap"
+                                        TextWrapping="Wrap" TextAlignment="Justify"
                                         Visibility="{x:Bind ShowInfo}" />
                                     <TextBlock
                                         Margin="0,4,0,0"
                                         FontSize="12"
                                         Foreground="Gray"
                                         Text="{x:Bind Description}"
-                                        TextWrapping="Wrap"
+                                        TextWrapping="Wrap" TextAlignment="Justify"
                                         Visibility="{x:Bind ShowDescription}" />
                                 </StackPanel>
                             </muxc:Expander.Header>
@@ -108,7 +108,7 @@
                                                         MaxLines="2"
                                                         Text="{x:Bind Title}"
                                                         TextTrimming="CharacterEllipsis"
-                                                        TextWrapping="Wrap" />
+                                                        TextWrapping="Wrap" TextAlignment="Justify" />
                                                     <TextBlock
                                                         Margin="0,4,0,0"
                                                         FontSize="12"

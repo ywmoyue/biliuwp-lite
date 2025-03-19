@@ -63,8 +63,6 @@ namespace BiliLite.Pages
                 item.Keyword = par.Keyword;
                 item.Area = m_viewModel.Area.area;
             }
-
-            txtKeyword.Focus(FocusState.Keyboard);
         }
 
         private async void txtKeyword_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
@@ -277,6 +275,11 @@ namespace BiliLite.Pages
         {
             pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
             pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
+        }
+
+        private void SearchPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            txtKeyword.Focus(FocusState.Keyboard);
         }
     }
 }

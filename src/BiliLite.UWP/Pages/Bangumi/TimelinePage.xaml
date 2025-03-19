@@ -66,7 +66,7 @@
                         StretchContentForSingleRow="False">
                         <GridView.ItemTemplate>
                             <DataTemplate x:DataType="anime:AnimeTimelineItemModel">
-                                <Grid>
+                                <Grid Background="{ThemeResource CardBackground}">
                                     <Grid.RowDefinitions>
                                         <RowDefinition />
                                         <RowDefinition Height="24" />
@@ -106,6 +106,7 @@
                                         Margin="4,4,4,0"
                                         MaxLines="1"
                                         Text="{x:Bind Title}"
+                                        TextAlignment="Justify"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />
                                     <TextBlock
@@ -114,6 +115,7 @@
                                         FontSize="12"
                                         Foreground="Gray"
                                         Text="{x:Bind PubIndex}"
+                                        TextAlignment="Justify"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />
                                 </Grid>

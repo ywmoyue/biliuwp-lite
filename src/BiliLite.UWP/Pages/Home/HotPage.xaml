@@ -42,12 +42,11 @@
                             </MenuFlyout>
                         </Grid.ContextFlyout>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="180" />
+                            <ColumnDefinition Width="200" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Grid>
                             <toolkit:ImageEx
-                                Height="100"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -79,6 +78,7 @@
                                         FontSize="12"
                                         Foreground="{x:Bind Path=RcmdReason.TextColor, Converter={StaticResource ColorConvert}}"
                                         Text="{x:Bind Path=RcmdReason.Text}"
+                                        TextAlignment="Justify"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />
                                 </Border>
@@ -88,6 +88,7 @@
                             <TextBlock
                                 MaxLines="3"
                                 Text="{x:Bind Title}"
+                                TextAlignment="Justify"
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="Wrap" />
                             <StackPanel VerticalAlignment="Bottom">
@@ -110,6 +111,7 @@
                             Foreground="Gray"
                             MaxLines="2"
                             Text="{Binding desc}"
+                            TextAlignment="Justify"
                             TextTrimming="CharacterEllipsis"
                             TextWrapping="Wrap" />-->
                     </Grid>

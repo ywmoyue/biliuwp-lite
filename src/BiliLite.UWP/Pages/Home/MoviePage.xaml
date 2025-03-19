@@ -17,7 +17,7 @@
     mc:Ignorable="d">
     <Page.Resources>
         <DataTemplate x:Key="HotAnimeItem" x:DataType="homeModel:CinemaHomeHotItem">
-            <Grid>
+            <Grid Width="180" Background="{ThemeResource CardBackground}">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition Height="24" />
@@ -25,7 +25,6 @@
                 </Grid.RowDefinitions>
                 <Grid>
                     <toolkit:ImageEx
-                        MaxHeight="240"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -57,6 +56,7 @@
                             FontSize="12"
                             Foreground="#FFFFFFFF"
                             Text="{x:Bind Path=Badge}"
+                            TextAlignment="Justify"
                             TextTrimming="CharacterEllipsis"
                             TextWrapping="Wrap" />
                     </Border>
@@ -67,6 +67,7 @@
                     Margin="4,4,4,0"
                     MaxLines="1"
                     Text="{x:Bind Path=Title}"
+                    TextAlignment="Justify"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="Wrap" />
                 <TextBlock
@@ -75,12 +76,13 @@
                     FontSize="12"
                     Foreground="Gray"
                     Text="{x:Bind Path=Desc}"
+                    TextAlignment="Justify"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="Wrap" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="HotAnimeItemWide" x:DataType="homeModel:CinemaHomeHotItem">
-            <Grid>
+            <Grid Width="231" Background="{ThemeResource CardBackground}">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition Height="24" />
@@ -88,7 +90,6 @@
                 </Grid.RowDefinitions>
                 <Grid>
                     <toolkit:ImageEx
-                        Width="200"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -120,6 +121,7 @@
                             FontSize="12"
                             Foreground="#FFFFFFFF"
                             Text="{x:Bind Path=Badge}"
+                            TextAlignment="Justify"
                             TextTrimming="CharacterEllipsis"
                             TextWrapping="Wrap" />
                     </Border>
@@ -130,6 +132,7 @@
                     Margin="4,4,4,0"
                     MaxLines="1"
                     Text="{x:Bind Path=Title}"
+                    TextAlignment="Justify"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="Wrap" />
                 <TextBlock
@@ -138,6 +141,7 @@
                     FontSize="12"
                     Foreground="Gray"
                     Text="{x:Bind Path=Desc}"
+                    TextAlignment="Justify"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="Wrap" />
             </Grid>
@@ -226,7 +230,7 @@
                             </GridView.ItemsPanel>
                             <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="model:FollowSeasonModel">
-                                    <Grid>
+                                    <Grid Width="231" Background="{ThemeResource CardBackground}">
                                         <Grid.RowDefinitions>
                                             <RowDefinition />
                                             <RowDefinition Height="24" />
@@ -234,7 +238,6 @@
                                         </Grid.RowDefinitions>
                                         <Grid>
                                             <toolkit:ImageEx
-                                                Width="200"
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch"
                                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -266,6 +269,7 @@
                                                     FontSize="12"
                                                     Foreground="#FFFFFFFF"
                                                     Text="{x:Bind Badge}"
+                                                    TextAlignment="Justify"
                                                     TextTrimming="CharacterEllipsis"
                                                     TextWrapping="Wrap" />
                                             </Border>
@@ -276,6 +280,7 @@
                                             Margin="4,4,4,0"
                                             MaxLines="1"
                                             Text="{x:Bind Path=Title}"
+                                            TextAlignment="Justify"
                                             TextTrimming="CharacterEllipsis"
                                             TextWrapping="Wrap" />
                                         <TextBlock
@@ -284,6 +289,7 @@
                                             FontSize="12"
                                             Foreground="Gray"
                                             Text="{x:Bind Path=ProgressText}"
+                                            TextAlignment="Justify"
                                             TextTrimming="CharacterEllipsis"
                                             TextWrapping="Wrap" />
                                     </Grid>
@@ -305,7 +311,7 @@
                             SelectionMode="None">
                             <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="homeModel:CinemaHomeHotItem">
-                                    <Grid>
+                                    <Grid Width="180" Background="{ThemeResource CardBackground}">
                                         <Grid.RowDefinitions>
                                             <RowDefinition />
                                             <RowDefinition Height="24" />
@@ -313,7 +319,6 @@
                                         </Grid.RowDefinitions>
                                         <Grid>
                                             <toolkit:ImageEx
-                                                MaxHeight="240"
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch"
                                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -345,6 +350,7 @@
                                                     FontSize="12"
                                                     Foreground="#FFFFFFFF"
                                                     Text="{x:Bind Path=Badge}"
+                                                    TextAlignment="Justify"
                                                     TextTrimming="CharacterEllipsis"
                                                     TextWrapping="Wrap" />
                                             </Border>
@@ -355,6 +361,7 @@
                                             Margin="4,4,4,0"
                                             MaxLines="1"
                                             Text="{x:Bind Path=Title}"
+                                            TextAlignment="Justify"
                                             TextTrimming="CharacterEllipsis"
                                             TextWrapping="Wrap" />
                                         <TextBlock
@@ -363,6 +370,7 @@
                                             FontSize="12"
                                             Foreground="Gray"
                                             Text="{x:Bind Path=Hat}"
+                                            TextAlignment="Justify"
                                             TextTrimming="CharacterEllipsis"
                                             TextWrapping="Wrap" />
                                     </Grid>
@@ -515,7 +523,7 @@
                                         </controls:MyAdaptiveGridView.Header>
                                         <controls:MyAdaptiveGridView.ItemTemplate>
                                             <DataTemplate x:DataType="homeModel:CinemaHomeFallItemModel">
-                                                <Grid>
+                                                <Grid Background="{ThemeResource CardBackground}">
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition />
                                                         <RowDefinition Height="28" />
@@ -532,6 +540,7 @@
                                                         Margin="4"
                                                         MaxLines="1"
                                                         Text="{x:Bind Title}"
+                                                        TextAlignment="Justify"
                                                         TextTrimming="CharacterEllipsis"
                                                         TextWrapping="Wrap" />
                                                     <!--<TextBlock
@@ -542,7 +551,7 @@
                                                         MaxLines="2"
                                                         Text="{Binding desc}"
                                                         TextTrimming="CharacterEllipsis"
-                                                        TextWrapping="Wrap" />-->
+                                                        TextWrapping="Wrap" TextAlignment="Justify" />-->
                                                 </Grid>
                                             </DataTemplate>
                                         </controls:MyAdaptiveGridView.ItemTemplate>

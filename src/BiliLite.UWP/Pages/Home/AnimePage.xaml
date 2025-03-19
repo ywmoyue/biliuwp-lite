@@ -17,7 +17,7 @@
     mc:Ignorable="d">
     <Page.Resources>
         <DataTemplate x:Key="HotAnimeItem" x:DataType="anime:AnimeRankModel">
-            <Grid Width="180">
+            <Grid Width="180" Background="{ThemeResource CardBackground}">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition Height="Auto" />
@@ -56,6 +56,7 @@
                             FontSize="12"
                             Foreground="#FFFFFFFF"
                             Text="{x:Bind Path=Badge}"
+                            TextAlignment="Justify"
                             TextTrimming="CharacterEllipsis"
                             TextWrapping="Wrap" />
                     </Border>
@@ -65,6 +66,7 @@
                         Margin="5"
                         MaxLines="2"
                         Text="{x:Bind Path=Title}"
+                        TextAlignment="Justify"
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="Wrap" />
                     <TextBlock
@@ -73,6 +75,7 @@
                         FontSize="12"
                         Foreground="Gray"
                         Text="{x:Bind Path=IndexShow}"
+                        TextAlignment="Justify"
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="Wrap" />
                 </Grid>
@@ -161,7 +164,7 @@
                             </GridView.ItemsPanel>
                             <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="model:FollowSeasonModel">
-                                    <Grid MaxWidth="230">
+                                    <Grid Width="231" Background="{ThemeResource CardBackground}">
                                         <Grid.RowDefinitions>
                                             <RowDefinition />
                                             <RowDefinition Height="Auto" />
@@ -200,6 +203,7 @@
                                                     FontSize="12"
                                                     Foreground="#FFFFFFFF"
                                                     Text="{x:Bind Badge}"
+                                                    TextAlignment="Justify"
                                                     TextTrimming="CharacterEllipsis"
                                                     TextWrapping="Wrap" />
                                             </Border>
@@ -209,6 +213,7 @@
                                                 Margin="5"
                                                 MaxLines="1"
                                                 Text="{x:Bind Path=Title}"
+                                                TextAlignment="Justify"
                                                 TextTrimming="CharacterEllipsis"
                                                 TextWrapping="Wrap" />
                                             <TextBlock
@@ -217,6 +222,7 @@
                                                 FontSize="12"
                                                 Foreground="Gray"
                                                 Text="{x:Bind Path=ProgressText}"
+                                                TextAlignment="Justify"
                                                 TextTrimming="CharacterEllipsis"
                                                 TextWrapping="Wrap" />
                                         </Grid>
@@ -253,7 +259,7 @@
                             </GridView.ItemsPanel>
                             <GridView.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid Width="180">
+                                    <Grid Width="180" Background="{ThemeResource CardBackground}">
                                         <Grid.RowDefinitions>
                                             <RowDefinition />
                                             <RowDefinition Height="Auto" />
@@ -291,6 +297,7 @@
                                                 Margin="5"
                                                 MaxLines="2"
                                                 Text="{Binding Title}"
+                                                TextAlignment="Justify"
                                                 TextTrimming="CharacterEllipsis"
                                                 TextWrapping="Wrap" />
                                             <TextBlock
@@ -299,6 +306,7 @@
                                                 FontSize="12"
                                                 Foreground="Gray"
                                                 Text="{Binding PubIndex}"
+                                                TextAlignment="Justify"
                                                 TextTrimming="CharacterEllipsis"
                                                 TextWrapping="Wrap" />
 
@@ -393,7 +401,7 @@
                                         </controls:MyAdaptiveGridView.Header>
                                         <controls:MyAdaptiveGridView.ItemTemplate>
                                             <DataTemplate x:DataType="anime:AnimeFallItemModel">
-                                                <Grid>
+                                                <Grid Background="{ThemeResource CardBackground}">
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition />
                                                         <RowDefinition Height="Auto" />
@@ -408,6 +416,7 @@
                                                         <TextBlock
                                                             MaxLines="1"
                                                             Text="{x:Bind Title}"
+                                                            TextAlignment="Justify"
                                                             TextTrimming="CharacterEllipsis"
                                                             TextWrapping="Wrap" />
                                                         <!--<TextBlock
@@ -418,7 +427,7 @@
                                                             MaxLines="2"
                                                             Text="{Binding desc}"
                                                             TextTrimming="CharacterEllipsis"
-                                                            TextWrapping="Wrap" />-->
+                                                            TextWrapping="Wrap" TextAlignment="Justify" />-->
                                                     </Grid>
                                                 </Grid>
                                             </DataTemplate>

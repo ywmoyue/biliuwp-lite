@@ -278,15 +278,20 @@
                                                 FontSize="12"
                                                 Foreground="#FFFFFFFF"
                                                 Text="{x:Bind Path=m_viewModel.Detail.Badge, Mode=OneWay}"
+                                                TextAlignment="Justify"
                                                 TextTrimming="CharacterEllipsis"
                                                 TextWrapping="Wrap" />
                                         </Border>
                                     </Grid>
-                                    <StackPanel Grid.Column="1" Margin="8,0,0,0">
-                                        <TextBlock Text="{x:Bind Path=m_viewModel.Detail.Title, Mode=OneWay}" TextWrapping="Wrap" />
+                                    <StackPanel Grid.Column="1" Margin="10,5">
+                                        <TextBlock
+                                            Text="{x:Bind Path=m_viewModel.Detail.Title, Mode=OneWay}"
+                                            TextAlignment="Justify"
+                                            TextWrapping="Wrap" />
                                         <TextBlock
                                             Margin="0,2"
                                             Foreground="Gray"
+                                            TextAlignment="Justify"
                                             TextWrapping="Wrap"><Run Text="{x:Bind Path=m_viewModel.Detail.Stat.Play, Mode=OneWay}" /> <Run Text="{x:Bind Path=m_viewModel.Detail.Stat.Followers, Mode=OneWay}" /></TextBlock>
                                         <TextBlock
                                             Margin="0,2"
@@ -471,15 +476,18 @@
                                 <TextBlock
                                     IsTextSelectionEnabled="True"
                                     Text="{x:Bind Path=m_viewModel.Detail.Title, Mode=OneWay}"
+                                    TextAlignment="Justify"
                                     TextWrapping="Wrap" />
                                 <TextBlock
                                     IsTextSelectionEnabled="True"
                                     Text="{x:Bind Path=m_viewModel.Detail.Alias, Mode=OneWay}"
+                                    TextAlignment="Justify"
                                     TextWrapping="Wrap" />
                                 <TextBlock
                                     Margin="0,4"
                                     IsTextSelectionEnabled="True"
                                     Text="{x:Bind Path=m_viewModel.Detail.OriginName, Mode=OneWay}"
+                                    TextAlignment="Justify"
                                     TextWrapping="Wrap" />
                                 <TextBlock
                                     Margin="0,8"
@@ -490,6 +498,7 @@
                                     Foreground="Gray"
                                     IsTextSelectionEnabled="True"
                                     Text="{x:Bind Path=m_viewModel.Detail.Evaluate, Mode=OneWay}"
+                                    TextAlignment="Justify"
                                     TextWrapping="Wrap" />
                                 <TextBlock
                                     Margin="0,8"
@@ -556,6 +565,7 @@
                                     Foreground="Gray"
                                     IsTextSelectionEnabled="True"
                                     Text="{x:Bind Path=m_viewModel.Detail.Actor.Info, Mode=OneWay}"
+                                    TextAlignment="Justify"
                                     TextWrapping="Wrap" />
                                 <TextBlock
                                     Margin="0,8"
@@ -566,6 +576,7 @@
                                     Foreground="Gray"
                                     IsTextSelectionEnabled="True"
                                     Text="{x:Bind Path=m_viewModel.Detail.Staff.Info, Mode=OneWay}"
+                                    TextAlignment="Justify"
                                     TextWrapping="Wrap" />
 
                             </StackPanel>
@@ -630,6 +641,7 @@
                                                 Margin="44,8,0,8"
                                                 IsTextSelectionEnabled="True"
                                                 Text="{x:Bind Content}"
+                                                TextAlignment="Justify"
                                                 TextWrapping="Wrap" />
                                             <StackPanel Margin="44,0,0,0" Orientation="Horizontal">
                                                 <HyperlinkButton

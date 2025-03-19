@@ -18,11 +18,7 @@
         <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent" />
         <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White" />
         <DataTemplate x:Key="SeasonDataTemplate" x:DataType="model:FollowSeasonModel">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
+            <Grid Background="{ThemeResource CardBackground}">
                 <Grid.ContextFlyout>
                     <MenuFlyout>
                         <MenuFlyoutItem
@@ -46,10 +42,12 @@
                         <MenuFlyoutItem Command="{x:Bind CancelFollowCommand}" CommandParameter="{x:Bind}">取消收藏</MenuFlyoutItem>
                     </MenuFlyout>
                 </Grid.ContextFlyout>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
                 <Grid>
                     <toolkit:ImageEx
-                        Width="105"
-                        Height="140"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -67,35 +65,37 @@
                             FontSize="12"
                             Foreground="#FFFFFFFF"
                             Text="会员专享"
+                            TextAlignment="Justify"
                             TextTrimming="CharacterEllipsis"
                             TextWrapping="Wrap" />
                     </Border>
                 </Grid>
-
-                <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                <StackPanel Grid.Row="1" Margin="10">
                     <TextBlock
-                        Margin="0,4"
-                        MaxLines="2"
+                        Margin="0,0,0,5"
+                        MaxLines="1"
                         Text="{x:Bind Title}"
+                        TextAlignment="Justify"
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="Wrap" />
-                    <TextBlock
-                        Margin="0,4"
-                        FontSize="14"
-                        Foreground="Gray"
-                        Text="{x:Bind Path=NewEp.index_show}" />
-                    <TextBlock
-                        Margin="0,4"
-                        FontSize="14"
-                        Foreground="Gray"
-                        Text="{x:Bind Path=ProgressText}" />
+                    <Grid>
+                        <TextBlock
+                            FontSize="14"
+                            Foreground="Gray"
+                            Text="{x:Bind Path=ProgressText}" />
+                        <TextBlock
+                            HorizontalAlignment="Right"
+                            FontSize="14"
+                            Foreground="Gray"
+                            Text="{x:Bind Path=NewEp.index_show}" />
+                    </Grid>
                 </StackPanel>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Name="VideoDataTemplate" x:DataType="user:FavoriteItemViewModel">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="200" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.ContextFlyout>
@@ -105,18 +105,17 @@
                     </MenuFlyout>
                 </Grid.ContextFlyout>
                 <toolkit:ImageEx
-                    Width="120"
-                    Height="80"
-                    VerticalAlignment="Center"
                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png"
                     Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
                     Stretch="UniformToFill" />
 
                 <Grid Grid.Column="1" Margin="10,5">
                     <TextBlock
-                        MaxLines="2"
+                        MaxLines="1"
                         Text="{x:Bind Title}"
-                        TextTrimming="CharacterEllipsis" />
+                        TextAlignment="Justify"
+                        TextTrimming="CharacterEllipsis"
+                        TextWrapping="Wrap" />
                     <TextBlock
                         VerticalAlignment="Center"
                         FontSize="14"
@@ -144,7 +143,7 @@
         <DataTemplate x:Name="CollectedDataTemplate" x:DataType="user:FavoriteItemViewModel">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="200" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.ContextFlyout>
@@ -153,18 +152,17 @@
                     </MenuFlyout>
                 </Grid.ContextFlyout>
                 <toolkit:ImageEx
-                    Width="120"
-                    Height="80"
-                    VerticalAlignment="Center"
                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png"
                     Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
                     Stretch="UniformToFill" />
 
                 <Grid Grid.Column="1" Margin="10,5">
                     <TextBlock
-                        MaxLines="2"
+                        MaxLines="1"
                         Text="{x:Bind Title}"
-                        TextTrimming="CharacterEllipsis" />
+                        TextAlignment="Justify"
+                        TextTrimming="CharacterEllipsis"
+                        TextWrapping="Wrap" />
                     <TextBlock
                         VerticalAlignment="Center"
                         FontSize="14"
@@ -213,7 +211,6 @@
                                 DragItemsStarting="VideoFavGridView_DragItemsStarting"
                                 IsItemClickEnabled="True"
                                 ItemClick="VideoFavorite_ItemClick"
-                                ItemHeight="80"
                                 ItemTemplate="{StaticResource VideoDataTemplate}"
                                 ItemsSource="{x:Bind Path=m_videoViewModel.MyFavorite, Mode=TwoWay}"
                                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
@@ -249,7 +246,6 @@
                                 DesiredWidth="550"
                                 IsItemClickEnabled="True"
                                 ItemClick="VideoFavorite_ItemClick"
-                                ItemHeight="80"
                                 ItemTemplate="{StaticResource CollectedDataTemplate}"
                                 ItemsSource="{x:Bind Path=m_videoViewModel.CollectFavorite, Mode=OneWay}"
                                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
@@ -297,10 +293,9 @@
                         x:Name="BangumiSeason"
                         Padding="10,0"
                         CanLoadMore="{x:Bind Path=animeVM.ShowLoadMore, Mode=OneWay}"
-                        DesiredWidth="550"
+                        DesiredWidth="260"
                         IsItemClickEnabled="True"
                         ItemClick="BangumiSeason_ItemClick"
-                        ItemHeight="140"
                         ItemTemplate="{StaticResource SeasonDataTemplate}"
                         ItemsSource="{x:Bind Path=animeVM.Follows, Mode=OneWay}"
                         LoadMoreCommand="{x:Bind Path=animeVM.LoadMoreCommand, Mode=OneWay}"
@@ -401,10 +396,9 @@
                     <controls:MyAdaptiveGridView
                         Padding="10,0"
                         CanLoadMore="{x:Bind Path=cinemaVM.ShowLoadMore, Mode=OneWay}"
-                        DesiredWidth="550"
+                        DesiredWidth="260"
                         IsItemClickEnabled="True"
                         ItemClick="BangumiSeason_ItemClick"
-                        ItemHeight="140"
                         ItemTemplate="{StaticResource SeasonDataTemplate}"
                         ItemsSource="{x:Bind Path=cinemaVM.Follows, Mode=OneWay}"
                         LoadMoreCommand="{x:Bind Path=cinemaVM.LoadMoreCommand, Mode=OneWay}"

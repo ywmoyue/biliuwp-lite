@@ -211,10 +211,10 @@
                                     Grid.Row="1"
                                     Padding="10,5"
                                     CanLoadMore="{x:Bind Path=m_userSubmitVideoViewModel.SubmitVideoCanLoadMore, Mode=OneWay}"
-                                    DesiredWidth="600"
+                                    DesiredWidth="550"
                                     IsItemClickEnabled="True"
                                     ItemClick="SubmitVideo_ItemClick"
-                                    ItemHeight="100"
+                                    
                                     ItemsSource="{x:Bind Path=m_userSubmitVideoViewModel.SubmitVideoItems, Mode=OneWay}"
                                     LoadMoreBottomOffset="0"
                                     LoadMoreCommand="{x:Bind Path=m_userSubmitVideoViewModel.LoadMoreSubmitVideoCommand}"
@@ -234,7 +234,7 @@
                                                     </MenuFlyout>
                                                 </Grid.ContextFlyout>
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="180" />
+                                                    <ColumnDefinition Width="200" />
                                                     <ColumnDefinition />
                                                 </Grid.ColumnDefinitions>
                                                 <Grid>
@@ -264,6 +264,7 @@
                                                     <TextBlock
                                                         MaxLines="2"
                                                         Text="{x:Bind Title}"
+                                                        TextAlignment="Justify"
                                                         TextTrimming="CharacterEllipsis"
                                                         TextWrapping="Wrap" />
                                                     <StackPanel VerticalAlignment="Bottom">
@@ -281,7 +282,7 @@
                                                         MaxLines="2"
                                                         Text="{Binding desc}"
                                                         TextTrimming="CharacterEllipsis"
-                                                        TextWrapping="Wrap" />-->
+                                                        TextWrapping="Wrap" TextAlignment="Justify" />-->
                                                 </Grid>
                                             </Grid>
                                         </DataTemplate>
@@ -339,10 +340,10 @@
                                 <control:MyAdaptiveGridView
                                     Padding="10,5"
                                     CanLoadMore="{x:Bind Path=userSubmitArticleVM.SubmitArticleCanLoadMore, Mode=OneWay}"
-                                    DesiredWidth="600"
+                                    DesiredWidth="550"
                                     IsItemClickEnabled="True"
                                     ItemClick="SubmitArticle_ItemClick"
-                                    ItemHeight="100"
+                                    
                                     ItemsSource="{x:Bind Path=userSubmitArticleVM.SubmitArticleItems, Mode=OneWay}"
                                     LoadMoreBottomOffset="0"
                                     LoadMoreCommand="{x:Bind Path=userSubmitArticleVM.LoadMoreSubmitArticleCommand}"
@@ -369,7 +370,7 @@
                                         <DataTemplate x:DataType="modules1:SubmitArticleItemModel">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="160" />
+                                                    <ColumnDefinition Width="200" />
                                                     <ColumnDefinition />
                                                 </Grid.ColumnDefinitions>
                                                 <Grid>
@@ -398,6 +399,7 @@
                                                     <TextBlock
                                                         MaxLines="1"
                                                         Text="{x:Bind title}"
+                                                        TextAlignment="Justify"
                                                         TextTrimming="CharacterEllipsis"
                                                         TextWrapping="Wrap" />
                                                     <TextBlock
@@ -421,7 +423,7 @@
                                                     MaxLines="2"
                                                     Text="{Binding desc}"
                                                     TextTrimming="CharacterEllipsis"
-                                                    TextWrapping="Wrap" />-->
+                                                    TextWrapping="Wrap" TextAlignment="Justify" />-->
                                             </Grid>
                                         </DataTemplate>
                                     </toolkit:AdaptiveGridView.ItemTemplate>
@@ -464,10 +466,10 @@
                                 <control:MyAdaptiveGridView
                                     Padding="10,5"
                                     CanLoadMore="{x:Bind Path=m_userSubmitCollectionViewModel.SubmitCollectionCanLoadMore, Mode=OneWay}"
-                                    DesiredWidth="600"
+                                    DesiredWidth="550"
                                     IsItemClickEnabled="True"
                                     ItemClick="SubmitCollection_ItemClick"
-                                    ItemHeight="100"
+                                    
                                     ItemsSource="{x:Bind Path=m_userSubmitCollectionViewModel.SubmitCollectionItems, Mode=OneWay}"
                                     LoadMoreBottomOffset="0"
                                     LoadMoreCommand="{x:Bind Path=m_userSubmitCollectionViewModel.LoadMoreSubmitCollectionCommand}"
@@ -478,7 +480,7 @@
                                         <DataTemplate x:DataType="user:SubmitCollectionItemModel">
                                             <Grid Background="#00FFFFFF">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="180" />
+                                                    <ColumnDefinition Width="200" />
                                                     <ColumnDefinition />
                                                 </Grid.ColumnDefinitions>
                                                 <Grid>
@@ -518,6 +520,7 @@
                                                             Margin="0,0,0,0"
                                                             MaxLines="2"
                                                             Text="{x:Bind Title}"
+                                                            TextAlignment="Justify"
                                                             TextTrimming="CharacterEllipsis"
                                                             TextWrapping="Wrap" />
                                                     </StackPanel>
@@ -673,7 +676,7 @@
                                     Grid.Row="1"
                                     Padding="10,5"
                                     CanLoadMore="{x:Bind Path=followVM.CanLoadMore, Mode=OneWay}"
-                                    DesiredWidth="600"
+                                    DesiredWidth="550"
                                     IsItemClickEnabled="True"
                                     ItemClick="UserList_ItemClick"
                                     ItemTemplate="{StaticResource UserTpl}"
@@ -727,7 +730,7 @@
                                 <control:MyAdaptiveGridView
                                     Padding="10,5"
                                     CanLoadMore="{x:Bind Path=fansVM.CanLoadMore, Mode=OneWay}"
-                                    DesiredWidth="600"
+                                    DesiredWidth="550"
                                     IsItemClickEnabled="True"
                                     ItemClick="UserList_ItemClick"
                                     ItemTemplate="{StaticResource UserTpl}"
@@ -803,7 +806,6 @@
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition />
-
                                                     </Grid.ColumnDefinitions>
                                                     <Grid Margin="12,0" VerticalAlignment="Top">
                                                         <Ellipse
@@ -871,6 +873,7 @@
                                                             FontSize="14"
                                                             Opacity="0.8"
                                                             Text="{x:Bind Path=m_viewModel.UserSpaceInfo.Official.Title, Mode=OneWay}"
+                                                            TextAlignment="Justify"
                                                             TextWrapping="Wrap"
                                                             Visibility="{x:Bind Path=m_viewModel.UserSpaceInfo.Official.ShowOfficial, Mode=OneWay}" />
                                                         <TextBlock Margin="0,4" Foreground="{ThemeResource TextColor}">
@@ -882,6 +885,7 @@
                                                             Foreground="Gray"
                                                             IsTextSelectionEnabled="True"
                                                             Text="{x:Bind Path=m_viewModel.UserSpaceInfo.Sign, Mode=OneWay}"
+                                                            TextAlignment="Justify"
                                                             TextWrapping="Wrap" />
                                                     </StackPanel>
                                                 </Grid>

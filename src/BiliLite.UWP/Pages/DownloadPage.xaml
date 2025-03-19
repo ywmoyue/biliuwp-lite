@@ -281,7 +281,7 @@
                                                 MaxLines="2"
                                                 Text="{Binding Path=Title}"
                                                 TextTrimming="CharacterEllipsis"
-                                                TextWrapping="Wrap" />
+                                                TextWrapping="Wrap" TextAlignment="Justify" />
                                             <TextBlock
                                                 Margin="0,4,0,0"
                                                 FontSize="12"
@@ -428,7 +428,7 @@
                                                     MaxLines="2"
                                                     Text="{x:Bind Path=Title}"
                                                     TextTrimming="CharacterEllipsis"
-                                                    TextWrapping="Wrap" />
+                                                    TextWrapping="Wrap" TextAlignment="Justify" />
                                                 <StackPanel VerticalAlignment="Bottom">
                                                     <TextBlock
                                                         Margin="0,4,0,0"

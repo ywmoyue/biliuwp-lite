@@ -41,7 +41,7 @@
                         DesiredWidth="550"
                         IsItemClickEnabled="True"
                         ItemClick="AdaptiveGridView_ItemClick"
-                        ItemHeight="100"
+                        
                         ItemsSource="{x:Bind Path=Items, Mode=OneWay}"
                         OneRowModeEnabled="False"
                         PointerPressed="AdaptiveGridView_PointerPressed"
@@ -51,7 +51,7 @@
                             <DataTemplate x:DataType="season:SeasonRankItemModel">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="160" />
+                                        <ColumnDefinition Width="200" />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
                                     <Grid>
@@ -73,6 +73,7 @@
                                                 FontSize="12"
                                                 Foreground="#FFFFFFFF"
                                                 Text="{x:Bind Path=Badge}"
+                                                TextAlignment="Justify"
                                                 TextTrimming="CharacterEllipsis"
                                                 TextWrapping="Wrap" />
                                         </Border>
@@ -93,26 +94,25 @@
                                         </Border>
                                     </Grid>
 
-                                    <TextBlock
-                                        Grid.Column="1"
-                                        Margin="5"
-                                        MaxLines="2"
-                                        Text="{x:Bind Path=Title}"
-                                        TextTrimming="CharacterEllipsis"
-                                        TextWrapping="Wrap" />
-                                    <StackPanel
-                                        Grid.Column="1"
-                                        Margin="5"
-                                        VerticalAlignment="Bottom">
-                                        <TextBlock Margin="0,2,0,0" Foreground="Gray"><Run Text="{x:Bind Path=NewEp.IndexShow}" /></TextBlock>
+                                    <Grid Grid.Column="1" Margin="10,5">
                                         <TextBlock
-                                            Margin="0,2,0,0"
-                                            Foreground="Gray"
-                                            Visibility="{x:Bind Path=ShowDanmaku}">
-                                            弹幕:<Run Text="{x:Bind Path=Stat.Danmaku, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
-                                        <TextBlock Margin="0,2,0,0" Foreground="Gray">
-                                            综合评分<Run Text="{x:Bind Path=Pts}" /></TextBlock>
-                                    </StackPanel>
+                                            MaxLines="2"
+                                            Text="{x:Bind Path=Title}"
+                                            TextAlignment="Justify"
+                                            TextTrimming="CharacterEllipsis"
+                                            TextWrapping="Wrap" />
+                                        <StackPanel VerticalAlignment="Bottom">
+                                            <TextBlock Margin="0,2,0,0" Foreground="Gray"><Run Text="{x:Bind Path=NewEp.IndexShow}" /></TextBlock>
+                                            <TextBlock
+                                                Margin="0,2,0,0"
+                                                Foreground="Gray"
+                                                Visibility="{x:Bind Path=ShowDanmaku}">
+                                                弹幕:<Run Text="{x:Bind Path=Stat.Danmaku, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
+                                            <TextBlock Margin="0,2,0,0" Foreground="Gray">
+                                                综合评分<Run Text="{x:Bind Path=Pts}" /></TextBlock>
+                                        </StackPanel>
+                                    </Grid>
+
                                 </Grid>
                             </DataTemplate>
                         </controls:MyAdaptiveGridView.ItemTemplate>

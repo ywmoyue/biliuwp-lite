@@ -16,7 +16,6 @@
     <Page.Resources>
         <Flyout x:Name="Menu" Placement="RightEdgeAlignedBottom">
             <ListView
-                MaxWidth="385"
                 IsItemClickEnabled="True"
                 ItemClick="ListMenu_ItemClick"
                 ItemsSource="{Binding Path=ThreePointV2}"
@@ -31,7 +30,7 @@
                                     Foreground="Gray"
                                     Text="{x:Bind Subtitle}" />
                             </TextBlock>
-                            <controls:MyAdaptiveGridView
+                            <GridView
                                 Margin="0,8,0,0"
                                 Padding="0"
                                 IsItemClickEnabled="True"
@@ -41,16 +40,21 @@
                                 ScrollViewer.VerticalScrollMode="Disabled"
                                 SelectionMode="None"
                                 Visibility="{x:Bind Path=Reasons, Converter={StaticResource DisplayConvert}}">
-                                <controls:MyAdaptiveGridView.ItemTemplate>
+                                <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="recommend:RecommendThreePointV2ItemReasonsModel">
-                                        <TextBlock
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            Text="{x:Bind Name}"
-                                            TextTrimming="CharacterEllipsis" />
+                                        <Border Margin="0,-100" Background="{ThemeResource CardColor}">
+                                            <TextBlock
+                                                MinWidth="193"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Text="{x:Bind Name}"
+                                                TextAlignment="Center"
+                                                TextTrimming="CharacterEllipsis" />
+                                        </Border>
+
                                     </DataTemplate>
-                                </controls:MyAdaptiveGridView.ItemTemplate>
-                            </controls:MyAdaptiveGridView>
+                                </GridView.ItemTemplate>
+                            </GridView>
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -59,6 +63,7 @@
         <DataTemplate x:Key="Grid" x:DataType="recommend:RecommendItemModel">
             <Grid
                 x:Name="RecommendItemGrid"
+                Background="{ThemeResource CardBackground}"
                 ContextFlyout="{StaticResource Menu}"
                 PointerPressed="RecommendItemGrid_PointerPressed">
                 <Grid.RowDefinitions>
@@ -74,7 +79,7 @@
                         Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='200h'}"
                         Stretch="UniformToFill" />
                     <Grid
-                        Padding="8"
+                        Padding="10"
                         VerticalAlignment="Bottom"
                         Visibility="{x:Bind ShowCoverText}">
                         <Grid.Background>
@@ -115,9 +120,10 @@
                 </Grid>
                 <TextBlock
                     Grid.Row="1"
-                    Margin="4"
+                    Margin="10,4"
                     MaxLines="2"
                     Text="{x:Bind Title}"
+                    TextAlignment="Justify"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="Wrap" />
                 <Grid Grid.Row="2" Margin="10,0">
@@ -131,7 +137,10 @@
                             <Setter Target="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
                         </Style>
                     </Grid.Resources>
-                    <TextBlock Foreground="Gray" Text="{x:Bind BottomText}" />
+                    <TextBlock
+                        Margin="0,1,0,0"
+                        Foreground="Gray"
+                        Text="{x:Bind BottomText}" />
                     <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                         <Border
                             Background="{x:Bind Path=RcmdReasonStyle.BgColor, Converter={StaticResource ColorConvert}}"
@@ -154,11 +163,11 @@
         <DataTemplate x:Key="List" x:DataType="recommend:RecommendItemModel">
             <Grid ContextFlyout="{StaticResource Menu}" CornerRadius="{ThemeResource OverlayCornerRadius}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="200" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Grid Width="160">
-                    <toolkit:ImageEx
+                <Grid>
+                    <toolkit:ImageEx 
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -228,6 +237,7 @@
                     <TextBlock
                         MaxLines="3"
                         Text="{x:Bind Title}"
+                        TextAlignment="Justify"
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="Wrap" />
                     <StackPanel VerticalAlignment="Bottom">
@@ -254,7 +264,6 @@
                     CanLoadMore="True"
                     IsItemClickEnabled="True"
                     ItemClick="RecommendGridView_ItemClick"
-                    ItemHeight="240"
                     ItemsSource="{x:Bind Path=m_viewModel.Items, Mode=OneWay}"
                     LoadMoreBottomOffset="{x:Bind m_viewModel.ScrollViewLoadMoreBottomOffset}"
                     LoadMoreCommand="{x:Bind Path=m_viewModel.LoadMoreCommand}"

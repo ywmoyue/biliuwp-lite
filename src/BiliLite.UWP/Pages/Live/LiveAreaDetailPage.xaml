@@ -59,7 +59,7 @@
                     StretchContentForSingleRow="False">
                     <controls:MyAdaptiveGridView.ItemTemplate>
                         <DataTemplate x:DataType="modules:LiveRecommendItemModel">
-                            <Grid>
+                            <Grid Background="{ThemeResource CardBackground}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
                                     <RowDefinition Height="24" />
@@ -67,7 +67,6 @@
                                 </Grid.RowDefinitions>
                                 <Grid>
                                     <toolkit:ImageEx
-                                        Width="260"
                                         MinHeight="140"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
@@ -121,6 +120,7 @@
                                     Margin="4,4,4,0"
                                     MaxLines="1"
                                     Text="{x:Bind Path=title}"
+                                    TextAlignment="Justify"
                                     TextTrimming="CharacterEllipsis"
                                     TextWrapping="Wrap" />
                                 <TextBlock
@@ -129,6 +129,7 @@
                                     FontSize="12"
                                     Foreground="Gray"
                                     Text="{x:Bind Path=area_v2_name}"
+                                    TextAlignment="Justify"
                                     TextTrimming="CharacterEllipsis"
                                     TextWrapping="Wrap" />
                             </Grid>

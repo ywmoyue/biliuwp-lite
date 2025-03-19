@@ -17,7 +17,7 @@
         <DataTemplate x:Name="CollectedDataTemplate" x:DataType="user:FavoriteItemViewModel">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="200" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.ContextFlyout>
@@ -26,13 +26,11 @@
                     </MenuFlyout>
                 </Grid.ContextFlyout>
                 <toolkit:ImageEx
-                    Width="120"
-                    Height="80"
                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png"
                     Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
                     Stretch="UniformToFill" />
 
-                <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                <StackPanel Grid.Column="1" Margin="10,5">
                     <TextBlock
                         Margin="0,0,0,4"
                         MaxLines="2"
@@ -64,10 +62,10 @@
     </Page.Resources>
     <Grid>
         <controls:MyAdaptiveGridView
-            DesiredWidth="500"
+            DesiredWidth="550"
             IsItemClickEnabled="True"
             ItemClick="VideoFavorite_ItemClick"
-            ItemHeight="80"
+            
             ItemTemplate="{StaticResource CollectedDataTemplate}"
             ItemsSource="{x:Bind Path=m_viewModel.CollectedItems, Mode=OneWay}"
             SelectionMode="None"

@@ -49,7 +49,7 @@
                         DesiredWidth="550"
                         IsItemClickEnabled="True"
                         ItemClick="AdaptiveGridView_ItemClick"
-                        ItemHeight="100"
+                        
                         ItemsSource="{x:Bind Path=Items, Mode=OneWay}"
                         OneRowModeEnabled="False"
                         PointerPressed="AdaptiveGridView_PointerPressed"
@@ -58,7 +58,7 @@
                         <controls:MyAdaptiveGridView.Header>
                             <Grid Padding="8">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <FontIcon
@@ -85,13 +85,11 @@
                                         </MenuFlyout>
                                     </Grid.ContextFlyout>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="160" />
+                                        <ColumnDefinition Width="200" />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
                                     <Grid>
                                         <toolkit:ImageEx
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
                                             PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                             Source="{x:Bind Path=Pic, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
                                             Stretch="UniformToFill" />
@@ -127,9 +125,10 @@
                                     </Grid>
 
                                     <Grid Grid.Column="1" Margin="10,5">
-                                        <TextBlock
+                                        <TextBlock 
                                             MaxLines="2"
                                             Text="{x:Bind Path=Title}"
+                                            TextAlignment="Justify"
                                             TextTrimming="CharacterEllipsis"
                                             TextWrapping="Wrap" />
 

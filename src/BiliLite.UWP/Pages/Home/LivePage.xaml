@@ -92,7 +92,7 @@
                             </GridView.ItemsPanel>
                             <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="live1:LiveInfoModel">
-                                    <Grid>
+                                    <Grid Width="260" Background="{ThemeResource CardBackground}">
                                         <Grid.ContextFlyout>
                                             <MenuFlyout>
                                                 <MenuFlyoutItem Click="CancelLocalAttention_OnClick">取消本地关注</MenuFlyoutItem>
@@ -110,7 +110,6 @@
                                                 </MenuFlyout>
                                             </Grid.ContextFlyout>
                                             <toolkit:ImageEx
-                                                Width="260"
                                                 Height="160"
                                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                                 Source="{x:Bind Path=RoomInfo.Cover, Converter={StaticResource ImageSourceConvert}, ConverterParameter='460w_260h_1c'}"
@@ -151,6 +150,7 @@
                                             Margin="4,4,4,0"
                                             MaxLines="1"
                                             Text="{x:Bind Path=RoomInfo.Title}"
+                                            TextAlignment="Justify"
                                             TextTrimming="CharacterEllipsis"
                                             TextWrapping="Wrap" />
                                     </Grid>
@@ -183,7 +183,7 @@
                             </GridView.ItemsPanel>
                             <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="live:LiveFollowAnchorModel">
-                                    <Grid>
+                                    <Grid Width="260" Background="{ThemeResource CardBackground}">
                                         <Grid.RowDefinitions>
                                             <RowDefinition />
                                             <RowDefinition Height="24" />
@@ -191,7 +191,6 @@
                                         </Grid.RowDefinitions>
                                         <Grid>
                                             <toolkit:ImageEx
-                                                Width="260"
                                                 Height="160"
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch"
@@ -243,6 +242,7 @@
                                             Margin="4,4,4,0"
                                             MaxLines="1"
                                             Text="{x:Bind Path=title}"
+                                            TextAlignment="Justify"
                                             TextTrimming="CharacterEllipsis"
                                             TextWrapping="Wrap" />
                                         <TextBlock
@@ -251,6 +251,7 @@
                                             FontSize="12"
                                             Foreground="Gray"
                                             Text="{x:Bind Path=area_v2_name}"
+                                            TextAlignment="Justify"
                                             TextTrimming="CharacterEllipsis"
                                             TextWrapping="Wrap" />
                                     </Grid>
@@ -297,7 +298,7 @@
                                         </GridView.ItemsPanel>
                                         <GridView.ItemTemplate>
                                             <DataTemplate x:DataType="home:LiveHomeItemsItemModel">
-                                                <Grid>
+                                                <Grid Width="260" Background="{ThemeResource CardBackground}">
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition />
                                                         <RowDefinition Height="24" />
@@ -305,7 +306,6 @@
                                                     </Grid.RowDefinitions>
                                                     <Grid>
                                                         <toolkit:ImageEx
-                                                            Width="260"
                                                             Height="160"
                                                             HorizontalAlignment="Stretch"
                                                             VerticalAlignment="Stretch"
@@ -357,6 +357,7 @@
                                                         Margin="4,4,4,0"
                                                         MaxLines="1"
                                                         Text="{x:Bind Path=Title}"
+                                                        TextAlignment="Justify"
                                                         TextTrimming="CharacterEllipsis"
                                                         TextWrapping="Wrap" />
                                                     <TextBlock
@@ -365,6 +366,7 @@
                                                         FontSize="12"
                                                         Foreground="Gray"
                                                         Text="{x:Bind Path=AreaV2Name}"
+                                                        TextAlignment="Justify"
                                                         TextTrimming="CharacterEllipsis"
                                                         TextWrapping="Wrap" />
                                                 </Grid>

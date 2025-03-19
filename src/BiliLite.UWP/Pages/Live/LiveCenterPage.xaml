@@ -54,10 +54,10 @@
                     <control:MyAdaptiveGridView
                         Padding="12,8"
                         CanLoadMore="False"
-                        DesiredWidth="600"
+                        DesiredWidth="550"
                         IsItemClickEnabled="True"
                         ItemClick="AttentionlList_ItemClick"
-                        ItemHeight="100"
+                        
                         ItemsSource="{x:Bind Path=liveAttentionVM.Follow, Mode=OneWay}"
                         OneRowModeEnabled="False"
                         SelectionMode="None"
@@ -66,7 +66,7 @@
                             <DataTemplate x:DataType="modules:LiveFollowAnchorModel">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="160" />
+                                        <ColumnDefinition Width="200" />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
                                     <toolkit:ImageEx
@@ -76,7 +76,7 @@
                                         Source="{x:Bind Path=cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
                                         Stretch="UniformToFill" />
 
-                                    <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                    <StackPanel Grid.Column="1" Margin="10,5">
                                         <TextBlock
                                             MaxLines="1"
                                             Text="{x:Bind title}"
@@ -94,6 +94,7 @@
                                         Foreground="Gray"
                                         MaxLines="2"
                                         Text="{Binding desc}"
+                                        TextAlignment="Justify"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />-->
                                 </Grid>
@@ -125,7 +126,7 @@
                     <control:MyAdaptiveGridView
                         Padding="12,8"
                         CanLoadMore="{x:Bind Path=liveAttentionUnLiveVM.CanLoadMore, Mode=OneWay}"
-                        DesiredWidth="600"
+                        DesiredWidth="550" 
                         IsItemClickEnabled="True"
                         ItemClick="UnLiveList_ItemClick"
                         ItemsSource="{x:Bind Path=liveAttentionUnLiveVM.Items, Mode=OneWay}"
@@ -149,7 +150,7 @@
                                     </Ellipse>
                                     <StackPanel
                                         Grid.Column="1"
-                                        Margin="8,0,0,0"
+                                        Margin="10,5"
                                         VerticalAlignment="Center">
                                         <TextBlock
                                             MaxLines="1"
@@ -167,6 +168,7 @@
                                         Foreground="Gray"
                                         MaxLines="2"
                                         Text="{Binding desc}"
+                                        TextAlignment="Justify"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />-->
                                 </Grid>
@@ -207,10 +209,10 @@
                     <control:MyAdaptiveGridView
                         Padding="12,8"
                         CanLoadMore="{x:Bind Path=liveCenterHistoryVM.CanLoadMore, Mode=OneWay}"
-                        DesiredWidth="600"
+                        DesiredWidth="550"
                         IsItemClickEnabled="True"
                         ItemClick="HistoryList_ItemClick"
-                        ItemHeight="100"
+                        
                         ItemsSource="{x:Bind Path=liveCenterHistoryVM.Items, Mode=OneWay}"
                         LoadMoreBottomOffset="0"
                         LoadMoreCommand="{x:Bind Path=liveCenterHistoryVM.LoadMoreCommand}"
@@ -221,7 +223,7 @@
                             <DataTemplate x:DataType="modules:LiveHistoryItemModel">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="160" />
+                                        <ColumnDefinition Width="200" />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
                                     <toolkit:ImageEx
@@ -230,10 +232,11 @@
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                         Source="{x:Bind Path=cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
                                         Stretch="UniformToFill" />
-                                    <Grid Grid.Column="1" Margin="8,0,0,0">
+                                    <Grid Grid.Column="1" Margin="10,5">
                                         <TextBlock
                                             MaxLines="2"
                                             Text="{x:Bind title}"
+                                            TextAlignment="Justify"
                                             TextTrimming="CharacterEllipsis"
                                             TextWrapping="Wrap" />
                                         <StackPanel VerticalAlignment="Bottom">
@@ -250,7 +253,7 @@
                                         MaxLines="2"
                                         Text="{Binding desc}"
                                         TextTrimming="CharacterEllipsis"
-                                        TextWrapping="Wrap" />-->
+                                        TextWrapping="Wrap" TextAlignment="Justify" />-->
                                 </Grid>
                             </DataTemplate>
                         </toolkit:AdaptiveGridView.ItemTemplate>

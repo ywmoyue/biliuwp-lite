@@ -26,7 +26,7 @@
                 </Grid.ContextFlyout>
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="160" />
+                    <ColumnDefinition Width="200" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid>
@@ -64,6 +64,7 @@
                     <TextBlock
                         MaxLines="2"
                         Text="{x:Bind Path=Video.Title}"
+                        TextAlignment="Justify"
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="Wrap" />
                     <Grid VerticalAlignment="Bottom">
@@ -106,7 +107,7 @@
                 </Grid.ContextFlyout>
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="160" />
+                    <ColumnDefinition Width="200" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid>
@@ -142,10 +143,11 @@
                         </StackPanel>
                     </Grid>
                 </Grid>
-                <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                <StackPanel Grid.Column="1" Margin="10,5">
                     <TextBlock
                         MaxLines="2"
                         Text="{x:Bind Path=UgcSeason.Title}"
+                        TextAlignment="Justify"
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="Wrap" />
                     <TextBlock
@@ -158,7 +160,7 @@
         <DataTemplate x:Key="DynamicSeason" x:DataType="dynamic:DynamicItemModel">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="160" />
+                    <ColumnDefinition Width="200" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid>
@@ -182,10 +184,11 @@
                     </Border>
 
                 </Grid>
-                <Grid Grid.Column="1" Margin="8,0,0,0">
+                <Grid Grid.Column="1" Margin="10,5">
                     <TextBlock
                         MaxLines="2"
                         Text="{x:Bind Path=Season.Season.Title}"
+                        TextAlignment="Justify"
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="Wrap" />
                     <StackPanel VerticalAlignment="Bottom">
@@ -208,7 +211,7 @@
                 x:Name="DynGridView"
                 Padding="12,0"
                 CanLoadMore="True"
-                DesiredWidth="700"
+                DesiredWidth="550" 
                 IsItemClickEnabled="True"
                 ItemClick="AdaptiveGridView_ItemClick"
                 ItemTemplateSelector="{x:Bind Path=m_viewModel.DynamicItemDataTemplateSelector, Mode=OneWay}"

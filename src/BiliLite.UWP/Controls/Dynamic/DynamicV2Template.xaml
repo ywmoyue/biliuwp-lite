@@ -96,6 +96,7 @@
                                     Foreground="{ThemeResource TextColor}"
                                     MaxLines="2"
                                     Text="{Binding Path=Dynamic.DynArchive.Title}"
+                                    TextAlignment="Justify"
                                     TextTrimming="CharacterEllipsis"
                                     TextWrapping="Wrap" />
                                 <TextBlock
@@ -170,6 +171,7 @@
                                     Foreground="{ThemeResource TextColor}"
                                     MaxLines="2"
                                     Text="{Binding Path=Dynamic.DynPgc.Title}"
+                                    TextAlignment="Justify"
                                     TextTrimming="CharacterEllipsis"
                                     TextWrapping="Wrap" />
                             </StackPanel>
@@ -226,6 +228,7 @@
                                     Foreground="{ThemeResource TextColor}"
                                     MaxLines="2"
                                     Text="{Binding Path=Dynamic.DynArchive.Title}"
+                                    TextAlignment="Justify"
                                     TextTrimming="CharacterEllipsis"
                                     TextWrapping="Wrap" />
                             </StackPanel>
@@ -290,6 +293,7 @@
                                 Foreground="{ThemeResource TextColor}"
                                 MaxLines="2"
                                 Text="{Binding Path=Dynamic.DynMusic.Title}"
+                                TextAlignment="Justify"
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="Wrap" />
                             <TextBlock
@@ -381,6 +385,7 @@
                                 Foreground="{ThemeResource TextColor}"
                                 MaxLines="2"
                                 Text="{Binding Path=Extend.OrigDesc[0].Text}"
+                                TextAlignment="Justify"
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="Wrap" />
                         </StackPanel>
@@ -431,6 +436,7 @@
                                 Foreground="{ThemeResource TextColor}"
                                 MaxLines="2"
                                 Text="{Binding Path=Extend.OrigDesc[0].Text}"
+                                TextAlignment="Justify"
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="Wrap" />
                         </StackPanel>
@@ -581,6 +587,7 @@
                                 Foreground="{ThemeResource TextColor}"
                                 MaxLines="2"
                                 Text="{Binding Path=Dynamic.DynCommon.Title}"
+                                TextAlignment="Justify"
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="Wrap" />
                             <TextBlock
@@ -636,6 +643,7 @@
                                 Foreground="{ThemeResource TextColor}"
                                 MaxLines="2"
                                 Text="{Binding Path=LiveInfo.PlayInfo.Title}"
+                                TextAlignment="Justify"
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="Wrap" />
                             <TextBlock
@@ -712,6 +720,7 @@
                                 Foreground="{ThemeResource TextColor}"
                                 MaxLines="2"
                                 Text="{Binding Path=Dynamic.DynCourBatchUp.Title}"
+                                TextAlignment="Justify"
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="Wrap" />
                             <TextBlock
@@ -750,6 +759,7 @@
                         Foreground="{ThemeResource TextColor}"
                         MaxLines="2"
                         Text="{Binding Path=Season.Title}"
+                        TextAlignment="Justify"
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="Wrap" />
                     <TextBlock
@@ -804,6 +814,7 @@
                                     Foreground="{ThemeResource TextColor}"
                                     MaxLines="2"
                                     Text="{Binding Path=CustomArticle.Title}"
+                                    TextAlignment="Justify"
                                     TextTrimming="CharacterEllipsis"
                                     TextWrapping="Wrap" />
                             </StackPanel>
@@ -821,7 +832,7 @@
             BorderThickness="1"
             CornerRadius="{StaticResource OverlayCornerRadius}">
             <StackPanel Margin="12">
-                <TextBlock TextWrapping="Wrap">无法显示此动态,请点击以下按钮复制内容给开发者适配</TextBlock>
+                <TextBlock TextAlignment="Justify" TextWrapping="Wrap">无法显示此动态,请点击以下按钮复制内容给开发者适配</TextBlock>
                 <Button
                     Margin="0,0,8,0"
                     Command="{Binding Parent.CopyDynCommand}"

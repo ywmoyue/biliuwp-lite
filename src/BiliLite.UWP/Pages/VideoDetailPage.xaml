@@ -439,6 +439,7 @@
                                             Grid.Column="1"
                                             FontSize="14"
                                             Text="{x:Bind Path=m_viewModel.VideoInfo.ArgueMsg, Mode=OneWay}"
+                                            TextAlignment="Justify"
                                             TextWrapping="Wrap" />
                                     </Grid>
                                 </Border>
@@ -447,6 +448,7 @@
                                     FontSize="18"
                                     RightTapped="TitleText_RightTapped"
                                     Text="{x:Bind Path=m_viewModel.VideoInfo.Title, Mode=OneWay}"
+                                    TextAlignment="Justify"
                                     TextWrapping="Wrap" />
                                 <TextBlock
                                     Margin="0,4,0,0"
@@ -468,9 +470,9 @@
                                     Visibility="{x:Bind Path=m_viewModel.VideoInfo.ShowStaff, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition />
-                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
                                         <Ellipse Width="36" Height="36">
                                             <Ellipse.Fill>
@@ -508,9 +510,9 @@
                                                     Foreground="{ThemeResource TextColor}">
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="auto" />
+                                                            <ColumnDefinition Width="Auto" />
                                                             <ColumnDefinition />
-                                                            <ColumnDefinition Width="auto" />
+                                                            <ColumnDefinition Width="Auto" />
                                                         </Grid.ColumnDefinitions>
                                                         <Ellipse Width="36" Height="36">
                                                             <Ellipse.Fill>
@@ -574,6 +576,7 @@
                                         RightTapped="txtDesc_RightTapped"
                                         Tapped="txtDesc_Tapped"
                                         Text="{x:Bind Path=m_viewModel.VideoInfo.Desc, Mode=OneWay}"
+                                        TextAlignment="Justify"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap"
                                         Visibility="Collapsed" />
@@ -681,6 +684,7 @@
                                             <TextBlock
                                                 MaxLines="2"
                                                 Text="{x:Bind Title}"
+                                                TextAlignment="Justify"
                                                 TextTrimming="CharacterEllipsis"
                                                 TextWrapping="Wrap" />
                                             <TextBlock

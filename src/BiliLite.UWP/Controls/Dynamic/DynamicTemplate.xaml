@@ -87,6 +87,7 @@
                                 Foreground="{ThemeResource TextColor}"
                                 MaxLines="2"
                                 Text="{Binding Path=OneRowInfo.Title}"
+                                TextAlignment="Justify"
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="Wrap" />
                             <TextBlock
@@ -95,6 +96,7 @@
                                 Foreground="Gray"
                                 MaxLines="2"
                                 Text="{Binding Path=OneRowInfo.Desc}"
+                                TextAlignment="Justify"
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="Wrap"
                                 Visibility="Collapsed" />
@@ -246,11 +248,12 @@
             BorderThickness="0"
             CornerRadius="{StaticResource OverlayCornerRadius}">
             <StackPanel Margin="12">
-                <TextBlock TextWrapping="Wrap">无法显示此动态,请将以下内容复制给开发者适配</TextBlock>
+                <TextBlock TextAlignment="Justify" TextWrapping="Wrap">无法显示此动态,请将以下内容复制给开发者适配</TextBlock>
                 <TextBlock
                     Margin="0,0,8,0"
                     IsTextSelectionEnabled="True"
                     Text="{Binding Path=ContentStr}"
+                    TextAlignment="Justify"
                     TextWrapping="Wrap" />
             </StackPanel>
         </Border>
@@ -282,6 +285,7 @@
                             Foreground="{ThemeResource TextColor}"
                             MaxLines="2"
                             Text="{Binding Path=ContentDisplayInfo.Title}"
+                            TextAlignment="Justify"
                             TextTrimming="CharacterEllipsis"
                             TextWrapping="Wrap" />
                         <TextBlock

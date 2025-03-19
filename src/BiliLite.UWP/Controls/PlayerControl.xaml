@@ -71,10 +71,12 @@
                                                     <TextBlock
                                                         Grid.Column="1"
                                                         Text="{Binding TitlePart}"
+                                                        TextAlignment="Justify"
                                                         TextWrapping="Wrap" />
                                                 </Grid>
                                                 <TextBlock
                                                     Text="{Binding title}"
+                                                    TextAlignment="Justify"
                                                     TextWrapping="Wrap"
                                                     ToolTipService.ToolTip="{Binding title}"
                                                     Visibility="{Binding ShowTitlePart, Converter={StaticResource DisplayConvert}}" />
@@ -407,7 +409,10 @@
                                         </Button>
                                     </StackPanel>
 
-                                    <TextBlock x:Name="txtInfo" TextWrapping="Wrap" />
+                                    <TextBlock
+                                        x:Name="txtInfo"
+                                        TextAlignment="Justify"
+                                        TextWrapping="Wrap" />
                                 </StackPanel>
                             </ScrollViewer>
                         </PivotItem>
@@ -1263,9 +1268,12 @@
                                             <Image Width="120" Source="{x:Bind ImgUrl}" />
                                             <StackPanel
                                                 Width="172"
-                                                Margin="8,0,0,0"
+                                                Margin="10,5"
                                                 Orientation="Vertical">
-                                                <TextBlock Text="{x:Bind Content}" TextWrapping="Wrap" />
+                                                <TextBlock
+                                                    Text="{x:Bind Content}"
+                                                    TextAlignment="Justify"
+                                                    TextWrapping="Wrap" />
                                                 <TextBlock>
                                                     <Run Text="{x:Bind From, Converter={StaticResource ProgressToTimeConverter}}" />
                                                     -<Run Text="{x:Bind To, Converter={StaticResource ProgressToTimeConverter}}" />

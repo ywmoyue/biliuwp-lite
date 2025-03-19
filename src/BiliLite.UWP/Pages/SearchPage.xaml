@@ -13,7 +13,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:viewModel="using:BiliLite.ViewModels.Search"
-    Background="Transparent"
+    Background="Transparent" Loaded="SearchPage_Loaded"
     SizeChanged="SearchPage_OnSizeChanged"
     mc:Ignorable="d">
     <Page.Resources>
@@ -62,10 +62,10 @@
                     Grid.Row="1"
                     Grid.ColumnSpan="2"
                     Padding="8"
-                    DesiredWidth="600"
+                    DesiredWidth="550"
                     IsItemClickEnabled="True"
                     ItemClick="Search_ItemClick"
-                    ItemHeight="100"
+                    
                     ItemsSource="{x:Bind Path=Videos, Mode=OneWay}"
                     PointerPressed="Search_ItemPressed"
                     SelectionMode="None"
@@ -74,13 +74,11 @@
                         <DataTemplate x:DataType="model:SearchVideoItem">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="200" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Grid>
                                     <toolkit:ImageEx
-                                        Width="160"
-                                        Height="100"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -100,10 +98,11 @@
                                             Text="{x:Bind DurationShow}" />
                                     </Grid>
                                 </Grid>
-                                <Grid Grid.Column="1" Margin="8,0,0,0">
+                                <Grid Grid.Column="1" Margin="10,5">
                                     <TextBlock
                                         MaxLines="2"
                                         Text="{x:Bind title}"
+                                        TextAlignment="Justify"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />
                                     <StackPanel VerticalAlignment="Bottom">
@@ -157,10 +156,10 @@
                 <control:MyAdaptiveGridView
                     Grid.Row="1"
                     Padding="8"
-                    DesiredWidth="600"
+                    DesiredWidth="550"
                     IsItemClickEnabled="True"
                     ItemClick="Search_ItemClick"
-                    ItemHeight="140"
+                    
                     ItemsSource="{x:Bind Path=Animes, Mode=OneWay}"
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
@@ -168,13 +167,11 @@
                         <DataTemplate x:DataType="model:SearchAnimeItem">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="200" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Grid>
                                     <toolkit:ImageEx
-                                        Width="105"
-                                        Height="140"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -192,15 +189,17 @@
                                             FontSize="12"
                                             Foreground="#FFFFFFFF"
                                             Text="会员专享"
+                                            TextAlignment="Justify"
                                             TextTrimming="CharacterEllipsis"
                                             TextWrapping="Wrap" />
                                     </Border>
                                 </Grid>
-                                <Grid Grid.Column="1" Margin="8,0,0,0">
+                                <Grid Grid.Column="1" Margin="10,5">
                                     <TextBlock
                                         Margin="0,0,0,4"
                                         MaxLines="2"
                                         Text="{x:Bind title}"
+                                        TextAlignment="Justify"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />
                                     <StackPanel VerticalAlignment="Bottom">
@@ -231,7 +230,7 @@
                                             MaxLines="2"
                                             Text="{x:Bind Path=desc}"
                                             TextTrimming="CharacterEllipsis"
-                                            TextWrapping="Wrap" />-->
+                                            TextWrapping="Wrap" TextAlignment="Justify" />-->
                                     </StackPanel>
                                 </Grid>
                             </Grid>
@@ -302,7 +301,7 @@
                 <control:MyAdaptiveGridView
                     Grid.Row="1"
                     Padding="8"
-                    DesiredWidth="600"
+                    DesiredWidth="550"
                     IsItemClickEnabled="True"
                     ItemClick="Search_ItemClick"
                     ItemHeight="72"
@@ -333,27 +332,39 @@
                                         VerticalAlignment="Bottom"
                                         Source="{x:Bind Path=Verify}" />
                                 </Grid>
-                                <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                <Grid Grid.Column="1" Margin="8,0">
                                     <TextBlock
                                         Margin="0,0,0,4"
                                         Text="{x:Bind uname}"
                                         TextTrimming="CharacterEllipsis" />
                                     <TextBlock
                                         Margin="0,0,0,4"
+                                        VerticalAlignment="Center"
                                         FontSize="14"
                                         Foreground="Gray">
                                         稿件:<Run Text="{x:Bind Path=videos, Converter={StaticResource NumberToStringConvert}}" />
                                         粉丝:<Run Text="{x:Bind Path=fans, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
                                     <TextBlock
                                         Margin="0,0,0,4"
+                                        VerticalAlignment="Bottom"
                                         FontSize="14"
                                         Foreground="Gray"
                                         MaxLines="1"
                                         Text="{x:Bind sign}"
-                                        TextTrimming="CharacterEllipsis" />
+                                        TextAlignment="Justify"
+                                        TextTrimming="CharacterEllipsis"
+                                        TextWrapping="Wrap" />
 
-                                    <!--<TextBlock Margin="0" MaxLines="2" FontSize="14" Foreground="Gray" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=desc}"></TextBlock>-->
-                                </StackPanel>
+                                    <!--<TextBlock
+                                        Margin="0"
+                                        FontSize="14"
+                                        Foreground="Gray"
+                                        MaxLines="2"
+                                        Text="{x:Bind Path=desc}"
+                                        TextAlignment="Justify"
+                                        TextTrimming="CharacterEllipsis"
+                                        TextWrapping="Wrap" />-->
+                                </Grid>
                             </Grid>
                         </DataTemplate>
                     </control:MyAdaptiveGridView.ItemTemplate>
@@ -410,7 +421,7 @@
                     StretchContentForSingleRow="False">
                     <control:MyAdaptiveGridView.ItemTemplate>
                         <DataTemplate x:DataType="model:SearchLiveRoomItem">
-                            <Grid>
+                            <Grid Background="{ThemeResource CardBackground}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
                                     <RowDefinition Height="24" />
@@ -442,7 +453,9 @@
                                         Grid.Column="1"
                                         Margin="4,24,4,0"
                                         Text="{x:Bind title}"
-                                        TextTrimming="CharacterEllipsis" />
+                                        TextAlignment="Justify"
+                                        TextTrimming="CharacterEllipsis"
+                                        TextWrapping="Wrap" />
                                 </Grid>
 
                                 <Grid Grid.Row="2" Margin="8,4">
@@ -455,6 +468,7 @@
                                         FontSize="12"
                                         Foreground="Gray"
                                         Text="{x:Bind uname}"
+                                        TextAlignment="Justify"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />
                                     <TextBlock
@@ -535,10 +549,10 @@
                     Grid.Row="1"
                     Grid.ColumnSpan="2"
                     Padding="8"
-                    DesiredWidth="600"
+                    DesiredWidth="550"
                     IsItemClickEnabled="True"
                     ItemClick="Search_ItemClick"
-                    ItemHeight="100"
+                    
                     ItemsSource="{x:Bind Path=Articles, Mode=OneWay}"
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
@@ -546,13 +560,11 @@
                         <DataTemplate x:DataType="model:SearchArticleItem">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="200" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Grid>
                                     <toolkit:ImageEx
-                                        Width="160"
-                                        Height="100"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -560,11 +572,12 @@
                                         Stretch="UniformToFill" />
 
                                 </Grid>
-                                <Grid Grid.Column="1" Margin="8,0,0,0">
+                                <Grid Grid.Column="1" Margin="10,5">
                                     <TextBlock
                                         Margin="0,0,0,4"
                                         MaxLines="2"
                                         Text="{x:Bind title}"
+                                        TextAlignment="Justify"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />
                                     <StackPanel VerticalAlignment="Bottom">
@@ -631,10 +644,10 @@
                     Grid.Row="1"
                     Grid.ColumnSpan="2"
                     Padding="8"
-                    DesiredWidth="600"
+                    DesiredWidth="550"
                     IsItemClickEnabled="True"
                     ItemClick="Search_ItemClick"
-                    ItemHeight="100"
+                    
                     ItemsSource="{x:Bind Path=Topics, Mode=OneWay}"
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
@@ -642,13 +655,11 @@
                         <DataTemplate x:DataType="model:SearchTopicItem">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="200" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Grid>
                                     <toolkit:ImageEx
-                                        Width="80"
-                                        Height="100"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -656,11 +667,12 @@
                                         Stretch="UniformToFill" />
 
                                 </Grid>
-                                <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                <StackPanel Grid.Column="1" Margin="10,5">
                                     <TextBlock
                                         Margin="0,0,0,4"
                                         MaxLines="2"
                                         Text="{x:Bind title}"
+                                        TextAlignment="Justify"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />
                                     <TextBlock
@@ -669,6 +681,7 @@
                                         Foreground="Gray"
                                         MaxLines="2"
                                         Text="{x:Bind description}"
+                                        TextAlignment="Justify"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />
                                     <TextBlock

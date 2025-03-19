@@ -113,7 +113,7 @@
                                                 MaxLines="1"
                                                 Text="{x:Bind Path=title}"
                                                 TextTrimming="CharacterEllipsis"
-                                                TextWrapping="Wrap" />
+                                                TextWrapping="Wrap" TextAlignment="Justify" />
                                             <TextBlock
                                                 Grid.Row="2"
                                                 Margin="4,0,4,4"
@@ -121,7 +121,7 @@
                                                 Foreground="Gray"
                                                 Text="{x:Bind Path=area_v2_name}"
                                                 TextTrimming="CharacterEllipsis"
-                                                TextWrapping="Wrap" />
+                                                TextWrapping="Wrap" TextAlignment="Justify" />
                                         </Grid>
                                     </DataTemplate>
                                 </controls:MyAdaptiveGridView.ItemTemplate>

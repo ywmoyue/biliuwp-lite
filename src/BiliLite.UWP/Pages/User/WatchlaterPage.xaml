@@ -16,7 +16,7 @@
         <DataTemplate x:Key="VideoDataTemplate" x:DataType="user:WatchlaterItemModel">
             <Grid Background="#00FFFFFF">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="140" />
+                    <ColumnDefinition Width="200" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.ContextFlyout>
@@ -37,6 +37,7 @@
                     <TextBlock
                         MaxLines="2"
                         Text="{x:Bind title}"
+                        TextAlignment="Justify"
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="WrapWholeWords" />
 
@@ -80,7 +81,7 @@
                 DesiredWidth="550"
                 IsItemClickEnabled="True"
                 ItemClick="Video_ItemClick"
-                ItemHeight="90"
+                
                 ItemTemplate="{StaticResource VideoDataTemplate}"
                 ItemsSource="{x:Bind Path=watchLaterVM.Videos, Mode=OneWay}"
                 SelectionMode="None"
