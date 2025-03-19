@@ -61,8 +61,7 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <FontIcon
-                                    FontFamily="Segoe MDL2 Assets"
+                                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                     Foreground="Gray"
                                     Glyph="&#xE946;" />
                                 <TextBlock

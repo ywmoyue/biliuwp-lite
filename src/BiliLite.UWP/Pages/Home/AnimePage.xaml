@@ -279,8 +279,7 @@
                                                     </LinearGradientBrush>
                                                 </Grid.Background>
                                                 <StackPanel Orientation="Horizontal">
-                                                    <FontIcon
-                                                        FontFamily="Segoe MDL2 Assets"
+                                                    <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                                         FontSize="12"
                                                         Foreground="White"
                                                         Glyph="" />

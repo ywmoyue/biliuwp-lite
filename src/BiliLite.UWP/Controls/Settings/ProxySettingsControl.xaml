@@ -63,7 +63,7 @@
         <controls:SettingsCard Header="繁体字幕转简体"
                                Description="繁体字幕转简体">
             <controls:SettingsCard.HeaderIcon>
-                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8D2;"/>
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE8D2;"/>
             </controls:SettingsCard.HeaderIcon>
             <ToggleSwitch x:Name="RoamingSettingToSimplified" OnContent="打开" OffContent="关闭" ></ToggleSwitch>
         </controls:SettingsCard>

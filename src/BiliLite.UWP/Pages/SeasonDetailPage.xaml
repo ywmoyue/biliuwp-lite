@@ -53,11 +53,11 @@
                             Command="{x:Bind Path=m_viewModel.FollowCommand}"
                             Foreground="{x:Bind Path=m_viewModel.Detail.UserStatus.Follow, Mode=OneWay, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=1}">
                             <StackPanel>
-                                <FontIcon
+                                <FontIcon 
                                     FontFamily="{StaticResource BiliIconFont}"
                                     Glyph="&#xE66B;"
                                     Visibility="{x:Bind Path=m_viewModel.Detail.UserStatus.Follow, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=0}" />
-                                <FontIcon
+                                <FontIcon 
                                     FontFamily="{StaticResource BiliIconFont}"
                                     Glyph="&#xE6DB;"
                                     Visibility="{x:Bind Path=m_viewModel.Detail.UserStatus.Follow, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=1}" />
@@ -75,7 +75,7 @@
                             Background="Transparent"
                             Click="btnSendReview_Click">
                             <StackPanel>
-                                <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE6DF;" />
+                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE6DF;" />
                                 <TextBlock
                                     FontSize="12"
                                     Text="点评"
@@ -91,7 +91,7 @@
                             Background="Transparent"
                             Visibility="{x:Bind m_viewModel.ShowNormalShareBtn, Mode=OneWay}">
                             <StackPanel>
-                                <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE671;" />
+                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE671;" />
                                 <TextBlock
                                     FontSize="12"
                                     Text="分享"
@@ -122,7 +122,7 @@
                             Click="btnDownload_Click"
                             Visibility="{x:Bind m_viewModel.ShowNormalDownloadBtn, Mode=OneWay}">
                             <StackPanel>
-                                <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE672;" />
+                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE672;" />
                                 <TextBlock
                                     FontSize="12"
                                     Text="下载"
@@ -190,7 +190,7 @@
                             Margin="0"
                             Background="Transparent">
                             <StackPanel>
-                                <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE680;" />
+                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE680;" />
                                 <TextBlock
                                     FontSize="12"
                                     Text="更多"
@@ -227,7 +227,7 @@
                             Command="{x:Bind m_viewModel.OpenRightInfoCommand}"
                             Visibility="{x:Bind m_viewModel.ShowOpenRightInfoBtn, Mode=OneWay}">
                             <StackPanel>
-                                <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xe68a;" />
+                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xe68a;" />
                                 <TextBlock
                                     FontSize="12"
                                     Text="详情"

@@ -329,7 +329,7 @@
                 Style="{StaticResource RoundAccentButtonStyle}"
                 ToolTipService.ToolTip="切换为网格显示"
                 Visibility="Collapsed">
-                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE80A;" />
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE80A;" />
             </Button>
             <Button
                 x:Name="BtnList"
@@ -337,7 +337,7 @@
                 Click="BtnList_Click"
                 Style="{StaticResource RoundAccentButtonStyle}"
                 ToolTipService.ToolTip="切换为列表显示">
-                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE292;" />
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE292;" />
             </Button>
             <Button
                 x:Name="BtnTop"
@@ -345,7 +345,7 @@
                 Click="BtnTop_Click"
                 Style="{StaticResource RoundAccentButtonStyle}"
                 ToolTipService.ToolTip="返回顶部">
-                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE110;" />
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE110;" />
             </Button>
             <Button
                 Margin="0,0,0,8"

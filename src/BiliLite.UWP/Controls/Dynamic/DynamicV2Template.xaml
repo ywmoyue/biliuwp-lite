@@ -331,8 +331,7 @@
                         CornerRadius="{StaticResource OverlayCornerRadius}"
                         Visibility="{Binding ForwardMissed}">
                         <StackPanel Margin="12" Orientation="Horizontal">
-                            <FontIcon
-                                FontFamily="Segoe MDL2 Assets"
+                            <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                 FontSize="14"
                                 Foreground="Gray"
                                 Glyph="&#xE7BA;" />

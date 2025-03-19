@@ -98,7 +98,7 @@
                             RightTapped="btnLike_RightTapped"
                             ToolTipService.ToolTip="右击或长按可以一键三连哦">
                             <StackPanel>
-                                <FontIcon
+                                <FontIcon 
                                     FontFamily="{StaticResource BiliIconFont}"
                                     Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Like, Mode=OneWay, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=1}"
                                     Glyph="&#xE6C6;" />
@@ -117,7 +117,7 @@
                             Background="Transparent"
                             Command="{x:Bind Path=m_viewModel.DislikeCommand}">
                             <StackPanel>
-                                <FontIcon
+                                <FontIcon 
                                     Margin="0,-2,0,2"
                                     FontFamily="{StaticResource BiliIconFont}"
                                     Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Dislike, Mode=OneWay, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=1}"
@@ -228,7 +228,7 @@
                             Margin="0"
                             Background="Transparent">
                             <StackPanel>
-                                <FontIcon
+                                <FontIcon 
                                     FontFamily="{StaticResource BiliIconFont}"
                                     Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Coin, Mode=OneWay, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=1}"
                                     Glyph="&#xE670;" />
@@ -256,7 +256,7 @@
                             Foreground="{ThemeResource TextColor}"
                             Visibility="{x:Bind m_viewModel.ShowNormalShareBtn, Mode=OneWay}">
                             <StackPanel>
-                                <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE671;" />
+                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE671;" />
                                 <TextBlock
                                     FontSize="12"
                                     Text="分享"
@@ -272,7 +272,7 @@
                             Foreground="{ThemeResource TextColor}"
                             Visibility="{x:Bind m_viewModel.ShowNormalDownloadBtn, Mode=OneWay}">
                             <StackPanel>
-                                <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE672;" />
+                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE672;" />
                                 <TextBlock
                                     FontSize="12"
                                     Text="下载"
@@ -347,7 +347,7 @@
                             Background="Transparent"
                             Foreground="{ThemeResource TextColor}">
                             <StackPanel>
-                                <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE680;" />
+                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE680;" />
                                 <TextBlock
                                     FontSize="12"
                                     Text="更多"
@@ -386,7 +386,7 @@
                             Foreground="{ThemeResource TextColor}"
                             Visibility="{x:Bind m_viewModel.ShowOpenRightInfoBtn, Mode=OneWay}">
                             <StackPanel>
-                                <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xe68a;" />
+                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xe68a;" />
                                 <TextBlock
                                     FontSize="12"
                                     Text="详情"
@@ -547,7 +547,7 @@
                                             <TextBlock>
                                                 制作团队(<Run Text="{x:Bind Path=m_viewModel.VideoInfo.Staff.Count, Mode=OneWay, TargetNullValue='0'}" />
                                                 人)</TextBlock>
-                                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE011;" />
+                                            <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE011;" />
                                         </StackPanel>
                                     </HyperlinkButton>
                                     <HyperlinkButton
@@ -557,7 +557,7 @@
                                         Foreground="Gray"
                                         Visibility="{x:Bind Path=m_viewModel.ShowMoreStaff, Mode=OneWay}">
                                         <StackPanel>
-                                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE010;" />
+                                            <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE010;" />
                                         </StackPanel>
                                     </HyperlinkButton>
                                 </StackPanel>

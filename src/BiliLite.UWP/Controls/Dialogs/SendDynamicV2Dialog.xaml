@@ -147,8 +147,9 @@
                 AcceptsReturn="True"
                 MaxLength="233"
                 PlaceholderText="说点什么吧..."
+                TextAlignment="Justify"
                 TextChanged="txtContent_TextChanged"
-                TextWrapping="Wrap" TextAlignment="Justify" />
+                TextWrapping="Wrap" />
 
             <StackPanel
                 Margin="0,8"
@@ -182,7 +183,7 @@
                         ToolTipService.ToolTip="表情">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon
-                                FontFamily="Segoe MDL2 Assets"
+                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                 FontSize="14"
                                 Glyph="&#xE170;" />
                         </StackPanel>
@@ -196,7 +197,7 @@
                         Visibility="{x:Bind Path=sendDynamicVM.IsRepost, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon
-                                FontFamily="Segoe MDL2 Assets"
+                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                 FontSize="14"
                                 Glyph="&#xE1E9;" />
                         </StackPanel>
@@ -211,7 +212,7 @@
                         Visibility="{x:Bind Path=m_viewModel.IsRepost, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon
-                                FontFamily="Segoe MDL2 Assets"
+                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                 FontSize="14"
                                 Glyph="&#xEB9F;" />
 
@@ -226,7 +227,7 @@
                         ToolTipService.ToolTip="@">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon
-                                FontFamily="Segoe MDL2 Assets"
+                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                 FontSize="14"
                                 Glyph="&#xE168;" />
                         </StackPanel>
@@ -254,7 +255,7 @@
                         Visibility="{x:Bind Path=sendDynamicVM.IsRepost, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon
-                                FontFamily="Segoe MDL2 Assets"
+                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                 FontSize="14"
                                 Glyph="&#xE916;" />
                         </StackPanel>
@@ -334,7 +335,7 @@
                                     Click="btn_RemovePic_Click"
                                     Foreground="White">
                                     <FontIcon
-                                        FontFamily="Segoe MDL2 Assets"
+                                        FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                         FontSize="14"
                                         Glyph="&#xE947;" />
                                 </Button>

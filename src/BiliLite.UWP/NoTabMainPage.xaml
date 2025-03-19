@@ -51,8 +51,7 @@
                 BorderThickness="0"
                 Click="btnBack_Click"
                 Visibility="Visible">
-                <FontIcon
-                    FontFamily="Segoe MDL2 Assets"
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                     FontSize="14"
                     Glyph="&#xE0A6;" />
             </Button>

@@ -28,9 +28,8 @@
                 <Grid VerticalAlignment="Stretch" Background="Transparent">
                     <Button Margin="12,0">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon
+                            <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                 Margin="0,0,8,0"
-                                FontFamily="Segoe MDL2 Assets"
                                 FontSize="12"
                                 Glyph="&#xE109;" />
                             <TextBlock>订阅</TextBlock>

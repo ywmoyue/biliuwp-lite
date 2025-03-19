@@ -417,9 +417,8 @@
                             Foreground="Gray"
                             Visibility="Collapsed">
                             <StackPanel Orientation="Horizontal">
-                                <FontIcon
+                                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                     VerticalAlignment="Center"
-                                    FontFamily="Segoe MDL2 Assets"
                                     FontSize="14"
                                     Glyph="&#xE19E;" />
                                 <TextBlock />
@@ -467,8 +466,7 @@
                                     Foreground="White"
                                     Visibility="Collapsed">
                                     <StackPanel Orientation="Horizontal">
-                                        <FontIcon
-                                            FontFamily="Segoe MDL2 Assets"
+                                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                             FontSize="12"
                                             Glyph="&#xE775;" />
                                         <TextBlock Margin="4,0,0,0">颜文字</TextBlock>
@@ -482,8 +480,7 @@
                                     Foreground="White"
                                     Style="{StaticResource AccentButtonStyle}">
                                     <StackPanel Orientation="Horizontal">
-                                        <FontIcon
-                                            FontFamily="Segoe MDL2 Assets"
+                                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                             FontSize="12"
                                             Glyph="&#xE170;" />
                                         <TextBlock Margin="4,0,0,0">表情</TextBlock>
@@ -635,8 +632,7 @@
                                                     Foreground="White"
                                                     Visibility="Collapsed">
                                                     <StackPanel Orientation="Horizontal">
-                                                        <FontIcon
-                                                            FontFamily="Segoe MDL2 Assets"
+                                                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                                             FontSize="12"
                                                             Glyph="&#xE775;" />
                                                         <TextBlock Margin="4,0,0,0">颜文字</TextBlock>
@@ -650,8 +646,7 @@
                                                     FontSize="12"
                                                     Foreground="White">
                                                     <StackPanel Orientation="Horizontal">
-                                                        <FontIcon
-                                                            FontFamily="Segoe MDL2 Assets"
+                                                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                                             FontSize="12"
                                                             Glyph="&#xE170;" />
                                                         <TextBlock Margin="4,0,0,0">表情</TextBlock>

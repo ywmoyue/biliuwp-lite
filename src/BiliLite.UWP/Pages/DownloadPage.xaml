@@ -156,8 +156,7 @@
                                                         BorderThickness="0"
                                                         Click="BtnPauseSubItem_OnClick"
                                                         Visibility="{x:Bind Path=ShowPause, Mode=OneWay}">
-                                                        <FontIcon
-                                                            FontFamily="Segoe MDL2 Assets"
+                                                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                                             FontSize="14"
                                                             Glyph="&#xE103;" />
                                                     </Button>
@@ -171,8 +170,7 @@
                                                         BorderThickness="0"
                                                         Click="BtnResumeSubItem_OnClick"
                                                         Visibility="{x:Bind Path=ShowStart, Mode=OneWay}">
-                                                        <FontIcon
-                                                            FontFamily="Segoe MDL2 Assets"
+                                                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                                             FontSize="14"
                                                             Glyph="&#xE118;" />
                                                     </Button>
@@ -200,8 +198,7 @@
                             Command="{x:Bind Path=m_viewModel.StartCommand}"
                             FontSize="12">
                             <StackPanel Orientation="Horizontal">
-                                <FontIcon
-                                    FontFamily="Segoe MDL2 Assets"
+                                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                     FontSize="14"
                                     Glyph="&#xE102;" />
                                 <TextBlock Margin="4,0,0,0">开始全部</TextBlock>
@@ -212,8 +209,7 @@
                             Command="{x:Bind Path=m_viewModel.PauseCommand}"
                             FontSize="12">
                             <StackPanel Orientation="Horizontal">
-                                <FontIcon
-                                    FontFamily="Segoe MDL2 Assets"
+                                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                     FontSize="14"
                                     Glyph="&#xE103;" />
                                 <TextBlock Margin="4,0,0,0">暂停全部</TextBlock>
@@ -224,8 +220,7 @@
                             Command="{x:Bind Path=m_viewModel.DeleteCommand}"
                             FontSize="12">
                             <StackPanel Orientation="Horizontal">
-                                <FontIcon
-                                    FontFamily="Segoe MDL2 Assets"
+                                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                     FontSize="14"
                                     Glyph="&#xE107;" />
                                 <TextBlock Margin="4,0,0,0">删除全部</TextBlock>

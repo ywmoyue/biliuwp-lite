@@ -99,7 +99,7 @@
                                 Style="{ThemeResource CaptionTextBlockStyle}"
                                 Text="{TemplateBinding KeyboardAcceleratorTextOverride}"
                                 Visibility="Collapsed" />
-                            <FontIcon
+                            <FontIcon 
                                 x:Name="SubItemChevron"
                                 Grid.Column="2"
                                 Margin="-23,20,12,0"

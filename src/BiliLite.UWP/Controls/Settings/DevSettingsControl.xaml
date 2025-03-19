@@ -55,7 +55,7 @@
             <controls:SettingsCard.HeaderIcon>
                 <font:FontAwesome Icon="Solid_FileMedical"></font:FontAwesome>
             </controls:SettingsCard.HeaderIcon>
-            <ComboBox x:Name="cbLogLevel" Margin="0 8"  MinWidth="200">
+            <ComboBox x:Name="cbLogLevel" Margin="0 0"  MinWidth="200">
                 <ComboBox.Items>
                     <ComboBoxItem>Trace</ComboBoxItem>
                     <ComboBoxItem>Debug</ComboBoxItem>

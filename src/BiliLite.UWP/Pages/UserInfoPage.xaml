@@ -904,7 +904,7 @@
                                     Click="BtnFollowingTag_OnClick"
                                     Label="关注分组"
                                     Visibility="{x:Bind Path=m_viewModel.IsFollowed, Mode=OneWay}">
-                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE779;" />
+                                    <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE779;" />
                                 </AppBarButton>
 
                                 <AppBarButton
@@ -913,7 +913,7 @@
                                     Label="关注"
                                     Visibility="{x:Bind Path=m_viewModel.IsFollowed, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                     <AppBarButton.Icon>
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE006;" />
+                                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE006;" />
                                     </AppBarButton.Icon>
                                     <!--<interactivity:Interaction.Behaviors>
                                         <core:EventTriggerBehavior EventName="RightTapped">
@@ -928,7 +928,7 @@
                                     Label="取消关注"
                                     Visibility="{x:Bind Path=m_viewModel.IsFollowed, Mode=OneWay}">
                                     <AppBarButton.Icon>
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE00B;" />
+                                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE00B;" />
                                     </AppBarButton.Icon>
                                 </AppBarButton>
 
@@ -944,7 +944,7 @@
                                     Label="直播间"
                                     Visibility="{x:Bind Path=m_viewModel.HaveLiveRoom, Mode=OneWay}">
                                     <AppBarButton.Icon>
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE960;" />
+                                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE960;" />
                                     </AppBarButton.Icon>
                                 </AppBarButton>
                             </StackPanel>

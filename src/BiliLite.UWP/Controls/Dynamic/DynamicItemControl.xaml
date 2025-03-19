@@ -139,7 +139,7 @@
                         </MenuFlyoutItem>
                         <MenuFlyoutItem Text="举报">
                             <MenuFlyoutItem.Icon>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7BA;" />
+                                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE7BA;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                         <MenuFlyoutItem
@@ -189,7 +189,7 @@
                     CommandParameter="{x:Bind Path=ViewModel, Mode=OneWay}"
                     Foreground="Gray"
                     Visibility="{x:Bind Path=ViewModel.IsRepost, Mode=OneWay}">
-                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE17C;" />
+                    <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE17C;" />
                 </Button>
             </Grid>
         </HyperlinkButton>
