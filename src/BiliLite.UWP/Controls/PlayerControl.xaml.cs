@@ -892,6 +892,7 @@ namespace BiliLite.Controls
 
         private void PositionTimer_Tick(object sender, object e)
         {
+            m_viewModel.Position = Player.Position;
             PluginCenter.BroadcastPosition(this, Player.Position);
             if (!m_autoSkipOpEdFlag) return;
             if (CurrentPlayItem == null) return;
@@ -2762,10 +2763,11 @@ namespace BiliLite.Controls
         {
             txtInfo.Text = Player.GetMediaInfo();
             VideoLoading.Visibility = Visibility.Collapsed;
-            if (_postion != 0)
+            if (_postion != 0 && _postion < Player.Duration)
             {
                 Player.SetPosition(_postion);
             }
+
             if (_autoPlay)
             {
                 await Play();
@@ -3259,5 +3261,10 @@ namespace BiliLite.Controls
         private void SplitView_PaneOpening(SplitView sender, object args) => ScrollToItem();
 
         private void ScrollToItem() => EpisodeList.ScrollIntoView(EpisodeList.SelectedItem);
+
+        private void BottomProgress_OnPositionChanged(object sender, double e)
+        {
+            SetPosition(e);
+        }
     }
 }
