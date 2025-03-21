@@ -170,7 +170,7 @@
         </Grid>
 
         <Grid Grid.Row="1">
-            <controls:MyAdaptiveGridView
+            <controls:MyAdaptiveGridView ItemHeight="120"
                 x:Name="listView"
                 Grid.ColumnSpan="2"
                 AllowDrop="True"

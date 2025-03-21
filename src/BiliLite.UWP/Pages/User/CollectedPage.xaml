@@ -61,7 +61,7 @@
         </DataTemplate>
     </Page.Resources>
     <Grid>
-        <controls:MyAdaptiveGridView
+        <controls:MyAdaptiveGridView ItemHeight="120"
             DesiredWidth="550"
             IsItemClickEnabled="True"
             ItemClick="VideoFavorite_ItemClick"

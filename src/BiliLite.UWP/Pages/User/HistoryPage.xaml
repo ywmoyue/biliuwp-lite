@@ -101,7 +101,7 @@
                     <TextBlock FontSize="15">视频</TextBlock>
                 </PivotItem.Header>
                 <Grid>
-                    <controls:MyAdaptiveGridView
+                    <controls:MyAdaptiveGridView ItemHeight="120"
                         Grid.ColumnSpan="2"
                         Padding="15,0"
                         DesiredWidth="550"

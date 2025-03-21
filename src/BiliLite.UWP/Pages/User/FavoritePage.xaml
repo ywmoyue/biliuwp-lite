@@ -43,7 +43,7 @@
                     </MenuFlyout>
                 </Grid.ContextFlyout>
                 <Grid.RowDefinitions>
-                    <RowDefinition />
+                    <RowDefinition Height="250"/>
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid>
@@ -201,7 +201,7 @@
                 <Grid>
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <StackPanel>
-                            <controls:MyAdaptiveGridView
+                            <controls:MyAdaptiveGridView ItemHeight="120"
                                 Padding="10,0"
                                 AllowDrop="True"
                                 CanDragItems="True"
@@ -241,7 +241,7 @@
                                     </Grid>
                                 </controls:MyAdaptiveGridView.Footer>
                             </controls:MyAdaptiveGridView>
-                            <controls:MyAdaptiveGridView
+                            <controls:MyAdaptiveGridView ItemHeight="120"
                                 Padding="10,0"
                                 DesiredWidth="550"
                                 IsItemClickEnabled="True"
@@ -289,11 +289,11 @@
                     <TextBlock FontSize="15">追番</TextBlock>
                 </PivotItem.Header>
                 <Grid>
-                    <controls:MyAdaptiveGridView
+                    <controls:MyAdaptiveGridView 
                         x:Name="BangumiSeason"
                         Padding="10,0"
                         CanLoadMore="{x:Bind Path=animeVM.ShowLoadMore, Mode=OneWay}"
-                        DesiredWidth="260"
+                        DesiredWidth="200"
                         IsItemClickEnabled="True"
                         ItemClick="BangumiSeason_ItemClick"
                         ItemTemplate="{StaticResource SeasonDataTemplate}"
@@ -396,7 +396,7 @@
                     <controls:MyAdaptiveGridView
                         Padding="10,0"
                         CanLoadMore="{x:Bind Path=cinemaVM.ShowLoadMore, Mode=OneWay}"
-                        DesiredWidth="260"
+                        DesiredWidth="200"
                         IsItemClickEnabled="True"
                         ItemClick="BangumiSeason_ItemClick"
                         ItemTemplate="{StaticResource SeasonDataTemplate}"

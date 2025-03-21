@@ -14,7 +14,7 @@
     mc:Ignorable="d">
 
     <Grid>
-        <controls:MyAdaptiveGridView
+        <controls:MyAdaptiveGridView ItemHeight="120"
             x:Name="HotGridView"
             Padding="10,0"
             CanLoadMore="True"

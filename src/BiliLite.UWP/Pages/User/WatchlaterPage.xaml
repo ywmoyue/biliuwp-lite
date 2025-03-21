@@ -75,7 +75,7 @@
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">
-            <controls:MyAdaptiveGridView
+            <controls:MyAdaptiveGridView ItemHeight="120"
                 Grid.ColumnSpan="2"
                 Padding="10,0"
                 DesiredWidth="550"

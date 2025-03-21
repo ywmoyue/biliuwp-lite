@@ -207,7 +207,7 @@
                                         全部播放
                                     </Button>
                                 </Grid>
-                                <control:MyAdaptiveGridView
+                                <control:MyAdaptiveGridView ItemHeight="120"
                                     Grid.Row="1"
                                     Padding="10,5"
                                     CanLoadMore="{x:Bind Path=m_userSubmitVideoViewModel.SubmitVideoCanLoadMore, Mode=OneWay}"
@@ -337,7 +337,7 @@
                                         Text="{x:Bind Path=m_viewModel.Stat.Article, Mode=OneWay}" /></TextBlock>
                             </PivotItem.Header>
                             <Grid>
-                                <control:MyAdaptiveGridView
+                                <control:MyAdaptiveGridView ItemHeight="120"
                                     Padding="10,5"
                                     CanLoadMore="{x:Bind Path=userSubmitArticleVM.SubmitArticleCanLoadMore, Mode=OneWay}"
                                     DesiredWidth="550"
@@ -463,7 +463,7 @@
                                         Text="{x:Bind Path=m_viewModel.Stat.Collection, Mode=OneWay}" /></TextBlock>
                             </PivotItem.Header>
                             <Grid>
-                                <control:MyAdaptiveGridView
+                                <control:MyAdaptiveGridView ItemHeight="120"
                                     Padding="10,5"
                                     CanLoadMore="{x:Bind Path=m_userSubmitCollectionViewModel.SubmitCollectionCanLoadMore, Mode=OneWay}"
                                     DesiredWidth="550"

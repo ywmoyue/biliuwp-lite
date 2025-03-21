@@ -44,7 +44,7 @@
             </Pivot.HeaderTemplate>
             <Pivot.ItemTemplate>
                 <DataTemplate x:DataType="rank1:RankRegionViewModel">
-                    <controls:MyAdaptiveGridView
+                    <controls:MyAdaptiveGridView ItemHeight="120"
                         Padding="10,0"
                         DesiredWidth="550"
                         IsItemClickEnabled="True"

@@ -350,10 +350,10 @@
                     </SplitView.Pane>
                     <SplitView.Content>
                         <Grid>
-                            <controls:MyAdaptiveGridView
+                            <controls:MyAdaptiveGridView ItemHeight="120"
                                 x:Name="listDowned"
                                 Padding="8"
-                                DesiredWidth="460"
+                                DesiredWidth="550"
                                 IsItemClickEnabled="True"
                                 ItemClick="listDowned_ItemClick"
                                 ItemsSource="{x:Bind Path=m_viewModel.DownloadedViewModels, Mode=OneWay}"
@@ -393,13 +393,11 @@
                                                 </MenuFlyout>
                                             </Grid.ContextFlyout>
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="200" />
                                                 <ColumnDefinition />
                                             </Grid.ColumnDefinitions>
                                             <Grid>
                                                 <Image
-                                                    Width="128"
-                                                    Height="80"
                                                     Source="{x:Bind Path=Cover}"
                                                     Stretch="UniformToFill" />
                                                 <Border

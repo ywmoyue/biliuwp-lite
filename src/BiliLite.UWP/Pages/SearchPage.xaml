@@ -58,7 +58,7 @@
                         SelectedValuePath="value"
                         SelectionChanged="ComboBox_SelectionChanged" />
                 </Grid>
-                <control:MyAdaptiveGridView
+                <control:MyAdaptiveGridView ItemHeight="120"
                     Grid.Row="1"
                     Grid.ColumnSpan="2"
                     Padding="8"
@@ -153,7 +153,7 @@
         </DataTemplate>
         <DataTemplate x:Key="AnimeTpl" x:DataType="viewModel:SearchAnimeViewModel">
             <Grid>
-                <control:MyAdaptiveGridView
+                <control:MyAdaptiveGridView ItemHeight="120"
                     Grid.Row="1"
                     Padding="8"
                     DesiredWidth="550"
@@ -545,7 +545,7 @@
                         SelectedValuePath="value"
                         SelectionChanged="ComboBox_SelectionChanged" />
                 </Grid>
-                <control:MyAdaptiveGridView
+                <control:MyAdaptiveGridView ItemHeight="120"
                     Grid.Row="1"
                     Grid.ColumnSpan="2"
                     Padding="8"
@@ -640,7 +640,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <control:MyAdaptiveGridView
+                <control:MyAdaptiveGridView ItemHeight="120"
                     Grid.Row="1"
                     Grid.ColumnSpan="2"
                     Padding="8"

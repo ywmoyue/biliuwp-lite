@@ -207,7 +207,7 @@
     </Page.Resources>
     <Grid>
         <muxc:RefreshContainer RefreshRequested="RefreshContainer_RefreshRequested">
-            <controls:MyAdaptiveGridView
+            <controls:MyAdaptiveGridView ItemHeight="120"
                 x:Name="DynGridView"
                 Padding="12,0"
                 CanLoadMore="True"

@@ -17,7 +17,7 @@
         <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White" />
         <DataTemplate x:Key="HomeTemplate" x:DataType="region:RegionDetailHomeViewModel">
             <Grid>
-                <controls:MyAdaptiveGridView
+                <controls:MyAdaptiveGridView ItemHeight="120"
                     Padding="15,0"
                     CanLoadMore="True"
                     DesiredWidth="550"
@@ -149,7 +149,7 @@
         </DataTemplate>
         <DataTemplate x:Key="ChildTemplate" x:DataType="region:RegionDetailChildViewModel">
             <Grid>
-                <controls:MyAdaptiveGridView
+                <controls:MyAdaptiveGridView ItemHeight="120"
                     Padding="12,8"
                     CanLoadMore="True"
                     DesiredWidth="550"

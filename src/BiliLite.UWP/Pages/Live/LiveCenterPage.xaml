@@ -51,7 +51,7 @@
                     <TextBlock FontSize="15">关注直播中</TextBlock>
                 </PivotItem.Header>
                 <Grid>
-                    <control:MyAdaptiveGridView
+                    <control:MyAdaptiveGridView ItemHeight="120"
                         Padding="12,8"
                         CanLoadMore="False"
                         DesiredWidth="550"
@@ -206,7 +206,7 @@
                     <TextBlock FontSize="15">观看历史</TextBlock>
                 </PivotItem.Header>
                 <Grid>
-                    <control:MyAdaptiveGridView
+                    <control:MyAdaptiveGridView ItemHeight="120"
                         Padding="12,8"
                         CanLoadMore="{x:Bind Path=liveCenterHistoryVM.CanLoadMore, Mode=OneWay}"
                         DesiredWidth="550"
