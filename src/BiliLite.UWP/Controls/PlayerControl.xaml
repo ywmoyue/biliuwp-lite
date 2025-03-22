@@ -502,12 +502,18 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
                             <Grid Margin="8 0" >
-                                <Slider
+                                <!--<Slider
                                         x:Name="BottomProgress" 
-                                        Value="{Binding ElementName=Player,Path=Position,Mode=TwoWay}"
+                                        Value="{Binding ElementName=Player,Path=Position,Mode=OneWay}"
                                         Maximum="{Binding ElementName=Player,Path=Duration,Mode=OneWay}"
                                         Foreground="{ThemeResource SystemAccentColor}"
-                                        ThumbToolTipValueConverter="{StaticResource progress}" ></Slider>
+                                        ThumbToolTipValueConverter="{StaticResource progress}"
+                                >
+                                </Slider>-->
+                                <local:PlayerProgressBar x:Name="BottomProgress"
+                                                         Position="{x:Bind m_viewModel.Position,Mode=OneWay}"
+                                                         PositionChanged="BottomProgress_OnPositionChanged"
+                                                         Duration="{Binding ElementName=Player,Path=Duration,Mode=OneWay}"></local:PlayerProgressBar>
                                 <Canvas x:Name="BottomProgressCanvas">
                                 </Canvas>
                             </Grid>
@@ -712,7 +718,7 @@
                                 <fa:FontAwesome Icon="Regular_WindowMaximize"  FontSize="20"></fa:FontAwesome>
                             </HyperlinkButton>
                         </StackPanel>
-                        <muxc:ProgressBar VerticalAlignment="Bottom" Foreground="White" Value="{Binding ElementName=BottomProgress,Path=Value,Mode=OneWay}" Maximum="{Binding ElementName=BottomProgress,Path=Maximum,Mode=OneWay}"></muxc:ProgressBar>
+                        <muxc:ProgressBar VerticalAlignment="Bottom" Foreground="White" Value="{Binding ElementName=BottomProgress,Path=Position,Mode=OneWay}" Maximum="{Binding ElementName=BottomProgress,Path=Duration,Mode=OneWay}"></muxc:ProgressBar>
                     </Grid>
 
                 </Grid>

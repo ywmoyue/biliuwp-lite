@@ -20,5 +20,7 @@ namespace BiliLite.ViewModels
         public bool ShowViewPointsBtn { get; set; }
 
         public List<PlayerInfoViewPoint> ViewPoints { get; set; }
+
+        public double Position { get; set; }
     }
 }
