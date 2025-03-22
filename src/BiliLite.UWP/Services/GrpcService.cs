@@ -97,6 +97,29 @@ namespace BiliLite.Services
             }
         }
 
+        public async Task<DynDetailReply> GetDynDetail(string id)
+        {
+            var message = new DynDetailReq()
+            {
+                DynamicId = id
+            };
+            var requestUserInfo = new GrpcBiliUserInfo(
+                SettingService.Account.AccessKey,
+                SettingService.Account.UserID,
+                SettingService.Account.GetLoginAppKeySecret().Appkey);
+
+            var result = await GrpcRequest.Instance.SendMessage("https://grpc.biliapi.net:443/bilibili.app.dynamic.v2.Dynamic/DynDetail", message, requestUserInfo);
+            if (result.status)
+            {
+                var reply = DynDetailReply.Parser.ParseFrom(result.results);
+                return reply;
+            }
+            else
+            {
+                throw new Exception(result.message);
+            }
+        }
+
         public async Task<DynVideoReply> GetDynVideo(int page, string historyOffset, string updateBaseline)
         {
             var message = new DynVideoReq()
@@ -119,6 +142,33 @@ namespace BiliLite.Services
             if (result.status)
             {
                 var reply = DynVideoReply.Parser.ParseFrom(result.results);
+                return reply;
+            }
+            else
+            {
+                throw new Exception(result.message);
+            }
+        }
+
+        public async Task<RepostListRsp> GetDynRepostList(string id, string historyOffset)
+        {
+            var message = new RepostListReq()
+            {
+                DynamicId = id
+            };
+            if (!string.IsNullOrEmpty(historyOffset))
+            {
+                message.Offset = historyOffset;
+            }
+            var requestUserInfo = new GrpcBiliUserInfo(
+                SettingService.Account.AccessKey,
+                SettingService.Account.UserID,
+                SettingService.Account.GetLoginAppKeySecret().Appkey);
+
+            var result = await GrpcRequest.Instance.SendMessage("https://grpc.biliapi.net:443/bilibili.app.dynamic.v2.Dynamic/RepostList", message, requestUserInfo);
+            if (result.status)
+            {
+                var reply = RepostListRsp.Parser.ParseFrom(result.results);
                 return reply;
             }
             else

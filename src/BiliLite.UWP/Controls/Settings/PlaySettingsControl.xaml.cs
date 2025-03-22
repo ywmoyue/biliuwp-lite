@@ -39,19 +39,22 @@ namespace BiliLite.Controls.Settings
         private void LoadPlayer()
         {
             //播放类型
-            var selectedValue = (PlayUrlCodecMode)SettingService.GetValue(SettingConstants.Player.DEFAULT_VIDEO_TYPE, (int)DefaultVideoTypeOptions.DEFAULT_VIDEO_TYPE);
+            var selectedValue = (PlayUrlCodecMode)SettingService.GetValue(SettingConstants.Player.DEFAULT_VIDEO_TYPE,
+                (int)DefaultVideoTypeOptions.DEFAULT_VIDEO_TYPE);
             cbVideoType.SelectedItem = DefaultVideoTypeOptions.GetOption(selectedValue);
             cbVideoType.SelectionChanged += (e, args) =>
             {
                 SettingService.SetValue(SettingConstants.Player.DEFAULT_VIDEO_TYPE, (int)cbVideoType.SelectedValue);
             };
             //优先播放器类型
-            var realPlayerType = (RealPlayerType)SettingService.GetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE, (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
+            var realPlayerType = (RealPlayerType)SettingService.GetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE,
+                (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
             ComboBoxUseRealPlayerType.SelectedItem =
                 m_realPlayerTypes.Options.FirstOrDefault(x => x.Value == realPlayerType);
             ComboBoxUseRealPlayerType.SelectionChanged += (e, args) =>
             {
-                SettingService.SetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE, (int)ComboBoxUseRealPlayerType.SelectedValue);
+                SettingService.SetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE,
+                    (int)ComboBoxUseRealPlayerType.SelectedValue);
             };
             //视频倍速
             var speeds = m_playSpeedMenuService.MenuItems
@@ -66,14 +69,15 @@ namespace BiliLite.Controls.Settings
                     if (cbVideoSpeed.SelectedIndex == -1) // 空值初始化
                     {
                         speeds = m_playSpeedMenuService.MenuItems
-                                                   .Select(x => x.Value)
-                                                   .ToList();
+                            .Select(x => x.Value)
+                            .ToList();
                         SettingService.SetValue(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 0);
                         cbVideoSpeed.SelectedIndex = 0;
                         return;
                     }
 
-                    SettingService.SetValue(SettingConstants.Player.DEFAULT_VIDEO_SPEED, speeds[cbVideoSpeed.SelectedIndex]);
+                    SettingService.SetValue(SettingConstants.Player.DEFAULT_VIDEO_SPEED,
+                        speeds[cbVideoSpeed.SelectedIndex]);
                 };
             };
 
@@ -96,7 +100,8 @@ namespace BiliLite.Controls.Settings
                 });
             });
             //自动跳过OP/ED
-            SwSkipOpEd.IsOn = SettingService.GetValue(SettingConstants.Player.AUTO_SKIP_OP_ED, SettingConstants.Player.DEFAULT_AUTO_SKIP_OP_ED);
+            SwSkipOpEd.IsOn = SettingService.GetValue(SettingConstants.Player.AUTO_SKIP_OP_ED,
+                SettingConstants.Player.DEFAULT_AUTO_SKIP_OP_ED);
             SwSkipOpEd.Loaded += (sender, e) =>
             {
                 SwSkipOpEd.Toggled += (obj, args) =>
@@ -124,51 +129,61 @@ namespace BiliLite.Controls.Settings
             //});
 
             //自动跳转进度
-            swPlayerSettingAutoToPosition.IsOn = SettingService.GetValue<bool>(SettingConstants.Player.AUTO_TO_POSITION, true);
+            swPlayerSettingAutoToPosition.IsOn =
+                SettingService.GetValue<bool>(SettingConstants.Player.AUTO_TO_POSITION, true);
             swPlayerSettingAutoToPosition.Loaded += new RoutedEventHandler((sender, e) =>
             {
                 swPlayerSettingAutoToPosition.Toggled += new RoutedEventHandler((obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.Player.AUTO_TO_POSITION, swPlayerSettingAutoToPosition.IsOn);
+                    SettingService.SetValue(SettingConstants.Player.AUTO_TO_POSITION,
+                        swPlayerSettingAutoToPosition.IsOn);
                 });
             });
             //自动铺满屏幕
-            swPlayerSettingAutoFullWindows.IsOn = SettingService.GetValue<bool>(SettingConstants.Player.AUTO_FULL_WINDOW, false);
+            swPlayerSettingAutoFullWindows.IsOn =
+                SettingService.GetValue<bool>(SettingConstants.Player.AUTO_FULL_WINDOW, false);
             swPlayerSettingAutoFullWindows.Loaded += new RoutedEventHandler((sender, e) =>
             {
                 swPlayerSettingAutoFullWindows.Toggled += new RoutedEventHandler((obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.Player.AUTO_FULL_WINDOW, swPlayerSettingAutoFullWindows.IsOn);
+                    SettingService.SetValue(SettingConstants.Player.AUTO_FULL_WINDOW,
+                        swPlayerSettingAutoFullWindows.IsOn);
                 });
             });
             //默认最大音质
-            SwitchEnableDefaultMaxSoundQuality.IsOn = SettingService.GetValue(SettingConstants.Player.ENABLE_DEFAULT_MAX_SOUND_QUALITY,
+            SwitchEnableDefaultMaxSoundQuality.IsOn = SettingService.GetValue(
+                SettingConstants.Player.ENABLE_DEFAULT_MAX_SOUND_QUALITY,
                 SettingConstants.Player.DEFAULT_ENABLE_DEFAULT_MAX_SOUND_QUALITY);
             SwitchEnableDefaultMaxSoundQuality.Loaded += (sender, e) =>
             {
                 SwitchEnableDefaultMaxSoundQuality.Toggled += (obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.Player.ENABLE_DEFAULT_MAX_SOUND_QUALITY, SwitchEnableDefaultMaxSoundQuality.IsOn);
+                    SettingService.SetValue(SettingConstants.Player.ENABLE_DEFAULT_MAX_SOUND_QUALITY,
+                        SwitchEnableDefaultMaxSoundQuality.IsOn);
                 };
             };
             //自动全屏
-            swPlayerSettingAutoFullScreen.IsOn = SettingService.GetValue<bool>(SettingConstants.Player.AUTO_FULL_SCREEN, false);
+            swPlayerSettingAutoFullScreen.IsOn =
+                SettingService.GetValue<bool>(SettingConstants.Player.AUTO_FULL_SCREEN, false);
             swPlayerSettingAutoFullScreen.Loaded += new RoutedEventHandler((sender, e) =>
             {
                 swPlayerSettingAutoFullScreen.Toggled += new RoutedEventHandler((obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.Player.AUTO_FULL_SCREEN, swPlayerSettingAutoFullScreen.IsOn);
+                    SettingService.SetValue(SettingConstants.Player.AUTO_FULL_SCREEN,
+                        swPlayerSettingAutoFullScreen.IsOn);
                 });
             });
 
 
             //双击全屏
-            swPlayerSettingDoubleClickFullScreen.IsOn = SettingService.GetValue<bool>(SettingConstants.Player.DOUBLE_CLICK_FULL_SCREEN, false);
+            swPlayerSettingDoubleClickFullScreen.IsOn =
+                SettingService.GetValue<bool>(SettingConstants.Player.DOUBLE_CLICK_FULL_SCREEN, false);
             swPlayerSettingDoubleClickFullScreen.Loaded += new RoutedEventHandler((sender, e) =>
             {
                 swPlayerSettingDoubleClickFullScreen.Toggled += new RoutedEventHandler((obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.Player.DOUBLE_CLICK_FULL_SCREEN, swPlayerSettingDoubleClickFullScreen.IsOn);
+                    SettingService.SetValue(SettingConstants.Player.DOUBLE_CLICK_FULL_SCREEN,
+                        swPlayerSettingDoubleClickFullScreen.IsOn);
                 });
             });
 
@@ -184,32 +199,39 @@ namespace BiliLite.Controls.Settings
             //};
 
             // 按住手势行为
-            cbPlayerHoldingGestureAction.SelectedIndex = SettingService.GetValue(SettingConstants.Player.HOLDING_GESTURE_ACTION, (int)PlayerHoldingAction.None);
+            cbPlayerHoldingGestureAction.SelectedIndex =
+                SettingService.GetValue(SettingConstants.Player.HOLDING_GESTURE_ACTION, (int)PlayerHoldingAction.None);
             cbPlayerHoldingGestureAction.Loaded += (sender, e) =>
             {
                 cbPlayerHoldingGestureAction.SelectionChanged += (obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.Player.HOLDING_GESTURE_ACTION, cbPlayerHoldingGestureAction.SelectedIndex);
+                    SettingService.SetValue(SettingConstants.Player.HOLDING_GESTURE_ACTION,
+                        cbPlayerHoldingGestureAction.SelectedIndex);
                 };
             };
 
             // 按住手势可被其他手势取消
-            swPlayerHoldingGestureCanCancel.IsOn = SettingService.GetValue(SettingConstants.Player.HOLDING_GESTURE_CAN_CANCEL, true);
+            swPlayerHoldingGestureCanCancel.IsOn =
+                SettingService.GetValue(SettingConstants.Player.HOLDING_GESTURE_CAN_CANCEL, true);
             swPlayerHoldingGestureCanCancel.Loaded += (sender, e) =>
             {
                 swPlayerHoldingGestureCanCancel.Toggled += (obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.Player.HOLDING_GESTURE_CAN_CANCEL, swPlayerHoldingGestureCanCancel.IsOn);
+                    SettingService.SetValue(SettingConstants.Player.HOLDING_GESTURE_CAN_CANCEL,
+                        swPlayerHoldingGestureCanCancel.IsOn);
                 };
             };
 
             // 倍速播放速度
-            cbRatePlaySpeed.SelectedIndex = SettingConstants.Player.HIGH_RATE_PLAY_SPEED_LIST.IndexOf(SettingService.GetValue(SettingConstants.Player.HIGH_RATE_PLAY_SPEED, 2.0d));
+            cbRatePlaySpeed.SelectedIndex =
+                SettingConstants.Player.HIGH_RATE_PLAY_SPEED_LIST.IndexOf(
+                    SettingService.GetValue(SettingConstants.Player.HIGH_RATE_PLAY_SPEED, 2.0d));
             cbRatePlaySpeed.Loaded += (sender, e) =>
             {
                 cbRatePlaySpeed.SelectionChanged += (obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.Player.HIGH_RATE_PLAY_SPEED, SettingConstants.Player.HIGH_RATE_PLAY_SPEED_LIST[cbRatePlaySpeed.SelectedIndex]);
+                    SettingService.SetValue(SettingConstants.Player.HIGH_RATE_PLAY_SPEED,
+                        SettingConstants.Player.HIGH_RATE_PLAY_SPEED_LIST[cbRatePlaySpeed.SelectedIndex]);
                 };
             };
 
@@ -229,25 +251,28 @@ namespace BiliLite.Controls.Settings
                     {
                         NumBoxVolume.Value = 0;
                     }
+
                     SettingService.SetValue(SettingConstants.Player.PLAYER_VOLUME, NumBoxVolume.Value / 100);
                 };
             };
 
             // 锁定播放器音量设置
-            SwLockPlayerVolume.IsOn = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_VOLUME, SettingConstants.Player.DEFAULT_LOCK_PLAYER_VOLUME);
+            SwLockPlayerVolume.IsOn = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_VOLUME,
+                SettingConstants.Player.DEFAULT_LOCK_PLAYER_VOLUME);
             SwLockPlayerVolume.Loaded += (sender, e) =>
             {
                 SwLockPlayerVolume.Toggled += (obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.Player.LOCK_PLAYER_VOLUME, SwLockPlayerVolume.IsOn);
+                    SettingService.SetValue(SettingConstants.Player.LOCK_PLAYER_VOLUME,
+                        SwLockPlayerVolume.IsOn);
                 };
             };
 
             // 亮度
             NumBoxBrightness.Value = Math.Round(
                 (Math.Abs(SettingService.GetValue(
-                SettingConstants.Player.PLAYER_BRIGHTNESS,
-                SettingConstants.Player.DEFAULT_PLAYER_BRIGHTNESS) - 1)) * 100, 2);
+                    SettingConstants.Player.PLAYER_BRIGHTNESS,
+                    SettingConstants.Player.DEFAULT_PLAYER_BRIGHTNESS) - 1)) * 100, 2);
             NumBoxBrightness.Loaded += (sender, e) =>
             {
                 NumBoxBrightness.ValueChanged += (obj, args) =>
@@ -268,41 +293,50 @@ namespace BiliLite.Controls.Settings
             };
 
             // 锁定播放器亮度设置
-            SwLockPlayerBrightness.IsOn = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_BRIGHTNESS, SettingConstants.Player.DEFAULT_LOCK_PLAYER_BRIGHTNESS);
+            SwLockPlayerBrightness.IsOn = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_BRIGHTNESS,
+                SettingConstants.Player.DEFAULT_LOCK_PLAYER_BRIGHTNESS);
             SwLockPlayerBrightness.Loaded += (sender, e) =>
             {
                 SwLockPlayerBrightness.Toggled += (obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.Player.LOCK_PLAYER_BRIGHTNESS, SwLockPlayerBrightness.IsOn);
+                    SettingService.SetValue(SettingConstants.Player.LOCK_PLAYER_BRIGHTNESS,
+                        SwLockPlayerBrightness.IsOn);
                 };
             };
 
             //自动打开AI字幕
-            swPlayerSettingAutoOpenAISubtitle.IsOn = SettingService.GetValue<bool>(SettingConstants.Player.AUTO_OPEN_AI_SUBTITLE, false);
+            swPlayerSettingAutoOpenAISubtitle.IsOn =
+                SettingService.GetValue<bool>(SettingConstants.Player.AUTO_OPEN_AI_SUBTITLE, false);
             swPlayerSettingAutoOpenAISubtitle.Loaded += new RoutedEventHandler((sender, e) =>
             {
                 swPlayerSettingAutoOpenAISubtitle.Toggled += new RoutedEventHandler((obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.Player.AUTO_OPEN_AI_SUBTITLE, swPlayerSettingAutoOpenAISubtitle.IsOn);
+                    SettingService.SetValue(SettingConstants.Player.AUTO_OPEN_AI_SUBTITLE,
+                        swPlayerSettingAutoOpenAISubtitle.IsOn);
                 });
             });
             //上报历史纪录
-            SwitchPlayerReportHistory.IsOn = SettingService.GetValue(SettingConstants.Player.REPORT_HISTORY, SettingConstants.Player.DEFAULT_REPORT_HISTORY);
+            SwitchPlayerReportHistory.IsOn = SettingService.GetValue(SettingConstants.Player.REPORT_HISTORY,
+                SettingConstants.Player.DEFAULT_REPORT_HISTORY);
             SwitchPlayerReportHistory.Loaded += (sender, e) =>
             {
                 SwitchPlayerReportHistory.Toggled += (obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.Player.REPORT_HISTORY, SwitchPlayerReportHistory.IsOn);
+                    SettingService.SetValue(SettingConstants.Player.REPORT_HISTORY,
+                        SwitchPlayerReportHistory.IsOn);
                 };
             };
 
             //视频结束上报历史纪录0
-            SwitchReportHistoryZeroWhenVideoEnd.IsOn = SettingService.GetValue(SettingConstants.Player.REPORT_HISTORY_ZERO_WHEN_VIDEO_END, SettingConstants.Player.DEFAULT_REPORT_HISTORY_ZERO_WHEN_VIDEO_END);
+            SwitchReportHistoryZeroWhenVideoEnd.IsOn = SettingService.GetValue(
+                SettingConstants.Player.REPORT_HISTORY_ZERO_WHEN_VIDEO_END,
+                SettingConstants.Player.DEFAULT_REPORT_HISTORY_ZERO_WHEN_VIDEO_END);
             SwitchReportHistoryZeroWhenVideoEnd.Loaded += (sender, e) =>
             {
                 SwitchReportHistoryZeroWhenVideoEnd.Toggled += (obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.Player.REPORT_HISTORY_ZERO_WHEN_VIDEO_END, SwitchReportHistoryZeroWhenVideoEnd.IsOn);
+                    SettingService.SetValue(SettingConstants.Player.REPORT_HISTORY_ZERO_WHEN_VIDEO_END,
+                        SwitchReportHistoryZeroWhenVideoEnd.IsOn);
                 };
             };
             //替换CDN
@@ -311,11 +345,13 @@ namespace BiliLite.Controls.Settings
             {
                 cbPlayerReplaceCDN.SelectionChanged += new SelectionChangedEventHandler((obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.Player.REPLACE_CDN, cbPlayerReplaceCDN.SelectedIndex);
+                    SettingService.SetValue(SettingConstants.Player.REPLACE_CDN,
+                        cbPlayerReplaceCDN.SelectedIndex);
                 });
             });
             //CDN服务器
-            var cdnServer = SettingService.GetValue<string>(SettingConstants.Player.CDN_SERVER, "upos-sz-mirrorhwo1.bilivideo.com");
+            var cdnServer = SettingService.GetValue<string>(SettingConstants.Player.CDN_SERVER,
+                "upos-sz-mirrorhwo1.bilivideo.com");
             RoamingSettingCDNServer.SelectedIndex = m_viewModel.CDNServers.FindIndex(x => x.Server == cdnServer);
             RoamingSettingCDNServer.Loaded += new RoutedEventHandler((sender, e) =>
             {
@@ -328,7 +364,8 @@ namespace BiliLite.Controls.Settings
             });
 
             //自动刷新播放地址
-            SwitchAutoRefreshPlayUrl.IsOn = SettingService.GetValue(SettingConstants.Player.AUTO_REFRESH_PLAY_URL, SettingConstants.Player.DEFAULT_AUTO_REFRESH_PLAY_URL);
+            SwitchAutoRefreshPlayUrl.IsOn = SettingService.GetValue(SettingConstants.Player.AUTO_REFRESH_PLAY_URL,
+                SettingConstants.Player.DEFAULT_AUTO_REFRESH_PLAY_URL);
 
             AutoRefreshPlayUrlTimeSetting.Visibility =
                 SwitchAutoRefreshPlayUrl.IsOn ? Visibility.Visible : Visibility.Collapsed;
@@ -337,20 +374,24 @@ namespace BiliLite.Controls.Settings
             {
                 SwitchAutoRefreshPlayUrl.Toggled += (obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.Player.AUTO_REFRESH_PLAY_URL, SwitchAutoRefreshPlayUrl.IsOn);
+                    SettingService.SetValue(SettingConstants.Player.AUTO_REFRESH_PLAY_URL,
+                        SwitchAutoRefreshPlayUrl.IsOn);
                     AutoRefreshPlayUrlTimeSetting.Visibility =
                         SwitchAutoRefreshPlayUrl.IsOn ? Visibility.Visible : Visibility.Collapsed;
                 };
             };
 
-            NumAutoRefreshPlayUrlTime.Value = SettingService.GetValue(
+            SettingService.TryGetValue(
                 SettingConstants.Player.AUTO_REFRESH_PLAY_URL_TIME,
-                SettingConstants.Player.DEFAULT_AUTO_REFRESH_PLAY_URL_TIME);
+                SettingConstants.Player.DEFAULT_AUTO_REFRESH_PLAY_URL_TIME, out var autoRefreshPlayUrlTime);
+            NumAutoRefreshPlayUrlTime.Value = autoRefreshPlayUrlTime;
+
             NumAutoRefreshPlayUrlTime.Loaded += (_, _) =>
             {
                 NumAutoRefreshPlayUrlTime.ValueChanged += (_, _) =>
                 {
-                    SettingService.SetValue(SettingConstants.Player.AUTO_REFRESH_PLAY_URL_TIME, NumAutoRefreshPlayUrlTime.Value);
+                    SettingService.SetValue(SettingConstants.Player.AUTO_REFRESH_PLAY_URL_TIME,
+                        NumAutoRefreshPlayUrlTime.Value);
                 };
             };
         }

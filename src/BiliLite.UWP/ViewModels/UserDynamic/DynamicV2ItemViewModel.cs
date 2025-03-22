@@ -159,6 +159,19 @@ namespace BiliLite.ViewModels.UserDynamic
             get => m_stat;
             set
             {
+                if (value == null) return;
+                m_stat = value;
+                Liked = value.LikeInfo.IsLike;
+                LikeCount = value.Like;
+            }
+        }
+
+        public ModuleStat BottomStat
+        {
+            get => m_stat;
+            set
+            {
+                if (value == null) return;
                 m_stat = value;
                 Liked = value.LikeInfo.IsLike;
                 LikeCount = value.Like;

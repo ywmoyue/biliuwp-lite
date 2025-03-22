@@ -97,7 +97,7 @@ namespace BiliLite.Extensions
             return false;
         }
 
-        public static async Task CheckVersion()
+        public static async Task CheckVersion(bool isSilentUpdateCheck = false)
         {
             try
             {
@@ -140,9 +140,14 @@ namespace BiliLite.Extensions
                     };
                     await dialog.ShowAsync();
                 }
+                else
+                {
+                    if (!isSilentUpdateCheck) Notify.ShowMessageToast($"LatestRelease版本：Ver {ver.Version}；当前已是最新或更新版本");
+                }
             }
             catch (Exception ex)
             {
+                Notify.ShowMessageToast("检查更新失败；请检查日志");
                 _logger.Error($"检查更新失败：{ex.Message}", ex);
             }
         }

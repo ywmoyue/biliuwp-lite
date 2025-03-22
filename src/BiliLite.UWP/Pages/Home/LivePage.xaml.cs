@@ -99,14 +99,14 @@ namespace BiliLite.Pages.Home
                     parameters = data.roomid
                 });
             }
-            else if(e.ClickedItem is LiveRoomInfoOldModel info)
+            else if (e.ClickedItem is LiveInfoModel info)
             {
                 MessageCenter.NavigateToPage(this, new NavigationInfo()
                 {
                     icon = Symbol.Video,
                     page = typeof(LiveDetailPage),
-                    title = info.UserName + "的直播间",
-                    parameters = info.RoomId
+                    title = info.AnchorInfo.BaseInfo.Uname + "的直播间",
+                    parameters = info.RoomInfo.RoomId
                 });
             }
         }

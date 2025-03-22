@@ -16,7 +16,7 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Dynamic/DynamicTemplate.xaml"/>
+                <ResourceDictionary Source="/Controls/Dynamic/DynamicV2Template.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Style TargetType="HyperlinkButton">
@@ -24,12 +24,8 @@
             </Style>
             <AcrylicBrush x:Key="SystemControlBaseHighAcrylicElementBrush" BackgroundSource="Backdrop" TintColor="{StaticResource SystemChromeAltHighColor}" TintOpacity="0.8" FallbackColor="{StaticResource SystemChromeAltHighColor}" />
         </ResourceDictionary>
-
-
     </Page.Resources>
     <Grid>
-
-
         <SplitView x:Name="splitView" OpenPaneLength="360" PaneBackground="Transparent" PanePlacement="Right" IsPaneOpen="False" DisplayMode="Overlay">
             <SplitView.Pane>
                 <Border x:Name="RootBorder" Padding="12,0,0,0" >
@@ -45,15 +41,15 @@
                             <Pivot x:Name="pivotRight" SelectionChanged="pivotRight_SelectionChanged">
                                 <PivotItem Margin="0">
                                     <PivotItem.Header>
-                                        <TextBlock FontSize="15">转发(<Run x:Name="repostCount"/>)</TextBlock>
+                                        <TextBlock FontSize="15">转发(<Run Text="{x:Bind m_viewModel.RepostCount,Mode=OneWay}"/>)</TextBlock>
                                     </PivotItem.Header>
                                     <controls:DynamicRepostControl x:Name="repost"></controls:DynamicRepostControl>
                                 </PivotItem>
                                 <PivotItem Margin="0">
                                     <PivotItem.Header>
-                                        <TextBlock FontSize="15">评论(<Run x:Name="commentCount"/>)</TextBlock>
+                                        <TextBlock FontSize="15">评论(<Run Text="{x:Bind m_viewModel.ReplyCount,Mode=OneWay}"/>)</TextBlock>
                                     </PivotItem.Header>
-                                    <controls:CommentControl x:Name="comment"></controls:CommentControl>
+                                    <controls:CommentControl x:Name="Comment"></controls:CommentControl>
                                 </PivotItem>
                             </Pivot>
                         </Grid>
@@ -67,13 +63,12 @@
                     <controls:MyListView SelectionMode="None" 
                   IsItemClickEnabled="false" 
                           x:Name="list"
-                  ItemsSource="{x:Bind Path=m_userDynamicViewModel.Items,Mode=OneWay}" 
-                                         CanLoadMore="{x:Bind Path=m_userDynamicViewModel.CanLoadMore,Mode=OneWay}"
+                  ItemsSource="{x:Bind Path=m_viewModel.DynamicItems,Mode=OneWay}" 
+                                         CanLoadMore="False"
                                          LoadMoreBottomOffset="0"
-                                         LoadMoreCommand="{x:Bind Path=m_userDynamicViewModel.LoadMoreCommand}"
                   Padding="4" 
                   Grid.Row="1"
-                 ItemTemplateSelector="{StaticResource select}"
+                 ItemTemplateSelector="{StaticResource DynamicTemplateSelector}"
                   HorizontalContentAlignment="Center">
                         <controls:MyListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
@@ -95,7 +90,7 @@
                         <!--</ListView.ItemsPanel>-->
 
                     </controls:MyListView>
-                    <ProgressRing Grid.Row="1" VerticalAlignment="Center" Margin="8" IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_userDynamicViewModel.Loading,Mode=OneWay}"></ProgressRing>
+                    <ProgressRing Grid.Row="1" VerticalAlignment="Center" Margin="8" IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}"></ProgressRing>
                 </Grid>
             </SplitView.Content>
         </SplitView>

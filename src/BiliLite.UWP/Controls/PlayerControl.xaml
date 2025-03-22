@@ -501,12 +501,22 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <Slider Margin="8 0" 
-                                x:Name="BottomProgress" 
-                                Value="{Binding ElementName=Player,Path=Position,Mode=TwoWay}"
-                                Maximum="{Binding ElementName=Player,Path=Duration,Mode=OneWay}"
-                                Foreground="{ThemeResource SystemAccentColor}"
-                                ThumbToolTipValueConverter="{StaticResource progress}" ></Slider>
+                            <Grid Margin="8 0" >
+                                <!--<Slider
+                                        x:Name="BottomProgress" 
+                                        Value="{Binding ElementName=Player,Path=Position,Mode=OneWay}"
+                                        Maximum="{Binding ElementName=Player,Path=Duration,Mode=OneWay}"
+                                        Foreground="{ThemeResource SystemAccentColor}"
+                                        ThumbToolTipValueConverter="{StaticResource progress}"
+                                >
+                                </Slider>-->
+                                <local:PlayerProgressBar x:Name="BottomProgress"
+                                                         Position="{x:Bind m_viewModel.Position,Mode=OneWay}"
+                                                         PositionChanged="BottomProgress_OnPositionChanged"
+                                                         Duration="{Binding ElementName=Player,Path=Duration,Mode=OneWay}"></local:PlayerProgressBar>
+                                <Canvas x:Name="BottomProgressCanvas">
+                                </Canvas>
+                            </Grid>
                             <Grid Grid.Row="1" Padding="4 8">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -708,7 +718,7 @@
                                 <fa:FontAwesome Icon="Regular_WindowMaximize"  FontSize="20"></fa:FontAwesome>
                             </HyperlinkButton>
                         </StackPanel>
-                        <muxc:ProgressBar VerticalAlignment="Bottom" Foreground="White" Value="{Binding ElementName=BottomProgress,Path=Value,Mode=OneWay}" Maximum="{Binding ElementName=BottomProgress,Path=Maximum,Mode=OneWay}"></muxc:ProgressBar>
+                        <muxc:ProgressBar VerticalAlignment="Bottom" Foreground="White" Value="{Binding ElementName=BottomProgress,Path=Position,Mode=OneWay}" Maximum="{Binding ElementName=BottomProgress,Path=Duration,Mode=OneWay}"></muxc:ProgressBar>
                     </Grid>
 
                 </Grid>
