@@ -1,7 +1,7 @@
 {
-  "version": "4.7.18",
-  "version_num": 40718,
-  "version_desc": "更新内容:\r\n\r\n- 收藏夹内单个视频快速取消收藏 \r\n\r\n- 不登陆时仍然请求评论 \r\n\r\n- 提升热门页推荐页的加载数量，支持设置滚动条预加载偏移量 \r\n\r\n- 解决直播间'无需发送弹幕的天选抽奖'无法抽奖的问题 \r\n\r\n- 修复自动刷新播放地址计时器未释放问题 \r\n\r\n- 修复导出设置错误 \r\n\r\n- 修复合集视频列表时长显示错误 \r\n\r\n- 修复自动刷新播放地址时间数据类型注解错误 \r\n\r\n- 临时处理部分分区页面无法打开，同时修改webview逻辑避免登陆失效 \r\n\r\n- 修复收藏夹批量操作工具错误，清理失效视频自动刷新收藏夹 \r\n\r\n- 处理分P视频重复显示分P数 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.7.19",
+  "version_num": 40719,
+  "version_desc": "更新内容:\r\n\r\n- 优化检查更新相关内容  \r\n\r\n- 重写播放器进度条控件，尝试处理进度条抖动错误和播放停止错误  \r\n\r\n- 打开视频时加载弹幕设置报错不提示 \r\n\r\n- 动态详情页改用Grpc方式请求数据 \r\n\r\n- 修复本地关注直播间无法打开 \r\n\r\n- 切换视频时停止刷新地址计时器 \r\n\r\n- 捕获过滤推荐页列表错误，过滤无up名称的内容  \r\n\r\n- 视频进度条显示章节看点刻度 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
