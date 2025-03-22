@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using BiliLite.Extensions;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -117,8 +111,13 @@ public sealed partial class PlayerProgressBar : UserControl
     private void TrackGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
     {
         var point = e.GetCurrentPoint(TrackGrid);
-        double progress = point.Position.X / TrackGrid.ActualWidth;
-        ProgressToolTip.Content = $"{progress * Duration:F2} s";
+        var progress = (long) ((point.Position.X / TrackGrid.ActualWidth) * Duration);
+        var displayTime = progress.ProgressToTime();
+        ProgressToolTip.Content = displayTime;
+        // 动态更新 ToolTip 的位置
+        var transform = TrackGrid.TransformToVisual(Window.Current.Content);
+        var position = transform.TransformPoint(new Point(point.Position.X, 0));
+        ProgressToolTip.HorizontalOffset = position.X;
     }
 
     private void TrackGrid_PointerPressed(object sender, PointerRoutedEventArgs e)

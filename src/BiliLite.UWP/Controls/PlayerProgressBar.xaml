@@ -20,10 +20,13 @@
         <Canvas>
             <Thumb Name="ProgressThumb" DragDelta="ProgressThumb_DragDelta" DragCompleted="ProgressThumb_DragCompleted"
                    Width="20" Height="20" VerticalAlignment="Center">
+                <Thumb.RenderTransform>
+                    <TranslateTransform Y="-8"></TranslateTransform>
+                </Thumb.RenderTransform>
                 <Thumb.Template>
                     <ControlTemplate TargetType="Thumb">
                         <!--<Image Source="{Binding ThumbIcon, ElementName=Root,Mode=OneWay}" />-->
-                        <Ellipse Fill="Red" Width="20" Height="20" />
+                        <Ellipse Fill="{ThemeResource SystemAccentColor}" Width="20" Height="20" />
                     </ControlTemplate>
                 </Thumb.Template>
             </Thumb>

@@ -2600,6 +2600,7 @@ namespace BiliLite.Controls
                 return;
             }
             _logger.Debug("视频结束，上报进度");
+            Pause();
 
             await ReportHistory(Player.Duration);
 
@@ -3086,6 +3087,12 @@ namespace BiliLite.Controls
                     m_startTime = DateTime.Now;
                     return;
                 }
+            }
+
+            // 播放结束后再次播放应从进度0开始
+            if (Player.PlayState == PlayState.End)
+            {
+                SetPosition(0);
             }
             Player.Play();
         }
