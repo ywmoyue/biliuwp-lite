@@ -9,27 +9,42 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <Grid Name="TrackGrid" Background="LightGray" Height="5" VerticalAlignment="Center"
+    <Grid Name="TrackGrid" Background="Transparent" Height="21" VerticalAlignment="Center"
           PointerMoved="TrackGrid_PointerMoved" PointerPressed="TrackGrid_PointerPressed">
         <ToolTipService.ToolTip>
             <ToolTip Name="ProgressToolTip" />
         </ToolTipService.ToolTip>
-        <!-- 进度条背景 -->
-        <Rectangle Name="ProgressRectangle"  Fill="{ThemeResource SystemAccentColor}" HorizontalAlignment="Left" />
-        <!-- Thumb 容器 -->
-        <Canvas>
-            <Thumb Name="ProgressThumb" DragDelta="ProgressThumb_DragDelta" DragCompleted="ProgressThumb_DragCompleted"
-                   Width="20" Height="20" VerticalAlignment="Center">
+
+        <!-- 可视背景条（5px 高度，位于中间） -->
+        <Rectangle Fill="LightGray" 
+                   Height="5" 
+                   VerticalAlignment="Center" />
+
+        <!-- 进度条填充（同样保持在中间 5px 高度） -->
+        <Rectangle Name="ProgressRectangle"  
+                   Fill="{ThemeResource SystemAccentColor}"  
+                   Height="5" 
+                   VerticalAlignment="Center" 
+                   HorizontalAlignment="Left" />
+
+        <!-- Thumb 容器及组件的垂直居中处理 -->
+        <Canvas VerticalAlignment="Center" Height="20">
+            <Thumb Name="ProgressThumb" 
+                   DragDelta="ProgressThumb_DragDelta" 
+                   DragCompleted="ProgressThumb_DragCompleted" 
+                   Width="20" Height="20" 
+                   VerticalAlignment="Center">
                 <Thumb.RenderTransform>
-                    <TranslateTransform Y="-8"></TranslateTransform>
+                    <TranslateTransform Y="-1" />
                 </Thumb.RenderTransform>
                 <Thumb.Template>
                     <ControlTemplate TargetType="Thumb">
-                        <!--<Image Source="{Binding ThumbIcon, ElementName=Root,Mode=OneWay}" />-->
-                        <Ellipse Fill="{ThemeResource SystemAccentColor}" Width="20" Height="20" />
+                        <Ellipse Fill="{ThemeResource SystemAccentColor}" 
+                                 Width="20" Height="20" />
                     </ControlTemplate>
                 </Thumb.Template>
             </Thumb>
         </Canvas>
     </Grid>
+
 </UserControl>
