@@ -924,6 +924,7 @@ namespace BiliLite.Controls
             subtitles = null;
             subtitleTimer?.Stop();
             subtitleTimer = null;
+            Pause();
             Player.ClosePlay();
 
             m_autoRefreshTimer?.Stop();
