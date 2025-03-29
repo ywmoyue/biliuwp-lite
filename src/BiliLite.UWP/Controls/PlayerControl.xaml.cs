@@ -2240,7 +2240,7 @@ namespace BiliLite.Controls
             DirectionY = false;
             if (ssValue != 0)
             {
-                Player.Position = Player.Position + ssValue;
+                SetPosition(Player.Position + ssValue);
             }
         }
 
