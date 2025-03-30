@@ -37,15 +37,13 @@
                                 <GradientStop Offset="0" Color="#00000000" />
                             </LinearGradientBrush>
                         </Grid.Background>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock
-                                FontSize="12"
-                                Foreground="White"
-                                Text="{x:Bind Path=Display}" />
-                        </StackPanel>
+                        <TextBlock HorizontalAlignment="Right"
+     FontSize="12"
+     Foreground="White"
+     Text="{x:Bind Path=Display}" />
                     </Grid>
                     <Border
-                        Margin="4"
+                        Margin="5"
                         Padding="8,4"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top"
@@ -184,15 +182,13 @@
                                                         <GradientStop Offset="0" Color="#00000000" />
                                                     </LinearGradientBrush>
                                                 </Grid.Background>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock
-                                                        FontSize="12"
-                                                        Foreground="White"
-                                                        Text="{x:Bind Path=NewEp.index_show}" />
-                                                </StackPanel>
+                                                <TextBlock HorizontalAlignment="Right"
+    FontSize="12"
+    Foreground="White"
+    Text="{x:Bind Path=NewEp.index_show}" />
                                             </Grid>
                                             <Border
-                                                Margin="4"
+                                                Margin="5"
                                                 Padding="8,4"
                                                 HorizontalAlignment="Right"
                                                 VerticalAlignment="Top"
@@ -278,7 +274,7 @@
                                                         <GradientStop Offset="0" Color="#00000000" />
                                                     </LinearGradientBrush>
                                                 </Grid.Background>
-                                                <StackPanel Orientation="Horizontal">
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                                     <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                                         FontSize="12"
                                                         Foreground="White"

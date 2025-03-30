@@ -14,13 +14,14 @@
     mc:Ignorable="d">
 
     <Grid>
-        <controls:MyAdaptiveGridView ItemHeight="120"
+        <controls:MyAdaptiveGridView
             x:Name="HotGridView"
             Padding="10,0"
             CanLoadMore="True"
             DesiredWidth="550"
             IsItemClickEnabled="True"
             ItemClick="gridHot_ItemClick"
+            ItemHeight="120"
             ItemsSource="{x:Bind Path=m_viewModel.HotItems, Mode=OneWay}"
             LoadMoreBottomOffset="{x:Bind m_viewModel.ScrollViewLoadMoreBottomOffset}"
             LoadMoreCommand="{x:Bind Path=m_viewModel.LoadMoreCommand}"
@@ -52,7 +53,7 @@
                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                 Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
                                 Stretch="UniformToFill" />
-                            <Grid>
+                            <Grid Padding="8" VerticalAlignment="Bottom">
                                 <Grid.Background>
                                     <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
                                         <GradientStop Offset="0.993" Color="#CC000005" />
@@ -60,28 +61,11 @@
                                     </LinearGradientBrush>
                                 </Grid.Background>
                                 <TextBlock
-                                    Margin="8"
-                                    VerticalAlignment="Bottom"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
                                     FontSize="12"
                                     Foreground="White"
                                     Text="{x:Bind TextInfo1}" />
-                                <Border
-                                    Margin="5"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Bottom"
-                                    Background="{x:Bind Path=RcmdReason.BgColor, Converter={StaticResource ColorConvert}}"
-                                    BorderBrush="{x:Bind Path=RcmdReason.BorderColor, Converter={StaticResource ColorConvert}}"
-                                    BorderThickness="1"
-                                    CornerRadius="{ThemeResource ControlCornerRadius}">
-                                    <TextBlock
-                                        Padding="2"
-                                        FontSize="12"
-                                        Foreground="{x:Bind Path=RcmdReason.TextColor, Converter={StaticResource ColorConvert}}"
-                                        Text="{x:Bind Path=RcmdReason.Text}"
-                                        TextAlignment="Justify"
-                                        TextTrimming="CharacterEllipsis"
-                                        TextWrapping="Wrap" />
-                                </Border>
                             </Grid>
                         </Grid>
                         <Grid Grid.Column="1" Margin="10,5">
@@ -92,6 +76,21 @@
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="Wrap" />
                             <StackPanel VerticalAlignment="Bottom">
+                                <Border
+                                    Padding="4,1,5,2"
+                                    HorizontalAlignment="Left"
+                                    Background="{x:Bind Path=RcmdReason.BgColor, Converter={StaticResource ColorConvert}}"
+                                    BorderBrush="{x:Bind Path=RcmdReason.BorderColor, Converter={StaticResource ColorConvert}}"
+                                    BorderThickness="1"
+                                    CornerRadius="{ThemeResource ControlCornerRadius}">
+                                    <TextBlock
+                                        FontSize="12"
+                                        Foreground="{x:Bind Path=RcmdReason.TextColor, Converter={StaticResource ColorConvert}}"
+                                        Text="{x:Bind Path=RcmdReason.Text}"
+                                        TextAlignment="Justify"
+                                        TextTrimming="CharacterEllipsis"
+                                        TextWrapping="Wrap" />
+                                </Border>
                                 <TextBlock
                                     FontSize="13"
                                     Foreground="Gray"

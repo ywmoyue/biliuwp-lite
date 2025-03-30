@@ -121,12 +121,10 @@
                                                         <GradientStop Offset="0" Color="#00000000" />
                                                     </LinearGradientBrush>
                                                 </Grid.Background>
-                                                <StackPanel>
-                                                    <TextBlock
-                                                        FontSize="12"
-                                                        Foreground="White"
-                                                        Text="{x:Bind Path=AnchorInfo.BaseInfo.Uname}" />
-                                                </StackPanel>
+                                                <TextBlock
+    FontSize="12"
+    Foreground="White"
+    Text="{x:Bind Path=AnchorInfo.BaseInfo.Uname}" />
                                                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                                     <TextBlock
                                                         Margin="0,0,8,0"
@@ -204,12 +202,10 @@
                                                         <GradientStop Offset="0" Color="#00000000" />
                                                     </LinearGradientBrush>
                                                 </Grid.Background>
-                                                <StackPanel>
-                                                    <TextBlock
-                                                        FontSize="12"
-                                                        Foreground="White"
-                                                        Text="{x:Bind Path=uname}" />
-                                                </StackPanel>
+                                                <TextBlock
+    FontSize="12"
+    Foreground="White"
+    Text="{x:Bind Path=uname}" />
                                                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                                     <fa:FontAwesome
                                                         Margin="0,0,8,0"
@@ -319,12 +315,10 @@
                                                                     <GradientStop Offset="0" Color="#00000000" />
                                                                 </LinearGradientBrush>
                                                             </Grid.Background>
-                                                            <StackPanel>
-                                                                <TextBlock
-                                                                    FontSize="12"
-                                                                    Foreground="White"
-                                                                    Text="{x:Bind Path=Uname}" />
-                                                            </StackPanel>
+                                                            <TextBlock
+    FontSize="12"
+    Foreground="White"
+    Text="{x:Bind Path=Uname}" />
                                                             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                                                 <fa:FontAwesome
                                                                     Margin="0,0,8,0"

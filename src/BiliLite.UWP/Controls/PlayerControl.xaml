@@ -53,7 +53,6 @@
                             <Grid>
                                 <ListView
                                     x:Name="EpisodeList"
-                                    Margin="0,4"
                                     Loaded="EpisodeList_Loaded"
                                     SelectionChanged="EpisodeList_SelectionChanged">
                                     <ListView.ItemTemplate>
@@ -67,14 +66,17 @@
                                                     <TextBlock
                                                         MinWidth="25"
                                                         VerticalAlignment="Center"
+                                                        Foreground="White"
                                                         Text="{Binding TitlePage}" />
                                                     <TextBlock
                                                         Grid.Column="1"
+                                                        Foreground="White"
                                                         Text="{Binding TitlePart}"
                                                         TextAlignment="Justify"
                                                         TextWrapping="Wrap" />
                                                 </Grid>
                                                 <TextBlock
+                                                    Foreground="White"
                                                     Text="{Binding title}"
                                                     TextAlignment="Justify"
                                                     TextWrapping="Wrap"

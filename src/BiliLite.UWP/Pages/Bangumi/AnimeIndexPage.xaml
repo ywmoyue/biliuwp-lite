@@ -77,7 +77,7 @@
                                         <GradientStop Offset="0" Color="#00000000" />
                                     </LinearGradientBrush>
                                 </Grid.Background>
-                                <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                     <TextBlock
                                         FontSize="12"
                                         Foreground="White"
@@ -92,7 +92,7 @@
                                 </StackPanel>
                             </Grid>
                             <Border
-                                Margin="4"
+                                Margin="5"
                                 Padding="8,4"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"

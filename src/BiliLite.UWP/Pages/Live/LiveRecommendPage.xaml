@@ -53,7 +53,7 @@
                                 StretchContentForSingleRow="False">
                                 <controls:MyAdaptiveGridView.ItemTemplate>
                                     <DataTemplate x:DataType="modules:LiveRecommendItemModel">
-                                        <Grid>
+                                        <Grid Background="{ThemeResource CardBackground}">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition />
                                                 <RowDefinition Height="24" />
@@ -73,12 +73,10 @@
                                                             <GradientStop Offset="0" Color="#00000000" />
                                                         </LinearGradientBrush>
                                                     </Grid.Background>
-                                                    <StackPanel>
-                                                        <TextBlock
-                                                            FontSize="12"
-                                                            Foreground="White"
-                                                            Text="{x:Bind Path=uname}" />
-                                                    </StackPanel>
+                                                        <TextBlock HorizontalAlignment="Left"
+    FontSize="12"
+    Foreground="White"
+    Text="{x:Bind Path=uname}" />
                                                     <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                                         <fa:FontAwesome
                                                             Margin="0,0,8,0"

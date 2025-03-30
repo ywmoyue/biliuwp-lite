@@ -37,12 +37,10 @@
                                 <GradientStop Offset="0" Color="#00000000" />
                             </LinearGradientBrush>
                         </Grid.Background>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock
-                                FontSize="12"
-                                Foreground="White"
-                                Text="{x:Bind Path=Stat.FollowView}" />
-                        </StackPanel>
+                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
+    FontSize="12"
+    Foreground="White"
+    Text="{x:Bind Path=Stat.FollowView}" />
                     </Grid>
                     <Border
                         Margin="4"
@@ -102,12 +100,10 @@
                                 <GradientStop Offset="0" Color="#00000000" />
                             </LinearGradientBrush>
                         </Grid.Background>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock
-                                FontSize="12"
-                                Foreground="White"
-                                Text="{x:Bind Path=Stat.FollowView}" />
-                        </StackPanel>
+                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
+    FontSize="12"
+    Foreground="White"
+    Text="{x:Bind Path=Stat.FollowView}" />
                     </Grid>
                     <Border
                         Margin="4"
@@ -250,12 +246,10 @@
                                                         <GradientStop Offset="0" Color="#00000000" />
                                                     </LinearGradientBrush>
                                                 </Grid.Background>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock
-                                                        FontSize="12"
-                                                        Foreground="White"
-                                                        Text="{x:Bind Path=NewEp.index_show}" />
-                                                </StackPanel>
+                                                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
+    FontSize="12"
+    Foreground="White"
+    Text="{x:Bind Path=NewEp.index_show}" />
                                             </Grid>
                                             <Border
                                                 Margin="4"
@@ -331,12 +325,10 @@
                                                         <GradientStop Offset="0" Color="#00000000" />
                                                     </LinearGradientBrush>
                                                 </Grid.Background>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock
-                                                        FontSize="12"
-                                                        Foreground="White"
-                                                        Text="{x:Bind Path=Stat.FollowView}" />
-                                                </StackPanel>
+                                                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
+    FontSize="12"
+    Foreground="White"
+    Text="{x:Bind Path=Stat.FollowView}" />
                                             </Grid>
                                             <Border
                                                 Margin="4"

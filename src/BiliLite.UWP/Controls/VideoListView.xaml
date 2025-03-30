@@ -94,8 +94,8 @@
                                                             </LinearGradientBrush>
                                                         </Grid.Background>
                                                         <TextBlock
-                                                            HorizontalAlignment="Left"
-                                                            VerticalAlignment="Bottom"
+                                                            HorizontalAlignment="Right"
+                                                            VerticalAlignment="Center"
                                                             FontSize="12"
                                                             Foreground="White"
                                                             Text="{x:Bind DurationStr}"

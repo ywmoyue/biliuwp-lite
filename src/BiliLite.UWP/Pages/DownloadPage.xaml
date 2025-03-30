@@ -156,7 +156,8 @@
                                                         BorderThickness="0"
                                                         Click="BtnPauseSubItem_OnClick"
                                                         Visibility="{x:Bind Path=ShowPause, Mode=OneWay}">
-                                                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                                        <FontIcon
+                                                            FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                                             FontSize="14"
                                                             Glyph="&#xE103;" />
                                                     </Button>
@@ -170,7 +171,8 @@
                                                         BorderThickness="0"
                                                         Click="BtnResumeSubItem_OnClick"
                                                         Visibility="{x:Bind Path=ShowStart, Mode=OneWay}">
-                                                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                                        <FontIcon
+                                                            FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                                             FontSize="14"
                                                             Glyph="&#xE118;" />
                                                     </Button>
@@ -198,7 +200,8 @@
                             Command="{x:Bind Path=m_viewModel.StartCommand}"
                             FontSize="12">
                             <StackPanel Orientation="Horizontal">
-                                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                <FontIcon
+                                    FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                     FontSize="14"
                                     Glyph="&#xE102;" />
                                 <TextBlock Margin="4,0,0,0">开始全部</TextBlock>
@@ -209,7 +212,8 @@
                             Command="{x:Bind Path=m_viewModel.PauseCommand}"
                             FontSize="12">
                             <StackPanel Orientation="Horizontal">
-                                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                <FontIcon
+                                    FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                     FontSize="14"
                                     Glyph="&#xE103;" />
                                 <TextBlock Margin="4,0,0,0">暂停全部</TextBlock>
@@ -220,7 +224,8 @@
                             Command="{x:Bind Path=m_viewModel.DeleteCommand}"
                             FontSize="12">
                             <StackPanel Orientation="Horizontal">
-                                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                <FontIcon
+                                    FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                     FontSize="14"
                                     Glyph="&#xE107;" />
                                 <TextBlock Margin="4,0,0,0">删除全部</TextBlock>
@@ -275,8 +280,9 @@
                                             <TextBlock
                                                 MaxLines="2"
                                                 Text="{Binding Path=Title}"
+                                                TextAlignment="Justify"
                                                 TextTrimming="CharacterEllipsis"
-                                                TextWrapping="Wrap" TextAlignment="Justify" />
+                                                TextWrapping="Wrap" />
                                             <TextBlock
                                                 Margin="0,4,0,0"
                                                 FontSize="12"
@@ -350,12 +356,13 @@
                     </SplitView.Pane>
                     <SplitView.Content>
                         <Grid>
-                            <controls:MyAdaptiveGridView ItemHeight="120"
+                            <controls:MyAdaptiveGridView
                                 x:Name="listDowned"
                                 Padding="8"
                                 DesiredWidth="550"
                                 IsItemClickEnabled="True"
                                 ItemClick="listDowned_ItemClick"
+                                ItemHeight="120"
                                 ItemsSource="{x:Bind Path=m_viewModel.DownloadedViewModels, Mode=OneWay}"
                                 SelectionMode="None"
                                 StretchContentForSingleRow="false">
@@ -397,45 +404,46 @@
                                                 <ColumnDefinition />
                                             </Grid.ColumnDefinitions>
                                             <Grid>
-                                                <Image
-                                                    Source="{x:Bind Path=Cover}"
-                                                    Stretch="UniformToFill" />
-                                                <Border
-                                                    Margin="4"
-                                                    HorizontalAlignment="Right"
-                                                    VerticalAlignment="Top"
-                                                    Background="{ThemeResource SystemAccentColor}"
-                                                    CornerRadius="{StaticResource ControlCornerRadius}"
-                                                    Visibility="{x:Bind Path=IsSeason}">
+                                                <Image Source="{x:Bind Path=Cover}" Stretch="UniformToFill" />
+                                                <Grid Padding="8" VerticalAlignment="Bottom">
+                                                    <Grid.Background>
+                                                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                                            <GradientStop Offset="0.993" Color="#CC000005" />
+                                                            <GradientStop Offset="0" Color="#00000000" />
+                                                        </LinearGradientBrush>
+                                                    </Grid.Background>
                                                     <TextBlock
-                                                        Padding="8,4"
+                                                        HorizontalAlignment="Right"
                                                         FontSize="12"
-                                                        Foreground="White">
-                                                        剧集
-                                                    </TextBlock>
-                                                </Border>
+                                                        Foreground="White"
+                                                        Text="{x:Bind Path=UpdateTime}" />
+                                                </Grid>
                                             </Grid>
 
-                                            <Grid Grid.Column="1" Margin="8,0,0,0">
+                                            <Grid Grid.Column="1" Padding="8">
                                                 <TextBlock
                                                     MaxLines="2"
                                                     Text="{x:Bind Path=Title}"
+                                                    TextAlignment="Justify"
                                                     TextTrimming="CharacterEllipsis"
-                                                    TextWrapping="Wrap" TextAlignment="Justify" />
+                                                    TextWrapping="Wrap" />
                                                 <StackPanel VerticalAlignment="Bottom">
+                                                    <Border
+                                                        Padding="4,1,5,2"
+                                                        HorizontalAlignment="Left"
+                                                        Background="{ThemeResource SystemAccentColor}"
+                                                        CornerRadius="{StaticResource ControlCornerRadius}">
+                                                        <TextBlock FontSize="12" Foreground="White">
+                                                            剧集
+                                                        </TextBlock>
+                                                    </Border>
                                                     <TextBlock
                                                         Margin="0,4,0,0"
                                                         FontSize="12"
                                                         Foreground="Gray">
                                                         共<Run Text="{x:Bind Path=Epsidoes.Count}" />
                                                         个视频</TextBlock>
-                                                    <TextBlock
-                                                        Margin="0,4,0,0"
-                                                        FontSize="12"
-                                                        Foreground="Gray"
-                                                        Text="{x:Bind Path=UpdateTime}" />
                                                 </StackPanel>
-
                                             </Grid>
                                         </Grid>
                                     </DataTemplate>

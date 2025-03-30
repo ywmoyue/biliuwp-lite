@@ -51,13 +51,13 @@
                     <TextBlock FontSize="15">关注直播中</TextBlock>
                 </PivotItem.Header>
                 <Grid>
-                    <control:MyAdaptiveGridView ItemHeight="120"
+                    <control:MyAdaptiveGridView
                         Padding="12,8"
                         CanLoadMore="False"
                         DesiredWidth="550"
                         IsItemClickEnabled="True"
                         ItemClick="AttentionlList_ItemClick"
-                        
+                        ItemHeight="120"
                         ItemsSource="{x:Bind Path=liveAttentionVM.Follow, Mode=OneWay}"
                         OneRowModeEnabled="False"
                         SelectionMode="None"
@@ -75,28 +75,33 @@
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                         Source="{x:Bind Path=cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
                                         Stretch="UniformToFill" />
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="10,5"
+                                        MaxLines="1"
+                                        Text="{x:Bind title}"
+                                        TextTrimming="CharacterEllipsis" />
 
-                                    <StackPanel Grid.Column="1" Margin="10,5">
-                                        <TextBlock
-                                            MaxLines="1"
-                                            Text="{x:Bind title}"
-                                            TextTrimming="CharacterEllipsis" />
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        Margin="10,5"
+                                        VerticalAlignment="Bottom">
+                                        <!--<TextBlock
+                                            Grid.Row="2"
+                                            Margin="4,0,4,4"
+                                            FontSize="12"
+                                            Foreground="Gray"
+                                            MaxLines="2"
+                                            Text="{Binding desc}"
+                                            TextAlignment="Justify"
+                                            TextTrimming="CharacterEllipsis"
+                                            TextWrapping="Wrap" />-->
                                         <TextBlock Margin="0,4,0,0" Foreground="Gray"><Run Text="{x:Bind Path=uname}" /></TextBlock>
                                         <TextBlock Margin="0,4,0,0" Foreground="Gray">
                                             人气:<Run Text="{x:Bind Path=online, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
                                         <TextBlock Margin="0,4,0,0" Foreground="Gray">
                                             分区:<Run Text="{x:Bind Path=area_v2_name}" /></TextBlock>
                                     </StackPanel>
-                                    <!--<TextBlock
-                                        Grid.Row="2"
-                                        Margin="4,0,4,4"
-                                        FontSize="12"
-                                        Foreground="Gray"
-                                        MaxLines="2"
-                                        Text="{Binding desc}"
-                                        TextAlignment="Justify"
-                                        TextTrimming="CharacterEllipsis"
-                                        TextWrapping="Wrap" />-->
                                 </Grid>
                             </DataTemplate>
                         </control:MyAdaptiveGridView.ItemTemplate>
@@ -126,7 +131,7 @@
                     <control:MyAdaptiveGridView
                         Padding="12,8"
                         CanLoadMore="{x:Bind Path=liveAttentionUnLiveVM.CanLoadMore, Mode=OneWay}"
-                        DesiredWidth="550" 
+                        DesiredWidth="550"
                         IsItemClickEnabled="True"
                         ItemClick="UnLiveList_ItemClick"
                         ItemsSource="{x:Bind Path=liveAttentionUnLiveVM.Items, Mode=OneWay}"
@@ -206,13 +211,13 @@
                     <TextBlock FontSize="15">观看历史</TextBlock>
                 </PivotItem.Header>
                 <Grid>
-                    <control:MyAdaptiveGridView ItemHeight="120"
+                    <control:MyAdaptiveGridView
                         Padding="12,8"
                         CanLoadMore="{x:Bind Path=liveCenterHistoryVM.CanLoadMore, Mode=OneWay}"
                         DesiredWidth="550"
                         IsItemClickEnabled="True"
                         ItemClick="HistoryList_ItemClick"
-                        
+                        ItemHeight="120"
                         ItemsSource="{x:Bind Path=liveCenterHistoryVM.Items, Mode=OneWay}"
                         LoadMoreBottomOffset="0"
                         LoadMoreCommand="{x:Bind Path=liveCenterHistoryVM.LoadMoreCommand}"

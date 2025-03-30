@@ -266,7 +266,7 @@
                                             Stretch="Fill"
                                             Tapped="Image_Tapped" />
                                         <Border
-                                            Margin="4"
+                                            Margin="5"
                                             Padding="4,2"
                                             HorizontalAlignment="Right"
                                             VerticalAlignment="Top"

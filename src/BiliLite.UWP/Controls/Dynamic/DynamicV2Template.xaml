@@ -80,7 +80,7 @@
                                             <GradientStop Offset="0" Color="#00000000" />
                                         </LinearGradientBrush>
                                     </Grid.Background>
-                                    <TextBlock
+                                    <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
                                         Margin="4,2"
                                         FontSize="12"
                                         Foreground="White"
@@ -155,7 +155,7 @@
                                             <GradientStop Offset="0" Color="#00000000" />
                                         </LinearGradientBrush>
                                     </Grid.Background>
-                                    <TextBlock
+                                    <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
                                         Margin="4,2"
                                         FontSize="12"
                                         Foreground="White"
@@ -212,7 +212,7 @@
                                             <GradientStop Offset="0" Color="#00000000" />
                                         </LinearGradientBrush>
                                     </Grid.Background>
-                                    <TextBlock
+                                    <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
                                         Margin="4,2"
                                         FontSize="12"
                                         Foreground="White"
@@ -277,7 +277,7 @@
                                         <GradientStop Offset="0" Color="#00000000" />
                                     </LinearGradientBrush>
                                 </Grid.Background>
-                                <TextBlock
+                                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
                                     Margin="4,2"
                                     FontSize="12"
                                     Foreground="White"

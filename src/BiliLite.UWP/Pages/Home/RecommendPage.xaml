@@ -88,34 +88,38 @@
                                 <GradientStop Offset="0" Color="#00000000" />
                             </LinearGradientBrush>
                         </Grid.Background>
+                        <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                                <TextBlock
+                                    FontSize="12"
+                                    Foreground="White"
+                                    Text="{x:Bind LeftText}" />
+                                <!--<fa:FontAwesome
+                                    Margin="0,2,8,0"
+                                    FontSize="12"
+                                    Foreground="White"
+                                    Icon="Regular_PlayCircle" />
+                                <TextBlock
+                                    FontSize="12"
+                                    Foreground="White"
+                                    Text="{x:Bind cover_left_text_1}" />
+                                <fa:FontAwesome
+                                    Margin="12,2,8,0"
+                                    FontSize="12"
+                                    Foreground="White"
+                                    Icon="Solid_AlignLeft" />
+                                <TextBlock
+                                    FontSize="12"
+                                    Foreground="White"
+                                    Text="{x:Bind cover_left_text_2}" />-->
+                            </StackPanel>
+                        </StackPanel>
                         <TextBlock
+                            HorizontalAlignment="Right"
                             FontSize="12"
                             Foreground="White"
                             Text="{x:Bind CoverRightText}" />
-                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                            <TextBlock
-                                FontSize="12"
-                                Foreground="White"
-                                Text="{x:Bind LeftText}" />
-                            <!--<fa:FontAwesome
-                                Margin="0,2,8,0"
-                                FontSize="12"
-                                Foreground="White"
-                                Icon="Regular_PlayCircle" />
-                            <TextBlock
-                                FontSize="12"
-                                Foreground="White"
-                                Text="{x:Bind cover_left_text_1}" />
-                            <fa:FontAwesome
-                                Margin="12,2,8,0"
-                                FontSize="12"
-                                Foreground="White"
-                                Icon="Solid_AlignLeft" />
-                            <TextBlock
-                                FontSize="12"
-                                Foreground="White"
-                                Text="{x:Bind cover_left_text_2}" />-->
-                        </StackPanel>
+
                     </Grid>
                 </Grid>
                 <TextBlock
@@ -167,7 +171,7 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid>
-                    <toolkit:ImageEx 
+                    <toolkit:ImageEx
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -204,33 +208,12 @@
                                 Text="{x:Bind cover_left_text_2}" />-->
                         </StackPanel>
                         <TextBlock
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
                             FontSize="12"
                             Foreground="White"
                             Text="{x:Bind CoverRightText}" />
-                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                            <StackPanel.Resources>
-                                <Style TargetType="TextBlock">
-                                    <Setter Target="FontSize" Value="12" />
-                                </Style>
-                                <Style TargetType="Border">
-                                    <Setter Target="Padding" Value="5,0" />
-                                    <Setter Target="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
-                                </Style>
-                            </StackPanel.Resources>
-                            <Border
-                                Background="{x:Bind Path=RcmdReasonStyle.BgColor, Converter={StaticResource ColorConvert}}"
-                                BorderBrush="{x:Bind Path=RcmdReasonStyle.BorderColor, Converter={StaticResource ColorConvert}}"
-                                BorderThickness="1"
-                                Visibility="{x:Bind ShowRcmd}">
-                                <TextBlock Foreground="{x:Bind Path=RcmdReasonStyle.TextColor, Converter={StaticResource ColorConvert}}" Text="{x:Bind Path=RcmdReasonStyle.Text}" />
-                            </Border>
-                            <Border Background="Gray" Visibility="{x:Bind ShowAd}">
-                                <TextBlock Text="广告" />
-                            </Border>
-                            <Border Background="{ThemeResource SystemAccentColor}" Visibility="{x:Bind ShowBadge}">
-                                <TextBlock Text="{x:Bind Path=Badge}" />
-                            </Border>
-                        </StackPanel>
+
                     </Grid>
                 </Grid>
                 <Grid Grid.Column="1" Margin="10,5">
@@ -241,6 +224,32 @@
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="Wrap" />
                     <StackPanel VerticalAlignment="Bottom">
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Target="FontSize" Value="12" />
+                                </Style>
+                                <Style TargetType="Border">
+                                    <Setter Target="Padding" Value="4,1,5,2" />
+                                    <Setter Target="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
+                                </Style>
+                            </StackPanel.Resources>
+                            <Grid>
+                                <Border
+                                    Background="{x:Bind Path=RcmdReasonStyle.BgColor, Converter={StaticResource ColorConvert}}"
+                                    BorderBrush="{x:Bind Path=RcmdReasonStyle.BorderColor, Converter={StaticResource ColorConvert}}"
+                                    BorderThickness="1"
+                                    Visibility="{x:Bind ShowRcmd}">
+                                    <TextBlock Foreground="{x:Bind Path=RcmdReasonStyle.TextColor, Converter={StaticResource ColorConvert}}" Text="{x:Bind Path=RcmdReasonStyle.Text}" />
+                                </Border>
+                            </Grid>
+                            <Border Background="Gray" Visibility="{x:Bind ShowAd}">
+                                <TextBlock Text="广告" />
+                            </Border>
+                            <Border Background="{ThemeResource SystemAccentColor}" Visibility="{x:Bind ShowBadge}">
+                                <TextBlock Text="{x:Bind Path=Badge}" />
+                            </Border>
+                        </StackPanel>
                         <TextBlock
                             FontSize="13"
                             Foreground="Gray"
@@ -260,7 +269,7 @@
             <Grid>
                 <controls:MyAdaptiveGridView
                     x:Name="RecommendGridView"
-                    Padding="10,-5"
+                    Padding="10,0"
                     CanLoadMore="True"
                     IsItemClickEnabled="True"
                     ItemClick="RecommendGridView_ItemClick"

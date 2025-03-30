@@ -86,7 +86,7 @@
                                                     <GradientStop Offset="0" Color="#00000000" />
                                                 </LinearGradientBrush>
                                             </Grid.Background>
-                                            <StackPanel Orientation="Horizontal">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                                 <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                                     FontSize="12"
                                                     Foreground="White"
