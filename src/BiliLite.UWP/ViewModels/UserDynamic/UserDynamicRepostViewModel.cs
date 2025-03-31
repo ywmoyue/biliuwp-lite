@@ -1,45 +1,58 @@
-﻿using BiliLite.Extensions;
-using BiliLite.Extensions.Notifications;
-using BiliLite.Models.Common;
-using BiliLite.Models.Common.UserDynamic;
-using BiliLite.Models.Dynamic;
-using BiliLite.Models.Exceptions;
-using BiliLite.Models.Requests.Api.User;
-using BiliLite.Modules;
-using BiliLite.Pages;
-using BiliLite.Services;
-using BiliLite.ViewModels.Common;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using PropertyChanged;
-using System;
+
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.UI.Xaml.Controls;
+using AutoMapper;
+using BiliLite.Extensions;
+using BiliLite.Models.Attributes;
+using BiliLite.Models.Common;
+using BiliLite.Models.Common.UserDynamic;
+using BiliLite.Models.Exceptions;
+using BiliLite.Models.Requests.Api.User;
+using BiliLite.Modules;
+using BiliLite.Pages;
+using BiliLite.Services;
+using BiliLite.ViewModels.Common;
+using PropertyChanged;
+using Bilibili.App.Dynamic.V2;
 
 namespace BiliLite.ViewModels.UserDynamic
 {
-    public class UserDynamicRepostViewModel : BaseViewModel
+    [RegisterTransientViewModel]
+    public class UserDynamicRepostViewModel : BaseViewModel, IUserDynamicCommands
     {
         #region Fields
 
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly DynamicAPI m_dynamicApi;
-        private string m_next = "";
+        private readonly GrpcService m_grpcService;
+        private string m_offset = "";
+        private readonly IMapper m_mapper;
 
         #endregion
 
         #region Constructors
 
-        public UserDynamicRepostViewModel()
+        public UserDynamicRepostViewModel(GrpcService grpcService, IMapper mapper)
         {
+            m_grpcService = grpcService;
+            m_mapper = mapper;
             m_dynamicApi = new DynamicAPI();
             RefreshCommand = new RelayCommand(Refresh);
             LoadMoreCommand = new RelayCommand(LoadMore);
             UserCommand = new RelayCommand<object>(OpenUser);
+            DetailCommand = new RelayCommand<string>(DynamicExtensions.OpenDetail);
+            ImageCommand = new RelayCommand<object>(DynamicExtensions.OpenImage);
+            WebDetailCommand = new RelayCommand<string>(DynamicExtensions.OpenWebDetail);
+            LikeCommand = new RelayCommand<DynamicV2ItemViewModel>(DynamicExtensions.DoLike);
+            RepostCommand = new RelayCommand<DynamicV2ItemViewModel>(DynamicExtensions.OpenSendDynamicDialog);
+            LaunchUrlCommand = new RelayCommand<string>(DynamicExtensions.LaunchUrl);
+            CopyDynCommand = new RelayCommand<DynamicV2ItemViewModel>(DynamicExtensions.CopyDyn);
+            TagCommand = new RelayCommand<object>(DynamicExtensions.OpenTag);
         }
 
         #endregion
@@ -48,6 +61,16 @@ namespace BiliLite.ViewModels.UserDynamic
 
         public ICommand RefreshCommand { get; private set; }
         public ICommand LoadMoreCommand { get; private set; }
+        public ICommand WebDetailCommand { get; set; }
+        public ICommand DetailCommand { get; set; }
+        public ICommand ImageCommand { get; set; }
+        public ICommand WatchLaterCommand { get; set; }
+        public ICommand CopyDynCommand { get; set; }
+        public ICommand TagCommand { get; set; }
+        public ICommand LaunchUrlCommand { get; set; }
+        public ICommand RepostCommand { get; set; }
+        public ICommand LikeCommand { get; set; }
+        public ICommand CommentCommand { get; set; }
         public ICommand UserCommand { get; set; }
 
         [DoNotNotify]
@@ -57,19 +80,20 @@ namespace BiliLite.ViewModels.UserDynamic
 
         public bool CanLoadMore { get; set; }
 
-        public ObservableCollection<UserDynamicItemDisplayViewModel> Items { get; set; }
+        public ObservableCollection<DynamicV2ItemViewModel> DynamicItems { get; set; } =
+            new ObservableCollection<DynamicV2ItemViewModel>();
 
         #endregion
 
         #region Public Methods
 
-        public async Task GetDynamicItems()
+        public async Task GetDynamicItemReposts(bool reload = false)
         {
             try
             {
                 CanLoadMore = false;
                 Loading = true;
-                await GetDynamicItemsCore();
+                await GetDynamicItemRepostsCore(reload);
             }
             catch (CustomizedErrorException ex)
             {
@@ -93,9 +117,8 @@ namespace BiliLite.ViewModels.UserDynamic
             {
                 return;
             }
-            m_next = "";
-            Items = null;
-            await GetDynamicItems();
+            DynamicItems = null;
+            await GetDynamicItemReposts(true);
         }
 
         public async void LoadMore()
@@ -104,12 +127,12 @@ namespace BiliLite.ViewModels.UserDynamic
             {
                 return;
             }
-            if (Items == null || Items.Count == 0)
+            if (DynamicItems == null || DynamicItems.Count == 0)
             {
                 return;
             }
-            var last = Items.LastOrDefault();
-            await GetDynamicItems();
+            var last = DynamicItems.LastOrDefault();
+            await GetDynamicItemReposts();
         }
 
         public void OpenUser(object id)
@@ -125,102 +148,42 @@ namespace BiliLite.ViewModels.UserDynamic
 
         public void Clear()
         {
-            m_next = "";
-            Items = null;
+            m_offset = "";
+            DynamicItems = null;
         }
 
         #endregion
 
         #region Private Methods
 
-        private async Task GetDynamicItemsCore()
+        private void HandleDynamicResults(RepostListRsp results,bool firstPage)
         {
-            var api = m_dynamicApi.DynamicRepost(ID, m_next);
-
-            var results = await api.Request();
-            if (!results.status)
-            {
-                throw new CustomizedErrorException(results.message);
-            }
-
-            var data = results.GetJObject();
-            if (data["code"].ToInt32() != 0)
-            {
-                throw new CustomizedErrorException(data["message"].ToString());
-            }
-
-            var items = JsonConvert.DeserializeObject<List<DynamicCardModel>>(
-                data["data"]?["items"]?.ToString() ?? "[]");
-
-            var dynamicItemDisplayModels =
-                new ObservableCollection<UserDynamicItemDisplayViewModel>();
+            CanLoadMore = results.HasMore;
+            m_offset = results.Offset;
+            var items = m_mapper.Map<List<DynamicV2ItemViewModel>>(results.List.ToList());
             foreach (var item in items)
             {
-                dynamicItemDisplayModels.Add(ConvertToDisplayRepost(item));
+                item.Parent = this;
             }
-
-            if (Items == null)
-            {
-                Items = dynamicItemDisplayModels;
-            }
+            if (firstPage)
+                DynamicItems = new ObservableCollection<DynamicV2ItemViewModel>(items);
             else
             {
-                foreach (var item in dynamicItemDisplayModels)
-                {
-                    Items.Add(item);
-                }
+                DynamicItems.AddRange(items);
             }
-
-            CanLoadMore = (data["data"]?["has_more"]?.ToInt32() ?? 0) == 1;
-            m_next = data["data"]?["has_more"]?.ToString() ?? "";
         }
 
-        private UserDynamicItemDisplayViewModel ConvertToDisplayRepost(DynamicCardModel item)
+        private async Task GetDynamicItemRepostsCore(bool reload = false)
         {
-            var card = JObject.Parse(item.card);
-            var data = new UserDynamicItemDisplayViewModel()
+            var firstPage = false;
+            if (reload)
             {
-                Datetime = TimeExtensions.TimestampToDatetime(item.desc.timestamp).ToString(),
-                DynamicID = item.desc.dynamic_id,
-                Mid = item.desc.uid,
-                Time = item.desc.timestamp.HandelTimestamp(),
-                UserDynamicItemDisplayCommands = new UserDynamicItemDisplayCommands()
-                {
-                    UserCommand = UserCommand
-                }
-            };
-            var content = "";
-            //内容
-            if (card.ContainsKey("item") && card["item"]["content"] != null)
-            {
-                content = card["item"]["content"]?.ToString();
+                m_offset = "";
             }
-            data.ContentStr = content;
 
-            if (item.desc.user_profile == null) return data;
-            data.UserName = item.desc.user_profile.info.uname;
-            data.Photo = item.desc.user_profile.info.face;
-            if (item.desc.user_profile.vip != null)
-            {
-                data.IsYearVip = item.desc.user_profile.vip.vipStatus == 1 && item.desc.user_profile.vip.vipType == 2;
-            }
-            switch (item.desc.user_profile.card?.official_verify?.type ?? 3)
-            {
-                case 0:
-                    data.Verify = Constants.App.VERIFY_PERSONAL_IMAGE;
-                    break;
-                case 1:
-                    data.Verify = Constants.App.VERIFY_OGANIZATION_IMAGE;
-                    break;
-                default:
-                    data.Verify = Constants.App.TRANSPARENT_IMAGE;
-                    break;
-            }
-            if (!string.IsNullOrEmpty(item.desc.user_profile.pendant?.image))
-            {
-                data.Pendant = item.desc.user_profile.pendant.image;
-            }
-            return data;
+            if (string.IsNullOrEmpty(m_offset)) firstPage = true;
+            var results = await m_grpcService.GetDynRepostList(ID, m_offset);
+            HandleDynamicResults(results, firstPage);
         }
 
         #endregion

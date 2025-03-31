@@ -174,6 +174,9 @@ namespace BiliLite.Extensions
                     .ForMember(dest => dest.Stat,
                         opt => opt.MapFrom(src =>
                             src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleStat).ModuleStat))
+                    .ForMember(dest => dest.BottomStat,
+                        opt => opt.MapFrom(src =>
+                            src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleBottom).ModuleButtom.ModuleStat))
                     .ForMember(dest => dest.Fold,
                         opt => opt.MapFrom(src =>
                             src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleFold).ModuleFold))

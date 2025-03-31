@@ -45,6 +45,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.UI.Xaml.Shapes;
 using PlayInfo = BiliLite.Models.Common.Video.PlayInfo;
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -66,6 +67,7 @@ namespace BiliLite.Controls
         public event PropertyChangedEventHandler PropertyChanged;
         private GestureRecognizer gestureRecognizer;
         private bool m_firstMediaOpened;
+        private ThemeService m_themeService;
         private bool m_isLocalFileMode;
 
         private void DoPropertyChanged(string name)
@@ -123,7 +125,7 @@ namespace BiliLite.Controls
         }
 
         private readonly bool m_autoSkipOpEdFlag = false;
-        private Timer m_autoRefreshTimer;
+        private DispatcherTimer m_autoRefreshTimer;
         private DispatcherTimer m_positionTimer;
         DispatcherTimer danmuTimer;
         /// <summary>
@@ -147,6 +149,7 @@ namespace BiliLite.Controls
             m_viewModel = new PlayControlViewModel();
             m_playSpeedMenuService = App.ServiceProvider.GetRequiredService<PlaySpeedMenuService>();
             m_playerToastService = App.ServiceProvider.GetRequiredService<PlayerToastService>();
+            m_themeService = App.ServiceProvider.GetRequiredService<ThemeService>();
             m_playerToastService.Init(this);
             InitializeComponent();
             dispRequest = new DisplayRequest();
@@ -164,9 +167,9 @@ namespace BiliLite.Controls
             {
                 var timeMin = SettingService.GetValue(SettingConstants.Player.AUTO_REFRESH_PLAY_URL_TIME,
                     SettingConstants.Player.DEFAULT_AUTO_REFRESH_PLAY_URL_TIME);
-                m_autoRefreshTimer = new Timer();
-                m_autoRefreshTimer.Interval = timeMin * 1000 * 60;
-                m_autoRefreshTimer.Elapsed += AutoRefreshTimer_Elapsed;
+                m_autoRefreshTimer = new DispatcherTimer();
+                m_autoRefreshTimer.Interval = TimeSpan.FromMinutes(timeMin);
+                m_autoRefreshTimer.Tick += AutoRefreshTimer_Tick; ;
             }
 
             danmuTimer = new DispatcherTimer();
@@ -203,28 +206,24 @@ namespace BiliLite.Controls
             }
         }
 
-        private async void AutoRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private async void AutoRefreshTimer_Tick(object sender, object e)
         {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, async () =>
+            m_autoRefreshTimer.Stop();
+            _postion = Player.Position;
+            var info = await GetPlayUrlQualitesInfo();
+            if (!info.Success)
             {
-                m_autoRefreshTimer.Stop();
-                _postion = Player.Position;
-                var info = await GetPlayUrlQualitesInfo();
-                if (!info.Success)
-                {
-                    await NotificationShowExtensions.ShowMessageDialog($"请求信息:\r\n{info.Message}", "读取视频播放地址失败");
-                }
-                else
-                {
-                    playUrlInfo = info;
-                    InitSoundQuality();
-                    InitQuality();
-                }
-                NotificationShowExtensions.ShowMessageToast("已根据设置自动刷新播放地址");
-                m_startTime = DateTime.Now;
-            });
+                await NotificationShowExtensions.ShowMessageDialog($"请求信息:\r\n{info.Message}", "读取视频播放地址失败");
+            }
+            else
+            {
+                playUrlInfo = info;
+                InitSoundQuality();
+                InitQuality();
+            }
+            NotificationShowExtensions.ShowMessageToast("已根据设置自动刷新播放地址");
+            m_startTime = DateTime.Now;
         }
-
         private void Timer_focus_Tick(object sender, object e)
         {
             var elent = FocusManager.GetFocusedElement();
@@ -346,198 +345,204 @@ namespace BiliLite.Controls
 
         private void LoadDanmuSetting()
         {
-
-            //顶部
-            DanmuSettingHideTop.IsOn = SettingService.GetValue<bool>(SettingConstants.VideoDanmaku.HIDE_TOP, false);
-            if (DanmuSettingHideTop.IsOn)
+            try
             {
-                m_danmakuController.HideTop();
-            }
-            DanmuSettingHideTop.Toggled += new RoutedEventHandler((e, args) =>
-            {
-                SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.HIDE_TOP, DanmuSettingHideTop.IsOn);
+                //顶部
+                DanmuSettingHideTop.IsOn = SettingService.GetValue<bool>(SettingConstants.VideoDanmaku.HIDE_TOP, false);
                 if (DanmuSettingHideTop.IsOn)
                 {
                     m_danmakuController.HideTop();
                 }
-                else
+                DanmuSettingHideTop.Toggled += new RoutedEventHandler((e, args) =>
                 {
-                    m_danmakuController.ShowTop();
-                }
-            });
-            //底部
-            DanmuSettingHideBottom.IsOn = SettingService.GetValue<bool>(SettingConstants.VideoDanmaku.HIDE_BOTTOM, false);
-            if (DanmuSettingHideBottom.IsOn)
-            {
-                m_danmakuController.HideBottom();
-            }
-            DanmuSettingHideBottom.Toggled += new RoutedEventHandler((e, args) =>
-            {
-                SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.HIDE_BOTTOM, DanmuSettingHideBottom.IsOn);
+                    SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.HIDE_TOP, DanmuSettingHideTop.IsOn);
+                    if (DanmuSettingHideTop.IsOn)
+                    {
+                        m_danmakuController.HideTop();
+                    }
+                    else
+                    {
+                        m_danmakuController.ShowTop();
+                    }
+                });
+                //底部
+                DanmuSettingHideBottom.IsOn = SettingService.GetValue<bool>(SettingConstants.VideoDanmaku.HIDE_BOTTOM, false);
                 if (DanmuSettingHideBottom.IsOn)
                 {
                     m_danmakuController.HideBottom();
                 }
-                else
+                DanmuSettingHideBottom.Toggled += new RoutedEventHandler((e, args) =>
                 {
-                    m_danmakuController.ShowBottom();
-                }
-            });
-            //滚动
-            DanmuSettingHideRoll.IsOn = SettingService.GetValue<bool>(SettingConstants.VideoDanmaku.HIDE_ROLL, false);
-            if (DanmuSettingHideRoll.IsOn)
-            {
-                m_danmakuController.HideScroll();
-            }
-            DanmuSettingHideRoll.Toggled += new RoutedEventHandler((e, args) =>
-            {
-                SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.HIDE_ROLL, DanmuSettingHideRoll.IsOn);
+                    SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.HIDE_BOTTOM, DanmuSettingHideBottom.IsOn);
+                    if (DanmuSettingHideBottom.IsOn)
+                    {
+                        m_danmakuController.HideBottom();
+                    }
+                    else
+                    {
+                        m_danmakuController.ShowBottom();
+                    }
+                });
+                //滚动
+                DanmuSettingHideRoll.IsOn = SettingService.GetValue<bool>(SettingConstants.VideoDanmaku.HIDE_ROLL, false);
                 if (DanmuSettingHideRoll.IsOn)
                 {
                     m_danmakuController.HideScroll();
                 }
+                DanmuSettingHideRoll.Toggled += new RoutedEventHandler((e, args) =>
+                {
+                    SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.HIDE_ROLL, DanmuSettingHideRoll.IsOn);
+                    if (DanmuSettingHideRoll.IsOn)
+                    {
+                        m_danmakuController.HideScroll();
+                    }
+                    else
+                    {
+                        m_danmakuController.ShowScroll();
+                    }
+                });
+                //弹幕大小
+                m_danmakuController.SetFontZoom(SettingService.GetValue<double>(SettingConstants.VideoDanmaku.FONT_ZOOM, 1));
+                DanmuSettingFontZoom.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
+                {
+                    if (miniWin) return;
+                    SettingService.SetValue<double>(SettingConstants.VideoDanmaku.FONT_ZOOM, DanmuSettingFontZoom.Value);
+                    m_danmakuController.SetFontZoom(DanmuSettingFontZoom.Value);
+                });
+                //弹幕显示区域
+                m_danmakuController.SetArea(SettingService.GetValue<double>(SettingConstants.VideoDanmaku.AREA, 1));
+                DanmuSettingArea.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
+                {
+                    if (miniWin) return;
+                    SettingService.SetValue<double>(SettingConstants.VideoDanmaku.AREA, DanmuSettingArea.Value);
+                    m_danmakuController.SetArea(DanmuSettingArea.Value);
+                });
+
+                //弹幕速度
+                m_danmakuController.SetSpeed(SettingService.GetValue<int>(SettingConstants.VideoDanmaku.SPEED, 10));
+                DanmuSettingSpeed.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
+                {
+                    if (miniWin) return;
+                    SettingService.SetValue<int>(SettingConstants.VideoDanmaku.SPEED, (int)DanmuSettingSpeed.Value);
+                    m_danmakuController.SetSpeed((int)DanmuSettingSpeed.Value);
+                });
+                //弹幕顶部距离
+                var marginTop = SettingService.GetValue<double>(SettingConstants.VideoDanmaku.TOP_MARGIN, 0);
+                m_danmakuController.SetTopMargin(marginTop);
+                DanmuTopMargin.Value = marginTop;
+                DanmuTopMargin.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
+                {
+                    SettingService.SetValue<double>(SettingConstants.VideoDanmaku.TOP_MARGIN, DanmuTopMargin.Value);
+                    m_danmakuController.SetTopMargin(DanmuTopMargin.Value);
+                });
+                //弹幕透明度
+                m_danmakuController.SetOpacity(SettingService.GetValue<double>(SettingConstants.VideoDanmaku.OPACITY, 1.0));
+                DanmuSettingOpacity.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
+                {
+                    SettingService.SetValue<double>(SettingConstants.VideoDanmaku.OPACITY, DanmuSettingOpacity.Value);
+                    m_danmakuController.SetOpacity(DanmuSettingOpacity.Value);
+                });
+                //弹幕最大值
+                DanmuSettingMaxNum.Value = SettingService.GetValue<double>(SettingConstants.VideoDanmaku.MAX_NUM, 0);
+                m_danmakuController.SetDensity((int)DanmuSettingMaxNum.Value);
+                DanmuSettingMaxNum.ValueChanged += async (e, args) =>
+                {
+                    SettingService.SetValue<double>(SettingConstants.VideoDanmaku.MAX_NUM, DanmuSettingMaxNum.Value);
+                    m_danmakuController.SetDensity((int)DanmuSettingMaxNum.Value);
+                    if (!m_useNsDanmaku)
+                    {
+                        var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                        if (segIndex <= 0) segIndex = 1;
+                        await LoadDanmaku(segIndex);
+                    }
+                };
+
+                //弹幕云屏蔽等级
+                DanmuSettingShieldLevel.Value = SettingService.GetValue<int>(SettingConstants.VideoDanmaku.SHIELD_LEVEL, 0);
+                DanmuSettingShieldLevel.ValueChanged += async (e, args) =>
+                {
+                    SettingService.SetValue<int>(SettingConstants.VideoDanmaku.SHIELD_LEVEL, System.Convert.ToInt32(DanmuSettingShieldLevel.Value));
+                    if (!m_useNsDanmaku)
+                    {
+                        var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                        if (segIndex <= 0) segIndex = 1;
+                        await LoadDanmaku(segIndex);
+                    }
+                };
+
+                //弹幕加粗
+                m_danmakuController.SetBold(SettingService.GetValue<bool>(SettingConstants.VideoDanmaku.BOLD, false));
+                DanmuSettingBold.Toggled += new RoutedEventHandler((e, args) =>
+                {
+                    SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.BOLD, DanmuSettingBold.IsOn);
+                    m_danmakuController.SetBold(DanmuSettingBold.IsOn);
+                });
+                //弹幕样式
+                m_danmakuController.SetBolderStyle(SettingService.GetValue<int>(SettingConstants.VideoDanmaku.BORDER_STYLE, 2));
+                DanmuSettingStyle.SelectionChanged += new SelectionChangedEventHandler((e, args) =>
+                {
+                    if (DanmuSettingStyle.SelectedIndex != -1)
+                    {
+                        SettingService.SetValue<int>(SettingConstants.VideoDanmaku.BORDER_STYLE, DanmuSettingStyle.SelectedIndex);
+                    }
+                });
+
+                //弹幕字体
+                var fontFamily =
+                    SettingService.GetValue<string>(SettingConstants.VideoDanmaku.DANMAKU_FONT_FAMILY, string.Empty);
+                m_danmakuController.SetFont(fontFamily);
+                DanmuSettingFont.Text = fontFamily;
+                DanmuSettingFont.QuerySubmitted += (e, args) =>
+                {
+                    m_danmakuController.SetFont(DanmuSettingFont.Text);
+                    SettingService.SetValue(SettingConstants.VideoDanmaku.DANMAKU_FONT_FAMILY, DanmuSettingFont.Text);
+                };
+                //合并弹幕
+                DanmuSettingMerge.IsOn = SettingService.GetValue<bool>(SettingConstants.VideoDanmaku.MERGE, false);
+                DanmuSettingMerge.Toggled += async (e, args) =>
+                {
+                    SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.MERGE, DanmuSettingMerge.IsOn);
+                    if (!m_useNsDanmaku)
+                    {
+                        var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                        if (segIndex <= 0) segIndex = 1;
+                        await LoadDanmaku(segIndex);
+                    }
+                };
+                //屏蔽彩色弹幕
+                DanmuSettingDisableColorful.IsOn = SettingService.GetValue<bool>(SettingConstants.VideoDanmaku.DISABLE_COLORFUL, false);
+                DanmuSettingDisableColorful.Toggled += async (e, args) =>
+                {
+                    SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.DISABLE_COLORFUL, DanmuSettingDisableColorful.IsOn);
+                    if (!m_useNsDanmaku)
+                    {
+                        var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                        if (segIndex <= 0) segIndex = 1;
+                        await LoadDanmaku(segIndex);
+                    }
+                };
+                //半屏显示
+                //DanmuControl.DanmakuArea = SettingService.GetValue<bool>(SettingConstants.VideoDanmaku.DOTNET_HIDE_SUBTITLE, false)?1:.5;
+                //DanmuSettingDotHideSubtitle.Toggled += new RoutedEventHandler((e, args) =>
+                //{
+                //    SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.DOTNET_HIDE_SUBTITLE, DanmuSettingDotHideSubtitle.IsOn);
+                //});
+
+                //弹幕开关
+                if (SettingService.GetValue<Visibility>(SettingConstants.VideoDanmaku.SHOW, Visibility.Visible) == Visibility.Visible)
+                {
+                    m_danmakuController.Show();
+                }
                 else
                 {
-                    m_danmakuController.ShowScroll();
+                    m_danmakuController.Hide();
                 }
-            });
-            //弹幕大小
-            m_danmakuController.SetFontZoom(SettingService.GetValue<double>(SettingConstants.VideoDanmaku.FONT_ZOOM, 1));
-            DanmuSettingFontZoom.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
-            {
-                if (miniWin) return;
-                SettingService.SetValue<double>(SettingConstants.VideoDanmaku.FONT_ZOOM, DanmuSettingFontZoom.Value);
-                m_danmakuController.SetFontZoom(DanmuSettingFontZoom.Value);
-            });
-            //弹幕显示区域
-            m_danmakuController.SetArea(SettingService.GetValue<double>(SettingConstants.VideoDanmaku.AREA, 1));
-            DanmuSettingArea.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
-            {
-                if (miniWin) return;
-                SettingService.SetValue<double>(SettingConstants.VideoDanmaku.AREA, DanmuSettingArea.Value);
-                m_danmakuController.SetArea(DanmuSettingArea.Value);
-            });
-
-            //弹幕速度
-            m_danmakuController.SetSpeed(SettingService.GetValue<int>(SettingConstants.VideoDanmaku.SPEED, 10));
-            DanmuSettingSpeed.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
-            {
-                if (miniWin) return;
-                SettingService.SetValue<int>(SettingConstants.VideoDanmaku.SPEED, (int)DanmuSettingSpeed.Value);
-                m_danmakuController.SetSpeed((int)DanmuSettingSpeed.Value);
-            });
-            //弹幕顶部距离
-            var marginTop = SettingService.GetValue<double>(SettingConstants.VideoDanmaku.TOP_MARGIN, 0);
-            m_danmakuController.SetTopMargin(marginTop);
-            DanmuTopMargin.Value = marginTop;
-            DanmuTopMargin.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
-            {
-                SettingService.SetValue<double>(SettingConstants.VideoDanmaku.TOP_MARGIN, DanmuTopMargin.Value);
-                m_danmakuController.SetTopMargin(DanmuTopMargin.Value);
-            });
-            //弹幕透明度
-            m_danmakuController.SetOpacity(SettingService.GetValue<double>(SettingConstants.VideoDanmaku.OPACITY, 1.0));
-            DanmuSettingOpacity.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
-            {
-                SettingService.SetValue<double>(SettingConstants.VideoDanmaku.OPACITY, DanmuSettingOpacity.Value);
-                m_danmakuController.SetOpacity(DanmuSettingOpacity.Value);
-            });
-            //弹幕最大值
-            DanmuSettingMaxNum.Value = SettingService.GetValue<double>(SettingConstants.VideoDanmaku.MAX_NUM, 0);
-            m_danmakuController.SetDensity((int)DanmuSettingMaxNum.Value);
-            DanmuSettingMaxNum.ValueChanged += async (e, args) =>
-            {
-                SettingService.SetValue<double>(SettingConstants.VideoDanmaku.MAX_NUM, DanmuSettingMaxNum.Value);
-                m_danmakuController.SetDensity((int)DanmuSettingMaxNum.Value);
-                if (!m_useNsDanmaku)
-                {
-                    var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
-                    if (segIndex <= 0) segIndex = 1;
-                    await LoadDanmaku(segIndex);
-                }
-            };
-
-            //弹幕云屏蔽等级
-            DanmuSettingShieldLevel.Value = SettingService.GetValue<int>(SettingConstants.VideoDanmaku.SHIELD_LEVEL, 0);
-            DanmuSettingShieldLevel.ValueChanged += async (e, args) =>
-            {
-                SettingService.SetValue<int>(SettingConstants.VideoDanmaku.SHIELD_LEVEL, System.Convert.ToInt32(DanmuSettingShieldLevel.Value));
-                if (!m_useNsDanmaku)
-                {
-                    var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
-                    if (segIndex <= 0) segIndex = 1;
-                    await LoadDanmaku(segIndex);
-                }
-            };
-
-            //弹幕加粗
-            m_danmakuController.SetBold(SettingService.GetValue<bool>(SettingConstants.VideoDanmaku.BOLD, false));
-            DanmuSettingBold.Toggled += new RoutedEventHandler((e, args) =>
-            {
-                SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.BOLD, DanmuSettingBold.IsOn);
-                m_danmakuController.SetBold(DanmuSettingBold.IsOn);
-            });
-            //弹幕样式
-            m_danmakuController.SetBolderStyle(SettingService.GetValue<int>(SettingConstants.VideoDanmaku.BORDER_STYLE, 2));
-            DanmuSettingStyle.SelectionChanged += new SelectionChangedEventHandler((e, args) =>
-            {
-                if (DanmuSettingStyle.SelectedIndex != -1)
-                {
-                    SettingService.SetValue<int>(SettingConstants.VideoDanmaku.BORDER_STYLE, DanmuSettingStyle.SelectedIndex);
-                }
-            });
-
-            //弹幕字体
-            var fontFamily =
-                SettingService.GetValue<string>(SettingConstants.VideoDanmaku.DANMAKU_FONT_FAMILY, string.Empty);
-            m_danmakuController.SetFont(fontFamily);
-            DanmuSettingFont.Text = fontFamily;
-            DanmuSettingFont.QuerySubmitted += (e, args) =>
-            {
-                m_danmakuController.SetFont(DanmuSettingFont.Text);
-                SettingService.SetValue(SettingConstants.VideoDanmaku.DANMAKU_FONT_FAMILY, DanmuSettingFont.Text);
-            };
-            //合并弹幕
-            DanmuSettingMerge.IsOn = SettingService.GetValue<bool>(SettingConstants.VideoDanmaku.MERGE, false);
-            DanmuSettingMerge.Toggled += async (e, args) =>
-            {
-                SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.MERGE, DanmuSettingMerge.IsOn);
-                if (!m_useNsDanmaku)
-                {
-                    var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
-                    if (segIndex <= 0) segIndex = 1;
-                    await LoadDanmaku(segIndex);
-                }
-            };
-            //屏蔽彩色弹幕
-            DanmuSettingDisableColorful.IsOn = SettingService.GetValue<bool>(SettingConstants.VideoDanmaku.DISABLE_COLORFUL, false);
-            DanmuSettingDisableColorful.Toggled += async (e, args) =>
-            {
-                SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.DISABLE_COLORFUL, DanmuSettingDisableColorful.IsOn);
-                if (!m_useNsDanmaku)
-                {
-                    var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
-                    if (segIndex <= 0) segIndex = 1;
-                    await LoadDanmaku(segIndex);
-                }
-            };
-            //半屏显示
-            //DanmuControl.DanmakuArea = SettingService.GetValue<bool>(SettingConstants.VideoDanmaku.DOTNET_HIDE_SUBTITLE, false)?1:.5;
-            //DanmuSettingDotHideSubtitle.Toggled += new RoutedEventHandler((e, args) =>
-            //{
-            //    SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.DOTNET_HIDE_SUBTITLE, DanmuSettingDotHideSubtitle.IsOn);
-            //});
-
-            //弹幕开关
-            if (SettingService.GetValue<Visibility>(SettingConstants.VideoDanmaku.SHOW, Visibility.Visible) == Visibility.Visible)
-            {
-                m_danmakuController.Show();
+                DanmuSettingWords.ItemsSource = m_danmakuSettingsControlViewModel.ShieldWords;
             }
-            else
+            catch (Exception ex)
             {
-                m_danmakuController.Hide();
+                _logger.Warn("加载弹幕设置失败" + ex.Message, ex);
             }
-            DanmuSettingWords.ItemsSource = m_danmakuSettingsControlViewModel.ShieldWords;
         }
         private void LoadPlayerSetting()
         {
@@ -887,6 +892,7 @@ namespace BiliLite.Controls
 
         private void PositionTimer_Tick(object sender, object e)
         {
+            m_viewModel.Position = Player.Position;
             PluginCenter.BroadcastPosition(this, Player.Position);
             if (!m_autoSkipOpEdFlag) return;
             if (CurrentPlayItem == null) return;
@@ -918,7 +924,11 @@ namespace BiliLite.Controls
             subtitles = null;
             subtitleTimer?.Stop();
             subtitleTimer = null;
+            Pause();
             Player.ClosePlay();
+
+            m_autoRefreshTimer?.Stop();
+
             if (index >= PlayInfos.Count)
             {
                 index = PlayInfos.Count - 1;
@@ -1770,6 +1780,7 @@ namespace BiliLite.Controls
             {
                 m_viewModel.ViewPoints = player_info.ViewPoints;
                 m_viewModel.ShowViewPointsBtn = true;
+                UpdateViewPointPosition();
             }
 
             TopOnline.Text = await playerHelper.GetOnline(CurrentPlayItem.avid, CurrentPlayItem.cid);
@@ -2211,7 +2222,7 @@ namespace BiliLite.Controls
             DirectionY = false;
             if (ssValue != 0)
             {
-                Player.Position = Player.Position + ssValue;
+                SetPosition(Player.Position + ssValue);
             }
         }
 
@@ -2572,6 +2583,7 @@ namespace BiliLite.Controls
                 return;
             }
             _logger.Debug("视频结束，上报进度");
+            Pause();
 
             await ReportHistory(Player.Duration);
 
@@ -2735,10 +2747,11 @@ namespace BiliLite.Controls
         {
             txtInfo.Text = Player.GetMediaInfo();
             VideoLoading.Visibility = Visibility.Collapsed;
-            if (_postion != 0)
+            if (_postion != 0 && _postion < Player.Duration)
             {
                 Player.SetPosition(_postion);
             }
+
             if (_autoPlay)
             {
                 await Play();
@@ -3058,6 +3071,12 @@ namespace BiliLite.Controls
                     return;
                 }
             }
+
+            // 播放结束后再次播放应从进度0开始
+            if (Player.PlayState == PlayState.End)
+            {
+                SetPosition(0);
+            }
             Player.Play();
         }
 
@@ -3180,6 +3199,34 @@ namespace BiliLite.Controls
             m_danmakuController.UpdateSize(SplitView.ActualWidth, SplitView.ActualHeight);
             // 更新画面比例
             Player.SetRatioMode(PlayerSettingRatio.SelectedIndex);
+
+            UpdateViewPointPosition();
+        }
+
+        private void UpdateViewPointPosition()
+        {
+            if (m_viewModel.ViewPoints == null || m_viewModel.ViewPoints.Count <= 1) return;
+
+            BottomProgressCanvas.Children.Clear();
+            var duration = CurrentPlayItem.duration;
+            var accentColor = (Color)m_themeService.AccentThemeResource["SystemAccentColor"];
+            var brush = new SolidColorBrush(accentColor);
+
+            foreach (var viewPoint in m_viewModel.ViewPoints.Skip(1))
+            {
+                var x = (((double)viewPoint.From / duration) * BottomProgress.ActualWidth) / 2;
+                var line = new Line
+                {
+                    X1 = x,
+                    X2 = x,
+                    Y1 = 5,
+                    Y2 = 15,
+                    Stroke = brush,
+                    StrokeThickness = 1,
+                };
+                BottomProgressCanvas.Children.Add(line);
+                Canvas.SetLeft(line, x);
+            }
         }
 
         private void TopBtnViewPoints_OnClick(object sender, RoutedEventArgs e)
@@ -3204,5 +3251,10 @@ namespace BiliLite.Controls
         private void SplitView_PaneOpening(SplitView sender, object args) => ScrollToItem();
 
         private void ScrollToItem() => EpisodeList.ScrollIntoView(EpisodeList.SelectedItem);
+
+        private void BottomProgress_OnPositionChanged(object sender, double e)
+        {
+            SetPosition(e);
+        }
     }
 }

@@ -12,6 +12,27 @@ namespace BiliLite.Services
     {
         private static LocalObjectStorageHelper storageHelper = new LocalObjectStorageHelper();
 
+        public static bool TryGetValue<T>(string key, T _default, out T result)
+        {
+            try
+            {
+                if (storageHelper.KeyExists(key))
+                {
+                    result = storageHelper.Read<T>(key);
+                }
+                else
+                {
+                    result = _default;
+                }
+                return true;
+            }
+            catch
+            {
+                result = _default;
+                return false;
+            }
+        }
+
         public static T GetValue<T>(string key, T _default)
         {
             if (storageHelper.KeyExists(key))

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -149,6 +149,9 @@
     <Compile Include="Controls\DataTemplateSelectors\UserDynamicItemV2DataTemplateSelector.cs" />
     <Compile Include="Controls\Dynamic\DynamicItemV2Control.xaml.cs">
       <DependentUpon>DynamicItemV2Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PlayerProgressBar.xaml.cs">
+      <DependentUpon>PlayerProgressBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Settings\AboutSettingsControl.xaml.cs">
       <DependentUpon>AboutSettingsControl.xaml</DependentUpon>
@@ -344,6 +347,7 @@
     <Compile Include="Services\Biz\BaseBizService.cs" />
     <Compile Include="Services\Biz\LocalAttentionUserService.cs" />
     <Compile Include="Services\Biz\MessagesService.cs" />
+    <Compile Include="Services\Biz\UserDynamicService.cs" />
     <Compile Include="Services\Interfaces\IUpdatePivotLayout.cs" />
     <Compile Include="Services\PageSaveService.cs" />
     <Compile Include="Models\Common\Msg\BiliMessageSession.cs" />
@@ -426,6 +430,7 @@
     <Compile Include="ViewModels\Settings\ShortcutKeySettingsControlViewModel.cs" />
     <Compile Include="ViewModels\Settings\UISettingsControlViewModel.cs" />
     <Compile Include="ViewModels\Settings\VideoDanmakuSettingsControlViewModel.cs" />
+    <Compile Include="ViewModels\UserDynamic\UserDynamicDetailViewModel.cs" />
     <Compile Include="ViewModels\User\FavoriteItemViewModel.cs" />
     <Compile Include="Pages\Home\UserDynamicPage.xaml.cs">
       <DependentUpon>UserDynamicPage.xaml</DependentUpon>
@@ -1246,6 +1251,10 @@
     <Page Include="Controls\Dynamic\DynamicV2Template.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\PlayerProgressBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Settings\AboutSettingsControl.xaml">
       <SubType>Designer</SubType>

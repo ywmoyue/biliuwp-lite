@@ -6,18 +6,24 @@
     xmlns:local="using:BiliLite.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    xmlns:userDynamic="using:BiliLite.ViewModels.UserDynamic"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Controls/Dynamic/DynamicV2Template.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
 
     <Grid>
         <local:MyListView
             CanLoadMore="{x:Bind Path=UserDynamicRepostViewModel.CanLoadMore, Mode=OneWay}"
             IsItemClickEnabled="False"
-            ItemsSource="{x:Bind Path=UserDynamicRepostViewModel.Items, Mode=OneWay}"
+            ItemsSource="{x:Bind Path=UserDynamicRepostViewModel.DynamicItems, Mode=OneWay}"
             LoadMoreBottomOffset="0"
-            LoadMoreCommand="{x:Bind Path=UserDynamicRepostViewModel.LoadMoreCommand}"
+            LoadMoreCommand="{x:Bind Path=UserDynamicRepostViewModel.LoadMoreCommand}" ItemTemplateSelector="{StaticResource DynamicTemplateSelector}"
             SelectionMode="None">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
@@ -25,56 +31,6 @@
                     <Setter Property="VerticalContentAlignment" Value="Stretch" />
                 </Style>
             </ListView.ItemContainerStyle>
-            <ListView.ItemTemplate>
-                <DataTemplate x:DataType="userDynamic:UserDynamicItemDisplayViewModel">
-                    <StackPanel>
-                        <HyperlinkButton
-                            Padding="0"
-                            VerticalAlignment="Top"
-                            Command="{x:Bind Path=UserDynamicItemDisplayCommands.UserCommand, Mode=OneWay}"
-                            CommandParameter="{x:Bind Path=Mid, Mode=OneWay}">
-                            <StackPanel Orientation="Horizontal">
-                                <Ellipse
-                                    Width="36"
-                                    Height="36"
-                                    Margin="0,0,8,0">
-                                    <Ellipse.Fill>
-                                        <ImageBrush ImageSource="{x:Bind Path=Photo, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='64w'}" />
-                                    </Ellipse.Fill>
-                                </Ellipse>
-                                <StackPanel VerticalAlignment="Center">
-                                    <TextBlock
-                                        Foreground="{ThemeResource SystemAccentColor}"
-                                        Opacity=".8"
-                                        Text="{x:Bind Path=UserName, Mode=OneWay}"
-                                        Visibility="{x:Bind Path=IsYearVip, Mode=OneWay}" />
-                                    <TextBlock
-                                        Foreground="{ThemeResource TextColor}"
-                                        Text="{x:Bind Path=UserName, Mode=OneWay}"
-                                        Visibility="{x:Bind Path=IsYearVip, Mode=OneWay, Converter={StaticResource DisplayConvert}}" />
-                                    <TextBlock
-                                        Margin="0,4,0,0"
-                                        FontSize="12"
-                                        Foreground="Gray"
-                                        Text="{x:Bind Path=Time, Mode=OneWay}"
-                                        ToolTipService.ToolTip="{x:Bind Path=Datetime, Mode=OneWay}" />
-                                </StackPanel>
-
-                            </StackPanel>
-                        </HyperlinkButton>
-                        <TextBlock
-                            Margin="0,8"
-                            IsTextSelectionEnabled="True"
-                            Text="{x:Bind Path=ContentStr, Mode=OneWay}"
-                            TextWrapping="Wrap" TextAlignment="Justify" />
-                        <Border
-                            Margin="0,0,0,8"
-                            BorderBrush="Gray"
-                            BorderThickness="0,1,0,0"
-                            Opacity=".2" />
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
             <ListView.Footer>
                 <Grid>
                     <HyperlinkButton
