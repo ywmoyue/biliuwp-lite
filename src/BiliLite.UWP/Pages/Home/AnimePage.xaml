@@ -37,17 +37,18 @@
                                 <GradientStop Offset="0" Color="#00000000" />
                             </LinearGradientBrush>
                         </Grid.Background>
-                        <TextBlock HorizontalAlignment="Right"
-     FontSize="12"
-     Foreground="White"
-     Text="{x:Bind Path=Display}" />
+                        <TextBlock
+                            HorizontalAlignment="Right"
+                            FontSize="12"
+                            Foreground="White"
+                            Text="{x:Bind Path=Display}" />
                     </Grid>
                     <Border
                         Margin="5"
                         Padding="8,4"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top"
-                        Background="#FFFB9E60"
+                        Background="Orange"
                         CornerRadius="{ThemeResource ControlCornerRadius}"
                         Visibility="{Binding ShowBadge}">
                         <TextBlock
@@ -59,16 +60,17 @@
                             TextWrapping="Wrap" />
                     </Border>
                 </Grid>
-                <Grid Grid.Row="1" MinHeight="65">
+                <Grid
+                    Grid.Row="1"
+                    MinHeight="65"
+                    Margin="8,4">
                     <TextBlock
-                        Margin="5"
                         MaxLines="2"
                         Text="{x:Bind Path=Title}"
                         TextAlignment="Justify"
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="Wrap" />
                     <TextBlock
-                        Margin="5"
                         VerticalAlignment="Bottom"
                         FontSize="12"
                         Foreground="Gray"
@@ -182,17 +184,18 @@
                                                         <GradientStop Offset="0" Color="#00000000" />
                                                     </LinearGradientBrush>
                                                 </Grid.Background>
-                                                <TextBlock HorizontalAlignment="Right"
-    FontSize="12"
-    Foreground="White"
-    Text="{x:Bind Path=NewEp.index_show}" />
+                                                <TextBlock
+                                                    HorizontalAlignment="Right"
+                                                    FontSize="12"
+                                                    Foreground="White"
+                                                    Text="{x:Bind Path=NewEp.index_show}" />
                                             </Grid>
                                             <Border
                                                 Margin="5"
                                                 Padding="8,4"
                                                 HorizontalAlignment="Right"
                                                 VerticalAlignment="Top"
-                                                Background="#FFFB9E60"
+                                                Background="Orange"
                                                 CornerRadius="{ThemeResource ControlCornerRadius}"
                                                 Visibility="{x:Bind ShowBadge}">
                                                 <TextBlock
@@ -204,16 +207,17 @@
                                                     TextWrapping="Wrap" />
                                             </Border>
                                         </Grid>
-                                        <Grid Grid.Row="1" MinHeight="65">
+                                        <Grid
+                                            Grid.Row="1"
+                                            MinHeight="65"
+                                            Margin="8,4">
                                             <TextBlock
-                                                Margin="5"
                                                 MaxLines="1"
                                                 Text="{x:Bind Path=Title}"
                                                 TextAlignment="Justify"
                                                 TextTrimming="CharacterEllipsis"
                                                 TextWrapping="Wrap" />
                                             <TextBlock
-                                                Margin="5"
                                                 VerticalAlignment="Bottom"
                                                 FontSize="12"
                                                 Foreground="Gray"
@@ -274,8 +278,9 @@
                                                         <GradientStop Offset="0" Color="#00000000" />
                                                     </LinearGradientBrush>
                                                 </Grid.Background>
-                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                                    <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                                    <FontIcon
+                                                        FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                                         FontSize="12"
                                                         Foreground="White"
                                                         Glyph="" />
@@ -287,16 +292,17 @@
                                                 </StackPanel>
                                             </Grid>
                                         </Grid>
-                                        <Grid Grid.Row="1" MinHeight="65">
+                                        <Grid
+                                            Grid.Row="1"
+                                            MinHeight="65"
+                                            Margin="8,4">
                                             <TextBlock
-                                                Margin="5"
                                                 MaxLines="2"
                                                 Text="{Binding Title}"
                                                 TextAlignment="Justify"
                                                 TextTrimming="CharacterEllipsis"
                                                 TextWrapping="Wrap" />
                                             <TextBlock
-                                                Margin="5"
                                                 VerticalAlignment="Bottom"
                                                 FontSize="12"
                                                 Foreground="Gray"
@@ -407,7 +413,7 @@
                                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                                         Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='180h'}"
                                                         Stretch="UniformToFill" />
-                                                    <Grid Grid.Row="1" Margin="5">
+                                                    <Grid Grid.Row="1" Margin="8,4">
                                                         <TextBlock
                                                             MaxLines="1"
                                                             Text="{x:Bind Title}"

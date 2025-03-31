@@ -62,7 +62,7 @@
                             <Grid Background="{ThemeResource CardBackground}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
-                                    <RowDefinition Height="24" />
+                                    <RowDefinition Height="Auto" />
                                     <RowDefinition Height="24" />
                                 </Grid.RowDefinitions>
                                 <Grid>
@@ -116,7 +116,7 @@
 
                                 <TextBlock
                                     Grid.Row="1"
-                                    Margin="4,4,4,0"
+                                    Margin="8,4"
                                     MaxLines="1"
                                     Text="{x:Bind Path=title}"
                                     TextAlignment="Justify"
@@ -124,7 +124,7 @@
                                     TextWrapping="Wrap" />
                                 <TextBlock
                                     Grid.Row="2"
-                                    Margin="4,0,4,4"
+                                    Margin="8,4"
                                     FontSize="12"
                                     Foreground="Gray"
                                     Text="{x:Bind Path=area_v2_name}"

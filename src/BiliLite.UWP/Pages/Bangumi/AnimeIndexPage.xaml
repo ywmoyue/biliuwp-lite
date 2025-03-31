@@ -96,7 +96,7 @@
                                 Padding="8,4"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
-                                Background="#FFFB9E60"
+                                Background="Orange"
                                 CornerRadius="{StaticResource ControlCornerRadius}"
                                 Visibility="{Binding ShowBadge}">
                                 <TextBlock

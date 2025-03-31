@@ -69,7 +69,7 @@
                                 <Grid Background="{ThemeResource CardBackground}">
                                     <Grid.RowDefinitions>
                                         <RowDefinition />
-                                        <RowDefinition Height="24" />
+                                        <RowDefinition Height="Auto" />
                                         <RowDefinition Height="24" />
                                     </Grid.RowDefinitions>
                                     <Grid>
@@ -86,8 +86,9 @@
                                                     <GradientStop Offset="0" Color="#00000000" />
                                                 </LinearGradientBrush>
                                             </Grid.Background>
-                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                                <FontIcon
+                                                    FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                                     FontSize="12"
                                                     Foreground="White"
                                                     Glyph="&#xE121;" />
@@ -102,7 +103,7 @@
 
                                     <TextBlock
                                         Grid.Row="1"
-                                        Margin="4,4,4,0"
+                                        Margin="8,4"
                                         MaxLines="1"
                                         Text="{x:Bind Title}"
                                         TextAlignment="Justify"
@@ -110,7 +111,7 @@
                                         TextWrapping="Wrap" />
                                     <TextBlock
                                         Grid.Row="2"
-                                        Margin="4,0,4,4"
+                                        Margin="8,4"
                                         FontSize="12"
                                         Foreground="Gray"
                                         Text="{x:Bind PubIndex}"

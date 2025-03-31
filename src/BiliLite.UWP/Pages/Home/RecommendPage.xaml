@@ -79,7 +79,7 @@
                         Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='200h'}"
                         Stretch="UniformToFill" />
                     <Grid
-                        Padding="10"
+                        Padding="8"
                         VerticalAlignment="Bottom"
                         Visibility="{x:Bind ShowCoverText}">
                         <Grid.Background>
@@ -124,7 +124,7 @@
                 </Grid>
                 <TextBlock
                     Grid.Row="1"
-                    Margin="10,4"
+                    Margin="8,4"
                     MaxLines="2"
                     Text="{x:Bind Title}"
                     TextAlignment="Justify"

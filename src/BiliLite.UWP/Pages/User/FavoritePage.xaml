@@ -43,7 +43,7 @@
                     </MenuFlyout>
                 </Grid.ContextFlyout>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="250"/>
+                    <RowDefinition Height="250" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid>
@@ -54,11 +54,11 @@
                         Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
                         Stretch="UniformToFill" />
                     <Border
-                        Margin="4"
+                        Margin="5"
                         Padding="8,4"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top"
-                        Background="#FFFB9E60"
+                        Background="Orange"
                         CornerRadius="{StaticResource ControlCornerRadius}"
                         Visibility="{x:Bind ShowBadge}">
                         <TextBlock
@@ -70,7 +70,7 @@
                             TextWrapping="Wrap" />
                     </Border>
                 </Grid>
-                <StackPanel Grid.Row="1" Margin="10">
+                <StackPanel Grid.Row="1" Margin="8,4">
                     <TextBlock
                         Margin="0,0,0,5"
                         MaxLines="1"
@@ -201,7 +201,7 @@
                 <Grid>
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <StackPanel>
-                            <controls:MyAdaptiveGridView ItemHeight="120"
+                            <controls:MyAdaptiveGridView
                                 Padding="10,0"
                                 AllowDrop="True"
                                 CanDragItems="True"
@@ -211,6 +211,7 @@
                                 DragItemsStarting="VideoFavGridView_DragItemsStarting"
                                 IsItemClickEnabled="True"
                                 ItemClick="VideoFavorite_ItemClick"
+                                ItemHeight="120"
                                 ItemTemplate="{StaticResource VideoDataTemplate}"
                                 ItemsSource="{x:Bind Path=m_videoViewModel.MyFavorite, Mode=TwoWay}"
                                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
@@ -241,11 +242,12 @@
                                     </Grid>
                                 </controls:MyAdaptiveGridView.Footer>
                             </controls:MyAdaptiveGridView>
-                            <controls:MyAdaptiveGridView ItemHeight="120"
+                            <controls:MyAdaptiveGridView
                                 Padding="10,0"
                                 DesiredWidth="550"
                                 IsItemClickEnabled="True"
                                 ItemClick="VideoFavorite_ItemClick"
+                                ItemHeight="120"
                                 ItemTemplate="{StaticResource CollectedDataTemplate}"
                                 ItemsSource="{x:Bind Path=m_videoViewModel.CollectFavorite, Mode=OneWay}"
                                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
@@ -289,7 +291,7 @@
                     <TextBlock FontSize="15">追番</TextBlock>
                 </PivotItem.Header>
                 <Grid>
-                    <controls:MyAdaptiveGridView 
+                    <controls:MyAdaptiveGridView
                         x:Name="BangumiSeason"
                         Padding="10,0"
                         CanLoadMore="{x:Bind Path=animeVM.ShowLoadMore, Mode=OneWay}"

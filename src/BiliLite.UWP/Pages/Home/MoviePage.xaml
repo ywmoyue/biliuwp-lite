@@ -20,7 +20,7 @@
             <Grid Width="180" Background="{ThemeResource CardBackground}">
                 <Grid.RowDefinitions>
                     <RowDefinition />
-                    <RowDefinition Height="24" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="24" />
                 </Grid.RowDefinitions>
                 <Grid>
@@ -43,11 +43,11 @@
     Text="{x:Bind Path=Stat.FollowView}" />
                     </Grid>
                     <Border
-                        Margin="4"
+                        Margin="5"
                         Padding="8,4"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top"
-                        Background="#FFFB9E60"
+                        Background="Orange"
                         CornerRadius="{ThemeResource ControlCornerRadius}"
                         Visibility="{Binding Path=ShowBadge}">
                         <TextBlock
@@ -62,7 +62,7 @@
                 <TextBlock
                     Grid.Row="1"
                     MaxWidth="180"
-                    Margin="4,4,4,0"
+                    Margin="8,4"
                     MaxLines="1"
                     Text="{x:Bind Path=Title}"
                     TextAlignment="Justify"
@@ -70,7 +70,7 @@
                     TextWrapping="Wrap" />
                 <TextBlock
                     Grid.Row="2"
-                    Margin="4,0,4,4"
+                    Margin="8,4"
                     FontSize="12"
                     Foreground="Gray"
                     Text="{x:Bind Path=Desc}"
@@ -83,7 +83,7 @@
             <Grid Width="231" Background="{ThemeResource CardBackground}">
                 <Grid.RowDefinitions>
                     <RowDefinition />
-                    <RowDefinition Height="24" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="24" />
                 </Grid.RowDefinitions>
                 <Grid>
@@ -106,11 +106,11 @@
     Text="{x:Bind Path=Stat.FollowView}" />
                     </Grid>
                     <Border
-                        Margin="4"
+                        Margin="5"
                         Padding="8,4"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top"
-                        Background="#FFFB9E60"
+                        Background="Orange"
                         CornerRadius="{ThemeResource ControlCornerRadius}"
                         Visibility="{Binding Path=ShowBadge}">
                         <TextBlock
@@ -125,7 +125,7 @@
 
                 <TextBlock
                     Grid.Row="1"
-                    Margin="4,4,4,0"
+                    Margin="8,4"
                     MaxLines="1"
                     Text="{x:Bind Path=Title}"
                     TextAlignment="Justify"
@@ -133,7 +133,7 @@
                     TextWrapping="Wrap" />
                 <TextBlock
                     Grid.Row="2"
-                    Margin="4,0,4,4"
+                    Margin="8,4"
                     FontSize="12"
                     Foreground="Gray"
                     Text="{x:Bind Path=Desc}"
@@ -229,7 +229,7 @@
                                     <Grid Width="231" Background="{ThemeResource CardBackground}">
                                         <Grid.RowDefinitions>
                                             <RowDefinition />
-                                            <RowDefinition Height="24" />
+                                            <RowDefinition Height="Auto" />
                                             <RowDefinition Height="24" />
                                         </Grid.RowDefinitions>
                                         <Grid>
@@ -252,11 +252,11 @@
     Text="{x:Bind Path=NewEp.index_show}" />
                                             </Grid>
                                             <Border
-                                                Margin="4"
+                                                Margin="5"
                                                 Padding="8,4"
                                                 HorizontalAlignment="Right"
                                                 VerticalAlignment="Top"
-                                                Background="#FFFB9E60"
+                                                Background="Orange"
                                                 CornerRadius="{ThemeResource ControlCornerRadius}"
                                                 Visibility="{x:Bind ShowBadge}">
                                                 <TextBlock
@@ -271,7 +271,7 @@
 
                                         <TextBlock
                                             Grid.Row="1"
-                                            Margin="4,4,4,0"
+                                            Margin="8,4"
                                             MaxLines="1"
                                             Text="{x:Bind Path=Title}"
                                             TextAlignment="Justify"
@@ -279,7 +279,7 @@
                                             TextWrapping="Wrap" />
                                         <TextBlock
                                             Grid.Row="2"
-                                            Margin="4,0,4,4"
+                                            Margin="8,4"
                                             FontSize="12"
                                             Foreground="Gray"
                                             Text="{x:Bind Path=ProgressText}"
@@ -308,7 +308,7 @@
                                     <Grid Width="180" Background="{ThemeResource CardBackground}">
                                         <Grid.RowDefinitions>
                                             <RowDefinition />
-                                            <RowDefinition Height="24" />
+                                            <RowDefinition Height="Auto" />
                                             <RowDefinition Height="24" />
                                         </Grid.RowDefinitions>
                                         <Grid>
@@ -331,11 +331,11 @@
     Text="{x:Bind Path=Stat.FollowView}" />
                                             </Grid>
                                             <Border
-                                                Margin="4"
+                                                Margin="5"
                                                 Padding="8,4"
                                                 HorizontalAlignment="Right"
                                                 VerticalAlignment="Top"
-                                                Background="#FFFB9E60"
+                                                Background="Orange"
                                                 CornerRadius="{ThemeResource ControlCornerRadius}"
                                                 Visibility="{Binding Path=ShowBadge}">
                                                 <TextBlock
@@ -350,7 +350,7 @@
 
                                         <TextBlock
                                             Grid.Row="1"
-                                            Margin="4,4,4,0"
+                                            Margin="8,4"
                                             MaxLines="1"
                                             Text="{x:Bind Path=Title}"
                                             TextAlignment="Justify"
@@ -358,7 +358,7 @@
                                             TextWrapping="Wrap" />
                                         <TextBlock
                                             Grid.Row="2"
-                                            Margin="4,0,4,4"
+                                            Margin="8,4"
                                             FontSize="12"
                                             Foreground="Gray"
                                             Text="{x:Bind Path=Hat}"
@@ -529,7 +529,7 @@
                                                         Stretch="UniformToFill" />
                                                     <TextBlock
                                                         Grid.Row="1"
-                                                        Margin="4"
+                                                        Margin="8,4"
                                                         MaxLines="1"
                                                         Text="{x:Bind Title}"
                                                         TextAlignment="Justify"

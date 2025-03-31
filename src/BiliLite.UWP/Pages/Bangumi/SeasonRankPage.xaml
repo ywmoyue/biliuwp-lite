@@ -62,22 +62,6 @@
                                             Source="{x:Bind Path=NewEp.Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
                                             Stretch="UniformToFill" />
                                         <Border
-                                            Margin="5"
-                                            Padding="8,4"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Bottom"
-                                            Background="#FFFB9E60"
-                                            CornerRadius="{StaticResource ControlCornerRadius}"
-                                            Visibility="{Binding ShowBadge}">
-                                            <TextBlock
-                                                FontSize="12"
-                                                Foreground="#FFFFFFFF"
-                                                Text="{x:Bind Path=Badge}"
-                                                TextAlignment="Justify"
-                                                TextTrimming="CharacterEllipsis"
-                                                TextWrapping="Wrap" />
-                                        </Border>
-                                        <Border
                                             Padding="12,2"
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Top"
@@ -96,12 +80,26 @@
 
                                     <Grid Grid.Column="1" Margin="10,5">
                                         <TextBlock
-                                            MaxLines="2"
+                                            MaxLines="1"
                                             Text="{x:Bind Path=Title}"
                                             TextAlignment="Justify"
                                             TextTrimming="CharacterEllipsis"
                                             TextWrapping="Wrap" />
                                         <StackPanel VerticalAlignment="Bottom">
+                                            <Border
+                                                Padding="8,4"
+                                                HorizontalAlignment="Left"
+                                                Background="Orange"
+                                                CornerRadius="{StaticResource ControlCornerRadius}"
+                                                Visibility="{Binding ShowBadge}">
+                                                <TextBlock
+                                                    FontSize="12"
+                                                    Foreground="#FFFFFFFF"
+                                                    Text="{x:Bind Path=Badge}"
+                                                    TextAlignment="Justify"
+                                                    TextTrimming="CharacterEllipsis"
+                                                    TextWrapping="Wrap" />
+                                            </Border>
                                             <TextBlock Margin="0,2,0,0" Foreground="Gray"><Run Text="{x:Bind Path=NewEp.IndexShow}" /></TextBlock>
                                             <TextBlock
                                                 Margin="0,2,0,0"

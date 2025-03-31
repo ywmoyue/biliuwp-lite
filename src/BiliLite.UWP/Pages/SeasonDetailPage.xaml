@@ -270,7 +270,7 @@
                                             Padding="4,2"
                                             HorizontalAlignment="Right"
                                             VerticalAlignment="Top"
-                                            Background="#FFFB9E60"
+                                            Background="Orange"
                                             CornerRadius="{StaticResource ControlCornerRadius}"
                                             Opacity="1"
                                             Visibility="{x:Bind Path=m_viewModel.Detail.ShowBadge, Mode=OneWay}">
@@ -323,8 +323,8 @@
                                     Margin="0,16,0,0"
                                     HorizontalAlignment="Stretch"
                                     Background="Transparent"
-                                    BorderBrush="#FFFB9E60"
-                                    Foreground="#FFFB9E60"
+                                    BorderBrush="Orange"
+                                    Foreground="Orange"
                                     Visibility="{x:Bind Path=m_viewModel.Detail.ShowPayment, Mode=OneWay}">
                                     <TextBlock Text="{x:Bind Path=m_viewModel.Detail.Payment.Dialog.Title, Mode=OneWay}" />
                                 </Button>

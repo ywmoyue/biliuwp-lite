@@ -178,11 +178,11 @@
                                         Source="{x:Bind Path=cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
                                         Stretch="UniformToFill" />
                                     <Border
-                                        Margin="4"
+                                        Margin="5"
                                         Padding="8,4"
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Top"
-                                        Background="#FFFB9E60"
+                                        Background="Orange"
                                         CornerRadius="{StaticResource ControlCornerRadius}"
                                         Visibility="{x:Bind showBadge}">
                                         <TextBlock

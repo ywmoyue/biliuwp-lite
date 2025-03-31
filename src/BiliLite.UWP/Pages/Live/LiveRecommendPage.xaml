@@ -56,7 +56,7 @@
                                         <Grid Background="{ThemeResource CardBackground}">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition />
-                                                <RowDefinition Height="24" />
+                                                <RowDefinition Height="Auto" />
                                                 <RowDefinition Height="24" />
                                             </Grid.RowDefinitions>
                                             <Grid>
@@ -73,10 +73,11 @@
                                                             <GradientStop Offset="0" Color="#00000000" />
                                                         </LinearGradientBrush>
                                                     </Grid.Background>
-                                                        <TextBlock HorizontalAlignment="Left"
-    FontSize="12"
-    Foreground="White"
-    Text="{x:Bind Path=uname}" />
+                                                    <TextBlock
+                                                        HorizontalAlignment="Left"
+                                                        FontSize="12"
+                                                        Foreground="White"
+                                                        Text="{x:Bind Path=uname}" />
                                                     <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                                         <fa:FontAwesome
                                                             Margin="0,0,8,0"
@@ -107,19 +108,21 @@
 
                                             <TextBlock
                                                 Grid.Row="1"
-                                                Margin="4,4,4,0"
+                                                Margin="8,4"
                                                 MaxLines="1"
                                                 Text="{x:Bind Path=title}"
+                                                TextAlignment="Justify"
                                                 TextTrimming="CharacterEllipsis"
-                                                TextWrapping="Wrap" TextAlignment="Justify" />
+                                                TextWrapping="Wrap" />
                                             <TextBlock
                                                 Grid.Row="2"
-                                                Margin="4,0,4,4"
+                                                Margin="8,4"
                                                 FontSize="12"
                                                 Foreground="Gray"
                                                 Text="{x:Bind Path=area_v2_name}"
+                                                TextAlignment="Justify"
                                                 TextTrimming="CharacterEllipsis"
-                                                TextWrapping="Wrap" TextAlignment="Justify" />
+                                                TextWrapping="Wrap" />
                                         </Grid>
                                     </DataTemplate>
                                 </controls:MyAdaptiveGridView.ItemTemplate>
