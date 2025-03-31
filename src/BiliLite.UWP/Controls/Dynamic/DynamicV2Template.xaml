@@ -62,7 +62,7 @@
                                     MaxHeight="120"
                                     Source="{Binding Path=Dynamic.DynArchive.Cover}" />
                                 <Border
-                                    Margin="4"
+                                    Margin="8"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
                                     Background="{ThemeResource SystemAccentColor}"
@@ -137,7 +137,7 @@
                             <Grid>
                                 <Image Width="{Binding Path=CoverWidth}" Source="{Binding Path=Dynamic.DynPgc.Cover}" />
                                 <Border
-                                    Margin="4"
+                                    Margin="8"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
                                     Background="{ThemeResource SystemAccentColor}"
@@ -194,7 +194,7 @@
                             <Grid>
                                 <Image Width="{Binding Path=CoverWidth}" Source="{Binding Path=Dynamic.DynArchive.Cover}" />
                                 <Border
-                                    Margin="4"
+                                    Margin="8"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
                                     Background="{ThemeResource SystemAccentColor}"
@@ -259,7 +259,7 @@
                         <Grid>
                             <Image Width="80" Source="{Binding Path=Dynamic.DynMusic.Cover}" />
                             <Border
-                                Margin="4"
+                                Margin="8"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
@@ -363,7 +363,7 @@
                         <Grid>
                             <Image Width="{Binding Path=CoverWidth}" Source="{Binding Path=Extend.OrigImgUrl}" />
                             <Border
-                                Margin="4"
+                                Margin="8"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
@@ -414,7 +414,7 @@
                         <Grid>
                             <Image Width="{Binding Path=CoverWidth}" Source="{Binding Path=Extend.OrigImgUrl}" />
                             <Border
-                                Margin="4"
+                                Margin="8"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
@@ -565,7 +565,7 @@
                         <Grid>
                             <Image Width="80" Source="{Binding Path=Dynamic.DynCommon.Cover}" />
                             <Border
-                                Margin="4"
+                                Margin="8"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
@@ -621,7 +621,7 @@
                         <Grid>
                             <Image Width="160" Source="{Binding Path=LiveInfo.PlayInfo.Cover}" />
                             <Border
-                                Margin="4"
+                                Margin="8"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
@@ -698,7 +698,7 @@
                         <Grid>
                             <Image Width="160" Source="{Binding Path=Dynamic.DynCourBatchUp.Cover}" />
                             <Border
-                                Margin="4"
+                                Margin="8"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
@@ -792,7 +792,7 @@
                             <Grid>
                                 <Image Width="{Binding Path=CoverWidth}" Source="{Binding Path=CustomArticle.Cover}" />
                                 <Border
-                                    Margin="4"
+                                    Margin="8"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
                                     Background="{ThemeResource SystemAccentColor}"
