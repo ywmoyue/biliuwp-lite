@@ -1,13 +1,8 @@
 
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Windows.UI.Xaml.Controls;
 using AutoMapper;
+using Bilibili.App.Dynamic.V2;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Attributes;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.UserDynamic;
@@ -18,7 +13,13 @@ using BiliLite.Pages;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using PropertyChanged;
-using Bilibili.App.Dynamic.V2;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Windows.UI.Xaml.Controls;
 
 namespace BiliLite.ViewModels.UserDynamic
 {
@@ -156,7 +157,7 @@ namespace BiliLite.ViewModels.UserDynamic
 
         #region Private Methods
 
-        private void HandleDynamicResults(RepostListRsp results,bool firstPage)
+        private void HandleDynamicResults(RepostListRsp results, bool firstPage)
         {
             CanLoadMore = results.HasMore;
             m_offset = results.Offset;

@@ -1,14 +1,17 @@
-﻿using BiliLite.Extensions.Notifications;
+﻿using BiliLite.Controls.Dialogs;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.UserDynamic;
 using BiliLite.Pages;
-using BiliLite.Services;
-using BiliLite.ViewModels.UserDynamic;
-using System;
-using BiliLite.Services.Biz;
-using Microsoft.Extensions.DependencyInjection;
-using BiliLite.Dialogs;
 using BiliLite.Pages.User;
+using BiliLite.Services;
+using BiliLite.Services.Biz;
+using BiliLite.ViewModels.UserDynamic;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
 
 namespace BiliLite.Extensions
 {
@@ -70,7 +73,7 @@ namespace BiliLite.Extensions
             var result = await MessageCenter.HandelUrl(url);
             if (!result)
             {
-                Notify.ShowMessageToast("无法打开Url");
+                NotificationShowExtensions.ShowMessageToast("无法打开Url");
             }
         }
 
@@ -86,7 +89,7 @@ namespace BiliLite.Extensions
         public static void CopyDyn(DynamicV2ItemViewModel data)
         {
             var dataStr = data.SourceJson;
-            Notify.ShowMessageToast(dataStr.SetClipboard() ? "已复制" : "复制失败");
+            NotificationShowExtensions.ShowMessageToast(dataStr.SetClipboard() ? "已复制" : "复制失败");
         }
 
         public static void OpenWebDetail(string dynId)

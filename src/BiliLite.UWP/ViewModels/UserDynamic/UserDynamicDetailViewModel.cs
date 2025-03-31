@@ -1,27 +1,28 @@
-﻿using System;
+﻿using AutoMapper;
+using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
+using BiliLite.Models.Attributes;
+using BiliLite.Models.Common.UserDynamic;
+using BiliLite.Modules;
+using BiliLite.Modules.User;
+using BiliLite.Services;
+using BiliLite.ViewModels.Common;
+using PropertyChanged;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using AutoMapper;
-using BiliLite.Extensions;
-using BiliLite.Models.Attributes;
-using BiliLite.Models.Common.UserDynamic;
-using BiliLite.Modules.User;
-using BiliLite.Modules;
-using BiliLite.Services;
-using BiliLite.ViewModels.Common;
-using PropertyChanged;
 
 namespace BiliLite.ViewModels.UserDynamic;
 
 [RegisterTransientViewModel]
-public class UserDynamicDetailViewModel : BaseViewModel, IUserDynamicCommands 
+public class UserDynamicDetailViewModel : BaseViewModel, IUserDynamicCommands
 {
     private readonly GrpcService m_grpcService;
     private readonly IMapper m_mapper;
     private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
-        private readonly WatchLaterVM m_watchLaterVm;
+    private readonly WatchLaterVM m_watchLaterVm;
 
     public UserDynamicDetailViewModel(GrpcService grpcService, IMapper mapper)
     {
@@ -113,7 +114,7 @@ public class UserDynamicDetailViewModel : BaseViewModel, IUserDynamicCommands
         }
         catch (Exception ex)
         {
-            Notify.ShowMessageToast("加载动态数据失败");
+            NotificationShowExtensions.ShowMessageToast("加载动态数据失败");
             _logger.Warn(ex.Message, ex);
         }
         Loading = false;
