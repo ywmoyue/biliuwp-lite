@@ -63,12 +63,12 @@
                                     Source="{Binding Path=Dynamic.DynArchive.Cover}" />
                                 <Border
                                     Margin="8"
+                                    Padding="4,1,5,3"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
                                     Background="{ThemeResource SystemAccentColor}"
                                     CornerRadius="{StaticResource ControlCornerRadius}">
                                     <TextBlock
-                                        Margin="4,2"
                                         FontSize="12"
                                         Foreground="White"
                                         Text="视频" />
@@ -80,8 +80,9 @@
                                             <GradientStop Offset="0" Color="#00000000" />
                                         </LinearGradientBrush>
                                     </Grid.Background>
-                                    <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
-                                        Margin="4,2"
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
                                         FontSize="12"
                                         Foreground="White"
                                         Text="{Binding Path=Dynamic.DynArchive.CoverLeftText1}" />
@@ -138,12 +139,12 @@
                                 <Image Width="{Binding Path=CoverWidth}" Source="{Binding Path=Dynamic.DynPgc.Cover}" />
                                 <Border
                                     Margin="8"
+                                    Padding="4,1,5,3"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
                                     Background="{ThemeResource SystemAccentColor}"
                                     CornerRadius="{StaticResource ControlCornerRadius}">
                                     <TextBlock
-                                        Margin="4,2"
                                         FontSize="12"
                                         Foreground="White"
                                         Text="番剧" />
@@ -155,8 +156,9 @@
                                             <GradientStop Offset="0" Color="#00000000" />
                                         </LinearGradientBrush>
                                     </Grid.Background>
-                                    <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
-                                        Margin="4,2"
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
                                         FontSize="12"
                                         Foreground="White"
                                         Text="{Binding Path=Dynamic.DynArchive.CoverLeftText1}" />
@@ -195,12 +197,12 @@
                                 <Image Width="{Binding Path=CoverWidth}" Source="{Binding Path=Dynamic.DynArchive.Cover}" />
                                 <Border
                                     Margin="8"
+                                    Padding="4,1,5,3"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
                                     Background="{ThemeResource SystemAccentColor}"
                                     CornerRadius="{StaticResource ControlCornerRadius}">
                                     <TextBlock
-                                        Margin="4,2"
                                         FontSize="12"
                                         Foreground="White"
                                         Text="番剧" />
@@ -212,8 +214,9 @@
                                             <GradientStop Offset="0" Color="#00000000" />
                                         </LinearGradientBrush>
                                     </Grid.Background>
-                                    <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
-                                        Margin="4,2"
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
                                         FontSize="12"
                                         Foreground="White"
                                         Text="{Binding Path=Dynamic.DynArchive.CoverLeftText1}" />
@@ -260,12 +263,12 @@
                             <Image Width="80" Source="{Binding Path=Dynamic.DynMusic.Cover}" />
                             <Border
                                 Margin="8"
+                                Padding="4,1,5,3"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
                                 CornerRadius="{StaticResource ControlCornerRadius}">
                                 <TextBlock
-                                    Margin="4,2"
                                     FontSize="12"
                                     Foreground="White"
                                     Text="音频" />
@@ -277,8 +280,9 @@
                                         <GradientStop Offset="0" Color="#00000000" />
                                     </LinearGradientBrush>
                                 </Grid.Background>
-                                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
-                                    Margin="4,2"
+                                <TextBlock
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
                                     FontSize="12"
                                     Foreground="White"
                                     Text="{Binding Path=Dynamic.DynArchive.CoverLeftText1}" />
@@ -331,7 +335,8 @@
                         CornerRadius="{StaticResource OverlayCornerRadius}"
                         Visibility="{Binding ForwardMissed}">
                         <StackPanel Margin="12" Orientation="Horizontal">
-                            <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                            <FontIcon
+                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                 FontSize="14"
                                 Foreground="Gray"
                                 Glyph="&#xE7BA;" />
@@ -364,12 +369,12 @@
                             <Image Width="{Binding Path=CoverWidth}" Source="{Binding Path=Extend.OrigImgUrl}" />
                             <Border
                                 Margin="8"
+                                Padding="4,1,5,3"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
                                 CornerRadius="{StaticResource ControlCornerRadius}">
                                 <TextBlock
-                                    Margin="4,2"
                                     FontSize="12"
                                     Foreground="White"
                                     Text="专栏" />
@@ -415,12 +420,12 @@
                             <Image Width="{Binding Path=CoverWidth}" Source="{Binding Path=Extend.OrigImgUrl}" />
                             <Border
                                 Margin="8"
+                                Padding="4,1,5,3"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
                                 CornerRadius="{StaticResource ControlCornerRadius}">
                                 <TextBlock
-                                    Margin="4,2"
                                     FontSize="12"
                                     Foreground="White"
                                     Text="合集" />
@@ -466,15 +471,13 @@
                         </HyperlinkButton>
                         <Border
                             Margin="8"
+                            Padding="4,1,5,3"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"
                             Background="#66000000"
                             CornerRadius="{StaticResource ControlCornerRadius}"
                             Visibility="{Binding Path=ImageInfos[0].LongImage, Mode=OneWay}">
-                            <TextBlock
-                                Margin="4"
-                                FontSize="12"
-                                Foreground="White">
+                            <TextBlock FontSize="12" Foreground="White">
                                 长图
                             </TextBlock>
                         </Border>
@@ -566,12 +569,12 @@
                             <Image Width="80" Source="{Binding Path=Dynamic.DynCommon.Cover}" />
                             <Border
                                 Margin="8"
+                                Padding="4,1,5,3"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
                                 CornerRadius="{StaticResource ControlCornerRadius}">
                                 <TextBlock
-                                    Margin="4,2"
                                     FontSize="12"
                                     Foreground="White"
                                     Text="活动" />
@@ -622,12 +625,12 @@
                             <Image Width="160" Source="{Binding Path=LiveInfo.PlayInfo.Cover}" />
                             <Border
                                 Margin="8"
+                                Padding="4,1,5,3"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
                                 CornerRadius="{StaticResource ControlCornerRadius}">
                                 <TextBlock
-                                    Margin="4,2"
                                     FontSize="12"
                                     Foreground="White"
                                     Text="直播" />
@@ -699,12 +702,12 @@
                             <Image Width="160" Source="{Binding Path=Dynamic.DynCourBatchUp.Cover}" />
                             <Border
                                 Margin="8"
+                                Padding="4,1,5,3"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
                                 CornerRadius="{StaticResource ControlCornerRadius}">
                                 <TextBlock
-                                    Margin="4,2"
                                     FontSize="12"
                                     Foreground="White"
                                     Text="课堂" />
@@ -793,12 +796,12 @@
                                 <Image Width="{Binding Path=CoverWidth}" Source="{Binding Path=CustomArticle.Cover}" />
                                 <Border
                                     Margin="8"
+                                    Padding="4,1,5,3"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
                                     Background="{ThemeResource SystemAccentColor}"
                                     CornerRadius="{StaticResource ControlCornerRadius}">
                                     <TextBlock
-                                        Margin="4,2"
                                         FontSize="12"
                                         Foreground="White"
                                         Text="专栏" />

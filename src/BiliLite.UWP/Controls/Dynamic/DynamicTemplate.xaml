@@ -48,15 +48,14 @@
                         </Grid.ColumnDefinitions>
                         <Grid>
                             <Image Width="{Binding Path=OneRowInfo.CoverWidth}" Source="{Binding Path=OneRowInfo.Cover}" />
-                            <Border
+                            <Border Padding="4,1,5,3"
                                 Margin="8"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
-                                Background="#C8FF69B4"
+                                Background="{ThemeResource SystemAccentColor}"
                                 CornerRadius="{StaticResource ControlCornerRadius}"
                                 Visibility="{Binding Path=OneRowInfo.ShowTag}">
                                 <TextBlock
-                                    Margin="4,2"
                                     FontSize="12"
                                     Foreground="White"
                                     Text="{Binding Path=OneRowInfo.Tag}" />
@@ -72,7 +71,6 @@
                                     </LinearGradientBrush>
                                 </Grid.Background>
                                 <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
-                                    Margin="4,2"
                                     FontSize="12"
                                     Foreground="White"
                                     Text="{Binding Path=OneRowInfo.CoverText}" />
@@ -147,7 +145,7 @@
                                 Source="{Binding Path=ImagesInfo[0].ImageUrlWithPar}"
                                 Stretch="UniformToFill" />
                         </HyperlinkButton>
-                        <Border
+                        <Border Padding="4,1,5,3"
                             Margin="8"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"
@@ -155,7 +153,6 @@
                             CornerRadius="{StaticResource ControlCornerRadius}"
                             Visibility="{Binding Path=ImagesInfo[0].LongImage}">
                             <TextBlock
-                                Margin="4"
                                 FontSize="12"
                                 Foreground="White">
                                 长图
