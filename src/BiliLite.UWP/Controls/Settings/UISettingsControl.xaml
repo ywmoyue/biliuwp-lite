@@ -41,12 +41,12 @@
         MaxWidth="1200">
         <controls:SettingsExpander Header="主题" IsExpanded="True">
             <controls:SettingsExpander.HeaderIcon>
-                <font:FontAwesome Icon="Solid_PaintBrush" />
+                <SymbolIcon Symbol="Highlight"/>
             </controls:SettingsExpander.HeaderIcon>
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard Description="更改应用的日夜主题" Header="外观">
                     <controls:SettingsCard.HeaderIcon>
-                        <SymbolIcon Symbol="Highlight"/>
+                        <font:FontAwesome Icon="Solid_PaintBrush" />
                     </controls:SettingsCard.HeaderIcon>
                     <ComboBox x:Name="cbTheme" MinWidth="200" Margin="0 0 -4 0">
                         <ComboBox.Items>
