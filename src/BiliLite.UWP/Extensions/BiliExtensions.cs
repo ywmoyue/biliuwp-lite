@@ -146,12 +146,12 @@ namespace BiliLite.Extensions
                 }
                 else
                 {
-                    if (!isSilentUpdateCheck) Notify.ShowMessageToast($"LatestRelease版本：Ver {ver.Version}；当前已是最新或更新版本");
+                    if (!isSilentUpdateCheck) NotificationShowExtensions.ShowMessageToast($"LatestRelease版本：Ver {ver.Version}；当前已是最新或更新版本");
                 }
             }
             catch (Exception ex)
             {
-                Notify.ShowMessageToast("检查更新失败；请检查日志");
+                NotificationShowExtensions.ShowMessageToast("检查更新失败；请检查日志");
                 _logger.Error($"检查更新失败：{ex.Message}", ex);
             }
 #endif

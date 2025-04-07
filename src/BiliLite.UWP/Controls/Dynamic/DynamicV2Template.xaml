@@ -62,13 +62,13 @@
                                     MaxHeight="120"
                                     Source="{Binding Path=Dynamic.DynArchive.Cover}" />
                                 <Border
-                                    Margin="4"
+                                    Margin="8"
+                                    Padding="4,1,5,3"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
                                     Background="{ThemeResource SystemAccentColor}"
                                     CornerRadius="{StaticResource ControlCornerRadius}">
                                     <TextBlock
-                                        Margin="4,2"
                                         FontSize="12"
                                         Foreground="White"
                                         Text="视频" />
@@ -81,7 +81,8 @@
                                         </LinearGradientBrush>
                                     </Grid.Background>
                                     <TextBlock
-                                        Margin="4,2"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
                                         FontSize="12"
                                         Foreground="White"
                                         Text="{Binding Path=Dynamic.DynArchive.CoverLeftText1}" />
@@ -96,6 +97,7 @@
                                     Foreground="{ThemeResource TextColor}"
                                     MaxLines="2"
                                     Text="{Binding Path=Dynamic.DynArchive.Title}"
+                                    TextAlignment="Justify"
                                     TextTrimming="CharacterEllipsis"
                                     TextWrapping="Wrap" />
                                 <TextBlock
@@ -136,13 +138,13 @@
                             <Grid>
                                 <Image Width="{Binding Path=CoverWidth}" Source="{Binding Path=Dynamic.DynPgc.Cover}" />
                                 <Border
-                                    Margin="4"
+                                    Margin="8"
+                                    Padding="4,1,5,3"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
                                     Background="{ThemeResource SystemAccentColor}"
                                     CornerRadius="{StaticResource ControlCornerRadius}">
                                     <TextBlock
-                                        Margin="4,2"
                                         FontSize="12"
                                         Foreground="White"
                                         Text="番剧" />
@@ -155,7 +157,8 @@
                                         </LinearGradientBrush>
                                     </Grid.Background>
                                     <TextBlock
-                                        Margin="4,2"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
                                         FontSize="12"
                                         Foreground="White"
                                         Text="{Binding Path=Dynamic.DynArchive.CoverLeftText1}" />
@@ -170,6 +173,7 @@
                                     Foreground="{ThemeResource TextColor}"
                                     MaxLines="2"
                                     Text="{Binding Path=Dynamic.DynPgc.Title}"
+                                    TextAlignment="Justify"
                                     TextTrimming="CharacterEllipsis"
                                     TextWrapping="Wrap" />
                             </StackPanel>
@@ -192,13 +196,13 @@
                             <Grid>
                                 <Image Width="{Binding Path=CoverWidth}" Source="{Binding Path=Dynamic.DynArchive.Cover}" />
                                 <Border
-                                    Margin="4"
+                                    Margin="8"
+                                    Padding="4,1,5,3"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
                                     Background="{ThemeResource SystemAccentColor}"
                                     CornerRadius="{StaticResource ControlCornerRadius}">
                                     <TextBlock
-                                        Margin="4,2"
                                         FontSize="12"
                                         Foreground="White"
                                         Text="番剧" />
@@ -211,7 +215,8 @@
                                         </LinearGradientBrush>
                                     </Grid.Background>
                                     <TextBlock
-                                        Margin="4,2"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
                                         FontSize="12"
                                         Foreground="White"
                                         Text="{Binding Path=Dynamic.DynArchive.CoverLeftText1}" />
@@ -226,6 +231,7 @@
                                     Foreground="{ThemeResource TextColor}"
                                     MaxLines="2"
                                     Text="{Binding Path=Dynamic.DynArchive.Title}"
+                                    TextAlignment="Justify"
                                     TextTrimming="CharacterEllipsis"
                                     TextWrapping="Wrap" />
                             </StackPanel>
@@ -256,13 +262,13 @@
                         <Grid>
                             <Image Width="80" Source="{Binding Path=Dynamic.DynMusic.Cover}" />
                             <Border
-                                Margin="4"
+                                Margin="8"
+                                Padding="4,1,5,3"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
                                 CornerRadius="{StaticResource ControlCornerRadius}">
                                 <TextBlock
-                                    Margin="4,2"
                                     FontSize="12"
                                     Foreground="White"
                                     Text="音频" />
@@ -275,7 +281,8 @@
                                     </LinearGradientBrush>
                                 </Grid.Background>
                                 <TextBlock
-                                    Margin="4,2"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
                                     FontSize="12"
                                     Foreground="White"
                                     Text="{Binding Path=Dynamic.DynArchive.CoverLeftText1}" />
@@ -290,6 +297,7 @@
                                 Foreground="{ThemeResource TextColor}"
                                 MaxLines="2"
                                 Text="{Binding Path=Dynamic.DynMusic.Title}"
+                                TextAlignment="Justify"
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="Wrap" />
                             <TextBlock
@@ -328,7 +336,7 @@
                         Visibility="{Binding ForwardMissed}">
                         <StackPanel Margin="12" Orientation="Horizontal">
                             <FontIcon
-                                FontFamily="Segoe MDL2 Assets"
+                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                 FontSize="14"
                                 Foreground="Gray"
                                 Glyph="&#xE7BA;" />
@@ -360,13 +368,13 @@
                         <Grid>
                             <Image Width="{Binding Path=CoverWidth}" Source="{Binding Path=Extend.OrigImgUrl}" />
                             <Border
-                                Margin="4"
+                                Margin="8"
+                                Padding="4,1,5,3"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
                                 CornerRadius="{StaticResource ControlCornerRadius}">
                                 <TextBlock
-                                    Margin="4,2"
                                     FontSize="12"
                                     Foreground="White"
                                     Text="专栏" />
@@ -381,6 +389,7 @@
                                 Foreground="{ThemeResource TextColor}"
                                 MaxLines="2"
                                 Text="{Binding Path=Extend.OrigDesc[0].Text}"
+                                TextAlignment="Justify"
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="Wrap" />
                         </StackPanel>
@@ -410,13 +419,13 @@
                         <Grid>
                             <Image Width="{Binding Path=CoverWidth}" Source="{Binding Path=Extend.OrigImgUrl}" />
                             <Border
-                                Margin="4"
+                                Margin="8"
+                                Padding="4,1,5,3"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
                                 CornerRadius="{StaticResource ControlCornerRadius}">
                                 <TextBlock
-                                    Margin="4,2"
                                     FontSize="12"
                                     Foreground="White"
                                     Text="合集" />
@@ -431,6 +440,7 @@
                                 Foreground="{ThemeResource TextColor}"
                                 MaxLines="2"
                                 Text="{Binding Path=Extend.OrigDesc[0].Text}"
+                                TextAlignment="Justify"
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="Wrap" />
                         </StackPanel>
@@ -461,15 +471,13 @@
                         </HyperlinkButton>
                         <Border
                             Margin="8"
+                            Padding="4,1,5,3"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"
                             Background="#66000000"
                             CornerRadius="{StaticResource ControlCornerRadius}"
                             Visibility="{Binding Path=ImageInfos[0].LongImage, Mode=OneWay}">
-                            <TextBlock
-                                Margin="4"
-                                FontSize="12"
-                                Foreground="White">
+                            <TextBlock FontSize="12" Foreground="White">
                                 长图
                             </TextBlock>
                         </Border>
@@ -560,13 +568,13 @@
                         <Grid>
                             <Image Width="80" Source="{Binding Path=Dynamic.DynCommon.Cover}" />
                             <Border
-                                Margin="4"
+                                Margin="8"
+                                Padding="4,1,5,3"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
                                 CornerRadius="{StaticResource ControlCornerRadius}">
                                 <TextBlock
-                                    Margin="4,2"
                                     FontSize="12"
                                     Foreground="White"
                                     Text="活动" />
@@ -581,6 +589,7 @@
                                 Foreground="{ThemeResource TextColor}"
                                 MaxLines="2"
                                 Text="{Binding Path=Dynamic.DynCommon.Title}"
+                                TextAlignment="Justify"
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="Wrap" />
                             <TextBlock
@@ -615,13 +624,13 @@
                         <Grid>
                             <Image Width="160" Source="{Binding Path=LiveInfo.PlayInfo.Cover}" />
                             <Border
-                                Margin="4"
+                                Margin="8"
+                                Padding="4,1,5,3"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
                                 CornerRadius="{StaticResource ControlCornerRadius}">
                                 <TextBlock
-                                    Margin="4,2"
                                     FontSize="12"
                                     Foreground="White"
                                     Text="直播" />
@@ -636,6 +645,7 @@
                                 Foreground="{ThemeResource TextColor}"
                                 MaxLines="2"
                                 Text="{Binding Path=LiveInfo.PlayInfo.Title}"
+                                TextAlignment="Justify"
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="Wrap" />
                             <TextBlock
@@ -691,13 +701,13 @@
                         <Grid>
                             <Image Width="160" Source="{Binding Path=Dynamic.DynCourBatchUp.Cover}" />
                             <Border
-                                Margin="4"
+                                Margin="8"
+                                Padding="4,1,5,3"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
                                 CornerRadius="{StaticResource ControlCornerRadius}">
                                 <TextBlock
-                                    Margin="4,2"
                                     FontSize="12"
                                     Foreground="White"
                                     Text="课堂" />
@@ -712,6 +722,7 @@
                                 Foreground="{ThemeResource TextColor}"
                                 MaxLines="2"
                                 Text="{Binding Path=Dynamic.DynCourBatchUp.Title}"
+                                TextAlignment="Justify"
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="Wrap" />
                             <TextBlock
@@ -750,6 +761,7 @@
                         Foreground="{ThemeResource TextColor}"
                         MaxLines="2"
                         Text="{Binding Path=Season.Title}"
+                        TextAlignment="Justify"
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="Wrap" />
                     <TextBlock
@@ -783,13 +795,13 @@
                             <Grid>
                                 <Image Width="{Binding Path=CoverWidth}" Source="{Binding Path=CustomArticle.Cover}" />
                                 <Border
-                                    Margin="4"
+                                    Margin="8"
+                                    Padding="4,1,5,3"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
                                     Background="{ThemeResource SystemAccentColor}"
                                     CornerRadius="{StaticResource ControlCornerRadius}">
                                     <TextBlock
-                                        Margin="4,2"
                                         FontSize="12"
                                         Foreground="White"
                                         Text="专栏" />
@@ -804,6 +816,7 @@
                                     Foreground="{ThemeResource TextColor}"
                                     MaxLines="2"
                                     Text="{Binding Path=CustomArticle.Title}"
+                                    TextAlignment="Justify"
                                     TextTrimming="CharacterEllipsis"
                                     TextWrapping="Wrap" />
                             </StackPanel>
@@ -821,7 +834,7 @@
             BorderThickness="1"
             CornerRadius="{StaticResource OverlayCornerRadius}">
             <StackPanel Margin="12">
-                <TextBlock TextWrapping="Wrap">无法显示此动态,请点击以下按钮复制内容给开发者适配</TextBlock>
+                <TextBlock TextAlignment="Justify" TextWrapping="Wrap">无法显示此动态,请点击以下按钮复制内容给开发者适配</TextBlock>
                 <Button
                     Margin="0,0,8,0"
                     Command="{Binding Parent.CopyDynCommand}"

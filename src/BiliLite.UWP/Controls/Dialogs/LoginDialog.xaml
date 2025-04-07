@@ -150,7 +150,7 @@
                         Width="200"
                         Height="200"
                         Source="{x:Bind Path=loginVM.QRImageSource, Mode=OneWay}" />
-                    <ProgressRing
+                    <muxc:ProgressRing
                         Width="48"
                         Height="48"
                         IsActive="True"

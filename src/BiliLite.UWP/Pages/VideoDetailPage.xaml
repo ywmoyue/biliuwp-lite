@@ -10,6 +10,7 @@
     xmlns:local="using:BiliLite.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:modules="using:BiliLite.Modules"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:user="using:BiliLite.ViewModels.User"
     xmlns:video="using:BiliLite.ViewModels.Video"
@@ -25,9 +26,6 @@
         </Style>
         <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="#64B0B0B0" />
         <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="{ThemeResource SystemListLowColor}" />
-        <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource SystemAccentColor}" />
-        <SolidColorBrush x:Key="ControlSolidFillColorDefaultBrush" Color="{ThemeResource SystemAccentColor}" />
-        <StaticResource x:Key="GridViewItemSelectedInnerBorderBrush" ResourceKey="ControlSolidFillColorDefaultBrush" />
         <DataTemplate x:Name="PlayListTpl">
             <PivotItem Margin="0">
                 <PivotItem.Header>
@@ -100,7 +98,7 @@
                             RightTapped="btnLike_RightTapped"
                             ToolTipService.ToolTip="右击或长按可以一键三连哦">
                             <StackPanel>
-                                <FontIcon
+                                <FontIcon 
                                     FontFamily="{StaticResource BiliIconFont}"
                                     Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Like, Mode=OneWay, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=1}"
                                     Glyph="&#xE6C6;" />
@@ -119,7 +117,7 @@
                             Background="Transparent"
                             Command="{x:Bind Path=m_viewModel.DislikeCommand}">
                             <StackPanel>
-                                <FontIcon
+                                <FontIcon 
                                     Margin="0,-2,0,2"
                                     FontFamily="{StaticResource BiliIconFont}"
                                     Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Dislike, Mode=OneWay, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=1}"
@@ -230,7 +228,7 @@
                             Margin="0"
                             Background="Transparent">
                             <StackPanel>
-                                <FontIcon
+                                <FontIcon 
                                     FontFamily="{StaticResource BiliIconFont}"
                                     Foreground="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Coin, Mode=OneWay, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=1}"
                                     Glyph="&#xE670;" />
@@ -258,7 +256,7 @@
                             Foreground="{ThemeResource TextColor}"
                             Visibility="{x:Bind m_viewModel.ShowNormalShareBtn, Mode=OneWay}">
                             <StackPanel>
-                                <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE671;" />
+                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE671;" />
                                 <TextBlock
                                     FontSize="12"
                                     Text="分享"
@@ -274,7 +272,7 @@
                             Foreground="{ThemeResource TextColor}"
                             Visibility="{x:Bind m_viewModel.ShowNormalDownloadBtn, Mode=OneWay}">
                             <StackPanel>
-                                <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE672;" />
+                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE672;" />
                                 <TextBlock
                                     FontSize="12"
                                     Text="下载"
@@ -349,7 +347,7 @@
                             Background="Transparent"
                             Foreground="{ThemeResource TextColor}">
                             <StackPanel>
-                                <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE680;" />
+                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE680;" />
                                 <TextBlock
                                     FontSize="12"
                                     Text="更多"
@@ -388,7 +386,7 @@
                             Foreground="{ThemeResource TextColor}"
                             Visibility="{x:Bind m_viewModel.ShowOpenRightInfoBtn, Mode=OneWay}">
                             <StackPanel>
-                                <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xe68a;" />
+                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xe68a;" />
                                 <TextBlock
                                     FontSize="12"
                                     Text="详情"
@@ -441,6 +439,7 @@
                                             Grid.Column="1"
                                             FontSize="14"
                                             Text="{x:Bind Path=m_viewModel.VideoInfo.ArgueMsg, Mode=OneWay}"
+                                            TextAlignment="Justify"
                                             TextWrapping="Wrap" />
                                     </Grid>
                                 </Border>
@@ -449,6 +448,7 @@
                                     FontSize="18"
                                     RightTapped="TitleText_RightTapped"
                                     Text="{x:Bind Path=m_viewModel.VideoInfo.Title, Mode=OneWay}"
+                                    TextAlignment="Justify"
                                     TextWrapping="Wrap" />
                                 <TextBlock
                                     Margin="0,4,0,0"
@@ -470,9 +470,9 @@
                                     Visibility="{x:Bind Path=m_viewModel.VideoInfo.ShowStaff, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition />
-                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
                                         <Ellipse Width="36" Height="36">
                                             <Ellipse.Fill>
@@ -510,9 +510,9 @@
                                                     Foreground="{ThemeResource TextColor}">
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="auto" />
+                                                            <ColumnDefinition Width="Auto" />
                                                             <ColumnDefinition />
-                                                            <ColumnDefinition Width="auto" />
+                                                            <ColumnDefinition Width="Auto" />
                                                         </Grid.ColumnDefinitions>
                                                         <Ellipse Width="36" Height="36">
                                                             <Ellipse.Fill>
@@ -547,7 +547,7 @@
                                             <TextBlock>
                                                 制作团队(<Run Text="{x:Bind Path=m_viewModel.VideoInfo.Staff.Count, Mode=OneWay, TargetNullValue='0'}" />
                                                 人)</TextBlock>
-                                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE011;" />
+                                            <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE011;" />
                                         </StackPanel>
                                     </HyperlinkButton>
                                     <HyperlinkButton
@@ -557,7 +557,7 @@
                                         Foreground="Gray"
                                         Visibility="{x:Bind Path=m_viewModel.ShowMoreStaff, Mode=OneWay}">
                                         <StackPanel>
-                                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE010;" />
+                                            <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE010;" />
                                         </StackPanel>
                                     </HyperlinkButton>
                                 </StackPanel>
@@ -576,6 +576,7 @@
                                         RightTapped="txtDesc_RightTapped"
                                         Tapped="txtDesc_Tapped"
                                         Text="{x:Bind Path=m_viewModel.VideoInfo.Desc, Mode=OneWay}"
+                                        TextAlignment="Justify"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap"
                                         Visibility="Collapsed" />
@@ -602,9 +603,9 @@
                                                 <TextBlock
                                                     Margin="8,0"
                                                     Foreground="{ThemeResource TextColor}"
+                                                    Text="{x:Bind PagePart}"
                                                     TextAlignment="Center"
-                                                    TextTrimming="CharacterEllipsis"
-                                                    Text="{x:Bind PagePart}" />
+                                                    TextTrimming="CharacterEllipsis" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </GridView.ItemTemplate>
@@ -683,6 +684,7 @@
                                             <TextBlock
                                                 MaxLines="2"
                                                 Text="{x:Bind Title}"
+                                                TextAlignment="Justify"
                                                 TextTrimming="CharacterEllipsis"
                                                 TextWrapping="Wrap" />
                                             <TextBlock
@@ -743,7 +745,7 @@
                 </HyperlinkButton>
             </StackPanel>
         </Grid>
-        <ProgressRing
+        <muxc:ProgressRing
             Grid.ColumnSpan="2"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"

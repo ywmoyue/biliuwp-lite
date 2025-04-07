@@ -8,6 +8,7 @@
     xmlns:fa="using:FontAwesome5"
     xmlns:local="using:BiliLite.Pages.Bangumi"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pages="using:BiliLite.Pages"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     Background="Transparent"
@@ -65,10 +66,10 @@
                         StretchContentForSingleRow="False">
                         <GridView.ItemTemplate>
                             <DataTemplate x:DataType="anime:AnimeTimelineItemModel">
-                                <Grid>
+                                <Grid Background="{ThemeResource CardBackground}">
                                     <Grid.RowDefinitions>
                                         <RowDefinition />
-                                        <RowDefinition Height="24" />
+                                        <RowDefinition Height="Auto" />
                                         <RowDefinition Height="24" />
                                     </Grid.RowDefinitions>
                                     <Grid>
@@ -85,9 +86,9 @@
                                                     <GradientStop Offset="0" Color="#00000000" />
                                                 </LinearGradientBrush>
                                             </Grid.Background>
-                                            <StackPanel Orientation="Horizontal">
+                                            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                                 <FontIcon
-                                                    FontFamily="Segoe MDL2 Assets"
+                                                    FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                                     FontSize="12"
                                                     Foreground="White"
                                                     Glyph="&#xE121;" />
@@ -102,17 +103,19 @@
 
                                     <TextBlock
                                         Grid.Row="1"
-                                        Margin="4,4,4,0"
+                                        Margin="8,4"
                                         MaxLines="1"
                                         Text="{x:Bind Title}"
+                                        TextAlignment="Justify"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />
                                     <TextBlock
                                         Grid.Row="2"
-                                        Margin="4,0,4,4"
+                                        Margin="8,4"
                                         FontSize="12"
                                         Foreground="Gray"
                                         Text="{x:Bind PubIndex}"
+                                        TextAlignment="Justify"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />
                                 </Grid>
@@ -122,7 +125,7 @@
                 </DataTemplate>
             </Pivot.ItemTemplate>
         </Pivot>
-        <ProgressRing
+        <muxc:ProgressRing
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             IsActive="True"

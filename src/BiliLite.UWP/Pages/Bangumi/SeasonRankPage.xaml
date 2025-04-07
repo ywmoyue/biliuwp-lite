@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:BiliLite.Pages.Bangumi"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pages="using:BiliLite.Pages"
     xmlns:season="using:BiliLite.Models.Common.Season"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
@@ -40,7 +41,7 @@
                         DesiredWidth="550"
                         IsItemClickEnabled="True"
                         ItemClick="AdaptiveGridView_ItemClick"
-                        ItemHeight="100"
+                        ItemHeight="120"
                         ItemsSource="{x:Bind Path=Items, Mode=OneWay}"
                         OneRowModeEnabled="False"
                         PointerPressed="AdaptiveGridView_PointerPressed"
@@ -50,7 +51,7 @@
                             <DataTemplate x:DataType="season:SeasonRankItemModel">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="160" />
+                                        <ColumnDefinition Width="200" />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
                                     <Grid>
@@ -60,21 +61,6 @@
                                             PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                             Source="{x:Bind Path=NewEp.Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
                                             Stretch="UniformToFill" />
-                                        <Border
-                                            Margin="4"
-                                            Padding="8,4"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Top"
-                                            Background="#FFFB9E60"
-                                            CornerRadius="{StaticResource ControlCornerRadius}"
-                                            Visibility="{Binding ShowBadge}">
-                                            <TextBlock
-                                                FontSize="12"
-                                                Foreground="#FFFFFFFF"
-                                                Text="{x:Bind Path=Badge}"
-                                                TextTrimming="CharacterEllipsis"
-                                                TextWrapping="Wrap" />
-                                        </Border>
                                         <Border
                                             Padding="12,2"
                                             HorizontalAlignment="Left"
@@ -92,26 +78,39 @@
                                         </Border>
                                     </Grid>
 
-                                    <TextBlock
-                                        Grid.Column="1"
-                                        Margin="5"
-                                        MaxLines="2"
-                                        Text="{x:Bind Path=Title}"
-                                        TextTrimming="CharacterEllipsis"
-                                        TextWrapping="Wrap" />
-                                    <StackPanel
-                                        Grid.Column="1"
-                                        Margin="5"
-                                        VerticalAlignment="Bottom">
-                                        <TextBlock Margin="0,2,0,0" Foreground="Gray"><Run Text="{x:Bind Path=NewEp.IndexShow}" /></TextBlock>
+                                    <Grid Grid.Column="1" Margin="10,5">
                                         <TextBlock
-                                            Margin="0,2,0,0"
-                                            Foreground="Gray"
-                                            Visibility="{x:Bind Path=ShowDanmaku}">
-                                            弹幕:<Run Text="{x:Bind Path=Stat.Danmaku, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
-                                        <TextBlock Margin="0,2,0,0" Foreground="Gray">
-                                            综合评分<Run Text="{x:Bind Path=Pts}" /></TextBlock>
-                                    </StackPanel>
+                                            MaxLines="1"
+                                            Text="{x:Bind Path=Title}"
+                                            TextAlignment="Justify"
+                                            TextTrimming="CharacterEllipsis"
+                                            TextWrapping="Wrap" />
+                                        <StackPanel VerticalAlignment="Bottom">
+                                            <Border
+                                                Padding="8,4"
+                                                HorizontalAlignment="Left"
+                                                Background="Orange"
+                                                CornerRadius="{StaticResource ControlCornerRadius}"
+                                                Visibility="{Binding ShowBadge}">
+                                                <TextBlock
+                                                    FontSize="12"
+                                                    Foreground="#FFFFFFFF"
+                                                    Text="{x:Bind Path=Badge}"
+                                                    TextAlignment="Justify"
+                                                    TextTrimming="CharacterEllipsis"
+                                                    TextWrapping="Wrap" />
+                                            </Border>
+                                            <TextBlock Margin="0,2,0,0" Foreground="Gray"><Run Text="{x:Bind Path=NewEp.IndexShow}" /></TextBlock>
+                                            <TextBlock
+                                                Margin="0,2,0,0"
+                                                Foreground="Gray"
+                                                Visibility="{x:Bind Path=ShowDanmaku}">
+                                                弹幕:<Run Text="{x:Bind Path=Stat.Danmaku, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
+                                            <TextBlock Margin="0,2,0,0" Foreground="Gray">
+                                                综合评分<Run Text="{x:Bind Path=Pts}" /></TextBlock>
+                                        </StackPanel>
+                                    </Grid>
+
                                 </Grid>
                             </DataTemplate>
                         </controls:MyAdaptiveGridView.ItemTemplate>
@@ -119,7 +118,7 @@
                 </DataTemplate>
             </Pivot.ItemTemplate>
         </Pivot>
-        <ProgressRing
+        <muxc:ProgressRing
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             IsActive="True"

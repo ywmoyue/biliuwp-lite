@@ -9,6 +9,7 @@
     xmlns:fa="using:FontAwesome5"
     xmlns:local="using:BiliLite.Pages.User"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pages="using:BiliLite.Pages"
     Background="Transparent"
     mc:Ignorable="d">
@@ -16,7 +17,7 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Dynamic/DynamicTemplate.xaml" />
+                <ResourceDictionary Source="/Controls/Dynamic/DynamicV2Template.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <AcrylicBrush
                 x:Key="SystemControlBaseHighAcrylicElementBrush"
@@ -49,19 +50,15 @@
                             <Pivot x:Name="pivotRight" SelectionChanged="pivotRight_SelectionChanged">
                                 <PivotItem Margin="0">
                                     <PivotItem.Header>
-                                        <TextBlock FontSize="15">
-                                            转发(<Run x:Name="repostCount" />
-                                            )</TextBlock>
+                                        <TextBlock FontSize="15">转发(<Run Text="{x:Bind m_viewModel.RepostCount,Mode=OneWay}"/>)</TextBlock>
                                     </PivotItem.Header>
                                     <controls:DynamicRepostControl x:Name="repost" />
                                 </PivotItem>
                                 <PivotItem Margin="0">
                                     <PivotItem.Header>
-                                        <TextBlock FontSize="15">
-                                            评论(<Run x:Name="commentCount" />
-                                            )</TextBlock>
+                                        <TextBlock FontSize="15">评论(<Run Text="{x:Bind m_viewModel.ReplyCount,Mode=OneWay}"/>)</TextBlock>
                                     </PivotItem.Header>
-                                    <controls:CommentControl x:Name="comment" />
+                                    <controls:CommentControl x:Name="Comment"></controls:CommentControl>
                                 </PivotItem>
                             </Pivot>
                         </Grid>
@@ -75,12 +72,11 @@
                         Grid.Row="1"
                         Padding="4"
                         HorizontalContentAlignment="Center"
-                        CanLoadMore="{x:Bind Path=m_userDynamicViewModel.CanLoadMore, Mode=OneWay}"
+                        CanLoadMore="False"
                         IsItemClickEnabled="false"
-                        ItemTemplateSelector="{StaticResource select}"
-                        ItemsSource="{x:Bind Path=m_userDynamicViewModel.Items, Mode=OneWay}"
+                        ItemTemplateSelector="{StaticResource DynamicTemplateSelector}"
+                        ItemsSource="{x:Bind Path=m_viewModel.DynamicItems,Mode=OneWay}"
                         LoadMoreBottomOffset="0"
-                        LoadMoreCommand="{x:Bind Path=m_userDynamicViewModel.LoadMoreCommand}"
                         SelectionMode="None">
                         <controls:MyListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
@@ -99,13 +95,13 @@
                             </ItemsPanelTemplate>
                         </ListView.ItemsPanel>-->
                     </controls:MyListView>
-                    <ProgressRing
+                    <muxc:ProgressRing
                         Grid.Row="1"
                         Margin="8"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         IsActive="True"
-                        Visibility="{x:Bind Path=m_userDynamicViewModel.Loading, Mode=OneWay}" />
+                        Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}" />
                 </Grid>
             </SplitView.Content>
         </SplitView>

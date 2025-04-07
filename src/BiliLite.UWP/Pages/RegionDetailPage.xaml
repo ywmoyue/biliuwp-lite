@@ -17,13 +17,13 @@
         <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White" />
         <DataTemplate x:Key="HomeTemplate" x:DataType="region:RegionDetailHomeViewModel">
             <Grid>
-                <controls:MyAdaptiveGridView
+                <controls:MyAdaptiveGridView ItemHeight="120"
                     Padding="15,0"
                     CanLoadMore="True"
-                    DesiredWidth="600"
+                    DesiredWidth="550"
                     IsItemClickEnabled="True"
                     ItemClick="AdaptiveGridView_ItemClick"
-                    ItemHeight="100"
+                    
                     ItemsSource="{x:Bind Path=Videos, Mode=OneWay}"
                     LoadMoreBottomOffset="0"
                     LoadMoreCommand="{x:Bind Path=LoadMoreCommand, Mode=OneWay}"
@@ -87,7 +87,7 @@
                                     </MenuFlyout>
                                 </Grid.ContextFlyout>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="160" />
+                                    <ColumnDefinition Width="200" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Grid>
@@ -96,11 +96,12 @@
                                         Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
                                         Stretch="UniformToFill" />
                                 </Grid>
-                                <Grid Grid.Column="1" Margin="8,0,0,0">
+                                <Grid Grid.Column="1" Margin="10,5">
                                     <TextBlock
                                         Margin="0,0,0,4"
                                         MaxLines="2"
                                         Text="{x:Bind Title}"
+                                        TextAlignment="Justify"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />
                                     <StackPanel VerticalAlignment="Bottom">
@@ -130,7 +131,7 @@
                                 Visibility="{x:Bind Path=Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                 <TextBlock>加载更多</TextBlock>
                             </HyperlinkButton>
-                            <ProgressRing
+                            <muxc:ProgressRing
                                 HorizontalAlignment="Center"
                                 IsActive="True"
                                 Visibility="{x:Bind Path=Loading, Mode=OneWay}" />
@@ -148,13 +149,13 @@
         </DataTemplate>
         <DataTemplate x:Key="ChildTemplate" x:DataType="region:RegionDetailChildViewModel">
             <Grid>
-                <controls:MyAdaptiveGridView
+                <controls:MyAdaptiveGridView ItemHeight="120"
                     Padding="12,8"
                     CanLoadMore="True"
-                    DesiredWidth="600"
+                    DesiredWidth="550"
                     IsItemClickEnabled="True"
                     ItemClick="AdaptiveGridView_ItemClick"
-                    ItemHeight="100"
+                    
                     ItemsSource="{x:Bind Path=Videos, Mode=OneWay}"
                     LoadMoreBottomOffset="0"
                     LoadMoreCommand="{x:Bind Path=LoadMoreCommand, Mode=OneWay}"
@@ -174,22 +175,21 @@
                                     </MenuFlyout>
                                 </Grid.ContextFlyout>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="160" />
+                                    <ColumnDefinition Width="200" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Grid>
                                     <toolkit:ImageEx
-                                        Width="160"
-                                        Height="120"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                         Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
                                         Stretch="UniformToFill" />
                                 </Grid>
-                                <Grid Grid.Column="1" Margin="8,0,0,0">
+                                <Grid Grid.Column="1" Margin="10,5">
                                     <TextBlock
                                         Margin="0,0,0,4"
                                         MaxLines="2"
                                         Text="{x:Bind Title}"
+                                        TextAlignment="Justify"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />
                                     <StackPanel VerticalAlignment="Bottom">
@@ -220,7 +220,7 @@
                                 Visibility="{x:Bind Path=Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                 <TextBlock>加载更多</TextBlock>
                             </HyperlinkButton>
-                            <ProgressRing
+                            <muxc:ProgressRing
                                 HorizontalAlignment="Center"
                                 IsActive="True"
                                 Visibility="{x:Bind Path=Loading, Mode=OneWay}" />

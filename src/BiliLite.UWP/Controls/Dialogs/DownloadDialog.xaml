@@ -7,6 +7,7 @@
     xmlns:download="using:BiliLite.ViewModels.Download"
     xmlns:local="using:BiliLite.Controls.Dialogs"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     Title="下载视频"
     Background="{ThemeResource SystemControlAcrylicElementBrush}"
     CloseButtonStyle="{StaticResource DefaultButtonStyle}"
@@ -127,7 +128,7 @@
                                     Foreground="Red"
                                     Text="{x:Bind Path=ErrorMessage, Mode=OneWay}"
                                     Visibility="{x:Bind Path=State, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=99}" />
-                                <ProgressRing
+                                <muxc:ProgressRing
                                     Grid.Column="2"
                                     HorizontalAlignment="Right"
                                     IsActive="True"

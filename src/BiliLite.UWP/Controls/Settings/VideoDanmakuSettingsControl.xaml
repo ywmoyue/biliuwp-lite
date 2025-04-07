@@ -23,7 +23,7 @@
         <controls:SettingsCard Header="弹幕引擎"
                                Description="不同弹幕引擎支持的设置项不同，支持的相同设置项表现也不同，详细设置项请在播放视频时调整(如弹幕字体、密度等)">
             <controls:SettingsCard.HeaderIcon>
-                <FontIcon  FontFamily="Segoe MDL2 Assets" Glyph="&#xE8FD;"></FontIcon>
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE8FD;"></FontIcon>
             </controls:SettingsCard.HeaderIcon>
             <ComboBox x:Name="cbDanmakuEngine" SelectedIndex="0" MinWidth="200" SelectedValuePath="Value">
                 <ComboBox.ItemTemplate>
@@ -41,7 +41,7 @@
         <controls:SettingsCard Header="默认弹幕状态"
                                Description="播放视频时默认弹幕状态">
             <controls:SettingsCard.HeaderIcon>
-                <FontIcon  FontFamily="Segoe MDL2 Assets" Glyph="&#xEC87;"></FontIcon>
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"   Glyph="&#xEC87;"></FontIcon>
             </controls:SettingsCard.HeaderIcon>
             <ToggleSwitch x:Name="DanmuSettingState" OnContent="打开" OffContent="关闭"></ToggleSwitch>
         </controls:SettingsCard>
@@ -49,7 +49,7 @@
         <controls:SettingsCard Header="弹幕顶部距离"
                                Description="弹幕和画面顶部的距离">
             <controls:SettingsCard.HeaderIcon>
-                <FontIcon  FontFamily="Segoe MDL2 Assets" Glyph="&#xF574;"></FontIcon>
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"  Glyph="&#xF574;"></FontIcon>
             </controls:SettingsCard.HeaderIcon>
             <controls1:NumberBox x:Name="numDanmakuTopMargin" Minimum="0" Margin="0 0 0 8" Width="200" HorizontalAlignment="Left" Value="0" SpinButtonPlacementMode="Compact" SmallChange="4" ></controls1:NumberBox>
         </controls:SettingsCard>

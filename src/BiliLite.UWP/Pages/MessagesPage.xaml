@@ -115,7 +115,7 @@
                                         <HyperlinkButton Click="LoadMore_OnClick" Visibility="{x:Bind Path=m_viewModel.HasMoreContexts,Mode=OneWay}" Foreground="Gray" HorizontalAlignment="Center" >
                                             <TextBlock>加载更多</TextBlock>
                                         </HyperlinkButton>
-                                        <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.ChatContextLoading,Mode=OneWay}"></ProgressRing>
+                                        <muxc:ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.ChatContextLoading,Mode=OneWay}"></muxc:ProgressRing>
                                     </StackPanel>
                                 </ListView.Footer>
                             </ListView>
@@ -150,7 +150,7 @@
                                     <HyperlinkButton Click="LoadMoreMessages_OnClick"  Visibility="{x:Bind Path=m_viewModel.HasMoreMessages,Mode=OneWay}" Foreground="Gray" HorizontalAlignment="Center" >
                                         <TextBlock>加载更多</TextBlock>
                                     </HyperlinkButton>
-                                    <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.ChatMessagesLoading,Mode=OneWay}"></ProgressRing>
+                                    <muxc:ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.ChatMessagesLoading,Mode=OneWay}"></muxc:ProgressRing>
                                 </StackPanel>
                             </ListView.Header>
                         </ListView>
@@ -174,7 +174,7 @@
                                      Grid.Column="0" 
                                      Padding="0 42 0 42"
                                      AcceptsReturn="True" 
-                                     TextWrapping="Wrap" 
+                                     TextWrapping="Wrap" TextAlignment="Justify" 
                                      PlaceholderText="输入消息..."
                                      Text="{x:Bind m_viewModel.ChatMessageInput,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
 
@@ -231,7 +231,7 @@
                                         </StackPanel>
                                         <StackPanel Orientation="Vertical" Margin="0 0 14 10">
                                             <TextBlock Text="{x:Bind Content}" 
-                                                       TextWrapping="Wrap"></TextBlock>
+                                                       TextWrapping="Wrap" TextAlignment="Justify"></TextBlock>
                                             <RichTextBlock Visibility="{x:Bind ShowReferenceContent}" Margin="0 8 0 0">
                                                 <Paragraph FontStyle="Italic" Foreground="Gray">
                                                     <Run Text="{x:Bind ReferenceContent}"/>
@@ -260,7 +260,7 @@
                                             Height="80"
                                             FontSize="14"
                                             LineHeight="15"
-                                            TextWrapping="Wrap"
+                                            TextWrapping="Wrap" TextAlignment="Justify"
                                             TextTrimming="CharacterEllipsis"
                                             Text="{x:Bind Title}"
                                             ToolTipService.ToolTip="{x:Bind Title}"
@@ -276,7 +276,7 @@
                                 <HyperlinkButton Click="BtnLoadMoreReplyMeMsg_OnClick"  Visibility="{x:Bind Path=m_viewModel.HasMoreReplyMe,Mode=OneWay}" Foreground="Gray" HorizontalAlignment="Center" >
                                     <TextBlock>加载更多</TextBlock>
                                 </HyperlinkButton>
-                                <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.ReplyMeLoading,Mode=OneWay}"></ProgressRing>
+                                <muxc:ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=m_viewModel.ReplyMeLoading,Mode=OneWay}"></muxc:ProgressRing>
                             </StackPanel>
                         </ListView.Footer>
                     </ListView>

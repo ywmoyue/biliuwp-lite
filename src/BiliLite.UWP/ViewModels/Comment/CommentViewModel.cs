@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.UI;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 
@@ -215,10 +216,19 @@ namespace BiliLite.ViewModels.Comment
         {
             get
             {
-                if (!IsContentNeedExpand || IsContentNeedExpand && IsExpanded)
-                    return Content.Text;
-                return $"{Content.Message.SubstringCommentText(m_commentShrinkLength)}...".ToRichTextBlock(
-                    Content.Emote, enableVideoSeekTime: true);
+                RichTextBlock result;
+
+                if (!IsContentNeedExpand || (IsContentNeedExpand && IsExpanded))
+                {
+                    result = Content.Text;
+                }
+                else
+                {
+                    result = $"{Content.Message.SubstringCommentText(m_commentShrinkLength)}...".ToRichTextBlock(Content.Emote, enableVideoSeekTime: true);
+                }
+                result.TextAlignment = TextAlignment.Justify;
+
+                return result;
             }
         }
 

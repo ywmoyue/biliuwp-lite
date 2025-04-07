@@ -255,10 +255,11 @@ namespace BiliLite.Pages
 
         private void pivotRight_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (pivotRight.SelectedIndex == 0 && splitView.IsPaneOpen && (repost.UserDynamicRepostViewModel.Items == null || repost.UserDynamicRepostViewModel.Items.Count == 0))
-            {
-                repost.LoadData(dynamic_id);
-            }
+            throw new NotImplementedException();
+            //if (pivotRight.SelectedIndex == 0 && splitView.IsPaneOpen && (repost.UserDynamicRepostViewModel.Items == null || repost.UserDynamicRepostViewModel.Items.Count == 0))
+            //{
+            //    repost.LoadData(dynamic_id);
+            //}
         }
 
         //void SetStaggered()

@@ -17,15 +17,14 @@
     mc:Ignorable="d">
     <Page.Resources>
         <DataTemplate x:Key="HotAnimeItem" x:DataType="homeModel:CinemaHomeHotItem">
-            <Grid>
+            <Grid Width="180" Background="{ThemeResource CardBackground}">
                 <Grid.RowDefinitions>
                     <RowDefinition />
-                    <RowDefinition Height="24" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="24" />
                 </Grid.RowDefinitions>
                 <Grid>
                     <toolkit:ImageEx
-                        MaxHeight="240"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -38,25 +37,24 @@
                                 <GradientStop Offset="0" Color="#00000000" />
                             </LinearGradientBrush>
                         </Grid.Background>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock
-                                FontSize="12"
-                                Foreground="White"
-                                Text="{x:Bind Path=Stat.FollowView}" />
-                        </StackPanel>
+                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
+    FontSize="12"
+    Foreground="White"
+    Text="{x:Bind Path=Stat.FollowView}" />
                     </Grid>
                     <Border
-                        Margin="4"
+                        Margin="5"
                         Padding="8,4"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top"
-                        Background="#FFFB9E60"
+                        Background="Orange"
                         CornerRadius="{ThemeResource ControlCornerRadius}"
                         Visibility="{Binding Path=ShowBadge}">
                         <TextBlock
                             FontSize="12"
                             Foreground="#FFFFFFFF"
                             Text="{x:Bind Path=Badge}"
+                            TextAlignment="Justify"
                             TextTrimming="CharacterEllipsis"
                             TextWrapping="Wrap" />
                     </Border>
@@ -64,31 +62,32 @@
                 <TextBlock
                     Grid.Row="1"
                     MaxWidth="180"
-                    Margin="4,4,4,0"
+                    Margin="8,4"
                     MaxLines="1"
                     Text="{x:Bind Path=Title}"
+                    TextAlignment="Justify"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="Wrap" />
                 <TextBlock
                     Grid.Row="2"
-                    Margin="4,0,4,4"
+                    Margin="8,4"
                     FontSize="12"
                     Foreground="Gray"
                     Text="{x:Bind Path=Desc}"
+                    TextAlignment="Justify"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="Wrap" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="HotAnimeItemWide" x:DataType="homeModel:CinemaHomeHotItem">
-            <Grid>
+            <Grid Width="231" Background="{ThemeResource CardBackground}">
                 <Grid.RowDefinitions>
                     <RowDefinition />
-                    <RowDefinition Height="24" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="24" />
                 </Grid.RowDefinitions>
                 <Grid>
                     <toolkit:ImageEx
-                        Width="200"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -101,25 +100,24 @@
                                 <GradientStop Offset="0" Color="#00000000" />
                             </LinearGradientBrush>
                         </Grid.Background>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock
-                                FontSize="12"
-                                Foreground="White"
-                                Text="{x:Bind Path=Stat.FollowView}" />
-                        </StackPanel>
+                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
+    FontSize="12"
+    Foreground="White"
+    Text="{x:Bind Path=Stat.FollowView}" />
                     </Grid>
                     <Border
-                        Margin="4"
+                        Margin="5"
                         Padding="8,4"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top"
-                        Background="#FFFB9E60"
+                        Background="Orange"
                         CornerRadius="{ThemeResource ControlCornerRadius}"
                         Visibility="{Binding Path=ShowBadge}">
                         <TextBlock
                             FontSize="12"
                             Foreground="#FFFFFFFF"
                             Text="{x:Bind Path=Badge}"
+                            TextAlignment="Justify"
                             TextTrimming="CharacterEllipsis"
                             TextWrapping="Wrap" />
                     </Border>
@@ -127,17 +125,19 @@
 
                 <TextBlock
                     Grid.Row="1"
-                    Margin="4,4,4,0"
+                    Margin="8,4"
                     MaxLines="1"
                     Text="{x:Bind Path=Title}"
+                    TextAlignment="Justify"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="Wrap" />
                 <TextBlock
                     Grid.Row="2"
-                    Margin="4,0,4,4"
+                    Margin="8,4"
                     FontSize="12"
                     Foreground="Gray"
                     Text="{x:Bind Path=Desc}"
+                    TextAlignment="Justify"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="Wrap" />
             </Grid>
@@ -226,15 +226,14 @@
                             </GridView.ItemsPanel>
                             <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="model:FollowSeasonModel">
-                                    <Grid>
+                                    <Grid Width="231" Background="{ThemeResource CardBackground}">
                                         <Grid.RowDefinitions>
                                             <RowDefinition />
-                                            <RowDefinition Height="24" />
+                                            <RowDefinition Height="Auto" />
                                             <RowDefinition Height="24" />
                                         </Grid.RowDefinitions>
                                         <Grid>
                                             <toolkit:ImageEx
-                                                Width="200"
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch"
                                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -247,25 +246,24 @@
                                                         <GradientStop Offset="0" Color="#00000000" />
                                                     </LinearGradientBrush>
                                                 </Grid.Background>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock
-                                                        FontSize="12"
-                                                        Foreground="White"
-                                                        Text="{x:Bind Path=NewEp.index_show}" />
-                                                </StackPanel>
+                                                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
+    FontSize="12"
+    Foreground="White"
+    Text="{x:Bind Path=NewEp.index_show}" />
                                             </Grid>
                                             <Border
-                                                Margin="4"
+                                                Margin="5"
                                                 Padding="8,4"
                                                 HorizontalAlignment="Right"
                                                 VerticalAlignment="Top"
-                                                Background="#FFFB9E60"
+                                                Background="Orange"
                                                 CornerRadius="{ThemeResource ControlCornerRadius}"
                                                 Visibility="{x:Bind ShowBadge}">
                                                 <TextBlock
                                                     FontSize="12"
                                                     Foreground="#FFFFFFFF"
                                                     Text="{x:Bind Badge}"
+                                                    TextAlignment="Justify"
                                                     TextTrimming="CharacterEllipsis"
                                                     TextWrapping="Wrap" />
                                             </Border>
@@ -273,17 +271,19 @@
 
                                         <TextBlock
                                             Grid.Row="1"
-                                            Margin="4,4,4,0"
+                                            Margin="8,4"
                                             MaxLines="1"
                                             Text="{x:Bind Path=Title}"
+                                            TextAlignment="Justify"
                                             TextTrimming="CharacterEllipsis"
                                             TextWrapping="Wrap" />
                                         <TextBlock
                                             Grid.Row="2"
-                                            Margin="4,0,4,4"
+                                            Margin="8,4"
                                             FontSize="12"
                                             Foreground="Gray"
                                             Text="{x:Bind Path=ProgressText}"
+                                            TextAlignment="Justify"
                                             TextTrimming="CharacterEllipsis"
                                             TextWrapping="Wrap" />
                                     </Grid>
@@ -305,15 +305,14 @@
                             SelectionMode="None">
                             <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="homeModel:CinemaHomeHotItem">
-                                    <Grid>
+                                    <Grid Width="180" Background="{ThemeResource CardBackground}">
                                         <Grid.RowDefinitions>
                                             <RowDefinition />
-                                            <RowDefinition Height="24" />
+                                            <RowDefinition Height="Auto" />
                                             <RowDefinition Height="24" />
                                         </Grid.RowDefinitions>
                                         <Grid>
                                             <toolkit:ImageEx
-                                                MaxHeight="240"
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch"
                                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -326,25 +325,24 @@
                                                         <GradientStop Offset="0" Color="#00000000" />
                                                     </LinearGradientBrush>
                                                 </Grid.Background>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock
-                                                        FontSize="12"
-                                                        Foreground="White"
-                                                        Text="{x:Bind Path=Stat.FollowView}" />
-                                                </StackPanel>
+                                                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
+    FontSize="12"
+    Foreground="White"
+    Text="{x:Bind Path=Stat.FollowView}" />
                                             </Grid>
                                             <Border
-                                                Margin="4"
+                                                Margin="5"
                                                 Padding="8,4"
                                                 HorizontalAlignment="Right"
                                                 VerticalAlignment="Top"
-                                                Background="#FFFB9E60"
+                                                Background="Orange"
                                                 CornerRadius="{ThemeResource ControlCornerRadius}"
                                                 Visibility="{Binding Path=ShowBadge}">
                                                 <TextBlock
                                                     FontSize="12"
                                                     Foreground="#FFFFFFFF"
                                                     Text="{x:Bind Path=Badge}"
+                                                    TextAlignment="Justify"
                                                     TextTrimming="CharacterEllipsis"
                                                     TextWrapping="Wrap" />
                                             </Border>
@@ -352,17 +350,19 @@
 
                                         <TextBlock
                                             Grid.Row="1"
-                                            Margin="4,4,4,0"
+                                            Margin="8,4"
                                             MaxLines="1"
                                             Text="{x:Bind Path=Title}"
+                                            TextAlignment="Justify"
                                             TextTrimming="CharacterEllipsis"
                                             TextWrapping="Wrap" />
                                         <TextBlock
                                             Grid.Row="2"
-                                            Margin="4,0,4,4"
+                                            Margin="8,4"
                                             FontSize="12"
                                             Foreground="Gray"
                                             Text="{x:Bind Path=Hat}"
+                                            TextAlignment="Justify"
                                             TextTrimming="CharacterEllipsis"
                                             TextWrapping="Wrap" />
                                     </Grid>
@@ -515,7 +515,7 @@
                                         </controls:MyAdaptiveGridView.Header>
                                         <controls:MyAdaptiveGridView.ItemTemplate>
                                             <DataTemplate x:DataType="homeModel:CinemaHomeFallItemModel">
-                                                <Grid>
+                                                <Grid Background="{ThemeResource CardBackground}">
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition />
                                                         <RowDefinition Height="28" />
@@ -529,9 +529,10 @@
                                                         Stretch="UniformToFill" />
                                                     <TextBlock
                                                         Grid.Row="1"
-                                                        Margin="4"
+                                                        Margin="8,4"
                                                         MaxLines="1"
                                                         Text="{x:Bind Title}"
+                                                        TextAlignment="Justify"
                                                         TextTrimming="CharacterEllipsis"
                                                         TextWrapping="Wrap" />
                                                     <!--<TextBlock
@@ -542,7 +543,7 @@
                                                         MaxLines="2"
                                                         Text="{Binding desc}"
                                                         TextTrimming="CharacterEllipsis"
-                                                        TextWrapping="Wrap" />-->
+                                                        TextWrapping="Wrap" TextAlignment="Justify" />-->
                                                 </Grid>
                                             </DataTemplate>
                                         </controls:MyAdaptiveGridView.ItemTemplate>
@@ -556,7 +557,7 @@
                                             Visibility="{x:Bind Path=ShowMore, Mode=OneWay}">
                                             <TextBlock>加载更多</TextBlock>
                                         </HyperlinkButton>
-                                        <ProgressRing
+                                        <muxc:ProgressRing
                                             HorizontalAlignment="Center"
                                             IsActive="True"
                                             Visibility="{x:Bind Path=ShowMore, Converter={StaticResource DisplayConvert}, Mode=OneWay}" />
@@ -578,7 +579,7 @@
             x:Name="gridLoading"
             Background="Transparent"
             Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}">
-            <ProgressRing
+            <muxc:ProgressRing
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 IsActive="True" />

@@ -86,9 +86,9 @@
                 <controls:SettingsCard>
                     <controls:SettingsCard.Header>
                         <StackPanel>
-                            <TextBlock  Margin="0 0 0 8"  FontSize="14" TextWrapping="Wrap">这是一个第三方客户端，应用所有数据来源均来自哔哩哔哩。</TextBlock>
-                            <TextBlock  Margin="0 0 0 8"  FontSize="14" TextWrapping="Wrap">本程序仅供学习交流编程技术使用。</TextBlock>
-                            <TextBlock  Margin="0 0 0 8"  FontSize="14" TextWrapping="Wrap">如果侵犯您的合法权益，请及时联系本人以第一时间删除。</TextBlock>
+                            <TextBlock  Margin="0 0 0 8"  FontSize="14" TextWrapping="Wrap" TextAlignment="Justify">这是一个第三方客户端，应用所有数据来源均来自哔哩哔哩。</TextBlock>
+                            <TextBlock  Margin="0 0 0 8"  FontSize="14" TextWrapping="Wrap" TextAlignment="Justify">本程序仅供学习交流编程技术使用。</TextBlock>
+                            <TextBlock  Margin="0 0 0 8"  FontSize="14" TextWrapping="Wrap" TextAlignment="Justify">如果侵犯您的合法权益，请及时联系本人以第一时间删除。</TextBlock>
                         </StackPanel>
                     </controls:SettingsCard.Header>
                 </controls:SettingsCard>

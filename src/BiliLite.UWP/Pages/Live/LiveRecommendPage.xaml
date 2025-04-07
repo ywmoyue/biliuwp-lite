@@ -53,10 +53,10 @@
                                 StretchContentForSingleRow="False">
                                 <controls:MyAdaptiveGridView.ItemTemplate>
                                     <DataTemplate x:DataType="modules:LiveRecommendItemModel">
-                                        <Grid>
+                                        <Grid Background="{ThemeResource CardBackground}">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition />
-                                                <RowDefinition Height="24" />
+                                                <RowDefinition Height="Auto" />
                                                 <RowDefinition Height="24" />
                                             </Grid.RowDefinitions>
                                             <Grid>
@@ -73,12 +73,11 @@
                                                             <GradientStop Offset="0" Color="#00000000" />
                                                         </LinearGradientBrush>
                                                     </Grid.Background>
-                                                    <StackPanel>
-                                                        <TextBlock
-                                                            FontSize="12"
-                                                            Foreground="White"
-                                                            Text="{x:Bind Path=uname}" />
-                                                    </StackPanel>
+                                                    <TextBlock
+                                                        HorizontalAlignment="Left"
+                                                        FontSize="12"
+                                                        Foreground="White"
+                                                        Text="{x:Bind Path=uname}" />
                                                     <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                                         <fa:FontAwesome
                                                             Margin="0,0,8,0"
@@ -109,17 +108,19 @@
 
                                             <TextBlock
                                                 Grid.Row="1"
-                                                Margin="4,4,4,0"
+                                                Margin="8,4"
                                                 MaxLines="1"
                                                 Text="{x:Bind Path=title}"
+                                                TextAlignment="Justify"
                                                 TextTrimming="CharacterEllipsis"
                                                 TextWrapping="Wrap" />
                                             <TextBlock
                                                 Grid.Row="2"
-                                                Margin="4,0,4,4"
+                                                Margin="8,4"
                                                 FontSize="12"
                                                 Foreground="Gray"
                                                 Text="{x:Bind Path=area_v2_name}"
+                                                TextAlignment="Justify"
                                                 TextTrimming="CharacterEllipsis"
                                                 TextWrapping="Wrap" />
                                         </Grid>
@@ -133,7 +134,7 @@
                                             Visibility="{x:Bind Path=CanLoadMore, Mode=OneWay}">
                                             <TextBlock>加载更多</TextBlock>
                                         </HyperlinkButton>
-                                        <ProgressRing
+                                        <muxc:ProgressRing
                                             Width="24"
                                             VerticalAlignment="Center"
                                             IsActive="True"
@@ -147,7 +148,7 @@
                                 Visibility="{x:Bind Path=Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                 <SymbolIcon Symbol="Refresh" />
                             </Button>
-                            <ProgressRing
+                            <muxc:ProgressRing
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 IsActive="True"

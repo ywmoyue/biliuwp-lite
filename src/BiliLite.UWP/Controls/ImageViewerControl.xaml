@@ -10,10 +10,10 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <Style TargetType="AppBarButton">
-            <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}"/>
+            <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
         </Style>
     </UserControl.Resources>
-    
+
     <Grid>
         <Grid>
             <ScrollViewer
@@ -190,6 +190,7 @@
         </StackPanel>
         <ProgressRing
             x:Name="loading"
+            Foreground="{ThemeResource SystemAccentColor}"
             IsActive="True"
             Visibility="Collapsed" />
 

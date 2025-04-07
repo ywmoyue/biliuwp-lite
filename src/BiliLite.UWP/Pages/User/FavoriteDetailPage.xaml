@@ -8,6 +8,7 @@
     xmlns:favorites="using:BiliLite.Models.Common.Favorites"
     xmlns:local="using:BiliLite.Pages.User"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pages="using:BiliLite.Pages"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     Background="Transparent"
@@ -30,7 +31,7 @@
                     </MenuFlyout>
                 </Grid.ContextFlyout>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="200" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <!--<Grid.ContextFlyout>
@@ -39,17 +40,17 @@
                     </MenuFlyout>
                 </Grid.ContextFlyout>-->
                 <toolkit:ImageEx
-                    Width="120"
-                    Height="80"
                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                     Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
                     Stretch="UniformToFill" />
-                <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                <StackPanel Grid.Column="1" Margin="10,5">
                     <TextBlock
                         Margin="0,0,0,4"
-                        MaxLines="2"
+                        MaxLines="1"
                         Text="{x:Bind Title}"
-                        TextTrimming="CharacterEllipsis" />
+                        TextAlignment="Justify"
+                        TextTrimming="CharacterEllipsis"
+                        TextWrapping="Wrap" />
                     <TextBlock
                         Margin="0,4"
                         FontSize="14"
@@ -169,17 +170,17 @@
         </Grid>
 
         <Grid Grid.Row="1">
-            <controls:MyAdaptiveGridView
+            <controls:MyAdaptiveGridView ItemHeight="120"
                 x:Name="listView"
                 Grid.ColumnSpan="2"
                 AllowDrop="True"
                 CanDragItems="True"
                 CanReorderItems="True"
-                DesiredWidth="600"
+                DesiredWidth="550"
                 DragItemsCompleted="FavItemGridView_OnDragItemsCompleted"
                 IsItemClickEnabled="{x:Bind Path=m_viewModel.IsItemClickEnabled, Mode=OneWay}"
                 ItemClick="Video_ItemClick"
-                ItemHeight="80"
+                
                 ItemTemplate="{StaticResource VideoDataTemplate}"
                 ItemsSource="{x:Bind Path=m_viewModel.Videos, Mode=TwoWay}"
                 PointerPressed="Video_ItemPressed"
@@ -196,7 +197,7 @@
                             Visibility="{x:Bind Path=m_viewModel.ShowLoadMore, Mode=OneWay}">
                             <TextBlock>加载更多</TextBlock>
                         </HyperlinkButton>
-                        <ProgressRing
+                        <muxc:ProgressRing
                             HorizontalAlignment="Center"
                             IsActive="True"
                             Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}" />

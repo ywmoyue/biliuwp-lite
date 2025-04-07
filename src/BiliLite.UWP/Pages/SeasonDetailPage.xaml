@@ -53,11 +53,11 @@
                             Command="{x:Bind Path=m_viewModel.FollowCommand}"
                             Foreground="{x:Bind Path=m_viewModel.Detail.UserStatus.Follow, Mode=OneWay, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=1}">
                             <StackPanel>
-                                <FontIcon
+                                <FontIcon 
                                     FontFamily="{StaticResource BiliIconFont}"
                                     Glyph="&#xE66B;"
                                     Visibility="{x:Bind Path=m_viewModel.Detail.UserStatus.Follow, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=0}" />
-                                <FontIcon
+                                <FontIcon 
                                     FontFamily="{StaticResource BiliIconFont}"
                                     Glyph="&#xE6DB;"
                                     Visibility="{x:Bind Path=m_viewModel.Detail.UserStatus.Follow, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=1}" />
@@ -75,7 +75,7 @@
                             Background="Transparent"
                             Click="btnSendReview_Click">
                             <StackPanel>
-                                <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE6DF;" />
+                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE6DF;" />
                                 <TextBlock
                                     FontSize="12"
                                     Text="点评"
@@ -91,7 +91,7 @@
                             Background="Transparent"
                             Visibility="{x:Bind m_viewModel.ShowNormalShareBtn, Mode=OneWay}">
                             <StackPanel>
-                                <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE671;" />
+                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE671;" />
                                 <TextBlock
                                     FontSize="12"
                                     Text="分享"
@@ -122,7 +122,7 @@
                             Click="btnDownload_Click"
                             Visibility="{x:Bind m_viewModel.ShowNormalDownloadBtn, Mode=OneWay}">
                             <StackPanel>
-                                <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE672;" />
+                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE672;" />
                                 <TextBlock
                                     FontSize="12"
                                     Text="下载"
@@ -190,7 +190,7 @@
                             Margin="0"
                             Background="Transparent">
                             <StackPanel>
-                                <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE680;" />
+                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE680;" />
                                 <TextBlock
                                     FontSize="12"
                                     Text="更多"
@@ -227,7 +227,7 @@
                             Command="{x:Bind m_viewModel.OpenRightInfoCommand}"
                             Visibility="{x:Bind m_viewModel.ShowOpenRightInfoBtn, Mode=OneWay}">
                             <StackPanel>
-                                <FontIcon FontFamily="{StaticResource BiliIconFont}" Glyph="&#xe68a;" />
+                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xe68a;" />
                                 <TextBlock
                                     FontSize="12"
                                     Text="详情"
@@ -266,11 +266,11 @@
                                             Stretch="Fill"
                                             Tapped="Image_Tapped" />
                                         <Border
-                                            Margin="4"
+                                            Margin="5"
                                             Padding="4,2"
                                             HorizontalAlignment="Right"
                                             VerticalAlignment="Top"
-                                            Background="#FFFB9E60"
+                                            Background="Orange"
                                             CornerRadius="{StaticResource ControlCornerRadius}"
                                             Opacity="1"
                                             Visibility="{x:Bind Path=m_viewModel.Detail.ShowBadge, Mode=OneWay}">
@@ -278,15 +278,20 @@
                                                 FontSize="12"
                                                 Foreground="#FFFFFFFF"
                                                 Text="{x:Bind Path=m_viewModel.Detail.Badge, Mode=OneWay}"
+                                                TextAlignment="Justify"
                                                 TextTrimming="CharacterEllipsis"
                                                 TextWrapping="Wrap" />
                                         </Border>
                                     </Grid>
-                                    <StackPanel Grid.Column="1" Margin="8,0,0,0">
-                                        <TextBlock Text="{x:Bind Path=m_viewModel.Detail.Title, Mode=OneWay}" TextWrapping="Wrap" />
+                                    <StackPanel Grid.Column="1" Margin="10,5">
+                                        <TextBlock
+                                            Text="{x:Bind Path=m_viewModel.Detail.Title, Mode=OneWay}"
+                                            TextAlignment="Justify"
+                                            TextWrapping="Wrap" />
                                         <TextBlock
                                             Margin="0,2"
                                             Foreground="Gray"
+                                            TextAlignment="Justify"
                                             TextWrapping="Wrap"><Run Text="{x:Bind Path=m_viewModel.Detail.Stat.Play, Mode=OneWay}" /> <Run Text="{x:Bind Path=m_viewModel.Detail.Stat.Followers, Mode=OneWay}" /></TextBlock>
                                         <TextBlock
                                             Margin="0,2"
@@ -318,8 +323,8 @@
                                     Margin="0,16,0,0"
                                     HorizontalAlignment="Stretch"
                                     Background="Transparent"
-                                    BorderBrush="#FFFB9E60"
-                                    Foreground="#FFFB9E60"
+                                    BorderBrush="Orange"
+                                    Foreground="Orange"
                                     Visibility="{x:Bind Path=m_viewModel.Detail.ShowPayment, Mode=OneWay}">
                                     <TextBlock Text="{x:Bind Path=m_viewModel.Detail.Payment.Dialog.Title, Mode=OneWay}" />
                                 </Button>
@@ -471,15 +476,18 @@
                                 <TextBlock
                                     IsTextSelectionEnabled="True"
                                     Text="{x:Bind Path=m_viewModel.Detail.Title, Mode=OneWay}"
+                                    TextAlignment="Justify"
                                     TextWrapping="Wrap" />
                                 <TextBlock
                                     IsTextSelectionEnabled="True"
                                     Text="{x:Bind Path=m_viewModel.Detail.Alias, Mode=OneWay}"
+                                    TextAlignment="Justify"
                                     TextWrapping="Wrap" />
                                 <TextBlock
                                     Margin="0,4"
                                     IsTextSelectionEnabled="True"
                                     Text="{x:Bind Path=m_viewModel.Detail.OriginName, Mode=OneWay}"
+                                    TextAlignment="Justify"
                                     TextWrapping="Wrap" />
                                 <TextBlock
                                     Margin="0,8"
@@ -490,6 +498,7 @@
                                     Foreground="Gray"
                                     IsTextSelectionEnabled="True"
                                     Text="{x:Bind Path=m_viewModel.Detail.Evaluate, Mode=OneWay}"
+                                    TextAlignment="Justify"
                                     TextWrapping="Wrap" />
                                 <TextBlock
                                     Margin="0,8"
@@ -556,6 +565,7 @@
                                     Foreground="Gray"
                                     IsTextSelectionEnabled="True"
                                     Text="{x:Bind Path=m_viewModel.Detail.Actor.Info, Mode=OneWay}"
+                                    TextAlignment="Justify"
                                     TextWrapping="Wrap" />
                                 <TextBlock
                                     Margin="0,8"
@@ -566,6 +576,7 @@
                                     Foreground="Gray"
                                     IsTextSelectionEnabled="True"
                                     Text="{x:Bind Path=m_viewModel.Detail.Staff.Info, Mode=OneWay}"
+                                    TextAlignment="Justify"
                                     TextWrapping="Wrap" />
 
                             </StackPanel>
@@ -630,6 +641,7 @@
                                                 Margin="44,8,0,8"
                                                 IsTextSelectionEnabled="True"
                                                 Text="{x:Bind Content}"
+                                                TextAlignment="Justify"
                                                 TextWrapping="Wrap" />
                                             <StackPanel Margin="44,0,0,0" Orientation="Horizontal">
                                                 <HyperlinkButton
@@ -681,7 +693,7 @@
                                             Visibility="{x:Bind Path=m_seasonReviewViewModel.CanLoadMore, Mode=OneWay}">
                                             <TextBlock>加载更多</TextBlock>
                                         </HyperlinkButton>
-                                        <ProgressRing
+                                        <muxc:ProgressRing
                                             Width="24"
                                             VerticalAlignment="Center"
                                             IsActive="True"
@@ -736,7 +748,7 @@
                 </HyperlinkButton>
             </StackPanel>
         </Border>
-        <ProgressRing
+        <muxc:ProgressRing
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             IsActive="True"

@@ -44,7 +44,7 @@
             Grid.Row="1"
             Padding="12,0"
             CanLoadMore="True"
-            DesiredWidth="180"
+            DesiredWidth="200"
             IsItemClickEnabled="True"
             ItemClick="ListResult_ItemClick"
             ItemHeight="288"
@@ -56,7 +56,7 @@
             StretchContentForSingleRow="False">
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="season:SeasonIndexResultItemModel">
-                    <Grid>
+                    <Grid Background="{ThemeResource CardBackground}">
                         <Grid.RowDefinitions>
                             <RowDefinition />
                             <RowDefinition Height="24" />
@@ -77,7 +77,7 @@
                                         <GradientStop Offset="0" Color="#00000000" />
                                     </LinearGradientBrush>
                                 </Grid.Background>
-                                <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                     <TextBlock
                                         FontSize="12"
                                         Foreground="White"
@@ -92,17 +92,18 @@
                                 </StackPanel>
                             </Grid>
                             <Border
-                                Margin="4"
+                                Margin="5"
                                 Padding="8,4"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
-                                Background="#FFFB9E60"
+                                Background="Orange"
                                 CornerRadius="{StaticResource ControlCornerRadius}"
                                 Visibility="{Binding ShowBadge}">
                                 <TextBlock
                                     FontSize="12"
                                     Foreground="#FFFFFFFF"
                                     Text="{x:Bind Path=Badge}"
+                                    TextAlignment="Justify"
                                     TextTrimming="CharacterEllipsis"
                                     TextWrapping="Wrap" />
                             </Border>
@@ -113,6 +114,7 @@
                             Margin="4,4,4,0"
                             MaxLines="1"
                             Text="{x:Bind Path=Title}"
+                            TextAlignment="Justify"
                             TextTrimming="CharacterEllipsis"
                             TextWrapping="Wrap" />
                         <TextBlock
@@ -121,6 +123,7 @@
                             FontSize="12"
                             Foreground="Gray"
                             Text="{x:Bind Path=IndexShow}"
+                            TextAlignment="Justify"
                             TextTrimming="CharacterEllipsis"
                             TextWrapping="Wrap" />
                     </Grid>
@@ -136,7 +139,7 @@
                         Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                         <TextBlock>加载更多</TextBlock>
                     </HyperlinkButton>
-                    <ProgressRing
+                    <muxc:ProgressRing
                         HorizontalAlignment="Center"
                         IsActive="True"
                         Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}" />

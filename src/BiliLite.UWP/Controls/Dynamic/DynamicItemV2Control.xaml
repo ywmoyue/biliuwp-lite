@@ -167,7 +167,7 @@
                         Command="{x:Bind Path=ViewModel.Parent.DetailCommand, Mode=OneWay}"
                         CommandParameter="{x:Bind Path=ViewModel.Extend.DynIdStr, Mode=OneWay}"
                         Foreground="Gray">
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE17C;" />
+                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE17C;" />
                     </Button>
                 </Grid>
             </HyperlinkButton>

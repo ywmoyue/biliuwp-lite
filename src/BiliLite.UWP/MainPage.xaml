@@ -25,6 +25,7 @@
             IsAddTabButtonVisible="True"
             Loaded="tabView_Loaded"
             PreviewKeyDown="TabView_OnPreviewKeyDown"
+            SelectionChanged="TabView_SelectionChanged"
             TabCloseRequested="TabView_TabCloseRequested"
             TabDragCompleted="TabView_TabDragCompleted"
             TabWidthMode="SizeToContent">

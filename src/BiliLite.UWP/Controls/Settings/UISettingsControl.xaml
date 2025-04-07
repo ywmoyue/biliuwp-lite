@@ -20,7 +20,7 @@
                 Background="{x:Bind Color, Converter={StaticResource ColorConvert}}"
                 CornerRadius="{StaticResource ControlCornerRadius}"
                 ToolTipService.ToolTip="{x:Bind Name}">
-                <SymbolIcon Symbol="Accept" Visibility="{x:Bind IsActived, Mode=OneWay}" />
+                <SymbolIcon Foreground="White" Symbol="Accept" Visibility="{x:Bind IsActived, Mode=OneWay}" />
                 <Border.ContextFlyout>
                     <MenuFlyout>
                         <MenuFlyoutItem
@@ -46,7 +46,7 @@
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard Description="更改应用的日夜主题" Header="外观">
                     <controls:SettingsCard.HeaderIcon>
-                        <font:FontAwesome Icon="Solid_Brush" />
+                        <SymbolIcon Symbol="Highlight"/>
                     </controls:SettingsCard.HeaderIcon>
                     <ComboBox x:Name="cbTheme" MinWidth="200" Margin="0 0 -4 0">
                         <ComboBox.Items>
@@ -76,7 +76,7 @@
                     <controls:SettingsCard.Header>
                         <StackPanel>
                             <TextBlock>色彩</TextBlock>
-                            <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap">更改应用的强调色彩</TextBlock>
+                            <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" TextAlignment="Justify">更改应用的强调色彩</TextBlock>
                         </StackPanel>
                     </controls:SettingsCard.Header>
                     <controls:SettingsCard.Description>
@@ -133,7 +133,7 @@
                                         <StaticResource x:Key="AccentButtonBackgroundPointerOver" ResourceKey="SystemAccentColorLight1" />
                                         <StaticResource x:Key="AccentButtonBackgroundPressed" ResourceKey="SystemAccentColorDark1" />
                                     </Button.Resources>
-                                    <SymbolIcon Visibility="{Binding SelectedIndex, ElementName=gvColor,Converter={StaticResource BooleanConvert},ConverterParameter=-1}" Symbol="Accept"/>
+                                    <SymbolIcon Foreground="White" Visibility="{Binding SelectedIndex, ElementName=gvColor,Converter={StaticResource BooleanConvert},ConverterParameter=-1}" Symbol="Accept"/>
                                 </Button>
                             </StackPanel>
                         </Grid>
@@ -145,7 +145,7 @@
         <controls:SettingsCard Header="显示模式"
                                Description="选择应用的显示模式(重启生效)">
             <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Tv"></font:FontAwesome>
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE7F4;" />
             </controls:SettingsCard.HeaderIcon>
             <ComboBox x:Name="cbDisplayMode"  MinWidth="200">
                 <ComboBox.Items>
@@ -166,7 +166,7 @@
                 <controls:SettingsCard>
                     <controls:SettingsCard.Header>
                         <StackPanel>
-                            <GridView x:Name="gridHomeCustom"
+                            <GridView x:Name="gridHomeCustom" 
                           SelectionMode="None" 
                           Margin="0 8 0 0"
                           IsItemClickEnabled="True"  CanDragItems="True" CanReorderItems="True" AllowDrop="True" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" DragItemsCompleted="gridHomeCustom_DragItemsCompleted">
@@ -188,8 +188,8 @@
                                 </GridView.ItemTemplate>
 
                             </GridView>
-                            <TextBlock  Margin="0 0 0 8" >点击添加</TextBlock>
-                            <GridView x:Name="gridHomeNavItem" SelectionMode="None" IsItemClickEnabled="True" ItemClick="gridHomeNavItem_ItemClick" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                            <TextBlock  Margin="0 0 0 8" Visibility="{Binding ItemsSource.Count,ElementName=gridHomeNavItem,Converter={StaticResource InverseBooleanConverter},ConverterParameter=0}">点击添加</TextBlock>
+                            <GridView  x:Name="gridHomeNavItem" SelectionMode="None" IsItemClickEnabled="True" ItemClick="gridHomeNavItem_ItemClick" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="home:HomeNavItem">
                                         <Grid MinWidth="115" Background="{ThemeResource CardBackground}" MinHeight="42">
@@ -226,7 +226,7 @@
         <controls:SettingsCard Header="显示直播页推荐直播"
                                Description="是否显示直播页推荐直播">
             <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Tv"></font:FontAwesome>
+                <font:FontAwesome Icon="Solid_AlignRight"></font:FontAwesome>
             </controls:SettingsCard.HeaderIcon>
             <ToggleSwitch x:Name="SwitchDisplayLivePageRecommendLive"></ToggleSwitch>
         </controls:SettingsCard>
@@ -287,7 +287,7 @@
         <controls:SettingsCard Header="动态磁贴（实验性功能，未完成）"
                                Description="运行中更新动态磁贴，暂不支持后台更新动态磁贴">
             <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_SquareFull"></font:FontAwesome>
+                <SymbolIcon Symbol="SelectAll"/>
             </controls:SettingsCard.HeaderIcon>
             <ToggleSwitch x:Name="SwitchTile"></ToggleSwitch>
         </controls:SettingsCard>
@@ -295,7 +295,7 @@
         <controls:SettingsExpander Header="启用长评论折叠"
                                    Description="评论过长时自动折叠，需要点击展开按钮显示全部评论">
             <controls:SettingsExpander.HeaderIcon>
-                <font:FontAwesome Icon="Solid_CommentDots"></font:FontAwesome>
+                <SymbolIcon Symbol="Message"/>
             </controls:SettingsExpander.HeaderIcon>
             <ToggleSwitch x:Name="swEnableCommentShrink" ></ToggleSwitch>
 

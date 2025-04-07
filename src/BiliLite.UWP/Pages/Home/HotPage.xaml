@@ -12,7 +12,7 @@
     xmlns:viewModel="using:BiliLite.ViewModels.Home"
     d:DataContext="{d:DesignInstance Type=viewModel:HotViewModel}"
     mc:Ignorable="d">
-    
+
     <Grid>
         <controls:MyAdaptiveGridView
             x:Name="HotGridView"
@@ -21,6 +21,7 @@
             DesiredWidth="550"
             IsItemClickEnabled="True"
             ItemClick="gridHot_ItemClick"
+            ItemHeight="120"
             ItemsSource="{x:Bind Path=m_viewModel.HotItems, Mode=OneWay}"
             LoadMoreBottomOffset="{x:Bind m_viewModel.ScrollViewLoadMoreBottomOffset}"
             LoadMoreCommand="{x:Bind Path=m_viewModel.LoadMoreCommand}"
@@ -42,18 +43,17 @@
                             </MenuFlyout>
                         </Grid.ContextFlyout>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="180" />
+                            <ColumnDefinition Width="200" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Grid>
                             <toolkit:ImageEx
-                                Height="100"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                 Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
                                 Stretch="UniformToFill" />
-                            <Grid>
+                            <Grid Padding="8" VerticalAlignment="Bottom">
                                 <Grid.Background>
                                     <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
                                         <GradientStop Offset="0.993" Color="#CC000005" />
@@ -61,36 +61,36 @@
                                     </LinearGradientBrush>
                                 </Grid.Background>
                                 <TextBlock
-                                    Margin="8"
-                                    VerticalAlignment="Bottom"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
                                     FontSize="12"
                                     Foreground="White"
                                     Text="{x:Bind TextInfo1}" />
-                                <Border
-                                    Margin="5"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Bottom"
-                                    Background="{x:Bind Path=RcmdReason.BgColor, Converter={StaticResource ColorConvert}}"
-                                    BorderBrush="{x:Bind Path=RcmdReason.BorderColor, Converter={StaticResource ColorConvert}}"
-                                    BorderThickness="1"
-                                    CornerRadius="{ThemeResource ControlCornerRadius}">
-                                    <TextBlock
-                                        Padding="2"
-                                        FontSize="12"
-                                        Foreground="{x:Bind Path=RcmdReason.TextColor, Converter={StaticResource ColorConvert}}"
-                                        Text="{x:Bind Path=RcmdReason.Text}"
-                                        TextTrimming="CharacterEllipsis"
-                                        TextWrapping="Wrap" />
-                                </Border>
                             </Grid>
                         </Grid>
                         <Grid Grid.Column="1" Margin="10,5">
                             <TextBlock
                                 MaxLines="3"
                                 Text="{x:Bind Title}"
+                                TextAlignment="Justify"
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="Wrap" />
                             <StackPanel VerticalAlignment="Bottom">
+                                <Border
+                                    Padding="4,1,5,2"
+                                    HorizontalAlignment="Left"
+                                    Background="{x:Bind Path=RcmdReason.BgColor, Converter={StaticResource ColorConvert}}"
+                                    BorderBrush="{x:Bind Path=RcmdReason.BorderColor, Converter={StaticResource ColorConvert}}"
+                                    BorderThickness="1"
+                                    CornerRadius="{ThemeResource ControlCornerRadius}">
+                                    <TextBlock
+                                        FontSize="12"
+                                        Foreground="{x:Bind Path=RcmdReason.TextColor, Converter={StaticResource ColorConvert}}"
+                                        Text="{x:Bind Path=RcmdReason.Text}"
+                                        TextAlignment="Justify"
+                                        TextTrimming="CharacterEllipsis"
+                                        TextWrapping="Wrap" />
+                                </Border>
                                 <TextBlock
                                     FontSize="13"
                                     Foreground="Gray"
@@ -110,6 +110,7 @@
                             Foreground="Gray"
                             MaxLines="2"
                             Text="{Binding desc}"
+                            TextAlignment="Justify"
                             TextTrimming="CharacterEllipsis"
                             TextWrapping="Wrap" />-->
                     </Grid>
@@ -151,7 +152,7 @@
                         Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                         <TextBlock>加载更多</TextBlock>
                     </HyperlinkButton>
-                    <ProgressRing
+                    <muxc:ProgressRing
                         HorizontalAlignment="Center"
                         IsActive="True"
                         Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}" />

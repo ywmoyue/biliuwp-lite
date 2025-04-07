@@ -48,15 +48,14 @@
                         </Grid.ColumnDefinitions>
                         <Grid>
                             <Image Width="{Binding Path=OneRowInfo.CoverWidth}" Source="{Binding Path=OneRowInfo.Cover}" />
-                            <Border
-                                Margin="4"
+                            <Border Padding="4,1,5,3"
+                                Margin="8"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
-                                Background="#C8FF69B4"
+                                Background="{ThemeResource SystemAccentColor}"
                                 CornerRadius="{StaticResource ControlCornerRadius}"
                                 Visibility="{Binding Path=OneRowInfo.ShowTag}">
                                 <TextBlock
-                                    Margin="4,2"
                                     FontSize="12"
                                     Foreground="White"
                                     Text="{Binding Path=OneRowInfo.Tag}" />
@@ -71,8 +70,7 @@
                                         <GradientStop Offset="0" Color="#00000000" />
                                     </LinearGradientBrush>
                                 </Grid.Background>
-                                <TextBlock
-                                    Margin="4,2"
+                                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
                                     FontSize="12"
                                     Foreground="White"
                                     Text="{Binding Path=OneRowInfo.CoverText}" />
@@ -87,6 +85,7 @@
                                 Foreground="{ThemeResource TextColor}"
                                 MaxLines="2"
                                 Text="{Binding Path=OneRowInfo.Title}"
+                                TextAlignment="Justify"
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="Wrap" />
                             <TextBlock
@@ -95,6 +94,7 @@
                                 Foreground="Gray"
                                 MaxLines="2"
                                 Text="{Binding Path=OneRowInfo.Desc}"
+                                TextAlignment="Justify"
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="Wrap"
                                 Visibility="Collapsed" />
@@ -145,7 +145,7 @@
                                 Source="{Binding Path=ImagesInfo[0].ImageUrlWithPar}"
                                 Stretch="UniformToFill" />
                         </HyperlinkButton>
-                        <Border
+                        <Border Padding="4,1,5,3"
                             Margin="8"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"
@@ -153,7 +153,6 @@
                             CornerRadius="{StaticResource ControlCornerRadius}"
                             Visibility="{Binding Path=ImagesInfo[0].LongImage}">
                             <TextBlock
-                                Margin="4"
                                 FontSize="12"
                                 Foreground="White">
                                 长图
@@ -230,8 +229,7 @@
             BorderThickness="0"
             CornerRadius="{StaticResource OverlayCornerRadius}">
             <StackPanel Margin="12" Orientation="Horizontal">
-                <FontIcon
-                    FontFamily="Segoe MDL2 Assets"
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                     FontSize="14"
                     Foreground="Gray"
                     Glyph="&#xE7BA;" />
@@ -246,11 +244,12 @@
             BorderThickness="0"
             CornerRadius="{StaticResource OverlayCornerRadius}">
             <StackPanel Margin="12">
-                <TextBlock TextWrapping="Wrap">无法显示此动态,请将以下内容复制给开发者适配</TextBlock>
+                <TextBlock TextAlignment="Justify" TextWrapping="Wrap">无法显示此动态,请将以下内容复制给开发者适配</TextBlock>
                 <TextBlock
                     Margin="0,0,8,0"
                     IsTextSelectionEnabled="True"
                     Text="{Binding Path=ContentStr}"
+                    TextAlignment="Justify"
                     TextWrapping="Wrap" />
             </StackPanel>
         </Border>
@@ -282,6 +281,7 @@
                             Foreground="{ThemeResource TextColor}"
                             MaxLines="2"
                             Text="{Binding Path=ContentDisplayInfo.Title}"
+                            TextAlignment="Justify"
                             TextTrimming="CharacterEllipsis"
                             TextWrapping="Wrap" />
                         <TextBlock

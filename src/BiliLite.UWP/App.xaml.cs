@@ -189,7 +189,7 @@ namespace BiliLite
                 themeService.InitAccentColor();
                 // themeService.InitStyle();
 #if !DEBUG
-            await BiliExtensions.CheckVersion(isSilentUpdateCheck:true);
+                await BiliExtensions.CheckVersion(isSilentUpdateCheck:true);
 #endif
             }
         }

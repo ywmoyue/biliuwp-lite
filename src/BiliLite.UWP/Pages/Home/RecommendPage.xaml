@@ -16,7 +16,6 @@
     <Page.Resources>
         <Flyout x:Name="Menu" Placement="RightEdgeAlignedBottom">
             <ListView
-                MaxWidth="385"
                 IsItemClickEnabled="True"
                 ItemClick="ListMenu_ItemClick"
                 ItemsSource="{Binding Path=ThreePointV2}"
@@ -31,7 +30,7 @@
                                     Foreground="Gray"
                                     Text="{x:Bind Subtitle}" />
                             </TextBlock>
-                            <controls:MyAdaptiveGridView
+                            <GridView
                                 Margin="0,8,0,0"
                                 Padding="0"
                                 IsItemClickEnabled="True"
@@ -41,16 +40,21 @@
                                 ScrollViewer.VerticalScrollMode="Disabled"
                                 SelectionMode="None"
                                 Visibility="{x:Bind Path=Reasons, Converter={StaticResource DisplayConvert}}">
-                                <controls:MyAdaptiveGridView.ItemTemplate>
+                                <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="recommend:RecommendThreePointV2ItemReasonsModel">
-                                        <TextBlock
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            Text="{x:Bind Name}"
-                                            TextTrimming="CharacterEllipsis" />
+                                        <Border Margin="0,-100" Background="{ThemeResource CardColor}">
+                                            <TextBlock
+                                                MinWidth="193"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Text="{x:Bind Name}"
+                                                TextAlignment="Center"
+                                                TextTrimming="CharacterEllipsis" />
+                                        </Border>
+
                                     </DataTemplate>
-                                </controls:MyAdaptiveGridView.ItemTemplate>
-                            </controls:MyAdaptiveGridView>
+                                </GridView.ItemTemplate>
+                            </GridView>
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -59,6 +63,7 @@
         <DataTemplate x:Key="Grid" x:DataType="recommend:RecommendItemModel">
             <Grid
                 x:Name="RecommendItemGrid"
+                Background="{ThemeResource CardBackground}"
                 ContextFlyout="{StaticResource Menu}"
                 PointerPressed="RecommendItemGrid_PointerPressed">
                 <Grid.RowDefinitions>
@@ -83,41 +88,46 @@
                                 <GradientStop Offset="0" Color="#00000000" />
                             </LinearGradientBrush>
                         </Grid.Background>
+                        <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                                <TextBlock
+                                    FontSize="12"
+                                    Foreground="White"
+                                    Text="{x:Bind LeftText}" />
+                                <!--<fa:FontAwesome
+                                    Margin="0,2,8,0"
+                                    FontSize="12"
+                                    Foreground="White"
+                                    Icon="Regular_PlayCircle" />
+                                <TextBlock
+                                    FontSize="12"
+                                    Foreground="White"
+                                    Text="{x:Bind cover_left_text_1}" />
+                                <fa:FontAwesome
+                                    Margin="12,2,8,0"
+                                    FontSize="12"
+                                    Foreground="White"
+                                    Icon="Solid_AlignLeft" />
+                                <TextBlock
+                                    FontSize="12"
+                                    Foreground="White"
+                                    Text="{x:Bind cover_left_text_2}" />-->
+                            </StackPanel>
+                        </StackPanel>
                         <TextBlock
+                            HorizontalAlignment="Right"
                             FontSize="12"
                             Foreground="White"
                             Text="{x:Bind CoverRightText}" />
-                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                            <TextBlock
-                                FontSize="12"
-                                Foreground="White"
-                                Text="{x:Bind LeftText}" />
-                            <!--<fa:FontAwesome
-                                Margin="0,2,8,0"
-                                FontSize="12"
-                                Foreground="White"
-                                Icon="Regular_PlayCircle" />
-                            <TextBlock
-                                FontSize="12"
-                                Foreground="White"
-                                Text="{x:Bind cover_left_text_1}" />
-                            <fa:FontAwesome
-                                Margin="12,2,8,0"
-                                FontSize="12"
-                                Foreground="White"
-                                Icon="Solid_AlignLeft" />
-                            <TextBlock
-                                FontSize="12"
-                                Foreground="White"
-                                Text="{x:Bind cover_left_text_2}" />-->
-                        </StackPanel>
+
                     </Grid>
                 </Grid>
                 <TextBlock
                     Grid.Row="1"
-                    Margin="4"
+                    Margin="8,4"
                     MaxLines="2"
                     Text="{x:Bind Title}"
+                    TextAlignment="Justify"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="Wrap" />
                 <Grid Grid.Row="2" Margin="10,0">
@@ -131,7 +141,10 @@
                             <Setter Target="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
                         </Style>
                     </Grid.Resources>
-                    <TextBlock Foreground="Gray" Text="{x:Bind BottomText}" />
+                    <TextBlock
+                        Margin="0,1,0,0"
+                        Foreground="Gray"
+                        Text="{x:Bind BottomText}" />
                     <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                         <Border
                             Background="{x:Bind Path=RcmdReasonStyle.BgColor, Converter={StaticResource ColorConvert}}"
@@ -154,10 +167,10 @@
         <DataTemplate x:Key="List" x:DataType="recommend:RecommendItemModel">
             <Grid ContextFlyout="{StaticResource Menu}" CornerRadius="{ThemeResource OverlayCornerRadius}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="200" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Grid Width="160">
+                <Grid>
                     <toolkit:ImageEx
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
@@ -195,26 +208,41 @@
                                 Text="{x:Bind cover_left_text_2}" />-->
                         </StackPanel>
                         <TextBlock
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
                             FontSize="12"
                             Foreground="White"
                             Text="{x:Bind CoverRightText}" />
-                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+
+                    </Grid>
+                </Grid>
+                <Grid Grid.Column="1" Margin="10,5">
+                    <TextBlock
+                        MaxLines="3"
+                        Text="{x:Bind Title}"
+                        TextAlignment="Justify"
+                        TextTrimming="CharacterEllipsis"
+                        TextWrapping="Wrap" />
+                    <StackPanel VerticalAlignment="Bottom">
+                        <StackPanel Orientation="Horizontal">
                             <StackPanel.Resources>
                                 <Style TargetType="TextBlock">
                                     <Setter Target="FontSize" Value="12" />
                                 </Style>
                                 <Style TargetType="Border">
-                                    <Setter Target="Padding" Value="5,0" />
+                                    <Setter Target="Padding" Value="4,1,5,2" />
                                     <Setter Target="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
                                 </Style>
                             </StackPanel.Resources>
-                            <Border
-                                Background="{x:Bind Path=RcmdReasonStyle.BgColor, Converter={StaticResource ColorConvert}}"
-                                BorderBrush="{x:Bind Path=RcmdReasonStyle.BorderColor, Converter={StaticResource ColorConvert}}"
-                                BorderThickness="1"
-                                Visibility="{x:Bind ShowRcmd}">
-                                <TextBlock Foreground="{x:Bind Path=RcmdReasonStyle.TextColor, Converter={StaticResource ColorConvert}}" Text="{x:Bind Path=RcmdReasonStyle.Text}" />
-                            </Border>
+                            <Grid>
+                                <Border
+                                    Background="{x:Bind Path=RcmdReasonStyle.BgColor, Converter={StaticResource ColorConvert}}"
+                                    BorderBrush="{x:Bind Path=RcmdReasonStyle.BorderColor, Converter={StaticResource ColorConvert}}"
+                                    BorderThickness="1"
+                                    Visibility="{x:Bind ShowRcmd}">
+                                    <TextBlock Foreground="{x:Bind Path=RcmdReasonStyle.TextColor, Converter={StaticResource ColorConvert}}" Text="{x:Bind Path=RcmdReasonStyle.Text}" />
+                                </Border>
+                            </Grid>
                             <Border Background="Gray" Visibility="{x:Bind ShowAd}">
                                 <TextBlock Text="广告" />
                             </Border>
@@ -222,15 +250,6 @@
                                 <TextBlock Text="{x:Bind Path=Badge}" />
                             </Border>
                         </StackPanel>
-                    </Grid>
-                </Grid>
-                <Grid Grid.Column="1" Margin="10,5">
-                    <TextBlock
-                        MaxLines="3"
-                        Text="{x:Bind Title}"
-                        TextTrimming="CharacterEllipsis"
-                        TextWrapping="Wrap" />
-                    <StackPanel VerticalAlignment="Bottom">
                         <TextBlock
                             FontSize="13"
                             Foreground="Gray"
@@ -250,11 +269,10 @@
             <Grid>
                 <controls:MyAdaptiveGridView
                     x:Name="RecommendGridView"
-                    Padding="10,-5"
+                    Padding="10,0"
                     CanLoadMore="True"
                     IsItemClickEnabled="True"
                     ItemClick="RecommendGridView_ItemClick"
-                    ItemHeight="240"
                     ItemsSource="{x:Bind Path=m_viewModel.Items, Mode=OneWay}"
                     LoadMoreBottomOffset="{x:Bind m_viewModel.ScrollViewLoadMoreBottomOffset}"
                     LoadMoreCommand="{x:Bind Path=m_viewModel.LoadMoreCommand}"
@@ -299,7 +317,7 @@
                                 Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                 <TextBlock>加载更多</TextBlock>
                             </HyperlinkButton>
-                            <ProgressRing
+                            <muxc:ProgressRing
                                 HorizontalAlignment="Center"
                                 IsActive="True"
                                 Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}" />
@@ -320,7 +338,7 @@
                 Style="{StaticResource RoundAccentButtonStyle}"
                 ToolTipService.ToolTip="切换为网格显示"
                 Visibility="Collapsed">
-                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE80A;" />
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE80A;" />
             </Button>
             <Button
                 x:Name="BtnList"
@@ -328,7 +346,7 @@
                 Click="BtnList_Click"
                 Style="{StaticResource RoundAccentButtonStyle}"
                 ToolTipService.ToolTip="切换为列表显示">
-                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE292;" />
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE292;" />
             </Button>
             <Button
                 x:Name="BtnTop"
@@ -336,7 +354,7 @@
                 Click="BtnTop_Click"
                 Style="{StaticResource RoundAccentButtonStyle}"
                 ToolTipService.ToolTip="返回顶部">
-                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE110;" />
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE110;" />
             </Button>
             <Button
                 Margin="0,0,0,8"

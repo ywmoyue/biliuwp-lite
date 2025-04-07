@@ -160,7 +160,7 @@
         <controls:SettingsCard Header="双击播放器全屏"
                                Description="默认双击暂停">
             <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_MousePointer"></font:FontAwesome>
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xF8AF;" />
             </controls:SettingsCard.HeaderIcon>
             <ToggleSwitch x:Name="swPlayerSettingDoubleClickFullScreen" ></ToggleSwitch>
         </controls:SettingsCard>
@@ -168,7 +168,7 @@
         <controls:SettingsCard Header="播放器方向键右键行为"
                                Description="已弃用，请前往快捷键设置页进行设置">
             <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_ArrowRight"></font:FontAwesome>
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xF0AF;" />
             </controls:SettingsCard.HeaderIcon>
             <!--<ComboBox x:Name="cbPlayerKeyRightAction" SelectedIndex="0" MinWidth="200">
                 <ComboBox.Items>
@@ -181,7 +181,7 @@
         <controls:SettingsExpander Header="播放器按住手势行为"
                                Description="设置播放器按住手势行为">
             <controls:SettingsExpander.HeaderIcon>
-                <font:FontAwesome Icon="Regular_HandPointer"></font:FontAwesome>
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE815;" />
             </controls:SettingsExpander.HeaderIcon>
             <ComboBox x:Name="cbPlayerHoldingGestureAction" SelectedIndex="0" MinWidth="200">
                 <ComboBox.Items>
@@ -233,7 +233,7 @@
             <controls:SettingsCard.Description>
                 <StackPanel>
                     <TextBlock>部分自动生成的AI字幕会与视频自带字幕冲突</TextBlock>
-                    <TextBlock Margin="0 0 0 16">建议关闭，有需要时再手动打开字幕</TextBlock>
+                    <TextBlock Margin="0 0 0 0">建议关闭，有需要时再手动打开字幕</TextBlock>
                 </StackPanel>
             </controls:SettingsCard.Description>
             <controls:SettingsCard.HeaderIcon>

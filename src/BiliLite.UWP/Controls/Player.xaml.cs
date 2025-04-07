@@ -399,9 +399,14 @@ namespace BiliLite.Controls
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                if (PlayState == PlayState.End) return;
+                if (PlayState == PlayState.End)
+                {
+                    PlayStateChanged?.Invoke(this, PlayState);
+                    PlayMediaEnded?.Invoke(this, EventArgs.Empty);
+                    return;
+                }
                 //加个判断，是否真的播放完成了
-                if (Position.ToInt32() < Duration.ToInt32()) return;
+                if ((int)Position < (int)Duration) return;
                 PlayState = PlayState.End;
                 Position = 0;
                 PlayStateChanged?.Invoke(this, PlayState);
