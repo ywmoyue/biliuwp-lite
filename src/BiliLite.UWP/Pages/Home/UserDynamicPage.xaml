@@ -61,6 +61,18 @@
                         </DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CommentPanelMask" Storyboard.TargetProperty="(UIElement.IsHitTestVisible)">
+                    <DiscreteObjectKeyFrame KeyTime="00:00:00.000000">
+                        <DiscreteObjectKeyFrame.Value>
+                            <x:Boolean>false</x:Boolean>
+                        </DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                    <DiscreteObjectKeyFrame KeyTime="00:00:00.000000">
+                        <DiscreteObjectKeyFrame.Value>
+                            <x:Boolean>true</x:Boolean>
+                        </DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
             </Storyboard>
 
             <Storyboard x:Name="HideComment">
@@ -94,6 +106,18 @@
                     <DiscreteObjectKeyFrame KeyTime="00:00:00.500000">
                         <DiscreteObjectKeyFrame.Value>
                             <Visibility>Collapsed</Visibility>
+                        </DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CommentPanelMask" Storyboard.TargetProperty="(UIElement.IsHitTestVisible)">
+                    <DiscreteObjectKeyFrame KeyTime="00:00:00.000000">
+                        <DiscreteObjectKeyFrame.Value>
+                            <x:Boolean>true</x:Boolean>
+                        </DiscreteObjectKeyFrame.Value>
+                    </DiscreteObjectKeyFrame>
+                    <DiscreteObjectKeyFrame KeyTime="00:00:00.000000">
+                        <DiscreteObjectKeyFrame.Value>
+                            <x:Boolean>false</x:Boolean>
                         </DiscreteObjectKeyFrame.Value>
                     </DiscreteObjectKeyFrame>
                 </ObjectAnimationUsingKeyFrames>
@@ -279,7 +303,7 @@
                 VerticalAlignment="Stretch"
                 Background="Transparent"
                 Tapped="CommentPanel_OnTapped"
-                Visibility="Collapsed" />
+                Visibility="Collapsed"/>
             <Grid
                 x:Name="grid"
                 Width="{x:Bind m_viewModel.CommentControlWidth}"
