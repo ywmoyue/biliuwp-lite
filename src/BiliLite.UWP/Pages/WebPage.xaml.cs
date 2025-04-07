@@ -129,8 +129,7 @@ namespace BiliLite.Pages
         private void CoreWebView2_NavigationStarting(CoreWebView2 sender, CoreWebView2NavigationStartingEventArgs args)
         {
             string targetUrl = args.Uri;
-            string pattern = @"^https://([a-zA-Z0-9]{2,})\.bilibili\.com";
-            if (!Regex.IsMatch(targetUrl, pattern) && !targetUrl.StartsWith("https://m.bilibili.com"))
+            if (!Regex.IsMatch(targetUrl, BiliPattern))
             {
                 NotificationShowExtensions.ShowMessageToast("检测到未知的重定向，已自动切换到移动版网站");
 
@@ -288,8 +287,7 @@ $('.author-container').css('margin','12px 0px -12px 0px');"
 
         private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            string pattern = @"^(https?:\/\/)?([a-zA-Z0-9-]+\.)?([a-zA-Z0-9-]+\.)[a-zA-Z]{2,3}$";
-            if (Regex.IsMatch(AutoSuggestBox.Text, pattern))
+            if (Regex.IsMatch(AutoSuggestBox.Text, GeneralPattern))
             {
                 if (AutoSuggestBox.Text.Contains("bilibili.com"))
                 {
@@ -313,8 +311,7 @@ $('.author-container').css('margin','12px 0px -12px 0px');"
 
         private void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
-            string pattern = @"^(https?:\/\/)?([a-zA-Z0-9-]+\.)?([a-zA-Z0-9-]+\.)[a-zA-Z]{2,3}$";
-            if (Regex.IsMatch(sender.Text, pattern))
+            if (Regex.IsMatch(sender.Text, GeneralPattern))
             {
                 sender.QueryIcon = new SymbolIcon(Symbol.Go);
             }
@@ -323,5 +320,8 @@ $('.author-container').css('margin','12px 0px -12px 0px');"
                 sender.QueryIcon = new SymbolIcon(Symbol.Find);
             }
         }
+
+        private readonly string BiliPattern = @"^https?://(?:www\.|m\.|search\.)?bilibili\.com(/.*)?$";
+        private readonly string GeneralPattern = @"^(https?:\/\/)?([a-zA-Z0-9-]+\.)?([a-zA-Z0-9-]+\.)[a-zA-Z]{2,3}(\/.*)?$";
     }
 }
