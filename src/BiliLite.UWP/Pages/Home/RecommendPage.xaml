@@ -354,7 +354,7 @@
                 Click="BtnTop_Click"
                 Style="{StaticResource RoundAccentButtonStyle}"
                 ToolTipService.ToolTip="返回顶部">
-                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE110;" />
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE110;" Margin="0.5 0 0 0"/>
             </Button>
             <Button
                 Margin="0,0,0,8"
