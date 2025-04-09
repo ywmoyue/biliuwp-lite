@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,7 @@ using Windows.UI.Xaml.Media;
 using Windows.Web.Http;
 using BiliLite.Models.Common.Player;
 using Newtonsoft.Json;
+using PropertyChanged;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -50,6 +52,7 @@ namespace BiliLite.Controls
         //多段FLV
         private List<FFmpegMediaSource> m_ffmpegMssItems;
         private MediaPlaybackList m_mediaPlaybackList;
+        private bool m_hasHookMpvEvent;
 
         #endregion
 
@@ -75,6 +78,17 @@ namespace BiliLite.Controls
         public PlayState PlayState { get; set; }
         public PlayMediaType PlayMediaType { get; set; }
         public VideoPlayHistoryHelper.ABPlayHistoryEntry ABPlay { get; set; }
+
+        public bool ShowMpvPlayer { get; set; } = false;
+
+        [DependsOn(nameof(ShowMpvPlayer))]
+        public bool ShowBasePlayer
+        {
+            get
+            {
+                return !ShowMpvPlayer;
+            }
+        }
 
         /// <summary>
         /// 进度
@@ -337,8 +351,25 @@ namespace BiliLite.Controls
             _ffmpegConfig.FFmpegOptions.Add("reconnect_on_network_error", "1");
             //_ffmpegConfig.BufferTime
 
-            var ffmpegOptions =
-                SettingService.GetValue(SettingConstants.Player.FfmpegOptions, new Dictionary<string, string>());
+            var ffmpegOptionsStr =
+                SettingService.GetValue(SettingConstants.Player.FFMPEG_INTEROP_X_OPTIONS, "");
+            var ffmpegOptions = new Dictionary<string, string>();
+            try
+            {
+                if (!string.IsNullOrEmpty(ffmpegOptionsStr))
+                {
+                    var options = ffmpegOptionsStr.Split(",");
+                    foreach (var optionStr in options)
+                    {
+                        var option = optionStr.Split(':').Select(x => x.Trim()).ToList();
+                        ffmpegOptions.Add(option[0], option[1]);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn("解析额外参数错误", ex);
+            }
 
             if (ffmpegOptions.Any())
             {
@@ -561,6 +592,23 @@ namespace BiliLite.Controls
                     _logger.Trace($"m_playerAudioBufferingEnded: {JsonConvert.SerializeObject(arg)}");
                 };
             }
+        }
+
+        private void HookMpvEvent(Action specificPlayerMediaOpenAction = null)
+        {
+            if (m_hasHookMpvEvent) return;
+
+            MpvPlayer.MediaLoaded += async (_, _) =>
+            {
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+                {
+                    PlayState = PlayState.Pause;
+                    PlayStateChanged?.Invoke(this, PlayState);
+                    Duration = MpvPlayer.Duration;
+                    await OnPlayerMediaOpened(specificPlayerMediaOpenAction);
+                });
+            };
+            m_hasHookMpvEvent = true;
         }
 
         #endregion
@@ -832,6 +880,33 @@ namespace BiliLite.Controls
                 //设置速率
                 m_mediaTimelineController.ClockRate = Rate;
 
+                return new PlayerOpenResult()
+                {
+                    result = true
+                };
+            }
+            catch (Exception ex)
+            {
+                //PlayMediaError?.Invoke(this, "视频加载时出错:" + ex.Message);
+                return new PlayerOpenResult()
+                {
+                    result = false,
+                    message = ex.Message,
+                    detail_message = ex.StackTrace
+                };
+            }
+        }
+
+        public async Task<PlayerOpenResult> PlayDashUseMpv(BiliDashPlayUrlInfo dashPlayUrlInfo, string userAgent, string referer, double positon = 0, bool needConfig = true, bool isLocal = false)
+        {
+            try
+            {
+                ShowMpvPlayer = true;
+                Opening = true;
+                PlayState = PlayState.Loading;
+                PlayStateChanged?.Invoke(this, PlayState);
+                HookMpvEvent();
+                MpvPlayer.Load(dashPlayUrlInfo.Video.Url,userAgent, referer);
                 return new PlayerOpenResult()
                 {
                     result = true
@@ -1223,6 +1298,13 @@ namespace BiliLite.Controls
         {
             try
             {
+                if (ShowMpvPlayer)
+                {
+                    MpvPlayer.Pause();
+                    PlayState = PlayState.Pause;
+                    PlayStateChanged?.Invoke(this, PlayState);
+                    return;
+                }
                 if (m_mediaTimelineController != null)
                 {
                     if (m_mediaTimelineController.State == MediaTimelineControllerState.Running)
@@ -1231,7 +1313,7 @@ namespace BiliLite.Controls
                         PlayState = PlayState.Pause;
                     }
                 }
-                else
+                else if (m_playerVideo != null)
                 {
                     if (m_playerVideo.PlaybackSession.CanPause)
                     {
@@ -1239,6 +1321,7 @@ namespace BiliLite.Controls
                         PlayState = PlayState.Pause;
                     }
                 }
+
                 PlayStateChanged?.Invoke(this, PlayState);
             }
             catch (Exception ex)
@@ -1253,6 +1336,13 @@ namespace BiliLite.Controls
         /// </summary>
         public void Play()
         {
+            if (ShowMpvPlayer)
+            {
+                MpvPlayer.Resume();
+                PlayState = PlayState.Playing;
+                PlayStateChanged?.Invoke(this, PlayState);
+                return;
+            }
             if (Position == 0 && Duration == 0) return;
             if (m_mediaTimelineController != null)
             {
@@ -1435,9 +1525,10 @@ namespace BiliLite.Controls
                         //info += $"Video Url: {m_dashInfo.Video.Url}\r\n";
                         //info += $"Audio Url: {m_dashInfo.Audio.Url}\r\n";
                     }
-                    else
+                    else if (m_playerVideo != null)
                     {
-                        info += $"Resolution: {m_playerVideo.PlaybackSession.NaturalVideoWidth} x {m_playerVideo.PlaybackSession.NaturalVideoHeight}\r\n";
+                        info +=
+                            $"Resolution: {m_playerVideo.PlaybackSession.NaturalVideoWidth} x {m_playerVideo.PlaybackSession.NaturalVideoHeight}\r\n";
                     }
                 }
                 //MediaInfo = info;

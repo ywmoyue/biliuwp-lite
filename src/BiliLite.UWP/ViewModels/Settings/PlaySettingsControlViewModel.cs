@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Storage;
 using BiliLite.Models.Common;
+using BiliLite.Player.Mpv;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using Flurl.Http;
@@ -27,18 +30,30 @@ namespace BiliLite.ViewModels.Settings
                 new CDNServerItemViewModel("cn-hk-eq-bcache-16.bilivideo.com","香港"),
                 new CDNServerItemViewModel("upos-hz-mirrorakam.akamaized.net","Akamaized"),
             };
-            FFmpegOptions = new ObservableCollection<KeyValuePairViewModel>(SettingService
-                .GetValue(SettingConstants.Player.FfmpegOptions, new Dictionary<string, string>())
-                .Select(x=>new KeyValuePairViewModel()
+            FFmpegInteropXOptions = SettingService
+                .GetValue(SettingConstants.Player.FFMPEG_INTEROP_X_OPTIONS, "");
+            try
+            {
+                var file = StorageFile.GetFileFromPathAsync(MpvConstants.MpvPath);
+                using var mpvClient = new TempMpvClient(MpvConstants.MpvPath);
+                if (!mpvClient.IsValidMpvDll())
                 {
-                    Key = x.Key,
-                    Value = x.Value,
-                }).ToList());
+                    throw new Exception("不是有效的MPV播放器");
+                }
+                var version = mpvClient.GetVersionInfo();
+                MpvVersionStr = version;
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         public List<CDNServerItemViewModel> CDNServers { get; set; }
 
-        public ObservableCollection<KeyValuePairViewModel> FFmpegOptions { get; set; }
+        public string FFmpegInteropXOptions { get; set; }
+
+        public string MpvVersionStr { get; set; }
 
         /// <summary>
         /// CDN延迟测试

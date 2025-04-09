@@ -40,6 +40,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -54,6 +55,7 @@
     <UseDotNetNativeToolchain>False</UseDotNetNativeToolchain>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
     <DebugSymbols>false</DebugSymbols>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -65,6 +67,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
     <OutputPath>bin\ARM\Release\</OutputPath>
@@ -79,6 +82,7 @@
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
     <DebugSymbols>false</DebugSymbols>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
     <DebugSymbols>true</DebugSymbols>
@@ -91,6 +95,7 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM64'">
     <OutputPath>bin\ARM64\Release\</OutputPath>
@@ -105,6 +110,7 @@
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
     <DebugSymbols>false</DebugSymbols>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -117,6 +123,7 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
     <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -131,6 +138,7 @@
     <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
     <DebugSymbols>false</DebugSymbols>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
@@ -344,6 +352,24 @@
     <Compile Include="Pages\MessagesPage.xaml.cs">
       <DependentUpon>MessagesPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Player\Mpv\EglContext.cs" />
+    <Compile Include="Player\Mpv\MpvClient.cs" />
+    <Compile Include="Player\Mpv\MpvConstants.cs" />
+    <Compile Include="Player\Mpv\MpvEvent.cs" />
+    <Compile Include="Player\Mpv\MpvEventEndFile.cs" />
+    <Compile Include="Player\Mpv\MpvEventId.cs" />
+    <Compile Include="Player\Mpv\MpvEventLogMessage.cs" />
+    <Compile Include="Player\Mpv\MpvEventProperty.cs" />
+    <Compile Include="Player\Mpv\MpvOpenGlFbo.cs" />
+    <Compile Include="Player\Mpv\MpvOpenGlInitParams.cs" />
+    <Compile Include="Player\Mpv\MpvPlayer.xaml.cs">
+      <DependentUpon>MpvPlayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Player\Mpv\MpvRender.cs" />
+    <Compile Include="Player\Mpv\MpvRenderParam.cs" />
+    <Compile Include="Player\Mpv\MpvRenderParamType.cs" />
+    <Compile Include="Player\Mpv\MpvUtilsExtensions.cs" />
+    <Compile Include="Player\Mpv\TempMpvClient.cs" />
     <Compile Include="Services\Biz\BaseBizService.cs" />
     <Compile Include="Services\Biz\LocalAttentionUserService.cs" />
     <Compile Include="Services\Biz\MessagesService.cs" />
@@ -1348,6 +1374,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Player\Mpv\MpvPlayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Styles\AppBarButtonNoChevronStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1618,6 +1648,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="ANGLE.WindowsStore">
+      <Version>2.1.13</Version>
+    </PackageReference>
     <PackageReference Include="AutoMapper">
       <Version>10.1.1</Version>
     </PackageReference>

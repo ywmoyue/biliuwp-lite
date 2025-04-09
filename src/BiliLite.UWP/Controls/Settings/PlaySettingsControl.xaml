@@ -55,8 +55,31 @@
             </ComboBox>
 
             <controls:SettingsExpander.Items>
-                <controls:SettingsCard Header="ffmpeg options">
-                    <Button Click="BtnOpenFFmpegOptionsPanel_OnClick">设置</Button>
+                <TextBlock>FFMpegInteropX播放器设置</TextBlock>
+                <controls:SettingsCard Header="FFMpegInteropX额外播放参数">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox 
+                            Text="{x:Bind m_viewModel.FFmpegInteropXOptions,Mode=TwoWay}"
+                            PlaceholderText="key1:value1,key2:value2,..."
+                            AcceptsReturn="True"
+                            TextWrapping="Wrap"
+                            Height="80"
+                            Width="240"/>
+                        <Button Click="BtnSaveFfmpegInteropXOptions_OnClick">保存</Button>
+                    </StackPanel>
+                </controls:SettingsCard>
+                <TextBlock>MPV播放器设置</TextBlock>
+                <controls:SettingsCard Header="当前播放器信息">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{x:Bind m_viewModel.MpvVersionStr,Mode=OneWay}"></TextBlock>
+                    </StackPanel>
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="导入MPV播放器"
+                                       Description="仅支持dll格式的播放器文件，请前往 https://mpv.io/installation/ 选择下载mpv-dev的软件包">
+                    <StackPanel Orientation="Horizontal">
+                        <Button Click="BtnImportMpvPlayer_OnClick">选择播放器文件</Button>
+                        <Button>自动下载导入</Button>
+                    </StackPanel>
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
 
@@ -327,39 +350,5 @@
             </controls:SettingsCard.HeaderIcon>
             <controls1:NumberBox x:Name="NumAutoRefreshPlayUrlTime" Minimum="10" Maximum="2400"></controls1:NumberBox>
         </controls:SettingsCard>
-
-        <ContentDialog  x:Name="FFmpegOptionsDialog"
-                        Width="600"
-                        PrimaryButtonText="确定"
-                        IsPrimaryButtonEnabled="True"
-                        Title="设置FFmpeg options"
-        >
-            <StackPanel Orientation="Vertical">
-                <Button Click="BtnAddFFmpegOption_OnClick">Add</Button>
-                <ScrollViewer>
-                    <ListView ItemsSource="{x:Bind m_viewModel.FFmpegOptions,Mode=OneWay}"
-                              SelectionMode="None">
-                        <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="settings:KeyValuePairViewModel">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition></ColumnDefinition>
-                                        <ColumnDefinition></ColumnDefinition>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBox Text="{x:Bind Key,Mode=TwoWay}"
-                                             Width="300"
-                                             TextChanged="FFmpegOptions_OnTextChanged"></TextBox>
-                                    <TextBox Text="{x:Bind Value,Mode=TwoWay}"
-                                             Grid.Column="1"
-                                             HorizontalAlignment="Right"
-                                             Width="300"
-                                             TextChanged="FFmpegOptions_OnTextChanged"></TextBox>
-                                </Grid>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </ScrollViewer>
-            </StackPanel>
-        </ContentDialog>
     </StackPanel>
 </UserControl>

@@ -1863,9 +1863,19 @@ namespace BiliLite.Controls
                             positon: _postion);
                     }
                 }
-                else
+                else if(realPlayerType == RealPlayerType.FFmpegInterop)
                 {
                     result = await Player.PlayDashUseFFmpegInterop(quality.DashInfo, quality.UserAgent, quality.Referer,
+                        positon: _postion);
+
+                    if (!result.result)
+                    {
+                        result = await Player.PlayerDashUseNative(quality.DashInfo, quality.UserAgent, quality.Referer, positon: _postion);
+                    }
+                }
+                else if(realPlayerType == RealPlayerType.Mpv)
+                {
+                    result = await Player.PlayDashUseMpv(quality.DashInfo, quality.UserAgent, quality.Referer,
                         positon: _postion);
 
                     if (!result.result)

@@ -5,10 +5,13 @@ using BiliLite.Services;
 using BiliLite.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using BiliLite.Extensions;
+using BiliLite.Player.Mpv;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -407,21 +410,70 @@ namespace BiliLite.Controls.Settings
             m_viewModel.CDNServerDelayTest();
         }
 
-        private async void FFmpegOptions_OnTextChanged(object sender, TextChangedEventArgs e)
+        private async void BtnSaveFfmpegInteropXOptions_OnClick(object sender, RoutedEventArgs e)
         {
+            // 等待viewModel更新
             await Task.Delay(50);
-            var dict = m_viewModel.FFmpegOptions.ToDictionary(x => x.Key, t => t.Value);
-            SettingService.SetValue(SettingConstants.Player.FfmpegOptions, dict);
+            SettingService.SetValue(SettingConstants.Player.FFMPEG_INTEROP_X_OPTIONS,
+                m_viewModel.FFmpegInteropXOptions);
         }
 
-        private void BtnAddFFmpegOption_OnClick(object sender, RoutedEventArgs e)
+        private async void BtnImportMpvPlayer_OnClick(object sender, RoutedEventArgs e)
         {
-            m_viewModel.FFmpegOptions.Add(new KeyValuePairViewModel());
-        }
+            try
+            {
+                // 创建文件选择器
+                var filePicker = new Windows.Storage.Pickers.FileOpenPicker();
+                filePicker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
+                filePicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.ComputerFolder;
 
-        private void BtnOpenFFmpegOptionsPanel_OnClick(object sender, RoutedEventArgs e)
-        {
-            FFmpegOptionsDialog.ShowAsync();
+                // 添加.dll文件类型筛选
+                filePicker.FileTypeFilter.Add(".dll");
+
+                // 显示文件选择器并等待用户选择文件
+                Windows.Storage.StorageFile file = await filePicker.PickSingleFileAsync();
+
+                if (file != null)
+                {
+                    // 获取目标文件夹
+                    var destinationFolder =
+                        await Windows.Storage.StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(MpvConstants.MpvPath));
+
+                    // 检查目标文件夹是否存在
+                    if (destinationFolder != null)
+                    {
+                        var tmpFile = await file.CopyAsync(destinationFolder, "tmp-libmpv-2.dll",
+                            Windows.Storage.NameCollisionOption.ReplaceExisting);
+
+                        var mpvClient = new TempMpvClient(tmpFile.Path);
+                        if (!mpvClient.IsValidMpvDll())
+                        {
+                            throw new Exception("不是有效的MPV播放器");
+                        }
+                        var version = mpvClient.GetVersionInfo();
+                        mpvClient.Dispose();
+                        await tmpFile.DeleteAsync();
+
+                        // 复制文件到目标路径（如果已存在则替换）
+                        await file.CopyAsync(destinationFolder, "libmpv-2.dll",
+                            Windows.Storage.NameCollisionOption.ReplaceExisting);
+
+                        // 显示成功消息
+                        Notify.ShowMessageToast($"{version} 导入成功");
+                        m_viewModel.MpvVersionStr = version;
+                    }
+                    else
+                    {
+                        throw new DirectoryNotFoundException($"目标文件夹 {MpvConstants.MpvPath} 不存在");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // 显示错误消息
+                var dialog = new Windows.UI.Popups.MessageDialog($"导入失败: {ex.Message}", "错误");
+                await dialog.ShowAsync();
+            }
         }
     }
 }
