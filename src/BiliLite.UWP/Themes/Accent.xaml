@@ -43,7 +43,10 @@
                     <StaticResource x:Key="AccentButtonForegroundPointerOver" ResourceKey="SystemControlHighlightAltChromeWhiteBrush" />
                     <StaticResource x:Key="AccentButtonForegroundPressed" ResourceKey="SystemControlForegroundBaseMediumBrush" />
 
+                    <SolidColorBrush x:Key="GridViewItemForegroundSelected" Color="White" />
+                    <SolidColorBrush x:Key="GridViewItemForegroundPointerOver" Color="{ThemeResource SystemAccentColor}" />
                     <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource SystemAccentColor}" />
+                    <SolidColorBrush x:Key="GridViewItemBackgroundSelectedPointerOver" Color="{ThemeResource SystemAccentColor}" />
                     <SolidColorBrush x:Key="GridViewItemPointerOverBorderBrush" Color="{ThemeResource SystemAccentColor}" />
                     <SolidColorBrush x:Key="GridViewItemSelectedBorderBrush" Color="{ThemeResource SystemAccentColor}" />
                     <SolidColorBrush x:Key="GridViewItemSelectedInnerBorderBrush" Color="Transparent" />
