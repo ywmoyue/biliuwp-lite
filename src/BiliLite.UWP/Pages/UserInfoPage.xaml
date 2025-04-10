@@ -207,14 +207,14 @@
                                         全部播放
                                     </Button>
                                 </Grid>
-                                <control:MyAdaptiveGridView ItemHeight="120"
+                                <control:MyAdaptiveGridView
                                     Grid.Row="1"
                                     Padding="10,5"
                                     CanLoadMore="{x:Bind Path=m_userSubmitVideoViewModel.SubmitVideoCanLoadMore, Mode=OneWay}"
                                     DesiredWidth="550"
                                     IsItemClickEnabled="True"
                                     ItemClick="SubmitVideo_ItemClick"
-                                    
+                                    ItemHeight="120"
                                     ItemsSource="{x:Bind Path=m_userSubmitVideoViewModel.SubmitVideoItems, Mode=OneWay}"
                                     LoadMoreBottomOffset="0"
                                     LoadMoreCommand="{x:Bind Path=m_userSubmitVideoViewModel.LoadMoreSubmitVideoCommand}"
@@ -337,13 +337,13 @@
                                         Text="{x:Bind Path=m_viewModel.Stat.Article, Mode=OneWay}" /></TextBlock>
                             </PivotItem.Header>
                             <Grid>
-                                <control:MyAdaptiveGridView ItemHeight="120"
+                                <control:MyAdaptiveGridView
                                     Padding="10,5"
                                     CanLoadMore="{x:Bind Path=userSubmitArticleVM.SubmitArticleCanLoadMore, Mode=OneWay}"
                                     DesiredWidth="550"
                                     IsItemClickEnabled="True"
                                     ItemClick="SubmitArticle_ItemClick"
-                                    
+                                    ItemHeight="120"
                                     ItemsSource="{x:Bind Path=userSubmitArticleVM.SubmitArticleItems, Mode=OneWay}"
                                     LoadMoreBottomOffset="0"
                                     LoadMoreCommand="{x:Bind Path=userSubmitArticleVM.LoadMoreSubmitArticleCommand}"
@@ -463,13 +463,13 @@
                                         Text="{x:Bind Path=m_viewModel.Stat.Collection, Mode=OneWay}" /></TextBlock>
                             </PivotItem.Header>
                             <Grid>
-                                <control:MyAdaptiveGridView ItemHeight="120"
+                                <control:MyAdaptiveGridView
                                     Padding="10,5"
                                     CanLoadMore="{x:Bind Path=m_userSubmitCollectionViewModel.SubmitCollectionCanLoadMore, Mode=OneWay}"
                                     DesiredWidth="550"
                                     IsItemClickEnabled="True"
                                     ItemClick="SubmitCollection_ItemClick"
-                                    
+                                    ItemHeight="120"
                                     ItemsSource="{x:Bind Path=m_userSubmitCollectionViewModel.SubmitCollectionItems, Mode=OneWay}"
                                     LoadMoreBottomOffset="0"
                                     LoadMoreCommand="{x:Bind Path=m_userSubmitCollectionViewModel.LoadMoreSubmitCollectionCommand}"
@@ -944,7 +944,10 @@
                                     Label="直播间"
                                     Visibility="{x:Bind Path=m_viewModel.HaveLiveRoom, Mode=OneWay}">
                                     <AppBarButton.Icon>
-                                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE960;" />
+                                        <FontIcon
+                                            Margin="-2,-2,-2,0"
+                                            FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                            Glyph="&#xE960;" />
                                     </AppBarButton.Icon>
                                 </AppBarButton>
                             </StackPanel>

@@ -16,7 +16,7 @@
 
     <StackPanel
         Padding="12"
-        Background="{ThemeResource ControlFillColorDefaultBrush}"
+        Background="{ThemeResource CardBackground}"
         CornerRadius="{StaticResource OverlayCornerRadius}">
         <!--  用户信息  -->
         <Grid>
