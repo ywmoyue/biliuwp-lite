@@ -15,7 +15,6 @@
     <Convert:ByteSizeConvert x:Key="ByteSizeConvert" />
     <Convert:DownloadStatusConvert x:Key="DownloadStatusConvert" />
     <Convert:DatetimeConvert x:Key="DatetimeConvert" />
-    <Convert:ColorSelectedConvert x:Key="ColorSelectedConvert" />
     <Convert:DanmakuStyleConvert x:Key="DanmakuStyleConvert" />
     <Convert:BooleanConvert x:Name="BooleanConvert" />
     <Convert:ColorConvert x:Key="ColorConvert" />

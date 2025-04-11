@@ -759,6 +759,11 @@ namespace BiliLite.Pages
                 await m_viewModel.UpdateFav(m_viewModel.VideoInfo.Aid);
                 BtnFav.Flyout.Hide();
             }
+            if (AccentFav.Flyout.IsOpen)
+            {
+                await m_viewModel.UpdateFav(m_viewModel.VideoInfo.Aid);
+                AccentFav.Flyout.Hide();
+            }
         }
 
         private async void FavList_OnPointerPressed(object sender, PointerRoutedEventArgs e)
