@@ -60,6 +60,15 @@ namespace BiliLite.Controls.Settings
                 });
             });
 
+            swPreviewImageNavigateToPageFully.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.NEW_FULLY_WINDOW_PREVIEW_IMAGE, true);
+            swPreviewImageNavigateToPageFully.Loaded += new RoutedEventHandler((sender, e) =>
+            {
+                swPreviewImageNavigateToPageFully.Toggled += new RoutedEventHandler((obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.NEW_FULLY_WINDOW_PREVIEW_IMAGE, swPreviewImageNavigateToPageFully.IsOn);
+                });
+            });
+
             //启动应用时打开上次浏览的标签页
             SwitchOpenLastPage.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.ENABLE_OPEN_LAST_PAGE, SettingConstants.UI.DEFAULT_ENABLE_OPEN_LAST_PAGE);
             SwitchOpenLastPage.Loaded += (sender, e) =>

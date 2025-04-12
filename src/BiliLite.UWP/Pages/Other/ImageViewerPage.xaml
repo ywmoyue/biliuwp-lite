@@ -7,7 +7,7 @@
     xmlns:local="using:BiliLite.Pages.Other"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pages="using:BiliLite.Pages"
-    Background="{ThemeResource SystemControlChromeHighAcrylicWindowMediumBrush}"
+    Background="{ThemeResource SystemControlAltHighAcrylicWindowBrush}"
     mc:Ignorable="d">
 
     <Grid>

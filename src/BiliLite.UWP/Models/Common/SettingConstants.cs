@@ -108,26 +108,37 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string NEW_WINDOW_PREVIEW_IMAGE = "newWindowPreviewImage";
+
+            /// <summary>
+            /// 新窗口打开图片预览
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string NEW_FULLY_WINDOW_PREVIEW_IMAGE = "newFullyWindowPreviewImage";
+
             /// <summary>
             /// 动态显示样式
             /// </summary>
             [SettingKey(typeof(int))]
             public const string DYNAMIC_DISPLAY_MODE = "dynamicDiaplayMode";
+
             /// <summary>
             /// 首页推荐样式
             /// </summary>
             [SettingKey(typeof(int))]
             public const string RECMEND_DISPLAY_MODE = "recomendDiaplayMode";
+
             /// <summary>
             /// 右侧选项卡
             /// </summary>
             [SettingKey(typeof(int))]
             public const string DETAIL_DISPLAY = "detailDisplay";
+
             /// <summary>
             /// 动态显示样式
             /// </summary>
             [SettingKey]
             public const string BACKGROUND_IMAGE = "BackgroundImage";
+
             /// <summary>
             /// 鼠标功能键行为
             /// </summary>

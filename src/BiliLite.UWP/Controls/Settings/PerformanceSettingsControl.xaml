@@ -41,6 +41,10 @@
             <ToggleSwitch x:Name="swPreviewImageNavigateToPage" />
         </controls:SettingsCard>
 
+        <controls:SettingsCard HeaderIcon="FullScreen" Description="选择当前窗口中打开图片预览或新窗口打开图片预览" Header="全屏新窗口打开图片预览">
+            <ToggleSwitch x:Name="swPreviewImageNavigateToPageFully" />
+        </controls:SettingsCard>
+        
         <controls:SettingsCard Description="关闭后每次切换首页会重新加载数据,但会减少内存占用" Header="缓存首页">
             <controls:SettingsCard.HeaderIcon>
                 <font:FontAwesome Icon="Solid_SdCard" />
