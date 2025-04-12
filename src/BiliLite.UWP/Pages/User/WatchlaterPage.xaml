@@ -27,7 +27,7 @@
                             Text="移除" />
                     </MenuFlyout>
                 </Grid.ContextFlyout>
-                <toolkit:ImageEx
+                <toolkit:ImageEx CornerRadius="{StaticResource OverlayCornerRadius}"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"

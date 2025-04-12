@@ -417,8 +417,9 @@
                             Foreground="Gray"
                             Visibility="Collapsed">
                             <StackPanel Orientation="Horizontal">
-                                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                <FontIcon
                                     VerticalAlignment="Center"
+                                    FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                     FontSize="14"
                                     Glyph="&#xE19E;" />
                                 <TextBlock />
@@ -456,7 +457,8 @@
                             MaxLength="233"
                             PlaceholderText="说点什么吧..."
                             Text="{x:Bind Path=ReplyText, Mode=TwoWay}"
-                            TextWrapping="Wrap" TextAlignment="Justify" />
+                            TextAlignment="Justify"
+                            TextWrapping="Wrap" />
                         <Grid Margin="0,4,0,0">
                             <StackPanel Orientation="Horizontal">
                                 <Button
@@ -466,7 +468,8 @@
                                     Foreground="White"
                                     Visibility="Collapsed">
                                     <StackPanel Orientation="Horizontal">
-                                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                        <FontIcon
+                                            FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                             FontSize="12"
                                             Glyph="&#xE775;" />
                                         <TextBlock Margin="4,0,0,0">颜文字</TextBlock>
@@ -480,7 +483,8 @@
                                     Foreground="White"
                                     Style="{StaticResource AccentButtonStyle}">
                                     <StackPanel Orientation="Horizontal">
-                                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                        <FontIcon
+                                            FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                             FontSize="12"
                                             Glyph="&#xE170;" />
                                         <TextBlock Margin="4,0,0,0">表情</TextBlock>
@@ -622,7 +626,8 @@
                                             MaxLength="233"
                                             PlaceholderText="{Binding ReplyAt}"
                                             Text="{Binding Path=ReplyText, Mode=TwoWay}"
-                                            TextWrapping="Wrap" TextAlignment="Justify" />
+                                            TextAlignment="Justify"
+                                            TextWrapping="Wrap" />
                                         <Grid Margin="0,4,0,0">
                                             <StackPanel Orientation="Horizontal">
                                                 <Button
@@ -632,7 +637,8 @@
                                                     Foreground="White"
                                                     Visibility="Collapsed">
                                                     <StackPanel Orientation="Horizontal">
-                                                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                                        <FontIcon
+                                                            FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                                             FontSize="12"
                                                             Glyph="&#xE775;" />
                                                         <TextBlock Margin="4,0,0,0">颜文字</TextBlock>
@@ -646,7 +652,8 @@
                                                     FontSize="12"
                                                     Foreground="White">
                                                     <StackPanel Orientation="Horizontal">
-                                                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                                        <FontIcon
+                                                            FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                                             FontSize="12"
                                                             Glyph="&#xE170;" />
                                                         <TextBlock Margin="4,0,0,0">表情</TextBlock>
@@ -694,6 +701,7 @@
 
                 <ListView
                     Grid.Row="6"
+                    Margin="0,0,8,0"
                     Background="{ThemeResource CardBackground}"
                     CornerRadius="{StaticResource ControlCornerRadius}"
                     IsItemClickEnabled="False"
@@ -704,8 +712,11 @@
                     Visibility="{x:Bind ShowHotReplies, Mode=OneWay}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <Grid Padding="0,9" HorizontalAlignment="Left">
-                                <ContentControl Content="{Binding Path=Content, Mode=OneWay}" FontSize="13" />
+                            <Grid Padding="0,9" HorizontalAlignment="Stretch">
+                                <ContentControl
+                                    HorizontalAlignment="Stretch"
+                                    Content="{Binding Path=Content, Mode=OneWay}"
+                                    FontSize="13" />
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>

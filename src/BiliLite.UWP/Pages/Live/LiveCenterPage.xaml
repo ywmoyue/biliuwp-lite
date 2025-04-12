@@ -69,7 +69,7 @@
                                         <ColumnDefinition Width="200" />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <toolkit:ImageEx
+                                    <toolkit:ImageEx CornerRadius="{StaticResource OverlayCornerRadius}"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -231,7 +231,7 @@
                                         <ColumnDefinition Width="200" />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <toolkit:ImageEx
+                                    <toolkit:ImageEx CornerRadius="{StaticResource OverlayCornerRadius}"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
