@@ -1,7 +1,9 @@
 ﻿using BiliLite.Controls;
+using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Services;
+using BiliLite.ViewModels.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
@@ -26,6 +28,7 @@ namespace BiliLite.Pages
     {
         private readonly CookieService m_cookieService;
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+        private readonly WebPageViewModel m_WebPageViewModel = new();
         private bool m_needCookie = false;
 
         public WebPage()
@@ -106,8 +109,7 @@ namespace BiliLite.Pages
                         webView.CoreWebView2.CookieManager.AddOrUpdateCookie(webCookie);
                     }
                 }
-
-                webView.Source = new Uri(uri);
+                m_WebPageViewModel.Source = new Uri(uri);
             }
         }
 
@@ -129,12 +131,13 @@ namespace BiliLite.Pages
         private void CoreWebView2_NavigationStarting(CoreWebView2 sender, CoreWebView2NavigationStartingEventArgs args)
         {
             string targetUrl = args.Uri;
-            if (!Regex.IsMatch(targetUrl, BiliPattern))
+            if (targetUrl.StartsWith("https://t.bilibili.com/topic") || targetUrl.StartsWith("https://d.bilibili.com"))
             {
                 NotificationShowExtensions.ShowMessageToast("检测到未知的重定向，已自动切换到移动版网站");
 
                 args.Cancel = true;
                 UseMoblieUserAgent();
+                return;
             }
         }
 
@@ -287,41 +290,20 @@ $('.author-container').css('margin','12px 0px -12px 0px');"
 
         private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            if (Regex.IsMatch(AutoSuggestBox.Text, GeneralPattern))
+            if (Regex.IsMatch(AutoSuggestBox.Text, HttpFormatExtension.GeneralPattern))
             {
-                if (AutoSuggestBox.Text.Contains("bilibili.com"))
-                {
-                    webView.Source = new Uri(AutoSuggestBox.Text);
-                }
-                else
-                {
-                    NotificationShowExtensions.ShowMessageToast("仅支持浏览B站网页");
-                }
+                m_WebPageViewModel.Source = new Uri(HttpFormatExtension.EnsureHttpsPrefix(AutoSuggestBox.Text));
             }
             else if (!string.IsNullOrEmpty(AutoSuggestBox.Text))
             {
                 var searchUri = $"https://search.bilibili.com/all?keyword={AutoSuggestBox.Text}";
-                webView.Source = new Uri(searchUri);
-            }
-            else
-            {
-                webView.Source = new Uri(AutoSuggestBox.PlaceholderText);
+                m_WebPageViewModel.Source = new Uri(searchUri);
             }
         }
 
-        private void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
-        {
-            if (Regex.IsMatch(sender.Text, GeneralPattern))
-            {
-                sender.QueryIcon = new SymbolIcon(Symbol.Go);
-            }
-            else
-            {
-                sender.QueryIcon = new SymbolIcon(Symbol.Find);
-            }
-        }
-
-        private readonly string BiliPattern = @"^https?://(?:www\.|m\.|search\.)?bilibili\.com(/.*)?$";
-        private readonly string GeneralPattern = @"^(https?:\/\/)?([a-zA-Z0-9-]+\.)?([a-zA-Z0-9-]+\.)[a-zA-Z]{2,3}(\/.*)?$";
+        private void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args) =>
+            sender.QueryIcon = Regex.IsMatch(sender.Text, HttpFormatExtension.GeneralPattern)
+            ? new SymbolIcon(Symbol.Go)
+            : (IconElement)new SymbolIcon(Symbol.Find);
     }
 }

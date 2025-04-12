@@ -54,10 +54,12 @@
                 x:Name="AutoSuggestBox"
                 Grid.Column="1"
                 VerticalAlignment="Center"
-                PlaceholderText="{Binding Source, ElementName=webView, Mode=OneWay}"
+                PlaceholderText="在B站内搜索关键字"
                 QueryIcon="Find"
                 QuerySubmitted="AutoSuggestBox_QuerySubmitted"
-                TextChanged="AutoSuggestBox_TextChanged" />
+                Text="{x:Bind m_WebPageViewModel.Source, Mode=OneWay}"
+                TextChanged="AutoSuggestBox_TextChanged"
+                ToolTipService.ToolTip="在B站内搜索关键字" />
             <StackPanel
                 Grid.Column="2"
                 HorizontalAlignment="Right"
@@ -94,6 +96,7 @@
             x:Name="webView"
             Grid.Row="1"
             NavigationCompleted="WebView_OnNavigationCompleted"
-            NavigationStarting="WebView_OnNavigationStarting" />
+            NavigationStarting="WebView_OnNavigationStarting"
+            Source="{x:Bind m_WebPageViewModel.Source, Mode=TwoWay}" />
     </Grid>
 </local:BasePage>
