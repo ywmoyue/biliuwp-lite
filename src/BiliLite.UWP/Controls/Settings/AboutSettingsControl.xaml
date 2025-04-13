@@ -2,58 +2,85 @@
     x:Class="BiliLite.Controls.Settings.AboutSettingsControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BiliLite.Controls.Settings"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:font="using:FontAwesome5"
-    mc:Ignorable="d"
+    xmlns:local="using:BiliLite.Controls.Settings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="300"
     d:DesignWidth="400"
-    Loaded="AboutSettingsControl_OnLoaded">
+    Loaded="AboutSettingsControl_OnLoaded"
+    mc:Ignorable="d">
 
-    <StackPanel Orientation="Vertical"
-                MaxWidth="1200">
+    <StackPanel MaxWidth="1200" Orientation="Vertical">
         <controls:SettingsCard Header="哔哩哔哩 Lite">
             <controls:SettingsCard.Description>
-                <TextBlock  Margin="0 0 0 8"  FontSize="14" x:Name="version">版本 1.0.0</TextBlock>
+                <TextBlock
+                    x:Name="version"
+                    Margin="0,0,0,8"
+                    FontSize="14">
+                    版本 1.0.0
+                </TextBlock>
             </controls:SettingsCard.Description>
             <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_InfoCircle"></font:FontAwesome>
+                <font:FontAwesome Icon="Solid_InfoCircle" />
             </controls:SettingsCard.HeaderIcon>
 
             <StackPanel Orientation="Horizontal">
-                <Button x:Name="btnCheckUpdate" Click="btnCheckUpdate_Click" Margin="0 0 0 8">检查更新</Button>
-                <Button x:Name="btnCleanUpdateIgnore" Click="btnCleanUpdateIgnore_Click" Margin="0 0 0 8" Visibility="Collapsed">清除忽略的版本缓存</Button>
+                <Button
+                    x:Name="btnCheckUpdate"
+                    Margin="0,0,0,8"
+                    Click="btnCheckUpdate_Click">
+                    检查更新
+                </Button>
+                <Button
+                    x:Name="btnCleanUpdateIgnore"
+                    Margin="0,0,0,8"
+                    Click="btnCleanUpdateIgnore_Click"
+                    Visibility="Collapsed">
+                    清除忽略的版本缓存
+                </Button>
             </StackPanel>
         </controls:SettingsCard>
 
         <controls:SettingsExpander Header="开发" IsExpanded="True">
             <controls:SettingsExpander.HeaderIcon>
-                <font:FontAwesome Icon="Brands_Dev"></font:FontAwesome>
+                <font:FontAwesome Icon="Brands_Dev" />
             </controls:SettingsExpander.HeaderIcon>
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard>
                     <controls:SettingsCard.Header>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="80"></ColumnDefinition>
-                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition Width="80" />
+                                <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition></RowDefinition>
-                                <RowDefinition></RowDefinition>
-                                <RowDefinition></RowDefinition>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.Column="0" Grid.Row="0">开发者</TextBlock>
-                            <TextBlock Grid.Column="1" Grid.Row="0" 
-                                       Foreground="{ThemeResource LowProfileTextColor}">xiaoyaocz</TextBlock>
-                            <TextBlock Grid.Column="0" Grid.Row="1">维护者</TextBlock>
-                            <TextBlock Grid.Column="1" Grid.Row="1" 
-                                       Foreground="{ThemeResource LowProfileTextColor}">ywmoyue</TextBlock>
-                            <TextBlock Grid.Column="0" Grid.Row="2">Logo绘制</TextBlock>
-                            <TextBlock Grid.Column="1" Grid.Row="2" 
-                                       Foreground="{ThemeResource LowProfileTextColor}">xiaoyaomengo</TextBlock>
+                            <TextBlock Grid.Row="0" Grid.Column="0">开发者</TextBlock>
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Foreground="{ThemeResource LowProfileTextColor}">
+                                xiaoyaocz
+                            </TextBlock>
+                            <TextBlock Grid.Row="1" Grid.Column="0">维护者</TextBlock>
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Foreground="{ThemeResource LowProfileTextColor}">
+                                ywmoyue
+                            </TextBlock>
+                            <TextBlock Grid.Row="2" Grid.Column="0">Logo绘制</TextBlock>
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Foreground="{ThemeResource LowProfileTextColor}">
+                                xiaoyaomengo
+                            </TextBlock>
                         </Grid>
                     </controls:SettingsCard.Header>
                 </controls:SettingsCard>
@@ -62,15 +89,25 @@
 
         <controls:SettingsExpander Header="反馈" IsExpanded="True">
             <controls:SettingsExpander.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Comments"></font:FontAwesome>
+                <font:FontAwesome Icon="Solid_Comments" />
             </controls:SettingsExpander.HeaderIcon>
 
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard>
                     <controls:SettingsCard.Header>
                         <StackPanel>
-                            <TextBlock  Margin="0 0 0 8"  FontSize="14" IsTextSelectionEnabled="True">Github Discussions : <Hyperlink NavigateUri="https://github.com/ywmoyue/biliuwp-lite/discussions">https://github.com/ywmoyue/biliuwp-lite/discussions</Hyperlink></TextBlock>
-                            <TextBlock  Margin="0 0 0 8"  FontSize="14" IsTextSelectionEnabled="True">邮箱(请在发邮件时附带Github Discussion贴子链接) : ruamuyan@outlook.com</TextBlock>
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                FontSize="14"
+                                IsTextSelectionEnabled="True">
+                                Github Discussions :<Run Text="" />
+                                <Hyperlink NavigateUri="https://github.com/ywmoyue/biliuwp-lite/discussions">https://github.com/ywmoyue/biliuwp-lite/discussions</Hyperlink></TextBlock>
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                FontSize="14"
+                                IsTextSelectionEnabled="True">
+                                邮箱(请在发邮件时附带Github Discussion贴子链接) : ruamuyan@outlook.com
+                            </TextBlock>
                         </StackPanel>
                     </controls:SettingsCard.Header>
                 </controls:SettingsCard>
@@ -79,16 +116,34 @@
 
         <controls:SettingsExpander Header="说明" IsExpanded="True">
             <controls:SettingsExpander.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Flag"></font:FontAwesome>
+                <font:FontAwesome Icon="Solid_Flag" />
             </controls:SettingsExpander.HeaderIcon>
 
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard>
                     <controls:SettingsCard.Header>
                         <StackPanel>
-                            <TextBlock  Margin="0 0 0 8"  FontSize="14" TextWrapping="Wrap" TextAlignment="Justify">这是一个第三方客户端，应用所有数据来源均来自哔哩哔哩。</TextBlock>
-                            <TextBlock  Margin="0 0 0 8"  FontSize="14" TextWrapping="Wrap" TextAlignment="Justify">本程序仅供学习交流编程技术使用。</TextBlock>
-                            <TextBlock  Margin="0 0 0 8"  FontSize="14" TextWrapping="Wrap" TextAlignment="Justify">如果侵犯您的合法权益，请及时联系本人以第一时间删除。</TextBlock>
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                FontSize="14"
+                                TextAlignment="Justify"
+                                TextWrapping="Wrap">
+                                这是一个第三方客户端，应用所有数据来源均来自哔哩哔哩。
+                            </TextBlock>
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                FontSize="14"
+                                TextAlignment="Justify"
+                                TextWrapping="Wrap">
+                                本程序仅供学习交流编程技术使用。
+                            </TextBlock>
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                FontSize="14"
+                                TextAlignment="Justify"
+                                TextWrapping="Wrap">
+                                如果侵犯您的合法权益，请及时联系本人以第一时间删除。
+                            </TextBlock>
                         </StackPanel>
                     </controls:SettingsCard.Header>
                 </controls:SettingsCard>
@@ -97,15 +152,15 @@
 
         <controls:SettingsExpander Header="参考及引用" IsExpanded="True">
             <controls:SettingsExpander.HeaderIcon>
-                <font:FontAwesome Icon="Solid_BookOpen"></font:FontAwesome>
+                <font:FontAwesome Icon="Solid_BookOpen" />
             </controls:SettingsExpander.HeaderIcon>
 
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard>
                     <controls:SettingsCard.Header>
                         <StackPanel>
-                            <HyperlinkButton NavigateUri="https://www.bilibili.com" >哔哩哔哩官网</HyperlinkButton>
-                            <HyperlinkButton NavigateUri="https://nsapps.cn/index.php/bilibili-privacy.html" >隐私策略</HyperlinkButton>
+                            <HyperlinkButton NavigateUri="https://www.bilibili.com">哔哩哔哩官网</HyperlinkButton>
+                            <HyperlinkButton NavigateUri="https://nsapps.cn/index.php/bilibili-privacy.html">隐私策略</HyperlinkButton>
                             <HyperlinkButton NavigateUri="https://nsapps.cn/index.php/bilibili-opensource.html">开源代码许可/项目引用</HyperlinkButton>
                         </StackPanel>
                     </controls:SettingsCard.Header>
