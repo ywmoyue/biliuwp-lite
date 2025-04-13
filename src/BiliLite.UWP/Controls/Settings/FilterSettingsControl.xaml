@@ -2,67 +2,74 @@
     x:Class="BiliLite.Controls.Settings.FilterSettingsControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BiliLite.Controls.Settings"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:settings="using:BiliLite.ViewModels.Settings"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BiliLite.Controls.Settings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:BiliLite.Models.Common.Settings"
-   
-    mc:Ignorable="d"
+    xmlns:settings="using:BiliLite.ViewModels.Settings"
     d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignWidth="400"
+    mc:Ignorable="d">
 
-    <StackPanel x:Name="FilterSettingsControlGrid" Orientation="Vertical"
-                MaxWidth="1200">
-        <controls:SettingsCard Header="是否过滤推荐页直播" Description="是否过滤推荐页直播">
-            <ToggleSwitch x:Name="FilterRecommendLiveSwitch"></ToggleSwitch>
+    <StackPanel
+        x:Name="FilterSettingsControlGrid"
+        MaxWidth="1200"
+        Orientation="Vertical">
+        <controls:SettingsCard Header="过滤推荐页直播">
+            <ToggleSwitch x:Name="FilterRecommendLiveSwitch" />
         </controls:SettingsCard>
 
-        <ListView ItemsSource="{x:Bind m_viewModel.RecommendFilterRules,Mode=OneWay}"
-                  x:Name="RecommendFilterRuleListView"
-                  BorderThickness="0 1 0 0"
-                  BorderBrush="{ThemeResource SeparatorColor}"
-                  Margin="0 8 0 0"
-                  Padding="0 8 0 0"
-                  SelectionMode="None">
+        <ListView
+            x:Name="RecommendFilterRuleListView"
+            Margin="0,8,0,0"
+            Padding="0,8,0,0"
+            ItemsSource="{x:Bind m_viewModel.RecommendFilterRules, Mode=OneWay}"
+            SelectionMode="None">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.Header>
-                <Grid Margin="16 0">
+                <Grid Margin="28,5">
                     <TextBlock VerticalAlignment="Center">推荐页过滤</TextBlock>
-                    <Button HorizontalAlignment="Right" x:Name="BtnAddRecommendFilterRule" Click="BtnAddRecommendFilterRule_OnClick">添加规则</Button>
+                    <Button
+                        x:Name="BtnAddRecommendFilterRule"
+                        HorizontalAlignment="Right"
+                        Click="BtnAddRecommendFilterRule_OnClick">
+                        添加规则
+                    </Button>
                 </Grid>
             </ListView.Header>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="settings:FilterRuleViewModel">
-                    <controls:SettingsExpander Header="{x:Bind Rule,Mode=OneWay}" >
-                        <ToggleSwitch IsOn="{x:Bind Enable,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Toggled="OnFilterRuleChanged"></ToggleSwitch>
+                    <controls:SettingsExpander Header="{x:Bind Rule, Mode=OneWay}">
+                        <ToggleSwitch IsOn="{x:Bind Enable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Toggled="OnFilterRuleChanged" />
                         <controls:SettingsExpander.Items>
-                            <controls:SettingsCard Header="过滤值"
-                                                   Description="{x:Bind RuleDesc,Mode=OneWay}">
-                                <TextBox Text="{x:Bind Rule,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" TextChanged="OnFilterRuleChanged"></TextBox>
+                            <controls:SettingsCard Description="{x:Bind RuleDesc, Mode=OneWay}" Header="过滤值">
+                                <TextBox
+                                    MinWidth="200"
+                                    Text="{x:Bind Rule, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    TextChanged="OnFilterRuleChanged" />
                             </controls:SettingsCard>
-                            <controls:SettingsCard Header="规则类型"
-                                                   Description="{x:Bind FilterTypeDesc}">
-                                <ComboBox ItemsSource="{x:Bind models:FilterRuleTypes.FilterTypeOptions}"
-                                          Padding="8 0 0 0"
-                                          SelectedItem="{x:Bind FilterType,Mode=TwoWay,Converter={StaticResource FilterRuleTypeConverter}}"
-                                          SelectionChanged="OnFilterRuleChanged"
-                                          DisplayMemberPath="Text">
-                                </ComboBox>
+                            <controls:SettingsCard Description="{x:Bind FilterTypeDesc}" Header="规则类型">
+                                <ComboBox
+                                    MinWidth="200"
+                                    Padding="8,0,0,0"
+                                    DisplayMemberPath="Text"
+                                    ItemsSource="{x:Bind models:FilterRuleTypes.FilterTypeOptions}"
+                                    SelectedItem="{x:Bind FilterType, Mode=TwoWay, Converter={StaticResource FilterRuleTypeConverter}}"
+                                    SelectionChanged="OnFilterRuleChanged" />
                             </controls:SettingsCard>
-                            <controls:SettingsCard Header="过滤目标"
-                                                   Description="{x:Bind FilterContentTypeDesc}">
-                                <ComboBox ItemsSource="{x:Bind models:FilterRuleTypes.FilterTargetOptions}"
-                                          Padding="8 0 0 0"
-                                          SelectedItem="{x:Bind ContentType,Mode=TwoWay,Converter={StaticResource FilterRuleTypeConverter}}"
-                                          SelectionChanged="OnFilterRuleChanged"
-                                          DisplayMemberPath="Text">
-                                </ComboBox>
+                            <controls:SettingsCard Description="{x:Bind FilterContentTypeDesc}" Header="过滤目标">
+                                <ComboBox
+                                    MinWidth="200"
+                                    Padding="8,0,0,0"
+                                    DisplayMemberPath="Text"
+                                    ItemsSource="{x:Bind models:FilterRuleTypes.FilterTargetOptions}"
+                                    SelectedItem="{x:Bind ContentType, Mode=TwoWay, Converter={StaticResource FilterRuleTypeConverter}}"
+                                    SelectionChanged="OnFilterRuleChanged" />
                             </controls:SettingsCard>
                             <controls:SettingsCard Header="删除规则">
                                 <Button Click="BtnDeleteFilterRule_OnClick">确认删除</Button>
@@ -73,50 +80,56 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <ListView ItemsSource="{x:Bind m_viewModel.SearchFilterRules,Mode=OneWay}"
-                  BorderThickness="0 1 0 0"
-                  BorderBrush="{ThemeResource SeparatorColor}"
-                  Margin="0 16 0 0"
-                  Padding="0 8 0 0"
-                  x:Name="SearchFilterRuleListView"
-                  SelectionMode="None">
+        <ListView
+            x:Name="SearchFilterRuleListView"
+            Margin="0,16,0,0"
+            Padding="0,8,0,0"
+            ItemsSource="{x:Bind m_viewModel.SearchFilterRules, Mode=OneWay}"
+            SelectionMode="None">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.Header>
-                <Grid Margin="16 0">
+                <Grid Margin="28,5">
                     <TextBlock VerticalAlignment="Center">搜索页过滤</TextBlock>
-                    <Button HorizontalAlignment="Right" x:Name="BtnAddSearchFilterRule" Click="BtnAddSearchFilterRule_OnClick">添加规则</Button>
+                    <Button
+                        x:Name="BtnAddSearchFilterRule"
+                        HorizontalAlignment="Right"
+                        Click="BtnAddSearchFilterRule_OnClick">
+                        添加规则
+                    </Button>
                 </Grid>
             </ListView.Header>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="settings:FilterRuleViewModel">
-                    <controls:SettingsExpander Header="{x:Bind Rule,Mode=OneWay}">
-                        <ToggleSwitch IsOn="{x:Bind Enable,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Toggled="OnFilterRuleChanged"></ToggleSwitch>
+                    <controls:SettingsExpander Header="{x:Bind Rule, Mode=OneWay}">
+                        <ToggleSwitch IsOn="{x:Bind Enable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Toggled="OnFilterRuleChanged" />
                         <controls:SettingsExpander.Items>
-                            <controls:SettingsCard Header="过滤值"
-                                                   Description="{x:Bind RuleDesc,Mode=OneWay}">
-                                <TextBox Text="{x:Bind Rule,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" TextChanged="OnFilterRuleChanged"></TextBox>
+                            <controls:SettingsCard Description="{x:Bind RuleDesc, Mode=OneWay}" Header="过滤值">
+                                <TextBox
+                                    MinWidth="200"
+                                    Text="{x:Bind Rule, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    TextChanged="OnFilterRuleChanged" />
                             </controls:SettingsCard>
-                            <controls:SettingsCard Header="规则类型"
-                                                   Description="{x:Bind FilterTypeDesc}">
-                                <ComboBox ItemsSource="{x:Bind models:FilterRuleTypes.FilterTypeOptions}"
-                                          Padding="8 0 0 0"
-                                          SelectedItem="{x:Bind FilterType,Mode=TwoWay,Converter={StaticResource FilterRuleTypeConverter}}"
-                                          SelectionChanged="OnFilterRuleChanged"
-                                          DisplayMemberPath="Text">
-                                </ComboBox>
+                            <controls:SettingsCard Description="{x:Bind FilterTypeDesc}" Header="规则类型">
+                                <ComboBox
+                                    MinWidth="200"
+                                    Padding="8,0,0,0"
+                                    DisplayMemberPath="Text"
+                                    ItemsSource="{x:Bind models:FilterRuleTypes.FilterTypeOptions}"
+                                    SelectedItem="{x:Bind FilterType, Mode=TwoWay, Converter={StaticResource FilterRuleTypeConverter}}"
+                                    SelectionChanged="OnFilterRuleChanged" />
                             </controls:SettingsCard>
-                            <controls:SettingsCard Header="过滤目标"
-                                                   Description="{x:Bind FilterContentTypeDesc}">
-                                <ComboBox ItemsSource="{x:Bind models:FilterRuleTypes.FilterTargetOptions}"
-                                          Padding="8 0 0 0"
-                                          SelectedItem="{x:Bind ContentType,Mode=TwoWay,Converter={StaticResource FilterRuleTypeConverter}}"
-                                          SelectionChanged="OnFilterRuleChanged"
-                                          DisplayMemberPath="Text">
-                                </ComboBox>
+                            <controls:SettingsCard Description="{x:Bind FilterContentTypeDesc}" Header="过滤目标">
+                                <ComboBox
+                                    MinWidth="200"
+                                    Padding="8,0,0,0"
+                                    DisplayMemberPath="Text"
+                                    ItemsSource="{x:Bind models:FilterRuleTypes.FilterTargetOptions}"
+                                    SelectedItem="{x:Bind ContentType, Mode=TwoWay, Converter={StaticResource FilterRuleTypeConverter}}"
+                                    SelectionChanged="OnFilterRuleChanged" />
                             </controls:SettingsCard>
                             <controls:SettingsCard Header="删除规则">
                                 <Button Click="BtnDeleteFilterRule_OnClick">确认删除</Button>
@@ -127,50 +140,56 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <ListView ItemsSource="{x:Bind m_viewModel.DynamicFilterRules,Mode=OneWay}"
-                  BorderThickness="0 1 0 0"
-                  BorderBrush="{ThemeResource SeparatorColor}"
-                  Margin="0 16 0 0"
-                  Padding="0 8 0 0"
-                  x:Name="DynamicFilterRuleListView"
-                  SelectionMode="None">
+        <ListView
+            x:Name="DynamicFilterRuleListView"
+            Margin="0,16,0,0"
+            Padding="0,8,0,0"
+            ItemsSource="{x:Bind m_viewModel.DynamicFilterRules, Mode=OneWay}"
+            SelectionMode="None">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.Header>
-                <Grid Margin="16 0">
+                <Grid Margin="28,5">
                     <TextBlock VerticalAlignment="Center">动态页过滤</TextBlock>
-                    <Button HorizontalAlignment="Right" x:Name="BtnAddDynamicFilterRule" Click="BtnAddDynamicFilterRule_OnClick">添加规则</Button>
+                    <Button
+                        x:Name="BtnAddDynamicFilterRule"
+                        HorizontalAlignment="Right"
+                        Click="BtnAddDynamicFilterRule_OnClick">
+                        添加规则
+                    </Button>
                 </Grid>
             </ListView.Header>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="settings:FilterRuleViewModel">
-                    <controls:SettingsExpander Header="{x:Bind Rule,Mode=OneWay}">
-                        <ToggleSwitch IsOn="{x:Bind Enable,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Toggled="OnFilterRuleChanged"></ToggleSwitch>
+                    <controls:SettingsExpander Header="{x:Bind Rule, Mode=OneWay}">
+                        <ToggleSwitch IsOn="{x:Bind Enable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Toggled="OnFilterRuleChanged" />
                         <controls:SettingsExpander.Items>
-                            <controls:SettingsCard Header="过滤值"
-                                                   Description="{x:Bind RuleDesc,Mode=OneWay}">
-                                <TextBox Text="{x:Bind Rule,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" TextChanged="OnFilterRuleChanged"></TextBox>
+                            <controls:SettingsCard Description="{x:Bind RuleDesc, Mode=OneWay}" Header="过滤值">
+                                <TextBox
+                                    MinWidth="200"
+                                    Text="{x:Bind Rule, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    TextChanged="OnFilterRuleChanged" />
                             </controls:SettingsCard>
-                            <controls:SettingsCard Header="规则类型"
-                                                   Description="{x:Bind FilterTypeDesc}">
-                                <ComboBox ItemsSource="{x:Bind models:FilterRuleTypes.FilterTypeOptions}"
-                                          Padding="8 0 0 0"
-                                          SelectedItem="{x:Bind FilterType,Mode=TwoWay,Converter={StaticResource FilterRuleTypeConverter}}"
-                                          SelectionChanged="OnFilterRuleChanged"
-                                          DisplayMemberPath="Text">
-                                </ComboBox>
+                            <controls:SettingsCard Description="{x:Bind FilterTypeDesc}" Header="规则类型">
+                                <ComboBox
+                                    MinWidth="200"
+                                    Padding="8,0,0,0"
+                                    DisplayMemberPath="Text"
+                                    ItemsSource="{x:Bind models:FilterRuleTypes.FilterTypeOptions}"
+                                    SelectedItem="{x:Bind FilterType, Mode=TwoWay, Converter={StaticResource FilterRuleTypeConverter}}"
+                                    SelectionChanged="OnFilterRuleChanged" />
                             </controls:SettingsCard>
-                            <controls:SettingsCard Header="过滤目标"
-                                                   Description="{x:Bind FilterContentTypeDesc}">
-                                <ComboBox ItemsSource="{x:Bind models:FilterRuleTypes.FilterTargetOptions}"
-                                          Padding="8 0 0 0"
-                                          SelectedItem="{x:Bind ContentType,Mode=TwoWay,Converter={StaticResource FilterRuleTypeConverter}}"
-                                          SelectionChanged="OnFilterRuleChanged"
-                                          DisplayMemberPath="Text">
-                                </ComboBox>
+                            <controls:SettingsCard Description="{x:Bind FilterContentTypeDesc}" Header="过滤目标">
+                                <ComboBox
+                                    MinWidth="200"
+                                    Padding="8,0,0,0"
+                                    DisplayMemberPath="Text"
+                                    ItemsSource="{x:Bind models:FilterRuleTypes.FilterTargetOptions}"
+                                    SelectedItem="{x:Bind ContentType, Mode=TwoWay, Converter={StaticResource FilterRuleTypeConverter}}"
+                                    SelectionChanged="OnFilterRuleChanged" />
                             </controls:SettingsCard>
                             <controls:SettingsCard Header="删除规则">
                                 <Button Click="BtnDeleteFilterRule_OnClick">确认删除</Button>
