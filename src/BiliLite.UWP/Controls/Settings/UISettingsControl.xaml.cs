@@ -139,12 +139,12 @@ namespace BiliLite.Controls.Settings
             };
 
             // 显示直播页推荐直播
-            SwitchDisplayLivePageRecommendLive.IsOn = SettingService.GetValue(SettingConstants.UI.DISPLAY_LIVE_PAGE_RECOMMEND_LIVE, true);
+            SwitchDisplayLivePageRecommendLive.IsOn = !SettingService.GetValue(SettingConstants.UI.DISPLAY_LIVE_PAGE_RECOMMEND_LIVE, true);
             SwitchDisplayLivePageRecommendLive.Loaded += (sender, e) =>
             {
                 SwitchDisplayLivePageRecommendLive.Toggled += (obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.UI.DISPLAY_LIVE_PAGE_RECOMMEND_LIVE, SwitchDisplayLivePageRecommendLive.IsOn);
+                    SettingService.SetValue(SettingConstants.UI.DISPLAY_LIVE_PAGE_RECOMMEND_LIVE, !SwitchDisplayLivePageRecommendLive.IsOn);
                 };
             };
 
@@ -404,9 +404,9 @@ namespace BiliLite.Controls.Settings
             NotificationShowExtensions.ShowMessageToast("更改成功,重启生效");
         }
 
-        private void menuRemoveHomeItem_Click(object sender, RoutedEventArgs e)
+        private void menuRemoveHomeItem_Click(object sender, ItemClickEventArgs e)
         {
-            var item = (sender as MenuFlyoutItem).DataContext as HomeNavItem;
+            var item = e.ClickedItem as HomeNavItem;
             if (gridHomeCustom.Items.Count == 1)
             {
                 NotificationShowExtensions.ShowMessageToast("至少要留一个页面");

@@ -52,7 +52,7 @@ namespace BiliLite.Pages.Home
 
         private void SetStaggered()
         {
-            var staggered = SettingService.GetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 0) == 1;
+            var staggered = SettingService.GetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 0) == 0;
             if (staggered != m_isStaggered)
             {
                 m_isStaggered = staggered;
@@ -114,13 +114,13 @@ namespace BiliLite.Pages.Home
 
         private void BtnList_OnClick(object sender, RoutedEventArgs e)
         {
-            SettingService.SetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 0);
+            SettingService.SetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 1);
             SetListCore();
         }
 
         private void BtnGrid_OnClick(object sender, RoutedEventArgs e)
         {
-            SettingService.SetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 1);
+            SettingService.SetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 0);
             SetGridCore();
         }
 
