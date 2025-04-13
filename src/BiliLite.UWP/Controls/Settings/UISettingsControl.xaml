@@ -513,10 +513,10 @@
             </StackPanel>
         </controls:SettingsCard>
 
-        <controls:SettingsCard Description="运行中更新动态磁贴，暂不支持后台更新动态磁贴" Header="动态磁贴（实验性功能，未完成）">
-            <controls:SettingsCard.HeaderIcon>
-                <SymbolIcon Symbol="SelectAll" />
-            </controls:SettingsCard.HeaderIcon>
+        <controls:SettingsCard
+            Description="运行中更新动态磁贴，暂不支持后台更新动态磁贴"
+            Header="动态磁贴（实验性功能，未完成）"
+            HeaderIcon="ViewAll">
             <ToggleSwitch x:Name="SwitchTile" />
         </controls:SettingsCard>
     </StackPanel>

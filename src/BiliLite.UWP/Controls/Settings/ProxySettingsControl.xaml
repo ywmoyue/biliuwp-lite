@@ -60,14 +60,76 @@
             <AutoSuggestBox x:Name="RoamingSettingCustomServerCN" QueryIcon="Accept"  Width="260" HorizontalAlignment="Left" PlaceholderText="https://example.com/"></AutoSuggestBox>
         </controls:SettingsCard>
 
-        <controls:SettingsCard Header="繁体字幕转简体"
-                               Description="繁体字幕转简体">
+        <controls:SettingsCard Header="替换CDN链接">
+            <controls:SettingsCard.Description>
+                <StackPanel>
+                    <TextBlock Margin="0,8,0,0">替换CDN链接可以有效的提升视频加载速度</TextBlock>
+                    <TextBlock>开启替换后读取播放地址可能需要更长时间</TextBlock>
+                </StackPanel>
+            </controls:SettingsCard.Description>
             <controls:SettingsCard.HeaderIcon>
-                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE8D2;"/>
+                <font:FontAwesome Icon="Solid_Link" />
             </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="RoamingSettingToSimplified" OnContent="打开" OffContent="关闭" ></ToggleSwitch>
+            <ComboBox
+                x:Name="cbPlayerReplaceCDN"
+                MinWidth="200"
+                SelectedIndex="0">
+                <ComboBox.Items>
+                    <ComboBoxItem Content="不替换" />
+                    <ComboBoxItem Content="替换全部视频" />
+                    <ComboBoxItem Content="仅替换PCDN视频" />
+                    <ComboBoxItem Content="仅替换代理视频" />
+                </ComboBox.Items>
+            </ComboBox>
         </controls:SettingsCard>
 
-        <TextBlock Margin="16 16 0 8">如播放港澳台视频卡顿，建议到「播放」设置中打开替换CDN选项，并且选择延迟较低的CDN服务器</TextBlock>
+        <controls:SettingsExpander
+            Description="替换CDN服务器选择"
+            Header="替换CDN服务器选择"
+            IsExpanded="True">
+            <controls:SettingsExpander.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Link" />
+            </controls:SettingsExpander.HeaderIcon>
+
+            <controls:SettingsExpander.Items>
+                <controls:SettingsCard>
+                    <controls:SettingsCard.Header>
+                        <Button x:Name="RoamingSettingTestCDN" Click="RoamingSettingTestCDN_Click">测试服务器延迟</Button>
+                    </controls:SettingsCard.Header>
+                    <ComboBox
+                        x:Name="RoamingSettingCDNServer"
+                        Margin="0,8,0,8"
+                        HorizontalAlignment="Left"
+                        ItemsSource="{x:Bind Path=m_viewModel.CDNServers, Mode=OneWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock TextTrimming="CharacterEllipsis">
+                                        【<Run Text="{Binding Path=Remark}" />
+                                        】<Run Text="{Binding Path=Server}" />
+                                    </TextBlock>
+                                    <TextBlock Width="10" />
+                                    <TextBlock
+                                        Margin="0,2,0,0"
+                                        FontSize="12"
+                                        Foreground="Red"
+                                        Visibility="{Binding Path=ShowTimeOut, Mode=OneWay}">
+                                        超时
+                                    </TextBlock>
+                                    <TextBlock
+                                        Margin="0,2,0,0"
+                                        FontSize="12"
+                                        Foreground="Green"
+                                        Visibility="{Binding Path=ShowDelay, Mode=OneWay}"><Run Text="{Binding Path=Delay, Mode=OneWay}" />
+                                        ms</TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </controls:SettingsCard>
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>
+
+        <TextBlock Margin="16 16 0 8">如播放港澳台视频卡顿，建议打开替换CDN选项，并且选择延迟较低的CDN服务器</TextBlock>
     </StackPanel>
 </UserControl>
