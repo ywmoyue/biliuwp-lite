@@ -228,7 +228,7 @@
             Header="标签页"
             IsEnabled="{Binding SelectedIndex, ElementName=cbDisplayMode, Mode=OneWay, Converter={StaticResource BooleanConvert}, ConverterParameter=0}">
             <controls:SettingsExpander.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Tablet" />
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE737;" />
             </controls:SettingsExpander.HeaderIcon>
 
             <controls:SettingsExpander.Items>
@@ -386,6 +386,28 @@
 
                 <controls:SettingsCard Header="启用直播页横幅">
                     <ToggleSwitch x:Name="SwitchDisplayLiveBanner" />
+                </controls:SettingsCard>
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>
+
+        <controls:SettingsExpander
+            Header="图片预览"
+            HeaderIcon="BrowsePhotos"
+            IsExpanded="False">
+            <controls:SettingsExpander.Items>
+                <controls:SettingsCard Header="使用新窗口预览图片">
+                    <controls:SettingsCard.HeaderIcon>
+                        <font:FontAwesome Icon="Solid_WindowRestore" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <ToggleSwitch x:Name="swPreviewImageNavigateToPage" />
+                </controls:SettingsCard>
+
+                <controls:SettingsCard
+                    Description="仅对预览图片生效"
+                    Header="全屏化新窗口"
+                    HeaderIcon="FullScreen"
+                    IsEnabled="{Binding IsOn, ElementName=swPreviewImageNavigateToPage, Mode=OneWay}">
+                    <ToggleSwitch x:Name="swPreviewImageNavigateToPageFully" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>

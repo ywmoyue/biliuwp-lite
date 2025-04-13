@@ -182,7 +182,7 @@ namespace BiliLite.Models.Common
             /// 浏览器打开无法处理的链接
             /// </summary>
             [SettingKey(typeof(bool))]
-            public const string OPEN_URL_BROWSER = "OpenUrlWithBrowser";
+            public const string OPEN_INTEGRAL_BROWSER = "OpenUrlWithIntegralBrowser";
 
             /// <summary>
             /// 启用长评论折叠

@@ -358,6 +358,25 @@ namespace BiliLite.Controls.Settings
                 };
             };
 
+            //新窗口浏览图片
+            swPreviewImageNavigateToPage.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.NEW_WINDOW_PREVIEW_IMAGE, false);
+            swPreviewImageNavigateToPage.Loaded += new RoutedEventHandler((sender, e) =>
+            {
+                swPreviewImageNavigateToPage.Toggled += new RoutedEventHandler((obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.NEW_WINDOW_PREVIEW_IMAGE, swPreviewImageNavigateToPage.IsOn);
+                });
+            });
+
+            swPreviewImageNavigateToPageFully.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.NEW_FULLY_WINDOW_PREVIEW_IMAGE, true);
+            swPreviewImageNavigateToPageFully.Loaded += new RoutedEventHandler((sender, e) =>
+            {
+                swPreviewImageNavigateToPageFully.Toggled += new RoutedEventHandler((obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.NEW_FULLY_WINDOW_PREVIEW_IMAGE, swPreviewImageNavigateToPageFully.IsOn);
+                });
+            });
+
             var navItems = SettingService.GetValue(SettingConstants.UI.HOEM_ORDER, DefaultHomeNavItems.GetDefaultHomeNavItems());
             gridHomeCustom.ItemsSource = new ObservableCollection<HomeNavItem>(navItems);
             ExceptHomeNavItems();

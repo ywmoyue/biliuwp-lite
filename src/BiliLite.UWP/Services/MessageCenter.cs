@@ -569,20 +569,23 @@ namespace BiliLite.Services
 
             if (url.Contains("http://") || url.Contains("https://"))
             {
-                if (SettingService.GetValue(SettingConstants.UI.OPEN_URL_BROWSER, false))
+                if (SettingService.GetValue(SettingConstants.UI.OPEN_INTEGRAL_BROWSER, true))
+                {
+                    NavigateToPage(null, new NavigationInfo()
+                    {
+                        icon = Symbol.World,
+                        page = typeof(WebPage),
+                        title = "加载中...",
+                        parameters = url,
+                        dontGoTo = dontGoTo,
+                    });
+                    return true;
+                }
+                else
                 {
                     await Launcher.LaunchUriAsync(new Uri(url));
                     return true;
                 }
-                NavigateToPage(null, new NavigationInfo()
-                {
-                    icon = Symbol.World,
-                    page = typeof(WebPage),
-                    title = "加载中...",
-                    parameters = url,
-                    dontGoTo = dontGoTo,
-                });
-                return true;
             }
 
             return false;

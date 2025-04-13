@@ -50,25 +50,6 @@ namespace BiliLite.Controls.Settings
                 });
             });
 
-            //新窗口浏览图片
-            swPreviewImageNavigateToPage.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.NEW_WINDOW_PREVIEW_IMAGE, false);
-            swPreviewImageNavigateToPage.Loaded += new RoutedEventHandler((sender, e) =>
-            {
-                swPreviewImageNavigateToPage.Toggled += new RoutedEventHandler((obj, args) =>
-                {
-                    SettingService.SetValue(SettingConstants.UI.NEW_WINDOW_PREVIEW_IMAGE, swPreviewImageNavigateToPage.IsOn);
-                });
-            });
-
-            swPreviewImageNavigateToPageFully.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.NEW_FULLY_WINDOW_PREVIEW_IMAGE, true);
-            swPreviewImageNavigateToPageFully.Loaded += new RoutedEventHandler((sender, e) =>
-            {
-                swPreviewImageNavigateToPageFully.Toggled += new RoutedEventHandler((obj, args) =>
-                {
-                    SettingService.SetValue(SettingConstants.UI.NEW_FULLY_WINDOW_PREVIEW_IMAGE, swPreviewImageNavigateToPageFully.IsOn);
-                });
-            });
-
             //启动应用时打开上次浏览的标签页
             SwitchOpenLastPage.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.ENABLE_OPEN_LAST_PAGE, SettingConstants.UI.DEFAULT_ENABLE_OPEN_LAST_PAGE);
             SwitchOpenLastPage.Loaded += (sender, e) =>
@@ -104,12 +85,12 @@ namespace BiliLite.Controls.Settings
             };
 
             //浏览器打开无法处理的链接
-            swOpenUrlWithBrowser.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.OPEN_URL_BROWSER, false);
+            swOpenUrlWithBrowser.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.OPEN_INTEGRAL_BROWSER, true);
             swOpenUrlWithBrowser.Loaded += new RoutedEventHandler((sender, e) =>
             {
                 swOpenUrlWithBrowser.Toggled += new RoutedEventHandler((obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.UI.OPEN_URL_BROWSER, swOpenUrlWithBrowser.IsOn);
+                    SettingService.SetValue(SettingConstants.UI.OPEN_INTEGRAL_BROWSER, swOpenUrlWithBrowser.IsOn);
                 });
             });
 
