@@ -5,7 +5,6 @@
     xmlns:common="using:BiliLite.Models.Common"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
-    xmlns:controls2="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:font="using:FontAwesome5"
     xmlns:local="using:BiliLite.Controls.Settings"
@@ -100,7 +99,7 @@
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard>
                     <controls:SettingsCard.Description>
-                        <controls2:AdaptiveGridView
+                        <GridView
                             HorizontalAlignment="Stretch"
                             IsItemClickEnabled="False"
                             SelectionMode="None">
@@ -235,7 +234,7 @@
                                     </ListView>
                                 </StackPanel>
                             </GridViewItem>
-                        </controls2:AdaptiveGridView>
+                        </GridView>
 
                     </controls:SettingsCard.Description>
                 </controls:SettingsCard>
