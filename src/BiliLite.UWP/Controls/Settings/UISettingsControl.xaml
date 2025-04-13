@@ -45,6 +45,7 @@
     </UserControl.Resources>
 
     <StackPanel MaxWidth="1200">
+        
         <controls:SettingsExpander Header="主题" IsExpanded="True">
             <controls:SettingsExpander.HeaderIcon>
                 <SymbolIcon Symbol="Highlight" />
