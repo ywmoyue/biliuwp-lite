@@ -16,6 +16,12 @@
         x:Name="FilterSettingsControlGrid"
         MaxWidth="1200"
         Orientation="Vertical">
+        <StackPanel.ChildrenTransitions>
+            <TransitionCollection>
+                <RepositionThemeTransition />
+            </TransitionCollection>
+        </StackPanel.ChildrenTransitions>
+
         <controls:SettingsCard Header="过滤推荐页直播">
             <ToggleSwitch x:Name="FilterRecommendLiveSwitch" />
         </controls:SettingsCard>

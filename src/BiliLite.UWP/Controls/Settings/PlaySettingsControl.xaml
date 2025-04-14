@@ -15,6 +15,12 @@
     mc:Ignorable="d">
 
     <StackPanel MaxWidth="1200">
+        <StackPanel.ChildrenTransitions>
+            <TransitionCollection>
+                <RepositionThemeTransition />
+            </TransitionCollection>
+        </StackPanel.ChildrenTransitions>
+
         <controls:SettingsExpander Header="优先格式">
             <controls:SettingsExpander.HeaderIcon>
                 <SymbolIcon Symbol="Video" />

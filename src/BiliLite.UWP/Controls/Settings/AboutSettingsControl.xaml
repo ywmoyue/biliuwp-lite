@@ -13,11 +13,15 @@
     mc:Ignorable="d">
 
     <StackPanel MaxWidth="1200" Orientation="Vertical">
+        <StackPanel.ChildrenTransitions>
+            <TransitionCollection>
+                <RepositionThemeTransition />
+            </TransitionCollection>
+        </StackPanel.ChildrenTransitions>
+
         <controls:SettingsCard Header="哔哩哔哩 Lite">
             <controls:SettingsCard.Description>
-                <TextBlock
-                    x:Name="version"
-                    FontSize="14">
+                <TextBlock x:Name="version" FontSize="14">
                     版本 1.0.0
                 </TextBlock>
             </controls:SettingsCard.Description>
@@ -96,14 +100,10 @@
                 <controls:SettingsCard>
                     <controls:SettingsCard.Header>
                         <StackPanel>
-                            <TextBlock
-                                FontSize="14"
-                                IsTextSelectionEnabled="True">
+                            <TextBlock FontSize="14" IsTextSelectionEnabled="True">
                                 Github Discussions :<Run Text="" />
                                 <Hyperlink NavigateUri="https://github.com/ywmoyue/biliuwp-lite/discussions">https://github.com/ywmoyue/biliuwp-lite/discussions</Hyperlink></TextBlock>
-                            <TextBlock
-                                FontSize="14"
-                                IsTextSelectionEnabled="True">
+                            <TextBlock FontSize="14" IsTextSelectionEnabled="True">
                                 邮箱(请在发邮件时附带Github Discussion贴子链接) : ruamuyan@outlook.com
                             </TextBlock>
                         </StackPanel>

@@ -13,6 +13,11 @@
     mc:Ignorable="d">
 
     <StackPanel MaxWidth="1200">
+        <StackPanel.ChildrenTransitions>
+            <TransitionCollection>
+                <RepositionThemeTransition />
+            </TransitionCollection>
+        </StackPanel.ChildrenTransitions>
 
         <controls:SettingsCard Header="首选代理服务器">
             <controls:SettingsCard.Description>

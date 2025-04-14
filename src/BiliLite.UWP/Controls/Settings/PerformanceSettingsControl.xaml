@@ -13,6 +13,12 @@
     mc:Ignorable="d">
 
     <StackPanel MaxWidth="1200">
+        <StackPanel.ChildrenTransitions>
+            <TransitionCollection>
+                <RepositionThemeTransition />
+            </TransitionCollection>
+        </StackPanel.ChildrenTransitions>
+
         <controls:SettingsExpander Header="图片质量" IsExpanded="True">
             <controls:SettingsExpander.HeaderIcon>
                 <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE91B;" />

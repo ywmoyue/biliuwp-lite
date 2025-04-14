@@ -45,7 +45,12 @@
     </UserControl.Resources>
 
     <StackPanel MaxWidth="1200">
-        
+        <StackPanel.ChildrenTransitions>
+            <TransitionCollection>
+                <RepositionThemeTransition />
+            </TransitionCollection>
+        </StackPanel.ChildrenTransitions>
+
         <controls:SettingsExpander Header="主题" IsExpanded="True">
             <controls:SettingsExpander.HeaderIcon>
                 <SymbolIcon Symbol="Highlight" />

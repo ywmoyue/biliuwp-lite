@@ -15,6 +15,12 @@
     mc:Ignorable="d">
 
     <StackPanel MaxWidth="1200" Orientation="Vertical">
+        <StackPanel.ChildrenTransitions>
+            <TransitionCollection>
+                <RepositionThemeTransition />
+            </TransitionCollection>
+        </StackPanel.ChildrenTransitions>
+
         <controls:SettingsExpander Header="日志" IsExpanded="True">
 
             <controls:SettingsExpander.HeaderIcon>

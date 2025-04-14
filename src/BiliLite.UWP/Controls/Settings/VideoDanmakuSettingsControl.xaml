@@ -19,6 +19,12 @@
     </UserControl.Resources>
 
     <StackPanel MaxWidth="1200" Orientation="Vertical">
+        <StackPanel.ChildrenTransitions>
+            <TransitionCollection>
+                <RepositionThemeTransition />
+            </TransitionCollection>
+        </StackPanel.ChildrenTransitions>
+
         <controls:SettingsCard Description="不同弹幕引擎支持的设置项不同，支持的相同设置项表现也不同，详细设置项请在播放视频时调整(如弹幕字体、密度等)" Header="弹幕引擎">
             <controls:SettingsCard.HeaderIcon>
                 <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE8FD;" />

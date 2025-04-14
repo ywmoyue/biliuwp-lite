@@ -13,6 +13,12 @@
     mc:Ignorable="d">
 
     <StackPanel MaxWidth="1200" Orientation="Vertical">
+        <StackPanel.ChildrenTransitions>
+            <TransitionCollection>
+                <RepositionThemeTransition />
+            </TransitionCollection>
+        </StackPanel.ChildrenTransitions>
+
         <controls:SettingsCard Header="下载存放目录">
             <controls:SettingsCard.Description>
                 <Button
