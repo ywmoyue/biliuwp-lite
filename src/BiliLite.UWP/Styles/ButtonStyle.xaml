@@ -19,6 +19,13 @@
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="VerticalAlignment" Value="Bottom" />
             <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Transitions">
+                <Setter.Value>
+                    <TransitionCollection>
+                        <EntranceThemeTransition FromVerticalOffset="100" IsStaggeringEnabled="True"/>
+                    </TransitionCollection>
+                </Setter.Value>
+            </Setter>
         </Style.Setters>
     </Style>
     <Style
