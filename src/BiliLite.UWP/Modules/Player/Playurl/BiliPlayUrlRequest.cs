@@ -58,8 +58,8 @@ namespace BiliLite.Modules.Player.Playurl
         {
             IsDownload = isDownload;
             //PriorityAkamaiCDN = SettingService.GetValue<bool>(SettingConstants.Roaming.AKAMAI_CDN, false);
-            ReplaceCDNMode = SettingService.GetValue<int>(SettingConstants.Player.REPLACE_CDN, 3);
-            CDN = SettingService.GetValue<string>(SettingConstants.Player.CDN_SERVER, "upos-sz-mirrorhwo1.bilivideo.com");
+            ReplaceCDNMode = SettingService.GetValue<int>(SettingConstants.Roaming.REPLACE_CDN, 3);
+            CDN = SettingService.GetValue<string>(SettingConstants.Roaming.CDN_SERVER, "upos-sz-mirrorhwo1.bilivideo.com");
             IsVIP = (SettingService.Account.Logined && SettingService.Account.Profile.vip != null && SettingService.Account.Profile.vip.status != 0);
             CodecMode = (PlayUrlCodecMode)SettingService.GetValue(IsDownload ? SettingConstants.Download.DEFAULT_VIDEO_TYPE : SettingConstants.Player.DEFAULT_VIDEO_TYPE, (int)DefaultVideoTypeOptions.DEFAULT_VIDEO_TYPE);
         }

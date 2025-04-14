@@ -1042,18 +1042,6 @@ namespace BiliLite.Models.Common
             public const string AUTO_OPEN_AI_SUBTITLE = "PlayerAutoOpenAISubtitle";
 
             /// <summary>
-            /// 替换 CDN
-            /// </summary>
-            [SettingKey(typeof(int))]
-            public const string REPLACE_CDN = "PlayerReplaceCDN";
-
-            /// <summary>
-            /// CDN 服务器
-            /// </summary>
-            [SettingKey]
-            public const string CDN_SERVER = "PlayerCDNServer";
-
-            /// <summary>
             /// 直播播放器默认模式
             /// </summary>
             [SettingKey(typeof(int))]
@@ -1180,6 +1168,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(string))]
             public const string CUSTOM_SERVER_URL_CN = "RoamingCustomServerUrlCN";
+
+            /// <summary>
+            /// 替换 CDN
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const string REPLACE_CDN = "PlayerReplaceCDN";
+
+            /// <summary>
+            /// CDN 服务器
+            /// </summary>
+            [SettingKey]
+            public const string CDN_SERVER = "PlayerCDNServer";
 
             ///// <summary>
             ///// 只使用AkamaiCDN链接

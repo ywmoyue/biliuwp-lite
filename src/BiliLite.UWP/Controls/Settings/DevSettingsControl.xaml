@@ -164,10 +164,10 @@
                 QueryIcon="Accept" />
         </controls:SettingsCard>
 
-        <controls:SettingsCard Header="更新JSON请求地址">
+        <controls:SettingsCard Header="更新 JSON 请求地址">
             <controls:SettingsCard.Description>
                 <StackPanel>
-                    <TextBlock>用于解决Github在国内访问不佳的问题</TextBlock>
+                    <TextBlock>用于解决 Github 在国内访问不佳的问题</TextBlock>
                     <TextBlock x:Name="mirrorDonateText"><Hyperlink x:Name="mirrorDonateUrl">第三方公益镜像捐赠地址 - 赠人玫瑰，手有余香🌹</Hyperlink></TextBlock>
                 </StackPanel>
             </controls:SettingsCard.Description>

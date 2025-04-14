@@ -112,18 +112,18 @@ namespace BiliLite.Controls.Settings
             //});
 
             //替换CDN
-            cbPlayerReplaceCDN.SelectedIndex = SettingService.GetValue<int>(SettingConstants.Player.REPLACE_CDN, 3);
+            cbPlayerReplaceCDN.SelectedIndex = SettingService.GetValue<int>(SettingConstants.Roaming.REPLACE_CDN, 3);
             cbPlayerReplaceCDN.Loaded += new RoutedEventHandler((sender, e) =>
             {
                 cbPlayerReplaceCDN.SelectionChanged += new SelectionChangedEventHandler((obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.Player.REPLACE_CDN,
+                    SettingService.SetValue(SettingConstants.Roaming.REPLACE_CDN,
                         cbPlayerReplaceCDN.SelectedIndex);
                 });
             });
 
             //CDN服务器
-            var cdnServer = SettingService.GetValue<string>(SettingConstants.Player.CDN_SERVER,
+            var cdnServer = SettingService.GetValue<string>(SettingConstants.Roaming.CDN_SERVER,
                 "upos-sz-mirrorhwo1.bilivideo.com");
             RoamingSettingCDNServer.SelectedIndex = m_viewModel.CDNServers.FindIndex(x => x.Server == cdnServer);
             RoamingSettingCDNServer.Loaded += new RoutedEventHandler((sender, e) =>
@@ -131,7 +131,7 @@ namespace BiliLite.Controls.Settings
                 RoamingSettingCDNServer.SelectionChanged += new SelectionChangedEventHandler((obj, args) =>
                 {
                     var server = m_viewModel.CDNServers[RoamingSettingCDNServer.SelectedIndex];
-                    SettingService.SetValue(SettingConstants.Player.CDN_SERVER, server.Server);
+                    SettingService.SetValue(SettingConstants.Roaming.CDN_SERVER, server.Server);
 
                 });
             });
