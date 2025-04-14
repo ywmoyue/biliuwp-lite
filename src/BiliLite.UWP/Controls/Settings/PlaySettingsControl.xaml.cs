@@ -350,12 +350,12 @@ namespace BiliLite.Controls.Settings
             };
 
             //转简体
-            RoamingSettingToSimplified.IsOn = SettingService.GetValue<bool>(SettingConstants.Roaming.TO_SIMPLIFIED, true);
+            RoamingSettingToSimplified.IsOn = SettingService.GetValue<bool>(SettingConstants.Player.TO_SIMPLIFIED, true);
             RoamingSettingToSimplified.Loaded += new RoutedEventHandler((sender, e) =>
             {
                 RoamingSettingToSimplified.Toggled += new RoutedEventHandler((obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.Roaming.TO_SIMPLIFIED, RoamingSettingToSimplified.IsOn);
+                    SettingService.SetValue(SettingConstants.Player.TO_SIMPLIFIED, RoamingSettingToSimplified.IsOn);
                 });
             });
         }

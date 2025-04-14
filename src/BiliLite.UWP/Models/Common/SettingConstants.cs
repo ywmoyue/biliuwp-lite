@@ -28,17 +28,22 @@ namespace BiliLite.Models.Common
             [SettingDefaultValue]
             public const int DEFAULT_THEME_COLOR = 0;
 
+            /// <summary>
+            /// 可选的主题色彩
+            /// </summary>
             [SettingKey(typeof(object), useSqlDb: true)]
             public const string THEME_COLOR_MENU = "themeColorMenu";
 
             /// <summary>
-            /// 主题,0为默认，1为浅色，2为深色
+            /// 主题
+            /// 0 为默认，1 为浅色，2 为深色
             /// </summary>
             [SettingKey(typeof(int))]
             public const string THEME = "theme";
 
             /// <summary>
-            /// 显示模式,0为多标签，1为单窗口，2为多窗口
+            /// 显示模式
+            /// 0 为多标签，1 为单窗口，2 为多窗口
             /// </summary>
             [SettingKey(typeof(int))]
             public const string DISPLAY_MODE = "displayMode";
@@ -50,7 +55,7 @@ namespace BiliLite.Models.Common
             public const string CACHE_HOME = "cacheHome";
 
             /// <summary>
-            /// 首页排序
+            /// 首页栏目排序
             /// </summary>
             [SettingKey(typeof(object))]
             public const string HOEM_ORDER = "homePageOrder";
@@ -91,9 +96,15 @@ namespace BiliLite.Models.Common
             [SettingKey(typeof(bool))]
             public const string RIGHT_WIDTH_CHANGEABLE = "PlayerRightDetailWidthChangeable";
 
+            /// <summary>
+            /// 动态评论页总宽度
+            /// </summary>
             [SettingKey(typeof(double))]
             public const string DYNAMIC_COMMENT_WIDTH = "DynamicCommentWidth";
 
+            /// <summary>
+            /// 动态评论页默认总宽度
+            /// </summary>
             [SettingDefaultValue]
             public const double DEFAULT_DYNAMIC_COMMENT_WIDTH = 480;
 
@@ -104,37 +115,37 @@ namespace BiliLite.Models.Common
             public const string SHOW_DETAIL_COVER = "showDetailCover";
 
             /// <summary>
-            /// 新窗口打开图片预览
+            /// 新窗口预览图片
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string NEW_WINDOW_PREVIEW_IMAGE = "newWindowPreviewImage";
 
             /// <summary>
-            /// 新窗口打开图片预览
+            /// 新窗口全屏预览图片
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string NEW_FULLY_WINDOW_PREVIEW_IMAGE = "newFullyWindowPreviewImage";
 
             /// <summary>
-            /// 动态显示样式
+            /// 动态视图布局
             /// </summary>
             [SettingKey(typeof(int))]
             public const string DYNAMIC_DISPLAY_MODE = "dynamicDiaplayMode";
 
             /// <summary>
-            /// 首页推荐样式
+            /// 首页视图布局
             /// </summary>
             [SettingKey(typeof(int))]
             public const string RECMEND_DISPLAY_MODE = "recomendDiaplayMode";
 
             /// <summary>
-            /// 右侧选项卡
+            /// 视频页右侧栏目
             /// </summary>
             [SettingKey(typeof(int))]
             public const string DETAIL_DISPLAY = "detailDisplay";
 
             /// <summary>
-            /// 动态显示样式
+            /// 空白页背景图片
             /// </summary>
             [SettingKey]
             public const string BACKGROUND_IMAGE = "BackgroundImage";
@@ -173,13 +184,15 @@ namespace BiliLite.Models.Common
             /// 隐藏赞助按钮
             /// </summary>
             public const string HIDE_SPONSOR = "HideSponsor";
+
             /// <summary>
             /// 隐藏广告按钮
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string HIDE_AD = "HideAD";
+
             /// <summary>
-            /// 浏览器打开无法处理的链接
+            /// 使用内置浏览器
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string OPEN_INTEGRAL_BROWSER = "OpenUrlWithIntegralBrowser";
@@ -238,72 +251,107 @@ namespace BiliLite.Models.Common
             [SettingDefaultValue]
             public const bool DEFAULT_SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR = false;
 
+            /// <summary>
+            /// 启用固定标签栏宽度
+            /// </summary>
             [SettingKey(typeof(bool))]
             public const string ENABLE_TAB_ITEM_FIXED_WIDTH = "EnableTabItemFixedWidth";
 
+            /// <summary>
+            /// 启用固定标签栏宽度默认值
+            /// </summary>
             [SettingDefaultValue]
             public const bool DEFAULT_ENABLE_TAB_ITEM_FIXED_WIDTH = true;
 
+            /// <summary>
+            /// 固定标签栏宽度值
+            /// </summary>
             [SettingKey(typeof(double))]
             public const string TAB_ITEM_FIXED_WIDTH = "TabItemFixedWidth";
 
+            /// <summary>
+            /// 固定标签栏宽度默认值
+            /// </summary>
             [SettingDefaultValue]
             public const double DEFAULT_TAB_ITEM_FIXED_WIDTH = 224;
 
+            /// <summary>
+            /// 标签栏宽度最大值
+            /// </summary>
             [SettingKey(typeof(double))]
             public const string TAB_ITEM_MAX_WIDTH = "TabItemMaxWidth";
 
+            /// <summary>
+            /// 标签栏宽度最大默认值
+            /// </summary>
             [SettingDefaultValue]
             public const double DEFAULT_TAB_ITEM_MAX_WIDTH = 240;
 
+            /// <summary>
+            /// 标签栏宽度最小值
+            /// </summary>
             [SettingKey(typeof(double))]
             public const string TAB_ITEM_MIN_WIDTH = "TabItemMinWidth";
 
+            /// <summary>
+            /// 标签栏宽度最小默认值
+            /// </summary>
             [SettingDefaultValue]
             public const double DEFAULT_TAB_ITEM_MIN_WIDTH = 0;
 
+            /// <summary>
+            /// 标签栏高度值
+            /// </summary>
             [SettingKey(typeof(double))]
             public const string TAB_HEIGHT = "TabHeight";
 
+            /// <summary>
+            /// 标签栏高度默认值
+            /// </summary>
             [SettingDefaultValue]
             public const double DEFAULT_TAB_HEIGHT = 40;
 
             /// <summary>
-            /// 是否启用动态磁贴
+            /// 启用动态磁贴
             /// </summary>
             // 因为要开关时注册磁贴服务，所以不设置SettingKey
             public const string ENABLE_NOTIFICATION_TILES = "EnableNotificationTiles";
 
             /// <summary>
-            /// 是否打开上次浏览的标签页
+            /// 恢复未关闭的页面
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string ENABLE_OPEN_LAST_PAGE = "EnableOpenLastPage";
 
             /// <summary>
-            /// 打开上次浏览的标签页数量限制，0为不限制
+            /// 恢复未关闭的页面的默认值
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_ENABLE_OPEN_LAST_PAGE = false;
+
+            /// <summary>
+            /// 限制恢复未关闭的页面
+            /// 0 为不限制
             /// </summary>
             [SettingKey(typeof(int))]
             public const string OPEN_LAST_PAGE_LIMIT_COUNT = "OpenLastPageLimitCount";
 
             /// <summary>
-            /// 打开上次浏览的标签页数量限制默认值
+            /// 限制恢复未关闭的页面的默认值
             /// </summary>
             [SettingDefaultValue]
             public const int DEFAULT_OPEN_LAST_PAGE_LIMIT_COUNT = 5;
 
             /// <summary>
-            /// 是否打开上次浏览的标签页默认值
+            /// 本地关注用户
+            /// 适用于匿名观看直播
             /// </summary>
-            [SettingDefaultValue]
-            public const bool DEFAULT_ENABLE_OPEN_LAST_PAGE = false;
-
             [SettingKey]
             public const string LOCAL_ATTENTION_USER = "LocalAttentionUser";
 
             /// <summary>
             /// 滚动视图加载更多触发偏移量
-            /// 过大可能导致无限加载bug被B站风控
+            /// 过大可能导致无限加载 Bug 被B站风控
             /// </summary>
             [SettingKey(typeof(double))]
             public const string SCROLL_VIEW_LOAD_MORE_BOTTOM_OFFSET = "ScrollViewLoadMoreBottomOffset";
@@ -318,33 +366,37 @@ namespace BiliLite.Models.Common
         public class Account
         {
             /// <summary>
-            /// 登录后ACCESS_KEY
+            /// 登录后 ACCESS_KEY
             /// </summary>
             [SettingKey]
             public const string ACCESS_KEY = "accesskey";
+
             /// <summary>
-            /// 登录后REFRESH_KEY
+            /// 登录后 REFRESH_KEY
             /// </summary>
             [SettingKey]
             public const string REFRESH_KEY = "refreshkey";
+
             /// <summary>
             /// 到期时间
             /// </summary>
             [SettingKey(typeof(object))]
             public const string ACCESS_KEY_EXPIRE_DATE = "expireDate";
+
             /// <summary>
-            /// 用户ID
+            /// 用户 ID
             /// </summary>
             [SettingKey(typeof(long))]
             public const string USER_ID = "uid";
+
             /// <summary>
-            /// 到期时间
+            /// 用户信息
             /// </summary>
             [SettingKey(typeof(object))]
             public const string USER_PROFILE = "userProfile";
 
             /// <summary>
-            /// 是否web登录
+            /// 是否 Web 登录
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string IS_WEB_LOGIN = "isWebLogin";
@@ -356,46 +408,49 @@ namespace BiliLite.Models.Common
             public const string BILIBILI_COOKIES = "BiliBiliCookies";
 
             /// <summary>
-            /// 登录用AppKey
+            /// 用 AppKey 登录
             /// </summary>
             [SettingKey]
             public const string LOGIN_APP_KEY_SECRET = "LoginAppKeySecret";
 
             /// <summary>
-            /// 默认登录用AppKey
+            /// 默认用 AppKey 登录
             /// </summary>
             [SettingDefaultValue]
             public static ApiKeyInfo DefaultLoginAppKeySecret = ApiHelper.AndroidKey;
 
             /// <summary>
-            /// Wbi令牌ImgKey参数
+            /// Wbi 令牌 ImgKey 参数
             /// </summary>
             [SettingKey]
             public const string WBI_IMG_KEY = "WbiImgKey";
 
             /// <summary>
-            /// Wbi令牌SubKey参数
+            /// Wbi 令牌 SubKey 参数
             /// </summary>
             [SettingKey]
             public const string WBI_SUB_KEY = "WbiSubKey";
 
             /// <summary>
-            /// Wbi令牌参数获取时间（unix时间戳）
+            /// Wbi 令牌参数获取时间（unix 时间戳）
             /// </summary>
             [SettingKey(typeof(long))]
             public const string WBI_KEY_TIME = "WbiKeyTime";
 
             /// <summary>
-            /// Wbi令牌参数刷新时间（单位分钟，暂定2小时）
+            /// Wbi 令牌参数刷新时间（单位分钟，暂定 2 小时）
             /// </summary>
             [SettingDefaultValue]
             public const int WBI_KEY_REFRESH_TIME = 120;
 
+            /// <summary>
+            /// 会员购
+            /// </summary>
             [SettingKey]
             public const string BILI_TICKET = "BiliTicket";
 
             /// <summary>
-            /// 发送消息用的devId
+            /// 发送消息用的 Device ID
             /// </summary>
             [SettingKey]
             public const string MESSAGE_DEVICE_ID = "MessageDeviceId";
@@ -408,71 +463,85 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const DanmakuEngineType DEFAULT_DANMAKU_ENGINE = DanmakuEngineType.NSDanmaku;
+
             /// <summary>
             /// 弹幕引擎
             /// </summary>
             [SettingKey(typeof(int))]
             public const string DANMAKU_ENGINE = "DanmakuEngine";
+
             /// <summary>
-            /// 显示弹幕 Visibility
+            /// 显示弹幕 visibility
             /// </summary>
             [SettingKey(typeof(object))]
             public const string SHOW = "VideoDanmuShow";
+
             /// <summary>
             /// 弹幕缩放 double
             /// </summary>
             [SettingKey(typeof(double))]
             public const string FONT_ZOOM = "VideoDanmuFontZoom";
+
             /// <summary>
             /// 弹幕显示区域
             /// </summary>
             [SettingKey(typeof(double))]
             public const string AREA = "VideoDanmuArea";
+
             /// <summary>
             /// 弹幕速度 int
             /// </summary>
             [SettingKey(typeof(int))]
             public const string SPEED = "VideoDanmuSpeed";
+
             /// <summary>
             /// 弹幕加粗 bool
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string BOLD = "VideoDanmuBold";
+
             /// <summary>
             /// 弹幕边框样式 int
             /// </summary>
             [SettingKey(typeof(int))]
             public const string BORDER_STYLE = "VideoDanmuStyle";
+
             /// <summary>
             /// 弹幕合并 bool
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string MERGE = "VideoDanmuMerge";
+
             /// <summary>
             /// 弹幕半屏显示 bool
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string DOTNET_HIDE_SUBTITLE = "VideoDanmuDotHide";
+
             /// <summary>
             /// 弹幕透明度 double，0-1
             /// </summary>
             [SettingKey(typeof(double))]
             public const string OPACITY = "VideoDanmuOpacity";
+
             /// <summary>
             /// 隐藏顶部 bool
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string HIDE_TOP = "VideoDanmuHideTop";
+
             /// <summary>
             /// 隐藏底部 bool
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string HIDE_BOTTOM = "VideoDanmuHideBottom";
+
             /// <summary>
             /// 隐藏滚动 bool
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string HIDE_ROLL = "VideoDanmuHideRoll";
+
             /// <summary>
             /// 隐藏高级弹幕 bool
             /// </summary>
@@ -545,44 +614,55 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(int))]
             public const string DEFAULT_QUALITY = "LiveDefaultQuality";
+
             /// <summary>
             /// 显示弹幕 Visibility
             /// </summary>
             [SettingKey(typeof(object))]
             public const string SHOW = "LiveDanmuShow";
 
+            /// <summary>
+            /// 弹幕面积 double
+            /// </summary>
             [SettingKey(typeof(double))]
             public const string AREA = "LiveDanmuArea";
+
             /// <summary>
             /// 弹幕缩放 double
             /// </summary>
             [SettingKey(typeof(double))]
             public const string FONT_ZOOM = "LiveDanmuFontZoom";
+
             /// <summary>
             /// 弹幕速度 int
             /// </summary>
             [SettingKey(typeof(int))]
             public const string SPEED = "LiveDanmuSpeed";
+
             /// <summary>
             /// 弹幕加粗 bool
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string BOLD = "LiveDanmuBold";
+
             /// <summary>
             /// 弹幕边框样式 int
             /// </summary>
             [SettingKey(typeof(int))]
             public const string BORDER_STYLE = "LiveDanmuStyle";
+
             /// <summary>
             /// 弹幕半屏显示 bool
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string DOTNET_HIDE_SUBTITLE = "LiveDanmuDotHide";
+
             /// <summary>
             /// 弹幕透明度 double，0-1
             /// </summary>
             [SettingKey(typeof(double))]
             public const string OPACITY = "LiveDanmuOpacity";
+
             /// <summary>
             /// 关键词屏蔽 ObservableCollection<string>
             /// </summary>
@@ -628,6 +708,7 @@ namespace BiliLite.Models.Common
             /// 隐藏公告
             /// </summary>
             public const string HIDE_SYSTEM = "LiveSystemMessage";
+
             /// <summary>
             /// 隐藏抽奖
             /// </summary>
@@ -685,9 +766,15 @@ namespace BiliLite.Models.Common
             [SettingKey(typeof(int))]
             public const string USE_REAL_PLAYER_TYPE = "UseRealPlayerType";
 
+            /// <summary>
+            /// 优先使用播放器类型默认值
+            /// </summary>
             [SettingDefaultValue]
             public const RealPlayerType DEFAULT_USE_REAL_PLAYER_TYPE = RealPlayerType.Native;
 
+            /// <summary>
+            /// 自定义参数 FFmpegOptions
+            /// </summary>
             [SettingKey(typeof(object))]
             public const string FfmpegOptions = "FfmpegOptions";
 
@@ -708,11 +795,13 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string AUTO_PLAY = "PlayerAutoPlay";
+
             /// <summary>
             /// 自动切换下一个视频
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string AUTO_NEXT = "PlayerAutoNext";
+
             /// <summary>
             /// 默认清晰度 int
             /// </summary>
@@ -744,11 +833,22 @@ namespace BiliLite.Models.Common
             public const string RATIO = "PlayerDefaultRatio";
 
             /// <summary>
-            /// 默认视频类型 int flv=0, dash=1,dash_hevc=2
+            /// 默认视频类型 int 
+            /// flv = 0, dash = 1,dash_hevc = 2
             /// </summary>
             [SettingKey(typeof(int))]
             public const string DEFAULT_VIDEO_TYPE = "PlayerDefaultVideoType";
 
+
+            /// <summary>
+            /// 默认播放速度选项
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string PLAY_SPEED_MENU = "PlaySpeedMenu";
+
+            /// <summary>
+            /// 默认播放速度默认选项
+            /// </summary>
             [SettingDefaultValue]
             public static List<double> VideoSpeed = new List<double>() { 2.0d, 1.5d, 1.25d, 1.0d, 0.75d, 0.5d };
 
@@ -759,7 +859,8 @@ namespace BiliLite.Models.Common
             public const string DEFAULT_VIDEO_SPEED = "PlayerDefaultSpeed";
 
             /// <summary>
-            /// 播放模式 int 0=顺序播放，1=单集循环，2=列表循环
+            /// 播放模式 int 
+            /// 0 = 顺序播放，1 = 单集循环，2 = 列表循环
             /// </summary>
             [SettingKey(typeof(int))]
             public const string DEFAULT_PLAY_MODE = "PlayerDefaultPlayMode";
@@ -848,42 +949,56 @@ namespace BiliLite.Models.Common
             /// 字幕显示
             /// </summary>
             public const string SUBTITLE_SHOW = "subtitleShow";
+
             /// <summary>
             /// 字幕透明度
             /// </summary>
             [SettingKey(typeof(double))]
             public const string SUBTITLE_OPACITY = "subtitleOpacity";
+
             /// <summary>
             /// 字幕底部距离
             /// </summary>
             [SettingKey(typeof(double))]
             public const string SUBTITLE_BOTTOM = "subtitleBottom";
+
             /// <summary>
             /// 字幕加粗
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string SUBTITLE_BOLD = "subtitleBold";
+
             /// <summary>
             /// 字幕对齐
             /// 0=居中对齐，1=左对齐，2=右对齐
             /// </summary>
             [SettingKey(typeof(int))]
             public const string SUBTITLE_ALIGN = "subtitleAlign";
+
+            /// <summary>
+            /// 简体中文字幕
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string TO_SIMPLIFIED = "RoamingSubtitleToSimplified";
+
             /// <summary>
             /// 自动跳转进度
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string AUTO_TO_POSITION = "PlayerAutoToPosition";
+
             /// <summary>
             /// 自动铺满窗口
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string AUTO_FULL_WINDOW = "PlayerAutoToFullWindow";
+
             /// <summary>
             /// 自动铺满全屏
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string AUTO_FULL_SCREEN = "PlayerAutoToFullScreen";
+
             /// <summary>
             /// 双击全屏
             /// </summary>
@@ -914,6 +1029,9 @@ namespace BiliLite.Models.Common
             [SettingKey(typeof(double))]
             public const string HIGH_RATE_PLAY_SPEED = "HighRatePlaySpeed";
 
+            /// <summary>
+            /// 倍速播放速度默认选项
+            /// </summary>
             [SettingDefaultValue]
             public static List<double> HIGH_RATE_PLAY_SPEED_LIST = new List<double>() { 3.0d, 2.0d };
 
@@ -923,15 +1041,14 @@ namespace BiliLite.Models.Common
             [SettingKey(typeof(bool))]
             public const string AUTO_OPEN_AI_SUBTITLE = "PlayerAutoOpenAISubtitle";
 
-
             /// <summary>
-            /// 替换CDN
+            /// 替换 CDN
             /// </summary>
             [SettingKey(typeof(int))]
             public const string REPLACE_CDN = "PlayerReplaceCDN";
 
             /// <summary>
-            /// CDN服务器
+            /// CDN 服务器
             /// </summary>
             [SettingKey]
             public const string CDN_SERVER = "PlayerCDNServer";
@@ -942,29 +1059,38 @@ namespace BiliLite.Models.Common
             [SettingKey(typeof(int))]
             public const string DEFAULT_LIVE_PLAYER_MODE = "DefaultLivePlayerMode";
 
+            /// <summary>
+            /// 播放历史记录
+            /// </summary>
             [SettingKey(typeof(bool))]
             public const string REPORT_HISTORY = "ReportHistory";
 
+            /// <summary>
+            /// 播放历史记录默认值
+            /// </summary>
             [SettingDefaultValue]
             public const bool DEFAULT_REPORT_HISTORY = true;
 
+            /// <summary>
+            /// 视频结束后不上报播放历史记录
+            /// </summary>
             [SettingKey(typeof(bool))]
             public const string REPORT_HISTORY_ZERO_WHEN_VIDEO_END = "ReportHistoryZeroWhenVideoEnd";
 
+            /// <summary>
+            /// 视频结束后不上报播放历史记录默认值
+            /// </summary>
             [SettingDefaultValue]
             public const bool DEFAULT_REPORT_HISTORY_ZERO_WHEN_VIDEO_END = false;
 
-            [SettingKey(typeof(string))]
-            public const string PLAY_SPEED_MENU = "PlaySpeedMenu";
-
             /// <summary>
-            /// 自动跳过OP/ED
+            /// 自动跳过 OP/ED
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string AUTO_SKIP_OP_ED = "AutoSkipOpEd";
 
             /// <summary>
-            /// 默认不自动跳过OP/ED
+            /// 默认不自动跳过 OP/ED
             /// </summary>
             [SettingDefaultValue]
             public const bool DEFAULT_AUTO_SKIP_OP_ED = false;
@@ -987,15 +1113,21 @@ namespace BiliLite.Models.Common
             [SettingKey(typeof(bool))]
             public const string AUTO_REFRESH_PLAY_URL = "AutoRefreshPlayUrl";
 
+            /// <summary>
+            /// 自动刷新播放地址默认时间值
+            /// </summary>
             [SettingDefaultValue]
             public const bool DEFAULT_AUTO_REFRESH_PLAY_URL = false;
 
             /// <summary>
-            /// 自动刷新播放地址时间,单位分钟
+            /// 自动刷新播放地址时间，单位分钟
             /// </summary>
             [SettingKey(typeof(double))]
             public const string AUTO_REFRESH_PLAY_URL_TIME = "AutoRefreshPlayUrlTime";
 
+            /// <summary>
+            /// 自动刷新播放地址时间默认值，单位分钟
+            /// </summary>
             [SettingDefaultValue]
             public const double DEFAULT_AUTO_REFRESH_PLAY_URL_TIME = 118;
         }
@@ -1024,6 +1156,7 @@ namespace BiliLite.Models.Common
             /// 自定义服务器
             /// </summary>
             public const string CUSTOM_SERVER = "RoamingCustomServer";
+
             /// <summary>
             /// 自定义服务器链接
             /// </summary>
@@ -1048,11 +1181,6 @@ namespace BiliLite.Models.Common
             [SettingKey(typeof(string))]
             public const string CUSTOM_SERVER_URL_CN = "RoamingCustomServerUrlCN";
 
-            /// <summary>
-            /// 简体中文
-            /// </summary>
-            [SettingKey(typeof(bool))]
-            public const string TO_SIMPLIFIED = "RoamingSubtitleToSimplified";
             ///// <summary>
             ///// 只使用AkamaiCDN链接
             ///// </summary>
@@ -1068,6 +1196,7 @@ namespace BiliLite.Models.Common
             public const string DOWNLOAD_PATH = "downloadPath";
             [SettingDefaultValue]
             public const string DEFAULT_PATH = "视频库/哔哩哔哩下载";
+
             /// <summary>
             /// 旧版下载目录
             /// </summary>
@@ -1075,6 +1204,7 @@ namespace BiliLite.Models.Common
             public const string OLD_DOWNLOAD_PATH = "downloadOldPath";
             [SettingDefaultValue]
             public const string DEFAULT_OLD_PATH = "视频库/BiliBiliDownload";
+
             /// <summary>
             /// 允许付费网络下载
             /// </summary>
@@ -1132,12 +1262,21 @@ namespace BiliLite.Models.Common
         /// </summary>
         public class ShortcutKey
         {
+            /// <summary>
+            /// 按下延迟时间
+            /// </summary>
             [SettingKey(typeof(int))]
             public const string PRESS_ACTION_DELAY_TIME = "PressActionDelayTime";
 
+            /// <summary>
+            /// 按下延迟时间默认值
+            /// </summary>
             [SettingDefaultValue]
             public const int DEFAULT_PRESS_ACTION_DELAY_TIME = 200;
 
+            /// <summary>
+            /// 快捷键
+            /// </summary>
             [SettingKey(typeof(object), useSqlDb: true)]
             public const string SHORTCUT_KEY_FUNCTIONS = "ShortcutKeyFunctions";
         }
@@ -1173,33 +1312,39 @@ namespace BiliLite.Models.Common
             public const string IGNORE_VERSION = "ignoreVersion";
 
             /// <summary>
-            /// WebApi地址
+            /// WebApi 地址
             /// </summary>
             public const string BILI_LITE_WEB_API_BASE_URL = "BiliLiteWebApiBaseUrl";
 
             /// <summary>
-            /// 优先使用Grpc请求动态
+            /// 优先使用 Grpc 请求动态
             /// </summary>
             public const string FIRST_GRPC_REQUEST_DYNAMIC = "FirstGrpcRequestDynamic";
 
             /// <summary>
-            /// 更新json请求地址
+            /// 更新 Json 请求地址
             /// </summary>
             public const string UPDATE_JSON_ADDRESS = "RawRepositoryAddress";
 
             /// <summary>
-            /// 发起请求时使用的build值
+            /// 发起请求时使用的 Build 值
             /// </summary>
             public const string REQUEST_BUILD = "RequestBuild";
 
             /// <summary>
-            /// 默认发起请求时使用的build值
+            /// 发起请求时使用的 Build 默认值
             /// </summary>
             [SettingDefaultValue]
             public const string DEFAULT_REQUEST_BUILD = "75900200";
 
+            /// <summary>
+            /// 迁移数据库
+            /// </summary>
             public const string SQL_DB_VERSION = "SqlDbVersion";
 
+            /// <summary>
+            /// 外置插件
+            /// </summary>
             public const string PLUGIN_LIST = "PluginList";
         }
     }
