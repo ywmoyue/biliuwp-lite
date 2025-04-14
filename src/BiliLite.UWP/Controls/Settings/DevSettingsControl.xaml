@@ -32,7 +32,7 @@
             </Button>
 
             <controls:SettingsExpander.Items>
-                <controls:SettingsCard Description="需要定位闪退问题时，请设置为 Trace 级别" Header="日志级别">
+                <controls:SettingsCard Description="需要定位闪退问题时，请设置为 Trace 级别" Header="收集级别">
                     <controls:SettingsCard.HeaderIcon>
                         <font:FontAwesome Icon="Solid_FileMedical" />
                     </controls:SettingsCard.HeaderIcon>
