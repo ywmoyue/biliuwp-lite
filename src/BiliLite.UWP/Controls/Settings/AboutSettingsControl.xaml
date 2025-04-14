@@ -17,7 +17,6 @@
             <controls:SettingsCard.Description>
                 <TextBlock
                     x:Name="version"
-                    Margin="0,0,0,8"
                     FontSize="14">
                     版本 1.0.0
                 </TextBlock>
@@ -29,14 +28,15 @@
             <StackPanel Orientation="Horizontal">
                 <Button
                     x:Name="btnCheckUpdate"
-                    Margin="0,0,0,8"
-                    Click="btnCheckUpdate_Click">
+                    Click="Button_Click"
+                    Tag="btnCheckUpdate">
                     检查更新
                 </Button>
                 <Button
                     x:Name="btnCleanUpdateIgnore"
-                    Margin="0,0,0,8"
-                    Click="btnCleanUpdateIgnore_Click"
+                    Margin="10,0,0,0"
+                    Click="Button_Click"
+                    Tag="btnCleanUpdateIgnore"
                     Visibility="Collapsed">
                     清除忽略的版本缓存
                 </Button>
@@ -97,13 +97,11 @@
                     <controls:SettingsCard.Header>
                         <StackPanel>
                             <TextBlock
-                                Margin="0,0,0,8"
                                 FontSize="14"
                                 IsTextSelectionEnabled="True">
                                 Github Discussions :<Run Text="" />
                                 <Hyperlink NavigateUri="https://github.com/ywmoyue/biliuwp-lite/discussions">https://github.com/ywmoyue/biliuwp-lite/discussions</Hyperlink></TextBlock>
                             <TextBlock
-                                Margin="0,0,0,8"
                                 FontSize="14"
                                 IsTextSelectionEnabled="True">
                                 邮箱(请在发邮件时附带Github Discussion贴子链接) : ruamuyan@outlook.com
@@ -138,7 +136,6 @@
                                 本程序仅供学习交流编程技术使用。
                             </TextBlock>
                             <TextBlock
-                                Margin="0,0,0,8"
                                 FontSize="14"
                                 TextAlignment="Justify"
                                 TextWrapping="Wrap">
