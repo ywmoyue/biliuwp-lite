@@ -26,7 +26,6 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Timers;
 using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.Graphics.Imaging;
@@ -35,7 +34,6 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System.Display;
 using Windows.UI;
-using Windows.UI.Core;
 using Windows.UI.Input;
 using Windows.UI.Text;
 using Windows.UI.ViewManagement;
@@ -691,10 +689,10 @@ namespace BiliLite.Controls
                 SettingService.SetValue<double>(SettingConstants.Player.SUBTITLE_BOTTOM, SubtitleSettingBottom.Value);
             });
             //字幕转换
-            SubtitleSettingToSimplified.IsOn = SettingService.GetValue<bool>(SettingConstants.Roaming.TO_SIMPLIFIED, true);
+            SubtitleSettingToSimplified.IsOn = SettingService.GetValue<bool>(SettingConstants.Player.TO_SIMPLIFIED, true);
             SubtitleSettingToSimplified.Toggled += new RoutedEventHandler((e, args) =>
             {
-                SettingService.SetValue<bool>(SettingConstants.Roaming.TO_SIMPLIFIED, SubtitleSettingToSimplified.IsOn);
+                SettingService.SetValue<bool>(SettingConstants.Player.TO_SIMPLIFIED, SubtitleSettingToSimplified.IsOn);
                 if (SubtitleSettingToSimplified.IsOn)
                 {
                     currentSubtitleText = currentSubtitleText.ToSimplifiedChinese();
@@ -1069,7 +1067,7 @@ namespace BiliLite.Controls
                 if (subtitles != null)
                 {
                     //转为简体
-                    if (SettingService.GetValue<bool>(SettingConstants.Roaming.TO_SIMPLIFIED, true) && CurrentSubtitleName == "中文（繁体）")
+                    if (SettingService.GetValue<bool>(SettingConstants.Player.TO_SIMPLIFIED, true) && CurrentSubtitleName == "中文（繁体）")
                     {
                         foreach (var item in subtitles.body)
                         {

@@ -2,113 +2,124 @@
     x:Class="BiliLite.Controls.Settings.DownloadSettingsControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BiliLite.Controls.Settings"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:common="using:BiliLite.Models.Common"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:font="using:FontAwesome5"
-    mc:Ignorable="d"
+    xmlns:local="using:BiliLite.Controls.Settings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignWidth="400"
+    mc:Ignorable="d">
 
-    <StackPanel Orientation="Vertical"
-                MaxWidth="1200">
+    <StackPanel MaxWidth="1200" Orientation="Vertical">
+        <StackPanel.ChildrenTransitions>
+            <TransitionCollection>
+                <RepositionThemeTransition />
+            </TransitionCollection>
+        </StackPanel.ChildrenTransitions>
+
         <controls:SettingsCard Header="下载存放目录">
             <controls:SettingsCard.Description>
-                <StackPanel>
-                    <Button x:Name="DownloadOpenPath" Padding="4" Background="Transparent">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <SymbolIcon Symbol="Folder" Foreground="Orange" Margin="0 0 8 0"></SymbolIcon>
-                            <TextBlock Grid.Column="1" x:Name="txtDownloadPath" ></TextBlock>
-                        </Grid>
-                    </Button>
-                </StackPanel>
+                <Button
+                    x:Name="DownloadOpenPath"
+                    Margin="0,5,0,0"
+                    Padding="4"
+                    Style="{StaticResource TransparentButtonStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <SymbolIcon
+                            Margin="0,0,8,0"
+                            Foreground="Orange"
+                            Symbol="Folder" />
+                        <TextBlock x:Name="txtDownloadPath" Grid.Column="1" />
+                    </Grid>
+                </Button>
             </controls:SettingsCard.Description>
             <controls:SettingsCard.HeaderIcon>
-                <SymbolIcon Symbol="Folder"></SymbolIcon>
+                <SymbolIcon Symbol="Folder" />
             </controls:SettingsCard.HeaderIcon>
-            <Button x:Name="DownloadChangePath" Margin="0 8">修改存放目录</Button>
+            <Button x:Name="DownloadChangePath" Margin="0,8">修改存放目录</Button>
         </controls:SettingsCard>
 
         <controls:SettingsCard Header="旧版下载目录">
             <controls:SettingsCard.Description>
-                <StackPanel>
-                    <Button x:Name="DownloadOpenOldPath"  Padding="4" Background="Transparent">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <SymbolIcon Symbol="Folder" Foreground="Orange" Margin="0 0 8 0"></SymbolIcon>
-                            <TextBlock x:Name="txtDownloadOldPath" Grid.Column="1" ></TextBlock>
-                        </Grid>
-                    </Button>
-                </StackPanel>
+                <Button
+                    x:Name="DownloadOpenOldPath"
+                    Margin="0,5,0,0"
+                    Padding="4"
+                    Style="{StaticResource TransparentButtonStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <SymbolIcon
+                            Margin="0,0,8,0"
+                            Foreground="Orange"
+                            Symbol="Folder" />
+                        <TextBlock x:Name="txtDownloadOldPath" Grid.Column="1" />
+                    </Grid>
+                </Button>
             </controls:SettingsCard.Description>
             <controls:SettingsCard.HeaderIcon>
-                <SymbolIcon Symbol="Folder"></SymbolIcon>
+                <SymbolIcon Symbol="Folder" />
             </controls:SettingsCard.HeaderIcon>
-            <Button x:Name="DownloadChangeOldPath" Margin="0 8">导入旧版目录</Button>
+            <Button x:Name="DownloadChangeOldPath" Margin="0,8">导入旧版目录</Button>
         </controls:SettingsCard>
 
-        <controls:SettingsCard Header="加载旧版下载的视频"
-                               Description="是否加载旧版下载的视频">
+        <controls:SettingsCard Header="加载旧版下载的视频">
             <controls:SettingsCard.HeaderIcon>
-                <SymbolIcon Symbol="SyncFolder"></SymbolIcon>
+                <SymbolIcon Symbol="SyncFolder" />
             </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="swDownloadLoadOld"></ToggleSwitch>
+            <ToggleSwitch x:Name="swDownloadLoadOld" />
         </controls:SettingsCard>
 
-        <controls:SettingsCard Header="优先下载视频类型"
-                               Description="设置优先下载视频类型">
+        <controls:SettingsCard Header="优先下载视频类型">
             <controls:SettingsCard.HeaderIcon>
-                <SymbolIcon Symbol="Video"></SymbolIcon>
+                <SymbolIcon Symbol="Video" />
             </controls:SettingsCard.HeaderIcon>
-            <ComboBox x:Name="cbDownloadVideoType" Margin="0 8"  MinWidth="200"
-                      ItemsSource="{x:Bind common:DefaultVideoTypeOptions.Options}" 
-                      SelectedValuePath="Value"
-                      DisplayMemberPath="Name">
-            </ComboBox>
+            <ComboBox
+                x:Name="cbDownloadVideoType"
+                MinWidth="200"
+                Margin="0,8"
+                DisplayMemberPath="Name"
+                ItemsSource="{x:Bind common:DefaultVideoTypeOptions.Options}"
+                SelectedValuePath="Value" />
         </controls:SettingsCard>
 
-        <controls:SettingsCard Header="同时下载多个任务"
-                               Description="是否同时下载多个任务">
+        <controls:SettingsCard Header="同时下载多个任务">
             <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Tasks"></font:FontAwesome>
+                <font:FontAwesome Icon="Solid_Tasks" />
             </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="swDownloadParallelDownload"></ToggleSwitch>
+            <ToggleSwitch x:Name="swDownloadParallelDownload" />
         </controls:SettingsCard>
 
-        <controls:SettingsCard Header="允许使用流量下载"
-                               Description="是否允许使用流量下载">
+        <controls:SettingsCard Header="允许使用流量下载">
             <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Download"></font:FontAwesome>
+                <font:FontAwesome Icon="Solid_Download" />
             </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch  x:Name="swDownloadAllowCostNetwork"></ToggleSwitch>
+            <ToggleSwitch x:Name="swDownloadAllowCostNetwork" />
         </controls:SettingsCard>
 
-        <controls:SettingsCard Header="下载完成发送通知"
-                               Description="下载完成是否发送通知">
+        <controls:SettingsCard Header="下载完成发送通知">
             <controls:SettingsCard.HeaderIcon>
-                <SymbolIcon Symbol="Message"></SymbolIcon>
+                <SymbolIcon Symbol="Message" />
             </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch  x:Name="swDownloadSendToast"></ToggleSwitch>
+            <ToggleSwitch x:Name="swDownloadSendToast" />
         </controls:SettingsCard>
 
-        <controls:SettingsExpander Header="使用下载索引"
-                               Description="实验性功能,是否在数据库中建立下载索引而不是每次读取下载文件夹,暂不支持旧版下载的视频,下次重启生效">
+        <controls:SettingsExpander Description="实验性功能，是否在数据库中建立下载索引而不是每次读取下载文件夹，暂不支持旧版下载的视频，下次重启生效" Header="使用下载索引">
             <controls:SettingsExpander.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Database"></font:FontAwesome>
+                <font:FontAwesome Icon="Solid_Database" />
             </controls:SettingsExpander.HeaderIcon>
-            <ToggleSwitch  x:Name="SwUseDownloadIndex"></ToggleSwitch>
+            <ToggleSwitch x:Name="SwUseDownloadIndex" />
 
             <controls:SettingsExpander.Items>
-                <controls:SettingsCard Header="重建索引">
+                <controls:SettingsCard>
                     <Button Click="BtnRebuildDownloadIndex_OnClick">重建索引</Button>
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>

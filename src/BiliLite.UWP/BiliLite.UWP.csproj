@@ -216,6 +216,7 @@
     <Compile Include="Extensions\ControlsExtensions.cs" />
     <Compile Include="Extensions\DownloadExtensions.cs" />
     <Compile Include="Extensions\FileExtensions.cs" />
+    <Compile Include="Extensions\HttpFormatExtension.cs" />
     <Compile Include="Extensions\QrCodeExtensions.cs" />
     <Compile Include="Extensions\RegexExtensions.cs" />
     <Compile Include="Extensions\DynamicExtensions.cs" />
@@ -356,6 +357,7 @@
     <Compile Include="Models\Common\Msg\BiliSessionMessageSource.cs" />
     <Compile Include="Models\Common\Msg\BiliSessionMessagesResponse.cs" />
     <Compile Include="Models\Common\Msg\BiliSessionPrivateMessage.cs" />
+    <Compile Include="ViewModels\Common\WebPageViewModel.cs" />
     <Compile Include="ViewModels\Messages\ChatContextViewModel.cs" />
     <Compile Include="Models\Common\Msg\ChatMessage.cs" />
     <Compile Include="Models\Common\Msg\MsgContent\IChatMsgContent.cs" />
@@ -864,7 +866,6 @@
     </Compile>
     <Compile Include="Converters\BooleanConvert.cs" />
     <Compile Include="Converters\ColorConvert.cs" />
-    <Compile Include="Converters\ColorSelectedConvert.cs" />
     <Compile Include="Converters\CountOrTextConvert.cs" />
     <Compile Include="Converters\DatetimeConvert.cs" />
     <Compile Include="Converters\DisplayConvert.cs" />

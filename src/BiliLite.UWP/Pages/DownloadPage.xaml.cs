@@ -338,7 +338,7 @@ namespace BiliLite.Pages
             {
                 try
                 {
-                    var toSimplified = SettingService.GetValue<bool>(SettingConstants.Roaming.TO_SIMPLIFIED, true);
+                    var toSimplified = SettingService.GetValue<bool>(SettingConstants.Player.TO_SIMPLIFIED, true);
                     var folder = await StorageFolder.GetFolderFromPathAsync(item.FilePath);
                     foreach (var subtitle in item.SubtitlePath)
                     {

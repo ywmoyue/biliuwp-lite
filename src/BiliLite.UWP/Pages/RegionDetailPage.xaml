@@ -17,13 +17,13 @@
         <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White" />
         <DataTemplate x:Key="HomeTemplate" x:DataType="region:RegionDetailHomeViewModel">
             <Grid>
-                <controls:MyAdaptiveGridView ItemHeight="120"
+                <controls:MyAdaptiveGridView
                     Padding="15,0"
                     CanLoadMore="True"
                     DesiredWidth="550"
                     IsItemClickEnabled="True"
                     ItemClick="AdaptiveGridView_ItemClick"
-                    
+                    ItemHeight="120"
                     ItemsSource="{x:Bind Path=Videos, Mode=OneWay}"
                     LoadMoreBottomOffset="0"
                     LoadMoreCommand="{x:Bind Path=LoadMoreCommand, Mode=OneWay}"
@@ -90,12 +90,11 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Grid>
-                                    <toolkit:ImageEx
-                                        PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                        Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
-                                        Stretch="UniformToFill" />
-                                </Grid>
+                                <toolkit:ImageEx
+                                    CornerRadius="{StaticResource OverlayCornerRadius}"
+                                    PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
+                                    Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
+                                    Stretch="UniformToFill" />
                                 <Grid Grid.Column="1" Margin="10,5">
                                     <TextBlock
                                         Margin="0,0,0,4"
@@ -149,13 +148,13 @@
         </DataTemplate>
         <DataTemplate x:Key="ChildTemplate" x:DataType="region:RegionDetailChildViewModel">
             <Grid>
-                <controls:MyAdaptiveGridView ItemHeight="120"
+                <controls:MyAdaptiveGridView
                     Padding="12,8"
                     CanLoadMore="True"
                     DesiredWidth="550"
                     IsItemClickEnabled="True"
                     ItemClick="AdaptiveGridView_ItemClick"
-                    
+                    ItemHeight="120"
                     ItemsSource="{x:Bind Path=Videos, Mode=OneWay}"
                     LoadMoreBottomOffset="0"
                     LoadMoreCommand="{x:Bind Path=LoadMoreCommand, Mode=OneWay}"
@@ -178,12 +177,11 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Grid>
-                                    <toolkit:ImageEx
-                                        PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                        Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
-                                        Stretch="UniformToFill" />
-                                </Grid>
+                                <toolkit:ImageEx
+                                    CornerRadius="{StaticResource OverlayCornerRadius}"
+                                    PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
+                                    Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
+                                    Stretch="UniformToFill" />
                                 <Grid Grid.Column="1" Margin="10,5">
                                     <TextBlock
                                         Margin="0,0,0,4"

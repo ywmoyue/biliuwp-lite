@@ -9,6 +9,11 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
     <UserControl.Resources>
+        <SolidColorBrush x:Key="AppBarButtonForegroundPointerOver" Color="{ThemeResource SystemAccentColor}" />
+        <SolidColorBrush
+            x:Key="AppBarButtonForegroundPressed"
+            Opacity="0.5"
+            Color="{ThemeResource SystemAccentColor}" />
         <Style TargetType="AppBarButton">
             <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
         </Style>

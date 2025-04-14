@@ -20,7 +20,7 @@
             Stretch="UniformToFill"
             Visibility="Visible" />
 
-        <ScrollViewer>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel VerticalAlignment="Center">
                 <Image
                     Width="80"

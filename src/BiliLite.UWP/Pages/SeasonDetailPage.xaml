@@ -16,11 +16,6 @@
     mc:Ignorable="d">
     <Page.Resources>
         <SolidColorBrush x:Key="RatingControlSelectedForeground" Color="Orange" />
-        <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
-            <Style.Setters>
-                <Setter Property="BorderThickness" Value="0" />
-            </Style.Setters>
-        </Style>
     </Page.Resources>
     <Grid>
         <Grid x:Name="detail">
@@ -45,59 +40,68 @@
                     Grid.Row="1"
                     SizeChanged="BottomActionBar_OnSizeChanged">
                     <StackPanel Orientation="Horizontal">
-                        <Button
-                            Width="56"
-                            Margin="0,0,4,0"
-                            Padding="0,8"
-                            Background="Transparent"
-                            Command="{x:Bind Path=m_viewModel.FollowCommand}"
-                            Foreground="{x:Bind Path=m_viewModel.Detail.UserStatus.Follow, Mode=OneWay, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=1}">
-                            <StackPanel>
-                                <FontIcon 
-                                    FontFamily="{StaticResource BiliIconFont}"
-                                    Glyph="&#xE66B;"
-                                    Visibility="{x:Bind Path=m_viewModel.Detail.UserStatus.Follow, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=0}" />
-                                <FontIcon 
-                                    FontFamily="{StaticResource BiliIconFont}"
-                                    Glyph="&#xE6DB;"
-                                    Visibility="{x:Bind Path=m_viewModel.Detail.UserStatus.Follow, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=1}" />
-                                <TextBlock
-                                    FontSize="12"
-                                    Text="{x:Bind Path=m_viewModel.Detail.Stat.Favorites, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}"
-                                    TextAlignment="Center" />
-                            </StackPanel>
-                        </Button>
-
-                        <Button
+                        <Grid>
+                            <AppBarButton
+                                Width="60"
+                                Margin="0,0,4,0"
+                                Padding="0,8"
+                                Command="{x:Bind Path=m_viewModel.FollowCommand}"
+                                Label="{x:Bind Path=m_viewModel.Detail.Stat.Favorites, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}"
+                                Visibility="{Binding Visibility, ElementName=AccentFollow, Converter={StaticResource DisplayConvert}}">
+                                <AppBarButton.Icon>
+                                    <FontIcon
+                                        Margin="-3"
+                                        FontFamily="{StaticResource BiliIconFont}"
+                                        Glyph="&#xE66B;" />
+                                </AppBarButton.Icon>
+                            </AppBarButton>
+                            <AppBarButton
+                                x:Name="AccentFollow"
+                                Width="60"
+                                Margin="0,0,4,0"
+                                Padding="0,8"
+                                Command="{x:Bind Path=m_viewModel.FollowCommand}"
+                                Foreground="{ThemeResource SystemAccentColor}"
+                                Label="{x:Bind Path=m_viewModel.Detail.Stat.Favorites, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}"
+                                Visibility="{x:Bind Path=m_viewModel.Detail.UserStatus.Follow, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=1}">
+                                <AppBarButton.Icon>
+                                    <FontIcon
+                                        Margin="-3"
+                                        FontFamily="{StaticResource BiliIconFont}"
+                                        Foreground="{ThemeResource SystemAccentColor}"
+                                        Glyph="&#xE66B;" />
+                                </AppBarButton.Icon>
+                            </AppBarButton>
+                        </Grid>
+                        <AppBarButton
                             x:Name="btnSendReview"
-                            Width="56"
+                            Width="60"
                             Padding="0,8"
-                            Background="Transparent"
-                            Click="btnSendReview_Click">
-                            <StackPanel>
-                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE6DF;" />
-                                <TextBlock
-                                    FontSize="12"
-                                    Text="点评"
-                                    TextAlignment="Center" />
-                            </StackPanel>
-                        </Button>
+                            Click="btnSendReview_Click"
+                            Label="点评">
+                            <AppBarButton.Icon>
+                                <FontIcon
+                                    Margin="-3"
+                                    FontFamily="{StaticResource BiliIconFont}"
+                                    Glyph="&#xE6DF;" />
+                            </AppBarButton.Icon>
+                        </AppBarButton>
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                        <Button
+                        <AppBarButton
                             x:Name="btnShare"
-                            Width="56"
+                            Width="60"
                             Margin="0,0,4,0"
-                            Background="Transparent"
+                            Label="分享"
+                            Style="{StaticResource AppBarButtonNoChevronStyle}"
                             Visibility="{x:Bind m_viewModel.ShowNormalShareBtn, Mode=OneWay}">
-                            <StackPanel>
-                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE671;" />
-                                <TextBlock
-                                    FontSize="12"
-                                    Text="分享"
-                                    TextAlignment="Center" />
-                            </StackPanel>
-                            <Button.Flyout>
+                            <AppBarButton.Icon>
+                                <FontIcon
+                                    Margin="-3"
+                                    FontFamily="{StaticResource BiliIconFont}"
+                                    Glyph="&#xE671;" />
+                            </AppBarButton.Icon>
+                            <AppBarButton.Flyout>
                                 <MenuFlyout>
                                     <MenuFlyoutItem
                                         Click="btnShareCopyUrl_Click"
@@ -112,23 +116,23 @@
                                         Icon="Share"
                                         Text="分享到..." />
                                 </MenuFlyout>
-                            </Button.Flyout>
-                        </Button>
-                        <Button
+                            </AppBarButton.Flyout>
+                        </AppBarButton>
+                        <AppBarButton
                             x:Name="btnDownload"
-                            Width="56"
+                            Width="60"
                             Margin="0,0,4,0"
-                            Background="Transparent"
                             Click="btnDownload_Click"
+                            Label="下载"
                             Visibility="{x:Bind m_viewModel.ShowNormalDownloadBtn, Mode=OneWay}">
-                            <StackPanel>
-                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE672;" />
-                                <TextBlock
-                                    FontSize="12"
-                                    Text="下载"
-                                    TextAlignment="Center" />
-                            </StackPanel>
-                        </Button>
+                            <AppBarButton.Icon>
+                                <FontIcon
+                                    Margin="-3"
+                                    FontFamily="{StaticResource BiliIconFont}"
+                                    Glyph="&#xE672;" />
+                            </AppBarButton.Icon>
+                        </AppBarButton>
+
                         <AppBarButton
                             Label="手机看"
                             Style="{StaticResource AppBarButtonNoChevronStyle}"
@@ -184,19 +188,20 @@
                                 <KeyboardAccelerator Key="F5" />
                             </AppBarButton.KeyboardAccelerators>
                         </AppBarButton>
-                        <Button
+
+                        <AppBarButton
                             x:Name="btnMore"
-                            Width="56"
+                            Width="60"
                             Margin="0"
-                            Background="Transparent">
-                            <StackPanel>
-                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xE680;" />
-                                <TextBlock
-                                    FontSize="12"
-                                    Text="更多"
-                                    TextAlignment="Center" />
-                            </StackPanel>
-                            <Button.Flyout>
+                            Label="更多"
+                            Style="{StaticResource AppBarButtonNoChevronStyle}">
+                            <AppBarButton.Icon>
+                                <FontIcon
+                                    Margin="-3"
+                                    FontFamily="{StaticResource BiliIconFont}"
+                                    Glyph="&#xE680;" />
+                            </AppBarButton.Icon>
+                            <AppBarButton.Flyout>
                                 <MenuFlyout>
                                     <MenuFlyoutSubItem Text="分享" Visibility="{x:Bind m_viewModel.ShowFlyoutShareBtn, Mode=OneWay}">
                                         <MenuFlyoutItem
@@ -217,23 +222,22 @@
                                     <MenuFlyoutItem Click="btnOpenWeb_Click">浏览器打开</MenuFlyoutItem>
                                     <MenuFlyoutItem Click="btnRefresh_Click">刷新</MenuFlyoutItem>
                                 </MenuFlyout>
-                            </Button.Flyout>
-                        </Button>
-                        <Button
+                            </AppBarButton.Flyout>
+                        </AppBarButton>
+                        <AppBarButton
                             x:Name="BtnOpenRightInfo"
-                            Width="56"
+                            Width="60"
                             Margin="0,0,4,0"
-                            Background="Transparent"
                             Command="{x:Bind m_viewModel.OpenRightInfoCommand}"
+                            Label="详情"
                             Visibility="{x:Bind m_viewModel.ShowOpenRightInfoBtn, Mode=OneWay}">
-                            <StackPanel>
-                                <FontIcon  FontFamily="{StaticResource BiliIconFont}" Glyph="&#xe68a;" />
-                                <TextBlock
-                                    FontSize="12"
-                                    Text="详情"
-                                    TextAlignment="Center" />
-                            </StackPanel>
-                        </Button>
+                            <AppBarButton.Icon>
+                                <FontIcon
+                                    Margin="-3"
+                                    FontFamily="{StaticResource BiliIconFont}"
+                                    Glyph="&#xe68a;" />
+                            </AppBarButton.Icon>
+                        </AppBarButton>
                         <!--<AppBarButton Label="磁贴">
                             <AppBarButton.Icon>
                                 <fa:FontAwesome Icon="Solid_Thumbtack"></fa:FontAwesome>
@@ -621,12 +625,19 @@
                                                 <StackPanel Grid.Column="1" Margin="8,0">
                                                     <!--<StackPanel Orientation="Horizontal">
                                                         <TextBlock VerticalAlignment="Center">xiaoyaocz</TextBlock>
-
                                                     </StackPanel>-->
-                                                    <TextBlock
-                                                        VerticalAlignment="Center"
-                                                        Foreground="{x:Bind Path=Author.Vip.VipType, Converter={StaticResource ColorSelectedConvert}, ConverterParameter=2}"
-                                                        Text="{x:Bind Path=Author.Uname}" />
+                                                    <Grid>
+                                                        <TextBlock
+                                                            VerticalAlignment="Center"
+                                                            Text="{x:Bind Path=Author.Uname}"
+                                                            Visibility="{Binding Visibility, ElementName=AccentVIP, Converter={StaticResource DisplayConvert}}" />
+                                                        <TextBlock
+                                                            x:Name="AccentVIP"
+                                                            VerticalAlignment="Center"
+                                                            Foreground="{ThemeResource SystemAccentColor}"
+                                                            Text="{x:Bind Path=Author.Uname}"
+                                                            Visibility="{x:Bind Path=Author.Vip.VipType, Converter={StaticResource DisplayConvert}, ConverterParameter=2}" />
+                                                    </Grid>
                                                     <TextBlock
                                                         FontSize="12"
                                                         Foreground="Gray"

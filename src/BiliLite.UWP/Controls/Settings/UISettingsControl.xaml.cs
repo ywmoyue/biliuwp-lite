@@ -139,12 +139,12 @@ namespace BiliLite.Controls.Settings
             };
 
             // 显示直播页推荐直播
-            SwitchDisplayLivePageRecommendLive.IsOn = SettingService.GetValue(SettingConstants.UI.DISPLAY_LIVE_PAGE_RECOMMEND_LIVE, true);
+            SwitchDisplayLivePageRecommendLive.IsOn = !SettingService.GetValue(SettingConstants.UI.DISPLAY_LIVE_PAGE_RECOMMEND_LIVE, true);
             SwitchDisplayLivePageRecommendLive.Loaded += (sender, e) =>
             {
                 SwitchDisplayLivePageRecommendLive.Toggled += (obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.UI.DISPLAY_LIVE_PAGE_RECOMMEND_LIVE, SwitchDisplayLivePageRecommendLive.IsOn);
+                    SettingService.SetValue(SettingConstants.UI.DISPLAY_LIVE_PAGE_RECOMMEND_LIVE, !SwitchDisplayLivePageRecommendLive.IsOn);
                 };
             };
 
@@ -358,6 +358,25 @@ namespace BiliLite.Controls.Settings
                 };
             };
 
+            //新窗口浏览图片
+            swPreviewImageNavigateToPage.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.NEW_WINDOW_PREVIEW_IMAGE, false);
+            swPreviewImageNavigateToPage.Loaded += new RoutedEventHandler((sender, e) =>
+            {
+                swPreviewImageNavigateToPage.Toggled += new RoutedEventHandler((obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.NEW_WINDOW_PREVIEW_IMAGE, swPreviewImageNavigateToPage.IsOn);
+                });
+            });
+
+            swPreviewImageNavigateToPageFully.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.NEW_FULLY_WINDOW_PREVIEW_IMAGE, true);
+            swPreviewImageNavigateToPageFully.Loaded += new RoutedEventHandler((sender, e) =>
+            {
+                swPreviewImageNavigateToPageFully.Toggled += new RoutedEventHandler((obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.NEW_FULLY_WINDOW_PREVIEW_IMAGE, swPreviewImageNavigateToPageFully.IsOn);
+                });
+            });
+
             var navItems = SettingService.GetValue(SettingConstants.UI.HOEM_ORDER, DefaultHomeNavItems.GetDefaultHomeNavItems());
             gridHomeCustom.ItemsSource = new ObservableCollection<HomeNavItem>(navItems);
             ExceptHomeNavItems();
@@ -404,9 +423,9 @@ namespace BiliLite.Controls.Settings
             NotificationShowExtensions.ShowMessageToast("更改成功,重启生效");
         }
 
-        private void menuRemoveHomeItem_Click(object sender, RoutedEventArgs e)
+        private void menuRemoveHomeItem_Click(object sender, ItemClickEventArgs e)
         {
-            var item = (sender as MenuFlyoutItem).DataContext as HomeNavItem;
+            var item = e.ClickedItem as HomeNavItem;
             if (gridHomeCustom.Items.Count == 1)
             {
                 NotificationShowExtensions.ShowMessageToast("至少要留一个页面");

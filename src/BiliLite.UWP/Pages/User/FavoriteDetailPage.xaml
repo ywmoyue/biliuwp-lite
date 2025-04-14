@@ -39,7 +39,7 @@
                         <MenuFlyoutItem  Text="取消收藏"></MenuFlyoutItem>
                     </MenuFlyout>
                 </Grid.ContextFlyout>-->
-                <toolkit:ImageEx
+                <toolkit:ImageEx CornerRadius="{StaticResource OverlayCornerRadius}"
                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                     Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
                     Stretch="UniformToFill" />

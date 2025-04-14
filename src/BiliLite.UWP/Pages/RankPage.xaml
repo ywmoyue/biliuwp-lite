@@ -87,7 +87,7 @@
                                         <ColumnDefinition Width="200" />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <Grid>
+                                    <Grid CornerRadius="{StaticResource OverlayCornerRadius}">
                                         <toolkit:ImageEx
                                             PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                             Source="{x:Bind Path=Pic, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"

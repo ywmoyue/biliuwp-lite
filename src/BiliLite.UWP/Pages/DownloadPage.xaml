@@ -403,7 +403,7 @@
                                                 <ColumnDefinition Width="200" />
                                                 <ColumnDefinition />
                                             </Grid.ColumnDefinitions>
-                                            <Grid>
+                                            <Grid CornerRadius="{StaticResource OverlayCornerRadius}">
                                                 <Image Source="{x:Bind Path=Cover}" Stretch="UniformToFill" />
                                                 <Grid Padding="8" VerticalAlignment="Bottom">
                                                     <Grid.Background>

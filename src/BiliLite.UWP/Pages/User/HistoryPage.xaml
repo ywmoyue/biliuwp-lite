@@ -27,7 +27,7 @@
                         <MenuFlyoutItem Click="removeVideoHistory_Click" Text="移除" />
                     </MenuFlyout>
                 </Grid.ContextFlyout>
-                <toolkit:ImageEx
+                <toolkit:ImageEx CornerRadius="{StaticResource OverlayCornerRadius}"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     PlaceholderSource="/Assets/Thumbnails/Placeholde.png"

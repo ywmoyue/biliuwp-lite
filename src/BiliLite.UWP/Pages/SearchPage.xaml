@@ -13,7 +13,8 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:viewModel="using:BiliLite.ViewModels.Search"
-    Background="Transparent" Loaded="SearchPage_Loaded"
+    Background="Transparent"
+    Loaded="SearchPage_Loaded"
     SizeChanged="SearchPage_OnSizeChanged"
     mc:Ignorable="d">
     <Page.Resources>
@@ -58,14 +59,14 @@
                         SelectedValuePath="value"
                         SelectionChanged="ComboBox_SelectionChanged" />
                 </Grid>
-                <control:MyAdaptiveGridView ItemHeight="120"
+                <control:MyAdaptiveGridView
                     Grid.Row="1"
                     Grid.ColumnSpan="2"
                     Padding="8"
                     DesiredWidth="550"
                     IsItemClickEnabled="True"
                     ItemClick="Search_ItemClick"
-                    
+                    ItemHeight="120"
                     ItemsSource="{x:Bind Path=Videos, Mode=OneWay}"
                     PointerPressed="Search_ItemPressed"
                     SelectionMode="None"
@@ -77,7 +78,7 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Grid>
+                                <Grid CornerRadius="{StaticResource OverlayCornerRadius}">
                                     <toolkit:ImageEx
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
@@ -153,13 +154,13 @@
         </DataTemplate>
         <DataTemplate x:Key="AnimeTpl" x:DataType="viewModel:SearchAnimeViewModel">
             <Grid>
-                <control:MyAdaptiveGridView ItemHeight="120"
+                <control:MyAdaptiveGridView
                     Grid.Row="1"
                     Padding="8"
                     DesiredWidth="550"
                     IsItemClickEnabled="True"
                     ItemClick="Search_ItemClick"
-                    
+                    ItemHeight="120"
                     ItemsSource="{x:Bind Path=Animes, Mode=OneWay}"
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
@@ -170,7 +171,7 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Grid>
+                                <Grid CornerRadius="{StaticResource OverlayCornerRadius}">
                                     <toolkit:ImageEx
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
@@ -545,14 +546,14 @@
                         SelectedValuePath="value"
                         SelectionChanged="ComboBox_SelectionChanged" />
                 </Grid>
-                <control:MyAdaptiveGridView ItemHeight="120"
+                <control:MyAdaptiveGridView
                     Grid.Row="1"
                     Grid.ColumnSpan="2"
                     Padding="8"
                     DesiredWidth="550"
                     IsItemClickEnabled="True"
                     ItemClick="Search_ItemClick"
-                    
+                    ItemHeight="120"
                     ItemsSource="{x:Bind Path=Articles, Mode=OneWay}"
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
@@ -563,15 +564,13 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Grid>
-                                    <toolkit:ImageEx
-                                        HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Stretch"
-                                        PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                        Source="{x:Bind Path=cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
-                                        Stretch="UniformToFill" />
-
-                                </Grid>
+                                <toolkit:ImageEx
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    CornerRadius="{StaticResource OverlayCornerRadius}"
+                                    PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
+                                    Source="{x:Bind Path=cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
+                                    Stretch="UniformToFill" />
                                 <Grid Grid.Column="1" Margin="10,5">
                                     <TextBlock
                                         Margin="0,0,0,4"
@@ -640,14 +639,14 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <control:MyAdaptiveGridView ItemHeight="120"
+                <control:MyAdaptiveGridView
                     Grid.Row="1"
                     Grid.ColumnSpan="2"
                     Padding="8"
                     DesiredWidth="550"
                     IsItemClickEnabled="True"
                     ItemClick="Search_ItemClick"
-                    
+                    ItemHeight="120"
                     ItemsSource="{x:Bind Path=Topics, Mode=OneWay}"
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
@@ -658,15 +657,13 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Grid>
-                                    <toolkit:ImageEx
-                                        HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Stretch"
-                                        PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                        Source="{x:Bind Path=cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
-                                        Stretch="UniformToFill" />
-
-                                </Grid>
+                                <toolkit:ImageEx
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    CornerRadius="{StaticResource OverlayCornerRadius}"
+                                    PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
+                                    Source="{x:Bind Path=cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
+                                    Stretch="UniformToFill" />
                                 <StackPanel Grid.Column="1" Margin="10,5">
                                     <TextBlock
                                         Margin="0,0,0,4"

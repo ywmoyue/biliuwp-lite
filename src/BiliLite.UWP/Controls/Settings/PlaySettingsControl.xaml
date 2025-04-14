@@ -2,95 +2,119 @@
     x:Class="BiliLite.Controls.Settings.PlaySettingsControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BiliLite.Controls.Settings"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:font="using:FontAwesome5"
     xmlns:common="using:BiliLite.Models.Common"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:font="using:FontAwesome5"
+    xmlns:local="using:BiliLite.Controls.Settings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:settings="using:BiliLite.ViewModels.Settings"
-    mc:Ignorable="d"
     d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignWidth="400"
+    mc:Ignorable="d">
 
-    <StackPanel
-        MaxWidth="1200">
-        <controls:SettingsCard Header="优先视频编码">
-            <controls:SettingsCard.Description>
-                <StackPanel>
-                    <RichTextBlock Margin="0 12 0 0">
-                        <Paragraph>
-                            <Run>视频编码为HEVC时系统需要</Run>
-                            <Hyperlink NavigateUri="ms-windows-store://pdp/?productid=9n4wgh0z6vhq">安装HEVC扩展</Hyperlink>
-                        </Paragraph>
-                    </RichTextBlock>
-                    <RichTextBlock>
-                        <Paragraph>
-                            <Run>视频编码为AV1时系统需要</Run>
-                            <Hyperlink NavigateUri="ms-windows-store://pdp/?productid=9MVZQVXJBQ9V">安装AV1扩展</Hyperlink>
-                            <Run>,部分清晰度可能也需要HEVC扩展</Run>
-                        </Paragraph>
-                    </RichTextBlock>
-                </StackPanel>
-            </controls:SettingsCard.Description>
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Film"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ComboBox  x:Name="cbVideoType" MinWidth="200"
-                       ItemsSource="{x:Bind common:DefaultVideoTypeOptions.Options}" 
-                       SelectedValuePath="Value"
-                       DisplayMemberPath="Name"></ComboBox>
-        </controls:SettingsCard>
+    <StackPanel MaxWidth="1200">
+        <StackPanel.ChildrenTransitions>
+            <TransitionCollection>
+                <RepositionThemeTransition />
+            </TransitionCollection>
+        </StackPanel.ChildrenTransitions>
 
-        <controls:SettingsExpander Header="优先播放器类型"
-                               Description="如果遇到加载卡顿、磁盘占用高等问题，请尝试修改优先播放器类型">
+        <controls:SettingsExpander Header="优先格式">
             <controls:SettingsExpander.HeaderIcon>
-                <font:FontAwesome Icon="Solid_PhotoVideo"></font:FontAwesome>
+                <SymbolIcon Symbol="Video" />
             </controls:SettingsExpander.HeaderIcon>
-            <ComboBox x:Name="ComboBoxUseRealPlayerType" SelectedIndex="0" MinWidth="200"
-                      SelectedValuePath="Value"
-                      DisplayMemberPath="Content"
-                      ItemsSource="{x:Bind m_realPlayerTypes.Options}">
-            </ComboBox>
-
             <controls:SettingsExpander.Items>
-                <controls:SettingsCard Header="ffmpeg options">
-                    <Button Click="BtnOpenFFmpegOptionsPanel_OnClick">设置</Button>
+                <controls:SettingsCard Header="优先视频编码">
+                    <controls:SettingsCard.Description>
+                        <StackPanel>
+                            <TextBlock HorizontalAlignment="Left">
+                                <Run>视频编码为HEVC时系统需要</Run>
+                                <Hyperlink NavigateUri="ms-windows-store://pdp/?productid=9n4wgh0z6vhq">安装HEVC扩展</Hyperlink>
+                            </TextBlock>
+                            <TextBlock HorizontalAlignment="Left">
+                                <Run>视频编码为AV1时系统需要</Run>
+                                <Hyperlink NavigateUri="ms-windows-store://pdp/?productid=9MVZQVXJBQ9V">安装AV1扩展</Hyperlink>
+                                <Run>，部分清晰度可能也需要HEVC扩展</Run>
+                            </TextBlock>
+                        </StackPanel>
+                    </controls:SettingsCard.Description>
+                    <controls:SettingsCard.HeaderIcon>
+                        <font:FontAwesome Icon="Solid_Film" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <ComboBox
+                        x:Name="cbVideoType"
+                        MinWidth="200"
+                        DisplayMemberPath="Name"
+                        ItemsSource="{x:Bind common:DefaultVideoTypeOptions.Options}"
+                        SelectedValuePath="Value" />
+                </controls:SettingsCard>
+
+                <controls:SettingsCard Description="如果遇到加载卡顿、磁盘占用高等问题，请尝试修改优先播放器类型" Header="优先播放器类型">
+                    <controls:SettingsCard.HeaderIcon>
+                        <font:FontAwesome Icon="Solid_PhotoVideo" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <StackPanel Orientation="Horizontal">
+                        <Button
+                            Margin="0,0,10,0"
+                            Click="BtnOpenFFmpegOptionsPanel_OnClick"
+                            Visibility="{Binding SelectedIndex, ElementName=ComboBoxUseRealPlayerType, Converter={StaticResource DisplayConvert}, ConverterParameter=1}">
+                            参数自定义
+                        </Button>
+                        <ComboBox
+                            x:Name="ComboBoxUseRealPlayerType"
+                            MinWidth="200"
+                            DisplayMemberPath="Content"
+                            ItemsSource="{x:Bind m_realPlayerTypes.Options}"
+                            SelectedIndex="0"
+                            SelectedValuePath="Value" />
+                    </StackPanel>
+                </controls:SettingsCard>
+
+                <controls:SettingsCard
+                    Description="仅对 FFmpeg 生效"
+                    Header="优先视频解码"
+                    IsEnabled="False"
+                    Visibility="{Binding SelectedIndex, ElementName=ComboBoxUseRealPlayerType, Converter={StaticResource DisplayConvert}, ConverterParameter=1}">
+                    <controls:SettingsCard.HeaderIcon>
+                        <font:FontAwesome Icon="Solid_Video" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <ComboBox
+                        x:Name="swHardwareDecode"
+                        MinWidth="200"
+                        SelectedIndex="0">
+                        <ComboBoxItem>优先硬解</ComboBoxItem>
+                    </ComboBox>
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
-
         </controls:SettingsExpander>
 
-        <!--<TextBlock  Margin="0 16 0 8" FontSize="16" Visibility="Collapsed">优先使用FFmpeg播放器</TextBlock>
-        <ToggleSwitch x:Name="swPriorityFFmpeg" Visibility="Collapsed"></ToggleSwitch>
-
-        <TextBlock  Margin="0 16 0 8" FontSize="16" Visibility="Collapsed">使用FFmpeg播放时硬解视频</TextBlock>
-        <ToggleSwitch x:Name="swHardwareDecode" Visibility="Collapsed"></ToggleSwitch>-->
-        
-        <controls:SettingsExpander Description="适用于普通视频" Header="播放倍速" IsExpanded="True">
+        <controls:SettingsExpander
+            Description="适用于普通视频"
+            Header="播放倍速"
+            IsExpanded="True">
             <controls:SettingsExpander.HeaderIcon>
                 <font:FontAwesome Icon="Solid_AngleDoubleRight" />
             </controls:SettingsExpander.HeaderIcon>
-            
             <Button x:Name="BtnEditPlaySpeedMenu" Click="BtnEditPlaySpeedMenu_OnClick">自定义</Button>
-         
+
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard Header="默认播放倍速">
                     <ComboBox
-                x:Name="cbVideoSpeed"
-                MinWidth="200"
-                DisplayMemberPath="Content"
-                ItemsSource="{x:Bind m_playSpeedMenuService.MenuItems, Mode=OneWay}"
-                SelectedIndex="0"
-                SelectedValuePath="Value" />
+                        x:Name="cbVideoSpeed"
+                        MinWidth="200"
+                        DisplayMemberPath="Content"
+                        ItemsSource="{x:Bind m_playSpeedMenuService.MenuItems, Mode=OneWay}"
+                        SelectedIndex="0"
+                        SelectedValuePath="Value" />
                 </controls:SettingsCard>
 
                 <controls:SettingsCard Description="触摸及键盘长按专用" Header="临时播放倍速">
                     <ComboBox
-                x:Name="cbRatePlaySpeed"
-                MinWidth="200"
-                SelectedIndex="0">
+                        x:Name="cbRatePlaySpeed"
+                        MinWidth="200"
+                        SelectedIndex="0">
                         <ComboBox.Items>
                             <ComboBoxItem Content="3.0x" />
                             <ComboBoxItem Content="2.0x" />
@@ -100,260 +124,203 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
+        <controls:SettingsExpander Header="自动化">
+            <controls:SettingsExpander.HeaderIcon>
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE811;" />
+            </controls:SettingsExpander.HeaderIcon>
+            <controls:SettingsExpander.Items>
+                <controls:SettingsCard Description="播放完成自动切换下一P" Header="连续播放分P视频">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xF8AD;" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <ToggleSwitch x:Name="swAutoNext" />
+                </controls:SettingsCard>
 
-        <controls:SettingsCard Header="播放完成自动切换下一P"
-                               Description="分P视频播放完成自动切换下一P">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_StepForward"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch  x:Name="swAutoNext"></ToggleSwitch>
-        </controls:SettingsCard>
+                <controls:SettingsCard
+                    Description="默认自动播放"
+                    Header="自动播放加载完成的视频"
+                    HeaderIcon="Play">
+                    <ToggleSwitch x:Name="swAutoPlay" />
+                </controls:SettingsCard>
 
-        <controls:SettingsCard Header="视频自动播放"
-                               Description="进入视频详情页时视频自动播放">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Play"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch  x:Name="swAutoPlay"></ToggleSwitch>
-        </controls:SettingsCard>
+                <controls:SettingsCard Description="默认自动跳过片头/片尾" Header="自动跳过番剧 OP/ED">
+                    <controls:SettingsCard.HeaderIcon>
+                        <font:FontAwesome Icon="Solid_Music" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <ToggleSwitch x:Name="SwSkipOpEd" />
+                </controls:SettingsCard>
 
-        <controls:SettingsCard Header="番剧自动跳过OP/ED"
-                               Description="自动跳过片头/片尾">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Music"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch  x:Name="SwSkipOpEd"></ToggleSwitch>
-        </controls:SettingsCard>
+                <controls:SettingsCard Description="默认自动全屏" Header="自动全屏播放">
+                    <controls:SettingsCard.HeaderIcon>
+                        <SymbolIcon Symbol="FullScreen" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <ToggleSwitch x:Name="swPlayerSettingAutoFullScreen" />
+                </controls:SettingsCard>
 
-        <controls:SettingsCard Header="自动跳转至上次观看进度"
-                               Description="自动跳转至上次观看进度">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_History"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="swPlayerSettingAutoToPosition" ></ToggleSwitch>
-        </controls:SettingsCard>
+                <controls:SettingsCard Description="默认自动铺满可用窗口" Header="自动隐藏视频信息">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE89F;" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <ToggleSwitch x:Name="swPlayerSettingAutoFullWindows" />
+                </controls:SettingsCard>
 
-        <controls:SettingsCard Header="进入播放自动全屏"
-                               Description="进入播放自动全屏">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Expand"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="swPlayerSettingAutoFullScreen" ></ToggleSwitch>
-        </controls:SettingsCard>
+                <controls:SettingsCard Description="不指定音质或找不到指定音质时，默认使用最大音质" Header="默认最大音质">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xEC4F;" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <ToggleSwitch x:Name="SwitchEnableDefaultMaxSoundQuality" />
+                </controls:SettingsCard>
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>
 
-        <controls:SettingsCard Header="进入播放自动铺满窗口"
-                               Description="进入播放自动铺满窗口">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_ExpandAlt"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="swPlayerSettingAutoFullWindows" ></ToggleSwitch>
-        </controls:SettingsCard>
+        <controls:SettingsExpander
+            Description="默认视频音量"
+            Header="音量"
+            HeaderIcon="Volume">
+            <StackPanel Orientation="Vertical">
+                <TextBlock HorizontalAlignment="Center" Text="{Binding Value, ElementName=SliderVolume}" />
+                <Slider x:Name="SliderVolume" MinWidth="200" />
+            </StackPanel>
 
-        <controls:SettingsCard Header="默认最大音质"
-                               Description="不指定音质或找不到指定音质时，默认使用最大音质">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Music"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="SwitchEnableDefaultMaxSoundQuality" ></ToggleSwitch>
-        </controls:SettingsCard>
+            <controls:SettingsExpander.Items>
+                <controls:SettingsCard Description="仅允许在这里修改默认音量" Header="锁定默认音量">
+                    <ToggleSwitch x:Name="SwLockPlayerVolume" />
+                </controls:SettingsCard>
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>
 
-        <controls:SettingsCard Header="双击播放器全屏"
-                               Description="默认双击暂停">
-            <controls:SettingsCard.HeaderIcon>
-                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xF8AF;" />
-            </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="swPlayerSettingDoubleClickFullScreen" ></ToggleSwitch>
-        </controls:SettingsCard>
+        <controls:SettingsExpander Description="默认视频亮度" Header="亮度">
+            <controls:SettingsExpander.HeaderIcon>
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE793;" />
+            </controls:SettingsExpander.HeaderIcon>
+            <StackPanel Orientation="Vertical">
+                <TextBlock HorizontalAlignment="Center" Text="{Binding Value, ElementName=SliderBrightness}" />
+                <Slider x:Name="SliderBrightness" MinWidth="200" />
+            </StackPanel>
+            <controls:SettingsExpander.Items>
+                <controls:SettingsCard Description="仅允许在这里修改默认亮度" Header="锁定默认亮度">
+                    <ToggleSwitch x:Name="SwLockPlayerBrightness" />
+                </controls:SettingsCard>
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>
 
-        <controls:SettingsCard Header="播放器方向键右键行为"
-                               Description="已弃用，请前往快捷键设置页进行设置">
-            <controls:SettingsCard.HeaderIcon>
-                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xF0AF;" />
-            </controls:SettingsCard.HeaderIcon>
-            <!--<ComboBox x:Name="cbPlayerKeyRightAction" SelectedIndex="0" MinWidth="200">
-                <ComboBox.Items>
-                    <ComboBoxItem Content="操作进度条" ></ComboBoxItem>
-                    <ComboBoxItem Content="倍速播放" ></ComboBoxItem>
-                </ComboBox.Items>
-            </ComboBox>-->
-        </controls:SettingsCard>
+        <controls:SettingsExpander Header="历史记录">
+            <controls:SettingsExpander.HeaderIcon>
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE81C;" />
+            </controls:SettingsExpander.HeaderIcon>
+            <controls:SettingsExpander.Items>
 
-        <controls:SettingsExpander Header="播放器按住手势行为"
-                               Description="设置播放器按住手势行为">
+                <controls:SettingsCard Header="从已有的记录位置继续观看">
+                    <ToggleSwitch x:Name="swPlayerSettingAutoToPosition" />
+                </controls:SettingsCard>
+
+                <controls:SettingsCard Header="上报历史记录">
+                    <ToggleSwitch x:Name="SwitchPlayerReportHistory" />
+                </controls:SettingsCard>
+
+                <controls:SettingsCard Description="服务端不会储存已播放完毕的记录，相当于没有播放记录" Header="视频结束后不上报历史记录">
+                    <ToggleSwitch x:Name="SwitchReportHistoryZeroWhenVideoEnd" />
+                </controls:SettingsCard>
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>
+
+        <controls:SettingsExpander Header="播放源" HeaderIcon="Sync">
+            <controls:SettingsExpander.Items>
+                <controls:SettingsCard Description="持续播放长视频时自动刷新播放地址并提示，下次打开视频生效" Header="自动刷新">
+                    <ToggleSwitch x:Name="SwitchAutoRefreshPlayUrl" />
+                </controls:SettingsCard>
+
+                <controls:SettingsCard
+                    Description="单位分钟，默认118分钟，下次打开视频生效"
+                    Header="刷新间隔"
+                    IsEnabled="{Binding IsOn, ElementName=SwitchAutoRefreshPlayUrl, Mode=OneWay}">
+                    <controls1:NumberBox
+                        x:Name="NumAutoRefreshPlayUrlTime"
+                        MinWidth="200"
+                        Maximum="2400"
+                        Minimum="10" />
+                </controls:SettingsCard>
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>
+
+        <controls:SettingsExpander Header="字幕" HeaderIcon="ClosedCaption">
+            <controls:SettingsExpander.Items>
+                <controls:SettingsCard Header="自动打开 AI 字幕">
+                    <controls:SettingsCard.HeaderIcon>
+                        <font:FontAwesome Icon="Solid_Robot" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <controls:SettingsCard.Description>
+                        <StackPanel>
+                            <TextBlock>部分自动生成的 AI 字幕会与视频自带字幕冲突</TextBlock>
+                            <TextBlock Margin="0,0,0,0">建议关闭，有需要时再手动打开字幕</TextBlock>
+                        </StackPanel>
+                    </controls:SettingsCard.Description>
+                    <ToggleSwitch x:Name="swPlayerSettingAutoOpenAISubtitle" />
+                </controls:SettingsCard>
+
+                <controls:SettingsCard Description="繁体字幕转简体" Header="繁体字幕转简体">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE8D2;" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <ToggleSwitch x:Name="RoamingSettingToSimplified" />
+                </controls:SettingsCard>
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>
+
+        <controls:SettingsExpander Header="播放器按住手势行为">
             <controls:SettingsExpander.HeaderIcon>
                 <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE815;" />
             </controls:SettingsExpander.HeaderIcon>
-            <ComboBox x:Name="cbPlayerHoldingGestureAction" SelectedIndex="0" MinWidth="200">
+            <ComboBox
+                x:Name="cbPlayerHoldingGestureAction"
+                MinWidth="200"
+                SelectedIndex="0">
                 <ComboBox.Items>
-                    <ComboBoxItem Content="无" ></ComboBoxItem>
-                    <ComboBoxItem Content="倍速播放" ></ComboBoxItem>
+                    <ComboBoxItem Content="无" />
+                    <ComboBoxItem Content="倍速播放" />
                 </ComboBox.Items>
             </ComboBox>
             <controls:SettingsExpander.Items>
-                <controls:SettingsCard Header="播放器按住手势可被其他手势取消"
-                                       Description="如按住时上划取消按住">
-                    <ToggleSwitch x:Name="swPlayerHoldingGestureCanCancel" ></ToggleSwitch>
+                <controls:SettingsCard Description="可被其他手势取消，如按住时上划取消行为" Header="最低优先级">
+                    <ToggleSwitch x:Name="swPlayerHoldingGestureCanCancel" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsCard Header="音量"
-                               Description="视频音量">
+        <controls:SettingsCard Description="默认双击暂停" Header="双击播放器全屏">
             <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_VolumeUp"></font:FontAwesome>
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xF8AF;" />
             </controls:SettingsCard.HeaderIcon>
-            <controls1:NumberBox x:Name="NumBoxVolume" Minimum="0" Margin="0 0 0 8" Width="200" HorizontalAlignment="Left" Value="0" SpinButtonPlacementMode="Compact" SmallChange="4" ></controls1:NumberBox>
+            <ToggleSwitch x:Name="swPlayerSettingDoubleClickFullScreen" />
         </controls:SettingsCard>
 
-        <controls:SettingsCard Header="亮度"
-                               Description="视频亮度">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Sun"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <controls1:NumberBox x:Name="NumBoxBrightness" Minimum="0" Margin="0 0 0 8" Width="200" HorizontalAlignment="Left" Value="0" SpinButtonPlacementMode="Compact" SmallChange="4" ></controls1:NumberBox>
-        </controls:SettingsCard>
-
-        <controls:SettingsCard Header="锁定播放器音量设置"
-                               Description="播放器内修改音量时不写设置">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Lock"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="SwLockPlayerVolume" ></ToggleSwitch>
-        </controls:SettingsCard>
-
-        <controls:SettingsCard Header="锁定播放器亮度设置"
-                               Description="播放器内修改亮度时不写设置">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Lock"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="SwLockPlayerBrightness" ></ToggleSwitch>
-        </controls:SettingsCard>
-
-        <controls:SettingsCard Header="自动打开AI字幕">
-            <controls:SettingsCard.Description>
-                <StackPanel>
-                    <TextBlock>部分自动生成的AI字幕会与视频自带字幕冲突</TextBlock>
-                    <TextBlock Margin="0 0 0 0">建议关闭，有需要时再手动打开字幕</TextBlock>
-                </StackPanel>
-            </controls:SettingsCard.Description>
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_ClosedCaptioning"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch  x:Name="swPlayerSettingAutoOpenAISubtitle"></ToggleSwitch>
-        </controls:SettingsCard>
-
-        <controls:SettingsCard Header="上报历史纪录"
-                               Description="是否上报播放历史纪录">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_History"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch  x:Name="SwitchPlayerReportHistory"></ToggleSwitch>
-        </controls:SettingsCard>
-
-        <controls:SettingsCard Header="视频结束上报历史纪录位置0"
-                               Description="视频结束是否上报历史纪录位置0，相当于下次在其他客户端打开该视频时重新播放">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_History"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch  x:Name="SwitchReportHistoryZeroWhenVideoEnd"></ToggleSwitch>
-        </controls:SettingsCard>
-
-        <controls:SettingsCard Header="替换CDN链接">
-            <controls:SettingsCard.Description>
-                <StackPanel>
-                    <TextBlock Margin="0 8 0 0">替换CDN链接可以有效的提升视频加载速度</TextBlock>
-                    <TextBlock >开启替换后读取播放地址可能需要更长时间</TextBlock>
-                </StackPanel>
-            </controls:SettingsCard.Description>
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Link"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ComboBox x:Name="cbPlayerReplaceCDN" SelectedIndex="0" MinWidth="200">
-                <ComboBox.Items>
-                    <ComboBoxItem Content="不替换"></ComboBoxItem>
-                    <ComboBoxItem Content="替换全部视频" ></ComboBoxItem>
-                    <ComboBoxItem Content="仅替换PCDN视频" ></ComboBoxItem>
-                    <ComboBoxItem Content="仅替换代理视频" ></ComboBoxItem>
-                </ComboBox.Items>
-            </ComboBox>
-        </controls:SettingsCard>
-
-        <controls:SettingsExpander Header="替换CDN服务器选择"
-                               Description="替换CDN服务器选择"
-                               IsExpanded="True">
-            <controls:SettingsExpander.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Link"></font:FontAwesome>
-            </controls:SettingsExpander.HeaderIcon>
-
-            <controls:SettingsExpander.Items>
-                <controls:SettingsCard>
-                    <controls:SettingsCard.Header>
-                        <Button x:Name="RoamingSettingTestCDN"  Click="RoamingSettingTestCDN_Click">测试服务器延迟</Button>
-                    </controls:SettingsCard.Header>
-                    <ComboBox x:Name="RoamingSettingCDNServer" 
-                              ItemsSource="{x:Bind Path=m_viewModel.CDNServers,Mode=OneWay}"
-                              Margin="0 8 0 8" HorizontalAlignment="Left" >
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate >
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock TextTrimming="CharacterEllipsis">
-                                        【<Run Text="{Binding Path=Remark}"></Run>】
-                                        <Run Text="{Binding Path=Server}"></Run>
-                                    </TextBlock>
-                                    <TextBlock Width="10"></TextBlock>
-                                    <TextBlock FontSize="12" Foreground="Red" Margin="0 2 0 0" Visibility="{Binding Path=ShowTimeOut,Mode=OneWay}">超时</TextBlock>
-                                    <TextBlock FontSize="12" Foreground="Green" Margin="0 2 0 0" Visibility="{Binding Path=ShowDelay,Mode=OneWay}"><Run Text="{Binding Path=Delay,Mode=OneWay}"/> ms</TextBlock>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-                </controls:SettingsCard>
-            </controls:SettingsExpander.Items>
-        </controls:SettingsExpander>
-
-        <controls:SettingsCard Header="自动刷新播放地址"
-                               Description="持续播放长视频时自动刷新播放地址并提示,下次打开视频生效">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Sync"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch  x:Name="SwitchAutoRefreshPlayUrl"></ToggleSwitch>
-        </controls:SettingsCard>
-
-        <controls:SettingsCard Header="自动刷新播放地址时间"
-                               x:Name="AutoRefreshPlayUrlTimeSetting"
-                               Description="单位分钟，默认118分钟，下次打开视频生效">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Sync"></font:FontAwesome>
-            </controls:SettingsCard.HeaderIcon>
-            <controls1:NumberBox x:Name="NumAutoRefreshPlayUrlTime" Minimum="10" Maximum="2400"></controls1:NumberBox>
-        </controls:SettingsCard>
-
-        <ContentDialog  x:Name="FFmpegOptionsDialog"
-                        Width="600"
-                        PrimaryButtonText="确定"
-                        IsPrimaryButtonEnabled="True"
-                        Title="设置FFmpeg options"
-        >
+        <ContentDialog
+            x:Name="FFmpegOptionsDialog"
+            Title="设置FFmpeg options"
+            Width="600"
+            IsPrimaryButtonEnabled="True"
+            PrimaryButtonText="确定">
             <StackPanel Orientation="Vertical">
                 <Button Click="BtnAddFFmpegOption_OnClick">Add</Button>
                 <ScrollViewer>
-                    <ListView ItemsSource="{x:Bind m_viewModel.FFmpegOptions,Mode=OneWay}"
-                              SelectionMode="None">
+                    <ListView ItemsSource="{x:Bind m_viewModel.FFmpegOptions, Mode=OneWay}" SelectionMode="None">
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="settings:KeyValuePairViewModel">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition></ColumnDefinition>
-                                        <ColumnDefinition></ColumnDefinition>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <TextBox Text="{x:Bind Key,Mode=TwoWay}"
-                                             Width="300"
-                                             TextChanged="FFmpegOptions_OnTextChanged"></TextBox>
-                                    <TextBox Text="{x:Bind Value,Mode=TwoWay}"
-                                             Grid.Column="1"
-                                             HorizontalAlignment="Right"
-                                             Width="300"
-                                             TextChanged="FFmpegOptions_OnTextChanged"></TextBox>
+                                    <TextBox
+                                        Width="300"
+                                        Text="{x:Bind Key, Mode=TwoWay}"
+                                        TextChanged="FFmpegOptions_OnTextChanged" />
+                                    <TextBox
+                                        Grid.Column="1"
+                                        Width="300"
+                                        HorizontalAlignment="Right"
+                                        Text="{x:Bind Value, Mode=TwoWay}"
+                                        TextChanged="FFmpegOptions_OnTextChanged" />
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>

@@ -15,11 +15,17 @@
     mc:Ignorable="d">
 
     <StackPanel
+        x:Name="ShortcutKeySettingPanel"
         MaxWidth="1200"
         Margin="0,0,0,8"
-        x:Name="ShortcutKeySettingPanel"
         Orientation="Vertical"
         SizeChanged="ShortcutKeySettingPanel_OnSizeChanged">
+        <StackPanel.ChildrenTransitions>
+            <TransitionCollection>
+                <RepositionThemeTransition />
+            </TransitionCollection>
+        </StackPanel.ChildrenTransitions>
+
         <controls:SettingsCard Description="选择鼠标中键/侧键行为" Header="鼠标自定义">
             <controls:SettingsCard.HeaderIcon>
                 <font:FontAwesome Icon="Solid_Mouse" />
@@ -44,15 +50,19 @@
             </StackPanel>
         </Grid>
         <ListView
-            Padding="-12,0"
-            Width="{x:Bind m_viewModel.ControlWidth,Mode=OneWay}"
+            Width="{x:Bind m_viewModel.ControlWidth, Mode=OneWay}"
             MinWidth="320"
+            Padding="-12,0"
             ItemsSource="{x:Bind m_viewModel.ShortcutFunctions, Mode=OneWay}"
             SelectionMode="None">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="settings:ShortcutFunctionViewModel">
-                    <controls:SettingsExpander Description="{x:Bind Description}" Header="{x:Bind Name}"
-                                               MinWidth="320" Width="{Binding DataContext.ControlWidth,ElementName=ShortcutKeySettingPanel,Mode=OneWay}">
+                    <!--  Win10样式取消Width数据绑定  -->
+                    <controls:SettingsExpander
+                        Width="{Binding DataContext.ControlWidth, ElementName=ShortcutKeySettingPanel, Mode=OneWay}"
+                        MinWidth="320"
+                        Description="{x:Bind Description}"
+                        Header="{x:Bind Name}">
                         <controls:SettingsExpander.HeaderIcon>
                             <font:FontAwesome Icon="Solid_Keyboard" />
                         </controls:SettingsExpander.HeaderIcon>

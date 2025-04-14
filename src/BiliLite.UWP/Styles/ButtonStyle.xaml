@@ -4,8 +4,12 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls">
 
     <Style
-        x:Key="RoundAccentButtonStyle"
+        x:Key="DefaultAccentButtonStyle"
         BasedOn="{StaticResource AccentButtonStyle}"
+        TargetType="Button" />
+    <Style
+        x:Key="RoundAccentButtonStyle"
+        BasedOn="{StaticResource DefaultAccentButtonStyle}"
         TargetType="Button">
         <Style.Setters>
             <Setter Property="Height" Value="45" />
@@ -14,6 +18,21 @@
             <Setter Property="CornerRadius" Value="45" />
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Transitions">
+                <Setter.Value>
+                    <TransitionCollection>
+                        <EntranceThemeTransition FromVerticalOffset="100" IsStaggeringEnabled="True"/>
+                    </TransitionCollection>
+                </Setter.Value>
+            </Setter>
         </Style.Setters>
+    </Style>
+    <Style
+        x:Key="TransparentButtonStyle"
+        BasedOn="{StaticResource DefaultButtonStyle}"
+        TargetType="Button">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
     </Style>
 </ResourceDictionary>
