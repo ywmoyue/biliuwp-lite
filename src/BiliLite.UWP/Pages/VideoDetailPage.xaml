@@ -85,8 +85,7 @@
                 <ScrollViewer
                     Grid.Row="1"
                     MaxHeight="480"
-                    Margin="0,8,0,0"
-                    Padding="0,0,8,0">
+                    VerticalScrollBarVisibility="Auto">
                     <ListView ItemsSource="{x:Bind Path=m_viewModel.MyFavorite, Mode=OneWay}" SelectionMode="None">
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="user:FavoriteItemViewModel">
@@ -103,7 +102,6 @@
                                         <TextBlock Grid.Column="0" Text="{x:Bind Title}" />
                                         <TextBlock
                                             Grid.Column="1"
-                                            Margin="0,4"
                                             HorizontalAlignment="Right"
                                             FontSize="14"
                                             Foreground="Gray"
@@ -112,7 +110,6 @@
                                         </TextBlock>
                                         <TextBlock
                                             Grid.Column="1"
-                                            Margin="0,4"
                                             HorizontalAlignment="Right"
                                             FontSize="14"
                                             Foreground="Gray"
@@ -131,7 +128,7 @@
                     Grid.Row="2"
                     HorizontalAlignment="Right"
                     Click="SaveFavList_OnClick">
-                    <TextBlock><Span><Bold>保存</Bold></Span></TextBlock>
+                    <TextBlock>保存</TextBlock>
                 </Button>
             </Grid>
         </Flyout>
@@ -631,8 +628,7 @@
                                     Visibility="{x:Bind Path=m_viewModel.VideoInfo.ShowPages, Mode=OneWay}">
                                     <GridView.Header>
                                         <TextBlock Margin="0,8" FontSize="16">
-                                            分集(共
-                                            <Run Text="{x:Bind Path=m_viewModel.VideoInfo.Pages.Count, Mode=OneWay}" />
+                                            分集(共<Run Text="{x:Bind Path=m_viewModel.VideoInfo.Pages.Count, Mode=OneWay}" />
                                             P)</TextBlock>
                                     </GridView.Header>
                                     <GridView.ItemTemplate>
@@ -649,7 +645,7 @@
 
                                 </toolkit:AdaptiveGridView>
 
-                                <TextBlock FontSize="16">标签</TextBlock>
+                                <TextBlock Margin="0,20,0,0" FontSize="16">标签</TextBlock>
                                 <ItemsControl Margin="0,8,0,0" ItemsSource="{x:Bind Path=m_viewModel.Tags, Mode=OneWay}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
