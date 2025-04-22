@@ -92,16 +92,10 @@ namespace BiliLite.Extensions
             NotificationShowExtensions.ShowMessageToast(dataStr.SetClipboard() ? "已复制" : "复制失败");
         }
 
-        public static void OpenWebDetail(string dynId)
+        public static async Task OpenWebDetail(string dynId)
         {
             var url = $"https://www.bilibili.com/opus/{dynId}";
-            MessageCenter.NavigateToPage(null, new NavigationInfo()
-            {
-                icon = Symbol.World,
-                page = typeof(WebPage),
-                title = "加载中...",
-                parameters = url
-            });
+            await MessageCenter.HandelUrl(url);
         }
 
         public static async void DoLike(DynamicV2ItemViewModel item)
