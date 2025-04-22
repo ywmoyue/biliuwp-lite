@@ -204,25 +204,13 @@
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />
                                     <StackPanel VerticalAlignment="Bottom">
-                                        <TextBlock
-                                            Margin="0,0,0,4"
-                                            FontSize="14"
-                                            Foreground="Gray">
+                                        <TextBlock FontSize="14" Foreground="Gray">
                                             类型：<Run Text="{x:Bind season_type_name}" /></TextBlock>
-                                        <TextBlock
-                                            Margin="0,0,0,4"
-                                            FontSize="14"
-                                            Foreground="Gray">
+                                        <TextBlock FontSize="14" Foreground="Gray">
                                             地区：<Run Text="{x:Bind areas}" /></TextBlock>
-                                        <TextBlock
-                                            Margin="0,0,0,4"
-                                            FontSize="14"
-                                            Foreground="Gray">
+                                        <TextBlock FontSize="14" Foreground="Gray">
                                             风格：<Run Text="{x:Bind styles}" /></TextBlock>
-                                        <TextBlock
-                                            Margin="0,0,0,4"
-                                            FontSize="14"
-                                            Foreground="Gray">
+                                        <TextBlock FontSize="14" Foreground="Gray">
                                             开播时间：<Run Text="{x:Bind Path=pubtime, Converter={StaticResource DatetimeConvert}, ConverterParameter='yyyy-MM-dd'}" /></TextBlock>
                                         <!--<TextBlock
                                             Margin="0"
