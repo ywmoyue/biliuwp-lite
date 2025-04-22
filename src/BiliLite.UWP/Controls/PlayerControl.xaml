@@ -72,13 +72,13 @@
                                                         Grid.Column="1"
                                                         Foreground="White"
                                                         Text="{Binding TitlePart}"
-                                                        TextAlignment="Justify"
+                                                        
                                                         TextWrapping="Wrap" />
                                                 </Grid>
                                                 <TextBlock
                                                     Foreground="White"
                                                     Text="{Binding title}"
-                                                    TextAlignment="Justify"
+                                                    
                                                     TextWrapping="Wrap"
                                                     ToolTipService.ToolTip="{Binding title}"
                                                     Visibility="{Binding ShowTitlePart, Converter={StaticResource DisplayConvert}}" />
@@ -413,7 +413,7 @@
 
                                     <TextBlock
                                         x:Name="txtInfo"
-                                        TextAlignment="Justify"
+                                        
                                         TextWrapping="Wrap" />
                                 </StackPanel>
                             </ScrollViewer>
@@ -1283,7 +1283,7 @@
                                                 Orientation="Vertical">
                                                 <TextBlock
                                                     Text="{x:Bind Content}"
-                                                    TextAlignment="Justify"
+                                                    
                                                     TextWrapping="Wrap" />
                                                 <TextBlock>
                                                     <Run Text="{x:Bind From, Converter={StaticResource ProgressToTimeConverter}}" />

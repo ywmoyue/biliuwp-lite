@@ -2,7 +2,6 @@
 using BiliLite.Services;
 using Newtonsoft.Json.Linq;
 using System;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace BiliLite.Models.Common.Comment
@@ -23,19 +22,15 @@ namespace BiliLite.Models.Common.Comment
             {
                 try
                 {
-                    RichTextBlock result;
-
-                    var substringMsg = $"{Message.SubstringCommentText(50)}...";
-                    result = substringMsg.ToRichTextBlock(Emote, lowProfilePrefix: $"{UserName}:  ");
-
                     if (Message.Length <= 50)
                     {
-                        result = $"{Message}"
+                        return $"{Message}"
                             .ToRichTextBlock(Emote, lowProfilePrefix: $"{UserName}:  ");
                     }
 
-                    result.TextAlignment = TextAlignment.Justify;
-                    return result;
+                    var substringMsg = $"{Message.SubstringCommentText(50)}...";
+
+                    return substringMsg.ToRichTextBlock(Emote, lowProfilePrefix: $"{UserName}:  ");
                 }
                 catch (Exception ex)
                 {

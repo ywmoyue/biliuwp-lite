@@ -100,7 +100,7 @@
                                         Margin="0,0,0,4"
                                         MaxLines="2"
                                         Text="{x:Bind Title}"
-                                        TextAlignment="Justify"
+                                        
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />
                                     <StackPanel VerticalAlignment="Bottom">
@@ -187,7 +187,7 @@
                                         Margin="0,0,0,4"
                                         MaxLines="2"
                                         Text="{x:Bind Title}"
-                                        TextAlignment="Justify"
+                                        
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />
                                     <StackPanel VerticalAlignment="Bottom">

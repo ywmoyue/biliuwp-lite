@@ -457,7 +457,7 @@
                             MaxLength="233"
                             PlaceholderText="说点什么吧..."
                             Text="{x:Bind Path=ReplyText, Mode=TwoWay}"
-                            TextAlignment="Justify"
+                            
                             TextWrapping="Wrap" />
                         <Grid Margin="0,4,0,0">
                             <StackPanel Orientation="Horizontal">
@@ -561,7 +561,7 @@
                                         Margin="30,8,0,0"
                                         IsTextSelectionEnabled="True"
                                         Text="{Binding Path=content.message}"
-                                        TextWrapping="Wrap" TextAlignment="Justify" />-->
+                                        TextWrapping="Wrap"  />-->
                                     <ContentControl
                                         Margin="6,8,0,0"
                                         Content="{Binding Path=CommentText, Mode=OneWay}"
@@ -626,7 +626,7 @@
                                             MaxLength="233"
                                             PlaceholderText="{Binding ReplyAt}"
                                             Text="{Binding Path=ReplyText, Mode=TwoWay}"
-                                            TextAlignment="Justify"
+                                            
                                             TextWrapping="Wrap" />
                                         <Grid Margin="0,4,0,0">
                                             <StackPanel Orientation="Horizontal">

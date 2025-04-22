@@ -76,7 +76,7 @@
             Padding="8,8,8,36"
             AcceptsReturn="True"
             PlaceholderText="说点什么吧..."
-            TextWrapping="Wrap" TextAlignment="Justify" />
+            TextWrapping="Wrap"  />
         <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal">
             <Button
                 x:Name="btnOpenFace"

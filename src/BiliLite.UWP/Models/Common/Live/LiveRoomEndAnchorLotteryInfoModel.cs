@@ -1,12 +1,12 @@
-﻿using System;
-using Newtonsoft.Json;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Shapes;
-using Windows.UI.Xaml;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.UI.Xaml.Shapes;
 
 namespace BiliLite.Models.Common.Live
 {
@@ -33,7 +33,7 @@ namespace BiliLite.Models.Common.Live
 
         [JsonProperty("award_users")]
         public ObservableCollection<LiveRoomEndAnchorLotteryInfoUserModel> AwardUsers { get; set; }
-        
+
         public StackPanel WinnerList => AwardUsers == null ? new StackPanel() : GenerateWinnerList(AwardUsers);
 
         public StackPanel GenerateWinnerList(ObservableCollection<LiveRoomEndAnchorLotteryInfoUserModel> awardUsers)
@@ -66,7 +66,7 @@ namespace BiliLite.Models.Common.Live
                 };
                 var userNameText = new TextBlock()
                 {
-                    // <TextBlock Margin="4 0" TextWrapping="Wrap" TextAlignment="Justify" Text="TestUser测试文字" VerticalAlignment="Center">
+                    // <TextBlock Margin="4 0" TextWrapping="Wrap" TextAlignment="Center" Text="TestUser测试文字" VerticalAlignment="Center">
                     Margin = new Thickness(4, 0, 4, 0),
                     TextWrapping = TextWrapping.Wrap,
                     Text = awardUser.Uname,

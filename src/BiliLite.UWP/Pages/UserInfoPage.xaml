@@ -264,7 +264,7 @@
                                                     <TextBlock
                                                         MaxLines="2"
                                                         Text="{x:Bind Title}"
-                                                        TextAlignment="Justify"
+                                                        
                                                         TextTrimming="CharacterEllipsis"
                                                         TextWrapping="Wrap" />
                                                     <StackPanel VerticalAlignment="Bottom">
@@ -282,7 +282,7 @@
                                                         MaxLines="2"
                                                         Text="{Binding desc}"
                                                         TextTrimming="CharacterEllipsis"
-                                                        TextWrapping="Wrap" TextAlignment="Justify" />-->
+                                                        TextWrapping="Wrap"  />-->
                                                 </Grid>
                                             </Grid>
                                         </DataTemplate>
@@ -399,7 +399,7 @@
                                                     <TextBlock
                                                         MaxLines="1"
                                                         Text="{x:Bind title}"
-                                                        TextAlignment="Justify"
+                                                        
                                                         TextTrimming="CharacterEllipsis"
                                                         TextWrapping="Wrap" />
                                                     <TextBlock
@@ -423,7 +423,7 @@
                                                     MaxLines="2"
                                                     Text="{Binding desc}"
                                                     TextTrimming="CharacterEllipsis"
-                                                    TextWrapping="Wrap" TextAlignment="Justify" />-->
+                                                    TextWrapping="Wrap"  />-->
                                             </Grid>
                                         </DataTemplate>
                                     </toolkit:AdaptiveGridView.ItemTemplate>
@@ -520,7 +520,7 @@
                                                             Margin="0,0,0,0"
                                                             MaxLines="2"
                                                             Text="{x:Bind Title}"
-                                                            TextAlignment="Justify"
+                                                            
                                                             TextTrimming="CharacterEllipsis"
                                                             TextWrapping="Wrap" />
                                                     </StackPanel>
@@ -873,7 +873,7 @@
                                                             FontSize="14"
                                                             Opacity="0.8"
                                                             Text="{x:Bind Path=m_viewModel.UserSpaceInfo.Official.Title, Mode=OneWay}"
-                                                            TextAlignment="Justify"
+                                                            
                                                             TextWrapping="Wrap"
                                                             Visibility="{x:Bind Path=m_viewModel.UserSpaceInfo.Official.ShowOfficial, Mode=OneWay}" />
                                                         <TextBlock Margin="0,4" Foreground="{ThemeResource TextColor}">
@@ -885,7 +885,7 @@
                                                             Foreground="Gray"
                                                             IsTextSelectionEnabled="True"
                                                             Text="{x:Bind Path=m_viewModel.UserSpaceInfo.Sign, Mode=OneWay}"
-                                                            TextAlignment="Justify"
+                                                            
                                                             TextWrapping="Wrap" />
                                                     </StackPanel>
                                                 </Grid>

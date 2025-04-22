@@ -32,7 +32,7 @@
                                 Grid.Column="1"
                                 CornerRadius="10" Padding="10" >
                     <StackPanel>
-                        <TextBlock Text="{Binding TextContent.Content}" TextWrapping="Wrap" TextAlignment="Justify"/>
+                        <TextBlock Text="{Binding TextContent.Content}" TextWrapping="Wrap" />
                     </StackPanel>
                 </Border>
             </Grid>
@@ -60,7 +60,7 @@
                         </MenuFlyout>
                     </Border.ContextFlyout>
                     <StackPanel HorizontalAlignment="Right">
-                        <TextBlock Text="{Binding TextContent.Content}" TextWrapping="Wrap" TextAlignment="Justify"/>
+                        <TextBlock Text="{Binding TextContent.Content}" TextWrapping="Wrap" />
                     </StackPanel>
                 </Border>
             </Grid>
@@ -155,7 +155,7 @@
 
             <!-- 详情文本 -->
             <TextBlock x:Name="DetailText" Text="{Binding NotificationContent.Text}" FontSize="14" Grid.Row="1" Margin="0,0,0,16"
-                       TextWrapping="Wrap" TextAlignment="Justify"/>
+                       TextWrapping="Wrap" />
 
             <!-- 信息表格 -->
             <ItemsControl x:Name="InfoItemsControl" Grid.Row="2" Margin="0,0,0,16" ItemsSource="{Binding NotificationContent.Modules}">
@@ -211,7 +211,7 @@
     <DataTemplate x:Key="ChatMessageOther">
         <Border BorderThickness="1" HorizontalAlignment="Stretch"  BorderBrush="#C8E5E9EF" CornerRadius="{StaticResource ControlCornerRadius}">
             <StackPanel Margin="12">
-                <TextBlock TextWrapping="Wrap" TextAlignment="Justify">暂不支持的消息格式</TextBlock>
+                <TextBlock TextWrapping="Wrap" >暂不支持的消息格式</TextBlock>
             </StackPanel>
         </Border>
     </DataTemplate>

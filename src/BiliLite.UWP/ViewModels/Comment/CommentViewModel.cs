@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.UI;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 
@@ -216,19 +215,10 @@ namespace BiliLite.ViewModels.Comment
         {
             get
             {
-                RichTextBlock result;
-
-                if (!IsContentNeedExpand || (IsContentNeedExpand && IsExpanded))
-                {
-                    result = Content.Text;
-                }
-                else
-                {
-                    result = $"{Content.Message.SubstringCommentText(m_commentShrinkLength)}...".ToRichTextBlock(Content.Emote, enableVideoSeekTime: true);
-                }
-                result.TextAlignment = TextAlignment.Justify;
-
-                return result;
+                if (!IsContentNeedExpand || IsContentNeedExpand && IsExpanded)
+                    return Content.Text;
+                return $"{Content.Message.SubstringCommentText(m_commentShrinkLength)}...".ToRichTextBlock(
+                    Content.Emote, enableVideoSeekTime: true);
             }
         }
 
@@ -242,7 +232,7 @@ namespace BiliLite.ViewModels.Comment
             await MessageCenter.HandelUrl(paramenter.ToString());
         }
 
-        private async void Seek_Click(string timeText)
+        private void Seek_Click(string timeText)
         {
             timeText = timeText.Replace('：', ':');
             var timeSplitCount = timeText.Count(x => x == ':');

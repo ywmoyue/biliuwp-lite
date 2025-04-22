@@ -473,7 +473,7 @@
                                             Grid.Column="1"
                                             FontSize="14"
                                             Text="{x:Bind Path=m_viewModel.VideoInfo.ArgueMsg, Mode=OneWay}"
-                                            TextAlignment="Justify"
+                                            
                                             TextWrapping="Wrap" />
                                     </Grid>
                                 </Border>
@@ -482,7 +482,7 @@
                                     FontSize="18"
                                     RightTapped="TitleText_RightTapped"
                                     Text="{x:Bind Path=m_viewModel.VideoInfo.Title, Mode=OneWay}"
-                                    TextAlignment="Justify"
+                                    
                                     TextWrapping="Wrap" />
                                 <TextBlock
                                     Margin="0,4,0,0"
@@ -610,7 +610,7 @@
                                         RightTapped="txtDesc_RightTapped"
                                         Tapped="txtDesc_Tapped"
                                         Text="{x:Bind Path=m_viewModel.VideoInfo.Desc, Mode=OneWay}"
-                                        TextAlignment="Justify"
+                                        
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap"
                                         Visibility="Collapsed" />

@@ -101,7 +101,7 @@
                             <TextBlock
                                 FontSize="12"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                TextAlignment="Justify"
+                                
                                 TextWrapping="Wrap">
                                 更改应用的强调色彩
                             </TextBlock>

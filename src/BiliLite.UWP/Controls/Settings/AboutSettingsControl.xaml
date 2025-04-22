@@ -124,20 +124,20 @@
                             <TextBlock
                                 Margin="0,0,0,8"
                                 FontSize="14"
-                                TextAlignment="Justify"
+                                
                                 TextWrapping="Wrap">
                                 这是一个第三方客户端，应用所有数据来源均来自哔哩哔哩。
                             </TextBlock>
                             <TextBlock
                                 Margin="0,0,0,8"
                                 FontSize="14"
-                                TextAlignment="Justify"
+                                
                                 TextWrapping="Wrap">
                                 本程序仅供学习交流编程技术使用。
                             </TextBlock>
                             <TextBlock
                                 FontSize="14"
-                                TextAlignment="Justify"
+                                
                                 TextWrapping="Wrap">
                                 如果侵犯您的合法权益，请及时联系本人以第一时间删除。
                             </TextBlock>
