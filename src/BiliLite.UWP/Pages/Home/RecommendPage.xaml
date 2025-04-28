@@ -42,7 +42,7 @@
                                 Visibility="{x:Bind Path=Reasons, Converter={StaticResource DisplayConvert}}">
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="recommend:RecommendThreePointV2ItemReasonsModel">
-                                        <Border Margin="0,-100" Background="{ThemeResource CardColor}">
+                                        <Border Padding="0,11" Background="{ThemeResource CardColor}">
                                             <TextBlock
                                                 MinWidth="193"
                                                 HorizontalAlignment="Center"
