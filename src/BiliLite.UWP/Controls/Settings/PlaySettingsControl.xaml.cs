@@ -407,21 +407,12 @@ namespace BiliLite.Controls.Settings
             m_viewModel.CDNServerDelayTest();
         }
 
-        private async void FFmpegOptions_OnTextChanged(object sender, TextChangedEventArgs e)
+        private async void BtnSaveFfmpegInteropXOptions_OnClick(object sender, RoutedEventArgs e)
         {
+            // 等待viewModel更新
             await Task.Delay(50);
-            var dict = m_viewModel.FFmpegOptions.ToDictionary(x => x.Key, t => t.Value);
-            SettingService.SetValue(SettingConstants.Player.FfmpegOptions, dict);
-        }
-
-        private void BtnAddFFmpegOption_OnClick(object sender, RoutedEventArgs e)
-        {
-            m_viewModel.FFmpegOptions.Add(new KeyValuePairViewModel());
-        }
-
-        private void BtnOpenFFmpegOptionsPanel_OnClick(object sender, RoutedEventArgs e)
-        {
-            FFmpegOptionsDialog.ShowAsync();
+            SettingService.SetValue(SettingConstants.Player.FFMPEG_INTEROP_X_OPTIONS,
+                m_viewModel.FFmpegInteropXOptions);
         }
     }
 }
