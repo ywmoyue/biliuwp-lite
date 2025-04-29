@@ -304,6 +304,18 @@ namespace BiliLite.Controls.Settings
                 };
             };
 
+            // ShakaPlayer调试模式
+            SwitchEnableShakaPlayerDebugMode.IsOn = SettingService.GetValue(SettingConstants.Player.SHAKA_PLAYER_ENABLE_DEBUG_MODE,
+                false);
+            SwitchEnableShakaPlayerDebugMode.Loaded += (sender, e) =>
+            {
+                SwitchEnableShakaPlayerDebugMode.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.SHAKA_PLAYER_ENABLE_DEBUG_MODE,
+                        SwitchEnableShakaPlayerDebugMode.IsOn);
+                };
+            };
+
             //自动打开AI字幕
             swPlayerSettingAutoOpenAISubtitle.IsOn =
                 SettingService.GetValue<bool>(SettingConstants.Player.AUTO_OPEN_AI_SUBTITLE, false);

@@ -55,8 +55,10 @@
             </ComboBox>
 
             <controls:SettingsExpander.Items>
-                <TextBlock>FFMpegInteropX播放器设置</TextBlock>
-                <controls:SettingsCard Header="FFMpegInteropX额外播放参数">
+                <controls:SettingsCard Header="FFMpegInteropX播放器设置"
+                                       Margin="8 8 8 0"></controls:SettingsCard>
+                <controls:SettingsCard Header="FFMpegInteropX额外播放参数"
+                                       Margin="8 0 8 0">
                     <StackPanel Orientation="Horizontal">
                         <TextBox 
                             Text="{x:Bind m_viewModel.FFmpegInteropXOptions,Mode=TwoWay}"
@@ -68,8 +70,10 @@
                         <Button Click="BtnSaveFfmpegInteropXOptions_OnClick">保存</Button>
                     </StackPanel>
                 </controls:SettingsCard>
-                <TextBlock>ShakaPlayer设置</TextBlock>
+                <controls:SettingsCard Header="ShakaPlayer设置"
+                                       Margin="8 8 8 0"></controls:SettingsCard>
                 <controls:SettingsCard Header="启用调试模式"
+                                       Margin="8 0 8 8"
                                        Description="每次播放时打开控制台">
                     <ToggleSwitch x:Name="SwitchEnableShakaPlayerDebugMode"></ToggleSwitch>
                 </controls:SettingsCard>

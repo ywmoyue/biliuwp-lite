@@ -1,19 +1,22 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using BiliLite.Models.Common;
 using BiliLite.Player.ShakaPlayer.Models;
+using BiliLite.Services;
 using Newtonsoft.Json;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
 namespace BiliLite.Player.ShakaPlayer
 {
-    public sealed partial class ShakaPlayerControl : UserControl
+    public sealed partial class ShakaPlayerControl : UserControl, IDisposable
     {
+        private bool m_hasLoaded = false;
+
         public ShakaPlayerControl()
         {
             this.InitializeComponent();
@@ -32,16 +35,23 @@ namespace BiliLite.Player.ShakaPlayer
         {
             var tempFolder = ApplicationData.Current.TemporaryFolder;
             var dataFolder = ApplicationData.Current.LocalFolder;
+            var installFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
+            var assetsFolder = await installFolder.GetFolderAsync("Assets");
+            var shakaAssetsFolder = await assetsFolder.GetFolderAsync("ShakaPlayer");
             await WebViewElement.EnsureCoreWebView2Async();
             WebViewElement.CoreWebView2.SetVirtualHostNameToFolderMapping("videolibs.bililte.service", "C:\\Users\\muyan\\Videos\\哔哩哔哩下载",
                 CoreWebView2HostResourceAccessKind.Allow);
             WebViewElement.CoreWebView2.SetVirtualHostNameToFolderMapping("temp.bililte.service", tempFolder.Path,
                 CoreWebView2HostResourceAccessKind.Allow);
-            WebViewElement.CoreWebView2.SetVirtualHostNameToFolderMapping("www.bilibili.com", Path.Combine(dataFolder.Path, "shakaPlayer"),
+            WebViewElement.CoreWebView2.SetVirtualHostNameToFolderMapping("www.bilibili.com", shakaAssetsFolder.Path,
                 CoreWebView2HostResourceAccessKind.Allow);
 
-            WebViewElement.CoreWebView2.Settings.AreDevToolsEnabled = true;
-            WebViewElement.CoreWebView2.OpenDevToolsWindow();
+            if (SettingService.GetValue(SettingConstants.Player.SHAKA_PLAYER_ENABLE_DEBUG_MODE,
+                    false))
+            {
+                WebViewElement.CoreWebView2.Settings.AreDevToolsEnabled = true;
+                WebViewElement.CoreWebView2.OpenDevToolsWindow();
+            }
 
             WebViewElement.CoreWebView2.WebMessageReceived += CoreWebView2_WebMessageReceived;
         }
@@ -59,6 +69,7 @@ namespace BiliLite.Player.ShakaPlayer
                 var data = JsonConvert.DeserializeObject<ShakaPlayerLoadedData>(
                     JsonConvert.SerializeObject(@event.Data));
                 PlayerLoaded?.Invoke(this, data);
+                m_hasLoaded = true;
             }
         }
 
@@ -69,26 +80,35 @@ namespace BiliLite.Player.ShakaPlayer
 
         public async Task Pause()
         {
+            if (!m_hasLoaded) return;
             var script = "window.pause()";
             await WebViewElement.CoreWebView2.ExecuteScriptAsync(script);
         }
 
         public async Task Resume()
         {
+            if (!m_hasLoaded) return;
             var script = "window.resume()";
             await WebViewElement.CoreWebView2.ExecuteScriptAsync(script);
         }
 
         public async Task Seek(double position)
         {
+            if (!m_hasLoaded) return;
             var script = $"window.seek({position})";
             await WebViewElement.CoreWebView2.ExecuteScriptAsync(script);
         }
 
         public async Task SetRate(double speed)
         {
+            if (!m_hasLoaded) return;
             var script = $"window.setRate({speed})";
             await WebViewElement.CoreWebView2.ExecuteScriptAsync(script);
+        }
+
+        public void Dispose()
+        {
+            WebViewElement.Close();
         }
     }
 }

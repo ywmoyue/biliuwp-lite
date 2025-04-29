@@ -993,6 +993,12 @@ namespace BiliLite.Models.Common
 
             [SettingDefaultValue]
             public const double DEFAULT_AUTO_REFRESH_PLAY_URL_TIME = 118;
+
+            /// <summary>
+            /// ShakaPlayer调试模式
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string SHAKA_PLAYER_ENABLE_DEBUG_MODE = "ShakaPlayerEnableDebugMode";
         }
 
         public class Filter

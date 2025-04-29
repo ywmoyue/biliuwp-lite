@@ -1,14 +1,11 @@
-﻿using Bilibili.Main.Community.Reply.V1;
+﻿
 using BiliLite.Models;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using BiliLite.Services;
-using System.Web;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite.Player.ShakaPlayer.Extensions
 {
@@ -19,18 +16,16 @@ namespace BiliLite.Player.ShakaPlayer.Extensions
         public static async Task<string> CreateMpdFiles(this GenerateMPDModel model)
         {
             var mpdString = GenerateMpd(model);
-            var fileName = Guid.NewGuid().ToString();
 
-            var tempFolder = ApplicationData.Current.TemporaryFolder;
-            var tempFile = await tempFolder.CreateFileAsync(
-                fileName,
-                CreationCollisionOption.ReplaceExisting);
+            var tempFileService = App.ServiceProvider.GetRequiredService<TempFileService>();
+
+            var tempFile = await tempFileService.CreateTempFile();
 
             await FileIO.WriteTextAsync(tempFile, mpdString);
 
-            _logger.Debug("tempFolder：" + tempFolder.Path + ",tempFile:" + tempFile.Path);
+            var folder = await tempFile.GetParentAsync();
 
-            return tempFile.Path.Replace(tempFolder.Path, "https://temp.bililte.service").Replace("\\", "/");
+            return tempFile.Path.Replace(folder.Path, "https://temp.bililte.service").Replace("\\", "/");
         }
 
         public static string GenerateMpd(GenerateMPDModel model)

@@ -350,7 +350,6 @@
     <Compile Include="Player\ShakaPlayer\ShakaPlayerControl.xaml.cs">
       <DependentUpon>ShakaPlayerControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Player\ShakaPlayer\ShakaPlayerService.cs" />
     <Compile Include="Services\Biz\BaseBizService.cs" />
     <Compile Include="Services\Biz\LocalAttentionUserService.cs" />
     <Compile Include="Services\Biz\MessagesService.cs" />

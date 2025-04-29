@@ -169,9 +169,9 @@ namespace BiliLite.Controls
             DependencyProperty.Register("MediaInfo", typeof(string), typeof(Player), new PropertyMetadata(""));
         public bool Opening { get; set; }
 
-        public bool ShowMediaPlayer { get; set; } = false;
+        public bool ShowMediaPlayer { get; set; } = true;
 
-        public bool ShowShakaPlayer { get; set; } = true;
+        public bool ShowShakaPlayer { get; set; } = false;
 
         #endregion
 
@@ -1342,7 +1342,7 @@ namespace BiliLite.Controls
                         PlayState = PlayState.Pause;
                     }
                 }
-                else
+                else if (m_playerVideo != null)
                 {
                     if (m_playerVideo.PlaybackSession.CanPause)
                     {
@@ -1350,6 +1350,7 @@ namespace BiliLite.Controls
                         PlayState = PlayState.Pause;
                     }
                 }
+
                 PlayStateChanged?.Invoke(this, PlayState);
             }
             catch (Exception ex)
@@ -1579,6 +1580,7 @@ namespace BiliLite.Controls
             try
             {
                 ClosePlay();
+                ShakaPlayer.Dispose();
             }
             catch (Exception ex)
             {
