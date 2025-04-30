@@ -44,10 +44,16 @@ namespace BiliLite.Player.ShakaPlayer
                 CoreWebView2HostResourceAccessKind.Allow);
             WebViewElement.CoreWebView2.SetVirtualHostNameToFolderMapping("temp.bililte.service", tempFolder.Path,
                 CoreWebView2HostResourceAccessKind.Allow);
-            WebViewElement.CoreWebView2.SetVirtualHostNameToFolderMapping("www.bilibili.com", shakaAssetsFolder.Path,
-                CoreWebView2HostResourceAccessKind.Allow);
 
-            if (SettingService.GetValue(SettingConstants.Player.SHAKA_PLAYER_ENABLE_DEBUG_MODE,
+            if (!SettingService.GetValue(SettingConstants.Player.WEB_PLAYER_ENABLE_DEV_MODE,
+                    false))
+            {
+                WebViewElement.CoreWebView2.SetVirtualHostNameToFolderMapping("www.bilibili.com",
+                    shakaAssetsFolder.Path,
+                    CoreWebView2HostResourceAccessKind.Allow);
+            }
+
+            if (SettingService.GetValue(SettingConstants.Player.WEB_PLAYER_ENABLE_DEBUG_MODE,
                     false))
             {
                 WebViewElement.CoreWebView2.Settings.AreDevToolsEnabled = true;
@@ -88,7 +94,16 @@ namespace BiliLite.Player.ShakaPlayer
                 }
             };
             var json = JsonConvert.SerializeObject(playData);
-            WebViewElement.Source = new Uri($"https://www.bilibili.com/index.html?playData={json.ToBase64()}");
+
+            if (!SettingService.GetValue(SettingConstants.Player.WEB_PLAYER_ENABLE_DEV_MODE,
+                    false))
+            {
+                WebViewElement.Source = new Uri($"https://www.bilibili.com/index.html?playData={json.ToBase64()}");
+            }
+            else
+            {
+                WebViewElement.Source = new Uri($"http://www.bilibili.com/index.html?playData={json.ToBase64()}");
+            }
         }
 
         public async Task Pause()

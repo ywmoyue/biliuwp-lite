@@ -70,12 +70,22 @@
                         <Button Click="BtnSaveFfmpegInteropXOptions_OnClick">保存</Button>
                     </StackPanel>
                 </controls:SettingsCard>
-                <controls:SettingsCard Header="ShakaPlayer设置"
+                <controls:SettingsCard Header="Web播放器设置(ShakaPlayer)"
                                        Margin="8 8 8 0"></controls:SettingsCard>
+                <controls:SettingsCard Header="挂载本地文件"
+                                       Margin="8 0 8 0"
+                                       Description="选择本地html文件替代内置播放器html进行挂载">
+                    <Button x:Name="BtnSelectWebPlayerFile">开发中，敬请期待</Button>
+                </controls:SettingsCard>
                 <controls:SettingsCard Header="启用调试模式"
-                                       Margin="8 0 8 8"
+                                       Margin="8 0 8 0"
                                        Description="每次播放时打开控制台">
-                    <ToggleSwitch x:Name="SwitchEnableShakaPlayerDebugMode"></ToggleSwitch>
+                    <ToggleSwitch x:Name="SwitchEnableWebPlayerDebugMode"></ToggleSwitch>
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="启用开发模式"
+                                       Margin="8 0 8 8"
+                                       Description="取消挂载播放器html文件，并以 http://www.bilibili.com 作为播放器进行使用。播放器前端开发时使用，普通用户请勿开启。">
+                    <ToggleSwitch x:Name="SwitchEnableWebPlayerDevMode"></ToggleSwitch>
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
 

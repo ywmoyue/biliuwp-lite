@@ -995,10 +995,15 @@ namespace BiliLite.Models.Common
             public const double DEFAULT_AUTO_REFRESH_PLAY_URL_TIME = 118;
 
             /// <summary>
-            /// ShakaPlayer调试模式
+            /// WebPlayer调试模式
             /// </summary>
             [SettingKey(typeof(bool))]
-            public const string SHAKA_PLAYER_ENABLE_DEBUG_MODE = "ShakaPlayerEnableDebugMode";
+            public const string WEB_PLAYER_ENABLE_DEBUG_MODE = "WebPlayerEnableDebugMode";
+
+            /// <summary>
+            /// WebPlayer开发模式
+            /// </summary>
+            public const string WEB_PLAYER_ENABLE_DEV_MODE = "WebPlayerEnableDevMode";
         }
 
         public class Filter

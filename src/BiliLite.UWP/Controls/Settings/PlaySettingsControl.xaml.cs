@@ -304,15 +304,27 @@ namespace BiliLite.Controls.Settings
                 };
             };
 
-            // ShakaPlayer调试模式
-            SwitchEnableShakaPlayerDebugMode.IsOn = SettingService.GetValue(SettingConstants.Player.SHAKA_PLAYER_ENABLE_DEBUG_MODE,
+            // Web播放器调试模式
+            SwitchEnableWebPlayerDebugMode.IsOn = SettingService.GetValue(SettingConstants.Player.WEB_PLAYER_ENABLE_DEBUG_MODE,
                 false);
-            SwitchEnableShakaPlayerDebugMode.Loaded += (sender, e) =>
+            SwitchEnableWebPlayerDebugMode.Loaded += (sender, e) =>
             {
-                SwitchEnableShakaPlayerDebugMode.Toggled += (obj, args) =>
+                SwitchEnableWebPlayerDebugMode.Toggled += (obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.Player.SHAKA_PLAYER_ENABLE_DEBUG_MODE,
-                        SwitchEnableShakaPlayerDebugMode.IsOn);
+                    SettingService.SetValue(SettingConstants.Player.WEB_PLAYER_ENABLE_DEBUG_MODE,
+                        SwitchEnableWebPlayerDebugMode.IsOn);
+                };
+            };
+
+            // Web播放器开发模式
+            SwitchEnableWebPlayerDevMode.IsOn = SettingService.GetValue(SettingConstants.Player.WEB_PLAYER_ENABLE_DEV_MODE,
+                false);
+            SwitchEnableWebPlayerDevMode.Loaded += (sender, e) =>
+            {
+                SwitchEnableWebPlayerDevMode.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.WEB_PLAYER_ENABLE_DEV_MODE,
+                        SwitchEnableWebPlayerDevMode.IsOn);
                 };
             };
 
