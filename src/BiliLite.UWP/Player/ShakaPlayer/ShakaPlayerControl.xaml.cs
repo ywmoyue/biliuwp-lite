@@ -40,8 +40,9 @@ namespace BiliLite.Player.ShakaPlayer
             var assetsFolder = await installFolder.GetFolderAsync("Assets");
             var shakaAssetsFolder = await assetsFolder.GetFolderAsync("ShakaPlayer");
             await WebViewElement.EnsureCoreWebView2Async();
-            WebViewElement.CoreWebView2.SetVirtualHostNameToFolderMapping("videolibs.bililte.service", "C:\\Users\\muyan\\Videos\\哔哩哔哩下载",
-                CoreWebView2HostResourceAccessKind.Allow);
+            // TODO: 挂载下载目录
+            //WebViewElement.CoreWebView2.SetVirtualHostNameToFolderMapping("videolibs.bililte.service", "",
+            //    CoreWebView2HostResourceAccessKind.Allow);
             WebViewElement.CoreWebView2.SetVirtualHostNameToFolderMapping("temp.bililte.service", tempFolder.Path,
                 CoreWebView2HostResourceAccessKind.Allow);
 
