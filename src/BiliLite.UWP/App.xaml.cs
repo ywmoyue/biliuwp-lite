@@ -188,6 +188,8 @@ namespace BiliLite
                 themeService.InitTitleBar();
                 themeService.InitAccentColor();
                 themeService.InitStyle();
+                var tempFileService = ServiceProvider.GetRequiredService<TempFileService>();
+                tempFileService.ClearTempFiles();
             }
         }
 

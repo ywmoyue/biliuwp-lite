@@ -344,6 +344,12 @@
     <Compile Include="Pages\MessagesPage.xaml.cs">
       <DependentUpon>MessagesPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Player\ShakaPlayer\Extensions\ShakaExtensions.cs" />
+    <Compile Include="Player\ShakaPlayer\Models\BaseShakaPlayerEventMessage.cs" />
+    <Compile Include="Player\ShakaPlayer\Models\ShakaPlayerLoadedData.cs" />
+    <Compile Include="Player\ShakaPlayer\ShakaPlayerControl.xaml.cs">
+      <DependentUpon>ShakaPlayerControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Services\Biz\BaseBizService.cs" />
     <Compile Include="Services\Biz\LocalAttentionUserService.cs" />
     <Compile Include="Services\Biz\MessagesService.cs" />
@@ -356,6 +362,7 @@
     <Compile Include="Models\Common\Msg\BiliSessionMessageSource.cs" />
     <Compile Include="Models\Common\Msg\BiliSessionMessagesResponse.cs" />
     <Compile Include="Models\Common\Msg\BiliSessionPrivateMessage.cs" />
+    <Compile Include="Services\TempFileService.cs" />
     <Compile Include="ViewModels\Common\WebPageViewModel.cs" />
     <Compile Include="ViewModels\Messages\ChatContextViewModel.cs" />
     <Compile Include="Models\Common\Msg\ChatMessage.cs" />
@@ -1155,6 +1162,7 @@
     <Content Include="Assets\Login\ic_22_hide.png" />
     <Content Include="Assets\Login\ic_33.png" />
     <Content Include="Assets\Login\ic_33_hide.png" />
+    <Content Include="Assets\ShakaPlayer\index.html" />
     <Content Include="Assets\SmallTile.scale-100.png" />
     <Content Include="Assets\SmallTile.scale-125.png" />
     <Content Include="Assets\SmallTile.scale-150.png" />
@@ -1345,6 +1353,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\User\DynamicSpacePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Player\ShakaPlayer\ShakaPlayerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
