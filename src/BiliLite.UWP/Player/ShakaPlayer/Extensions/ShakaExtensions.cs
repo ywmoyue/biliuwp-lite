@@ -44,10 +44,10 @@ namespace BiliLite.Player.ShakaPlayer.Extensions
 <MPD xmlns=""urn:mpeg:dash:schema:mpd:2011"" 
      xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""
      xsi:schemaLocation=""urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd""
-     type=""static""
+     type=""dynamic""
      mediaPresentationDuration=""PT{0}S""
-     minBufferTime=""PT1.5S""
-     profiles=""urn:mpeg:dash:profile:isoff-on-demand:2011"">
+timeShiftBufferDepth=""PT1S"" minimumUpdatePeriod=""PT1H"" maxSegmentDuration=""PT3S"" minBufferTime=""PT1S"" 
+profiles=""urn:mpeg:dash:profile:isoff-live:2011,urn:com:dashif:dash264"">
     <Period start=""PT0S"" duration=""PT{1}S"">
         {2}
     </Period>
@@ -70,7 +70,7 @@ namespace BiliLite.Player.ShakaPlayer.Extensions
                            mimeType=""video/mp4"">
                 <SegmentTemplate
                     timescale=""16000""
-                    duration=""{model.DurationMS}""
+                    duration=""16000""
                     media=""{escapedVideoUrl}""
                     startNumber=""1""/>
             </Representation>";
@@ -95,7 +95,7 @@ namespace BiliLite.Player.ShakaPlayer.Extensions
                            codecs=""{model.AudioCodec}""
                            mimeType=""audio/mp4"">
                 <SegmentTemplate
-                    duration=""{model.DurationMS}""
+                    duration=""16000""
                     media=""{escapedAudioUrl}""
                     startNumber=""1""/>
             </Representation>";

@@ -715,7 +715,7 @@ namespace BiliLite.Controls
                 var mpdUrl = await mpdModel.CreateMpdFiles();
 
                 //设置播放器
-                await ShakaPlayer.LoadUrl(mpdUrl);
+                await ShakaPlayer.LoadUrl(quality.DashInfo.Video.Url, quality.DashInfo.Audio.Url);
 
                 Buffering = true;
 

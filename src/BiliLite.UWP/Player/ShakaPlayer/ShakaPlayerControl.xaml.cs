@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Player.ShakaPlayer.Models;
 using BiliLite.Services;
@@ -73,9 +74,21 @@ namespace BiliLite.Player.ShakaPlayer
             }
         }
 
-        public async Task LoadUrl(string mpdUrl)
+        public async Task LoadUrl(string videoUrl, string audioUrl)
         {
-            WebViewElement.Source = new Uri($"https://www.bilibili.com/index.html?mpdUrl={mpdUrl}");
+            var playData = new
+            {
+                video = new
+                {
+                    url = videoUrl,
+                },
+                audio = new
+                {
+                    url = audioUrl,
+                }
+            };
+            var json = JsonConvert.SerializeObject(playData);
+            WebViewElement.Source = new Uri($"https://www.bilibili.com/index.html?playData={json.ToBase64()}");
         }
 
         public async Task Pause()
