@@ -81,7 +81,7 @@ namespace BiliLite.Pages
             m_playerConfig = new PlayerConfig();
             PreLoadSetting();
             m_playerController = PlayerControllerFactory.Create(PlayerType.Live);
-            m_player = new LivePlayer(m_playerConfig, playerElement, m_playerController);
+            m_player = new LivePlayer(m_playerConfig, playerElement, m_playerController, ShakaPlayer);
             m_realPlayInfo = new RealPlayInfo();
             m_realPlayInfo.IsAutoPlay = true;
             m_playerController.SetPlayer(m_player);
@@ -559,6 +559,12 @@ namespace BiliLite.Pages
                         SettingConstants.Player.DEFAULT_LIVE_PLAYER_MODE,
                         (int)DefaultPlayerModeOptions.DEFAULT_LIVE_PLAYER_MODE);
             m_playerConfig.PlayMode = m_viewModel.LivePlayerMode;
+
+            // 播放器类型
+            m_playerConfig.PlayerType = (RealPlayerType)SettingService.GetValue(
+                SettingConstants.Player.LIVE_PLAYER_TYPE,
+                (int)LivePlayerTypeOptions.DEFAULT_LIVE_PLAYER_MODE);
+            m_viewModel.RealPlayerType = m_playerConfig.PlayerType;
 
             // 直播流默认源
             m_viewModel.LivePlayUrlSource = SettingService.GetValue(

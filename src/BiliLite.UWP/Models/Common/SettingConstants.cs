@@ -937,6 +937,12 @@ namespace BiliLite.Models.Common
             [SettingKey(typeof(int))]
             public const string DEFAULT_LIVE_PLAYER_MODE = "DefaultLivePlayerMode";
 
+            /// <summary>
+            /// 直播播放器使用播放器类型
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const string LIVE_PLAYER_TYPE = "LivePlayerType";
+
             [SettingKey(typeof(bool))]
             public const string REPORT_HISTORY = "ReportHistory";
 

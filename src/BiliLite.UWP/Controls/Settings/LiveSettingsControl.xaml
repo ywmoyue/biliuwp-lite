@@ -36,7 +36,20 @@
                 </ComboBox.Items>
             </ComboBox>
         </controls:SettingsCard>
-        <controls:SettingsCard Header="默认弹幕状态"
+
+        <controls:SettingsCard Header="播放器类型"
+                                   Description="如果遇到奇怪问题，请尝试修改播放器类型">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_PhotoVideo"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <ComboBox x:Name="ComboBoxUseRealPlayerType" SelectedIndex="0" MinWidth="200"
+                      SelectedValuePath="Value"
+                      DisplayMemberPath="Content"
+                      ItemsSource="{x:Bind m_realPlayerTypes}">
+            </ComboBox>
+        </controls:SettingsCard>
+
+            <controls:SettingsCard Header="默认弹幕状态"
                                Description="播放视频时默认弹幕状态">
             <controls:SettingsCard.HeaderIcon>
                 <FontIcon  FontFamily="Segoe MDL2 Assets" Glyph="&#xEC87;"></FontIcon>

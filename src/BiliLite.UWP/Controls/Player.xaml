@@ -22,6 +22,7 @@
         <Grid Visibility="{x:Bind ShowShakaPlayer,Mode=OneWay}">
             <shakaPlayer:ShakaPlayerControl x:Name="ShakaPlayer" 
                                             PlayerLoaded="ShakaPlayer_OnPlayerLoaded"
+                                            Ended="ShakaPlayer_OnEnded"
                                             PositionChanged="ShakaPlayer_OnPositionChanged"></shakaPlayer:ShakaPlayerControl>
         </Grid>
     </Grid>

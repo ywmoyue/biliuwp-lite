@@ -108,7 +108,15 @@ namespace BiliLite.Controls
         /// </summary>
         public double Volume
         {
-            get { return (double)GetValue(VolumeProperty); }
+            get
+            {
+                if (ShowMediaPlayer)
+                {
+                    return (double)GetValue(VolumeProperty);
+                }
+
+                return ShakaPlayer.Volume;
+            }
             set
             {
                 if (value > 1)
@@ -242,7 +250,10 @@ namespace BiliLite.Controls
             {
                 value = 0;
             }
-            sender.SetVolume(value);
+
+            if (sender.ShowMediaPlayer)
+                sender.SetVolume(value);
+            else sender.ShakaPlayer.SetVolume(value);
         }
 
         private async Task<AdaptiveMediaSource> CreateAdaptiveMediaSource(BiliDashPlayUrlInfo dashInfo, string userAgent, string referer)
@@ -589,6 +600,23 @@ namespace BiliLite.Controls
         private async void ShakaPlayer_OnPositionChanged(object sender, double e)
         {
             await OnPlayerPositionChanged(TimeSpan.FromSeconds(e));
+        }
+
+        private async void ShakaPlayer_OnPlayerLoaded(object sender, ShakaPlayerLoadedData e)
+        {
+            Duration = e.Duration;
+            Opening = false;
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                PlayMediaOpened?.Invoke(this, EventArgs.Empty);
+
+                Buffering = false;
+            });
+        }
+
+        private async void ShakaPlayer_OnEnded(object sender, EventArgs e)
+        {
+            await OnPlayerMediaEnded();
         }
 
         #endregion
@@ -1626,17 +1654,5 @@ namespace BiliLite.Controls
         }
 
         #endregion
-
-        private async void ShakaPlayer_OnPlayerLoaded(object sender, ShakaPlayerLoadedData e)
-        {
-            Duration = e.Duration;
-            Opening = false;
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                PlayMediaOpened?.Invoke(this, EventArgs.Empty);
-
-                Buffering = false;
-            });
-        }
     }
 }

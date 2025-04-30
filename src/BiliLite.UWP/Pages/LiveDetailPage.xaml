@@ -16,6 +16,7 @@
     xmlns:live1="using:BiliLite.ViewModels.Live"
     xmlns:Player="using:BiliLite.Models.Common.Player"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
+    xmlns:shakaPlayer="using:BiliLite.Player.ShakaPlayer"
     Margin="{x:Bind m_viewModel.Margin, Mode=OneWay}"
     Background="Transparent">
     <Page.Resources>
@@ -174,7 +175,8 @@
                    ManipulationCompleted="Grid_ManipulationCompleted"
                    ManipulationDelta="Grid_ManipulationDelta"
                    ManipulationStarted="Grid_ManipulationStarted">
-                    <MediaPlayerElement x:Name="playerElement" ></MediaPlayerElement>
+                    <MediaPlayerElement x:Name="playerElement" Visibility="{x:Bind m_viewModel.ShowMediaPlayer,Mode=OneWay}"></MediaPlayerElement>
+                    <shakaPlayer:ShakaPlayerControl x:Name="ShakaPlayer" Visibility="{x:Bind m_viewModel.ShowWebPlayer,Mode=OneWay}"></shakaPlayer:ShakaPlayerControl>
                    
                     <!--弹幕-->
                     <Grid Tapped="Grid_Tapped">
