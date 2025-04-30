@@ -9,8 +9,7 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400"
-    Loaded="ShakaPlayerControl_OnLoaded"
-    Unloaded="ShakaPlayerControl_OnUnloaded">
+    Loaded="ShakaPlayerControl_OnLoaded">
 
     <Grid>
         <controls:WebView2 x:Name="WebViewElement" ></controls:WebView2>

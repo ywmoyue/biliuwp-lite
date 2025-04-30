@@ -215,10 +215,5 @@ namespace BiliLite.Player.ShakaPlayer
         {
             WebViewElement.Close();
         }
-
-        private void ShakaPlayerControl_OnUnloaded(object sender, RoutedEventArgs e)
-        {
-            Dispose();
-        }
     }
 }
