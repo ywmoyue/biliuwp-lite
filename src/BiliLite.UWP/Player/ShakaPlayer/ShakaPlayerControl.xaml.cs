@@ -91,6 +91,8 @@ namespace BiliLite.Player.ShakaPlayer
                     JsonConvert.SerializeObject(@event.Data));
                 PlayerLoaded?.Invoke(this, data);
                 m_hasLoaded = true;
+                SetSyncThreshold();
+                SetVolume(Volume);
             }
             else if (@event.Event == ShakaPlayerEventLists.ENDED)
             {
@@ -155,17 +157,21 @@ namespace BiliLite.Player.ShakaPlayer
             if (!SettingService.GetValue(SettingConstants.Player.WEB_PLAYER_ENABLE_DEV_MODE,
                     false))
             {
-                WebViewElement.Source = new Uri($"https://www.bilibili.com/index.html?playData={playDataStr.ToBase64()}");
+                WebViewElement.Source = new Uri($"https://www.bilibili.com/index.html?view=ShakaPlayerView&playData={playDataStr.ToBase64()}");
             }
             else
             {
-                WebViewElement.Source = new Uri($"http://www.bilibili.com/index.html?playData={playDataStr.ToBase64()}");
+                WebViewElement.Source = new Uri($"http://www.bilibili.com/index.html?view=ShakaPlayerView&playData={playDataStr.ToBase64()}");
             }
         }
 
         public async Task SetVolume(double volume)
         {
-            if (!m_hasLoaded) return;
+            if (!m_hasLoaded)
+            {
+                Volume = volume;
+                return;
+            }
             var script = $"window.setVolume({volume})";
             await WebViewElement.CoreWebView2.ExecuteScriptAsync(script);
         }
@@ -181,6 +187,18 @@ namespace BiliLite.Player.ShakaPlayer
                 return volume;
             }
             return 1;
+        }
+
+        public async Task SetSyncThreshold()
+        {
+            var diff1 = SettingService.GetValue(
+                SettingConstants.Player.WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_1,
+                SettingConstants.Player.DEFAULT_WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_1);
+            var diff2 = SettingService.GetValue(
+                SettingConstants.Player.WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_2,
+                SettingConstants.Player.DEFAULT_WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_2);
+            string script = $"window.setCheckAVSyncDiff({diff1},{diff2})";
+            await WebViewElement.CoreWebView2.ExecuteScriptAsync(script);
         }
 
         public async Task Pause()

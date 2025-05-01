@@ -328,6 +328,32 @@ namespace BiliLite.Controls.Settings
                 };
             };
 
+            //WebPlayer音视频进度同步阈值1
+            NumberBoxWebPlayerAVPositionSyncThreshold1.Value = SettingService.GetValue(
+                SettingConstants.Player.WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_1,
+                SettingConstants.Player.DEFAULT_WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_1);
+            NumberBoxWebPlayerAVPositionSyncThreshold1.Loaded += (_, _) =>
+            {
+                NumberBoxWebPlayerAVPositionSyncThreshold1.ValueChanged += (_, _) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_1,
+                        NumberBoxWebPlayerAVPositionSyncThreshold1.Value);
+                };
+            };
+
+            //WebPlayer音视频进度同步阈值2
+            NumberBoxWebPlayerAVPositionSyncThreshold2.Value = SettingService.GetValue(
+                SettingConstants.Player.WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_2,
+                SettingConstants.Player.DEFAULT_WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_2);
+            NumberBoxWebPlayerAVPositionSyncThreshold2.Loaded += (_, _) =>
+            {
+                NumberBoxWebPlayerAVPositionSyncThreshold2.ValueChanged += (_, _) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_2,
+                        NumberBoxWebPlayerAVPositionSyncThreshold2.Value);
+                };
+            };
+
             //自动打开AI字幕
             swPlayerSettingAutoOpenAISubtitle.IsOn =
                 SettingService.GetValue<bool>(SettingConstants.Player.AUTO_OPEN_AI_SUBTITLE, false);

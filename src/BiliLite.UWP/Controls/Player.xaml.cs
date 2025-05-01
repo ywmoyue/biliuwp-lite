@@ -110,12 +110,7 @@ namespace BiliLite.Controls
         {
             get
             {
-                if (ShowMediaPlayer)
-                {
-                    return (double)GetValue(VolumeProperty);
-                }
-
-                return ShakaPlayer.Volume;
+                return (double)GetValue(VolumeProperty);
             }
             set
             {
@@ -750,12 +745,9 @@ namespace BiliLite.Controls
                 PlayState = PlayState.Pause;
                 PlayStateChanged?.Invoke(this, PlayState);
                 //设置音量
-                //m_playerVideo.Volume = Volume;
+                ShakaPlayer.SetVolume(Volume);
                 //设置速率
-               // m_playerVideo.PlaybackSession.PlaybackRate = Rate;
-
-                //绑定MediaPlayer
-                //mediaPlayerVideo.SetMediaPlayer(m_playerVideo);
+                ShakaPlayer.SetRate(Rate);
 
                 return new PlayerOpenResult()
                 {

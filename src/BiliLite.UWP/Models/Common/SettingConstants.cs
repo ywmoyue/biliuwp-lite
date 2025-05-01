@@ -1010,6 +1010,24 @@ namespace BiliLite.Models.Common
             /// WebPlayer开发模式
             /// </summary>
             public const string WEB_PLAYER_ENABLE_DEV_MODE = "WebPlayerEnableDevMode";
+
+            /// <summary>
+            /// WebPlayer音视频进度同步阈值1
+            /// </summary>
+            [SettingKey(typeof(double))]
+            public const string WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_1 = "WebPlayerAVPositionSyncThreshold1";
+
+            [SettingDefaultValue]
+            public const double DEFAULT_WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_1 = 0.2d;
+
+            /// <summary>
+            /// WebPlayer音视频进度同步阈值2
+            /// </summary>
+            [SettingKey(typeof(double))]
+            public const string WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_2 = "WebPlayerAVPositionSyncThreshold2";
+
+            [SettingDefaultValue]
+            public const double DEFAULT_WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_2 = 0.6d;
         }
 
         public class Filter

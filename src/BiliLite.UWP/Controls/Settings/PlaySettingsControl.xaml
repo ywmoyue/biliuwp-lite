@@ -83,9 +83,19 @@
                     <ToggleSwitch x:Name="SwitchEnableWebPlayerDebugMode"></ToggleSwitch>
                 </controls:SettingsCard>
                 <controls:SettingsCard Header="启用开发模式"
-                                       Margin="8 0 8 8"
+                                       Margin="8 0 8 0"
                                        Description="取消挂载播放器html文件，并以 http://www.bilibili.com 作为播放器进行使用。播放器前端开发时使用，普通用户请勿开启。">
                     <ToggleSwitch x:Name="SwitchEnableWebPlayerDevMode"></ToggleSwitch>
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="WebPlayer音视频进度同步阈值1"
+                                       Margin="8 0 8 0"
+                                       Description="当音视频进度偏差大于此阈值时调整音频播放速度，随后恢复">
+                    <controls1:NumberBox x:Name="NumberBoxWebPlayerAVPositionSyncThreshold1"></controls1:NumberBox>
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="WebPlayer音视频进度同步阈值2"
+                                       Margin="8 0 8 8"
+                                       Description="当音视频进度偏差大于此阈值时音频进度跳转到视频进度位置">
+                    <controls1:NumberBox x:Name="NumberBoxWebPlayerAVPositionSyncThreshold2"></controls1:NumberBox>
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
 
