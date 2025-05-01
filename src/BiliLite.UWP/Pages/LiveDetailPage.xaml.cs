@@ -81,7 +81,7 @@ namespace BiliLite.Pages
             m_playerConfig = new PlayerConfig();
             PreLoadSetting();
             m_playerController = PlayerControllerFactory.Create(PlayerType.Live);
-            m_player = new LivePlayer(m_playerConfig, playerElement, m_playerController);
+            m_player = new LivePlayer(m_playerConfig, playerElement, m_playerController, ShakaPlayer);
             m_realPlayInfo = new RealPlayInfo();
             m_realPlayInfo.IsAutoPlay = true;
             m_playerController.SetPlayer(m_player);
@@ -281,6 +281,7 @@ namespace BiliLite.Pages
         private async void LiveDetailPage_ClosedPage(object sender, EventArgs e)
         {
             await StopPlay();
+            ShakaPlayer.Dispose();
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -560,6 +561,12 @@ namespace BiliLite.Pages
                         (int)DefaultPlayerModeOptions.DEFAULT_LIVE_PLAYER_MODE);
             m_playerConfig.PlayMode = m_viewModel.LivePlayerMode;
 
+            // 播放器类型
+            m_playerConfig.PlayerType = (RealPlayerType)SettingService.GetValue(
+                SettingConstants.Player.LIVE_PLAYER_TYPE,
+                (int)LivePlayerTypeOptions.DEFAULT_LIVE_PLAYER_MODE);
+            m_viewModel.RealPlayerType = m_playerConfig.PlayerType;
+
             // 直播流默认源
             m_viewModel.LivePlayUrlSource = SettingService.GetValue(
                 SettingConstants.Live.DEFAULT_LIVE_PLAY_URL_SOURCE,
@@ -572,12 +579,27 @@ namespace BiliLite.Pages
         private void LoadSetting()
         {
             //音量
-            m_player.Volume = SettingService.GetValue(SettingConstants.Player.PLAYER_VOLUME, SettingConstants.Player.DEFAULT_PLAYER_VOLUME);
-            SliderVolume.Value = m_player.Volume;
+            var volume = SettingService.GetValue(SettingConstants.Player.PLAYER_VOLUME, SettingConstants.Player.DEFAULT_PLAYER_VOLUME);
+            if (m_viewModel.ShowMediaPlayer)
+            {
+                m_player.Volume = volume;
+            }
+            else
+            {
+                ShakaPlayer.SetVolume(volume);
+            }
+            SliderVolume.Value = volume;
             var lockPlayerVolume = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_VOLUME, SettingConstants.Player.DEFAULT_LOCK_PLAYER_VOLUME);
             SliderVolume.ValueChanged += (e, args) =>
             {
-                m_player.Volume = SliderVolume.Value;
+                if (m_viewModel.ShowMediaPlayer)
+                {
+                    m_player.Volume = SliderVolume.Value;
+                }
+                else
+                {
+                    ShakaPlayer.SetVolume(SliderVolume.Value);
+                }
                 if (!lockPlayerVolume)
                     SettingService.SetValue(SettingConstants.Player.PLAYER_VOLUME, SliderVolume.Value);
             };
@@ -1311,21 +1333,24 @@ namespace BiliLite.Pages
 
         private void HandleSlideVolumeDelta(double delta)
         {
+            var volume = 1d;
             if (delta > 0)
             {
                 var dd = delta / (this.ActualHeight * 0.8);
-                var volume = m_player.Volume - dd;
+                volume = m_viewModel.ShowMediaPlayer ? m_player.Volume : ShakaPlayer.Volume;
+                volume = volume - dd;
                 if (volume < 0) volume = 0;
                 SliderVolume.Value = volume;
             }
             else
             {
                 var dd = Math.Abs(delta) / (this.ActualHeight * 0.8);
-                var volume = m_player.Volume + dd;
+                volume = m_viewModel.ShowMediaPlayer ? m_player.Volume : ShakaPlayer.Volume;
+                volume = volume + dd;
                 if (volume > 1) volume = 1;
                 SliderVolume.Value = volume;
             }
-            TxtToolTip.Text = "音量:" + m_player.Volume.ToString("P");
+            TxtToolTip.Text = "音量:" + volume.ToString("P");
         }
 
         private void HandleSlideBrightnessDelta(double delta)

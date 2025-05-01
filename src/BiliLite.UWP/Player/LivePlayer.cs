@@ -7,8 +7,8 @@ using BiliLite.Models.Exceptions;
 using BiliLite.Player.Controllers;
 using BiliLite.Player.SubPlayers;
 using BiliLite.Services;
-using FFmpegInteropX;
 using BiliLite.Player.MediaInfos;
+using BiliLite.Player.ShakaPlayer;
 
 namespace BiliLite.Player
 {
@@ -20,11 +20,18 @@ namespace BiliLite.Player
         private PlayerConfig m_playerConfig;
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
 
-        public LivePlayer(PlayerConfig playerConfig, MediaPlayerElement playerElement, BasePlayerController playerController)
+        public LivePlayer(PlayerConfig playerConfig, MediaPlayerElement playerElement, BasePlayerController playerController, ShakaPlayerControl shakaPlayerControl)
         {
             m_playerConfig = playerConfig;
             m_playerController = playerController;
-            m_subPlayer = new LiveHlsPlayer(playerConfig, playerElement);
+            if (playerConfig.PlayerType == RealPlayerType.FFmpegInterop)
+            {
+                m_subPlayer = new LiveHlsPlayer(playerConfig, playerElement);
+            }
+            else
+            {
+                m_subPlayer = new LiveShakaPlayer(playerConfig, shakaPlayerControl);
+            }
             InitPlayerEvents(m_subPlayer);
         }
 
