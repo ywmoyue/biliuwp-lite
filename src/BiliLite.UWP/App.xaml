@@ -2,6 +2,7 @@
     x:Class="BiliLite.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:local="using:BiliLite">
     <Application.Resources>
         <ResourceDictionary>
@@ -19,6 +20,10 @@
                 <ResourceDictionary Source="Themes/Default.xaml" />
                 <ResourceDictionary Source="Themes/Accent.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <IsWin10:Style TargetType="ListViewItem">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            </IsWin10:Style>
         </ResourceDictionary>
     </Application.Resources>
 

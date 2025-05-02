@@ -150,10 +150,5 @@ namespace BiliLite.Controls.Settings
             var shortcutFunction = m_mapper.Map<ShortcutFunctionModel>(m_viewModel.AddShortcutFunctionModel);
             m_shortcutKeyService.AddShortcutFunction(shortcutFunction);
         }
-
-        private void ShortcutKeySettingPanel_OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            m_viewModel.ControlWidth = e.NewSize.Width;
-        }
     }
 }

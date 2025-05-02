@@ -20,15 +20,15 @@
 
     <Grid>
         <ListView
-            MaxHeight="{x:Bind DialogHeight, Mode=OneWay}"
             Margin="-16,0,0,80"
             ItemsSource="{x:Bind m_viewModel.PlaySpeedMenuItems, Mode=OneWay}"
             SelectionMode="None">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="player:PlaySpeedMenuItem">
-                    <Grid MinWidth="260" HorizontalAlignment="Stretch">
+                    <Grid>
                         <TextBlock
                             MinWidth="{Binding ElementName=DisposableBtnAddPlaySpeed, Path=ActualWidth}"
+                            Margin="5,0,0,0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             Text="{x:Bind Content}"
