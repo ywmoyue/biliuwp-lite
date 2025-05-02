@@ -3,6 +3,12 @@
 namespace BiliLite.Models.Attributes
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+    public class RegisterSingletonUIServiceAttribute : Attribute
+    {
+
+    }
+
+    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     public class RegisterSingletonServiceAttribute : Attribute
     {
 

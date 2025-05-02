@@ -1,4 +1,5 @@
 ﻿using BiliLite.Extensions;
+using BiliLite.Models.Attributes;
 using BiliLite.Models.Common;
 using BiliLite.Models.Theme;
 using Microsoft.UI.Xaml.Controls;
@@ -11,6 +12,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace BiliLite.Services
 {
+    [RegisterSingletonUIServiceAttribute]
     public class ThemeService
     {
         private readonly ResourceDictionary m_defaultColorsResource = App.Current.Resources.MergedDictionaries.FirstOrDefault(x => x.Source.AbsoluteUri.Contains("Default"));
@@ -44,7 +46,9 @@ namespace BiliLite.Services
         public ThemeService(SettingSqlService settingSqlService)
         {
             m_settingSqlService = settingSqlService;
-            rootFrame.RequestedTheme = m_theme = (ElementTheme)SettingService.GetValue<int>(SettingConstants.UI.THEME, 0);
+            if (rootFrame != null)
+                rootFrame.RequestedTheme =
+                    m_theme = (ElementTheme)SettingService.GetValue<int>(SettingConstants.UI.THEME, 0);
             if (m_theme == ElementTheme.Default)
             {
                 m_theme = (ElementTheme)(App.Current.RequestedTheme + 1);
