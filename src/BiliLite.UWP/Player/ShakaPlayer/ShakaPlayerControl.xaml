@@ -11,7 +11,7 @@
     d:DesignWidth="400"
     Loaded="ShakaPlayerControl_OnLoaded">
 
-    <Grid>
-        <controls:WebView2 x:Name="WebViewElement" ></controls:WebView2>
+    <Grid x:Name="GridElement">
+        <!--<controls:WebView2 x:Name="WebViewElement" ></controls:WebView2>-->
     </Grid>
 </UserControl>

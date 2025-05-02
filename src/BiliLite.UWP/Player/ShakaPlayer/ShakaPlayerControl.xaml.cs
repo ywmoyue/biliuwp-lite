@@ -8,6 +8,7 @@ using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Player.ShakaPlayer.Models;
 using BiliLite.Services;
+using Microsoft.UI.Xaml.Controls;
 using Newtonsoft.Json;
 using NSDanmaku;
 
@@ -25,6 +26,8 @@ namespace BiliLite.Player.ShakaPlayer
             this.InitializeComponent();
         }
 
+        public WebView2 WebViewElement { get; set; }
+
         public double Volume { get; set; } = 1;
 
         public event EventHandler<double> PositionChanged;
@@ -35,11 +38,14 @@ namespace BiliLite.Player.ShakaPlayer
 
         private async void ShakaPlayerControl_OnLoaded(object sender, RoutedEventArgs e)
         {
-            await InitWebView2();
+            // await InitWebView2();
         }
 
         private async Task InitWebView2()
         {
+            WebViewElement = new WebView2();
+            GridElement.Children.Add(WebViewElement);
+
             var tempFolder = ApplicationData.Current.TemporaryFolder;
             var dataFolder = ApplicationData.Current.LocalFolder;
             var installFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
@@ -128,7 +134,7 @@ namespace BiliLite.Player.ShakaPlayer
                 }
             };
             var json = JsonConvert.SerializeObject(playData);
-            LoadCore(json);
+            await LoadCore(json);
         }
 
         public async Task LoadUrl(string videoUrl, string audioUrl)
@@ -149,11 +155,13 @@ namespace BiliLite.Player.ShakaPlayer
                 }
             };
             var json = JsonConvert.SerializeObject(playData);
-            LoadCore(json);
+            await LoadCore(json);
         }
 
-        private void LoadCore(string playDataStr)
+        private async Task LoadCore(string playDataStr)
         {
+            if(WebViewElement == null)
+                await InitWebView2();
             if (!SettingService.GetValue(SettingConstants.Player.WEB_PLAYER_ENABLE_DEV_MODE,
                     false))
             {
@@ -229,9 +237,15 @@ namespace BiliLite.Player.ShakaPlayer
             await WebViewElement.CoreWebView2.ExecuteScriptAsync(script);
         }
 
-        public void Dispose()
+        public void Stop()
         {
             WebViewElement.Close();
+            WebViewElement = null;
+        }
+
+        public void Dispose()
+        {
+            Stop();
         }
     }
 }
