@@ -10,7 +10,7 @@
     xmlns:modules="using:BiliLite.Modules"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pages="using:BiliLite.Pages.Home"
-    Background="Transparent"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
     <Page.Resources>

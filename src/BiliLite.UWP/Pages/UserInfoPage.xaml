@@ -15,7 +15,7 @@
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:user="using:BiliLite.Models.Common.User"
     xmlns:userViewModel="using:BiliLite.ViewModels.User"
-    Background="Transparent"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     Loaded="UserInfoPage_OnLoaded"
     SizeChanged="UserInfoPage_OnSizeChanged"
     mc:Ignorable="d">
@@ -264,7 +264,6 @@
                                                     <TextBlock
                                                         MaxLines="2"
                                                         Text="{x:Bind Title}"
-                                                        
                                                         TextTrimming="CharacterEllipsis"
                                                         TextWrapping="Wrap" />
                                                     <StackPanel VerticalAlignment="Bottom">
@@ -399,7 +398,6 @@
                                                     <TextBlock
                                                         MaxLines="1"
                                                         Text="{x:Bind title}"
-                                                        
                                                         TextTrimming="CharacterEllipsis"
                                                         TextWrapping="Wrap" />
                                                     <TextBlock
@@ -520,7 +518,6 @@
                                                             Margin="0,0,0,0"
                                                             MaxLines="2"
                                                             Text="{x:Bind Title}"
-                                                            
                                                             TextTrimming="CharacterEllipsis"
                                                             TextWrapping="Wrap" />
                                                     </StackPanel>
@@ -873,7 +870,6 @@
                                                             FontSize="14"
                                                             Opacity="0.8"
                                                             Text="{x:Bind Path=m_viewModel.UserSpaceInfo.Official.Title, Mode=OneWay}"
-                                                            
                                                             TextWrapping="Wrap"
                                                             Visibility="{x:Bind Path=m_viewModel.UserSpaceInfo.Official.ShowOfficial, Mode=OneWay}" />
                                                         <TextBlock Margin="0,4" Foreground="{ThemeResource TextColor}">
@@ -885,7 +881,6 @@
                                                             Foreground="Gray"
                                                             IsTextSelectionEnabled="True"
                                                             Text="{x:Bind Path=m_viewModel.UserSpaceInfo.Sign, Mode=OneWay}"
-                                                            
                                                             TextWrapping="Wrap" />
                                                     </StackPanel>
                                                 </Grid>

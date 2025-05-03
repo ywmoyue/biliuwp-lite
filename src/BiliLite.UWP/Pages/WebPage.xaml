@@ -9,7 +9,7 @@
     xmlns:local="using:BiliLite.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    Background="Transparent"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
 
     <Grid>

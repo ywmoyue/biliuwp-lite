@@ -12,7 +12,7 @@
     xmlns:rank="using:BiliLite.Models.Common.Rank"
     xmlns:rank1="using:BiliLite.ViewModels.Rank"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    Background="Transparent"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
         <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White" />
@@ -44,12 +44,12 @@
             </Pivot.HeaderTemplate>
             <Pivot.ItemTemplate>
                 <DataTemplate x:DataType="rank1:RankRegionViewModel">
-                    <controls:MyAdaptiveGridView ItemHeight="120"
+                    <controls:MyAdaptiveGridView
                         Padding="10,0"
                         DesiredWidth="550"
                         IsItemClickEnabled="True"
                         ItemClick="AdaptiveGridView_ItemClick"
-                        
+                        ItemHeight="120"
                         ItemsSource="{x:Bind Path=Items, Mode=OneWay}"
                         OneRowModeEnabled="False"
                         PointerPressed="AdaptiveGridView_PointerPressed"
@@ -61,7 +61,8 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                <FontIcon
+                                    FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                     Foreground="Gray"
                                     Glyph="&#xE946;" />
                                 <TextBlock
@@ -124,7 +125,7 @@
                                     </Grid>
 
                                     <Grid Grid.Column="1" Margin="10,5">
-                                        <TextBlock 
+                                        <TextBlock
                                             MaxLines="2"
                                             Text="{x:Bind Path=Title}"
                                             TextAlignment="Justify"

@@ -12,7 +12,7 @@
     xmlns:pages="using:BiliLite.Pages"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:user="using:BiliLite.ViewModels.User"
-    Background="Transparent"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
         <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent" />
@@ -104,7 +104,8 @@
                         <MenuFlyoutItem x:Name="btnFavBoxDel" Click="btnFavBoxDel_Click">删除</MenuFlyoutItem>
                     </MenuFlyout>
                 </Grid.ContextFlyout>
-                <toolkit:ImageEx CornerRadius="{StaticResource OverlayCornerRadius}"
+                <toolkit:ImageEx
+                    CornerRadius="{StaticResource OverlayCornerRadius}"
                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png"
                     Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
                     Stretch="UniformToFill" />
@@ -151,7 +152,8 @@
                         <MenuFlyoutItem x:Name="BtnCollectedDel" Click="BtnCollectedDel_OnClick">取消订阅</MenuFlyoutItem>
                     </MenuFlyout>
                 </Grid.ContextFlyout>
-                <toolkit:ImageEx CornerRadius="{StaticResource OverlayCornerRadius}"
+                <toolkit:ImageEx
+                    CornerRadius="{StaticResource OverlayCornerRadius}"
                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png"
                     Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
                     Stretch="UniformToFill" />

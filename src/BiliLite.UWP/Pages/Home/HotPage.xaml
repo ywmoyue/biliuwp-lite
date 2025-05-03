@@ -11,6 +11,7 @@
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:viewModel="using:BiliLite.ViewModels.Home"
     d:DataContext="{d:DesignInstance Type=viewModel:HotViewModel}"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
 
     <Grid>

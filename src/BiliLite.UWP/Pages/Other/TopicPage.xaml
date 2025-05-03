@@ -9,14 +9,14 @@
     xmlns:modules="using:BiliLite.Modules.User"
     xmlns:pages="using:BiliLite.Pages"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    Background="Transparent"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Controls/Dynamic/DynamicTemplate.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            
+
             <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent" />
             <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White" />
         </ResourceDictionary>
@@ -28,8 +28,9 @@
                 <Grid VerticalAlignment="Stretch" Background="Transparent">
                     <Button Margin="12,0">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                            <FontIcon
                                 Margin="0,0,8,0"
+                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                 FontSize="12"
                                 Glyph="&#xE109;" />
                             <TextBlock>订阅</TextBlock>

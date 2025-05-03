@@ -11,7 +11,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:user="using:BiliLite.Modules.User"
-    Background="Transparent"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
@@ -136,7 +136,8 @@
                     <Pivot.RightHeader>
                         <Button Margin="15,0" Command="{x:Bind Path=m_viewModel.RepostCommand, Mode=OneWay}">
                             <StackPanel Orientation="Horizontal">
-                                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                <FontIcon
+                                    FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                     FontSize="14"
                                     Glyph="&#xE104;" />
                                 <TextBlock Margin="8,0,0,0">发表动态</TextBlock>
@@ -280,7 +281,10 @@
                     Click="BtnTop_OnClick"
                     Style="{StaticResource RoundAccentButtonStyle}"
                     ToolTipService.ToolTip="返回顶部">
-                    <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE110;" Margin="0.5 0 0 0"/>
+                    <FontIcon
+                        Margin="0.5,0,0,0"
+                        FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                        Glyph="&#xE110;" />
                 </Button>
                 <Button
                     x:Name="BtnRefresh"
@@ -303,7 +307,7 @@
                 VerticalAlignment="Stretch"
                 Background="Transparent"
                 Tapped="CommentPanel_OnTapped"
-                Visibility="Collapsed"/>
+                Visibility="Collapsed" />
             <Grid
                 x:Name="grid"
                 Width="{x:Bind m_viewModel.CommentControlWidth}"

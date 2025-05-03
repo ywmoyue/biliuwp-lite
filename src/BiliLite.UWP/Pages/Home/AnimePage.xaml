@@ -13,7 +13,7 @@
     xmlns:models="using:BiliLite.Models"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    Background="Transparent"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
         <DataTemplate x:Key="HotAnimeItem" x:DataType="anime:AnimeRankModel">

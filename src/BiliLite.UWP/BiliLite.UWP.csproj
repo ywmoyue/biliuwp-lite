@@ -12,8 +12,8 @@
     <DefaultLanguage>zh-cn</DefaultLanguage>
     <LangVersion>latest</LangVersion>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22621.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -1647,6 +1647,9 @@
     <PackageReference Include="log4net">
       <Version>2.0.15</Version>
     </PackageReference>
+    <PackageReference Include="MicaForUWP">
+      <Version>0.2.13</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore">
       <Version>3.1.32</Version>
     </PackageReference>
@@ -1725,9 +1728,6 @@
     <PackageReference Include="WebSocket4Net">
       <Version>0.15.2</Version>
     </PackageReference>
-    <PackageReference Include="Win2D.uwp">
-      <Version>1.26.0</Version>
-    </PackageReference>
     <PackageReference Include="ZXing.Net">
       <Version>0.16.8</Version>
     </PackageReference>
@@ -1757,7 +1757,7 @@
     <Folder Include="Modules\User\SendDynamic\" />
   </ItemGroup>
   <ItemGroup>
-    <SDKReference Include="WindowsDesktop, Version=10.0.19041.0">
+    <SDKReference Include="WindowsDesktop, Version=10.0.22621.0">
       <Name>Windows Desktop Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>

@@ -12,7 +12,7 @@
     xmlns:modules="using:BiliLite.Modules"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:settings="using:BiliLite.Controls.Settings"
-    Background="Transparent"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
         <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent" />

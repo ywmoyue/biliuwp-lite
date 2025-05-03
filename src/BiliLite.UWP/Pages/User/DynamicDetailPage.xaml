@@ -11,13 +11,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pages="using:BiliLite.Pages"
-    Background="Transparent"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
 
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Dynamic/DynamicV2Template.xaml"/>
+                <ResourceDictionary Source="/Controls/Dynamic/DynamicV2Template.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <AcrylicBrush
                 x:Key="SystemControlBaseHighAcrylicElementBrush"
@@ -50,15 +50,19 @@
                             <Pivot x:Name="pivotRight" SelectionChanged="pivotRight_SelectionChanged">
                                 <PivotItem Margin="0">
                                     <PivotItem.Header>
-                                        <TextBlock FontSize="15">转发(<Run Text="{x:Bind m_viewModel.RepostCount,Mode=OneWay}"/>)</TextBlock>
+                                        <TextBlock FontSize="15">
+                                            转发(<Run Text="{x:Bind m_viewModel.RepostCount, Mode=OneWay}" />
+                                            )</TextBlock>
                                     </PivotItem.Header>
                                     <controls:DynamicRepostControl x:Name="repost" />
                                 </PivotItem>
                                 <PivotItem Margin="0">
                                     <PivotItem.Header>
-                                        <TextBlock FontSize="15">评论(<Run Text="{x:Bind m_viewModel.ReplyCount,Mode=OneWay}"/>)</TextBlock>
+                                        <TextBlock FontSize="15">
+                                            评论(<Run Text="{x:Bind m_viewModel.ReplyCount, Mode=OneWay}" />
+                                            )</TextBlock>
                                     </PivotItem.Header>
-                                    <controls:CommentControl x:Name="Comment"></controls:CommentControl>
+                                    <controls:CommentControl x:Name="Comment" />
                                 </PivotItem>
                             </Pivot>
                         </Grid>
@@ -75,7 +79,7 @@
                         CanLoadMore="False"
                         IsItemClickEnabled="false"
                         ItemTemplateSelector="{StaticResource DynamicTemplateSelector}"
-                        ItemsSource="{x:Bind Path=m_viewModel.DynamicItems,Mode=OneWay}"
+                        ItemsSource="{x:Bind Path=m_viewModel.DynamicItems, Mode=OneWay}"
                         LoadMoreBottomOffset="0"
                         SelectionMode="None">
                         <controls:MyListView.ItemContainerStyle>
@@ -101,7 +105,7 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         IsActive="True"
-                        Visibility="{x:Bind Path=m_viewModel.Loading,Mode=OneWay}" />
+                        Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}" />
                 </Grid>
             </SplitView.Content>
         </SplitView>

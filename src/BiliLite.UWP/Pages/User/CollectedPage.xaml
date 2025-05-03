@@ -10,7 +10,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:user="using:BiliLite.ViewModels.User"
-    Background="Transparent"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -25,7 +25,8 @@
                         <MenuFlyoutItem x:Name="BtnCollectedDel" Click="BtnCollectedDel_OnClick">取消订阅</MenuFlyoutItem>
                     </MenuFlyout>
                 </Grid.ContextFlyout>
-                <toolkit:ImageEx CornerRadius="{StaticResource OverlayCornerRadius}"
+                <toolkit:ImageEx
+                    CornerRadius="{StaticResource OverlayCornerRadius}"
                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png"
                     Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
                     Stretch="UniformToFill" />
@@ -61,11 +62,11 @@
         </DataTemplate>
     </Page.Resources>
     <Grid>
-        <controls:MyAdaptiveGridView ItemHeight="120"
+        <controls:MyAdaptiveGridView
             DesiredWidth="550"
             IsItemClickEnabled="True"
             ItemClick="VideoFavorite_ItemClick"
-            
+            ItemHeight="120"
             ItemTemplate="{StaticResource CollectedDataTemplate}"
             ItemsSource="{x:Bind Path=m_viewModel.CollectedItems, Mode=OneWay}"
             SelectionMode="None"

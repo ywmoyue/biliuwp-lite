@@ -13,7 +13,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:viewModel="using:BiliLite.ViewModels.Search"
-    Background="Transparent"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     Loaded="SearchPage_Loaded"
     SizeChanged="SearchPage_OnSizeChanged"
     mc:Ignorable="d">

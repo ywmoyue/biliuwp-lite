@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
-    Background="Transparent"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     Loaded="NoTabMainPage_OnLoaded"
     mc:Ignorable="d">
 
@@ -51,7 +51,8 @@
                 BorderThickness="0"
                 Click="btnBack_Click"
                 Visibility="Visible">
-                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                <FontIcon
+                    FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                     FontSize="14"
                     Glyph="&#xE0A6;" />
             </Button>

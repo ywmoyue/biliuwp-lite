@@ -11,6 +11,7 @@
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:viewModel="using:BiliLite.ViewModels.Home"
     d:DataContext="{d:DesignInstance Type=viewModel:RecommendPageViewModel}"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -354,7 +355,10 @@
                 Click="BtnTop_Click"
                 Style="{StaticResource RoundAccentButtonStyle}"
                 ToolTipService.ToolTip="返回顶部">
-                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE110;" Margin="0.5 0 0 0"/>
+                <FontIcon
+                    Margin="0.5,0,0,0"
+                    FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                    Glyph="&#xE110;" />
             </Button>
             <Button
                 Margin="0,0,0,8"

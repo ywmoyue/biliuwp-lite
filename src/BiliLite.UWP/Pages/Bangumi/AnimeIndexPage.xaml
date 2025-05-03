@@ -11,7 +11,7 @@
     xmlns:pages="using:BiliLite.Pages"
     xmlns:season="using:BiliLite.Models.Common.Season"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    Background="Transparent"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
@@ -77,7 +77,7 @@
                                         <GradientStop Offset="0" Color="#00000000" />
                                     </LinearGradientBrush>
                                 </Grid.Background>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                     <TextBlock
                                         FontSize="12"
                                         Foreground="White"

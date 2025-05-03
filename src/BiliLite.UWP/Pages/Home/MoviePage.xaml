@@ -13,7 +13,7 @@
     xmlns:models="using:BiliLite.Models"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    Background="Transparent"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
         <DataTemplate x:Key="HotAnimeItem" x:DataType="homeModel:CinemaHomeHotItem">
@@ -37,10 +37,12 @@
                                 <GradientStop Offset="0" Color="#00000000" />
                             </LinearGradientBrush>
                         </Grid.Background>
-                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
-    FontSize="12"
-    Foreground="White"
-    Text="{x:Bind Path=Stat.FollowView}" />
+                        <TextBlock
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            FontSize="12"
+                            Foreground="White"
+                            Text="{x:Bind Path=Stat.FollowView}" />
                     </Grid>
                     <Border
                         Margin="5"
@@ -100,10 +102,12 @@
                                 <GradientStop Offset="0" Color="#00000000" />
                             </LinearGradientBrush>
                         </Grid.Background>
-                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
-    FontSize="12"
-    Foreground="White"
-    Text="{x:Bind Path=Stat.FollowView}" />
+                        <TextBlock
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            FontSize="12"
+                            Foreground="White"
+                            Text="{x:Bind Path=Stat.FollowView}" />
                     </Grid>
                     <Border
                         Margin="5"
@@ -246,10 +250,12 @@
                                                         <GradientStop Offset="0" Color="#00000000" />
                                                     </LinearGradientBrush>
                                                 </Grid.Background>
-                                                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
-    FontSize="12"
-    Foreground="White"
-    Text="{x:Bind Path=NewEp.index_show}" />
+                                                <TextBlock
+                                                    HorizontalAlignment="Right"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="12"
+                                                    Foreground="White"
+                                                    Text="{x:Bind Path=NewEp.index_show}" />
                                             </Grid>
                                             <Border
                                                 Margin="5"
@@ -325,10 +331,12 @@
                                                         <GradientStop Offset="0" Color="#00000000" />
                                                     </LinearGradientBrush>
                                                 </Grid.Background>
-                                                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
-    FontSize="12"
-    Foreground="White"
-    Text="{x:Bind Path=Stat.FollowView}" />
+                                                <TextBlock
+                                                    HorizontalAlignment="Right"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="12"
+                                                    Foreground="White"
+                                                    Text="{x:Bind Path=Stat.FollowView}" />
                                             </Grid>
                                             <Border
                                                 Margin="5"

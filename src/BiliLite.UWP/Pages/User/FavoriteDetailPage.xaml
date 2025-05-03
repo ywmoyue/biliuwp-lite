@@ -11,7 +11,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pages="using:BiliLite.Pages"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    Background="Transparent"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
         <DataTemplate x:Key="VideoDataTemplate" x:DataType="favorites:FavoriteInfoVideoItemModel">
@@ -39,7 +39,8 @@
                         <MenuFlyoutItem  Text="取消收藏"></MenuFlyoutItem>
                     </MenuFlyout>
                 </Grid.ContextFlyout>-->
-                <toolkit:ImageEx CornerRadius="{StaticResource OverlayCornerRadius}"
+                <toolkit:ImageEx
+                    CornerRadius="{StaticResource OverlayCornerRadius}"
                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                     Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
                     Stretch="UniformToFill" />
@@ -170,7 +171,7 @@
         </Grid>
 
         <Grid Grid.Row="1">
-            <controls:MyAdaptiveGridView ItemHeight="120"
+            <controls:MyAdaptiveGridView
                 x:Name="listView"
                 Grid.ColumnSpan="2"
                 AllowDrop="True"
@@ -180,7 +181,7 @@
                 DragItemsCompleted="FavItemGridView_OnDragItemsCompleted"
                 IsItemClickEnabled="{x:Bind Path=m_viewModel.IsItemClickEnabled, Mode=OneWay}"
                 ItemClick="Video_ItemClick"
-                
+                ItemHeight="120"
                 ItemTemplate="{StaticResource VideoDataTemplate}"
                 ItemsSource="{x:Bind Path=m_viewModel.Videos, Mode=TwoWay}"
                 PointerPressed="Video_ItemPressed"

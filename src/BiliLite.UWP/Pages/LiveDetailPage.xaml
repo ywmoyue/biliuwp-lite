@@ -15,7 +15,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     Margin="{x:Bind m_viewModel.Margin, Mode=OneWay}"
-    Background="Transparent"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
         <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource SystemAccentColor}" />
@@ -268,7 +268,6 @@
                             x:Name="txtInfo"
                             MaxWidth="400"
                             IsTextSelectionEnabled="True"
-                            
                             TextWrapping="Wrap" />
                     </Flyout>
                 </Grid.ContextFlyout>
@@ -572,16 +571,12 @@
                                                                 FontSize="12"
                                                                 Foreground="Gray"
                                                                 IsColorFontEnabled="False"
-                                                                
                                                                 TextWrapping="Wrap">
                                                                 💡开启后请关闭再打开当前直播界面
                                                             </TextBlock>
                                                             <StackPanel x:Name="LowDelayModeBlock" Visibility="Collapsed">
                                                                 <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
-                                                                    <TextBlock
-                                                                        VerticalAlignment="Center"
-                                                                        
-                                                                        TextWrapping="Wrap">
+                                                                    <TextBlock VerticalAlignment="Center" TextWrapping="Wrap">
                                                                         <Run>🎞 已储存视频流:</Run>
                                                                         <Run x:Name="LowDelayHaveStorageUrl">否</Run>
                                                                     </TextBlock>
@@ -598,7 +593,6 @@
                                                                     FontSize="12"
                                                                     Foreground="Gray"
                                                                     IsColorFontEnabled="False"
-                                                                    
                                                                     TextWrapping="Wrap">
                                                                     ⚠️一般来说, 开播时获取的原始流有效期为1小时
                                                                 </TextBlock>
@@ -622,7 +616,6 @@
                                                                     FontSize="12"
                                                                     Foreground="Gray"
                                                                     IsColorFontEnabled="False"
-                                                                    
                                                                     TextWrapping="Wrap">
                                                                     ⚠️如果输入为空并更新, 则会清除储存的视频流
                                                                 </TextBlock>
@@ -637,7 +630,6 @@
                                                                     FontSize="12"
                                                                     Foreground="Gray"
                                                                     IsColorFontEnabled="False"
-                                                                    
                                                                     TextWrapping="Wrap">
                                                                     💡使用此按钮来手动向前缩小延迟
                                                                 </TextBlock>
@@ -1196,7 +1188,6 @@
                                                 Margin="0,4"
                                                 Foreground="Gray"
                                                 Text="奖品信息："
-                                                
                                                 TextWrapping="Wrap" />
                                             <RichTextBlock
                                                 Grid.Column="1"
@@ -1223,13 +1214,11 @@
                                                 Margin="0,4"
                                                 Foreground="Gray"
                                                 Text="需要送出："
-                                                
                                                 TextWrapping="Wrap" />
                                             <TextBlock
                                                 Grid.Column="1"
                                                 Margin="0,4"
                                                 HorizontalAlignment="Center"
-                                                
                                                 TextWrapping="Wrap">
                                                 <Run Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.GiftName, Mode=OneWay}" />
                                                 <Run Text="×" />
@@ -1247,14 +1236,12 @@
                                                 Margin="0,4"
                                                 Foreground="Gray"
                                                 Text="弹幕口令："
-                                                
                                                 TextWrapping="Wrap" />
                                             <TextBlock
                                                 Grid.Column="1"
                                                 Margin="0,4"
                                                 HorizontalAlignment="Center"
                                                 Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.Danmu, Mode=OneWay}"
-                                                
                                                 TextWrapping="Wrap" />
                                         </Grid>
 
@@ -1268,14 +1255,12 @@
                                                 Margin="0,4"
                                                 Foreground="Gray"
                                                 Text="限制条件："
-                                                
                                                 TextWrapping="Wrap" />
                                             <TextBlock
                                                 Grid.Column="1"
                                                 Margin="0,4"
                                                 HorizontalAlignment="Center"
                                                 Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.AnchorLotteryInfo.RequireText, Mode=OneWay}"
-                                                
                                                 TextWrapping="Wrap" />
                                         </Grid>
 
@@ -1290,7 +1275,6 @@
                                                 Margin="0,4"
                                                 Foreground="Gray"
                                                 Text="中奖名单："
-                                                
                                                 TextWrapping="Wrap" />
                                             <ContentControl
                                                 x:Name="AnchorLotteryWinnerList"
@@ -1361,7 +1345,6 @@
                                                 Margin="0,4"
                                                 Foreground="Gray"
                                                 Text="发送来源："
-                                                
                                                 TextWrapping="Wrap" />
                                             <StackPanel
                                                 Grid.Column="1"
@@ -1376,7 +1359,6 @@
                                                     Margin="4,0"
                                                     VerticalAlignment="Center"
                                                     Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryInfo.SenderName, Mode=OneWay}"
-                                                    
                                                     TextWrapping="Wrap" />
                                             </StackPanel>
                                         </Grid>
@@ -1391,7 +1373,6 @@
                                                 Margin="0,4"
                                                 Foreground="Gray"
                                                 Text="奖品列表："
-                                                
                                                 TextWrapping="Wrap" />
                                             <ContentControl
                                                 Grid.Column="1"
@@ -1426,14 +1407,12 @@
                                                 Margin="0,4"
                                                 Foreground="Gray"
                                                 Text="弹幕口令："
-                                                
                                                 TextWrapping="Wrap" />
                                             <TextBlock
                                                 Grid.Column="1"
                                                 Margin="0,4"
                                                 HorizontalAlignment="Center"
                                                 Text="{x:Bind Path=m_liveRoomViewModel.LotteryViewModel.RedPocketLotteryInfo.Danmu, Mode=OneWay}"
-                                                
                                                 TextWrapping="Wrap" />
                                         </Grid>
 
@@ -1447,14 +1426,12 @@
                                                 Margin="0,4"
                                                 Foreground="Gray"
                                                 Text="限制条件："
-                                                
                                                 TextWrapping="Wrap" />
                                             <TextBlock
                                                 Grid.Column="1"
                                                 Margin="0,4"
                                                 HorizontalAlignment="Center"
                                                 Text="关注主播"
-                                                
                                                 TextWrapping="Wrap" />
                                         </Grid>
 
@@ -1468,7 +1445,6 @@
                                                 Margin="0,4"
                                                 Foreground="Gray"
                                                 Text="中奖名单："
-                                                
                                                 TextWrapping="Wrap" />
                                             <ContentControl
                                                 x:Name="redPocketWinnerList"
@@ -1638,7 +1614,6 @@
                                                                     FontSize="12"
                                                                     Foreground="Gray"
                                                                     Text="{x:Bind Desc}"
-                                                                    
                                                                     TextWrapping="Wrap" />
                                                                 <TextBlock
                                                                     MaxWidth="200"
@@ -1646,7 +1621,6 @@
                                                                     FontSize="12"
                                                                     Foreground="Gray"
                                                                     Text="{x:Bind Rights}"
-                                                                    
                                                                     TextWrapping="Wrap" />
                                                             </StackPanel>
 
@@ -1731,7 +1705,6 @@
                                                                     FontSize="12"
                                                                     Foreground="Gray"
                                                                     Text="{x:Bind Desc}"
-                                                                    
                                                                     TextWrapping="Wrap" />
                                                                 <TextBlock
                                                                     MaxWidth="200"
@@ -1739,7 +1712,6 @@
                                                                     FontSize="12"
                                                                     Foreground="Gray"
                                                                     Text="{x:Bind Rights}"
-                                                                    
                                                                     TextWrapping="Wrap" />
                                                             </StackPanel>
 
@@ -1960,7 +1932,6 @@
                                                                     Foreground="white"
                                                                     IsTextSelectionEnabled="True"
                                                                     Text="{x:Bind Path=Message}"
-                                                                    
                                                                     TextWrapping="Wrap" />
                                                             </Grid>
                                                         </StackPanel>
@@ -2163,7 +2134,7 @@
                                             SelectionMode="None">
                                             <ListView.ItemTemplate>
                                                 <DataTemplate x:DataType="live:LiveRoomRankItemModel">
-                                                    <Grid Margin="-5 0">
+                                                    <Grid Margin="-5,0">
                                                         <StackPanel Orientation="Horizontal">
                                                             <TextBlock
                                                                 MinWidth="20"

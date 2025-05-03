@@ -10,7 +10,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:muxm="using:Microsoft.UI.Xaml.Media"
     xmlns:pages="using:BiliLite.Pages"
-    muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     Loaded="MainPage_OnLoaded"
     mc:Ignorable="d">
 

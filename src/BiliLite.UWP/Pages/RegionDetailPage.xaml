@@ -11,7 +11,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:region="using:BiliLite.ViewModels.Region"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    Background="Transparent"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
         <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White" />
@@ -100,7 +100,6 @@
                                         Margin="0,0,0,4"
                                         MaxLines="2"
                                         Text="{x:Bind Title}"
-                                        
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />
                                     <StackPanel VerticalAlignment="Bottom">
@@ -187,7 +186,6 @@
                                         Margin="0,0,0,4"
                                         MaxLines="2"
                                         Text="{x:Bind Title}"
-                                        
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap" />
                                     <StackPanel VerticalAlignment="Bottom">

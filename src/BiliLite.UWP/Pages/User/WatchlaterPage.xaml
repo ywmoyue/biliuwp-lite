@@ -10,7 +10,7 @@
     xmlns:pages="using:BiliLite.Pages"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:user="using:BiliLite.Modules.User"
-    Background="Transparent"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
         <DataTemplate x:Key="VideoDataTemplate" x:DataType="user:WatchlaterItemModel">
@@ -27,9 +27,10 @@
                             Text="移除" />
                     </MenuFlyout>
                 </Grid.ContextFlyout>
-                <toolkit:ImageEx CornerRadius="{StaticResource OverlayCornerRadius}"
+                <toolkit:ImageEx
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
+                    CornerRadius="{StaticResource OverlayCornerRadius}"
                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                     Source="{x:Bind Path=pic, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
                     Stretch="UniformToFill" />
@@ -75,13 +76,13 @@
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">
-            <controls:MyAdaptiveGridView ItemHeight="120"
+            <controls:MyAdaptiveGridView
                 Grid.ColumnSpan="2"
                 Padding="10,0"
                 DesiredWidth="550"
                 IsItemClickEnabled="True"
                 ItemClick="Video_ItemClick"
-                
+                ItemHeight="120"
                 ItemTemplate="{StaticResource VideoDataTemplate}"
                 ItemsSource="{x:Bind Path=watchLaterVM.Videos, Mode=OneWay}"
                 SelectionMode="None"

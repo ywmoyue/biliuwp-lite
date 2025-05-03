@@ -13,7 +13,7 @@
     xmlns:model="using:BiliLite.Modules"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    Background="Transparent"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
 
     <Grid>
@@ -122,9 +122,9 @@
                                                     </LinearGradientBrush>
                                                 </Grid.Background>
                                                 <TextBlock
-    FontSize="12"
-    Foreground="White"
-    Text="{x:Bind Path=AnchorInfo.BaseInfo.Uname}" />
+                                                    FontSize="12"
+                                                    Foreground="White"
+                                                    Text="{x:Bind Path=AnchorInfo.BaseInfo.Uname}" />
                                                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                                     <TextBlock
                                                         Margin="0,0,8,0"
@@ -203,9 +203,9 @@
                                                     </LinearGradientBrush>
                                                 </Grid.Background>
                                                 <TextBlock
-    FontSize="12"
-    Foreground="White"
-    Text="{x:Bind Path=uname}" />
+                                                    FontSize="12"
+                                                    Foreground="White"
+                                                    Text="{x:Bind Path=uname}" />
                                                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                                     <fa:FontAwesome
                                                         Margin="0,0,8,0"
@@ -316,9 +316,9 @@
                                                                 </LinearGradientBrush>
                                                             </Grid.Background>
                                                             <TextBlock
-    FontSize="12"
-    Foreground="White"
-    Text="{x:Bind Path=Uname}" />
+                                                                FontSize="12"
+                                                                Foreground="White"
+                                                                Text="{x:Bind Path=Uname}" />
                                                             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                                                 <fa:FontAwesome
                                                                     Margin="0,0,8,0"

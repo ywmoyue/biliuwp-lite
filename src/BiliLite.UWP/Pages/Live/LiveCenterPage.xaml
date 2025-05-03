@@ -10,7 +10,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pages="using:BiliLite.Pages"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    Background="Transparent"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
         <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent" />
@@ -69,9 +69,10 @@
                                         <ColumnDefinition Width="200" />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <toolkit:ImageEx CornerRadius="{StaticResource OverlayCornerRadius}"
+                                    <toolkit:ImageEx
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
+                                        CornerRadius="{StaticResource OverlayCornerRadius}"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                         Source="{x:Bind Path=cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
                                         Stretch="UniformToFill" />
@@ -231,9 +232,10 @@
                                         <ColumnDefinition Width="200" />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <toolkit:ImageEx CornerRadius="{StaticResource OverlayCornerRadius}"
+                                    <toolkit:ImageEx
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
+                                        CornerRadius="{StaticResource OverlayCornerRadius}"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                         Source="{x:Bind Path=cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
                                         Stretch="UniformToFill" />
