@@ -240,18 +240,6 @@ namespace BiliLite.Models.Common
             public const double DEFAULT_VIDEO_DETAIL_LIST_EPISODE_DESIRED_WIDTH = 180;
 
             /// <summary>
-            /// 是否在视频底部显示进度条
-            /// </summary>
-            [SettingKey(typeof(bool))]
-            public const string SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR = "ShowVideoBottomVirtualProgressBar";
-
-            /// <summary>
-            /// 默认不在视频底部显示进度条
-            /// </summary>
-            [SettingDefaultValue]
-            public const bool DEFAULT_SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR = false;
-
-            /// <summary>
             /// 启用固定标签栏宽度
             /// </summary>
             [SettingKey(typeof(bool))]
@@ -760,6 +748,30 @@ namespace BiliLite.Models.Common
 
         public class Player
         {
+            /// <summary>
+            /// 是否在视频底部显示进度条
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR = "ShowVideoBottomVirtualProgressBar";
+
+            /// <summary>
+            /// 默认不在视频底部显示进度条
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR = false;
+
+            /// <summary>
+            /// 是否在视频底部显示进度条
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string ALWAYS_SHOW_VIDEO_PROGRESS_BAR = "SwAlwaysShowVideoProgressBar";
+
+            /// <summary>
+            /// 默认不在视频底部显示进度条
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_ALWAYS_SHOW_VIDEO_PROGRESS_BAR = false;
+
             /// <summary>
             /// 优先使用播放器类型
             /// </summary>

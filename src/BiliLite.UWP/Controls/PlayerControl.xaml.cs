@@ -827,27 +827,31 @@ namespace BiliLite.Controls
 
         private async void DanmuTimer_Tick(object sender, object e)
         {
-            if (showControlsFlag != -1)
+            if (!SettingService.GetValue(SettingConstants.Player.ALWAYS_SHOW_VIDEO_PROGRESS_BAR, SettingConstants.Player.DEFAULT_ALWAYS_SHOW_VIDEO_PROGRESS_BAR))
             {
-                if (showControlsFlag >= 5)
+                if (showControlsFlag != -1)
                 {
-                    var elent = FocusManager.GetFocusedElement();
-                    if (!(elent is TextBox) && !(elent is AutoSuggestBox))
+                    if (showControlsFlag >= 5)
                     {
-                        ShowControl(false);
-                        showControlsFlag = -1;
-                    }
-                    //FadeOut.Begin();
-                    //control.Visibility = Visibility.Collapsed;
+                        var elent = FocusManager.GetFocusedElement();
+                        if (elent is not TextBox && elent is not AutoSuggestBox)
+                        {
+                            ShowControl(false);
+                            showControlsFlag = -1;
+                        }
+                        //FadeOut.Begin();
+                        //control.Visibility = Visibility.Collapsed;
 
-                }
-                else
-                {
-                    showControlsFlag++;
+                    }
+                    else
+                    {
+                        showControlsFlag++;
+                    }
                 }
             }
-            var position = System.Convert.ToInt32(Player.Position);
-            var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+
+            var position = Convert.ToInt32(Player.Position);
+            var segIndex = Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
             if (segIndex <= 0) segIndex = 1;
             if (danmakuLoadedSegment != null && !danmakuLoadedSegment.Contains(segIndex))
             {

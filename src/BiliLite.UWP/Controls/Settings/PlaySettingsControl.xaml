@@ -218,7 +218,10 @@
                     <ToggleSwitch x:Name="SwitchPlayerReportHistory" />
                 </controls:SettingsCard>
 
-                <controls:SettingsCard Description="服务端不会储存已播放完毕的记录，相当于没有播放记录" Header="视频结束后不上报历史记录">
+                <controls:SettingsCard
+                    Description="服务端不会储存已播放完毕的记录，相当于没有播放记录"
+                    Header="视频结束后不上报历史记录"
+                    IsEnabled="{Binding IsOn, ElementName=SwitchPlayerReportHistory}">
                     <ToggleSwitch x:Name="SwitchReportHistoryZeroWhenVideoEnd" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
@@ -239,6 +242,21 @@
                         MinWidth="200"
                         Maximum="2400"
                         Minimum="10" />
+                </controls:SettingsCard>
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>
+
+        <controls:SettingsExpander Header="进度条">
+            <controls:SettingsExpander.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Spinner" />
+            </controls:SettingsExpander.HeaderIcon>
+            <controls:SettingsExpander.Items>
+                <controls:SettingsCard Header="总是显示进度条">
+                    <ToggleSwitch x:Name="SwAlwaysShowVideoProgress" />
+                </controls:SettingsCard>
+
+                <controls:SettingsCard Header="自动最小化到播放窗口底部">
+                    <ToggleSwitch x:Name="SwShowVideoBottomProgress" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>

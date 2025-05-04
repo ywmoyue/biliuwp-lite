@@ -358,6 +358,26 @@ namespace BiliLite.Controls.Settings
                     SettingService.SetValue(SettingConstants.Player.TO_SIMPLIFIED, RoamingSettingToSimplified.IsOn);
                 });
             });
+
+            //显示视频底部进度条
+            SwShowVideoBottomProgress.IsOn = SettingService.GetValue(SettingConstants.Player.SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR, SettingConstants.Player.DEFAULT_SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR);
+            SwShowVideoBottomProgress.Loaded += (sender, e) =>
+            {
+                SwShowVideoBottomProgress.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR, SwShowVideoBottomProgress.IsOn);
+                };
+            };
+
+            //总是显示进度条
+            SwAlwaysShowVideoProgress.IsOn = SettingService.GetValue(SettingConstants.Player.ALWAYS_SHOW_VIDEO_PROGRESS_BAR, SettingConstants.Player.DEFAULT_ALWAYS_SHOW_VIDEO_PROGRESS_BAR);
+            SwAlwaysShowVideoProgress.Loaded += (sender, e) =>
+            {
+                SwAlwaysShowVideoProgress.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.ALWAYS_SHOW_VIDEO_PROGRESS_BAR, SwAlwaysShowVideoProgress.IsOn);
+                };
+            };
         }
 
         private async void BtnEditPlaySpeedMenu_OnClick(object sender, RoutedEventArgs e)

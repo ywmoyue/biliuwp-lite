@@ -348,16 +348,6 @@ namespace BiliLite.Controls.Settings
                 };
             };
 
-            //显示视频底部进度条
-            SwShowVideoBottomProgress.IsOn = SettingService.GetValue(SettingConstants.UI.SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR, SettingConstants.UI.DEFAULT_SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR);
-            SwShowVideoBottomProgress.Loaded += (sender, e) =>
-            {
-                SwShowVideoBottomProgress.Toggled += (obj, args) =>
-                {
-                    SettingService.SetValue(SettingConstants.UI.SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR, SwShowVideoBottomProgress.IsOn);
-                };
-            };
-
             //新窗口浏览图片
             swPreviewImageNavigateToPage.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.NEW_WINDOW_PREVIEW_IMAGE, false);
             swPreviewImageNavigateToPage.Loaded += new RoutedEventHandler((sender, e) =>
