@@ -20,10 +20,9 @@ namespace BiliLite.Extensions
 {
     public static class ViewModelExtensions
     {
-        public static IServiceCollection AddViewModels(this IServiceCollection services)
+        public static IServiceCollection AddViewModels(this IServiceCollection services, int displayMode)
         {
             services.AddSingleton<HomeViewModel>();
-            services.AddSingleton<DownloadPageViewModel>();
             services.AddTransient<DownloadDialogViewModel>();
             services.AddTransient<CommentControlViewModel>();
             services.AddTransient<UserSubmitVideoViewModel>();
@@ -58,12 +57,12 @@ namespace BiliLite.Extensions
             services.AddTransient<MainPageViewModel>();
             services.AddTransient<SearchPageViewModel>();
 
-            services.AddAttributeViewModel();
+            services.AddAttributeViewModel(displayMode);
 
             return services;
         }
 
-        private static void AddAttributeViewModel(this IServiceCollection services)
+        private static void AddAttributeViewModel(this IServiceCollection services, int displayMode)
         {
             var types = Assembly.GetExecutingAssembly().GetTypes();
 
@@ -71,7 +70,14 @@ namespace BiliLite.Extensions
             {
                 if (type.GetCustomAttributes(typeof(RegisterSingletonViewModelAttribute), false).Any())
                 {
-                    services.AddSingleton(type);
+                    if (displayMode == 2)
+                    {
+                        services.AddTransient(type);
+                    }
+                    else
+                    {
+                        services.AddSingleton(type);
+                    }
                 }
 
                 if (type.GetCustomAttributes(typeof(RegisterTransientViewModelAttribute), false).Any())

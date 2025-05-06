@@ -17,4 +17,15 @@
 
         public LivePlayerMode Value { get; set; }
     }
+
+    public static class LivePlayerTypeOptions
+    {
+        public static RealPlayerTypeOption[] Options = new RealPlayerTypeOption[]
+        {
+            new RealPlayerTypeOption() { Value = RealPlayerType.FFmpegInterop },
+            new RealPlayerTypeOption() { Value = RealPlayerType.ShakaPlayer },
+        };
+
+        public const RealPlayerType DEFAULT_LIVE_PLAYER_MODE = RealPlayerType.FFmpegInterop;
+    }
 }

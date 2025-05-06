@@ -10,9 +10,11 @@ using System.Threading;
 using Windows.Networking.BackgroundTransfer;
 using AutoMapper;
 using BiliLite.Models.Common;
+using BiliLite.Models.Attributes;
 
 namespace BiliLite.ViewModels.Download
 {
+    [RegisterSingletonViewModelAttribute]
     public class DownloadPageViewModel : BaseViewModel
     {
         #region Fields

@@ -191,6 +191,8 @@ namespace BiliLite
 #if !DEBUG
                 await BiliExtensions.CheckVersion(isSilentUpdateCheck:true);
 #endif
+                var tempFileService = ServiceProvider.GetRequiredService<TempFileService>();
+                tempFileService.ClearTempFiles();
             }
         }
 

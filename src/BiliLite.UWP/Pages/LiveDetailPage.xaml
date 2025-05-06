@@ -13,6 +13,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model_live="using:BiliLite.Modules.Live"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:shakaPlayer="using:BiliLite.Player.ShakaPlayer"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     Margin="{x:Bind m_viewModel.Margin, Mode=OneWay}"
     Background="{ThemeResource PageBackgroundMicaBrush}"
@@ -282,7 +283,8 @@
                     PointerExited="Grid_PointerExited"
                     PointerMoved="Grid_PointerMoved"
                     SizeChanged="Player_SizeChanged">
-                    <MediaPlayerElement x:Name="playerElement" />
+                    <MediaPlayerElement x:Name="playerElement" Visibility="{x:Bind m_viewModel.ShowMediaPlayer, Mode=OneWay}" />
+                    <shakaPlayer:ShakaPlayerControl x:Name="ShakaPlayer" Visibility="{x:Bind m_viewModel.ShowWebPlayer, Mode=OneWay}" />
 
                     <!--  弹幕  -->
                     <Grid Tapped="Grid_Tapped">

@@ -1,4 +1,5 @@
 ﻿using BiliLite.Extensions;
+using BiliLite.Models.Common;
 using BiliLite.Services;
 using BiliLite.Services.Biz;
 using BiliLite.Services.Notification;
@@ -11,6 +12,7 @@ namespace BiliLite
     {
         public void ConfigureServices(HostBuilderContext context, IServiceCollection services)
         {
+            var displayMode = SettingService.GetValue<int>(SettingConstants.UI.DISPLAY_MODE, 0);
             services.AddDbContext<BiliLiteDbContext>();
             services.AddSingleton<SettingSqlService>();
             services.AddSingleton<PluginService>();
@@ -18,7 +20,7 @@ namespace BiliLite
 
             services.AddSingleton<LiveTileService>();
             services.AddMapper();
-            services.AddViewModels();
+            services.AddViewModels(displayMode);
             services.AddControls();
             services.AddDanmakuController();
 
@@ -34,8 +36,7 @@ namespace BiliLite
             services.AddSingleton<SearchService>();
 
             services.AddSingleton<GrpcService>();
-            services.AddSingleton<ThemeService>();
-            services.AddAttributeService();
+            services.AddAttributeService(displayMode);
         }
     }
 }

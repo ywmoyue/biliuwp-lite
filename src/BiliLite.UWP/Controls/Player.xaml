@@ -5,15 +5,24 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:BiliLite.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:shakaPlayer="using:BiliLite.Player.ShakaPlayer"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
 
     <Grid>
-        <!--  播放器  -->
-        <MediaPlayerElement x:Name="mediaPlayerVideo" />
-        <!--  音视频分离  -->
-        <MediaPlayerElement x:Name="mediaPlayerAudio" Visibility="Collapsed" />
-        <!--<vlc:VideoView x:Name="vlcVideoView" Initialized="vlcVideoView_Initialized" />-->
+        <Grid Visibility="{x:Bind ShowMediaPlayer,Mode=OneWay}">
+            <!--播放器-->
+            <MediaPlayerElement x:Name="mediaPlayerVideo" ></MediaPlayerElement>
+            <!--音视频分离-->
+            <MediaPlayerElement x:Name="mediaPlayerAudio"  Visibility="Collapsed"></MediaPlayerElement>
+            <!--<vlc:VideoView x:Name="vlcVideoView" Initialized="vlcVideoView_Initialized"></vlc:VideoView>-->
+        </Grid>
+        <Grid Visibility="{x:Bind ShowShakaPlayer,Mode=OneWay}">
+            <shakaPlayer:ShakaPlayerControl x:Name="ShakaPlayer" 
+                                            PlayerLoaded="ShakaPlayer_OnPlayerLoaded"
+                                            Ended="ShakaPlayer_OnEnded"
+                                            PositionChanged="ShakaPlayer_OnPositionChanged"></shakaPlayer:ShakaPlayerControl>
+        </Grid>
     </Grid>
 </UserControl>

@@ -1865,7 +1865,7 @@ namespace BiliLite.Controls
                             positon: _postion);
                     }
                 }
-                else
+                else if (realPlayerType == RealPlayerType.FFmpegInterop)
                 {
                     result = await Player.PlayDashUseFFmpegInterop(quality.DashInfo, quality.UserAgent, quality.Referer,
                         positon: _postion);
@@ -1875,7 +1875,10 @@ namespace BiliLite.Controls
                         result = await Player.PlayerDashUseNative(quality.DashInfo, quality.UserAgent, quality.Referer, positon: _postion);
                     }
                 }
-
+                else if (realPlayerType == RealPlayerType.ShakaPlayer)
+                {
+                    result = await Player.PlayerDashUseShaka(quality, quality.UserAgent, quality.Referer, positon: _postion);
+                }
             }
             else if (quality.PlayUrlType == BiliPlayUrlType.SingleFLV)
             {
