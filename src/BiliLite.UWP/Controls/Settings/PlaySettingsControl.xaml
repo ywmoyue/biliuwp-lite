@@ -56,12 +56,6 @@
                         <font:FontAwesome Icon="Solid_PhotoVideo" />
                     </controls:SettingsCard.HeaderIcon>
                     <StackPanel Orientation="Horizontal">
-                        <Button
-                            Margin="0,0,10,0"
-                            Click="BtnOpenFFmpegOptionsPanel_OnClick"
-                            Visibility="{Binding SelectedIndex, ElementName=ComboBoxUseRealPlayerType, Converter={StaticResource DisplayConvert}, ConverterParameter=1}">
-                            参数自定义
-                        </Button>
                         <ComboBox
                             x:Name="ComboBoxUseRealPlayerType"
                             MinWidth="200"
