@@ -70,7 +70,7 @@
                         <Button Click="BtnSaveFfmpegInteropXOptions_OnClick">保存</Button>
                     </StackPanel>
                 </controls:SettingsCard>
-                <controls:SettingsCard Header="Web播放器设置(ShakaPlayer)"
+                <controls:SettingsCard Header="Web播放器设置(ShakaPlayer/Mpegts)"
                                        Margin="8 8 8 0"></controls:SettingsCard>
                 <controls:SettingsCard Header="挂载本地文件"
                                        Margin="8 0 8 0"

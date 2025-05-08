@@ -1,4 +1,4 @@
-﻿namespace BiliLite.Player.ShakaPlayer.Models;
+﻿namespace BiliLite.Player.WebPlayer.Models;
 
 public class BaseShakaPlayerEventMessage
 {

@@ -7,6 +7,7 @@ namespace BiliLite.Models.Common.Player
         Native,
         FFmpegInterop,
         ShakaPlayer,
+        Mpegts,
     }
 
     public class RealPlayerTypes

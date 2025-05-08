@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BiliLite.Models.Common.Player;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
@@ -8,7 +9,7 @@ using BiliLite.Player.Controllers;
 using BiliLite.Player.SubPlayers;
 using BiliLite.Services;
 using BiliLite.Player.MediaInfos;
-using BiliLite.Player.ShakaPlayer;
+using BiliLite.Player.WebPlayer;
 
 namespace BiliLite.Player
 {
@@ -19,8 +20,11 @@ namespace BiliLite.Player
         private BasePlayerController m_playerController;
         private PlayerConfig m_playerConfig;
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+        private List<RealPlayerType> m_triedPlayers = new();
 
-        public LivePlayer(PlayerConfig playerConfig, MediaPlayerElement playerElement, BasePlayerController playerController, ShakaPlayerControl shakaPlayerControl)
+        public LivePlayer(PlayerConfig playerConfig, MediaPlayerElement playerElement,
+            BasePlayerController playerController, ShakaPlayerControl shakaPlayerControl,
+            MpegtsPlayerControl mpegtsPlayerControl)
         {
             m_playerConfig = playerConfig;
             m_playerController = playerController;
@@ -28,10 +32,15 @@ namespace BiliLite.Player
             {
                 m_subPlayer = new LiveHlsPlayer(playerConfig, playerElement);
             }
-            else
+            else if (playerConfig.PlayerType == RealPlayerType.ShakaPlayer)
             {
                 m_subPlayer = new LiveShakaPlayer(playerConfig, shakaPlayerControl);
             }
+            else if (playerConfig.PlayerType == RealPlayerType.Mpegts)
+            {
+                m_subPlayer = new LiveMpegtsPlayer(playerConfig, mpegtsPlayerControl);
+            }
+
             InitPlayerEvents(m_subPlayer);
         }
 
@@ -43,6 +52,7 @@ namespace BiliLite.Player
 
         public event EventHandler<PlayerException> ErrorOccurred;
         public event EventHandler BufferingEnded;
+        public event EventHandler<RealPlayerType> NeedReplacePlayer;
 
         private void InitPlayerEvents(ISubPlayer subPlayer)
         {
@@ -51,6 +61,15 @@ namespace BiliLite.Player
             subPlayer.MediaEnded += SubPlayer_MediaEnded;
             subPlayer.BufferingStarted += SubPlayer_BufferingStarted;
             subPlayer.BufferingEnded += SubPlayer_BufferingEnded;
+        }
+
+        private void UnLoadPlayerEvents(ISubPlayer subPlayer)
+        {
+            subPlayer.PlayerErrorOccurred -= SubPlayerOnPlayerErrorOccurred;
+            subPlayer.MediaOpened -= SubPlayer_MediaOpened;
+            subPlayer.MediaEnded -= SubPlayer_MediaEnded;
+            subPlayer.BufferingStarted -= SubPlayer_BufferingStarted;
+            subPlayer.BufferingEnded -= SubPlayer_BufferingEnded;
         }
 
         private async void SubPlayer_BufferingStarted(object sender, EventArgs e)
@@ -69,6 +88,27 @@ namespace BiliLite.Player
             {
                 await m_playerController.PlayState.Stop();
                 return;
+            }
+
+            if (e.Code == PlayerError.PlayerErrorCode.NeedUseOtherPlayerError)
+            {
+                m_triedPlayers.Add(m_subPlayer.Type);
+
+                if (!m_triedPlayers.Contains(RealPlayerType.ShakaPlayer))
+                {
+                    NeedReplacePlayer?.Invoke(this, RealPlayerType.ShakaPlayer);
+                    return;
+                }
+                else if (!m_triedPlayers.Contains(RealPlayerType.Mpegts))
+                {
+                    NeedReplacePlayer?.Invoke(this, RealPlayerType.Mpegts);
+                    return;
+                }
+                else if (!m_triedPlayers.Contains(RealPlayerType.FFmpegInterop))
+                {
+                    NeedReplacePlayer?.Invoke(this, RealPlayerType.FFmpegInterop);
+                    return;
+                }
             }
             await m_playerController.PlayState.Fault();
             Notify.ShowMessageToast($"播放失败: {e.Description}");
@@ -139,6 +179,11 @@ namespace BiliLite.Player
         public async Task Resume()
         {
             await m_subPlayer.Resume();
+        }
+
+        public async Task UnLoad()
+        {
+            UnLoadPlayerEvents(m_subPlayer);
         }
 
         public async Task FullWindow()

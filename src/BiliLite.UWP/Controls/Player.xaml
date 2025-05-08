@@ -5,11 +5,14 @@
     xmlns:local="using:BiliLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:shakaPlayer="using:BiliLite.Player.ShakaPlayer"
-
+    xmlns:webPlayer="using:BiliLite.Player.WebPlayer"
+    xmlns:converters="using:BiliLite.Converters"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
+    <UserControl.Resources>
+        <converters:RealPlayerTypeDisplayConverter x:Key="RealPlayerTypeDisplayConverter"></converters:RealPlayerTypeDisplayConverter>
+    </UserControl.Resources>
 
     <Grid>
         <Grid Visibility="{x:Bind ShowMediaPlayer,Mode=OneWay}">
@@ -20,10 +23,11 @@
             <!--<vlc:VideoView x:Name="vlcVideoView" Initialized="vlcVideoView_Initialized"></vlc:VideoView>-->
         </Grid>
         <Grid Visibility="{x:Bind ShowShakaPlayer,Mode=OneWay}">
-            <shakaPlayer:ShakaPlayerControl x:Name="ShakaPlayer" 
+            <webPlayer:ShakaPlayerControl x:Name="ShakaPlayer" 
+                                          Visibility="{x:Bind RealPlayerType,Mode=OneWay,Converter={StaticResource RealPlayerTypeDisplayConverter},ConverterParameter='ShakaPlayer'}"
                                             PlayerLoaded="ShakaPlayer_OnPlayerLoaded"
                                             Ended="ShakaPlayer_OnEnded"
-                                            PositionChanged="ShakaPlayer_OnPositionChanged"></shakaPlayer:ShakaPlayerControl>
+                                            PositionChanged="ShakaPlayer_OnPositionChanged"></webPlayer:ShakaPlayerControl>
         </Grid>
     </Grid>
 </UserControl>

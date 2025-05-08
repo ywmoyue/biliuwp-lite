@@ -16,10 +16,11 @@
     xmlns:live1="using:BiliLite.ViewModels.Live"
     xmlns:Player="using:BiliLite.Models.Common.Player"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
-    xmlns:shakaPlayer="using:BiliLite.Player.ShakaPlayer"
+    xmlns:webPlayer="using:BiliLite.Player.WebPlayer"
     Margin="{x:Bind m_viewModel.Margin, Mode=OneWay}"
     Background="Transparent">
     <Page.Resources>
+        <convert:RealPlayerTypeDisplayConverter x:Key="RealPlayerTypeDisplayConverter"></convert:RealPlayerTypeDisplayConverter>
         <convert:DatetimeConvert x:Key="datetime" ></convert:DatetimeConvert>
         <convert:ColorConvert x:Key="colorConvert" ></convert:ColorConvert>
         <convert:DanmakuStyleConvert x:Key="styleConvert"></convert:DanmakuStyleConvert>
@@ -176,7 +177,14 @@
                    ManipulationDelta="Grid_ManipulationDelta"
                    ManipulationStarted="Grid_ManipulationStarted">
                     <MediaPlayerElement x:Name="playerElement" Visibility="{x:Bind m_viewModel.ShowMediaPlayer,Mode=OneWay}"></MediaPlayerElement>
-                    <shakaPlayer:ShakaPlayerControl x:Name="ShakaPlayer" Visibility="{x:Bind m_viewModel.ShowWebPlayer,Mode=OneWay}"></shakaPlayer:ShakaPlayerControl>
+                    <Grid Visibility="{x:Bind m_viewModel.ShowWebPlayer,Mode=OneWay}">
+                        <webPlayer:ShakaPlayerControl x:Name="ShakaPlayer"                                           
+                                                      Visibility="{x:Bind m_viewModel.RealPlayerType,Mode=OneWay,Converter={StaticResource RealPlayerTypeDisplayConverter},ConverterParameter='ShakaPlayer'}"
+                        ></webPlayer:ShakaPlayerControl>
+                        <webPlayer:MpegtsPlayerControl x:Name="MpegtsPlayer" 
+                                                       Visibility="{x:Bind m_viewModel.RealPlayerType,Mode=OneWay,Converter={StaticResource RealPlayerTypeDisplayConverter},ConverterParameter='Mpegts'}">
+                        </webPlayer:MpegtsPlayerControl>
+                    </Grid>
                    
                     <!--弹幕-->
                     <Grid Tapped="Grid_Tapped">

@@ -11,6 +11,8 @@ namespace BiliLite.Player.SubPlayers
     {
         protected RealPlayInfo m_realPlayInfo;
 
+        public abstract RealPlayerType Type { get; }
+
         public abstract double Volume { get; set; }
 
         public event EventHandler<PlayerException> PlayerErrorOccurred;

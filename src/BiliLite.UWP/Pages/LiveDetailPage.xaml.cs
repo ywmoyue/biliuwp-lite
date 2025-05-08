@@ -34,10 +34,10 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Player.WebPlayer;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -51,7 +51,7 @@ namespace BiliLite.Pages
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
 
         private readonly BasePlayerController m_playerController;
-        private readonly LivePlayer m_player;
+        private LivePlayer m_player;
         private readonly RealPlayInfo m_realPlayInfo;
         private readonly PlayerConfig m_playerConfig;
         private readonly LiveDetailPageViewModel m_viewModel;
@@ -71,6 +71,7 @@ namespace BiliLite.Pages
         private bool changePlayUrlFlag = false;
         private bool isPointerInChatList = false;
         private bool isPointerInThisPage = true;
+        private BaseWebPlayer m_webPlayer;
 
         public LiveDetailPage()
         {
@@ -81,7 +82,7 @@ namespace BiliLite.Pages
             m_playerConfig = new PlayerConfig();
             PreLoadSetting();
             m_playerController = PlayerControllerFactory.Create(PlayerType.Live);
-            m_player = new LivePlayer(m_playerConfig, playerElement, m_playerController, ShakaPlayer);
+            m_player = new LivePlayer(m_playerConfig, playerElement, m_playerController, ShakaPlayer, MpegtsPlayer);
             m_realPlayInfo = new RealPlayInfo();
             m_realPlayInfo.IsAutoPlay = true;
             m_playerController.SetPlayer(m_player);
@@ -282,6 +283,7 @@ namespace BiliLite.Pages
         {
             await StopPlay();
             ShakaPlayer.Dispose();
+            MpegtsPlayer.Dispose();
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -320,7 +322,21 @@ namespace BiliLite.Pages
             m_playerController.ContentStateChanged += PlayerController_ContentStateChanged;
             m_playerController.ScreenStateChanged += PlayerController_ScreenStateChanged;
             m_player.ErrorOccurred += Player_ErrorOccurred;
+            m_player.NeedReplacePlayer += Player_NeedReplacePlayer; ;
             m_playerController.MediaInfosUpdated += PlayerController_MediaInfosUpdated; ;
+        }
+
+        private async void Player_NeedReplacePlayer(object sender, RealPlayerType e)
+        {
+            await m_player.UnLoad();
+            m_player.ErrorOccurred -= Player_ErrorOccurred;
+            m_player.NeedReplacePlayer -= Player_NeedReplacePlayer; ;
+            m_playerConfig.PlayerType = e;
+            m_player = new LivePlayer(m_playerConfig, playerElement, m_playerController, ShakaPlayer, MpegtsPlayer);
+            m_playerController.SetPlayer(m_player);
+            m_player.SetRealPlayInfo(m_realPlayInfo);
+            m_player.ErrorOccurred += Player_ErrorOccurred;
+            m_player.NeedReplacePlayer += Player_NeedReplacePlayer; ;
         }
 
         private async void PlayerController_MediaInfosUpdated(object sender, Player.MediaInfos.MediaInfo e)
@@ -580,26 +596,12 @@ namespace BiliLite.Pages
         {
             //音量
             var volume = SettingService.GetValue(SettingConstants.Player.PLAYER_VOLUME, SettingConstants.Player.DEFAULT_PLAYER_VOLUME);
-            if (m_viewModel.ShowMediaPlayer)
-            {
-                m_player.Volume = volume;
-            }
-            else
-            {
-                ShakaPlayer.SetVolume(volume);
-            }
+            m_player.Volume = volume;
             SliderVolume.Value = volume;
             var lockPlayerVolume = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_VOLUME, SettingConstants.Player.DEFAULT_LOCK_PLAYER_VOLUME);
             SliderVolume.ValueChanged += (e, args) =>
             {
-                if (m_viewModel.ShowMediaPlayer)
-                {
-                    m_player.Volume = SliderVolume.Value;
-                }
-                else
-                {
-                    ShakaPlayer.SetVolume(SliderVolume.Value);
-                }
+                m_player.Volume = SliderVolume.Value;
                 if (!lockPlayerVolume)
                     SettingService.SetValue(SettingConstants.Player.PLAYER_VOLUME, SliderVolume.Value);
             };
@@ -1337,7 +1339,7 @@ namespace BiliLite.Pages
             if (delta > 0)
             {
                 var dd = delta / (this.ActualHeight * 0.8);
-                volume = m_viewModel.ShowMediaPlayer ? m_player.Volume : ShakaPlayer.Volume;
+                volume = m_player.Volume;
                 volume = volume - dd;
                 if (volume < 0) volume = 0;
                 SliderVolume.Value = volume;
@@ -1345,7 +1347,7 @@ namespace BiliLite.Pages
             else
             {
                 var dd = Math.Abs(delta) / (this.ActualHeight * 0.8);
-                volume = m_viewModel.ShowMediaPlayer ? m_player.Volume : ShakaPlayer.Volume;
+                volume = m_player.Volume;
                 volume = volume + dd;
                 if (volume > 1) volume = 1;
                 SliderVolume.Value = volume;

@@ -12,9 +12,13 @@ namespace BiliLite.ViewModels.Live
 {
     public class LiveDetailPageViewModel : BaseViewModel
     {
-        public bool ShowMediaPlayer { get; set; } = true;
+        public RealPlayerType RealPlayerType { get; set; }
 
-        public bool ShowWebPlayer { get; set; } = false;
+        [DependsOn(nameof(RealPlayerType))]
+        public bool ShowMediaPlayer => RealPlayerType is RealPlayerType.Native or RealPlayerType.FFmpegInterop;
+
+        [DependsOn(nameof(RealPlayerType))]
+        public bool ShowWebPlayer => RealPlayerType is RealPlayerType.ShakaPlayer or RealPlayerType.Mpegts;
 
         public string DanmakuInput { get; set; }
 
@@ -84,23 +88,6 @@ namespace BiliLite.ViewModels.Live
                 : new Thickness(0);
 
         public LivePlayerMode LivePlayerMode { get; set; }
-
-        public RealPlayerType RealPlayerType
-        {
-            set
-            {
-                if (value == RealPlayerType.FFmpegInterop)
-                {
-                    ShowMediaPlayer = true;
-                    ShowWebPlayer = false;
-                }
-                else
-                {
-                    ShowMediaPlayer = false;
-                    ShowWebPlayer = true;
-                }
-            }
-        }
 
         public string LivePlayUrlSource { get; set; }
 

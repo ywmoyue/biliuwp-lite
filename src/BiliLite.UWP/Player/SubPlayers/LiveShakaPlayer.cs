@@ -3,7 +3,8 @@ using System.Threading.Tasks;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Player;
 using BiliLite.Player.MediaInfos;
-using BiliLite.Player.ShakaPlayer;
+using BiliLite.Player.WebPlayer;
+using BiliLite.Player.WebPlayer.Models;
 using BiliLite.Services;
 
 namespace BiliLite.Player.SubPlayers
@@ -21,7 +22,13 @@ namespace BiliLite.Player.SubPlayers
             InitPlayerEvent();
         }
 
-        public override double Volume { get; set; }
+        public override RealPlayerType Type { get; } = RealPlayerType.ShakaPlayer;
+
+        public override double Volume
+        {
+            get => m_ShakaPlayerControl.Volume;
+            set => m_ShakaPlayerControl.SetVolume(value);
+        }
 
         public override event EventHandler MediaOpened;
         public override event EventHandler MediaEnded;
@@ -44,9 +51,14 @@ namespace BiliLite.Player.SubPlayers
         public override async Task Load()
         {
             var urls = m_realPlayInfo.PlayUrls;
-            // shakaPlayer 不支持 flv流, 后续引入mpegts播放器进行支持
+            // shakaPlayer 不支持 flv流
             if (urls.HlsUrls == null)
             {
+                if (urls.FlvUrls != null)
+                {
+                    EmitError(PlayerError.PlayerErrorCode.NeedUseOtherPlayerError, "需要切换其他播放器", PlayerError.RetryStrategy.Normal);
+                    return;
+                }
                 EmitError(PlayerError.PlayerErrorCode.PlayUrlError, "获取播放地址失败", PlayerError.RetryStrategy.NoRetry);
             }
 
@@ -115,7 +127,7 @@ namespace BiliLite.Player.SubPlayers
             MediaEnded?.Invoke(this, EventArgs.Empty);
         }
 
-        private async void ShakaPlayerControl_PlayerLoaded(object sender, ShakaPlayer.Models.ShakaPlayerLoadedData e)
+        private async void ShakaPlayerControl_PlayerLoaded(object sender, ShakaPlayerLoadedData e)
         {
             MediaOpened?.Invoke(this, EventArgs.Empty);
             await Task.Delay(50);
