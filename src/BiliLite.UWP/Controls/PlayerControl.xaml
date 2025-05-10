@@ -370,6 +370,7 @@
                               PlayStateChanged="Player_PlayStateChanged" 
                               PlayMediaEnded="Player_PlayMediaEnded" 
                               PlayMediaError="Player_PlayMediaError" 
+                              StatsUpdated="Player_OnStatsUpdated"
                               ChangeEngine="Player_ChangeEngine" 
                               PlayMediaOpened="Player_PlayMediaOpened"/>
 

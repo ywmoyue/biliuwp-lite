@@ -44,6 +44,7 @@ public class LiveMpegtsPlayer : ISubPlayer, ISubWebPlayer
         {
             Data = new ShakaPlayerCollectInfoData()
             {
+                WebPlayer = m_playerControl,
             },
             RealPlayInfo = m_realPlayInfo,
             Type = "ShakaPlayer",

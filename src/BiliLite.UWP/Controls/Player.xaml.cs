@@ -56,6 +56,7 @@ namespace BiliLite.Controls
         private List<FFmpegMediaSource> m_ffmpegMssItems;
         private MediaPlaybackList m_mediaPlaybackList;
         private BaseWebPlayer m_webPlayer;
+        private WebPlayerStatsUpdatedData m_webPlayerStatsData;
 
         #endregion
 
@@ -216,6 +217,8 @@ namespace BiliLite.Controls
         /// 更改播放引擎
         /// </summary>
         public event EventHandler<ChangePlayerEngine> ChangeEngine;
+
+        public event EventHandler StatsUpdated; 
 
         #endregion
 
@@ -423,6 +426,12 @@ namespace BiliLite.Controls
         //{
         //    Debug.WriteLine(e.FormattedLog);
         //}
+
+        private void ShakaPlayer_OnStatsUpdated(object sender, WebPlayerStatsUpdatedData e)
+        {
+            m_webPlayerStatsData = e;
+            StatsUpdated?.Invoke(this, null);
+        }
 
         private async Task OnPlayerMediaOpened(Action specificPlayerAction = null)
         {
@@ -720,7 +729,7 @@ namespace BiliLite.Controls
                 m_userAgent = userAgent;
 
                 Opening = true;
-                m_currentEngine = PlayEngine.Native;
+                m_currentEngine = webPlayer.PlayEngine;
                 PlayMediaType = PlayMediaType.Dash;
                 //加载中
                 PlayState = PlayState.Loading;
@@ -1582,8 +1591,13 @@ namespace BiliLite.Controls
                     //info += $"Resolution: {_playerVideo.PlaybackSession.NaturalVideoHeight} x {_playerVideo.PlaybackSession.NaturalVideoWidth}\r\n";
                     if (m_dashInfo != null && m_dashInfo.Audio != null)
                     {
-                        info += $"Resolution: {m_dashInfo.Video.Width} x {m_dashInfo.Video.Height}\r\n";
-                        info += $"View Resolution: {(int)mediaPlayerVideo.Width} x {(int)mediaPlayerVideo.Height}\r\n";
+                        if (ShowMediaPlayer)
+                        {
+                            info += $"Resolution: {m_dashInfo.Video.Width} x {m_dashInfo.Video.Height}\r\n";
+                            info +=
+                                $"View Resolution: {(int)mediaPlayerVideo.Width} x {(int)mediaPlayerVideo.Height}\r\n";
+                        }
+
                         info += $"Video Codec: {m_dashInfo.Video.Codecs}\r\n";
                         info += $"Video DataRate: {(m_dashInfo.Video.BandWidth / 1024).ToString("0.0")}Kbps\r\n";
                         info += $"Average Frame: {m_dashInfo.Video.FrameRate}\r\n";
@@ -1598,6 +1612,13 @@ namespace BiliLite.Controls
                     {
                         info += $"Resolution: {m_playerVideo.PlaybackSession.NaturalVideoWidth} x {m_playerVideo.PlaybackSession.NaturalVideoHeight}\r\n";
                     }
+                }
+
+                if (m_webPlayerStatsData != null)
+                {
+                    info += $"Resolution: {m_webPlayerStatsData.Width} x {m_webPlayerStatsData.Height}\r\n";
+                    info += $"DecodedFrames: {m_webPlayerStatsData.DecodedFrames}\r\n";
+                    info += $"DroppedFrames: {m_webPlayerStatsData.DroppedFrames}\r\n";
                 }
                 //MediaInfo = info;
                 return info;

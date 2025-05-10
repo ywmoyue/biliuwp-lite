@@ -27,6 +27,7 @@
                                           Visibility="{x:Bind RealPlayerType,Mode=OneWay,Converter={StaticResource RealPlayerTypeDisplayConverter},ConverterParameter='ShakaPlayer'}"
                                             PlayerLoaded="ShakaPlayer_OnPlayerLoaded"
                                             Ended="ShakaPlayer_OnEnded"
+                                            StatsUpdated="ShakaPlayer_OnStatsUpdated"
                                             PositionChanged="ShakaPlayer_OnPositionChanged"></webPlayer:ShakaPlayerControl>
         </Grid>
     </Grid>

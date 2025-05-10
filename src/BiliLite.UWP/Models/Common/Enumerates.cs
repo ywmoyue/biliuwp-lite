@@ -171,7 +171,9 @@
         FFmpegInteropMSS = 2,
         SYEngine = 3,
         FFmpegInteropMSSH265 = 4,
-        VLC = 5
+        VLC = 5,
+        ShakaPlayer = 6,
+        Mpegts = 7,
     }
 
     public enum PlayMediaType

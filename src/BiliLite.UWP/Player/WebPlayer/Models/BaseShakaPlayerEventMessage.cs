@@ -16,4 +16,6 @@ public static class ShakaPlayerEventLists
     public const string ENDED = "ended";
 
     public const string VOLUME_CHANGED = "volumeChanged";
+
+    public const string STATS = "stats";
 }

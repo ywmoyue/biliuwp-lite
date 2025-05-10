@@ -44,6 +44,7 @@ namespace BiliLite.Player.SubPlayers
             {
                 Data = new ShakaPlayerCollectInfoData()
                 {
+                    WebPlayer = m_ShakaPlayerControl,
                 },
                 RealPlayInfo = m_realPlayInfo,
                 Type = "ShakaPlayer",

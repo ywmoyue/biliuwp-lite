@@ -3288,5 +3288,10 @@ namespace BiliLite.Controls
         {
             m_viewModel.ShowWebPlayerToolbar = false;
         }
+
+        private void Player_OnStatsUpdated(object sender, EventArgs e)
+        {
+            txtInfo.Text = Player.GetMediaInfo();
+        }
     }
 }

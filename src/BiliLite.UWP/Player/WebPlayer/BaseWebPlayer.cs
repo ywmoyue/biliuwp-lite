@@ -10,6 +10,7 @@ using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Controls;
+using BiliLite.Models.Common.Player;
 using BiliLite.Player.WebPlayer.Models;
 using NSDanmaku;
 
@@ -31,6 +32,10 @@ public abstract class BaseWebPlayer : Grid, IDisposable
 
     public abstract string PlayerView { get; }
 
+    public abstract RealPlayerType Type { get; }
+
+    public PlayEngine PlayEngine => Type == RealPlayerType.ShakaPlayer ? PlayEngine.ShakaPlayer : PlayEngine.Mpegts;
+
     public WebView2 WebViewElement { get; set; }
 
     public double Volume { get; set; } = 1;
@@ -42,6 +47,8 @@ public abstract class BaseWebPlayer : Grid, IDisposable
     public event EventHandler<ShakaPlayerLoadedData> PlayerLoaded;
 
     public event EventHandler Ended;
+
+    public event EventHandler<WebPlayerStatsUpdatedData> StatsUpdated;
 
     private async Task InitWebView2()
     {
@@ -110,6 +117,12 @@ public abstract class BaseWebPlayer : Grid, IDisposable
         else if (@event.Event == ShakaPlayerEventLists.ENDED)
         {
             Ended?.Invoke(this, EventArgs.Empty);
+        }
+        else if (@event.Event == ShakaPlayerEventLists.STATS)
+        {
+            var data = JsonConvert.DeserializeObject<WebPlayerStatsUpdatedData>(
+                JsonConvert.SerializeObject(@event.Data));
+            StatsUpdated?.Invoke(this, data);
         }
         else if (@event.Event == ShakaPlayerEventLists.VOLUME_CHANGED)
         {

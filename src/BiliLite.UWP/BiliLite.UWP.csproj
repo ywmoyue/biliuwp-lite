@@ -354,6 +354,7 @@
     <Compile Include="Player\WebPlayer\Models\BaseShakaPlayerEventMessage.cs" />
     <Compile Include="Player\WebPlayer\Models\ShakaPlayerLoadedData.cs" />
     <Compile Include="Player\SubPlayers\LiveShakaPlayer.cs" />
+    <Compile Include="Player\WebPlayer\Models\WebPlayerStatsUpdatedData.cs" />
     <Compile Include="Player\WebPlayer\MpegtsPlayerControl.cs" />
     <Compile Include="Player\WebPlayer\ShakaPlayerControl.cs" />
     <Compile Include="Player\WebPlayer\WebPlayerToolbarControl.xaml.cs">
