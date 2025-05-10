@@ -223,6 +223,11 @@
                                 </Grid.ColumnDefinitions>
                                 <TextBlock x:Name="TopTitle" VerticalAlignment="Center" Foreground="White" FontSize="18" Margin="12 0" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=m_liveRoomViewModel.RoomTitle,Mode=OneWay}"></TextBlock>
                                 <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <Button x:Name="BtnOpenWebPlayerToolbar"
+                                            Visibility="{x:Bind m_viewModel.ShowWebPlayer,Mode=OneWay}"
+                                            Click="BtnOpenWebPlayerToolbar_OnClick">
+                                        <fa:FontAwesome Width="28" Height="28" Icon="Solid_Tools"/>
+                                    </Button>
 
                                     <Button x:Name="TopBtnShare" Foreground="White" Background="Transparent" Padding="0" Width="48" Height="48">
                                         <FontIcon FontSize="28" FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;" />
@@ -570,6 +575,11 @@
                         </Grid>
                     </Grid>
                 </Grid>
+
+                <webPlayer:WebPlayerToolbarControl
+                    x:Name="WebPlayerToolbarControl"
+                    ExitToolbar="WebPlayerToolbarControl_OnExitToolbar"
+                    Visibility="{x:Bind m_viewModel.ShowWebPlayerToolbar,Mode=OneWay}"></webPlayer:WebPlayerToolbarControl>
                 <Grid Grid.Row="1" x:Name="BottomGiftBar" Visibility="{x:Bind m_viewModel.ShowBottomGiftBar, Mode=OneWay}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />

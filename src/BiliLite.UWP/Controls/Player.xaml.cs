@@ -82,6 +82,9 @@ namespace BiliLite.Controls
         public PlayMediaType PlayMediaType { get; set; }
         public VideoPlayHistoryHelper.ABPlayHistoryEntry ABPlay { get; set; }
 
+        [DoNotNotify]
+        public BaseWebPlayer WebPlayer => m_webPlayer;
+
         /// <summary>
         /// 进度
         /// </summary>

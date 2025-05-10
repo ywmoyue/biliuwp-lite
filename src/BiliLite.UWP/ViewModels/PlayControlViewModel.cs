@@ -19,6 +19,8 @@ namespace BiliLite.ViewModels
 
         public bool ShowViewPointsBtn { get; set; }
 
+        public bool ShowWebPlayerToolbar { get; set; }
+
         public List<PlayerInfoViewPoint> ViewPoints { get; set; }
 
         public double Position { get; set; }

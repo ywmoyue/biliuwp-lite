@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using BiliLite.Controls;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Player;
 using BiliLite.Player.MediaInfos;
@@ -9,7 +10,7 @@ using BiliLite.Services;
 
 namespace BiliLite.Player.SubPlayers
 {
-    public class LiveShakaPlayer : ISubPlayer
+    public class LiveShakaPlayer : ISubPlayer, ISubWebPlayer
     {
         private ShakaPlayerControl m_ShakaPlayerControl;
         private PlayerConfig m_playerConfig;
@@ -23,6 +24,8 @@ namespace BiliLite.Player.SubPlayers
         }
 
         public override RealPlayerType Type { get; } = RealPlayerType.ShakaPlayer;
+
+        public BaseWebPlayer WebPlayer => m_ShakaPlayerControl;
 
         public override double Volume
         {

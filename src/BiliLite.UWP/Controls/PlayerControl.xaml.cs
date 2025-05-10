@@ -3277,5 +3277,16 @@ namespace BiliLite.Controls
         {
             SetPosition(e);
         }
+
+        private void BtnOpenWebPlayerToolbar_OnClick(object sender, RoutedEventArgs e)
+        {
+            WebPlayerToolbarControl.SetPlayer(Player.WebPlayer);
+            m_viewModel.ShowWebPlayerToolbar = true;
+        }
+
+        private void WebPlayerToolbarControl_OnExitToolbar(object sender, EventArgs e)
+        {
+            m_viewModel.ShowWebPlayerToolbar = false;
+        }
     }
 }

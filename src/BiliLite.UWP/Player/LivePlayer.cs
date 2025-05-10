@@ -44,6 +44,19 @@ namespace BiliLite.Player
             InitPlayerEvents(m_subPlayer);
         }
 
+        public BaseWebPlayer WebPlayer
+        {
+            get
+            {
+                if (m_subPlayer is ISubWebPlayer subWebPlayer)
+                {
+                    return subWebPlayer.WebPlayer;
+                }
+
+                return null;
+            }
+        }
+
         public double Volume
         {
             get => m_subPlayer.Volume;

@@ -262,4 +262,46 @@ public abstract class BaseWebPlayer : Grid, IDisposable
     {
         Stop();
     }
+
+    public async Task FlipVertical()
+    {
+        if (!m_hasLoaded) return;
+        var script = $"window.flipVertical()";
+        await WebViewElement.CoreWebView2.ExecuteScriptAsync(script);
+    }
+
+    public async Task FlipHorizontal()
+    {
+        if (!m_hasLoaded) return;
+        var script = $"window.flipHorizontal()";
+        await WebViewElement.CoreWebView2.ExecuteScriptAsync(script);
+    }
+
+    public async Task Zoom(double scaleFactor)
+    {
+        if (!m_hasLoaded) return;
+        var script = $"window.zoom({scaleFactor})";
+        await WebViewElement.CoreWebView2.ExecuteScriptAsync(script);
+    }
+
+    public async Task Move(double x, double y)
+    {
+        if (!m_hasLoaded) return;
+        var script = $"window.move({x},{y})";
+        await WebViewElement.CoreWebView2.ExecuteScriptAsync(script);
+    }
+
+    public async Task ResetTransforms()
+    {
+        if (!m_hasLoaded) return;
+        var script = $"window.resetTransforms()";
+        await WebViewElement.CoreWebView2.ExecuteScriptAsync(script);
+    }
+
+    public async Task TogglePictureInPicture()
+    {
+        if (!m_hasLoaded) return;
+        var script = $"window.togglePictureInPicture()";
+        await WebViewElement.CoreWebView2.ExecuteScriptAsync(script);
+    }
 }

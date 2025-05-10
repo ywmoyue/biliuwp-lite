@@ -347,6 +347,7 @@
     </Compile>
     <Compile Include="Player\MediaInfos\ShakaPlayerCollectInfoData.cs" />
     <Compile Include="Player\MediaInfos\ShakaPlayerCollectInfoHandler.cs" />
+    <Compile Include="Player\SubPlayers\ISubWebPlayer.cs" />
     <Compile Include="Player\SubPlayers\LiveMpegtsPlayer.cs" />
     <Compile Include="Player\WebPlayer\BaseWebPlayer.cs" />
     <Compile Include="Player\WebPlayer\Extensions\ShakaExtensions.cs" />
@@ -355,6 +356,9 @@
     <Compile Include="Player\SubPlayers\LiveShakaPlayer.cs" />
     <Compile Include="Player\WebPlayer\MpegtsPlayerControl.cs" />
     <Compile Include="Player\WebPlayer\ShakaPlayerControl.cs" />
+    <Compile Include="Player\WebPlayer\WebPlayerToolbarControl.xaml.cs">
+      <DependentUpon>WebPlayerToolbarControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Services\Biz\BaseBizService.cs" />
     <Compile Include="Services\Biz\LocalAttentionUserService.cs" />
     <Compile Include="Services\Biz\MessagesService.cs" />
@@ -1358,6 +1362,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\User\DynamicSpacePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Player\WebPlayer\WebPlayerToolbarControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

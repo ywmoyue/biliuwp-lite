@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace BiliLite.Player.SubPlayers;
 
-public class LiveMpegtsPlayer : ISubPlayer
+public class LiveMpegtsPlayer : ISubPlayer, ISubWebPlayer
 {
     private MpegtsPlayerControl m_playerControl;
     private PlayerConfig m_playerConfig;
@@ -24,6 +24,8 @@ public class LiveMpegtsPlayer : ISubPlayer
     }
 
     public override RealPlayerType Type { get; } = RealPlayerType.Mpegts;
+
+    public BaseWebPlayer WebPlayer => m_playerControl;
 
     public override double Volume
     {

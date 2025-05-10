@@ -20,6 +20,8 @@ namespace BiliLite.ViewModels.Live
         [DependsOn(nameof(RealPlayerType))]
         public bool ShowWebPlayer => RealPlayerType is RealPlayerType.ShakaPlayer or RealPlayerType.Mpegts;
 
+        public bool ShowWebPlayerToolbar { get; set; }
+
         public string DanmakuInput { get; set; }
 
         public bool IsPaused { get; set; } = true;

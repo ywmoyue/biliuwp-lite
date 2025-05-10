@@ -1568,5 +1568,16 @@ namespace BiliLite.Pages
             pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
             pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
         }
+
+        private void WebPlayerToolbarControl_OnExitToolbar(object sender, EventArgs e)
+        {
+            m_viewModel.ShowWebPlayerToolbar = false;
+        }
+
+        private void BtnOpenWebPlayerToolbar_OnClick(object sender, RoutedEventArgs e)
+        {
+            WebPlayerToolbarControl.SetPlayer(m_player.WebPlayer);
+            m_viewModel.ShowWebPlayerToolbar = true;
+        }
     }
 }
