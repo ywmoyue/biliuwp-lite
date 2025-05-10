@@ -16,10 +16,11 @@
     xmlns:live1="using:BiliLite.ViewModels.Live"
     xmlns:Player="using:BiliLite.Models.Common.Player"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
-    xmlns:shakaPlayer="using:BiliLite.Player.ShakaPlayer"
+    xmlns:webPlayer="using:BiliLite.Player.WebPlayer"
     Margin="{x:Bind m_viewModel.Margin, Mode=OneWay}"
     Background="Transparent">
     <Page.Resources>
+        <convert:RealPlayerTypeDisplayConverter x:Key="RealPlayerTypeDisplayConverter"></convert:RealPlayerTypeDisplayConverter>
         <convert:DatetimeConvert x:Key="datetime" ></convert:DatetimeConvert>
         <convert:ColorConvert x:Key="colorConvert" ></convert:ColorConvert>
         <convert:DanmakuStyleConvert x:Key="styleConvert"></convert:DanmakuStyleConvert>
@@ -176,7 +177,14 @@
                    ManipulationDelta="Grid_ManipulationDelta"
                    ManipulationStarted="Grid_ManipulationStarted">
                     <MediaPlayerElement x:Name="playerElement" Visibility="{x:Bind m_viewModel.ShowMediaPlayer,Mode=OneWay}"></MediaPlayerElement>
-                    <shakaPlayer:ShakaPlayerControl x:Name="ShakaPlayer" Visibility="{x:Bind m_viewModel.ShowWebPlayer,Mode=OneWay}"></shakaPlayer:ShakaPlayerControl>
+                    <Grid Visibility="{x:Bind m_viewModel.ShowWebPlayer,Mode=OneWay}">
+                        <webPlayer:ShakaPlayerControl x:Name="ShakaPlayer"                                           
+                                                      Visibility="{x:Bind m_viewModel.RealPlayerType,Mode=OneWay,Converter={StaticResource RealPlayerTypeDisplayConverter},ConverterParameter='ShakaPlayer'}"
+                        ></webPlayer:ShakaPlayerControl>
+                        <webPlayer:MpegtsPlayerControl x:Name="MpegtsPlayer" 
+                                                       Visibility="{x:Bind m_viewModel.RealPlayerType,Mode=OneWay,Converter={StaticResource RealPlayerTypeDisplayConverter},ConverterParameter='Mpegts'}">
+                        </webPlayer:MpegtsPlayerControl>
+                    </Grid>
                    
                     <!--弹幕-->
                     <Grid Tapped="Grid_Tapped">
@@ -215,6 +223,11 @@
                                 </Grid.ColumnDefinitions>
                                 <TextBlock x:Name="TopTitle" VerticalAlignment="Center" Foreground="White" FontSize="18" Margin="12 0" TextTrimming="CharacterEllipsis" Text="{x:Bind Path=m_liveRoomViewModel.RoomTitle,Mode=OneWay}"></TextBlock>
                                 <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <Button x:Name="BtnOpenWebPlayerToolbar"
+                                            Visibility="{x:Bind m_viewModel.ShowWebPlayer,Mode=OneWay}"
+                                            Click="BtnOpenWebPlayerToolbar_OnClick">
+                                        <fa:FontAwesome Width="28" Height="28" Icon="Solid_Tools"/>
+                                    </Button>
 
                                     <Button x:Name="TopBtnShare" Foreground="White" Background="Transparent" Padding="0" Width="48" Height="48">
                                         <FontIcon FontSize="28" FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;" />
@@ -562,6 +575,11 @@
                         </Grid>
                     </Grid>
                 </Grid>
+
+                <webPlayer:WebPlayerToolbarControl
+                    x:Name="WebPlayerToolbarControl"
+                    ExitToolbar="WebPlayerToolbarControl_OnExitToolbar"
+                    Visibility="{x:Bind m_viewModel.ShowWebPlayerToolbar,Mode=OneWay}"></webPlayer:WebPlayerToolbarControl>
                 <Grid Grid.Row="1" x:Name="BottomGiftBar" Visibility="{x:Bind m_viewModel.ShowBottomGiftBar, Mode=OneWay}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />

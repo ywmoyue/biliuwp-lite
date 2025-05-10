@@ -6,6 +6,7 @@
         {
             NetworkError,
             PlayUrlError,
+            NeedUseOtherPlayerError,
             UnknownError,  
         }
 

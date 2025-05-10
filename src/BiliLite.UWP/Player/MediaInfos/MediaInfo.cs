@@ -19,34 +19,48 @@ namespace BiliLite.Player.MediaInfos
         public string Resolution => $"{VideoWidth} * {VideoHeight}";
 
         [MediaInfoDoNotToString]
-        public double VideoBitRate { get; set; }
+        public double? VideoBitRate { get; set; }
 
-        public string VideoBitRateKbps => (VideoBitRate / 1000).ToString() + " Kbps";
+        public string VideoBitRateKbps
+        {
+            get
+            {
+                if (VideoBitRate == null) return null;
+                return (VideoBitRate / 1000).ToString() + " Kbps";
+            }
+        }
 
         [MediaInfoDoNotToString]
-        public double AudioBitRate { get; set; }
+        public double? AudioBitRate { get; set; }
 
-        public string AudioBitRateKbps => (AudioBitRate / 1000).ToString() + " Kbps";
+        public string AudioBitRateKbps
+        {
+            get
+            {
+                if (AudioBitRate == null) return null;
+                return (AudioBitRate / 1000).ToString() + " Kbps";
+            }
+        }
 
         [MediaInfoDoNotToString]
         public string DecoderEngine { get; set; }
 
-        [MediaInfoDoNotToString]
-        public double Speed { get; set; }
+        public string Speed { get; set; }
 
-        [MediaInfoDoNotToString]
-        public int DroppedFrames { get; set; }
+        public int? DroppedFrames { get; set; }
+
+        public int? DecodedFrames { get; set; }
 
         [MediaInfoDoNotToString]
         public int PacketsLost { get; set; }
 
-        public double Fps { get; set; }
+        public double? Fps { get; set; }
 
         public string PlayerType { get; set; }
 
         public string Url { get; set; }
 
-        public double BufferingProgress { get; set; }
+        public double? BufferingProgress { get; set; }
 
         public string BufferTime { get; set; }
 
