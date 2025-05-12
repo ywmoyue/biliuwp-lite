@@ -48,8 +48,9 @@
                         </Grid.ColumnDefinitions>
                         <Grid>
                             <Image Width="{Binding Path=OneRowInfo.CoverWidth}" Source="{Binding Path=OneRowInfo.Cover}" />
-                            <Border Padding="4,1,5,3"
+                            <Border
                                 Margin="8"
+                                Padding="4,1,5,3"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
@@ -70,7 +71,9 @@
                                         <GradientStop Offset="0" Color="#00000000" />
                                     </LinearGradientBrush>
                                 </Grid.Background>
-                                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
+                                <TextBlock
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
                                     FontSize="12"
                                     Foreground="White"
                                     Text="{Binding Path=OneRowInfo.CoverText}" />
@@ -145,16 +148,15 @@
                                 Source="{Binding Path=ImagesInfo[0].ImageUrlWithPar}"
                                 Stretch="UniformToFill" />
                         </HyperlinkButton>
-                        <Border Padding="4,1,5,3"
+                        <Border
                             Margin="8"
+                            Padding="4,1,5,3"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"
                             Background="#66000000"
                             CornerRadius="{StaticResource ControlCornerRadius}"
                             Visibility="{Binding Path=ImagesInfo[0].LongImage}">
-                            <TextBlock
-                                FontSize="12"
-                                Foreground="White">
+                            <TextBlock FontSize="12" Foreground="White">
                                 长图
                             </TextBlock>
                         </Border>
@@ -229,7 +231,8 @@
             BorderThickness="0"
             CornerRadius="{StaticResource OverlayCornerRadius}">
             <StackPanel Margin="12" Orientation="Horizontal">
-                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                <FontIcon
+                    FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                     FontSize="14"
                     Foreground="Gray"
                     Glyph="&#xE7BA;" />

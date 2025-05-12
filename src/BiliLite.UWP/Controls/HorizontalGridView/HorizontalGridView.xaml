@@ -67,7 +67,8 @@
                             VerticalAlignment="Center"
                             Style="{StaticResource RoundAccentButtonStyle}"
                             Visibility="Collapsed">
-                            <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                            <FontIcon
+                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                 FontSize="14"
                                 Glyph="&#xE00E;" />
                         </Button>
@@ -78,7 +79,8 @@
                             VerticalAlignment="Center"
                             Style="{StaticResource RoundAccentButtonStyle}"
                             Visibility="Collapsed">
-                            <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                            <FontIcon
+                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                 FontSize="14"
                                 Glyph="&#xE00F;" />
                         </Button>

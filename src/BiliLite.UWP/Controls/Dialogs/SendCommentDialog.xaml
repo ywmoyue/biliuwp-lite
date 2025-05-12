@@ -76,7 +76,7 @@
             Padding="8,8,8,36"
             AcceptsReturn="True"
             PlaceholderText="说点什么吧..."
-            TextWrapping="Wrap"  />
+            TextWrapping="Wrap" />
         <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal">
             <Button
                 x:Name="btnOpenFace"
@@ -87,8 +87,8 @@
                 BorderThickness="0"
                 Click="btnOpenFace_Click">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
-                      
+                    <FontIcon
+                        FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                         FontSize="14"
                         Glyph="&#xE170;" />
                 </StackPanel>
@@ -113,7 +113,6 @@
             <TextBlock Margin="0,10,0,5">附件</TextBlock>
             <toolkit:AdaptiveGridView
                 IsItemClickEnabled="False"
-                
                 ItemsSource="{x:Bind Path=m_viewModel.Pictures, Mode=OneWay}"
                 OneRowModeEnabled="True"
                 SelectionMode="None"

@@ -1,14 +1,16 @@
 
-﻿using System;
-using System.Collections.Generic;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common.Player;
-using BiliLite.Models.Exceptions;！
+using BiliLite.Models.Exceptions;
 using BiliLite.Player.Controllers;
 using BiliLite.Player.MediaInfos;
 using BiliLite.Player.SubPlayers;
-using BiliLite.Services;
-using BiliLite.Player.MediaInfos;
 using BiliLite.Player.WebPlayer;
+using BiliLite.Services;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
 
 namespace BiliLite.Player
 {

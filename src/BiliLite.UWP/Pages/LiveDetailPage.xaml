@@ -14,20 +14,11 @@
     xmlns:model_live="using:BiliLite.Modules.Live"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-！
     xmlns:webPlayer="using:BiliLite.Player.WebPlayer"
-
     Margin="{x:Bind m_viewModel.Margin, Mode=OneWay}"
     Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
-
-
-        <convert:RealPlayerTypeDisplayConverter x:Key="RealPlayerTypeDisplayConverter"></convert:RealPlayerTypeDisplayConverter>
-        <convert:DatetimeConvert x:Key="datetime" ></convert:DatetimeConvert>
-        <convert:ColorConvert x:Key="colorConvert" ></convert:ColorConvert>
-        <convert:DanmakuStyleConvert x:Key="styleConvert"></convert:DanmakuStyleConvert>
-
         <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource SystemAccentColor}" />
         <SolidColorBrush x:Key="GridViewItemForegroundSelected" Color="{ThemeResource SystemAccentColor}" />
         <DataTemplate
@@ -282,27 +273,24 @@
                     </Flyout>
                 </Grid.ContextFlyout>
 
-                <Grid Background="Black" 
-                      x:Name="PlayerView"
-                      SizeChanged="Player_SizeChanged"
-                      PointerMoved="Grid_PointerMoved"   
-                   PointerEntered="Grid_PointerEntered" 
-                   PointerExited="Grid_PointerExited"
-                      ManipulationMode="TranslateY,TranslateRailsY"
-                   ManipulationCompleted="Grid_ManipulationCompleted"
-                   ManipulationDelta="Grid_ManipulationDelta"
-                   ManipulationStarted="Grid_ManipulationStarted">
-                    <MediaPlayerElement x:Name="playerElement" Visibility="{x:Bind m_viewModel.ShowMediaPlayer,Mode=OneWay}"></MediaPlayerElement>
-                    <Grid Visibility="{x:Bind m_viewModel.ShowWebPlayer,Mode=OneWay}">
-                        <webPlayer:ShakaPlayerControl x:Name="ShakaPlayer"                                           
-                                                      Visibility="{x:Bind m_viewModel.RealPlayerType,Mode=OneWay,Converter={StaticResource RealPlayerTypeDisplayConverter},ConverterParameter='ShakaPlayer'}"
-                        ></webPlayer:ShakaPlayerControl>
-                        <webPlayer:MpegtsPlayerControl x:Name="MpegtsPlayer" 
-                                                       Visibility="{x:Bind m_viewModel.RealPlayerType,Mode=OneWay,Converter={StaticResource RealPlayerTypeDisplayConverter},ConverterParameter='Mpegts'}">
-                        </webPlayer:MpegtsPlayerControl>
+                <Grid
+                    x:Name="PlayerView"
+                    Background="Black"
+                    ManipulationCompleted="Grid_ManipulationCompleted"
+                    ManipulationDelta="Grid_ManipulationDelta"
+                    ManipulationMode="TranslateY,TranslateRailsY"
+                    ManipulationStarted="Grid_ManipulationStarted"
+                    PointerEntered="Grid_PointerEntered"
+                    PointerExited="Grid_PointerExited"
+                    PointerMoved="Grid_PointerMoved"
+                    SizeChanged="Player_SizeChanged">
+                    <MediaPlayerElement x:Name="playerElement" Visibility="{x:Bind m_viewModel.ShowMediaPlayer, Mode=OneWay}" />
+                    <Grid Visibility="{x:Bind m_viewModel.ShowWebPlayer, Mode=OneWay}">
+                        <webPlayer:ShakaPlayerControl x:Name="ShakaPlayer" Visibility="{x:Bind m_viewModel.RealPlayerType, Mode=OneWay, Converter={StaticResource RealPlayerTypeDisplayConverter}, ConverterParameter='ShakaPlayer'}" />
+                        <webPlayer:MpegtsPlayerControl x:Name="MpegtsPlayer" Visibility="{x:Bind m_viewModel.RealPlayerType, Mode=OneWay, Converter={StaticResource RealPlayerTypeDisplayConverter}, ConverterParameter='Mpegts'}" />
                     </Grid>
-                   
-                    <!--弹幕-->
+
+                    <!--  弹幕  -->
                     <Grid Tapped="Grid_Tapped">
                         <danmaku:Danmaku x:Name="DanmuControl" />
                     </Grid>
@@ -380,13 +368,24 @@
                                     Text="{x:Bind Path=m_liveRoomViewModel.RoomTitle, Mode=OneWay}"
                                     TextTrimming="CharacterEllipsis" />
                                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                    <Button x:Name="BtnOpenWebPlayerToolbar"
-                                            Visibility="{x:Bind m_viewModel.ShowWebPlayer,Mode=OneWay}"
-                                            Click="BtnOpenWebPlayerToolbar_OnClick">
-                                        <fa:FontAwesome Width="28" Height="28" Icon="Solid_Tools"/>
+                                    <Button
+                                        x:Name="BtnOpenWebPlayerToolbar"
+                                        Click="BtnOpenWebPlayerToolbar_OnClick"
+                                        Visibility="{x:Bind m_viewModel.ShowWebPlayer, Mode=OneWay}">
+                                        <fa:FontAwesome
+                                            Width="28"
+                                            Height="28"
+                                            Icon="Solid_Tools" />
                                     </Button>
 
-                                    <Button x:Name="TopBtnShare" Foreground="White" Background="Transparent" Padding="0" Width="48" Height="48" BorderThickness="0">
+                                    <Button
+                                        x:Name="TopBtnShare"
+                                        Width="48"
+                                        Height="48"
+                                        Padding="0"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Foreground="White">
                                         <FontIcon
                                             FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                             FontSize="28"
@@ -1121,8 +1120,11 @@
                 <webPlayer:WebPlayerToolbarControl
                     x:Name="WebPlayerToolbarControl"
                     ExitToolbar="WebPlayerToolbarControl_OnExitToolbar"
-                    Visibility="{x:Bind m_viewModel.ShowWebPlayerToolbar,Mode=OneWay}"></webPlayer:WebPlayerToolbarControl>
-                <Grid Grid.Row="1" x:Name="BottomGiftBar" Visibility="{x:Bind m_viewModel.ShowBottomGiftBar, Mode=OneWay}">
+                    Visibility="{x:Bind m_viewModel.ShowWebPlayerToolbar, Mode=OneWay}" />
+                <Grid
+                    x:Name="BottomGiftBar"
+                    Grid.Row="1"
+                    Visibility="{x:Bind m_viewModel.ShowBottomGiftBar, Mode=OneWay}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />

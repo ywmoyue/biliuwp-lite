@@ -84,7 +84,8 @@
                 Background="{ThemeResource PieControlColor}"
                 CornerRadius="50"
                 Tapped="BtnExtentPie_OnTapped">
-                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                <FontIcon
+                    FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                     Foreground="{ThemeResource PieControlIconColor}"
                     Glyph="&#xE760;">
                     <FontIcon.RenderTransform>
@@ -172,8 +173,8 @@
                     <Button.RenderTransform>
                         <CompositeTransform TranslateX="40" />
                     </Button.RenderTransform>
-                    <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
-
+                    <FontIcon
+                        FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                         Foreground="{ThemeResource PieControlIconColor}"
                         Glyph="&#xE761;" />
                 </Button>

@@ -31,7 +31,7 @@
                     VerticalAlignment="Center"
                     Foreground="White"
                     Text=""
-                    TextWrapping="Wrap"  />
+                    TextWrapping="Wrap" />
                 <StackPanel
                     x:Name="btns"
                     Grid.Column="1"

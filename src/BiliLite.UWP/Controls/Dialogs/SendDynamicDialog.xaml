@@ -140,7 +140,6 @@
                 AcceptsReturn="True"
                 MaxLength="233"
                 PlaceholderText="说点什么吧..."
-                
                 TextChanged="txtContent_TextChanged"
                 TextWrapping="Wrap" />
 

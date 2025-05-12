@@ -12,7 +12,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Dynamic/DynamicV2Template.xaml"/>
+                <ResourceDictionary Source="/Controls/Dynamic/DynamicV2Template.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -21,9 +21,10 @@
         <local:MyListView
             CanLoadMore="{x:Bind Path=UserDynamicRepostViewModel.CanLoadMore, Mode=OneWay}"
             IsItemClickEnabled="False"
+            ItemTemplateSelector="{StaticResource DynamicTemplateSelector}"
             ItemsSource="{x:Bind Path=UserDynamicRepostViewModel.DynamicItems, Mode=OneWay}"
             LoadMoreBottomOffset="0"
-            LoadMoreCommand="{x:Bind Path=UserDynamicRepostViewModel.LoadMoreCommand}" ItemTemplateSelector="{StaticResource DynamicTemplateSelector}"
+            LoadMoreCommand="{x:Bind Path=UserDynamicRepostViewModel.LoadMoreCommand}"
             SelectionMode="None">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
