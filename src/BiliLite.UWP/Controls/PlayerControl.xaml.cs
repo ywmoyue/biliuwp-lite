@@ -1865,7 +1865,7 @@ namespace BiliLite.Controls
                             positon: _postion);
                     }
                 }
-                else
+                else if (realPlayerType == RealPlayerType.FFmpegInterop)
                 {
                     result = await Player.PlayDashUseFFmpegInterop(quality.DashInfo, quality.UserAgent, quality.Referer,
                         positon: _postion);
@@ -1875,7 +1875,10 @@ namespace BiliLite.Controls
                         result = await Player.PlayerDashUseNative(quality.DashInfo, quality.UserAgent, quality.Referer, positon: _postion);
                     }
                 }
-
+                else if (realPlayerType == RealPlayerType.ShakaPlayer)
+                {
+                    result = await Player.PlayerDashUseShaka(quality, quality.UserAgent, quality.Referer, positon: _postion);
+                }
             }
             else if (quality.PlayUrlType == BiliPlayUrlType.SingleFLV)
             {
@@ -3257,6 +3260,22 @@ namespace BiliLite.Controls
         private void BottomProgress_OnPositionChanged(object sender, double e)
         {
             SetPosition(e);
+        }
+
+        private void BtnOpenWebPlayerToolbar_OnClick(object sender, RoutedEventArgs e)
+        {
+            WebPlayerToolbarControl.SetPlayer(Player.WebPlayer);
+            m_viewModel.ShowWebPlayerToolbar = true;
+        }
+
+        private void WebPlayerToolbarControl_OnExitToolbar(object sender, EventArgs e)
+        {
+            m_viewModel.ShowWebPlayerToolbar = false;
+        }
+
+        private void Player_OnStatsUpdated(object sender, EventArgs e)
+        {
+            txtInfo.Text = Player.GetMediaInfo();
         }
     }
 }

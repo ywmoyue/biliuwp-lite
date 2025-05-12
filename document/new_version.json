@@ -1,7 +1,7 @@
 {
-  "version": "4.7.19",
-  "version_num": 40719,
-  "version_desc": "更新内容:\r\n\r\n- 优化检查更新相关内容  \r\n\r\n- 重写播放器进度条控件，尝试处理进度条抖动错误和播放停止错误  \r\n\r\n- 打开视频时加载弹幕设置报错不提示 \r\n\r\n- 动态详情页改用Grpc方式请求数据 \r\n\r\n- 修复本地关注直播间无法打开 \r\n\r\n- 切换视频时停止刷新地址计时器 \r\n\r\n- 捕获过滤推荐页列表错误，过滤无up名称的内容  \r\n\r\n- 视频进度条显示章节看点刻度 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.7.21",
+  "version_num": 40721,
+  "version_desc": "更新内容:\r\n\r\n- 新增Mpegts播放器用于直播播放 \r\n\r\n- WebPlayer新增视频画面操作工具栏 \r\n\r\n- WebPlayer视频信息显示 \r\n\r\n- 临时修复多窗口模式不可用问题 \r\n\r\n- 调整WebPlayer初始化流程 \r\n\r\n- 修复开启自动播放后WebPlayer无声音 \r\n\r\n- 修复WebPlayer后台恢复前台时进度回退问题 \r\n\r\n- 修复番剧花絮显示不全 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }

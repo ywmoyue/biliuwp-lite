@@ -23,6 +23,11 @@ using Windows.UI.Xaml.Media;
 using Windows.Web.Http;
 using BiliLite.Models.Common.Player;
 using Newtonsoft.Json;
+using BiliLite.Models;
+using BiliLite.Player.ShakaPlayer.Extensions;
+using BiliLite.Player.WebPlayer;
+using BiliLite.Player.WebPlayer.Models;
+using PropertyChanged;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -50,6 +55,8 @@ namespace BiliLite.Controls
         //多段FLV
         private List<FFmpegMediaSource> m_ffmpegMssItems;
         private MediaPlaybackList m_mediaPlaybackList;
+        private BaseWebPlayer m_webPlayer;
+        private WebPlayerStatsUpdatedData m_webPlayerStatsData;
 
         #endregion
 
@@ -75,6 +82,9 @@ namespace BiliLite.Controls
         public PlayState PlayState { get; set; }
         public PlayMediaType PlayMediaType { get; set; }
         public VideoPlayHistoryHelper.ABPlayHistoryEntry ABPlay { get; set; }
+
+        [DoNotNotify]
+        public BaseWebPlayer WebPlayer => m_webPlayer;
 
         /// <summary>
         /// 进度
@@ -105,7 +115,10 @@ namespace BiliLite.Controls
         /// </summary>
         public double Volume
         {
-            get { return (double)GetValue(VolumeProperty); }
+            get
+            {
+                return (double)GetValue(VolumeProperty);
+            }
             set
             {
                 if (value > 1)
@@ -166,6 +179,14 @@ namespace BiliLite.Controls
             DependencyProperty.Register("MediaInfo", typeof(string), typeof(Player), new PropertyMetadata(""));
         public bool Opening { get; set; }
 
+        public RealPlayerType RealPlayerType { get; set; }
+
+        [DependsOn(nameof(RealPlayerType))]
+        public bool ShowMediaPlayer => RealPlayerType is RealPlayerType.Native or RealPlayerType.FFmpegInterop;
+
+        [DependsOn(nameof(RealPlayerType))]
+        public bool ShowShakaPlayer => RealPlayerType is RealPlayerType.ShakaPlayer or RealPlayerType.Mpegts;
+
         #endregion
 
         #region Events
@@ -196,6 +217,8 @@ namespace BiliLite.Controls
         /// 更改播放引擎
         /// </summary>
         public event EventHandler<ChangePlayerEngine> ChangeEngine;
+
+        public event EventHandler StatsUpdated; 
 
         #endregion
 
@@ -235,7 +258,10 @@ namespace BiliLite.Controls
             {
                 value = 0;
             }
-            sender.SetVolume(value);
+
+            if (sender.ShowMediaPlayer)
+                sender.SetVolume(value);
+            else sender.m_webPlayer.SetVolume(value);
         }
 
         private async Task<AdaptiveMediaSource> CreateAdaptiveMediaSource(BiliDashPlayUrlInfo dashInfo, string userAgent, string referer)
@@ -336,9 +362,25 @@ namespace BiliLite.Controls
             _ffmpegConfig.FFmpegOptions.Add("reconnect_streamed", "1");
             _ffmpegConfig.FFmpegOptions.Add("reconnect_on_network_error", "1");
             //_ffmpegConfig.BufferTime
-
-            var ffmpegOptions =
-                SettingService.GetValue(SettingConstants.Player.FfmpegOptions, new Dictionary<string, string>());
+            var ffmpegOptionsStr =
+                SettingService.GetValue(SettingConstants.Player.FFMPEG_INTEROP_X_OPTIONS, "");
+            var ffmpegOptions = new Dictionary<string, string>();
+            try
+            {
+                if (!string.IsNullOrEmpty(ffmpegOptionsStr))
+                {
+                    var options = ffmpegOptionsStr.Split(",");
+                    foreach (var optionStr in options)
+                    {
+                        var option = optionStr.Split(':').Select(x => x.Trim()).ToList();
+                        ffmpegOptions.Add(option[0], option[1]);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn("解析额外参数错误", ex);
+            }
 
             if (ffmpegOptions.Any())
             {
@@ -384,6 +426,12 @@ namespace BiliLite.Controls
         //{
         //    Debug.WriteLine(e.FormattedLog);
         //}
+
+        private void ShakaPlayer_OnStatsUpdated(object sender, WebPlayerStatsUpdatedData e)
+        {
+            m_webPlayerStatsData = e;
+            StatsUpdated?.Invoke(this, null);
+        }
 
         private async Task OnPlayerMediaOpened(Action specificPlayerAction = null)
         {
@@ -563,6 +611,28 @@ namespace BiliLite.Controls
             }
         }
 
+        private async void ShakaPlayer_OnPositionChanged(object sender, double e)
+        {
+            await OnPlayerPositionChanged(TimeSpan.FromSeconds(e));
+        }
+
+        private async void ShakaPlayer_OnPlayerLoaded(object sender, ShakaPlayerLoadedData e)
+        {
+            Duration = e.Duration;
+            Opening = false;
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                PlayMediaOpened?.Invoke(this, EventArgs.Empty);
+
+                Buffering = false;
+            });
+        }
+
+        private async void ShakaPlayer_OnEnded(object sender, EventArgs e)
+        {
+            await OnPlayerMediaEnded();
+        }
+
         #endregion
 
         #region Public Methods
@@ -645,6 +715,79 @@ namespace BiliLite.Controls
                     detail_message = ex.StackTrace
                 };
             }
+        }
+
+        public async Task<PlayerOpenResult> PlayDashUseWebPlayer(BaseWebPlayer webPlayer, BiliPlayUrlInfo quality, string userAgent, string referer, double positon = 0)
+        {
+            try
+            {
+                m_webPlayer = webPlayer;
+                mediaPlayerVideo.Visibility = Visibility.Visible;
+                //vlcVideoView.Visibility = Visibility.Collapsed;
+                m_dashInfo = quality.DashInfo;
+                m_referer = referer;
+                m_userAgent = userAgent;
+
+                Opening = true;
+                m_currentEngine = webPlayer.PlayEngine;
+                PlayMediaType = PlayMediaType.Dash;
+                //加载中
+                PlayState = PlayState.Loading;
+                PlayStateChanged?.Invoke(this, PlayState);
+                ClosePlay();
+
+
+                var mpdModel = new GenerateMPDModel()
+                {
+                    AudioBandwidth = quality.DashInfo.Audio.BandWidth.ToString(),
+                    AudioCodec = quality.DashInfo.Audio.Codecs,
+                    AudioID = quality.DashInfo.Audio.ID.ToString(),
+                    AudioUrl = quality.DashInfo.Audio.Url,
+                    Duration = quality.DashInfo.Duration,
+                    DurationMS = quality.Timelength,
+                    VideoBandwidth = quality.DashInfo.Video.BandWidth.ToString(),
+                    VideoCodec = quality.DashInfo.Video.Codecs,
+                    VideoID = quality.DashInfo.Video.ID.ToString(),
+                    VideoFrameRate = quality.DashInfo.Video.FrameRate.ToString(),
+                    VideoHeight = quality.DashInfo.Video.Height,
+                    VideoWidth = quality.DashInfo.Video.Width,
+                    VideoUrl = quality.DashInfo.Video.Url,
+                };
+                var mpdUrl = await mpdModel.CreateMpdFiles();
+
+                //设置播放器
+                await webPlayer.LoadUrl(quality.DashInfo.Video.Url, quality.DashInfo.Audio.Url);
+
+                Buffering = true;
+
+                PlayState = PlayState.Pause;
+                PlayStateChanged?.Invoke(this, PlayState);
+                //设置音量
+                webPlayer.SetVolume(Volume);
+                //设置速率
+                webPlayer.SetRate(Rate);
+
+                return new PlayerOpenResult()
+                {
+                    result = true
+                };
+            }
+            catch (Exception ex)
+            {
+                //PlayMediaError?.Invoke(this, "视频加载时出错:" + ex.Message);
+                return new PlayerOpenResult()
+                {
+                    result = false,
+                    message = ex.Message,
+                    detail_message = ex.StackTrace
+                };
+            }
+        }
+
+        public async Task<PlayerOpenResult> PlayerDashUseShaka(BiliPlayUrlInfo quality, string userAgent, string referer, double positon = 0)
+        {
+            RealPlayerType = RealPlayerType.ShakaPlayer;
+            return await PlayDashUseWebPlayer(ShakaPlayer, quality, userAgent, referer, positon);
         }
 
         /// <summary>
@@ -1149,6 +1292,7 @@ namespace BiliLite.Controls
 
         public void SetRatioMode(int mode)
         {
+            if (ShowShakaPlayer) return;
             switch (mode)
             {
                 case 0:
@@ -1205,6 +1349,11 @@ namespace BiliLite.Controls
         /// </summary>
         public void SetPosition(double position)
         {
+            if (ShowShakaPlayer)
+            {
+                m_webPlayer.Seek(position);
+                return;
+            }
             if (m_mediaTimelineController != null)
             {
                 m_mediaTimelineController.Position = TimeSpan.FromSeconds(position);
@@ -1213,7 +1362,6 @@ namespace BiliLite.Controls
             {
                 m_playerVideo.PlaybackSession.Position = TimeSpan.FromSeconds(position);
             }
-
         }
 
         /// <summary>
@@ -1223,6 +1371,13 @@ namespace BiliLite.Controls
         {
             try
             {
+                if (ShowShakaPlayer)
+                {
+                    m_webPlayer.Pause();
+                    PlayState = PlayState.Pause;
+                    PlayStateChanged?.Invoke(this, PlayState);
+                    return;
+                }
                 if (m_mediaTimelineController != null)
                 {
                     if (m_mediaTimelineController.State == MediaTimelineControllerState.Running)
@@ -1231,7 +1386,7 @@ namespace BiliLite.Controls
                         PlayState = PlayState.Pause;
                     }
                 }
-                else
+                else if (m_playerVideo != null)
                 {
                     if (m_playerVideo.PlaybackSession.CanPause)
                     {
@@ -1239,6 +1394,7 @@ namespace BiliLite.Controls
                         PlayState = PlayState.Pause;
                     }
                 }
+
                 PlayStateChanged?.Invoke(this, PlayState);
             }
             catch (Exception ex)
@@ -1254,6 +1410,13 @@ namespace BiliLite.Controls
         public void Play()
         {
             if (Position == 0 && Duration == 0) return;
+            if (ShowShakaPlayer)
+            {
+                m_webPlayer.Resume();
+                PlayState = PlayState.Playing;
+                PlayStateChanged?.Invoke(this, PlayState);
+                return;
+            }
             if (m_mediaTimelineController != null)
             {
                 if (m_mediaTimelineController.State == MediaTimelineControllerState.Paused)
@@ -1291,6 +1454,11 @@ namespace BiliLite.Controls
         public void SetRate(double value)
         {
             Rate = value;
+            if (ShowShakaPlayer)
+            {
+                m_webPlayer.SetRate(value);
+                return;
+            }
             if (m_mediaTimelineController != null)
             {
                 m_mediaTimelineController.ClockRate = value;
@@ -1423,8 +1591,13 @@ namespace BiliLite.Controls
                     //info += $"Resolution: {_playerVideo.PlaybackSession.NaturalVideoHeight} x {_playerVideo.PlaybackSession.NaturalVideoWidth}\r\n";
                     if (m_dashInfo != null && m_dashInfo.Audio != null)
                     {
-                        info += $"Resolution: {m_dashInfo.Video.Width} x {m_dashInfo.Video.Height}\r\n";
-                        info += $"View Resolution: {(int)mediaPlayerVideo.Width} x {(int)mediaPlayerVideo.Height}\r\n";
+                        if (ShowMediaPlayer)
+                        {
+                            info += $"Resolution: {m_dashInfo.Video.Width} x {m_dashInfo.Video.Height}\r\n";
+                            info +=
+                                $"View Resolution: {(int)mediaPlayerVideo.Width} x {(int)mediaPlayerVideo.Height}\r\n";
+                        }
+
                         info += $"Video Codec: {m_dashInfo.Video.Codecs}\r\n";
                         info += $"Video DataRate: {(m_dashInfo.Video.BandWidth / 1024).ToString("0.0")}Kbps\r\n";
                         info += $"Average Frame: {m_dashInfo.Video.FrameRate}\r\n";
@@ -1435,10 +1608,17 @@ namespace BiliLite.Controls
                         //info += $"Video Url: {m_dashInfo.Video.Url}\r\n";
                         //info += $"Audio Url: {m_dashInfo.Audio.Url}\r\n";
                     }
-                    else
+                    else if (m_playerVideo != null)
                     {
                         info += $"Resolution: {m_playerVideo.PlaybackSession.NaturalVideoWidth} x {m_playerVideo.PlaybackSession.NaturalVideoHeight}\r\n";
                     }
+                }
+
+                if (m_webPlayerStatsData != null)
+                {
+                    info += $"Resolution: {m_webPlayerStatsData.Width} x {m_webPlayerStatsData.Height}\r\n";
+                    info += $"DecodedFrames: {m_webPlayerStatsData.DecodedFrames}\r\n";
+                    info += $"DroppedFrames: {m_webPlayerStatsData.DroppedFrames}\r\n";
                 }
                 //MediaInfo = info;
                 return info;
@@ -1456,6 +1636,7 @@ namespace BiliLite.Controls
             try
             {
                 ClosePlay();
+                m_webPlayer.Dispose();
             }
             catch (Exception ex)
             {

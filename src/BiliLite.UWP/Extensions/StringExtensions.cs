@@ -266,6 +266,13 @@ namespace BiliLite.Extensions
             return result;
         }
 
+        public static string ToBase64(this string input)
+        {
+            byte[] bytesToEncode = Encoding.UTF8.GetBytes(input);
+            string base64String = Convert.ToBase64String(bytesToEncode);
+            return base64String;
+        }
+
         public static string ToSimplifiedChinese(this string content)
         {
             content = content.TraditionalToSimplified();

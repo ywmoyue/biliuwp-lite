@@ -12,6 +12,16 @@ namespace BiliLite.ViewModels.Live
 {
     public class LiveDetailPageViewModel : BaseViewModel
     {
+        public RealPlayerType RealPlayerType { get; set; }
+
+        [DependsOn(nameof(RealPlayerType))]
+        public bool ShowMediaPlayer => RealPlayerType is RealPlayerType.Native or RealPlayerType.FFmpegInterop;
+
+        [DependsOn(nameof(RealPlayerType))]
+        public bool ShowWebPlayer => RealPlayerType is RealPlayerType.ShakaPlayer or RealPlayerType.Mpegts;
+
+        public bool ShowWebPlayerToolbar { get; set; }
+
         public string DanmakuInput { get; set; }
 
         public bool IsPaused { get; set; } = true;

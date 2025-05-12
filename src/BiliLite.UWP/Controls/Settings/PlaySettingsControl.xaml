@@ -26,66 +26,47 @@
                 <SymbolIcon Symbol="Video" />
             </controls:SettingsExpander.HeaderIcon>
             <controls:SettingsExpander.Items>
-                <controls:SettingsCard Header="优先视频编码">
-                    <controls:SettingsCard.Description>
-                        <StackPanel>
-                            <TextBlock HorizontalAlignment="Left">
-                                <Run>视频编码为HEVC时系统需要</Run>
-                                <Hyperlink NavigateUri="ms-windows-store://pdp/?productid=9n4wgh0z6vhq">安装HEVC扩展</Hyperlink>
-                            </TextBlock>
-                            <TextBlock HorizontalAlignment="Left">
-                                <Run>视频编码为AV1时系统需要</Run>
-                                <Hyperlink NavigateUri="ms-windows-store://pdp/?productid=9MVZQVXJBQ9V">安装AV1扩展</Hyperlink>
-                                <Run>，部分清晰度可能也需要HEVC扩展</Run>
-                            </TextBlock>
-                        </StackPanel>
-                    </controls:SettingsCard.Description>
-                    <controls:SettingsCard.HeaderIcon>
-                        <font:FontAwesome Icon="Solid_Film" />
-                    </controls:SettingsCard.HeaderIcon>
-                    <ComboBox
-                        x:Name="cbVideoType"
-                        MinWidth="200"
-                        DisplayMemberPath="Name"
-                        ItemsSource="{x:Bind common:DefaultVideoTypeOptions.Options}"
-                        SelectedValuePath="Value" />
-                </controls:SettingsCard>
-
-                <controls:SettingsCard Description="如果遇到加载卡顿、磁盘占用高等问题，请尝试修改优先播放器类型" Header="优先播放器类型">
-                    <controls:SettingsCard.HeaderIcon>
-                        <font:FontAwesome Icon="Solid_PhotoVideo" />
-                    </controls:SettingsCard.HeaderIcon>
+                <controls:SettingsCard Header="FFMpegInteropX播放器设置"
+                                       Margin="8 8 8 0"></controls:SettingsCard>
+                <controls:SettingsCard Header="FFMpegInteropX额外播放参数"
+                                       Margin="8 0 8 0">
                     <StackPanel Orientation="Horizontal">
-                        <Button
-                            Margin="0,0,10,0"
-                            Click="BtnOpenFFmpegOptionsPanel_OnClick"
-                            Visibility="{Binding SelectedIndex, ElementName=ComboBoxUseRealPlayerType, Converter={StaticResource DisplayConvert}, ConverterParameter=1}">
-                            参数自定义
-                        </Button>
-                        <ComboBox
-                            x:Name="ComboBoxUseRealPlayerType"
-                            MinWidth="200"
-                            DisplayMemberPath="Content"
-                            ItemsSource="{x:Bind m_realPlayerTypes.Options}"
-                            SelectedIndex="0"
-                            SelectedValuePath="Value" />
+                        <TextBox 
+                            Text="{x:Bind m_viewModel.FFmpegInteropXOptions,Mode=TwoWay}"
+                            PlaceholderText="key1:value1,key2:value2,..."
+                            AcceptsReturn="True"
+                            TextWrapping="Wrap"
+                            Height="80"
+                            Width="240"/>
+                        <Button Click="BtnSaveFfmpegInteropXOptions_OnClick">保存</Button>
                     </StackPanel>
                 </controls:SettingsCard>
-
-                <controls:SettingsCard
-                    Description="仅对 FFmpeg 生效"
-                    Header="优先视频解码"
-                    IsEnabled="False"
-                    Visibility="{Binding SelectedIndex, ElementName=ComboBoxUseRealPlayerType, Converter={StaticResource DisplayConvert}, ConverterParameter=1}">
-                    <controls:SettingsCard.HeaderIcon>
-                        <font:FontAwesome Icon="Solid_Video" />
-                    </controls:SettingsCard.HeaderIcon>
-                    <ComboBox
-                        x:Name="swHardwareDecode"
-                        MinWidth="200"
-                        SelectedIndex="0">
-                        <ComboBoxItem>优先硬解</ComboBoxItem>
-                    </ComboBox>
+                <controls:SettingsCard Header="Web播放器设置(ShakaPlayer/Mpegts)"
+                                       Margin="8 8 8 0"></controls:SettingsCard>
+                <controls:SettingsCard Header="挂载本地文件"
+                                       Margin="8 0 8 0"
+                                       Description="选择本地html文件替代内置播放器html进行挂载">
+                    <Button x:Name="BtnSelectWebPlayerFile">开发中，敬请期待</Button>
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="启用调试模式"
+                                       Margin="8 0 8 0"
+                                       Description="每次播放时打开控制台">
+                    <ToggleSwitch x:Name="SwitchEnableWebPlayerDebugMode"></ToggleSwitch>
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="启用开发模式"
+                                       Margin="8 0 8 0"
+                                       Description="取消挂载播放器html文件，并以 http://www.bilibili.com 作为播放器进行使用。播放器前端开发时使用，普通用户请勿开启。">
+                    <ToggleSwitch x:Name="SwitchEnableWebPlayerDevMode"></ToggleSwitch>
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="WebPlayer音视频进度同步阈值1"
+                                       Margin="8 0 8 0"
+                                       Description="当音视频进度偏差大于此阈值时调整音频播放速度，随后恢复">
+                    <controls1:NumberBox x:Name="NumberBoxWebPlayerAVPositionSyncThreshold1"></controls1:NumberBox>
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="WebPlayer音视频进度同步阈值2"
+                                       Margin="8 0 8 8"
+                                       Description="当音视频进度偏差大于此阈值时音频进度跳转到视频进度位置">
+                    <controls1:NumberBox x:Name="NumberBoxWebPlayerAVPositionSyncThreshold2"></controls1:NumberBox>
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
@@ -311,40 +292,14 @@
             </controls:SettingsCard.HeaderIcon>
             <ToggleSwitch x:Name="swPlayerSettingDoubleClickFullScreen" />
         </controls:SettingsCard>
-
-        <ContentDialog
-            x:Name="FFmpegOptionsDialog"
-            Title="设置FFmpeg options"
-            Width="600"
-            IsPrimaryButtonEnabled="True"
-            PrimaryButtonText="确定">
-            <StackPanel Orientation="Vertical">
-                <Button Click="BtnAddFFmpegOption_OnClick">Add</Button>
-                <ScrollViewer>
-                    <ListView ItemsSource="{x:Bind m_viewModel.FFmpegOptions, Mode=OneWay}" SelectionMode="None">
-                        <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="settings:KeyValuePairViewModel">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition />
-                                        <ColumnDefinition />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBox
-                                        Width="300"
-                                        Text="{x:Bind Key, Mode=TwoWay}"
-                                        TextChanged="FFmpegOptions_OnTextChanged" />
-                                    <TextBox
-                                        Grid.Column="1"
-                                        Width="300"
-                                        HorizontalAlignment="Right"
-                                        Text="{x:Bind Value, Mode=TwoWay}"
-                                        TextChanged="FFmpegOptions_OnTextChanged" />
-                                </Grid>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </ScrollViewer>
-            </StackPanel>
-        </ContentDialog>
+        <controls:SettingsCard Header="自动刷新播放地址时间"
+                               x:Name="AutoRefreshPlayUrlTimeSetting"
+                               Description="单位分钟，默认118分钟，下次打开视频生效">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Sync"></font:FontAwesome>
+            </controls:SettingsCard.HeaderIcon>
+            <controls1:NumberBox x:Name="NumAutoRefreshPlayUrlTime" Minimum="10" Maximum="2400"></controls1:NumberBox>
+        </controls:SettingsCard>
     </StackPanel>
 </UserControl>
+！

@@ -6,6 +6,8 @@ namespace BiliLite.Models.Common.Player
     {
         Native,
         FFmpegInterop,
+        ShakaPlayer,
+        Mpegts,
     }
 
     public class RealPlayerTypes
@@ -14,6 +16,7 @@ namespace BiliLite.Models.Common.Player
         {
             new RealPlayerTypeOption() { Value = RealPlayerType.Native },
             new RealPlayerTypeOption() { Value = RealPlayerType.FFmpegInterop },
+            new RealPlayerTypeOption() { Value = RealPlayerType.ShakaPlayer },
         };
     }
 

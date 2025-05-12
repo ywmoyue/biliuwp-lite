@@ -5,15 +5,32 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:BiliLite.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+
+    xmlns:webPlayer="using:BiliLite.Player.WebPlayer"
+    xmlns:converters="using:BiliLite.Converters"
+    mc:Ignorable="d"
     d:DesignHeight="300"
-    d:DesignWidth="400"
-    mc:Ignorable="d">
+    d:DesignWidth="400">
+    <UserControl.Resources>
+        <converters:RealPlayerTypeDisplayConverter x:Key="RealPlayerTypeDisplayConverter"></converters:RealPlayerTypeDisplayConverter>
+    </UserControl.Resources>
 
     <Grid>
-        <!--  播放器  -->
-        <MediaPlayerElement x:Name="mediaPlayerVideo" />
-        <!--  音视频分离  -->
-        <MediaPlayerElement x:Name="mediaPlayerAudio" Visibility="Collapsed" />
-        <!--<vlc:VideoView x:Name="vlcVideoView" Initialized="vlcVideoView_Initialized" />-->
+        <Grid Visibility="{x:Bind ShowMediaPlayer,Mode=OneWay}">
+            <!--播放器-->
+            <MediaPlayerElement x:Name="mediaPlayerVideo" ></MediaPlayerElement>
+            <!--音视频分离-->
+            <MediaPlayerElement x:Name="mediaPlayerAudio"  Visibility="Collapsed"></MediaPlayerElement>
+            <!--<vlc:VideoView x:Name="vlcVideoView" Initialized="vlcVideoView_Initialized"></vlc:VideoView>-->
+        </Grid>
+        <Grid Visibility="{x:Bind ShowShakaPlayer,Mode=OneWay}">
+            <webPlayer:ShakaPlayerControl x:Name="ShakaPlayer" 
+                                          Visibility="{x:Bind RealPlayerType,Mode=OneWay,Converter={StaticResource RealPlayerTypeDisplayConverter},ConverterParameter='ShakaPlayer'}"
+                                            PlayerLoaded="ShakaPlayer_OnPlayerLoaded"
+                                            Ended="ShakaPlayer_OnEnded"
+                                            StatsUpdated="ShakaPlayer_OnStatsUpdated"
+                                            PositionChanged="ShakaPlayer_OnPositionChanged"></webPlayer:ShakaPlayerControl>
+        </Grid>
+！
     </Grid>
 </UserControl>

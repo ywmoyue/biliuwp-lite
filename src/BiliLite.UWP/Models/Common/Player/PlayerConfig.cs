@@ -6,6 +6,8 @@
 
         public LivePlayerMode PlayMode { get; set; }
 
+        public RealPlayerType PlayerType { get; set; }
+
         public int SelectedRouteLine { get; set; } = 0;
     }
 }

@@ -37,6 +37,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Player.WebPlayer;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -50,7 +51,7 @@ namespace BiliLite.Pages
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
 
         private readonly BasePlayerController m_playerController;
-        private readonly LivePlayer m_player;
+        private LivePlayer m_player;
         private readonly RealPlayInfo m_realPlayInfo;
         private readonly PlayerConfig m_playerConfig;
         private readonly LiveDetailPageViewModel m_viewModel;
@@ -70,6 +71,7 @@ namespace BiliLite.Pages
         private bool changePlayUrlFlag = false;
         private bool isPointerInChatList = false;
         private bool isPointerInThisPage = true;
+        private BaseWebPlayer m_webPlayer;
 
         public LiveDetailPage()
         {
@@ -80,7 +82,7 @@ namespace BiliLite.Pages
             m_playerConfig = new PlayerConfig();
             PreLoadSetting();
             m_playerController = PlayerControllerFactory.Create(PlayerType.Live);
-            m_player = new LivePlayer(m_playerConfig, playerElement, m_playerController);
+            m_player = new LivePlayer(m_playerConfig, playerElement, m_playerController, ShakaPlayer, MpegtsPlayer);
             m_realPlayInfo = new RealPlayInfo();
             m_realPlayInfo.IsAutoPlay = true;
             m_playerController.SetPlayer(m_player);
@@ -280,6 +282,8 @@ namespace BiliLite.Pages
         private async void LiveDetailPage_ClosedPage(object sender, EventArgs e)
         {
             await StopPlay();
+            ShakaPlayer.Dispose();
+            MpegtsPlayer.Dispose();
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -318,7 +322,21 @@ namespace BiliLite.Pages
             m_playerController.ContentStateChanged += PlayerController_ContentStateChanged;
             m_playerController.ScreenStateChanged += PlayerController_ScreenStateChanged;
             m_player.ErrorOccurred += Player_ErrorOccurred;
+            m_player.NeedReplacePlayer += Player_NeedReplacePlayer; ;
             m_playerController.MediaInfosUpdated += PlayerController_MediaInfosUpdated; ;
+        }
+
+        private async void Player_NeedReplacePlayer(object sender, RealPlayerType e)
+        {
+            await m_player.UnLoad();
+            m_player.ErrorOccurred -= Player_ErrorOccurred;
+            m_player.NeedReplacePlayer -= Player_NeedReplacePlayer; ;
+            m_playerConfig.PlayerType = e;
+            m_player = new LivePlayer(m_playerConfig, playerElement, m_playerController, ShakaPlayer, MpegtsPlayer);
+            m_playerController.SetPlayer(m_player);
+            m_player.SetRealPlayInfo(m_realPlayInfo);
+            m_player.ErrorOccurred += Player_ErrorOccurred;
+            m_player.NeedReplacePlayer += Player_NeedReplacePlayer; ;
         }
 
         private async void PlayerController_MediaInfosUpdated(object sender, Player.MediaInfos.MediaInfo e)
@@ -558,6 +576,12 @@ namespace BiliLite.Pages
                         (int)DefaultPlayerModeOptions.DEFAULT_LIVE_PLAYER_MODE);
             m_playerConfig.PlayMode = m_viewModel.LivePlayerMode;
 
+            // 播放器类型
+            m_playerConfig.PlayerType = (RealPlayerType)SettingService.GetValue(
+                SettingConstants.Player.LIVE_PLAYER_TYPE,
+                (int)LivePlayerTypeOptions.DEFAULT_LIVE_PLAYER_MODE);
+            m_viewModel.RealPlayerType = m_playerConfig.PlayerType;
+
             // 直播流默认源
             m_viewModel.LivePlayUrlSource = SettingService.GetValue(
                 SettingConstants.Live.DEFAULT_LIVE_PLAY_URL_SOURCE,
@@ -570,8 +594,9 @@ namespace BiliLite.Pages
         private void LoadSetting()
         {
             //音量
-            m_player.Volume = SettingService.GetValue(SettingConstants.Player.PLAYER_VOLUME, SettingConstants.Player.DEFAULT_PLAYER_VOLUME);
-            SliderVolume.Value = m_player.Volume;
+            var volume = SettingService.GetValue(SettingConstants.Player.PLAYER_VOLUME, SettingConstants.Player.DEFAULT_PLAYER_VOLUME);
+            m_player.Volume = volume;
+            SliderVolume.Value = volume;
             var lockPlayerVolume = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_VOLUME, SettingConstants.Player.DEFAULT_LOCK_PLAYER_VOLUME);
             SliderVolume.ValueChanged += (e, args) =>
             {
@@ -1309,21 +1334,24 @@ namespace BiliLite.Pages
 
         private void HandleSlideVolumeDelta(double delta)
         {
+            var volume = 1d;
             if (delta > 0)
             {
                 var dd = delta / (this.ActualHeight * 0.8);
-                var volume = m_player.Volume - dd;
+                volume = m_player.Volume;
+                volume = volume - dd;
                 if (volume < 0) volume = 0;
                 SliderVolume.Value = volume;
             }
             else
             {
                 var dd = Math.Abs(delta) / (this.ActualHeight * 0.8);
-                var volume = m_player.Volume + dd;
+                volume = m_player.Volume;
+                volume = volume + dd;
                 if (volume > 1) volume = 1;
                 SliderVolume.Value = volume;
             }
-            TxtToolTip.Text = "音量:" + m_player.Volume.ToString("P");
+            TxtToolTip.Text = "音量:" + volume.ToString("P");
         }
 
         private void HandleSlideBrightnessDelta(double delta)
@@ -1538,6 +1566,17 @@ namespace BiliLite.Pages
         {
             pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
             pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
+        }
+
+        private void WebPlayerToolbarControl_OnExitToolbar(object sender, EventArgs e)
+        {
+            m_viewModel.ShowWebPlayerToolbar = false;
+        }
+
+        private void BtnOpenWebPlayerToolbar_OnClick(object sender, RoutedEventArgs e)
+        {
+            WebPlayerToolbarControl.SetPlayer(m_player.WebPlayer);
+            m_viewModel.ShowWebPlayerToolbar = true;
         }
     }
 }

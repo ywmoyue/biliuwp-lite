@@ -16,7 +16,8 @@ namespace BiliLite.Player.MediaInfos
             m_playerController.PlayStateChanged += PlayerController_PlayStateChanged;
             m_collectInfoHandlerMap = new Dictionary<string, BaseCollectInfoHandler>()
             {
-                { "LiveHls", new FFMpegInteropMssCollectInfoHandler(this) }
+                { "LiveHls", new FFMpegInteropMssCollectInfoHandler(this) },
+                { "ShakaPlayer", new ShakaPlayerCollectInfoHandler(this) }
             };
         }
 

@@ -187,10 +187,12 @@ namespace BiliLite
                 var themeService = ServiceProvider.GetRequiredService<ThemeService>();
                 themeService.InitTitleBar();
                 themeService.InitAccentColor();
-                // themeService.InitStyle();
-#if !DEBUG
+                //themeService.InitStyle();
+                
                 await BiliExtensions.CheckVersion(isSilentUpdateCheck:true);
-#endif
+
+                var tempFileService = ServiceProvider.GetRequiredService<TempFileService>();
+                tempFileService.ClearTempFiles();
             }
         }
 

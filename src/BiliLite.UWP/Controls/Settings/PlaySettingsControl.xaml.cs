@@ -287,6 +287,56 @@ namespace BiliLite.Controls.Settings
                 };
             };
 
+            // Web播放器调试模式
+            SwitchEnableWebPlayerDebugMode.IsOn = SettingService.GetValue(SettingConstants.Player.WEB_PLAYER_ENABLE_DEBUG_MODE,
+                false);
+            SwitchEnableWebPlayerDebugMode.Loaded += (sender, e) =>
+            {
+                SwitchEnableWebPlayerDebugMode.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.WEB_PLAYER_ENABLE_DEBUG_MODE,
+                        SwitchEnableWebPlayerDebugMode.IsOn);
+                };
+            };
+
+            // Web播放器开发模式
+            SwitchEnableWebPlayerDevMode.IsOn = SettingService.GetValue(SettingConstants.Player.WEB_PLAYER_ENABLE_DEV_MODE,
+                false);
+            SwitchEnableWebPlayerDevMode.Loaded += (sender, e) =>
+            {
+                SwitchEnableWebPlayerDevMode.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.WEB_PLAYER_ENABLE_DEV_MODE,
+                        SwitchEnableWebPlayerDevMode.IsOn);
+                };
+            };
+
+            //WebPlayer音视频进度同步阈值1
+            NumberBoxWebPlayerAVPositionSyncThreshold1.Value = SettingService.GetValue(
+                SettingConstants.Player.WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_1,
+                SettingConstants.Player.DEFAULT_WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_1);
+            NumberBoxWebPlayerAVPositionSyncThreshold1.Loaded += (_, _) =>
+            {
+                NumberBoxWebPlayerAVPositionSyncThreshold1.ValueChanged += (_, _) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_1,
+                        NumberBoxWebPlayerAVPositionSyncThreshold1.Value);
+                };
+            };
+
+            //WebPlayer音视频进度同步阈值2
+            NumberBoxWebPlayerAVPositionSyncThreshold2.Value = SettingService.GetValue(
+                SettingConstants.Player.WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_2,
+                SettingConstants.Player.DEFAULT_WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_2);
+            NumberBoxWebPlayerAVPositionSyncThreshold2.Loaded += (_, _) =>
+            {
+                NumberBoxWebPlayerAVPositionSyncThreshold2.ValueChanged += (_, _) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_2,
+                        NumberBoxWebPlayerAVPositionSyncThreshold2.Value);
+                };
+            };
+
             //自动打开AI字幕
             swPlayerSettingAutoOpenAISubtitle.IsOn =
                 SettingService.GetValue<bool>(SettingConstants.Player.AUTO_OPEN_AI_SUBTITLE, false);
@@ -386,21 +436,12 @@ namespace BiliLite.Controls.Settings
             await NotificationShowExtensions.ShowContentDialog(dialog);
         }
 
-        private async void FFmpegOptions_OnTextChanged(object sender, TextChangedEventArgs e)
+        private async void BtnSaveFfmpegInteropXOptions_OnClick(object sender, RoutedEventArgs e)
         {
+            // 等待viewModel更新
             await Task.Delay(50);
-            var dict = m_viewModel.FFmpegOptions.ToDictionary(x => x.Key, t => t.Value);
-            SettingService.SetValue(SettingConstants.Player.FfmpegOptions, dict);
-        }
-
-        private void BtnAddFFmpegOption_OnClick(object sender, RoutedEventArgs e)
-        {
-            m_viewModel.FFmpegOptions.Add(new KeyValuePairViewModel());
-        }
-
-        private async void BtnOpenFFmpegOptionsPanel_OnClick(object sender, RoutedEventArgs e)
-        {
-            await NotificationShowExtensions.ShowContentDialog(FFmpegOptionsDialog);
+            SettingService.SetValue(SettingConstants.Player.FFMPEG_INTEROP_X_OPTIONS,
+                m_viewModel.FFmpegInteropXOptions);
         }
     }
 }

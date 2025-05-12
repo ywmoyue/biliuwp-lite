@@ -194,13 +194,18 @@ namespace BiliLite.ViewModels.Season
                     data.data.Seasons = JsonConvert.DeserializeObject<List<SeasonDetailSeasonItemModel>>(
                         data.data.Modules.FirstOrDefault(x => x["style"].ToString() == "season")?["data"]?["seasons"]
                             ?.ToString() ?? "[]");
-                    var pv = JsonConvert.DeserializeObject<List<SeasonDetailEpisodeModel>>(
-                        data.data.Modules.FirstOrDefault(x => x["style"].ToString() == "section")?["data"]?["episodes"]
-                            ?.ToString() ?? "[]");
-                    foreach (var item in pv)
+
+                    var sections = data.data.Modules.Where(x => x["style"].ToString() == "section").ToList();
+                    foreach (var section in sections)
                     {
-                        item.SectionType = 1;
-                        data.data.Episodes.Add(item);
+                        var extra = JsonConvert.DeserializeObject<List<SeasonDetailEpisodeModel>>(
+                            section?["data"]?["episodes"]?.ToString() ?? "[]");
+
+                        foreach (var item in extra)
+                        {
+                            item.SectionType = 1;
+                            data.data.Episodes.Add(item);
+                        }
                     }
                 }
                 catch (Exception ex)

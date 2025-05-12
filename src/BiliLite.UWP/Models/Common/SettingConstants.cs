@@ -787,8 +787,8 @@ namespace BiliLite.Models.Common
             /// <summary>
             /// 自定义参数 FFmpegOptions
             /// </summary>
-            [SettingKey(typeof(object))]
-            public const string FfmpegOptions = "FfmpegOptions";
+            [SettingKey(typeof(string))]
+            public const string FFMPEG_INTEROP_X_OPTIONS = "FfmpegInteropXOptions";
 
             /// <summary>
             /// 使用外站视频替换无法播放的视频 bool
@@ -1059,6 +1059,13 @@ namespace BiliLite.Models.Common
             [SettingKey(typeof(int))]
             public const string DEFAULT_LIVE_PLAYER_MODE = "DefaultLivePlayerMode";
 
+            
+            /// <summary>
+            /// 直播播放器使用播放器类型
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const string LIVE_PLAYER_TYPE = "LivePlayerType";
+
             /// <summary>
             /// 播放历史记录
             /// </summary>
@@ -1130,6 +1137,35 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const double DEFAULT_AUTO_REFRESH_PLAY_URL_TIME = 118;
+
+            /// <summary>
+            /// WebPlayer调试模式
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string WEB_PLAYER_ENABLE_DEBUG_MODE = "WebPlayerEnableDebugMode";
+
+            /// <summary>
+            /// WebPlayer开发模式
+            /// </summary>
+            public const string WEB_PLAYER_ENABLE_DEV_MODE = "WebPlayerEnableDevMode";
+
+            /// <summary>
+            /// WebPlayer音视频进度同步阈值1
+            /// </summary>
+            [SettingKey(typeof(double))]
+            public const string WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_1 = "WebPlayerAVPositionSyncThreshold1";
+
+            [SettingDefaultValue]
+            public const double DEFAULT_WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_1 = 0.2d;
+
+            /// <summary>
+            /// WebPlayer音视频进度同步阈值2
+            /// </summary>
+            [SettingKey(typeof(double))]
+            public const string WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_2 = "WebPlayerAVPositionSyncThreshold2";
+
+            [SettingDefaultValue]
+            public const double DEFAULT_WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_2 = 0.6d;
         }
 
         public class Filter

@@ -57,6 +57,8 @@ namespace BiliLite.Player
             }
         }
 
+        public override RealPlayerType Type { get; } = RealPlayerType.FFmpegInterop;
+
         public override double Volume
         {
             get => m_mediaPlayer.Volume;

@@ -21,6 +21,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -75,20 +76,25 @@ namespace BiliLite.Pages
         {
             ClosePage();
         }
+
         private void ClosePage()
         {
-            if (m_viewModel != null)
+            Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                m_viewModel.Loaded = false;
-                m_viewModel.Loading = true;
-                m_viewModel.VideoInfo = null;
-            }
-            changedFlag = true;
-            player?.FullScreen(false);
-            player?.MiniWidnows(false);
-            player?.Dispose();
-            if (!(this.Parent is MyFrame frame)) return;
-            frame.ClosedPage -= VideoDetailPage_ClosedPage;
+                if (m_viewModel != null)
+                {
+                    m_viewModel.Loaded = false;
+                    m_viewModel.Loading = true;
+                    m_viewModel.VideoInfo = null;
+                }
+
+                changedFlag = true;
+                player?.FullScreen(false);
+                player?.MiniWidnows(false);
+                player?.Dispose();
+                if (!(this.Parent is MyFrame frame)) return;
+                frame.ClosedPage -= VideoDetailPage_ClosedPage;
+            });
         }
         private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
         {
