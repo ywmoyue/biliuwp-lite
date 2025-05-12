@@ -1,7 +1,7 @@
 {
-  "version": "4.7.20",
-  "version_num": 40720,
-  "version_desc": "更新内容:\r\n\r\n- 新增接入基于WebView2的ShakaPlayer播放器 \r\n\r\n- 修复拖拽手势控制进度后进度条抖动 \r\n\r\n- 进度条可点击上下范围变大 \r\n\r\n- 修复切换分p时进度条仍然移动问题 \r\n\r\n- 修复纯文字动态无法显示的问题 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.7.21",
+  "version_num": 40721,
+  "version_desc": "更新内容:\r\n\r\n- 新增Mpegts播放器用于直播播放 \r\n\r\n- WebPlayer新增视频画面操作工具栏 \r\n\r\n- WebPlayer视频信息显示 \r\n\r\n- 临时修复多窗口模式不可用问题 \r\n\r\n- 调整WebPlayer初始化流程 \r\n\r\n- 修复开启自动播放后WebPlayer无声音 \r\n\r\n- 修复WebPlayer后台恢复前台时进度回退问题 \r\n\r\n- 修复番剧花絮显示不全 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
