@@ -11,6 +11,11 @@
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 
+    <!--  Win10 专用  -->
+    <Style x:Key="LocalListViewItemStyle" TargetType="ListViewItem">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    </Style>
+
     <!--  Win11 专用  -->
     <Style x:Key="LocalGridViewItemStyle" TargetType="GridViewItem">
         <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />

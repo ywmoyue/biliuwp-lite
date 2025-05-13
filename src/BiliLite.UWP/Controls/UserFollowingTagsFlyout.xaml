@@ -2,6 +2,7 @@
     x:Class="BiliLite.Controls.UserFollowingTagsFlyout"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:BiliLite.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -17,7 +18,7 @@
             Closed="FollowingTagFlyout_OnClosed"
             Placement="Bottom">
             <StackPanel Orientation="Vertical">
-                <ListView ItemsSource="{x:Bind m_viewModel.FollowingTags, Mode=OneWay}">
+                <ListView IsWin10:ItemContainerStyle="{StaticResource LocalListViewItemStyle}" ItemsSource="{x:Bind m_viewModel.FollowingTags, Mode=OneWay}">
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="user:UserRelationFollowingTagViewModel">
                             <CheckBox Content="{x:Bind Name}" IsChecked="{x:Bind UserInThisTag, Mode=TwoWay}" />

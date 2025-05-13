@@ -2,6 +2,7 @@
     x:Class="BiliLite.Controls.Settings.ShortcutKeySettingsControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -50,6 +51,7 @@
         </Grid>
         <ListView
             Padding="-12,0"
+            IsWin10:ItemContainerStyle="{StaticResource LocalListViewItemStyle}"
             ItemsSource="{x:Bind m_viewModel.ShortcutFunctions, Mode=OneWay}"
             SelectionMode="None">
             <ListView.ItemTemplate>

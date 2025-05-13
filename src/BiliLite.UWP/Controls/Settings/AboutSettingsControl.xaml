@@ -2,6 +2,7 @@
     x:Class="BiliLite.Controls.Settings.AboutSettingsControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:font="using:FontAwesome5"
@@ -124,21 +125,16 @@
                             <TextBlock
                                 Margin="0,0,0,8"
                                 FontSize="14"
-                                
                                 TextWrapping="Wrap">
                                 这是一个第三方客户端，应用所有数据来源均来自哔哩哔哩。
                             </TextBlock>
                             <TextBlock
                                 Margin="0,0,0,8"
                                 FontSize="14"
-                                
                                 TextWrapping="Wrap">
                                 本程序仅供学习交流编程技术使用。
                             </TextBlock>
-                            <TextBlock
-                                FontSize="14"
-                                
-                                TextWrapping="Wrap">
+                            <TextBlock FontSize="14" TextWrapping="Wrap">
                                 如果侵犯您的合法权益，请及时联系本人以第一时间删除。
                             </TextBlock>
                         </StackPanel>

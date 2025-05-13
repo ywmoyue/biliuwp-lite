@@ -2,6 +2,7 @@
     x:Class="BiliLite.Pages.SeasonDetailPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:control="using:BiliLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="using:FontAwesome5"
@@ -287,9 +288,7 @@
                                         </Border>
                                     </Grid>
                                     <StackPanel Grid.Column="1" Margin="10,5">
-                                        <TextBlock
-                                            Text="{x:Bind Path=m_viewModel.Detail.Title, Mode=OneWay}"
-                                            TextWrapping="Wrap" />
+                                        <TextBlock Text="{x:Bind Path=m_viewModel.Detail.Title, Mode=OneWay}" TextWrapping="Wrap" />
                                         <TextBlock
                                             Margin="0,2"
                                             Foreground="Gray"
@@ -477,18 +476,15 @@
                                 <TextBlock
                                     IsTextSelectionEnabled="True"
                                     Text="{x:Bind Path=m_viewModel.Detail.Title, Mode=OneWay}"
-                                    
                                     TextWrapping="Wrap" />
                                 <TextBlock
                                     IsTextSelectionEnabled="True"
                                     Text="{x:Bind Path=m_viewModel.Detail.Alias, Mode=OneWay}"
-                                    
                                     TextWrapping="Wrap" />
                                 <TextBlock
                                     Margin="0,4"
                                     IsTextSelectionEnabled="True"
                                     Text="{x:Bind Path=m_viewModel.Detail.OriginName, Mode=OneWay}"
-                                    
                                     TextWrapping="Wrap" />
                                 <TextBlock
                                     Margin="0,8"
@@ -499,7 +495,6 @@
                                     Foreground="Gray"
                                     IsTextSelectionEnabled="True"
                                     Text="{x:Bind Path=m_viewModel.Detail.Evaluate, Mode=OneWay}"
-                                    
                                     TextWrapping="Wrap" />
                                 <TextBlock
                                     Margin="0,8"
@@ -566,7 +561,6 @@
                                     Foreground="Gray"
                                     IsTextSelectionEnabled="True"
                                     Text="{x:Bind Path=m_viewModel.Detail.Actor.Info, Mode=OneWay}"
-                                    
                                     TextWrapping="Wrap" />
                                 <TextBlock
                                     Margin="0,8"
@@ -577,7 +571,6 @@
                                     Foreground="Gray"
                                     IsTextSelectionEnabled="True"
                                     Text="{x:Bind Path=m_viewModel.Detail.Staff.Info, Mode=OneWay}"
-                                    
                                     TextWrapping="Wrap" />
 
                             </StackPanel>
@@ -589,7 +582,10 @@
                             <TextBlock FontSize="18" Text="点评" />
                         </PivotItem.Header>
                         <Grid>
-                            <ListView ItemsSource="{x:Bind Path=m_seasonReviewViewModel.Items, Mode=OneWay}" SelectionMode="None">
+                            <ListView
+                                IsWin10:ItemContainerStyle="{StaticResource LocalListViewItemStyle}"
+                                ItemsSource="{x:Bind Path=m_seasonReviewViewModel.Items, Mode=OneWay}"
+                                SelectionMode="None">
                                 <ListView.Header>
                                     <StackPanel Margin="0,8">
                                         <muxc:RatingControl
@@ -649,7 +645,6 @@
                                                 Margin="44,8,0,8"
                                                 IsTextSelectionEnabled="True"
                                                 Text="{x:Bind Content}"
-                                                
                                                 TextWrapping="Wrap" />
                                             <StackPanel Margin="44,0,0,0" Orientation="Horizontal">
                                                 <HyperlinkButton
