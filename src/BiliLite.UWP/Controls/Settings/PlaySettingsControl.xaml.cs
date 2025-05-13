@@ -21,6 +21,7 @@ namespace BiliLite.Controls.Settings
         private readonly PlaySettingsControlViewModel m_viewModel;
         private readonly PlaySpeedMenuService m_playSpeedMenuService;
         private readonly RealPlayerTypes m_realPlayerTypes = new RealPlayerTypes();
+        private readonly RealPlayerTypeOption[] m_livePlayerTypes = LivePlayerTypeOptions.Options;
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
 
         public PlaySettingsControl()
@@ -48,6 +49,7 @@ namespace BiliLite.Controls.Settings
             {
                 SettingService.SetValue(SettingConstants.Player.DEFAULT_VIDEO_TYPE, (int)cbVideoType.SelectedValue);
             };
+
             //优先播放器类型
             var realPlayerType = (RealPlayerType)SettingService.GetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE,
                 (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
@@ -58,6 +60,18 @@ namespace BiliLite.Controls.Settings
                 SettingService.SetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE,
                     (int)ComboBoxUseRealPlayerType.SelectedValue);
             };
+
+            //直播优先播放器类型
+            var m_livePlayerType = (RealPlayerType)SettingService.GetValue(SettingConstants.Player.LIVE_PLAYER_TYPE,
+                (int)LivePlayerTypeOptions.DEFAULT_LIVE_PLAYER_MODE);
+            cbUseRealPlayerType.SelectedItem =
+                m_livePlayerTypes.FirstOrDefault(x => x.Value == m_livePlayerType);
+            cbUseRealPlayerType.SelectionChanged += (e, args) =>
+            {
+                SettingService.SetValue(SettingConstants.Player.LIVE_PLAYER_TYPE,
+                    (int)cbUseRealPlayerType.SelectedValue);
+            };
+
             //视频倍速
             var speeds = m_playSpeedMenuService.MenuItems
                 .Select(x => x.Value)
