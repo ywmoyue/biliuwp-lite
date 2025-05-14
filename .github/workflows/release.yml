@@ -108,17 +108,31 @@ jobs:
           cd ..
           cp ./OnlinePageToPDF-Node/安装教程.pdf C:\Package\安装教程.pdf
 
+      - name: Check if x64 asset exists
+        id: check-x64-asset
+        run: |
+          $assetName = "${{env.AppName}}_${{github.event.inputs.version}}_x64.zip"
+          $releaseAssets = gh api repos/${{ github.repository }}/releases/${{ steps.release-drafter.outputs.id }}  | jq --arg name "$assetName" '.assets[] | select(.name == $name)'
+          if ($releaseAssets) {
+            echo "x64 asset already exists, skipping build"
+            echo "SKIP_BUILD=true" >> $env:GITHUB_ENV
+          } else {
+            echo "x64 asset not found, proceeding with build"
+            echo "SKIP_BUILD=false" >> $env:GITHUB_ENV
+          }
+        if: github.event.inputs.enableX64 == 'true'
+
       - name: Build x64
         run: |
           msbuild $env:UWP_Project_Directory /p:Platform=x64 /p:Configuration=Release /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=$env:SigningCertificatePasswd  /restore
         env:
           BuildMode: SideloadOnly
           Configuration: Release
-        if: github.event.inputs.enableX64 == 'true'
+        if: github.event.inputs.enableX64 == 'true' && env.SKIP_BUILD == 'false'
 
       - name: copy x64 document
         run: cp C:\Package\安装教程.pdf ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x64_Test\安装教程.pdf
-        if: github.event.inputs.enableX64 == 'true'
+        if: github.event.inputs.enableX64 == 'true' && env.SKIP_BUILD == 'false'
 
       - name: Remove x64 useless files
         run: |
@@ -126,28 +140,42 @@ jobs:
           rm -r -fo *.appxsym
           cd Dependencies
           rm -r -fo arm,arm64,x86
-        if: github.event.inputs.enableX64 == 'true'
+        if: github.event.inputs.enableX64 == 'true' && env.SKIP_BUILD == 'false'
 
       - name: Create x64 archive
         run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x64_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x64.zip
-        if: github.event.inputs.enableX64 == 'true'
+        if: github.event.inputs.enableX64 == 'true' && env.SKIP_BUILD == 'false'
 
       - name: Update x64 release asset
         id: upload-release-asset-x64
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN  }}
-        if: github.event.inputs.enableX64 == 'true'
+        if: github.event.inputs.enableX64 == 'true' && env.SKIP_BUILD == 'false'
         with:
           upload_url: ${{ steps.release-drafter.outputs.upload_url }}
           asset_path: C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x64.zip
           asset_name: ${{env.AppName}}_${{github.event.inputs.version}}_x64.zip
           asset_content_type: application/zip
 
+      - name: Check if x64 native asset exists
+        id: check-x64-native-asset
+        run: |
+          $assetName = "${{env.AppName}}_${{github.event.inputs.version}}_x64_native.zip"
+          $releaseAssets = gh api repos/${{ github.repository }}/releases/${{ steps.release-drafter.outputs.id }}  | jq --arg name "$assetName" '.assets[] | select(.name == $name)'
+          if ($releaseAssets) {
+            echo "x64 native asset already exists, skipping build"
+            echo "SKIP_BUILD_NATIVE=true" >> $env:GITHUB_ENV
+          } else {
+            echo "x64 native asset not found, proceeding with build"
+            echo "SKIP_BUILD_NATIVE=false" >> $env:GITHUB_ENV
+          }
+        if: github.event.inputs.enableX64Native == 'true'
+
       - name: Set x64 native
         run: |
           ./scripts/setNative.ps1 -csprojPath $env:UWP_Project_Path
-        if: github.event.inputs.enableX64Native == 'true'
+        if: github.event.inputs.enableX64Native == 'true' && env.SKIP_BUILD_NATIVE == 'false'
 
       - name: Build x64 native
         run: |
@@ -155,11 +183,11 @@ jobs:
         env:
           BuildMode: SideloadOnly
           Configuration: Release
-        if: github.event.inputs.enableX64Native == 'true'
+        if: github.event.inputs.enableX64Native == 'true' && env.SKIP_BUILD_NATIVE == 'false'
 
       - name: copy x64 native document
         run: cp C:\Package\安装教程.pdf ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x64_Test\安装教程.pdf
-        if: github.event.inputs.enableX64Native == 'true'
+        if: github.event.inputs.enableX64Native == 'true' && env.SKIP_BUILD_NATIVE == 'false'
 
       - name: Remove x64 native useless files
         run: |
@@ -167,34 +195,48 @@ jobs:
           rm -r -fo *.appxsym
           cd Dependencies
           rm -r -fo arm,arm64,x86
-        if: github.event.inputs.enableX64Native == 'true'
+        if: github.event.inputs.enableX64Native == 'true' && env.SKIP_BUILD_NATIVE == 'false'
 
       - name: Create x64 native archive
         run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x64_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x64_native.zip
-        if: github.event.inputs.enableX64Native == 'true'
+        if: github.event.inputs.enableX64Native == 'true' && env.SKIP_BUILD_NATIVE == 'false'
 
       - name: Update x64 native release asset
         id: upload-release-asset-x64-native
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN  }}
-        if: github.event.inputs.enableX64Native == 'true'
+        if: github.event.inputs.enableX64Native == 'true' && env.SKIP_BUILD_NATIVE == 'false'
         with:
           upload_url: ${{ steps.release-drafter.outputs.upload_url }}
           asset_path: C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x64_native.zip
           asset_name: ${{env.AppName}}_${{github.event.inputs.version}}_x64_native.zip
           asset_content_type: application/zip
 
+      - name: Check if x86 asset exists
+        id: check-x86-asset
+        run: |
+          $assetName = "${{env.AppName}}_${{github.event.inputs.version}}_x86.zip"
+          $releaseAssets = gh api repos/${{ github.repository }}/releases/${{ steps.release-drafter.outputs.id }}  | jq --arg name "$assetName" '.assets[] | select(.name == $name)'
+          if ($releaseAssets) {
+            echo "x86 asset already exists, skipping build"
+            echo "SKIP_BUILD_X86=true" >> $env:GITHUB_ENV
+          } else {
+            echo "x86 asset not found, proceeding with build"
+            echo "SKIP_BUILD_X86=false" >> $env:GITHUB_ENV
+          }
+        if: github.event.inputs.enableX86 == 'true'
+
       - name: Build x86
         run: msbuild $env:UWP_Project_Directory /p:Platform=x86 /p:Configuration=Release /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=$env:SigningCertificatePasswd  /restore
-        if: github.event.inputs.enableX86 == 'true'
+        if: github.event.inputs.enableX86 == 'true' && env.SKIP_BUILD_X86 == 'false'
         env:
           BuildMode: SideloadOnly
           Configuration: Release
 
       - name: copy x86 document
         run: cp C:\Package\安装教程.pdf ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x86_Test\安装教程.pdf
-        if: github.event.inputs.enableX86 == 'true'
+        if: github.event.inputs.enableX86 == 'true' && env.SKIP_BUILD_X86 == 'false'
 
       - name: Remove x86 useless files
         run: |
@@ -202,34 +244,48 @@ jobs:
           rm -r -fo *.appxsym
           cd Dependencies
           rm -r -fo arm,arm64,x64
-        if: github.event.inputs.enableX86 == 'true'
+        if: github.event.inputs.enableX86 == 'true' && env.SKIP_BUILD_X86 == 'false'
 
       - name: Create x86 archive
         run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x86_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x86.zip
-        if: github.event.inputs.enableX86 == 'true'
+        if: github.event.inputs.enableX86 == 'true' && env.SKIP_BUILD_X86 == 'false'
 
       - name: Update x86 release asset
         id: upload-release-asset-x86
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN  }}
-        if: github.event.inputs.enableX86 == 'true'
+        if: github.event.inputs.enableX86 == 'true' && env.SKIP_BUILD_X86 == 'false'
         with:
           upload_url: ${{ steps.release-drafter.outputs.upload_url }}
           asset_path: C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x86.zip
           asset_name: ${{env.AppName}}_${{github.event.inputs.version}}_x86.zip
           asset_content_type: application/zip
 
+      - name: Check if ARM64 asset exists
+        id: check-arm64-asset
+        run: |
+          $assetName = "${{env.AppName}}_${{github.event.inputs.version}}_ARM64.zip"
+          $releaseAssets = gh api repos/${{ github.repository }}/releases/${{ steps.release-drafter.outputs.id }}  | jq --arg name "$assetName" '.assets[] | select(.name == $name)'
+          if ($releaseAssets) {
+            echo "ARM64 asset already exists, skipping build"
+            echo "SKIP_BUILD_ARM64=true" >> $env:GITHUB_ENV
+          } else {
+            echo "ARM64 asset not found, proceeding with build"
+            echo "SKIP_BUILD_ARM64=false" >> $env:GITHUB_ENV
+          }
+        if: github.event.inputs.enableArm64 == 'true'
+
       - name: Build ARM64
         run: msbuild $env:UWP_Project_Directory /p:Platform=ARM64 /p:Configuration=Release /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=$env:SigningCertificatePasswd  /restore
-        if: github.event.inputs.enableArm64 == 'true'
+        if: github.event.inputs.enableArm64 == 'true' && env.SKIP_BUILD_ARM64 == 'false'
         env:
           BuildMode: SideloadOnly
           Configuration: Release
 
       - name: copy arm64 document
         run: cp C:\Package\安装教程.pdf ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_ARM64_Test\安装教程.pdf
-        if: github.event.inputs.enableArm64 == 'true'
+        if: github.event.inputs.enableArm64 == 'true' && env.SKIP_BUILD_ARM64 == 'false'
 
       - name: Remove arm64 useless files
         run: |
@@ -237,34 +293,47 @@ jobs:
           rm -r -fo *.appxsym
           cd Dependencies
           rm -r -fo arm,x64,x86
-        if: github.event.inputs.enableArm64 == 'true'
+        if: github.event.inputs.enableArm64 == 'true' && env.SKIP_BUILD_ARM64 == 'false'
 
       - name: Create ARM64 archive
         run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_ARM64_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_ARM64.zip
-        if: github.event.inputs.enableArm64 == 'true'
-
+        if: github.event.inputs.enableArm64 == 'true' && env.SKIP_BUILD_ARM64 == 'false'
       - name: Update ARM64 release asset
         id: upload-release-asset-ARM64
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN  }}
-        if: github.event.inputs.enableArm64 == 'true'
+        if: github.event.inputs.enableArm64 == 'true' && env.SKIP_BUILD_ARM64 == 'false'
         with:
           upload_url: ${{ steps.release-drafter.outputs.upload_url }}
           asset_path: C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_ARM64.zip
           asset_name: ${{env.AppName}}_${{github.event.inputs.version}}_ARM64.zip
           asset_content_type: application/zip
 
+      - name: Check if ARM32 asset exists
+        id: check-arm32-asset
+        run: |
+          $assetName = "${{env.AppName}}_${{github.event.inputs.version}}_ARM.zip"
+          $releaseAssets = gh api repos/${{ github.repository }}/releases/${{ steps.release-drafter.outputs.id }}  | jq --arg name "$assetName" '.assets[] | select(.name == $name)'
+          if ($releaseAssets) {
+            echo "ARM32 asset already exists, skipping build"
+            echo "SKIP_BUILD_ARM32=true" >> $env:GITHUB_ENV
+          } else {
+            echo "ARM32 asset not found, proceeding with build"
+            echo "SKIP_BUILD_ARM32=false" >> $env:GITHUB_ENV
+          }
+        if: github.event.inputs.enableArm32 == 'true'
+
       - name: Build ARM32
         run: msbuild $env:UWP_Project_Directory /p:Platform=ARM /p:Configuration=Release /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=$env:SigningCertificatePasswd  /restore
-        if: github.event.inputs.enableArm32 == 'true'
+        if: github.event.inputs.enableArm32 == 'true' && env.SKIP_BUILD_ARM32 == 'false'
         env:
           BuildMode: SideloadOnly
           Configuration: Release
 
       - name: copy arm32 document
         run: cp C:\Package\安装教程.pdf ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_ARM_Test\安装教程.pdf
-        if: github.event.inputs.enableArm32 == 'true'
+        if: github.event.inputs.enableArm32 == 'true' && env.SKIP_BUILD_ARM32 == 'false'
 
       - name: Remove arm32 useless files
         run: |
@@ -272,18 +341,18 @@ jobs:
           rm -r -fo *.appxsym
           cd Dependencies
           rm -r -fo arm64,x64,x86
-        if: github.event.inputs.enableArm32 == 'true'
+        if: github.event.inputs.enableArm32 == 'true' && env.SKIP_BUILD_ARM32 == 'false'
 
       - name: Create ARM32 archive
         run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_ARM_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_ARM.zip
-        if: github.event.inputs.enableArm32 == 'true'
+        if: github.event.inputs.enableArm32 == 'true' && env.SKIP_BUILD_ARM32 == 'false'
 
       - name: Update ARM32 release asset
         id: upload-release-asset-ARM32
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN  }}
-        if: github.event.inputs.enableArm32 == 'true'
+        if: github.event.inputs.enableArm32 == 'true' && env.SKIP_BUILD_ARM32 == 'false'
         with:
           upload_url: ${{ steps.release-drafter.outputs.upload_url }}
           asset_path: C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_ARM.zip
