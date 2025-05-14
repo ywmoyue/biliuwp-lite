@@ -60,7 +60,7 @@
                     MinWidth="200"
                     DisplayMemberPath="Content"
                     Header="视频"
-                    ItemsSource="{x:Bind m_realPlayerTypes}"
+                    ItemsSource="{x:Bind m_realPlayerTypes.Options}"
                     SelectedIndex="0"
                     SelectedValuePath="Value" />
                 <ComboBox
