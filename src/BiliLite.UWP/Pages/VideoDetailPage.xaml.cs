@@ -1,6 +1,8 @@
 ﻿using BiliLite.Controls;
-using BiliLite.Dialogs;
+using BiliLite.Controls.Dialogs;
+using BiliLite.Converters;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Comment;
 using BiliLite.Models.Common.Video;
@@ -12,6 +14,7 @@ using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels.Video;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,8 +27,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Converters;
-using Newtonsoft.Json;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -208,7 +209,7 @@ namespace BiliLite.Pages
             if (SettingService.GetValue<bool>("一键三连提示", true))
             {
                 SettingService.SetValue("一键三连提示", false);
-                Notify.ShowMessageToast("右键或长按点赞按钮可以一键三连哦~", 5);
+                NotificationShowExtensions.ShowMessageToast("右键或长按点赞按钮可以一键三连哦~", 5);
             }
             if (m_viewModel.VideoInfo == null)
             {
@@ -360,7 +361,7 @@ namespace BiliLite.Pages
             catch (Exception ex)
             {
                 logger.Log("创建二维码失败avid" + avid, LogType.Error, ex);
-                Notify.ShowMessageToast("创建二维码失败");
+                NotificationShowExtensions.ShowMessageToast("创建二维码失败");
             }
         }
 
@@ -398,18 +399,18 @@ namespace BiliLite.Pages
             {
                 stDesc.MaxHeight = 1000.0;
             }
-            Notify.ShowMessageToast("右键或长按可以复制内容");
+            NotificationShowExtensions.ShowMessageToast("右键或长按可以复制内容");
         }
 
         private void txtDesc_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             if ((sender as TextBlock).Text.SetClipboard())
             {
-                Notify.ShowMessageToast("已将内容复制到剪切板");
+                NotificationShowExtensions.ShowMessageToast("已将内容复制到剪切板");
             }
             else
             {
-                Notify.ShowMessageToast("复制失败");
+                NotificationShowExtensions.ShowMessageToast("复制失败");
             }
         }
 
@@ -417,11 +418,11 @@ namespace BiliLite.Pages
         {
             if ((sender as TextBlock).Text.SetClipboard())
             {
-                Notify.ShowMessageToast("已将内容复制到剪切板");
+                NotificationShowExtensions.ShowMessageToast("已将内容复制到剪切板");
             }
             else
             {
-                Notify.ShowMessageToast("复制失败");
+                NotificationShowExtensions.ShowMessageToast("复制失败");
             }
         }
 
@@ -441,7 +442,7 @@ namespace BiliLite.Pages
 
         private void AppBarButton_Holding(object sender, HoldingRoutedEventArgs e)
         {
-            Notify.ShowMessageToast("长按");
+            NotificationShowExtensions.ShowMessageToast("长按");
         }
 
         private void btnLike_Holding(object sender, HoldingRoutedEventArgs e)
@@ -471,13 +472,13 @@ namespace BiliLite.Pages
         private void btnShareCopy_Click(object sender, RoutedEventArgs e)
         {
             $"{m_viewModel.VideoInfo.Title}\r\n{m_viewModel.VideoInfo.ShortLink}".SetClipboard();
-            Notify.ShowMessageToast("已复制内容到剪切板");
+            NotificationShowExtensions.ShowMessageToast("已复制内容到剪切板");
         }
 
         private void btnShareCopyUrl_Click(object sender, RoutedEventArgs e)
         {
             m_viewModel.VideoInfo.ShortLink.SetClipboard();
-            Notify.ShowMessageToast("已复制链接到剪切板");
+            NotificationShowExtensions.ShowMessageToast("已复制链接到剪切板");
         }
 
 
@@ -582,13 +583,13 @@ namespace BiliLite.Pages
 
         private async void btnCreateFavBox_Click(object sender, RoutedEventArgs e)
         {
-            if (!SettingService.Account.Logined && await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录");
+                NotificationShowExtensions.ShowMessageToast("请先登录");
                 return;
             }
             CreateFavFolderDialog createFavFolderDialog = new CreateFavFolderDialog();
-            await createFavFolderDialog.ShowAsync();
+            await NotificationShowExtensions.ShowContentDialog(createFavFolderDialog);
             await m_viewModel.LoadFavorite(m_viewModel.VideoInfo.Aid);
         }
 
@@ -681,7 +682,7 @@ namespace BiliLite.Pages
             }
 
             DownloadDialog downloadDialog = new DownloadDialog(downloadItem);
-            await downloadDialog.ShowAsync();
+            await NotificationShowExtensions.ShowContentDialog(downloadDialog);
         }
 
         public async Task Refresh()
@@ -763,6 +764,11 @@ namespace BiliLite.Pages
             {
                 await m_viewModel.UpdateFav(m_viewModel.VideoInfo.Aid);
                 BtnFav.Flyout.Hide();
+            }
+            if (AccentFav.Flyout.IsOpen)
+            {
+                await m_viewModel.UpdateFav(m_viewModel.VideoInfo.Aid);
+                AccentFav.Flyout.Hide();
             }
         }
 

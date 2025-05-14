@@ -2,196 +2,280 @@
     x:Class="BiliLite.Pages.RegionDetailPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BiliLite.Pages"
+    xmlns:controls="using:BiliLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    xmlns:controls="using:BiliLite.Controls" 
-    xmlns:convert="using:BiliLite.Converters" 
-    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls" 
-    xmlns:winui="using:Microsoft.UI.Xaml.Controls" 
     xmlns:fa="using:FontAwesome5"
-    xmlns:region="using:BiliLite.ViewModels.Region"
+    xmlns:local="using:BiliLite.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:BiliLite.Models.Common.Region"
-    Background="Transparent">
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:region="using:BiliLite.ViewModels.Region"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    Background="{ThemeResource PageBackgroundMicaBrush}"
+    mc:Ignorable="d">
     <Page.Resources>
-      
-        <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent"></SolidColorBrush>
-        <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White"></SolidColorBrush>
+        <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White" />
         <DataTemplate x:Key="HomeTemplate" x:DataType="region:RegionDetailHomeViewModel">
             <Grid>
                 <controls:MyAdaptiveGridView
-                    OneRowModeEnabled="False"
-                    StretchContentForSingleRow="False"
-                   ItemsSource="{x:Bind Path=Videos,Mode=OneWay}"
-                    ItemHeight="100" DesiredWidth="600" 
-                    Padding="12 8"
-                    ItemClick="AdaptiveGridView_ItemClick"
-                    LoadMoreCommand="{x:Bind Path=LoadMoreCommand,Mode=OneWay}"
+                    Padding="15,0"
                     CanLoadMore="True"
+                    DesiredWidth="550"
+                    IsItemClickEnabled="True"
+                    ItemClick="AdaptiveGridView_ItemClick"
+                    ItemHeight="120"
+                    ItemsSource="{x:Bind Path=Videos, Mode=OneWay}"
                     LoadMoreBottomOffset="0"
-                    SelectionMode="None" IsItemClickEnabled="True">
+                    LoadMoreCommand="{x:Bind Path=LoadMoreCommand, Mode=OneWay}"
+                    OneRowModeEnabled="False"
+                    SelectionMode="None"
+                    StretchContentForSingleRow="False">
                     <toolkit:AdaptiveGridView.Header>
-                        <Grid Margin="4 0">
+                        <Grid Margin="4,0">
                             <Grid.RowDefinitions>
                                 <RowDefinition />
-                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <controls:Carousel x:Name="control" ItemsSource="{x:Bind Path=Banners,Mode=OneWay}" MaxItems="1" SlideInterval="5000" AspectRatio="3.49" MaxHeight="240">
+                            <controls:Carousel
+                                x:Name="control"
+                                MaxHeight="240"
+                                AspectRatio="3.49"
+                                ItemsSource="{x:Bind Path=Banners, Mode=OneWay}"
+                                MaxItems="1"
+                                SlideInterval="5000">
                                 <controls:Carousel.ContentTemplate>
                                     <DataTemplate x:DataType="model:RegionHomeBannerItemModel">
-                                        <HyperlinkButton  Click="BtnOpenBanner_Click" Margin="4 0" Padding="0">
-                                            <Border CornerRadius="{StaticResource ImageCornerRadius}">
-                                                <toolkit:ImageEx IsCacheEnabled="True" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Source="{Binding Path=Image,Converter={StaticResource imageConvert},ConverterParameter='240h'}"></toolkit:ImageEx>
-                                            </Border>
+                                        <HyperlinkButton
+                                            Margin="0,5,0,0"
+                                            Padding="5"
+                                            HorizontalAlignment="Stretch"
+                                            Click="BtnOpenBanner_Click"
+                                            CornerRadius="{ThemeResource OverlayCornerRadius}">
+                                            <toolkit:ImageEx
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Stretch"
+                                                CornerRadius="{ThemeResource OverlayCornerRadius}"
+                                                PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
+                                                Source="{Binding Path=Image, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='240h'}"
+                                                Stretch="Fill" />
                                         </HyperlinkButton>
                                     </DataTemplate>
                                 </controls:Carousel.ContentTemplate>
                             </controls:Carousel>
-                            <Grid Grid.Row="1" Margin="0 8 0 4">
+                            <Grid Grid.Row="1" Margin="0,8,0,4">
                                 <TextBlock FontSize="18" FontWeight="Bold">综合动态</TextBlock>
-                                <HyperlinkButton x:Name="btnOpenRank" Click="btnOpenRank_Click" HorizontalAlignment="Right" Margin="8 -4 0 0">
+                                <HyperlinkButton
+                                    x:Name="btnOpenRank"
+                                    Margin="8,-4,0,0"
+                                    HorizontalAlignment="Right"
+                                    Click="btnOpenRank_Click">
                                     <TextBlock>排行榜</TextBlock>
                                 </HyperlinkButton>
                             </Grid>
                         </Grid>
                     </toolkit:AdaptiveGridView.Header>
-                    <toolkit:AdaptiveGridView.ItemContainerStyle>
-                        <Style TargetType="GridViewItem">
-                            <Setter Property="Margin" Value="4"></Setter>
-                        </Style>
-                    </toolkit:AdaptiveGridView.ItemContainerStyle>
-
                     <toolkit:AdaptiveGridView.ItemTemplate>
                         <DataTemplate x:DataType="model:RegionVideoItemModel">
-                            <Grid Background="#00FFFFFF">
+                            <Grid>
                                 <Grid.ContextFlyout>
                                     <MenuFlyout>
-                                        <MenuFlyoutItem x:Name="AddToWatchLater" Click="AddToWatchLater_Click" Icon="Add" Text="添加到稍后再看"/>
+                                        <MenuFlyoutItem
+                                            x:Name="AddToWatchLater"
+                                            Click="AddToWatchLater_Click"
+                                            Icon="Add"
+                                            Text="添加到稍后再看" />
                                     </MenuFlyout>
                                 </Grid.ContextFlyout>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="160"/>
+                                    <ColumnDefinition Width="200" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Border CornerRadius="{StaticResource ImageCornerRadius}">
-                                    <Grid >
-                                        <toolkit:ImageEx IsCacheEnabled="True" Height="120" Width="160" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=Cover,Converter={StaticResource imageConvert},ConverterParameter='120h'}"></toolkit:ImageEx>
-                                    </Grid>
-                                </Border>
-                                <StackPanel Grid.Column="1" Margin="8 0 0 0">
-                                    <TextBlock MaxLines="2" TextWrapping="Wrap" Margin="0 0 0 4" TextTrimming="CharacterEllipsis" Text="{x:Bind Title}"></TextBlock>
-                                    <TextBlock Margin="0 1" FontSize="14" Foreground="Gray">播放:<Run Text="{x:Bind Path=Play,Converter={StaticResource numberToStringConvert}}"></Run> 弹幕:<Run Text="{x:Bind Path=Danmaku,Converter={StaticResource numberToStringConvert}}"></Run></TextBlock>
-                                    <TextBlock Margin="0 1" FontSize="14" Foreground="Gray" ><Run Text="{x:Bind Path=Name}"/> · <Run  Text="{Binding Rname}"/></TextBlock>
-                                
-                                </StackPanel>
+                                <toolkit:ImageEx
+                                    CornerRadius="{StaticResource OverlayCornerRadius}"
+                                    PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
+                                    Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
+                                    Stretch="UniformToFill" />
+                                <Grid Grid.Column="1" Margin="10,5">
+                                    <TextBlock
+                                        Margin="0,0,0,4"
+                                        MaxLines="2"
+                                        Text="{x:Bind Title}"
+                                        TextTrimming="CharacterEllipsis"
+                                        TextWrapping="Wrap" />
+                                    <StackPanel VerticalAlignment="Bottom">
+                                        <TextBlock
+                                            Margin="0,1"
+                                            FontSize="14"
+                                            Foreground="Gray">
+                                            播放:<Run Text="{x:Bind Path=Play, Converter={StaticResource NumberToStringConvert}}" />
+                                            弹幕:<Run Text="{x:Bind Path=Danmaku, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
+                                        <TextBlock
+                                            Margin="0,1"
+                                            FontSize="14"
+                                            Foreground="Gray"><Run Text="{x:Bind Path=Name}" />
+                                            ·<Run Text="{Binding Rname}" /></TextBlock>
+                                    </StackPanel>
+                                </Grid>
                             </Grid>
                         </DataTemplate>
                     </toolkit:AdaptiveGridView.ItemTemplate>
                     <toolkit:AdaptiveGridView.Footer>
                         <StackPanel>
-                            <HyperlinkButton Command="{x:Bind Path=LoadMoreCommand}" Visibility="{x:Bind Path=Loading,Mode=OneWay,Converter={StaticResource display}}" Foreground="Gray" HorizontalAlignment="Center" x:Name="btnLoadMore">
+                            <HyperlinkButton
+                                x:Name="btnLoadMore"
+                                HorizontalAlignment="Center"
+                                Command="{x:Bind Path=LoadMoreCommand}"
+                                Foreground="Gray"
+                                Visibility="{x:Bind Path=Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                 <TextBlock>加载更多</TextBlock>
                             </HyperlinkButton>
-                            <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=Loading,Mode=OneWay}"></ProgressRing>
+                            <muxc:ProgressRing
+                                HorizontalAlignment="Center"
+                                IsActive="True"
+                                Visibility="{x:Bind Path=Loading, Mode=OneWay}" />
                         </StackPanel>
                     </toolkit:AdaptiveGridView.Footer>
                 </controls:MyAdaptiveGridView>
-                
-                <controls:RoundButton  Command="{x:Bind Path=RefreshCommand}" Visibility="{x:Bind Path=Loading,Mode=OneWay,Converter={StaticResource display}}" VerticalAlignment="Bottom" Padding="12" Margin="12" HorizontalAlignment="Right">
-                    <SymbolIcon Symbol="Refresh" Foreground="White"></SymbolIcon>
-                </controls:RoundButton>
+
+                <Button
+                    Command="{x:Bind Path=RefreshCommand}"
+                    Style="{StaticResource RoundAccentButtonStyle}"
+                    Visibility="{x:Bind Path=Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
+                    <SymbolIcon Symbol="Refresh" />
+                </Button>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="ChildTemplate" x:DataType="region:RegionDetailChildViewModel">
             <Grid>
-                <controls:MyAdaptiveGridView 
-                    OneRowModeEnabled="False"
-                    StretchContentForSingleRow="False"
-                   ItemsSource="{x:Bind Path=Videos,Mode=OneWay}"
-                    ItemHeight="100" DesiredWidth="600" 
-                    Padding="12 8"
-                    ItemClick="AdaptiveGridView_ItemClick"
-                    LoadMoreCommand="{x:Bind Path=LoadMoreCommand,Mode=OneWay}"
+                <controls:MyAdaptiveGridView
+                    Padding="12,8"
                     CanLoadMore="True"
+                    DesiredWidth="550"
+                    IsItemClickEnabled="True"
+                    ItemClick="AdaptiveGridView_ItemClick"
+                    ItemHeight="120"
+                    ItemsSource="{x:Bind Path=Videos, Mode=OneWay}"
                     LoadMoreBottomOffset="0"
-                    SelectionMode="None" IsItemClickEnabled="True">
-                    <toolkit:AdaptiveGridView.ItemContainerStyle>
-                        <Style TargetType="GridViewItem">
-                            <Setter Property="Margin" Value="4"></Setter>
-                        </Style>
-                    </toolkit:AdaptiveGridView.ItemContainerStyle>
-
+                    LoadMoreCommand="{x:Bind Path=LoadMoreCommand, Mode=OneWay}"
+                    OneRowModeEnabled="False"
+                    SelectionMode="None"
+                    StretchContentForSingleRow="False">
                     <toolkit:AdaptiveGridView.ItemTemplate>
                         <DataTemplate x:DataType="model:RegionVideoItemModel">
-                            <Grid Background="#00FFFFFF">
+                            <Grid>
                                 <Grid.ContextFlyout>
                                     <MenuFlyout>
-                                        <MenuFlyoutItem x:Name="AddToWatchLater" Click="AddToWatchLater_Click" Icon="Add" Text="添加到稍后再看"/>
+                                        <MenuFlyoutItem
+                                            x:Name="AddToWatchLater"
+                                            Click="AddToWatchLater_Click"
+                                            Icon="Add"
+                                            Text="添加到稍后再看" />
                                     </MenuFlyout>
                                 </Grid.ContextFlyout>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="160"/>
+                                    <ColumnDefinition Width="200" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Border CornerRadius="{StaticResource ImageCornerRadius}">
-                                    <Grid >
-                                        <toolkit:ImageEx IsCacheEnabled="True" Height="120" Width="160" PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png" Stretch="UniformToFill" Source="{x:Bind Path=Cover,Converter={StaticResource imageConvert},ConverterParameter='120h'}"></toolkit:ImageEx>
-                                    </Grid>
-                                </Border>
-                                <StackPanel Grid.Column="1" Margin="8 0 0 0">
-                                    <TextBlock MaxLines="2" TextWrapping="Wrap" Margin="0 0 0 4" TextTrimming="CharacterEllipsis" Text="{x:Bind Title}"></TextBlock>
-                                    <TextBlock Margin="0 1" FontSize="14" Foreground="Gray">播放:<Run Text="{x:Bind Path=Play,Converter={StaticResource numberToStringConvert}}"></Run> 弹幕:<Run Text="{x:Bind Path=Danmaku,Converter={StaticResource numberToStringConvert}}"></Run></TextBlock>
-                                    <TextBlock Margin="0 1" FontSize="14" Foreground="Gray" ><Run Text="{x:Bind Path=Name}"/> · <Run  Text="{Binding Rname}"/></TextBlock>
+                                <toolkit:ImageEx
+                                    CornerRadius="{StaticResource OverlayCornerRadius}"
+                                    PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
+                                    Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
+                                    Stretch="UniformToFill" />
+                                <Grid Grid.Column="1" Margin="10,5">
+                                    <TextBlock
+                                        Margin="0,0,0,4"
+                                        MaxLines="2"
+                                        Text="{x:Bind Title}"
+                                        TextTrimming="CharacterEllipsis"
+                                        TextWrapping="Wrap" />
+                                    <StackPanel VerticalAlignment="Bottom">
+                                        <TextBlock
+                                            Margin="0,1"
+                                            FontSize="14"
+                                            Foreground="Gray">
+                                            播放:<Run Text="{x:Bind Path=Play, Converter={StaticResource NumberToStringConvert}}" />
+                                            弹幕:<Run Text="{x:Bind Path=Danmaku, Converter={StaticResource NumberToStringConvert}}" /></TextBlock>
+                                        <TextBlock
+                                            Margin="0,1"
+                                            FontSize="14"
+                                            Foreground="Gray"><Run Text="{x:Bind Path=Name}" />
+                                            ·<Run Text="{Binding Rname}" /></TextBlock>
 
-                                </StackPanel>
+                                    </StackPanel>
+                                </Grid>
                             </Grid>
                         </DataTemplate>
                     </toolkit:AdaptiveGridView.ItemTemplate>
                     <toolkit:AdaptiveGridView.Footer>
                         <StackPanel>
-                            <HyperlinkButton Command="{x:Bind Path=LoadMoreCommand}" Visibility="{x:Bind Path=Loading,Mode=OneWay,Converter={StaticResource display}}" Foreground="Gray" HorizontalAlignment="Center" x:Name="btnLoadMore">
+                            <HyperlinkButton
+                                x:Name="btnLoadMore"
+                                HorizontalAlignment="Center"
+                                Command="{x:Bind Path=LoadMoreCommand}"
+                                Foreground="Gray"
+                                Visibility="{x:Bind Path=Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                 <TextBlock>加载更多</TextBlock>
                             </HyperlinkButton>
-                            <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=Loading,Mode=OneWay}"></ProgressRing>
+                            <muxc:ProgressRing
+                                HorizontalAlignment="Center"
+                                IsActive="True"
+                                Visibility="{x:Bind Path=Loading, Mode=OneWay}" />
                         </StackPanel>
                     </toolkit:AdaptiveGridView.Footer>
                 </controls:MyAdaptiveGridView>
 
-                <controls:RoundButton  Command="{x:Bind Path=RefreshCommand}" Visibility="{x:Bind Path=Loading,Mode=OneWay,Converter={StaticResource display}}" VerticalAlignment="Bottom" Padding="12" Margin="12" HorizontalAlignment="Right">
-                    <SymbolIcon Symbol="Refresh" Foreground="White"></SymbolIcon>
-                </controls:RoundButton>
+                <Button
+                    Command="{x:Bind Path=RefreshCommand}"
+                    Style="{StaticResource RoundAccentButtonStyle}"
+                    Visibility="{x:Bind Path=Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
+                    <SymbolIcon Symbol="Refresh" />
+                </Button>
             </Grid>
         </DataTemplate>
-        <local:RegionDataTemplateSelector x:Name="tplSelect" HomeTemplate="{StaticResource HomeTemplate}" ChildTemplate="{StaticResource ChildTemplate}"/>
-        
+        <local:RegionDataTemplateSelector
+            x:Name="tplSelect"
+            ChildTemplate="{StaticResource ChildTemplate}"
+            HomeTemplate="{StaticResource HomeTemplate}" />
+
     </Page.Resources>
     <Grid>
-        <Pivot ItemsSource="{x:Bind Path=m_viewModel.Regions,Mode=OneWay}" ItemTemplateSelector="{StaticResource tplSelect}" SelectedItem="{x:Bind Path=m_viewModel.SelectRegion,Mode=TwoWay}" x:Name="pivot" SelectionChanged="pivot_SelectionChanged">
+        <Pivot
+            x:Name="pivot"
+            ItemTemplateSelector="{StaticResource tplSelect}"
+            ItemsSource="{x:Bind Path=m_viewModel.Regions, Mode=OneWay}"
+            SelectedItem="{x:Bind Path=m_viewModel.SelectRegion, Mode=TwoWay}"
+            SelectionChanged="pivot_SelectionChanged">
             <Pivot.HeaderTemplate>
-                <DataTemplate >
-                    <TextBlock FontSize="15" Text="{Binding Path=RegionName}"></TextBlock>
+                <DataTemplate>
+                    <TextBlock FontSize="15" Text="{Binding Path=RegionName}" />
                 </DataTemplate>
             </Pivot.HeaderTemplate>
             <Pivot.RightHeader>
-                <Grid x:Name="GridOrder" Visibility="Collapsed" Background="{ThemeResource PivotHeaderBackground}" >
-                    <StackPanel Orientation="Horizontal"  Margin="8" >
-                        <ComboBox x:Name="cbTags"  ItemsSource="{Binding Tasgs}" SelectionChanged="cbTags_SelectionChanged" SelectedItem="{Binding Path=SelectTag,Mode=TwoWay}" DisplayMemberPath="tname" Margin="0 0 8 0">
-
-                        </ComboBox>
-                        <ComboBox x:Name="cbOrder"  ItemsSource="{Binding Orders}" SelectionChanged="cbOrder_SelectionChanged" SelectedItem="{Binding Path=SelectOrder,Mode=TwoWay}" DisplayMemberPath="name" >
-
-                        </ComboBox>
+                <Grid x:Name="GridOrder" Visibility="Collapsed">
+                    <StackPanel Margin="8" Orientation="Horizontal">
+                        <ComboBox
+                            x:Name="cbTags"
+                            Margin="0,0,8,0"
+                            DisplayMemberPath="tname"
+                            ItemsSource="{Binding Tasgs}"
+                            SelectedItem="{Binding Path=SelectTag, Mode=TwoWay}"
+                            SelectionChanged="cbTags_SelectionChanged" />
+                        <ComboBox
+                            x:Name="cbOrder"
+                            DisplayMemberPath="name"
+                            ItemsSource="{Binding Orders}"
+                            SelectedItem="{Binding Path=SelectOrder, Mode=TwoWay}"
+                            SelectionChanged="cbOrder_SelectionChanged" />
                     </StackPanel>
-                   
+
                 </Grid>
             </Pivot.RightHeader>
             <Pivot.ItemContainerStyle>
                 <Style TargetType="PivotItem">
-                    <Setter Property="Margin" Value="0"></Setter>
+                    <Setter Property="Margin" Value="0" />
                 </Style>
             </Pivot.ItemContainerStyle>
-            
+
         </Pivot>
     </Grid>
 </local:BasePage>

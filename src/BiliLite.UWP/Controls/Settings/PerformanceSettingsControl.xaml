@@ -3,77 +3,76 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:font="using:FontAwesome5"
     xmlns:local="using:BiliLite.Controls.Settings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
 
     <StackPanel MaxWidth="1200">
-        <controls:SettingsCard Description="加载原图会影响加载速度及加大内存占用" Header="加载原图">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Image" />
-            </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="swPictureQuality" />
-        </controls:SettingsCard>
+        <StackPanel.ChildrenTransitions>
+            <TransitionCollection>
+                <RepositionThemeTransition />
+            </TransitionCollection>
+        </StackPanel.ChildrenTransitions>
 
-        <controls:SettingsCard>
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_FileImage" />
-            </controls:SettingsCard.HeaderIcon>
-            <controls:SettingsCard.Header>
-                <Button
-                    x:Name="btnCleanImageCache"
-                    Margin="0,0,0,8"
-                    Click="btnCleanImageCache_Click">
-                    清除图片缓存
-                </Button>
-            </controls:SettingsCard.Header>
-        </controls:SettingsCard>
+        <controls:SettingsExpander Header="图片质量" IsExpanded="True">
+            <controls:SettingsExpander.HeaderIcon>
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE91B;" />
+            </controls:SettingsExpander.HeaderIcon>
+            <Button x:Name="btnCleanImageCache" Click="btnCleanImageCache_Click">
+                清除图片缓存
+            </Button>
+            <controls:SettingsExpander.Items>
+                <controls:SettingsCard Description="影响加载速度及加大内存占用" Header="加载原图">
+                    <ToggleSwitch x:Name="swPictureQuality" />
+                </controls:SettingsCard>
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>
 
-        <controls:SettingsCard Description="选择当前窗口中打开图片预览或新窗口打开图片预览" Header="新窗口打开图片预览">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_WindowRestore" />
-            </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="swPreviewImageNavigateToPage" />
-        </controls:SettingsCard>
-
-        <controls:SettingsCard Description="关闭后每次切换首页会重新加载数据,但会减少内存占用" Header="缓存首页">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_SdCard" />
-            </controls:SettingsCard.HeaderIcon>
+        <controls:SettingsCard
+            Description="减少内存占用，但会自动刷新首页数据"
+            Header="缓存首页"
+            HeaderIcon="Page2">
             <ToggleSwitch x:Name="swHomeCache" />
         </controls:SettingsCard>
-        <controls:SettingsCard Description="比如B站以外的链接" Header="使用浏览器打开无法处理的链接">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Brands_Chrome" />
-            </controls:SettingsCard.HeaderIcon>
+        <controls:SettingsCard
+            Description="支持接管B站内容"
+            Header="使用内置浏览器"
+            HeaderIcon="World">
             <ToggleSwitch x:Name="swOpenUrlWithBrowser" />
         </controls:SettingsCard>
-
-        <controls:SettingsCard Description="仅支持标签页模式" Header="启动应用时打开上次浏览的标签页">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_History" />
-            </controls:SettingsCard.HeaderIcon>
+        <controls:SettingsExpander
+            Description="仅支持标签页"
+            Header="恢复未关闭的页面"
+            IsExpanded="True">
+            <controls:SettingsExpander.HeaderIcon>
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE81C;" />
+            </controls:SettingsExpander.HeaderIcon>
             <ToggleSwitch x:Name="SwitchOpenLastPage" />
-        </controls:SettingsCard>
 
-        <controls:SettingsCard Description="0为不限制，不建议使用" Header="启动应用时打开上次浏览的标签页数量限制">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_History" />
-            </controls:SettingsCard.HeaderIcon>
-            <controls1:NumberBox x:Name="NumberOpenLastPageCount" Minimum="0" />
-        </controls:SettingsCard>
+            <controls:SettingsExpander.Items>
+                <controls:SettingsCard Description="0 为不限制，不建议使用" Header="需要恢复的数量">
+                    <controls1:NumberBox
+                        x:Name="NumberOpenLastPageCount"
+                        MinWidth="200"
+                        Minimum="0" />
+                </controls:SettingsCard>
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>
 
-        <controls:SettingsCard Description="过大可能导致无限加载bug被B站风控 (当前有效页面： 首页推荐页、首页热门页) 重启应用后生效" 
-                               Header="滚动视图加载更多触发偏移量">
+        <controls:SettingsCard Description="过大可能导致无限加载bug被B站风控 (当前有效页面： 首页推荐页、首页热门页) 重启应用后生效" Header="每次滚动加载更多数据">
             <controls:SettingsCard.HeaderIcon>
                 <font:FontAwesome Icon="Solid_Scroll" />
             </controls:SettingsCard.HeaderIcon>
-            <controls1:NumberBox x:Name="NumberScrollViewLoadMoreBottomOffset" Minimum="0" Maximum="1080"/>
+            <controls1:NumberBox
+                x:Name="NumberScrollViewLoadMoreBottomOffset"
+                MinWidth="200"
+                Maximum="1080"
+                Minimum="0" />
         </controls:SettingsCard>
     </StackPanel>
 </UserControl>

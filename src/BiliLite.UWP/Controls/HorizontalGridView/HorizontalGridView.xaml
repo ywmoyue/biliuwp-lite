@@ -62,30 +62,26 @@
                         </ScrollViewer>
                         <Button
                             x:Name="moveLeft"
-                            Height="56"
-                            Margin="4"
+                            Margin="20,0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
-                            Background="#66000000"
+                            Style="{StaticResource RoundAccentButtonStyle}"
                             Visibility="Collapsed">
                             <FontIcon
-                                FontFamily="Segoe MDL2 Assets"
+                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                 FontSize="14"
-                                Foreground="White"
                                 Glyph="&#xE00E;" />
                         </Button>
                         <Button
                             x:Name="moveRight"
-                            Height="56"
-                            Margin="4"
+                            Margin="20,0"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
-                            Background="#66000000"
+                            Style="{StaticResource RoundAccentButtonStyle}"
                             Visibility="Collapsed">
                             <FontIcon
-                                FontFamily="Segoe MDL2 Assets"
+                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                 FontSize="14"
-                                Foreground="White"
                                 Glyph="&#xE00F;" />
                         </Button>
                     </Grid>

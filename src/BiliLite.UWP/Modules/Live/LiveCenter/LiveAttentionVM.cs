@@ -1,16 +1,17 @@
-﻿using BiliLite.Models;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
+using BiliLite.Models;
+using BiliLite.Models.Common.Live;
 using BiliLite.Models.Requests.Api.Live;
+using BiliLite.Services;
+using BiliLite.Services.Biz;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.UI.Xaml.Media.Imaging;
-using BiliLite.Extensions;
-using BiliLite.Services;
-using BiliLite.Models.Common.Live;
-using BiliLite.Services.Biz;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite.Modules.Live.LiveCenter
 {
@@ -59,19 +60,19 @@ namespace BiliLite.Modules.Live.LiveCenter
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
 
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<LiveAttentionVM>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {

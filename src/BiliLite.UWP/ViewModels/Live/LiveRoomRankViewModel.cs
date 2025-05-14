@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Live;
 using BiliLite.Models.Exceptions;
@@ -13,6 +9,11 @@ using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace BiliLite.ViewModels.Live
 {
@@ -103,7 +104,7 @@ namespace BiliLite.ViewModels.Live
             {
                 Loading = true;
                 CanLoadMore = false;
-                var api = RankType == "fans" ? 
+                var api = RankType == "fans" ?
                     m_liveRoomApi.FansList(Uid, RoomID, Page) :
                     m_liveRoomApi.RoomRankList(Uid, RoomID, "online_rank", "contribution_rank");
 
@@ -123,12 +124,12 @@ namespace BiliLite.ViewModels.Live
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error("读取直播排行榜失败" + RankType, ex);
             }
             catch (Exception ex)
             {
-                Notify.ShowMessageToast("读取直播排行榜失败：" + RankType);
+                NotificationShowExtensions.ShowMessageToast("读取直播排行榜失败：" + RankType);
                 _logger.Log("读取直播排行榜失败" + RankType, LogType.Error, ex);
             }
             finally
@@ -145,11 +146,12 @@ namespace BiliLite.ViewModels.Live
                 Page = 1;
                 await LoadData();
                 ReloadFlag = 0;
-            } else
+            }
+            else
             {
                 ReloadFlag++;
             }
-        } 
+        }
 
         #endregion
     }

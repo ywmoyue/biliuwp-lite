@@ -1,5 +1,5 @@
 ﻿using BiliLite.Controls;
-using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Pages;
 using BiliLite.Services;
@@ -144,12 +144,9 @@ namespace BiliLite
                 var result = await MessageCenter.HandelUrl(e.Parameter.ToString());
                 if (!result)
                 {
-                    Notify.ShowMessageToast("无法打开链接:" + e.Parameter.ToString());
+                    NotificationShowExtensions.ShowMessageToast("无法打开链接:" + e.Parameter.ToString());
                 }
             }
-#if !DEBUG
-            await BiliExtensions.CheckVersion(isSilentUpdateCheck:true);
-#endif
         }
 
         private void MessageCenter_ChangeTitleEvent(object sender, string e)

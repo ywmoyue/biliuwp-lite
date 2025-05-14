@@ -14,7 +14,7 @@ namespace BiliLite.ViewModels.Settings
 
         public ShortcutFunctionViewModel AddShortcutFunctionModel { get; set; }
 
-        public List<KeyValuePair<string,string>> Actions
+        public List<KeyValuePair<string, string>> Actions
         {
             get
             {
@@ -29,7 +29,5 @@ namespace BiliLite.ViewModels.Settings
         }
 
         public string AddShortcutFunctionTypeName { get; set; }
-
-        public double ControlWidth { get; set; }
     }
 }

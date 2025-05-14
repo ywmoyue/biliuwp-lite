@@ -1,12 +1,10 @@
-﻿using System.Linq;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using BiliLite.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
-using BiliLite.Models.Common.Player;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -15,7 +13,6 @@ namespace BiliLite.Controls.Settings
     public sealed partial class LiveSettingsControl : UserControl
     {
         private readonly LiveSettingsControlViewModel m_viewModel;
-        private readonly RealPlayerTypeOption[] m_realPlayerTypes = LivePlayerTypeOptions.Options;
 
         public LiveSettingsControl()
         {
@@ -36,16 +33,6 @@ namespace BiliLite.Controls.Settings
                 };
             };
 
-            //优先播放器类型
-            var realPlayerType = (RealPlayerType)SettingService.GetValue(SettingConstants.Player.LIVE_PLAYER_TYPE,
-                (int)LivePlayerTypeOptions.DEFAULT_LIVE_PLAYER_MODE);
-            ComboBoxUseRealPlayerType.SelectedItem =
-                m_realPlayerTypes.FirstOrDefault(x => x.Value == realPlayerType);
-            ComboBoxUseRealPlayerType.SelectionChanged += (e, args) =>
-            {
-                SettingService.SetValue(SettingConstants.Player.LIVE_PLAYER_TYPE,
-                    (int)ComboBoxUseRealPlayerType.SelectedValue);
-            };
             //弹幕开关
             var state = SettingService.GetValue<Visibility>(SettingConstants.Live.SHOW, Visibility.Visible) == Visibility.Visible;
             LiveDanmuSettingState.IsOn = state;
@@ -61,7 +48,7 @@ namespace BiliLite.Controls.Settings
         {
             if (string.IsNullOrEmpty(LiveDanmuSettingTxtWord.Text))
             {
-                Notify.ShowMessageToast("关键字不能为空");
+                NotificationShowExtensions.ShowMessageToast("关键字不能为空");
                 return;
             }
             if (!m_viewModel.LiveShieldWords.Contains(LiveDanmuSettingTxtWord.Text))

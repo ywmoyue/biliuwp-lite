@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions;
+﻿using BiliLite.Extensions.Notifications;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -168,7 +168,7 @@ namespace BiliLite.Controls
                 CachedFileManager.DeferUpdates(file);
                 await FileIO.WriteBytesAsync(file, bytes);
                 FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
-                Notify.ShowMessageToast("保存成功");
+                NotificationShowExtensions.ShowMessageToast("保存成功");
             }
         }
 
@@ -206,7 +206,7 @@ namespace BiliLite.Controls
 
             data.RequestedOperation = DataPackageOperation.Copy;
             var rsult = Clipboard.SetContentWithOptions(data, null);
-            Notify.ShowMessageToast("已复制到剪切板");
+            NotificationShowExtensions.ShowMessageToast("已复制到剪切板");
         }
     }
 

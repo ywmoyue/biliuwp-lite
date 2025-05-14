@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Modules;
@@ -9,6 +7,9 @@ using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
+using System;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace BiliLite.ViewModels.User
 {
@@ -51,9 +52,9 @@ namespace BiliLite.ViewModels.User
 
         public async Task<bool> AttentionUP(string mid, int mode)
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录后再操作");
+                NotificationShowExtensions.ShowMessageToast("请先登录后再操作");
                 return false;
             }
 
@@ -67,25 +68,25 @@ namespace BiliLite.ViewModels.User
                     if (data.success)
                     {
 
-                        Notify.ShowMessageToast("操作成功");
+                        NotificationShowExtensions.ShowMessageToast("操作成功");
                         return true;
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                         return false;
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
                     return false;
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<object>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
                 return false;
             }
         }

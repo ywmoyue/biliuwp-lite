@@ -1,4 +1,7 @@
-﻿using BiliLite.Models.Requests.Api.User;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
+using BiliLite.Models.Common;
+using BiliLite.Models.Requests.Api.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -6,8 +9,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BiliLite.Extensions;
-using BiliLite.Models.Common;
 
 namespace BiliLite.Modules.User.UserDetail
 {
@@ -163,19 +164,19 @@ namespace BiliLite.Modules.User.UserDetail
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data["message"].ToString());
+                        NotificationShowExtensions.ShowMessageToast(data["message"].ToString());
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
 
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<UserFollowVM>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {

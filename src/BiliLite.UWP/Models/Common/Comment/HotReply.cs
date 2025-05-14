@@ -1,8 +1,8 @@
-﻿using System;
-using Windows.UI.Xaml.Controls;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
 using BiliLite.Services;
 using Newtonsoft.Json.Linq;
+using System;
+using Windows.UI.Xaml.Controls;
 
 namespace BiliLite.Models.Common.Comment
 {

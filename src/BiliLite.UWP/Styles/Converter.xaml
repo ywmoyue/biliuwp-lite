@@ -1,12 +1,28 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:convert="using:BiliLite.Converters">
+    xmlns:Convert="using:BiliLite.Converters"
+    xmlns:ToolKitConvert="using:CommunityToolkit.WinUI.Converters">
 
-    <convert:NumberToStringConvert x:Key="numberToStringConvert" />
-    <convert:ImageCompressionConvert x:Key="imageConvert" />
-    <convert:ImageSourceConvert x:Key="imageConvert2" />
-    <convert:DisplayConvert x:Key="display" />
-    <convert:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-    <convert:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+    <Convert:NumberToStringConvert x:Key="NumberToStringConvert" />
+    <Convert:ImageCompressionConvert x:Key="ImageCompressionConvert" />
+    <Convert:ImageSourceConvert x:Key="ImageSourceConvert" />
+    <Convert:DisplayConvert x:Key="DisplayConvert" />
+    <Convert:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+    <Convert:RankColorConvert x:Key="RankConvert" />
+    <Convert:ProgressToTimeConverter x:Key="ProgressToTimeConverter" />
+    <Convert:SingleCornerRadiusConverter x:Key="SingleCornerRadiusConverter" />
+    <Convert:ByteSizeConvert x:Key="ByteSizeConvert" />
+    <Convert:DownloadStatusConvert x:Key="DownloadStatusConvert" />
+    <Convert:DatetimeConvert x:Key="DatetimeConvert" />
+    <Convert:DanmakuStyleConvert x:Key="DanmakuStyleConvert" />
+    <Convert:BooleanConvert x:Name="BooleanConvert" />
+    <Convert:ColorConvert x:Key="ColorConvert" />
+    <Convert:CountDisplayConvert x:Key="CountDisplayConvert" />
+    <Convert:FilterRuleTypeConverter x:Key="FilterRuleTypeConverter" />
+    <Convert:CountOrTextConvert x:Name="CountOrTextConvert" />
+    <Convert:LiveStatusConverter x:Name="LiveStatusConverter" />
+    <Convert:RealPlayerTypeDisplayConverter x:Name="RealPlayerTypeDisplayConverter" />
+
+    <ToolKitConvert:ColorToDisplayNameConverter x:Key="ColorToDisplayNameConverter" />
 </ResourceDictionary>

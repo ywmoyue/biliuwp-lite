@@ -1,13 +1,14 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mica="using:MicaForUWP.Media"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls">
-    
-    <!--在此自定义颜色-->
+
+    <!--  在此自定义颜色  -->
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">
-            <Color x:Key="TextColor">#CC000000</Color>
-            <Color x:Key="CardColor">#0F000000</Color>
+            <Color x:Key="TextColor">#000000</Color>
+            <Color x:Key="CardColor">#B3FFFFFF</Color>
             <Color x:Key="HighLightTextColor">#FF000000</Color>
             <Color x:Key="DefaultTextColor">#CC000000</Color>
             <Color x:Key="LinkTextColor">#008ac5</Color>
@@ -23,7 +24,7 @@
             <Color x:Key="TabViewTabContainerGridColor">#1A333333</Color>
             <Color x:Key="TabViewLayoutRootBackground">#1A333333</Color>
             <SolidColorBrush x:Key="TabViewItemHeaderBackgroundNormal" Color="Transparent" />
-    
+
             <AcrylicBrush
                 x:Key="PlayerControlAcrylicBrush"
                 AlwaysUseFallback="False"
@@ -34,10 +35,18 @@
                 TintLuminosityOpacity="0.96"
                 TintOpacity="0.15"
                 TintTransitionDuration="0:0:0.5" />
+
+            <mica:BackdropMicaBrush
+                x:Key="PageBackgroundMicaBrush"
+                BackgroundSource="WallpaperBackdrop"
+                FallbackColor="White"
+                LuminosityOpacity="0.7"
+                TintColor="White"
+                TintOpacity="0.5" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
-            <Color x:Key="TextColor">#CCFFFFFF</Color>
-            <Color x:Key="CardColor">#19000000</Color>
+            <Color x:Key="TextColor">#FFFFFF</Color>
+            <Color x:Key="CardColor">#0DFFFFFF</Color>
             <Color x:Key="HighLightTextColor">#FFFFFFFF</Color>
             <Color x:Key="DefaultTextColor">#CC000000</Color>
             <Color x:Key="LinkTextColor">#008ac5</Color>
@@ -64,6 +73,14 @@
                 TintLuminosityOpacity="0.96"
                 TintOpacity="0.15"
                 TintTransitionDuration="0:0:0.5" />
+
+            <mica:BackdropMicaBrush
+                x:Key="PageBackgroundMicaBrush"
+                BackgroundSource="WallpaperBackdrop"
+                FallbackColor="Black"
+                LuminosityOpacity="0.7"
+                TintColor="Black"
+                TintOpacity="0.5" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="HighContrast" />
     </ResourceDictionary.ThemeDictionaries>

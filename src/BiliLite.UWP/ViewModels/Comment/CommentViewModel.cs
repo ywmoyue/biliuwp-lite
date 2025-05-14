@@ -232,7 +232,7 @@ namespace BiliLite.ViewModels.Comment
             await MessageCenter.HandelUrl(paramenter.ToString());
         }
 
-        private async void Seek_Click(string timeText)
+        private void Seek_Click(string timeText)
         {
             timeText = timeText.Replace('：', ':');
             var timeSplitCount = timeText.Count(x => x == ':');

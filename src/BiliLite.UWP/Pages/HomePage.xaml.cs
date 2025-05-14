@@ -1,18 +1,19 @@
 ﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Search;
 using BiliLite.Modules;
 using BiliLite.Services;
+using BiliLite.Services.Biz;
+using BiliLite.ViewModels.Download;
+using BiliLite.ViewModels.Home;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Uwp.Connectivity;
 using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Models.Common.Search;
-using BiliLite.Services.Biz;
-using BiliLite.ViewModels.Download;
-using BiliLite.ViewModels.Home;
-using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -95,8 +96,8 @@ namespace BiliLite.Pages
                         {
                             m_viewModel.IsLogin = false;
                             MessageCenter.SendLogout();
-                            Notify.ShowMessageToast("登录过期，请重新登录");
-                            await Notify.ShowLoginDialog();
+                            NotificationShowExtensions.ShowMessageToast("登录过期，请重新登录");
+                            await NotificationShowExtensions.ShowLoginDialog();
                         }
                     }
                 }
@@ -104,7 +105,7 @@ namespace BiliLite.Pages
                 {
                     m_viewModel.IsLogin = false;
                     logger.Log("读取access_key信息失败", LogType.Info, ex);
-                    Notify.ShowMessageToast("读取登录信息失败，请重新登录");
+                    NotificationShowExtensions.ShowMessageToast("读取登录信息失败，请重新登录");
                     //throw;
                 }
 
@@ -153,7 +154,7 @@ namespace BiliLite.Pages
 
         private async void btnLogin_Click(object sender, RoutedEventArgs e)
         {
-            var data = await Notify.ShowLoginDialog();
+            var data = await NotificationShowExtensions.ShowLoginDialog();
         }
 
         private void btnLogout_Click(object sender, RoutedEventArgs e)
@@ -177,7 +178,7 @@ namespace BiliLite.Pages
         {
             if (string.IsNullOrEmpty(SearchBox.Text))
             {
-                Notify.ShowMessageToast("关键字不能为空");
+                NotificationShowExtensions.ShowMessageToast("关键字不能为空");
                 return;
             }
 
@@ -201,9 +202,9 @@ namespace BiliLite.Pages
 
         private async void MenuMyFollow_Click(object sender, RoutedEventArgs e)
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录");
+                NotificationShowExtensions.ShowMessageToast("请先登录");
                 return;
             }
             MessageCenter.NavigateToPage(this, new NavigationInfo()
@@ -217,9 +218,9 @@ namespace BiliLite.Pages
 
         private async void MenuMyLive_Click(object sender, RoutedEventArgs e)
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录");
+                NotificationShowExtensions.ShowMessageToast("请先登录");
                 return;
             }
             MessageCenter.NavigateToPage(this, new NavigationInfo()
@@ -265,9 +266,9 @@ namespace BiliLite.Pages
 
         private async void MenuWatchlater_Click(object sender, RoutedEventArgs e)
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录");
+                NotificationShowExtensions.ShowMessageToast("请先登录");
                 return;
             }
             MessageCenter.NavigateToPage(this, new NavigationInfo()

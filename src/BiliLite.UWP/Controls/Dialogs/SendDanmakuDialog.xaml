@@ -1,0 +1,87 @@
+﻿<ContentDialog
+    x:Class="BiliLite.Controls.Dialogs.SendDanmakuDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BiliLite.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="发送弹幕"
+    Background="{ThemeResource SystemControlAcrylicElementBrush}"
+    CloseButtonStyle="{StaticResource DefaultButtonStyle}"
+    CornerRadius="{StaticResource OverlayCornerRadius}"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
+    PrimaryButtonText="取消"
+    RequestedTheme="Dark"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
+    SecondaryButtonStyle="{StaticResource DefaultButtonStyle}"
+    SecondaryButtonText="发送"
+    mc:Ignorable="d">
+
+    <Grid>
+        <StackPanel>
+            <TextBox
+                x:Name="Send_text_Comment"
+                AcceptsReturn="True"
+                PlaceholderText="弹幕内容" />
+            <Grid Grid.Row="1" Margin="0,4,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <ComboBox
+                    x:Name="Send_cb_Color"
+                    HorizontalAlignment="Stretch"
+                    PlaceholderText="选择弹幕颜色"
+                    SelectedIndex="0">
+                    <ComboBoxItem
+                        Content="白色"
+                        Foreground="White"
+                        Tag="16777215" />
+                    <ComboBoxItem
+                        Content="红色"
+                        Foreground="Red"
+                        Tag="16711680" />
+                    <ComboBoxItem
+                        Content="黄色"
+                        Foreground="Yellow"
+                        Tag="16776960" />
+                    <ComboBoxItem
+                        Content="绿色"
+                        Foreground="Lime"
+                        Tag="65280" />
+                    <ComboBoxItem
+                        Content="淡蓝"
+                        Foreground="#FF4FAFFF"
+                        Tag="52479" />
+                    <ComboBoxItem
+                        Content="浅绿"
+                        Foreground="#FF7BFF6E"
+                        Tag="3394662" />
+                    <ComboBoxItem
+                        Content="深蓝"
+                        Foreground="Blue"
+                        Tag="255" />
+                    <ComboBoxItem
+                        Content="紫色"
+                        Foreground="#FF5D00FF"
+                        Tag="6684774" />
+                    <ComboBoxItem
+                        Content="粉色"
+                        Foreground="#FFFF00F3"
+                        Tag="16711935" />
+                </ComboBox>
+                <ComboBox
+                    x:Name="Send_cb_Mode"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    PlaceholderText="选择弹幕位置"
+                    SelectedIndex="0">
+                    <ComboBoxItem>滚动</ComboBoxItem>
+                    <ComboBoxItem>顶部</ComboBoxItem>
+                    <ComboBoxItem>底部</ComboBoxItem>
+                </ComboBox>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</ContentDialog>

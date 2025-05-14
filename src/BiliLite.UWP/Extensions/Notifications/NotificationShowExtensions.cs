@@ -1,14 +1,25 @@
-﻿using System.Threading.Tasks;
-using Windows.UI.Notifications;
+﻿using BiliLite.Controls;
+using BiliLite.Controls.Dialogs;
 using BiliLite.Models.Common.Notifications.Template;
+using BiliLite.Models.Requests.Api;
+using BiliLite.Services;
 using BiliLite.Services.Notification;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Windows.System;
+using Windows.UI.Notifications;
+using Windows.UI.Popups;
+using Windows.UI.Xaml.Controls;
 
 namespace BiliLite.Extensions.Notifications
 {
-    public class NotificationShowExtensions
+    public static class NotificationShowExtensions
     {
-        public static async Task Tile()
+        private static bool dialogShowing = false;
+
+        public static async Task ShowTile()
         {
             // Create a tile update manager for the specified syndication feed.
             var updater = TileUpdateManager.CreateTileUpdaterForApplication();
@@ -29,19 +40,93 @@ namespace BiliLite.Extensions.Notifications
             }
         }
 
-        public static void Dialog()
+        public static void ShowToast()
         {
 
         }
 
-        public static void MessageDialog()
+        public static async Task<bool> ShowMessageDialog(string title, string content, Uri uri = null)
         {
-
+            MessageDialog messageDialog = new MessageDialog(content, title);
+            messageDialog.Commands.Add(new UICommand()
+            {
+                Label = "确定",
+                Id = true,
+                Invoked = async (cmd) =>
+                {
+                    if (uri != null)
+                        await Launcher.LaunchUriAsync(uri);
+                }
+            });
+            messageDialog.Commands.Add(new UICommand() { Label = "取消", Id = false });
+            var result = await messageDialog.ShowAsync();
+            return (bool)result.Id;
         }
 
-        public static void Toast()
+        public static async void ShowVideoErrorMessageDialog(string message)
         {
+            await ShowMessageDialog($@"播放失败:{message}
+你可以进行以下尝试:
+1、切换视频清晰度
+2、到⌈设置⌋-⌈播放⌋中修改⌈优先视频编码⌋选项
+3、到⌈设置⌋-⌈播放⌋中打开或关闭⌈替换PCDN链接⌋选项
+4、到⌈设置⌋-⌈代理⌋中打开或关闭⌈尝试替换视频的CDN⌋选项
+5、如果视频编码选择了HEVC，请检查是否安装了HEVC扩展
+6、如果视频编码选择了AV1，请检查是否安装了AV1扩展
+7、如果是付费视频，请在手机或网页端购买后观看
+8、尝试更新您的显卡驱动或使用核显打开应用", "播放失败");
+        }
 
+        public static void ShowMessageToast(string message, int seconds = 2)
+        {
+            MessageToast ms = new MessageToast(message, TimeSpan.FromSeconds(seconds));
+            ms.Show();
+        }
+
+        public static void ShowMessageToast(string message, List<MyUICommand> commands, int seconds = 15)
+        {
+            MessageToast ms = new MessageToast(message, TimeSpan.FromSeconds(seconds), commands);
+            ms.Show();
+        }
+
+        public static async Task ShowContentDialog(ContentDialog ms)
+        {
+            await ms.ShowAsync();
+        }
+
+        /// <summary>
+        /// 登录专用
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<bool> ShowLoginDialog()
+        {
+            if (!dialogShowing)
+            {
+                LoginDialog ms = new LoginDialog();
+                dialogShowing = true;
+                await ShowContentDialog(ms);
+                dialogShowing = false;
+            }
+            if (SettingService.Account.Logined)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Comment 专用
+        /// </summary>
+        /// <param name="oid"></param>
+        /// <param name="commentMode"></param>
+        /// <param name="commentSort"></param>
+        public static void ShowCommentDialog(string oid, int commentMode, CommentApi.CommentSort commentSort)
+        {
+            CommentDialog ms = new CommentDialog();
+            ms.Show(oid, commentMode, commentSort);
         }
     }
 }

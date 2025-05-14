@@ -2,13 +2,13 @@
     x:Class="BiliLite.Controls.AttentionButton"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BiliLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BiliLite.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="Transparent"
     d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignWidth="400"
+    Background="Transparent"
+    mc:Ignorable="d">
     <UserControl.Resources>
         <MenuFlyout x:Key="AttentionFlyout" x:Name="AttentionFlyout">
             <MenuFlyoutItem Click="SetFollowingTag_OnClick">设置分组</MenuFlyoutItem>
@@ -16,20 +16,27 @@
         </MenuFlyout>
     </UserControl.Resources>
     <Grid Background="Transparent">
-        <local:UserFollowingTagsFlyout x:Name="UserFollowingTagsFlyout"></local:UserFollowingTagsFlyout>
-        <Button Width="80" 
-                x:Name="AttendedBtn"
-                Visibility="{x:Bind Path=m_viewModel.Attention,Converter={StaticResource display},ConverterParameter=1,Mode=OneWay}" 
-                Click="AttendedBtn_OnClick"
-                Padding="16 4"  FontSize="12">已关注</Button>
-        <Button Width="80" 
-                Visibility="{x:Bind Path=m_viewModel.Attention,Converter={StaticResource display},ConverterParameter=0,Mode=OneWay}" 
-                Command="{x:Bind Path=m_viewModel.AttentionCommand}" 
-                Padding="16 4"  
-                BorderThickness="1" 
-                Background="Transparent" 
-                BorderBrush="{ThemeResource SystemAccentColor}" 
-                Foreground="{ThemeResource SystemAccentColor}" 
-                FontSize="12">关注</Button>
+        <local:UserFollowingTagsFlyout x:Name="UserFollowingTagsFlyout" />
+        <Button
+            x:Name="AttendedBtn"
+            Width="80"
+            Padding="16,4"
+            Click="AttendedBtn_OnClick"
+            FontSize="12"
+            Visibility="{x:Bind Path=m_viewModel.Attention, Converter={StaticResource DisplayConvert}, ConverterParameter=1, Mode=OneWay}">
+            已关注
+        </Button>
+        <Button
+            Width="80"
+            Padding="16,4"
+            Background="Transparent"
+            BorderBrush="{ThemeResource SystemAccentColor}"
+            BorderThickness="1"
+            Command="{x:Bind Path=m_viewModel.AttentionCommand}"
+            FontSize="12"
+            Foreground="{ThemeResource SystemAccentColor}"
+            Visibility="{x:Bind Path=m_viewModel.Attention, Converter={StaticResource DisplayConvert}, ConverterParameter=0, Mode=OneWay}">
+            关注
+        </Button>
     </Grid>
 </UserControl>

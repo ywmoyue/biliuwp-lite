@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
@@ -12,12 +8,12 @@ namespace BiliLite.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value==null)
+            if (value == null)
             {
                 return Visibility.Collapsed;
             }
             //如果是bool，反转下结果返回
-            if(value is bool)
+            if (value is bool)
             {
                 if ((bool)value)
                 {
@@ -31,7 +27,7 @@ namespace BiliLite.Converters
             //如果是Visibility，反转下结果返回
             if (value is Visibility)
             {
-                if ((Visibility)value== Visibility.Collapsed)
+                if ((Visibility)value == Visibility.Collapsed)
                 {
                     return Visibility.Visible;
                 }
@@ -41,9 +37,9 @@ namespace BiliLite.Converters
                 }
             }
             //如果是数字，则内容与parameter相等时返回显示
-            if (value is int||value is long)
+            if (value is int || value is long)
             {
-                if (value.ToString()== parameter.ToString())
+                if (value.ToString() == parameter.ToString())
                 {
                     return Visibility.Visible;
                 }
@@ -58,7 +54,7 @@ namespace BiliLite.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-           return  Visibility.Visible;
+            return Visibility.Visible;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using BiliLite.Controls;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Pages;
 using BiliLite.Services;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.System;
 using Windows.UI.Xaml;
@@ -23,7 +25,7 @@ namespace BiliLite
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class MainPage : Windows.UI.Xaml.Controls.Page, IMainPage
+    public sealed partial class MainPage : Page, IMainPage
     {
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly ShortcutKeyService m_shortcutKeyService;
@@ -64,8 +66,8 @@ namespace BiliLite
         {
             get
             {
-                if (!(tabView.SelectedItem is TabViewItem tabItem)) return null;
-                if (!(tabItem.Content is Frame frame)) return null;
+                if (tabView.SelectedItem is not TabViewItem tabItem) return null;
+                if (tabItem.Content is not Frame frame) return null;
                 return frame.Content;
             }
         }
@@ -88,19 +90,19 @@ namespace BiliLite
             var tabs = tabView.TabItems;
             foreach (var tab in tabs)
             {
-                if (!(tab is TabViewItem tabItem)) continue;
-                if (!(tabItem.Content is MyFrame frame)) continue;
+                if (tab is not TabViewItem tabItem) continue;
+                if (tabItem.Content is not MyFrame frame) continue;
                 var page = frame.Content;
-                if (!(page is PlayPage playPage)) continue;
+                if (page is not PlayPage playPage) continue;
                 await playPage.ReportHistory();
             }
         }
 
         private void MessageCenter_SeekEvent(object sender, double e)
         {
-            if (!(tabView.SelectedItem is TabViewItem tabItem)) return;
-            if (!(tabItem.Content is Frame frame)) return;
-            if (!(frame.Content is PlayPage playPage)) return;
+            if (tabView.SelectedItem is not TabViewItem tabItem) return;
+            if (tabItem.Content is not Frame frame) return;
+            if (frame.Content is not PlayPage playPage) return;
             playPage.Seek(e);
         }
 
@@ -132,12 +134,9 @@ namespace BiliLite
                 var result = await MessageCenter.HandelUrl(e.Parameter.ToString());
                 if (!result)
                 {
-                    Notify.ShowMessageToast("无法打开链接:" + e.Parameter.ToString());
+                    NotificationShowExtensions.ShowMessageToast("无法打开链接:" + e.Parameter.ToString());
                 }
             }
-#if !DEBUG
-             await BiliExtensions.CheckVersion(isSilentUpdateCheck:true);
-#endif
         }
 
         private void MessageCenter_ChangeTitleEvent(object sender, string e)
@@ -150,10 +149,8 @@ namespace BiliLite
 
             foreach (var item in tabView.TabItems)
             {
-                var tabViewItem = item as TabViewItem;
-                if (tabViewItem == null) continue;
-                var frame = tabViewItem.Content as MyFrame;
-                if (frame == null) continue;
+                if (item is not TabViewItem tabViewItem) continue;
+                if (tabViewItem.Content is not MyFrame frame) continue;
                 if (sender == frame.Content)
                 {
                     tabViewItem.Header = e;
@@ -192,7 +189,7 @@ namespace BiliLite
             }
         }
 
-        private void GoBack()
+        private async void GoBack()
         {
             //如果打开了图片浏览，则关闭图片浏览
             if (gridViewer.Visibility == Visibility.Visible)
@@ -212,7 +209,7 @@ namespace BiliLite
                 }
                 else
                 {
-                    ClosePage(tabView.SelectedItem as TabViewItem);
+                    await ClosePage(tabView.SelectedItem as TabViewItem);
                     //frame.Close();
                     //tabView.TabItems.Remove(tabView.SelectedItem);
                 }
@@ -248,11 +245,23 @@ namespace BiliLite
             });
         }
 
-        private void TabView_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
+        private async void TabView_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
         {
-            ClosePage(args.Tab);
+            var selectedTab = sender.SelectedItem as TabViewItem;
+            var tabToClose = args.Tab;
+
+            // 判断已选中的选项卡
+            if (selectedTab == tabToClose)
+            {
+                if (gridViewer.Visibility == Visibility.Visible)
+                {
+                    imgViewer_CloseEvent(this, null);
+                }
+            }
+
+            await ClosePage(args.Tab);
         }
-        private void ClosePage(TabViewItem tabItem)
+        private async Task ClosePage(TabViewItem tabItem)
         {
             var frame = tabItem.Content as MyFrame;
             if (frame.Content is Page { Content: Grid grid })
@@ -261,7 +270,7 @@ namespace BiliLite
             }
 
             var pageSaveService = App.ServiceProvider.GetRequiredService<PageSaveService>();
-            pageSaveService.RemovePage(frame.PageId);
+            await pageSaveService.RemovePage(frame.PageId);
 
             frame.Close();
             //frame.Navigate(typeof(BlankPage));
@@ -307,12 +316,12 @@ namespace BiliLite
             args.Handled = true;
         }
 
-        private void CloseSelectedTabKeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        private async void CloseSelectedTabKeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             if (((TabViewItem)tabView.SelectedItem).IsClosable)
             {
 
-                ClosePage((TabViewItem)tabView.SelectedItem);
+                await ClosePage((TabViewItem)tabView.SelectedItem);
             }
             args.Handled = true;
         }
@@ -357,6 +366,14 @@ namespace BiliLite
             if (draggedPage is IUpdatePivotLayout updateable)
             {
                 updateable.UpdatePivotLayout();
+            }
+        }
+
+        private void TabView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (gridViewer.Visibility == Visibility.Visible)
+            {
+                imgViewer_CloseEvent(this, null);
             }
         }
     }

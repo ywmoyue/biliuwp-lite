@@ -1,21 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using BiliLite.ViewModels.Common;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Storage.Pickers;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Danmaku;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Services;
+using BiliLite.ViewModels.Common;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json;
-using System.Text.RegularExpressions;
-using Windows.Storage;
 using Newtonsoft.Json.Serialization;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.Pickers;
 
 namespace BiliLite.ViewModels.Settings
 {
@@ -68,7 +69,7 @@ namespace BiliLite.ViewModels.Settings
             await FileIO.WriteTextAsync(file, String.Empty);
 
             var danmakuFilter = ExportDanmakuFilterCore();
-            var text = JsonConvert.SerializeObject(danmakuFilter,new JsonSerializerSettings()
+            var text = JsonConvert.SerializeObject(danmakuFilter, new JsonSerializerSettings()
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             });
@@ -83,7 +84,7 @@ namespace BiliLite.ViewModels.Settings
                 var result = await m_playerAPI.GetDanmuFilterWords().Request();
                 if (!result.status)
                 {
-                    Notify.ShowMessageToast(result.message);
+                    NotificationShowExtensions.ShowMessageToast(result.message);
                     return;
                 }
                 var obj = result.GetJObject();
@@ -95,7 +96,7 @@ namespace BiliLite.ViewModels.Settings
                 }
                 else
                 {
-                    Notify.ShowMessageToast(obj["message"].ToString());
+                    NotificationShowExtensions.ShowMessageToast(obj["message"].ToString());
                 }
             }
             catch (Exception ex)

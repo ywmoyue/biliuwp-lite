@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using BiliLite.Controls.DataTemplateSelectors;
+﻿using BiliLite.Controls.DataTemplateSelectors;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Dynamic;
 using BiliLite.Models.Common.UserDynamic;
@@ -18,6 +13,12 @@ using BiliLite.ViewModels.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace BiliLite.ViewModels.Home
 {
@@ -130,7 +131,7 @@ namespace BiliLite.ViewModels.Home
             var results = await api.Request();
 
             // 处理http结果，可能抛出CustomizedErrorException异常
-           var data = HandleRequestDynamicItemsResult(results);
+            var data = HandleRequestDynamicItemsResult(results);
 
             var items =
                 JsonConvert.DeserializeObject<List<DynamicItemModel>>(data["data"]["cards"]
@@ -187,11 +188,11 @@ namespace BiliLite.ViewModels.Home
                 if (ex is CustomizedErrorException)
                 {
                     _logger.Error(ex.Message, ex);
-                    Notify.ShowMessageToast(ex.Message);
+                    NotificationShowExtensions.ShowMessageToast(ex.Message);
                     return;
                 }
                 var handel = HandelError<DynamicPageViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {

@@ -1,6 +1,7 @@
 ﻿using BiliLite.Controls;
 using BiliLite.Converters;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Live;
 using BiliLite.Models.Common.Player;
@@ -29,7 +30,6 @@ using Windows.Graphics.Display;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.System.Display;
-using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -216,7 +216,7 @@ namespace BiliLite.Pages
             var msg = $"天选时刻 开奖信息:\r\n奖品: {e.AwardName} \r\n中奖用户:{str}";
             msg += e.AwardUsers.Any(user => user.Uid == SettingService.Account.UserID) ? $"\r\n你已抽中奖品: {e.AwardName}, 恭喜欧皇~" : "";
 
-            Notify.ShowMessageToast(msg, new List<MyUICommand>(), 10);
+            NotificationShowExtensions.ShowMessageToast(msg, new List<MyUICommand>(), 10);
             AnchorLotteryWinnerList.Content = e.WinnerList;
             m_liveRoomViewModel.ShowAnchorLotteryWinnerList = true;
             m_liveRoomViewModel.LoadBag().RunWithoutAwait();
@@ -232,7 +232,7 @@ namespace BiliLite.Pages
             {
                 if (winner[0] == (SettingService.Account.UserID).ToString())
                 {
-                    Notify.ShowMessageToast($"你已在人气红包抽奖中抽中 {awards[winner[3]].AwardName} , 赶快到背包中查看吧~", 5);
+                    NotificationShowExtensions.ShowMessageToast($"你已在人气红包抽奖中抽中 {awards[winner[3]].AwardName} , 赶快到背包中查看吧~", 5);
                     break;
                 }
             }
@@ -421,8 +421,7 @@ namespace BiliLite.Pages
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
                 logger.Log("直播加载失败", LogType.Error, new Exception(exception.Description));
-                await new MessageDialog($"啊，直播加载失败了\r\n错误信息:{exception.Description}\r\n请尝试在直播设置中打开/关闭硬解试试", "播放失败")
-                    .ShowAsync();
+                await NotificationShowExtensions.ShowMessageDialog($"啊，直播加载失败了\r\n错误信息:{exception.Description}\r\n请尝试在直播设置中打开/关闭硬解试试", "播放失败");
             });
         }
 
@@ -784,7 +783,7 @@ namespace BiliLite.Pages
             catch (Exception ex)
             {
                 logger.Log("播放失败", LogType.Error, ex);
-                Notify.ShowMessageToast("播放失败" + ex.Message);
+                NotificationShowExtensions.ShowMessageToast("播放失败" + ex.Message);
                 await m_playerController.PlayState.Stop();
             }
         }
@@ -996,11 +995,11 @@ namespace BiliLite.Pages
                          pixelBuffer.ToArray());
                     await encoder.FlushAsync();
                 }
-                Notify.ShowMessageToast("截图已经保存至图片库");
+                NotificationShowExtensions.ShowMessageToast("截图已经保存至图片库");
             }
             catch (Exception)
             {
-                Notify.ShowMessageToast("截图失败");
+                NotificationShowExtensions.ShowMessageToast("截图失败");
             }
         }
 
@@ -1056,7 +1055,7 @@ namespace BiliLite.Pages
         {
             if (string.IsNullOrEmpty(m_viewModel.DanmakuInput))
             {
-                Notify.ShowMessageToast("弹幕内容不能为空");
+                NotificationShowExtensions.ShowMessageToast("弹幕内容不能为空");
                 return;
             }
             var result = await m_liveRoomViewModel.SendDanmu(m_viewModel.DanmakuInput);
@@ -1152,7 +1151,7 @@ namespace BiliLite.Pages
                 msg += ", 关注主播成功";
             }
 
-            Notify.ShowMessageToast(msg);
+            NotificationShowExtensions.ShowMessageToast(msg);
         }
 
         private async void BtnSendRedPocketLotteryDanmu_Click(object sender, RoutedEventArgs e)
@@ -1169,7 +1168,7 @@ namespace BiliLite.Pages
                 msg += ", 关注主播成功";
             }
 
-            Notify.ShowMessageToast(msg);
+            NotificationShowExtensions.ShowMessageToast(msg);
         }
 
         private void BottomBtnMiniWindows_Click(object sender, RoutedEventArgs e)
@@ -1236,7 +1235,7 @@ namespace BiliLite.Pages
         {
             if (string.IsNullOrEmpty(DanmuSettingTxtWord.Text))
             {
-                Notify.ShowMessageToast("关键字不能为空");
+                NotificationShowExtensions.ShowMessageToast("关键字不能为空");
                 return;
             }
             AddShieldWord(DanmuSettingTxtWord.Text);
@@ -1418,13 +1417,13 @@ namespace BiliLite.Pages
         private void btnShareCopy_Click(object sender, RoutedEventArgs e)
         {
             $"{m_liveRoomViewModel.LiveInfo.RoomInfo.Title} - {m_liveRoomViewModel.LiveInfo.AnchorInfo.BaseInfo.Uname}的直播间\r\nhttps://live.bilibili.com/{m_liveRoomViewModel.RoomID}".SetClipboard();
-            Notify.ShowMessageToast("已复制内容到剪切板");
+            NotificationShowExtensions.ShowMessageToast("已复制内容到剪切板");
         }
 
         private void btnShareCopyUrl_Click(object sender, RoutedEventArgs e)
         {
             ("https://live.bilibili.com/" + m_liveRoomViewModel.RoomID).SetClipboard();
-            Notify.ShowMessageToast("已复制链接到剪切板");
+            NotificationShowExtensions.ShowMessageToast("已复制链接到剪切板");
         }
 
         private void Player_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -1454,7 +1453,7 @@ namespace BiliLite.Pages
                 if (!text.IsUrl())
                 {
                     LowDelayManualPlayUrlTextBox.Text = "";
-                    Notify.ShowMessageToast("不是正确格式的链接... 🤔 检查一下吧~");
+                    NotificationShowExtensions.ShowMessageToast("不是正确格式的链接... 🤔 检查一下吧~");
                     return;
                 }
                 LiveRoomViewModelSetManualPlayUrl(this, text);
@@ -1467,11 +1466,11 @@ namespace BiliLite.Pages
             if (m_liveRoomViewModel.ManualPlayUrl != null && m_liveRoomViewModel.ManualPlayUrl.Length > 0)
             {
                 m_liveRoomViewModel.ManualPlayUrl.SetClipboard();
-                Notify.ShowMessageToast("已复制链接到剪切板");
+                NotificationShowExtensions.ShowMessageToast("已复制链接到剪切板");
             }
             else
             {
-                Notify.ShowMessageToast("没存储链接怎么复制... (｀-_ゝ-)");
+                NotificationShowExtensions.ShowMessageToast("没存储链接怎么复制... (｀-_ゝ-)");
             }
         }
 

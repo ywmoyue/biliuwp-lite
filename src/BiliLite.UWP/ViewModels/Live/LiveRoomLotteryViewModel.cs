@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Timers;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Live;
 using BiliLite.Models.Exceptions;
@@ -13,6 +9,11 @@ using BiliLite.ViewModels.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Timers;
 
 namespace BiliLite.ViewModels.Live
 {
@@ -75,7 +76,7 @@ namespace BiliLite.ViewModels.Live
                 if (AnchorLotteryInfo == null) return;
 
                 if (AnchorLotteryInfo.Time <= 0)
-                {          
+                {
                     AnchorLotteryDownTime = "已开奖";
                     AnchorLotteryInfo.GoawayTime--;
                 }
@@ -88,12 +89,12 @@ namespace BiliLite.ViewModels.Live
                     AnchorLotteryDownTime = "--:--";
                     return;
                 }
-                
+
                 if (AnchorLotteryInfo.Time > 0)
                 {
                     AnchorLotteryDownTime = TimeSpan.FromSeconds(AnchorLotteryInfo.Time).ToString(@"mm\:ss");
                 }
-                
+
                 AnchorLotteryInfo.Time--;
             });
         }
@@ -172,7 +173,7 @@ namespace BiliLite.ViewModels.Live
             }
             catch (Exception ex)
             {
-                Notify.ShowMessageToast("加载主播抽奖信息失败");
+                NotificationShowExtensions.ShowMessageToast("加载主播抽奖信息失败");
                 _logger.Log("加载主播抽奖信息失败", LogType.Error, ex);
             }
         }

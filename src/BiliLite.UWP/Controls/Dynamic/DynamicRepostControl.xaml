@@ -2,40 +2,49 @@
     x:Class="BiliLite.Controls.DynamicRepostControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BiliLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BiliLite.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignWidth="400"
+    mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Dynamic/DynamicV2Template.xaml"/>
+                <ResourceDictionary Source="/Controls/Dynamic/DynamicV2Template.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
 
     <Grid>
-        <local:MyListView  SelectionMode="None"
-                           ItemsSource="{x:Bind Path=UserDynamicRepostViewModel.DynamicItems,Mode=OneWay}"
-                           CanLoadMore="{x:Bind Path=UserDynamicRepostViewModel.CanLoadMore,Mode=OneWay}"
-                           LoadMoreBottomOffset="0"
-                           LoadMoreCommand="{x:Bind Path=UserDynamicRepostViewModel.LoadMoreCommand}"
-                           ItemTemplateSelector="{StaticResource DynamicTemplateSelector}"
-                           IsItemClickEnabled="False">
+        <local:MyListView
+            CanLoadMore="{x:Bind Path=UserDynamicRepostViewModel.CanLoadMore, Mode=OneWay}"
+            IsItemClickEnabled="False"
+            ItemTemplateSelector="{StaticResource DynamicTemplateSelector}"
+            ItemsSource="{x:Bind Path=UserDynamicRepostViewModel.DynamicItems, Mode=OneWay}"
+            LoadMoreBottomOffset="0"
+            LoadMoreCommand="{x:Bind Path=UserDynamicRepostViewModel.LoadMoreCommand}"
+            SelectionMode="None">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                     <Setter Property="VerticalContentAlignment" Value="Stretch" />
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.Footer>
                 <Grid>
-                    <HyperlinkButton Visibility="{x:Bind Path=UserDynamicRepostViewModel.Loading,Mode=OneWay,Converter={StaticResource display}}" Foreground="Gray" HorizontalAlignment="Center"  Command="{x:Bind Path=UserDynamicRepostViewModel.LoadMoreCommand}">
+                    <HyperlinkButton
+                        HorizontalAlignment="Center"
+                        Command="{x:Bind Path=UserDynamicRepostViewModel.LoadMoreCommand}"
+                        Foreground="Gray"
+                        Visibility="{x:Bind Path=UserDynamicRepostViewModel.Loading, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                         <TextBlock>加载更多</TextBlock>
                     </HyperlinkButton>
-                    <ProgressRing IsActive="True" HorizontalAlignment="Center" Visibility="{x:Bind Path=UserDynamicRepostViewModel.Loading,Mode=OneWay}"></ProgressRing>
+                    <muxc:ProgressRing
+                        HorizontalAlignment="Center"
+                        IsActive="True"
+                        Visibility="{x:Bind Path=UserDynamicRepostViewModel.Loading, Mode=OneWay}" />
                 </Grid>
             </ListView.Footer>
         </local:MyListView>

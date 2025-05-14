@@ -1,27 +1,27 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Windows.Networking.BackgroundTransfer;
+﻿using AutoMapper;
 using BiliLite.Extensions;
-using BiliLite.ViewModels.Download;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Download;
+using BiliLite.Models.Databases;
 using BiliLite.Models.Download;
+using BiliLite.Modules;
+using BiliLite.ViewModels.Download;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Windows.Networking.BackgroundTransfer;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
-using BiliLite.Models.Common.Download;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using AutoMapper;
-using BiliLite.Models.Databases;
-using BiliLite.Modules;
-using Microsoft.EntityFrameworkCore;
-using Path = System.IO.Path;
 
 namespace BiliLite.Services
 {
@@ -97,7 +97,7 @@ namespace BiliLite.Services
                 }
                 var guid = downloadOperation.Guid.ToString();
                 var item = m_downloadPageViewModel.Downloadings.FirstOrDefault(x => x.Items.FirstOrDefault(y => y.GUID == guid) != null);
-                await Notify.ShowDialog("下载出现问题", $"失败视频:{item.Title ?? ""} {item.EpisodeTitle ?? ""}\r\n" + ex.Message);
+                await NotificationShowExtensions.ShowMessageDialog("下载出现问题", $"失败视频:{item.Title ?? ""} {item.EpisodeTitle ?? ""}\r\n" + ex.Message);
                 // TODO: 启用重试策略
             }
             finally
@@ -164,7 +164,7 @@ namespace BiliLite.Services
                 {
                     if (success && SettingService.GetValue<bool>(SettingConstants.Download.SEND_TOAST, false))
                     {
-                        Notify.ShowMessageToast("《" + item.Title + " " + item.EpisodeTitle + "》下载完成");
+                        NotificationShowExtensions.ShowMessageToast("《" + item.Title + " " + item.EpisodeTitle + "》下载完成");
                     }
 
                     m_downloadPageViewModel.Downloadings.Remove(item);
@@ -184,7 +184,7 @@ namespace BiliLite.Services
         {
             try
             {
-                if (!await Notify.ShowDialog("取消任务", "确定要取消任务吗?"))
+                if (!await NotificationShowExtensions.ShowMessageDialog("取消任务", "确定要取消任务吗?"))
                 {
                     return;
                 }
@@ -231,7 +231,7 @@ namespace BiliLite.Services
         private async void DeleteAll()
         {
             if (m_downloadPageViewModel.Downloadings.Count == 0) return;
-            if (!await Notify.ShowDialog("取消任务", "确定要取消全部任务吗?"))
+            if (!await NotificationShowExtensions.ShowMessageDialog("取消任务", "确定要取消全部任务吗?"))
             {
                 return;
             }
@@ -310,7 +310,7 @@ namespace BiliLite.Services
         {
             var downloadedDtos = m_biliLiteDbContext.DownloadedItems
                 .Include(x => x.Epsidoes)
-                .OrderByDescending(x=>x.UpdateTime)
+                .OrderByDescending(x => x.UpdateTime)
                 .ToList();
             var downloadedItems = m_mapper.Map<List<DownloadedItem>>(downloadedDtos);
 
@@ -785,13 +785,13 @@ namespace BiliLite.Services
             }
         }
 
-        public async Task AddOtherTracksToDownloadedSubItemIndex(DownloadInfo info,DownloadSaveEpisodeInfo downloadSaveEpisodeInfo)
+        public async Task AddOtherTracksToDownloadedSubItemIndex(DownloadInfo info, DownloadSaveEpisodeInfo downloadSaveEpisodeInfo)
         {
             var downloadedSubItemDTO = await m_biliLiteDbContext.DownloadedSubItems.FirstOrDefaultAsync(x => x.CID == info.CID);
 
             foreach (var item in info.Urls)
             {
-                var paths = downloadedSubItemDTO.Paths; 
+                var paths = downloadedSubItemDTO.Paths;
                 paths.Add(Path.Combine(downloadSaveEpisodeInfo.Path, item.FileName));
                 downloadedSubItemDTO.Paths = paths;
             }

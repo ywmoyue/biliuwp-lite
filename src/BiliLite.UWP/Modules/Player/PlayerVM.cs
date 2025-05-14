@@ -1,18 +1,19 @@
-﻿using BiliLite.Models.Requests.Api;
+﻿using Atelier39;
+using Bilibili.Tv.Interfaces.Dm.V1;
+using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
+using BiliLite.Models.Common;
+using BiliLite.Models.Common.Video;
+using BiliLite.Models.Common.Video.PlayUrlInfos;
+using BiliLite.Models.Requests.Api;
 using BiliLite.Modules.Player.Playurl;
+using BiliLite.Services;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Atelier39;
-using Bilibili.Tv.Interfaces.Dm.V1;
-using BiliLite.Extensions;
-using BiliLite.Models.Common;
-using BiliLite.Services;
-using BiliLite.Models.Common.Video;
-using BiliLite.Models.Common.Video.PlayUrlInfos;
 
 namespace BiliLite.Modules
 {
@@ -72,7 +73,7 @@ namespace BiliLite.Modules
             catch (Exception ex)
             {
                 var handel = HandelError<PlayerVM>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
         }
         public async Task<PlayerInfo> GetPlayInfo(string aid, string cid)
@@ -147,7 +148,7 @@ namespace BiliLite.Modules
             }
             catch (Exception ex)
             {
-                Notify.ShowMessageToast("弹幕加载失败:" + ex.Message);
+                NotificationShowExtensions.ShowMessageToast("弹幕加载失败:" + ex.Message);
                 logger.Log("grpc弹幕加载失败", LogType.Fatal, ex);
             }
             return danmuList;
@@ -200,7 +201,7 @@ namespace BiliLite.Modules
             }
             catch (Exception ex)
             {
-                Notify.ShowMessageToast("弹幕加载失败:" + ex.Message);
+                NotificationShowExtensions.ShowMessageToast("弹幕加载失败:" + ex.Message);
                 logger.Log("grpc弹幕加载失败", LogType.Fatal, ex);
             }
             return danmuList;
@@ -210,14 +211,14 @@ namespace BiliLite.Modules
         {
             try
             {
-                if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+                if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
                 {
-                    Notify.ShowMessageToast("请先登录");
+                    NotificationShowExtensions.ShowMessageToast("请先登录");
                     return false;
                 }
                 if (text == null || text.Trim().Length == 0)
                 {
-                    Notify.ShowMessageToast("弹幕文本不能为空");
+                    NotificationShowExtensions.ShowMessageToast("弹幕文本不能为空");
                     return false;
                 }
                 var result = await PlayerAPI.SendDanmu(aid, cid, color, text, position, mode).Request();
@@ -226,25 +227,25 @@ namespace BiliLite.Modules
                     var obj = result.GetJObject();
                     if (obj["code"].ToInt32() == 0)
                     {
-                        Notify.ShowMessageToast("弹幕成功发射");
+                        NotificationShowExtensions.ShowMessageToast("弹幕成功发射");
                         return true;
                     }
                     else
                     {
-                        Notify.ShowMessageToast("弹幕发送失败" + obj["message"].ToString());
+                        NotificationShowExtensions.ShowMessageToast("弹幕发送失败" + obj["message"].ToString());
                         return false;
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast("弹幕发送失败" + result.message);
+                    NotificationShowExtensions.ShowMessageToast("弹幕发送失败" + result.message);
                     return false;
                 }
             }
             catch (Exception ex)
             {
                 var result = HandelError<object>(ex);
-                Notify.ShowMessageToast(result.message);
+                NotificationShowExtensions.ShowMessageToast(result.message);
                 return false;
             }
 

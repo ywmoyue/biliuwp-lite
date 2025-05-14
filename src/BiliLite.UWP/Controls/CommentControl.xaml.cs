@@ -1,24 +1,24 @@
-﻿using System;
-using System.Linq;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using BiliLite.Pages;
-using static BiliLite.Models.Requests.Api.CommentApi;
-using BiliLite.Dialogs;
+﻿using BiliLite.Controls.Dialogs;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Comment;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests.Api;
+using BiliLite.Pages;
 using BiliLite.Services;
 using BiliLite.ViewModels;
 using BiliLite.ViewModels.Comment;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Uwp.UI.Controls;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using static BiliLite.Models.Requests.Api.CommentApi;
 using IMapper = AutoMapper.IMapper;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
@@ -122,7 +122,7 @@ namespace BiliLite.Controls
             catch (Exception ex)
             {
                 _logger.Error(ex.Message, ex);
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
             }
             finally
             {
@@ -193,7 +193,7 @@ namespace BiliLite.Controls
             }
             else
             {
-                Notify.ShowMessageToast("全部加载完了...");
+                NotificationShowExtensions.ShowMessageToast("全部加载完了...");
             }
         }
 
@@ -254,7 +254,7 @@ namespace BiliLite.Controls
             catch (Exception ex)
             {
                 _logger.Error(ex.Message, ex);
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
             }
             finally
             {
@@ -264,9 +264,9 @@ namespace BiliLite.Controls
 
         private async void DoLike(CommentViewModel data)
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请登录后再执行操作");
+                NotificationShowExtensions.ShowMessageToast("请登录后再执行操作");
                 return;
             }
             try
@@ -302,7 +302,7 @@ namespace BiliLite.Controls
             catch (Exception ex)
             {
                 _logger.Error(ex.Message, ex);
-                Notify.ShowMessageToast($"操作失败:{ex.Message}");
+                NotificationShowExtensions.ShowMessageToast($"操作失败:{ex.Message}");
             }
         }
 
@@ -384,14 +384,14 @@ namespace BiliLite.Controls
 
         private async void ReplyComment(CommentViewModel m)
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请登录后再执行操作");
+                NotificationShowExtensions.ShowMessageToast("请登录后再执行操作");
                 return;
             }
             if (m.ReplyText.Trim().Length == 0)
             {
-                Notify.ShowMessageToast("不能发送空白信息");
+                NotificationShowExtensions.ShowMessageToast("不能发送空白信息");
                 return;
             }
             try
@@ -402,7 +402,7 @@ namespace BiliLite.Controls
                     JObject obj = JObject.Parse(re.results);
                     if (obj["code"].ToInt32() == 0)
                     {
-                        Notify.ShowMessageToast("回复评论成功");
+                        NotificationShowExtensions.ShowMessageToast("回复评论成功");
                         m.LoadPage = 1;
                         m.Replies.Clear();
                         m.ReplyText = "";
@@ -410,18 +410,18 @@ namespace BiliLite.Controls
                     }
                     else
                     {
-                        Notify.ShowMessageToast(obj["message"].ToString());
+                        NotificationShowExtensions.ShowMessageToast(obj["message"].ToString());
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(re.message);
+                    NotificationShowExtensions.ShowMessageToast(re.message);
                 }
 
             }
             catch (Exception)
             {
-                Notify.ShowMessageToast("发送评论失败");
+                NotificationShowExtensions.ShowMessageToast("发送评论失败");
                 // throw;
             }
 
@@ -435,14 +435,14 @@ namespace BiliLite.Controls
 
         private async void ReplyAt(CommentViewModel m)
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请登录后再执行操作");
+                NotificationShowExtensions.ShowMessageToast("请登录后再执行操作");
                 return;
             }
             if (m.ReplyText.Trim().Length == 0)
             {
-                Notify.ShowMessageToast("不能发送空白信息");
+                NotificationShowExtensions.ShowMessageToast("不能发送空白信息");
                 return;
             }
             try
@@ -461,7 +461,7 @@ namespace BiliLite.Controls
                     JObject obj = JObject.Parse(re.results);
                     if (obj["code"].ToInt32() == 0)
                     {
-                        Notify.ShowMessageToast("回复评论成功");
+                        NotificationShowExtensions.ShowMessageToast("回复评论成功");
                         m.LoadPage = 1;
                         m.Replies.Clear();
                         m.ReplyText = "";
@@ -469,17 +469,17 @@ namespace BiliLite.Controls
                     }
                     else
                     {
-                        Notify.ShowMessageToast(obj["message"].ToString());
+                        NotificationShowExtensions.ShowMessageToast(obj["message"].ToString());
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(re.message);
+                    NotificationShowExtensions.ShowMessageToast(re.message);
                 }
             }
             catch (Exception)
             {
-                Notify.ShowMessageToast("发送评论失败");
+                NotificationShowExtensions.ShowMessageToast("发送评论失败");
                 // throw;
             }
         }
@@ -504,9 +504,9 @@ namespace BiliLite.Controls
             {
                 return;
             }
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请登录后再执行操作");
+                NotificationShowExtensions.ShowMessageToast("请登录后再执行操作");
                 return;
             }
 
@@ -526,22 +526,22 @@ namespace BiliLite.Controls
                     JObject obj = JObject.Parse(re.results);
                     if (obj["code"].ToInt32() == 0)
                     {
-                        Notify.ShowMessageToast("评论删除成功");
+                        NotificationShowExtensions.ShowMessageToast("评论删除成功");
                         RefreshComment();
                     }
                     else
                     {
-                        Notify.ShowMessageToast(obj["message"].ToString());
+                        NotificationShowExtensions.ShowMessageToast(obj["message"].ToString());
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(re.message);
+                    NotificationShowExtensions.ShowMessageToast(re.message);
                 }
             }
             catch (Exception)
             {
-                Notify.ShowMessageToast("删除评论失败");
+                NotificationShowExtensions.ShowMessageToast("删除评论失败");
                 // throw;
             }
 
@@ -562,7 +562,7 @@ namespace BiliLite.Controls
         private async void BtnOpenSendComment_Click(object sender, RoutedEventArgs e)
         {
             SendCommentDialog sendCommentDialog = new SendCommentDialog(m_loadCommentInfo.Oid, (CommentType)m_loadCommentInfo.CommentMode);
-            await sendCommentDialog.ShowAsync();
+            await NotificationShowExtensions.ShowContentDialog(sendCommentDialog);
         }
 
         private void BtnRefresh_Click(object sender, RoutedEventArgs e)
@@ -574,11 +574,11 @@ namespace BiliLite.Controls
         {
             if (m_disableShowPicture)
             {
-                Notify.ShowMessageToast("暂不支持查看图片");
+                NotificationShowExtensions.ShowMessageToast("暂不支持查看图片");
                 return;
             }
             var notePicture = e.ClickedItem as NotePicture;
-            var notePicturesView = sender as AdaptiveGridView;
+            var notePicturesView = sender as GridView;
             if (notePicture == null || notePicturesView == null) return;
             var comment = notePicturesView.DataContext as CommentViewModel;
             if (comment == null) return;

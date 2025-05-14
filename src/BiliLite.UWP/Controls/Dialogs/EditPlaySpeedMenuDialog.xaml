@@ -1,0 +1,90 @@
+﻿<ContentDialog
+    x:Class="BiliLite.Controls.Dialogs.EditPlaySpeedMenuDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BiliLite.Controls.Dialogs"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:player="using:BiliLite.Models.Common.Player"
+    Title="自定义播放倍速"
+    Background="{ThemeResource SystemControlAcrylicElementBrush}"
+    CloseButtonStyle="{StaticResource DefaultButtonStyle}"
+    CloseButtonText="取消"
+    CornerRadius="{StaticResource OverlayCornerRadius}"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
+    PrimaryButtonText="确定"
+    SecondaryButtonStyle="{StaticResource DefaultButtonStyle}"
+    mc:Ignorable="d">
+
+    <Grid>
+        <ListView
+            Margin="-16,0,0,80"
+            IsWin10:ItemContainerStyle="{StaticResource LocalListViewItemStyle}"
+            ItemsSource="{x:Bind m_viewModel.PlaySpeedMenuItems, Mode=OneWay}"
+            SelectionMode="None">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="player:PlaySpeedMenuItem">
+                    <Grid>
+                        <TextBlock
+                            MinWidth="{Binding ElementName=DisposableBtnAddPlaySpeed, Path=ActualWidth}"
+                            Margin="5,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Text="{x:Bind Content}"
+                            TextAlignment="Center" />
+                        <Button
+                            x:Name="BtnRemovePlaySpeed"
+                            HorizontalAlignment="Right"
+                            IsEnabled="{x:Bind IsDeletable}"
+                            Tapped="BtnRemovePlaySpeed_OnTapped">
+                            移除
+                        </Button>
+
+                        <Button
+                            x:Name="DisposableBtnAddPlaySpeed"
+                            Margin="0,0,5,0"
+                            HorizontalAlignment="Center"
+                            IsEnabled="False"
+                            Opacity="0"
+                            Style="{StaticResource AccentButtonStyle}">
+                            添加
+                        </Button>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Grid VerticalAlignment="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Button
+                x:Name="BtnAddPlaySpeed"
+                Margin="0,0,5,0"
+                Style="{StaticResource AccentButtonStyle}"
+                Tapped="BtnAddPlaySpeed_OnTapped">
+                添加
+            </Button>
+            <muxc:NumberBox
+                Grid.Column="1"
+                MinWidth="0.01"
+                Maximum="20"
+                Text="{x:Bind m_viewModel.AddPlaySpeedValue, Mode=TwoWay}" />
+            <Button
+                Grid.Row="1"
+                Grid.ColumnSpan="2"
+                Margin="0,10,0,0"
+                HorizontalAlignment="Stretch"
+                Click="BtnBackToDefault_OnClick">
+                恢复默认
+            </Button>
+        </Grid>
+    </Grid>
+</ContentDialog>
