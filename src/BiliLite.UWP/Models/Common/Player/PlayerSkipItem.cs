@@ -2,8 +2,8 @@
 {
     public class PlayerSkipItem
     {
-        public long Start { get; set; }
+        public double Start { get; set; }
 
-        public long End { get; set; }
+        public double End { get; set; }
     }
 }

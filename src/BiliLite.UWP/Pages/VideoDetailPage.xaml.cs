@@ -272,7 +272,8 @@ namespace BiliLite.Pages
                     title = item.Part.StartsWith(titlePage) ? item.Part : titlePage + " " + item.Part,
                     TitlePage = titlePage,
                     TitlePart = item.Part.TrimStart(' '),
-                    area = m_viewModel.VideoInfo.Title.ParseArea(m_viewModel.VideoInfo.Owner.Mid)
+                    area = m_viewModel.VideoInfo.Title.ParseArea(m_viewModel.VideoInfo.Owner.Mid),
+                    SegmentSkip = m_viewModel.SponsorBlockList
                 });
                 i++;
             }

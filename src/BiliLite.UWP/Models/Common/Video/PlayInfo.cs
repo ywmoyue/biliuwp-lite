@@ -1,6 +1,8 @@
 ﻿//https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
+using BiliLite.Models.Common.Player;
 using BiliLite.Models.Common.Season;
+using System.Collections.Generic;
 
 namespace BiliLite.Models.Common.Video
 {
@@ -66,5 +68,7 @@ namespace BiliLite.Models.Common.Video
         public bool ShowTitlePart => TitlePage != null;
 
         public EpisodeSkip EpisodeSkip { get; set; }
+
+        public List<PlayerSkipItem> SegmentSkip { get; set; }
     }
 }

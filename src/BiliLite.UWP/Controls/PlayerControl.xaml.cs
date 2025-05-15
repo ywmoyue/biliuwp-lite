@@ -174,7 +174,7 @@ namespace BiliLite.Controls
             danmuTimer.Interval = TimeSpan.FromSeconds(1);
             danmuTimer.Tick += DanmuTimer_Tick;
 
-            m_positionTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1) };
+            m_positionTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(0.02) };
             m_positionTimer.Tick += PositionTimer_Tick;
             m_autoSkipOpEdFlag = SettingService.GetValue(SettingConstants.Player.AUTO_SKIP_OP_ED,
                 SettingConstants.Player.DEFAULT_AUTO_SKIP_OP_ED);
@@ -894,21 +894,35 @@ namespace BiliLite.Controls
 
         private void PositionTimer_Tick(object sender, object e)
         {
+            if (!IsPlaying) return;
             m_viewModel.Position = Player.Position;
-            PluginCenter.BroadcastPosition(this, Player.Position);
-            if (!m_autoSkipOpEdFlag) return;
+            //PluginCenter.BroadcastPosition(this, Player.Position);
             if (CurrentPlayItem == null) return;
-            if (CurrentPlayItem.EpisodeSkip == null) return;
-            SkipSection(CurrentPlayItem.EpisodeSkip.Op, "SkipOp", "自动跳过OP");
-            SkipSection(CurrentPlayItem.EpisodeSkip.Ed, "SkipEd", "自动跳过ED");
+            if (CurrentPlayItem.EpisodeSkip != null)
+            {
+                if (!m_autoSkipOpEdFlag) return;
+                SkipSection(CurrentPlayItem.EpisodeSkip.Op, "SkipOp", "自动跳过OP");
+                SkipSection(CurrentPlayItem.EpisodeSkip.Ed, "SkipEd", "自动跳过ED");
+            }
+
+            if (CurrentPlayItem.SegmentSkip != null)
+            {
+                foreach (var seg in CurrentPlayItem.SegmentSkip)
+                {
+                    SkipSection(seg, "SkipSponsor", "自动跳过恰饭");
+                }
+            }
         }
 
         private void SkipSection(PlayerSkipItem section, string toastId, string message)
         {
             if (section == null) return;
-            if (!IsSectionValid(section) || (int)Player.Position != section.Start) return;
+            var gap = Math.Abs(Player.Position - section.Start);
+            if (!IsSectionValid(section) || gap > 0.1) return;
             m_playerToastService.Show(toastId, message);
+            Pause();
             SetPosition(section.End);
+            Player.Play();
         }
 
         private bool IsSectionValid(PlayerSkipItem section)
