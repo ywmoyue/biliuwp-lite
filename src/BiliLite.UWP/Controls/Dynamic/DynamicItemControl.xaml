@@ -2,79 +2,153 @@
     x:Class="BiliLite.Controls.Dynamic.DynamicItemControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BiliLite.Controls.Dynamic"
+    xmlns:controls="using:BiliLite.Controls.Dynamic"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fa="using:FontAwesome5"
+    xmlns:local="using:BiliLite.Controls.Dynamic"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400"
-    xmlns:controls="using:BiliLite.Controls.Dynamic"
-     xmlns:fa="using:FontAwesome5" xmlns:converters="using:BiliLite.Converters">
+    mc:Ignorable="d">
     <UserControl.Resources>
-        <converters:CountOrTextConvert x:Name="countConvert"></converters:CountOrTextConvert>
-        <converters:ColorConvert x:Name="colorConvert"></converters:ColorConvert>
-        <Style TargetType="HyperlinkButton">
-            <Setter Property="Foreground" Value="#178bcf" />
-        </Style>
+        <Style BasedOn="{StaticResource DefaultHyperlinkButtonStyle}" TargetType="HyperlinkButton" />
     </UserControl.Resources>
-    <StackPanel CornerRadius="8" Padding="12" Background="{ThemeResource CardColor}">
-        <!--用户信息-->
-        <Grid Height="64" Visibility="{x:Bind Path=ViewModel.IsRepost,Converter={StaticResource display},Mode=OneWay}"  >
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="Auto"/>
+    <StackPanel
+        Padding="12"
+        Background="{ThemeResource ControlFillColorDefaultBrush}"
+        CornerRadius="{StaticResource OverlayCornerRadius}">
+        <!--  用户信息  -->
+        <Grid Height="64" Visibility="{x:Bind Path=ViewModel.IsRepost, Converter={StaticResource DisplayConvert}, Mode=OneWay}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <HyperlinkButton Visibility="{x:Bind Path=ViewModel.IsRepost,Converter={StaticResource display},Mode=OneWay}" Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.UserCommand,Mode=OneWay}" CommandParameter="{x:Bind Path=ViewModel.Mid,Mode=OneWay}" Padding="0" VerticalAlignment="Top">
-                <Grid >
-                    <Ellipse Width="40"  Height="40" Stroke="WhiteSmoke" StrokeThickness="1">
+            <HyperlinkButton
+                Padding="0"
+                VerticalAlignment="Top"
+                Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.UserCommand, Mode=OneWay}"
+                CommandParameter="{x:Bind Path=ViewModel.Mid, Mode=OneWay}"
+                Visibility="{x:Bind Path=ViewModel.IsRepost, Converter={StaticResource DisplayConvert}, Mode=OneWay}">
+                <Grid>
+                    <Ellipse
+                        Width="40"
+                        Height="40"
+                        Stroke="WhiteSmoke"
+                        StrokeThickness="1">
                         <Ellipse.Fill>
-                            <ImageBrush ImageSource="{x:Bind Path=ViewModel.Photo,Mode=OneWay,Converter={StaticResource imageConvert2},ConverterParameter='64h'}"></ImageBrush>
+                            <ImageBrush ImageSource="{x:Bind Path=ViewModel.Photo, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='64h'}" />
                         </Ellipse.Fill>
                     </Ellipse>
-                    <Image Width="56" Height="56" Source="{x:Bind Path=ViewModel.Pendant,Mode=OneWay}"></Image>
-                    <Image Width="16" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0 0 4 4" Height="16" Source="{x:Bind Path=ViewModel.Verify,Mode=OneWay}"></Image>
+                    <Image
+                        Width="56"
+                        Height="56"
+                        Source="{x:Bind Path=ViewModel.Pendant, Mode=OneWay}" />
+                    <Image
+                        Width="16"
+                        Height="16"
+                        Margin="0,0,4,4"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Source="{x:Bind Path=ViewModel.Verify, Mode=OneWay}" />
                 </Grid>
             </HyperlinkButton>
-            <HyperlinkButton Grid.Column="1" Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.UserCommand,Mode=OneWay}" CommandParameter="{x:Bind Path=ViewModel.Mid,Mode=OneWay}" Padding="12,0,0,0" VerticalAlignment="Top" >
-                <Grid Height="56" >
-                    <StackPanel VerticalAlignment="Center" >
-                        <StackPanel Orientation="Horizontal" >
-                            <Border Visibility="{x:Bind Path=ViewModel.ShowTag,Mode=OneWay}" Margin="0 0 4 0" Background="{ThemeResource SystemAccentColor}" CornerRadius="2">
-                                <TextBlock Foreground="White" FontSize="12" Margin="4 2" Text="{x:Bind Path=ViewModel.TagName,Mode=OneWay}"></TextBlock>
+            <HyperlinkButton
+                Grid.Column="1"
+                Padding="12,0"
+                VerticalAlignment="Top"
+                Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.UserCommand, Mode=OneWay}"
+                CommandParameter="{x:Bind Path=ViewModel.Mid, Mode=OneWay}">
+                <Grid Height="56">
+                    <StackPanel VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal">
+                            <Border
+                                Margin="0,0,4,0"
+                                Background="{ThemeResource SystemAccentColor}"
+                                CornerRadius="{StaticResource ControlCornerRadius}"
+                                Visibility="{x:Bind Path=ViewModel.ShowTag, Mode=OneWay}">
+                                <TextBlock
+                                    Margin="4,2"
+                                    FontSize="12"
+                                    Foreground="White"
+                                    Text="{x:Bind Path=ViewModel.TagName, Mode=OneWay}" />
                             </Border>
-                            <TextBlock Text="{x:Bind Path=ViewModel.UserName,Mode=OneWay}" Foreground="DeepPink"  Opacity=".8" Visibility="{x:Bind Path=ViewModel.IsYearVip,Mode=OneWay}"></TextBlock>
-                            <TextBlock Text="{x:Bind Path=ViewModel.UserName,Mode=OneWay}" Foreground="{ThemeResource TextColor}" Visibility="{x:Bind Path=ViewModel.IsYearVip,Mode=OneWay,Converter={StaticResource display}}"></TextBlock>
+                            <TextBlock
+                                Foreground="{ThemeResource SystemAccentColor}"
+                                Opacity=".8"
+                                Text="{x:Bind Path=ViewModel.UserName, Mode=OneWay}"
+                                Visibility="{x:Bind Path=ViewModel.IsYearVip, Mode=OneWay}" />
+                            <TextBlock
+                                Foreground="{ThemeResource TextColor}"
+                                Text="{x:Bind Path=ViewModel.UserName, Mode=OneWay}"
+                                Visibility="{x:Bind Path=ViewModel.IsYearVip, Mode=OneWay, Converter={StaticResource DisplayConvert}}" />
                         </StackPanel>
-                        <TextBlock Margin="0 4 0 0" FontSize="12" Foreground="Gray" ToolTipService.ToolTip="{x:Bind Path=ViewModel.Datetime,Mode=OneWay}" Text="{x:Bind Path=ViewModel.Time,Mode=OneWay}"></TextBlock>
+                        <TextBlock
+                            Margin="0,4,0,0"
+                            FontSize="12"
+                            Foreground="Gray"
+                            Text="{x:Bind Path=ViewModel.Time, Mode=OneWay}"
+                            ToolTipService.ToolTip="{x:Bind Path=ViewModel.Datetime, Mode=OneWay}" />
                     </StackPanel>
                 </Grid>
             </HyperlinkButton>
-            <Grid Grid.Column="1" HorizontalAlignment="Right" ToolTipService.ToolTip="{x:Bind Path=ViewModel.DecorateName,Mode=OneWay}" Visibility="{x:Bind Path=ViewModel.ShowDecorate,Mode=OneWay}" VerticalAlignment="Center">
-                <Image Height="44" Source="{x:Bind Path=ViewModel.DecorateImage,Mode=OneWay,Converter={StaticResource imageConvert2},ConverterParameter='64h.png'}"></Image>
-                <TextBlock FontSize="12" Visibility="{x:Bind Path=ViewModel.ShowDecorateText,Mode=OneWay}" FontFamily="{StaticResource FansNum}"  VerticalAlignment="Center" Margin="0 0 40 0" HorizontalAlignment="Right" Foreground="{x:Bind Path=ViewModel.DecorateColor,Mode=OneWay,Converter={StaticResource colorConvert}}"  Text="{x:Bind Path=ViewModel.DecorateText,Mode=OneWay}"></TextBlock>
+            <Grid
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                ToolTipService.ToolTip="{x:Bind Path=ViewModel.DecorateName, Mode=OneWay}"
+                Visibility="{x:Bind Path=ViewModel.ShowDecorate, Mode=OneWay}">
+                <Image Height="44" Source="{x:Bind Path=ViewModel.DecorateImage, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='64h.png'}" />
+                <TextBlock
+                    Margin="0,0,40,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    FontFamily="{StaticResource FansNum}"
+                    FontSize="12"
+                    Foreground="{x:Bind Path=ViewModel.DecorateColor, Mode=OneWay, Converter={StaticResource ColorConvert}}"
+                    Text="{x:Bind Path=ViewModel.DecorateText, Mode=OneWay}"
+                    Visibility="{x:Bind Path=ViewModel.ShowDecorateText, Mode=OneWay}" />
             </Grid>
-            <AppBarButton Background="Transparent" Style="{StaticResource AppBarButtonNoChevronStyle}" Width="48" Height="48" VerticalAlignment="Center" Margin="8,0,0,0" Grid.Column="2" Icon="More" Foreground="Gray">
+            <AppBarButton
+                Grid.Column="2"
+                Width="48"
+                Height="48"
+                Margin="8,0,0,0"
+                VerticalAlignment="Center"
+                Background="Transparent"
+                Foreground="Gray"
+                Icon="More"
+                Style="{StaticResource AppBarButtonNoChevronStyle}">
                 <AppBarButton.Flyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem Text="打开详情" Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.DetailCommand,Mode=OneWay}" CommandParameter="{x:Bind Path=ViewModel,Mode=OneWay}">
+                        <MenuFlyoutItem
+                            Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.DetailCommand, Mode=OneWay}"
+                            CommandParameter="{x:Bind Path=ViewModel, Mode=OneWay}"
+                            Text="打开详情">
                             <MenuFlyoutItem.Icon>
-                                <SymbolIcon Symbol="OpenWith"></SymbolIcon>
+                                <SymbolIcon Symbol="OpenWith" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="网页打开" Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.WebCommand,Mode=OneWay}" CommandParameter="{x:Bind Path=ViewModel.DynamicUrl,Mode=OneWay}">
+                        <MenuFlyoutItem
+                            Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.WebCommand, Mode=OneWay}"
+                            CommandParameter="{x:Bind Path=ViewModel.DynamicUrl, Mode=OneWay}"
+                            Text="网页打开">
                             <MenuFlyoutItem.Icon>
-                                <SymbolIcon Symbol="World"></SymbolIcon>
+                                <SymbolIcon Symbol="World" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                         <MenuFlyoutItem Text="举报">
                             <MenuFlyoutItem.Icon>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7BA;" />
+                                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE7BA;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="删除" Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.DeleteCommand,Mode=OneWay}" CommandParameter="{x:Bind Path=ViewModel,Mode=OneWay}" Visibility="{x:Bind Path=ViewModel.IsSelf,Mode=OneWay}">
+                        <MenuFlyoutItem
+                            Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.DeleteCommand, Mode=OneWay}"
+                            CommandParameter="{x:Bind Path=ViewModel, Mode=OneWay}"
+                            Text="删除"
+                            Visibility="{x:Bind Path=ViewModel.IsSelf, Mode=OneWay}">
                             <MenuFlyoutItem.Icon>
-                                <SymbolIcon Symbol="Delete"></SymbolIcon>
+                                <SymbolIcon Symbol="Delete" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                     </MenuFlyout>
@@ -82,62 +156,104 @@
             </AppBarButton>
         </Grid>
 
-        <HyperlinkButton HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" Visibility="{x:Bind Path=ViewModel.IsRepost,Mode=OneWay}" Padding="0"  Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.UserCommand,Mode=OneWay}" CommandParameter="{x:Bind Path=ViewModel.Mid,Mode=OneWay}">
-            <Grid >
-                <StackPanel VerticalAlignment="Center"  Orientation="Horizontal" >
-                    <Ellipse Width="24" Height="24" Margin="0 0 8 0">
+        <HyperlinkButton
+            Padding="0"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Stretch"
+            Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.UserCommand, Mode=OneWay}"
+            CommandParameter="{x:Bind Path=ViewModel.Mid, Mode=OneWay}"
+            Visibility="{x:Bind Path=ViewModel.IsRepost, Mode=OneWay}">
+            <Grid>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <Ellipse
+                        Width="24"
+                        Height="24"
+                        Margin="0,0,8,0">
                         <Ellipse.Fill>
-                            <ImageBrush ImageSource="{x:Bind Path=ViewModel.Photo,Mode=OneWay,Converter={StaticResource imageConvert2},ConverterParameter='64w'}"></ImageBrush>
+                            <ImageBrush ImageSource="{x:Bind Path=ViewModel.Photo, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='64w'}" />
                         </Ellipse.Fill>
                     </Ellipse>
                     <TextBlock VerticalAlignment="Center" Foreground="#178bcf">
-                    <Run Text="{x:Bind Path=ViewModel.UserName,Mode=OneWay}"></Run>
-                    <Run Text="{x:Bind Path=ViewModel.Tooltip,Mode=OneWay}" Foreground="Gray" FontSize="12"></Run>
+                        <Run Text="{x:Bind Path=ViewModel.UserName, Mode=OneWay}" />
+                        <Run
+                            FontSize="12"
+                            Foreground="Gray"
+                            Text="{x:Bind Path=ViewModel.Tooltip, Mode=OneWay}" />
                     </TextBlock>
                 </StackPanel>
-                <Button Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.DetailCommand,Mode=OneWay}" CommandParameter="{x:Bind Path=ViewModel,Mode=OneWay}" HorizontalAlignment="Right" Foreground="Gray" Background="Transparent" Visibility="{x:Bind Path=ViewModel.IsRepost,Mode=OneWay}">
-                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE17C;" />
+                <Button
+                    HorizontalAlignment="Right"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.DetailCommand, Mode=OneWay}"
+                    CommandParameter="{x:Bind Path=ViewModel, Mode=OneWay}"
+                    Foreground="Gray"
+                    Visibility="{x:Bind Path=ViewModel.IsRepost, Mode=OneWay}">
+                    <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE17C;" />
                 </Button>
             </Grid>
         </HyperlinkButton>
-            <!--内容-->
-        <ContentPresenter Visibility="{x:Bind Path=ViewModel.ShowContent,Mode=OneWay}" Margin="0 4"  Content="{x:Bind Path=ViewModel.Content,Mode=OneWay}"></ContentPresenter>
-            <!--卡片-->
-        <ContentPresenter  Content="{x:Bind Path=CardContent,Mode=OneWay}" Padding="0 4 0 0"></ContentPresenter>
-        <StackPanel Visibility="{x:Bind Path=ViewModel.IsRepost,Converter={StaticResource display},Mode=OneWay}" Margin="0 4 0 0" Orientation="Horizontal">
+        <!--  内容  -->
+        <ContentPresenter
+            Margin="0,4"
+            Content="{x:Bind Path=ViewModel.Content, Mode=OneWay}"
+            Visibility="{x:Bind Path=ViewModel.ShowContent, Mode=OneWay}" />
+        <!--  卡片  -->
+        <ContentPresenter Padding="0,4,0,0" Content="{x:Bind Path=CardContent, Mode=OneWay}" />
+        <StackPanel
+            Margin="0,4,0,0"
+            Orientation="Horizontal"
+            Visibility="{x:Bind Path=ViewModel.IsRepost, Converter={StaticResource DisplayConvert}, Mode=OneWay}">
             <StackPanel.Resources>
-                <Style TargetType="Button">
-                    <Setter Property="Margin" Value="0,8,12,0"/>
-                    <Setter Property="Height" Value="32"/>
-                    <Setter Property="Width" Value="96"/>
-                    <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="Foreground" Value="Gray"/>
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="CornerRadius" Value="4"/>
+                <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
+                    <Setter Property="Margin" Value="0,8,12,0" />
+                    <Setter Property="Height" Value="32" />
+                    <Setter Property="Width" Value="96" />
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="BorderThickness" Value="0" />
                 </Style>
             </StackPanel.Resources>
-            <Button Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.RepostCommand,Mode=OneWay}" CommandParameter="{x:Bind Path=ViewModel,Mode=OneWay}">
+            <Button Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.RepostCommand, Mode=OneWay}" CommandParameter="{x:Bind Path=ViewModel, Mode=OneWay}">
                 <StackPanel Orientation="Horizontal">
-                    <fa:FontAwesome Icon="Solid_Share" Margin="0 2 0 0" FontSize="14"></fa:FontAwesome>
-                    <TextBlock Margin="8 0" Text="{x:Bind Path=ViewModel.ShareCount,Mode=OneWay,Converter={StaticResource countConvert},ConverterParameter='转发'}"></TextBlock>
+                    <fa:FontAwesome
+                        Margin="0,2,0,0"
+                        FontSize="14"
+                        Icon="Solid_Share" />
+                    <TextBlock Margin="8,0,0,0" Text="{x:Bind Path=ViewModel.ShareCount, Mode=OneWay, Converter={StaticResource CountOrTextConvert}, ConverterParameter='转发'}" />
                 </StackPanel>
             </Button>
-            <Button Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.CommentCommand,Mode=OneWay}" CommandParameter="{x:Bind Path=ViewModel,Mode=OneWay}">
+            <Button Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.CommentCommand, Mode=OneWay}" CommandParameter="{x:Bind Path=ViewModel, Mode=OneWay}">
                 <StackPanel Orientation="Horizontal">
-                    <fa:FontAwesome Icon="Regular_Comment" Margin="0 2 0 0" FontSize="14"></fa:FontAwesome>
-                    <TextBlock Margin="8 0" Text="{x:Bind Path=ViewModel.CommentCount,Mode=OneWay,Converter={StaticResource countConvert},ConverterParameter='评论'}"></TextBlock>
+                    <fa:FontAwesome
+                        Margin="0,2,0,0"
+                        FontSize="14"
+                        Icon="Regular_Comment" />
+                    <TextBlock Margin="8,0,0,0" Text="{x:Bind Path=ViewModel.CommentCount, Mode=OneWay, Converter={StaticResource CountOrTextConvert}, ConverterParameter='评论'}" />
                 </StackPanel>
             </Button>
-            <Button Visibility="{x:Bind Path=ViewModel.Liked,Mode=OneWay,Converter={StaticResource display}}" Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.LikeCommand,Mode=OneWay}" CommandParameter="{x:Bind Path=ViewModel,Mode=OneWay}">
+            <Button
+                Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.LikeCommand, Mode=OneWay}"
+                CommandParameter="{x:Bind Path=ViewModel, Mode=OneWay}"
+                Visibility="{x:Bind Path=ViewModel.Liked, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                 <StackPanel Orientation="Horizontal">
-                    <fa:FontAwesome Icon="Regular_ThumbsUp" Margin="0 2 0 0" FontSize="14"></fa:FontAwesome>
-                    <TextBlock Margin="8 0" Text="{x:Bind Path=ViewModel.LikeCount,Mode=OneWay,Converter={StaticResource countConvert},ConverterParameter='点赞'}"></TextBlock>
+                    <fa:FontAwesome
+                        Margin="0,2,0,0"
+                        FontSize="14"
+                        Icon="Regular_ThumbsUp" />
+                    <TextBlock Margin="8,0,0,0" Text="{x:Bind Path=ViewModel.LikeCount, Mode=OneWay, Converter={StaticResource CountOrTextConvert}, ConverterParameter='点赞'}" />
                 </StackPanel>
             </Button>
-            <Button Visibility="{x:Bind Path=ViewModel.Liked,Mode=OneWay}" Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.LikeCommand,Mode=OneWay}" CommandParameter="{x:Bind Path=ViewModel,Mode=OneWay}" Foreground="{ThemeResource SystemAccentColor}">
+            <Button
+                Command="{x:Bind Path=ViewModel.UserDynamicItemDisplayCommands.LikeCommand, Mode=OneWay}"
+                CommandParameter="{x:Bind Path=ViewModel, Mode=OneWay}"
+                Foreground="{ThemeResource SystemAccentColor}"
+                Visibility="{x:Bind Path=ViewModel.Liked, Mode=OneWay}">
                 <StackPanel Orientation="Horizontal">
-                    <fa:FontAwesome Icon="Regular_ThumbsUp" Margin="0 2 0 0" FontSize="14"></fa:FontAwesome>
-                    <TextBlock Margin="8 0" Text="{x:Bind Path=ViewModel.LikeCount,Mode=OneWay,Converter={StaticResource countConvert},ConverterParameter='点赞'}"></TextBlock>
+                    <fa:FontAwesome
+                        Margin="0,2,0,0"
+                        FontSize="14"
+                        Icon="Regular_ThumbsUp" />
+                    <TextBlock Margin="8,0,0,0" Text="{x:Bind Path=ViewModel.LikeCount, Mode=OneWay, Converter={StaticResource CountOrTextConvert}, ConverterParameter='点赞'}" />
                 </StackPanel>
             </Button>
         </StackPanel>

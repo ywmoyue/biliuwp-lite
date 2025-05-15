@@ -7,6 +7,9 @@ using BiliLite.Models.Common.Recommend;
 using BiliLite.Models.Common.Search;
 using BiliLite.Models.Common.Settings;
 using BiliLite.ViewModels.UserDynamic;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace BiliLite.Services
 {
@@ -93,7 +96,7 @@ namespace BiliLite.Services
             var recommendFilterRule = RecommendFilterRules.FirstOrDefault(x => x.Id == filterRule.Id);
             if (recommendFilterRule != null)
             {
-                UpdateFilterRule(recommendFilterRule,filterRule);
+                UpdateFilterRule(recommendFilterRule, filterRule);
                 m_settingSqlService.SetValue(SettingConstants.Filter.RECOMMEND_FILTER_RULE, RecommendFilterRules);
                 return;
             }
@@ -199,7 +202,7 @@ namespace BiliLite.Services
             _logger.Debug($"source searchItems count:{searchItems.Count};after filter:{result.Count}");
             //if (searchItems.Count - result.Count > 0)
             //{
-            //    Notify.ShowMessageToast($"过滤:{searchItems.Count - result.Count}");
+            //    NotificationShowExtensions.ShowMessageToast($"过滤:{searchItems.Count - result.Count}");
             //}
 
             return result;
@@ -241,10 +244,10 @@ namespace BiliLite.Services
             _logger.Debug($"source dynItems count:{dynItems.Count};after filter:{result.Count}");
             //if (dynItems.Count - result.Count > 0)
             //{
-            //    Notify.ShowMessageToast($"过滤:{dynItems.Count - result.Count}");
+            //    NotificationShowExtensions.ShowMessageToast($"过滤:{dynItems.Count - result.Count}");
             //}
 
             return result;
         }
-    } 
+    }
 }

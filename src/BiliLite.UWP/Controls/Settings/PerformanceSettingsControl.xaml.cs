@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions;
+﻿using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using Microsoft.Toolkit.Uwp.UI;
@@ -50,16 +50,6 @@ namespace BiliLite.Controls.Settings
                 });
             });
 
-            //新窗口浏览图片
-            swPreviewImageNavigateToPage.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.NEW_WINDOW_PREVIEW_IMAGE, false);
-            swPreviewImageNavigateToPage.Loaded += new RoutedEventHandler((sender, e) =>
-            {
-                swPreviewImageNavigateToPage.Toggled += new RoutedEventHandler((obj, args) =>
-                {
-                    SettingService.SetValue(SettingConstants.UI.NEW_WINDOW_PREVIEW_IMAGE, swPreviewImageNavigateToPage.IsOn);
-                });
-            });
-
             //启动应用时打开上次浏览的标签页
             SwitchOpenLastPage.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.ENABLE_OPEN_LAST_PAGE, SettingConstants.UI.DEFAULT_ENABLE_OPEN_LAST_PAGE);
             SwitchOpenLastPage.Loaded += (sender, e) =>
@@ -95,12 +85,12 @@ namespace BiliLite.Controls.Settings
             };
 
             //浏览器打开无法处理的链接
-            swOpenUrlWithBrowser.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.OPEN_URL_BROWSER, false);
+            swOpenUrlWithBrowser.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.OPEN_INTEGRAL_BROWSER, true);
             swOpenUrlWithBrowser.Loaded += new RoutedEventHandler((sender, e) =>
             {
                 swOpenUrlWithBrowser.Toggled += new RoutedEventHandler((obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.UI.OPEN_URL_BROWSER, swOpenUrlWithBrowser.IsOn);
+                    SettingService.SetValue(SettingConstants.UI.OPEN_INTEGRAL_BROWSER, swOpenUrlWithBrowser.IsOn);
                 });
             });
 
@@ -109,7 +99,7 @@ namespace BiliLite.Controls.Settings
         private async void btnCleanImageCache_Click(object sender, RoutedEventArgs e)
         {
             await ImageCache.Instance.ClearAsync();
-            Notify.ShowMessageToast("已清除图片缓存");
+            NotificationShowExtensions.ShowMessageToast("已清除图片缓存");
         }
     }
 }

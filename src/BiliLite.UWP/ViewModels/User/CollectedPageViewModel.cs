@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using AutoMapper;
+﻿using AutoMapper;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Common.User;
 using BiliLite.Models.Exceptions;
@@ -14,6 +10,11 @@ using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace BiliLite.ViewModels.User
 {
@@ -92,12 +93,12 @@ namespace BiliLite.ViewModels.User
             catch (CustomizedErrorException ex)
             {
                 _logger.Error(ex.Message, ex);
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<MyFollowVideoViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             return false;
         }
@@ -114,12 +115,12 @@ namespace BiliLite.ViewModels.User
             catch (CustomizedErrorException ex)
             {
                 _logger.Error(ex.Message, ex);
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<MyFollowVideoViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {

@@ -188,7 +188,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Control.IsTemplateFocusTarget="True"
-                            CornerRadius="4"
+                            CornerRadius="{StaticResource ControlCornerRadius}"
                             FocusVisualMargin="{TemplateBinding FocusVisualMargin}">
 
                             <Grid.ColumnDefinitions>
@@ -595,7 +595,7 @@
                                         HighContrastAdjustment="None"
                                         Interval="100"
                                         Style="{ThemeResource TabViewScrollButtonStyle}">
-                                        <FontIcon
+                                        <FontIcon 
                                             FontFamily="{StaticResource BiliIconFont}"
                                             FontSize="10"
                                             Glyph="&#xe692;" />
@@ -614,7 +614,7 @@
                                         HighContrastAdjustment="None"
                                         Interval="100"
                                         Style="{ThemeResource TabViewScrollButtonStyle}">
-                                        <FontIcon
+                                        <FontIcon 
                                             FontFamily="{StaticResource BiliIconFont}"
                                             FontSize="10"
                                             Glyph="&#xe693;" />

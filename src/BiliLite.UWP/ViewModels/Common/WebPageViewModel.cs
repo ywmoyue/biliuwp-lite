@@ -1,11 +1,9 @@
-﻿using BiliLite.Models.Attributes;
+﻿using System;
 
-namespace BiliLite.ViewModels.Common;
-
-[RegisterTransientViewModel]
-public class WebPageViewModel : BaseViewModel
+namespace BiliLite.ViewModels.Common
 {
-    public bool IsEnableGoBack { get; set; }
-
-    public bool IsEnableGoForward { get; set; }
+    public class WebPageViewModel : BaseViewModel
+    {
+        public Uri Source { get; set; }
+    }
 }

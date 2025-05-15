@@ -1,4 +1,21 @@
-﻿using System;
+﻿using AutoMapper;
+using Bilibili.App.Dynamic.V2;
+using BiliLite.Controls.Dialogs;
+using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
+using BiliLite.Models;
+using BiliLite.Models.Common;
+using BiliLite.Models.Common.UserDynamic;
+using BiliLite.Models.Exceptions;
+using BiliLite.Models.Requests.Api.User;
+using BiliLite.Modules;
+using BiliLite.Modules.User;
+using BiliLite.Pages;
+using BiliLite.Pages.User;
+using BiliLite.Services;
+using BiliLite.ViewModels.Common;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -125,7 +142,6 @@ namespace BiliLite.ViewModels.UserDynamic
                 DynamicItems.AddRange(items);
             }
         }
-
         #endregion
 
         #region Public Methods
@@ -160,13 +176,13 @@ namespace BiliLite.ViewModels.UserDynamic
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<UserDynamicViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {

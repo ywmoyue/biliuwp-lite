@@ -5,6 +5,8 @@ using BiliLite.Models.Common;
 using BiliLite.Pages;
 using BiliLite.Pages.Other;
 using BiliLite.Pages.User;
+using BiliLite.ViewModels.Settings;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +18,6 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using BiliLite.ViewModels.Settings;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite.Services
 {
@@ -569,20 +569,23 @@ namespace BiliLite.Services
 
             if (url.Contains("http://") || url.Contains("https://"))
             {
-                if (SettingService.GetValue(SettingConstants.UI.OPEN_URL_BROWSER, false))
+                if (SettingService.GetValue(SettingConstants.UI.OPEN_INTEGRAL_BROWSER, true))
+                {
+                    NavigateToPage(null, new NavigationInfo()
+                    {
+                        icon = Symbol.World,
+                        page = typeof(WebPage),
+                        title = "加载中...",
+                        parameters = url,
+                        dontGoTo = dontGoTo,
+                    });
+                    return true;
+                }
+                else
                 {
                     await Launcher.LaunchUriAsync(new Uri(url));
                     return true;
                 }
-                NavigateToPage(null, new NavigationInfo()
-                {
-                    icon = Symbol.World,
-                    page = typeof(WebPage),
-                    title = "加载中...",
-                    parameters = url,
-                    dontGoTo = dontGoTo,
-                });
-                return true;
             }
 
             return false;
@@ -638,6 +641,14 @@ namespace BiliLite.Services
                 frame.Navigate(page, par);
                 Window.Current.Content = frame;
                 Window.Current.Activate();
+                if (SettingService.GetValue<bool>(SettingConstants.UI.NEW_FULLY_WINDOW_PREVIEW_IMAGE, true))
+                {
+                    Window.Current.Activated += (sender, args) =>
+                    {
+                        ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+                    };
+                }
+
                 newViewId = ApplicationView.GetForCurrentView().Id;
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(800, 800));
                 ApplicationView.GetForCurrentView().Consolidated += (sender, args) =>

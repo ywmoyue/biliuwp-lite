@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using AutoMapper;
+﻿using AutoMapper;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Anime;
@@ -22,6 +15,14 @@ using BiliLite.ViewModels.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace BiliLite.ViewModels.Home
 {
@@ -194,7 +195,7 @@ namespace BiliLite.ViewModels.Home
             catch (Exception ex)
             {
                 var handel = HandelError<AnimeHomeModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {
@@ -225,7 +226,7 @@ namespace BiliLite.ViewModels.Home
             catch (Exception ex)
             {
                 var handel = HandelError<AnimeHomeModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {
@@ -253,7 +254,7 @@ namespace BiliLite.ViewModels.Home
             catch (Exception ex)
             {
                 var handel = HandelError<List<AnimeFallItemModel>>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {

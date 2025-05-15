@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Windows.UI.Xaml.Controls;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Attributes;
 using BiliLite.Models.Common.Favorites;
@@ -15,6 +9,13 @@ using BiliLite.Modules;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using PropertyChanged;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Windows.UI.Xaml.Controls;
 
 namespace BiliLite.ViewModels.Favourites
 {
@@ -171,13 +172,13 @@ namespace BiliLite.ViewModels.Favourites
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<FavoriteDetailViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {
@@ -189,9 +190,9 @@ namespace BiliLite.ViewModels.Favourites
         {
             try
             {
-                if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+                if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
                 {
-                    Notify.ShowMessageToast("请先登录后再操作");
+                    NotificationShowExtensions.ShowMessageToast("请先登录后再操作");
                     return;
                 }
                 var results = await m_favoriteApi.Delete(Id, items.Select(x => x.Id).ToList()).Request();
@@ -205,13 +206,13 @@ namespace BiliLite.ViewModels.Favourites
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<FavoriteDetailViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
         }
 
@@ -219,9 +220,9 @@ namespace BiliLite.ViewModels.Favourites
         {
             try
             {
-                if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+                if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
                 {
-                    Notify.ShowMessageToast("请先登录后再操作");
+                    NotificationShowExtensions.ShowMessageToast("请先登录后再操作");
                     return;
                 }
                 var results = await m_favoriteApi.Clean(Id).Request();
@@ -232,13 +233,13 @@ namespace BiliLite.ViewModels.Favourites
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<FavoriteDetailViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
         }
 
@@ -263,17 +264,17 @@ namespace BiliLite.ViewModels.Favourites
 
                 var data = await result.GetData<object>();
                 if (!data.success) throw new CustomizedErrorException("排序失败" + data.message);
-                Notify.ShowMessageToast("排序成功");
+                NotificationShowExtensions.ShowMessageToast("排序成功");
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<FavoriteDetailViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
         }
 
@@ -305,9 +306,9 @@ namespace BiliLite.ViewModels.Favourites
 
         public async void DoCollect()
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录后再操作");
+                NotificationShowExtensions.ShowMessageToast("请先登录后再操作");
                 return;
             }
             try
@@ -321,21 +322,21 @@ namespace BiliLite.ViewModels.Favourites
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<object>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
         }
 
         public async void DoCancelCollect()
         {
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录后再操作");
+                NotificationShowExtensions.ShowMessageToast("请先登录后再操作");
                 return;
             }
             try
@@ -349,13 +350,13 @@ namespace BiliLite.ViewModels.Favourites
             }
             catch (CustomizedErrorException ex)
             {
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
                 _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<object>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
         }
 

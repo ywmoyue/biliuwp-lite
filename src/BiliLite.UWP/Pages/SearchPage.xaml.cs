@@ -1,4 +1,5 @@
 ﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Search;
 using BiliLite.Services;
@@ -14,7 +15,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -36,11 +36,11 @@ namespace BiliLite.Pages
             m_viewModel = App.ServiceProvider.GetRequiredService<SearchPageViewModel>();
             m_viewModel.Init(m_searchService.PivotIndexCache = 0, m_searchService.ComboIndexCache = 0);
             this.InitializeComponent();
+            Title = "搜索";
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            CompositionTarget.Rendered += CompositionTarget_Rendered; // 订阅页面加载后事件
             base.OnNavigatedTo(e);
             SearchParameter par = new SearchParameter();
             if (e.Parameter is string)
@@ -64,18 +64,13 @@ namespace BiliLite.Pages
                 item.Area = m_viewModel.Area.area;
             }
         }
-        private void CompositionTarget_Rendered(object sender, RenderedEventArgs e)
-        {
-            txtKeyword.Focus(FocusState.Keyboard);
-            Title = "搜索";
-            CompositionTarget.Rendered -= CompositionTarget_Rendered;
-        }
+
         private async void txtKeyword_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             var queryText = args.QueryText;
             if (string.IsNullOrEmpty(queryText))
             {
-                Notify.ShowMessageToast("关键字不能为空啊，喂(#`O′)");
+                NotificationShowExtensions.ShowMessageToast("关键字不能为空啊，喂(#`O′)");
                 return;
             }
 
@@ -280,6 +275,11 @@ namespace BiliLite.Pages
         {
             pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
             pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
+        }
+
+        private void SearchPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            txtKeyword.Focus(FocusState.Keyboard);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common.Video;
 using BiliLite.Services.Biz;
 using BiliLite.ViewModels.Video;
@@ -68,7 +69,7 @@ namespace BiliLite.Controls
                     }
                 }
             }
-            Notify.ShowMessageToast("播放完毕");
+            NotificationShowExtensions.ShowMessageToast("播放完毕");
         }
 
         public bool IsLast(string id)

@@ -82,12 +82,12 @@ namespace BiliLite
                 if (e.Exception is NotImplementedException)
                 {
                     logger.Log("功能未实现", LogType.Error, e.Exception);
-                    Notify.ShowMessageToast("功能未实现");
+                    NotificationShowExtensions.ShowMessageToast("功能未实现");
                 }
                 else
                 {
                     logger.Log("程序运行出现错误", LogType.Error, e.Exception);
-                    Notify.ShowMessageToast("程序出现一个错误，已记录");
+                    NotificationShowExtensions.ShowMessageToast("程序出现一个错误，已记录");
                 }
             }
             catch (Exception)
@@ -102,12 +102,12 @@ namespace BiliLite
                 if (e.Exception is NotImplementedException)
                 {
                     logger.Log("功能未实现", LogType.Error, e.Exception);
-                    Notify.ShowMessageToast("功能未实现");
+                    NotificationShowExtensions.ShowMessageToast("功能未实现");
                 }
                 else
                 {
                     logger.Log("程序运行出现错误", LogType.Error, e.Exception);
-                    Notify.ShowMessageToast("程序出现一个错误，已记录");
+                    NotificationShowExtensions.ShowMessageToast("程序出现一个错误，已记录");
                 }
             }
             catch (Exception)
@@ -187,7 +187,12 @@ namespace BiliLite
                 var themeService = ServiceProvider.GetRequiredService<ThemeService>();
                 themeService.InitTitleBar();
                 themeService.InitAccentColor();
-                themeService.InitStyle();
+                //themeService.InitStyle();
+
+#if !DEBUG
+                await BiliExtensions.CheckVersion(isSilentUpdateCheck:true);
+#endif
+
                 var tempFileService = ServiceProvider.GetRequiredService<TempFileService>();
                 tempFileService.ClearTempFiles();
             }
@@ -292,7 +297,7 @@ namespace BiliLite
         {
             //base.OnBackgroundActivated(args);
             //IBackgroundTaskInstance taskInstance = args.TaskInstance;
-            await NotificationShowExtensions.Tile();
+            await NotificationShowExtensions.ShowTile();
         }
     }
 }

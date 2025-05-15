@@ -12,8 +12,8 @@ namespace BiliLite.ViewModels
         public List<InteractionEdgeInfoQuestionModel> Questions { get; set; }
 
         public bool ShowVideoBottomVirtualProgressBar =>
-            SettingService.GetValue(SettingConstants.UI.SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR,
-                SettingConstants.UI.DEFAULT_SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR);
+            SettingService.GetValue(SettingConstants.Player.SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR,
+                SettingConstants.Player.DEFAULT_SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR);
 
         public bool ShowViewPointsView { get; set; }
 

@@ -1,4 +1,6 @@
-﻿using BiliLite.Dialogs;
+﻿
+using BiliLite.Controls.Dialogs;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Player;
 using BiliLite.Services;
@@ -19,6 +21,7 @@ namespace BiliLite.Controls.Settings
         private readonly PlaySettingsControlViewModel m_viewModel;
         private readonly PlaySpeedMenuService m_playSpeedMenuService;
         private readonly RealPlayerTypes m_realPlayerTypes = new RealPlayerTypes();
+        private readonly RealPlayerTypeOption[] m_livePlayerTypes = LivePlayerTypeOptions.Options;
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
 
         public PlaySettingsControl()
@@ -46,6 +49,7 @@ namespace BiliLite.Controls.Settings
             {
                 SettingService.SetValue(SettingConstants.Player.DEFAULT_VIDEO_TYPE, (int)cbVideoType.SelectedValue);
             };
+
             //优先播放器类型
             var realPlayerType = (RealPlayerType)SettingService.GetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE,
                 (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
@@ -56,6 +60,18 @@ namespace BiliLite.Controls.Settings
                 SettingService.SetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE,
                     (int)ComboBoxUseRealPlayerType.SelectedValue);
             };
+
+            //直播优先播放器类型
+            var m_livePlayerType = (RealPlayerType)SettingService.GetValue(SettingConstants.Player.LIVE_PLAYER_TYPE,
+                (int)LivePlayerTypeOptions.DEFAULT_LIVE_PLAYER_MODE);
+            cbUseRealPlayerType.SelectedItem =
+                m_livePlayerTypes.FirstOrDefault(x => x.Value == m_livePlayerType);
+            cbUseRealPlayerType.SelectionChanged += (e, args) =>
+            {
+                SettingService.SetValue(SettingConstants.Player.LIVE_PLAYER_TYPE,
+                    (int)cbUseRealPlayerType.SelectedValue);
+            };
+
             //视频倍速
             var speeds = m_playSpeedMenuService.MenuItems
                 .Select(x => x.Value)
@@ -90,6 +106,7 @@ namespace BiliLite.Controls.Settings
             //        SettingService.SetValue(SettingConstants.Player.HARDWARE_DECODING, swHardwareDecode.IsOn);
             //    });
             //});
+
             //自动播放
             swAutoPlay.IsOn = SettingService.GetValue<bool>(SettingConstants.Player.AUTO_PLAY, false);
             swAutoPlay.Loaded += new RoutedEventHandler((sender, e) =>
@@ -236,23 +253,13 @@ namespace BiliLite.Controls.Settings
             };
 
             // 音量
-            NumBoxVolume.Value = Math.Round((SettingService.GetValue(SettingConstants.Player.PLAYER_VOLUME,
+            SliderVolume.Value = Math.Round((SettingService.GetValue(SettingConstants.Player.PLAYER_VOLUME,
                 SettingConstants.Player.DEFAULT_PLAYER_VOLUME)) * 100, 2);
-            NumBoxVolume.Loaded += (sender, e) =>
+            SliderVolume.Loaded += (sender, e) =>
             {
-                NumBoxVolume.ValueChanged += (obj, args) =>
+                SliderVolume.ValueChanged += (obj, args) =>
                 {
-                    if (NumBoxVolume.Value > 100)
-                    {
-                        NumBoxVolume.Value = 100;
-                    }
-
-                    if (NumBoxVolume.Value < 0)
-                    {
-                        NumBoxVolume.Value = 0;
-                    }
-
-                    SettingService.SetValue(SettingConstants.Player.PLAYER_VOLUME, NumBoxVolume.Value / 100);
+                    SettingService.SetValue(SettingConstants.Player.PLAYER_VOLUME, SliderVolume.Value / 100);
                 };
             };
 
@@ -269,25 +276,15 @@ namespace BiliLite.Controls.Settings
             };
 
             // 亮度
-            NumBoxBrightness.Value = Math.Round(
+            SliderBrightness.Value = Math.Round(
                 (Math.Abs(SettingService.GetValue(
                     SettingConstants.Player.PLAYER_BRIGHTNESS,
                     SettingConstants.Player.DEFAULT_PLAYER_BRIGHTNESS) - 1)) * 100, 2);
-            NumBoxBrightness.Loaded += (sender, e) =>
+            SliderBrightness.Loaded += (sender, e) =>
             {
-                NumBoxBrightness.ValueChanged += (obj, args) =>
+                SliderBrightness.ValueChanged += (obj, args) =>
                 {
-                    if (NumBoxBrightness.Value > 100)
-                    {
-                        NumBoxBrightness.Value = 100;
-                    }
-
-                    if (NumBoxBrightness.Value < 0)
-                    {
-                        NumBoxBrightness.Value = 0;
-                    }
-
-                    var brightness = Math.Abs((NumBoxBrightness.Value / 100) - 1);
+                    var brightness = Math.Abs((SliderBrightness.Value / 100) - 1);
                     SettingService.SetValue(SettingConstants.Player.PLAYER_BRIGHTNESS, brightness);
                 };
             };
@@ -389,45 +386,16 @@ namespace BiliLite.Controls.Settings
                         SwitchReportHistoryZeroWhenVideoEnd.IsOn);
                 };
             };
-            //替换CDN
-            cbPlayerReplaceCDN.SelectedIndex = SettingService.GetValue<int>(SettingConstants.Player.REPLACE_CDN, 3);
-            cbPlayerReplaceCDN.Loaded += new RoutedEventHandler((sender, e) =>
-            {
-                cbPlayerReplaceCDN.SelectionChanged += new SelectionChangedEventHandler((obj, args) =>
-                {
-                    SettingService.SetValue(SettingConstants.Player.REPLACE_CDN,
-                        cbPlayerReplaceCDN.SelectedIndex);
-                });
-            });
-            //CDN服务器
-            var cdnServer = SettingService.GetValue<string>(SettingConstants.Player.CDN_SERVER,
-                "upos-sz-mirrorhwo1.bilivideo.com");
-            RoamingSettingCDNServer.SelectedIndex = m_viewModel.CDNServers.FindIndex(x => x.Server == cdnServer);
-            RoamingSettingCDNServer.Loaded += new RoutedEventHandler((sender, e) =>
-            {
-                RoamingSettingCDNServer.SelectionChanged += new SelectionChangedEventHandler((obj, args) =>
-                {
-                    var server = m_viewModel.CDNServers[RoamingSettingCDNServer.SelectedIndex];
-                    SettingService.SetValue(SettingConstants.Player.CDN_SERVER, server.Server);
-
-                });
-            });
 
             //自动刷新播放地址
             SwitchAutoRefreshPlayUrl.IsOn = SettingService.GetValue(SettingConstants.Player.AUTO_REFRESH_PLAY_URL,
                 SettingConstants.Player.DEFAULT_AUTO_REFRESH_PLAY_URL);
-
-            AutoRefreshPlayUrlTimeSetting.Visibility =
-                SwitchAutoRefreshPlayUrl.IsOn ? Visibility.Visible : Visibility.Collapsed;
-
             SwitchAutoRefreshPlayUrl.Loaded += (sender, e) =>
             {
                 SwitchAutoRefreshPlayUrl.Toggled += (obj, args) =>
                 {
                     SettingService.SetValue(SettingConstants.Player.AUTO_REFRESH_PLAY_URL,
                         SwitchAutoRefreshPlayUrl.IsOn);
-                    AutoRefreshPlayUrlTimeSetting.Visibility =
-                        SwitchAutoRefreshPlayUrl.IsOn ? Visibility.Visible : Visibility.Collapsed;
                 };
             };
 
@@ -444,17 +412,42 @@ namespace BiliLite.Controls.Settings
                         NumAutoRefreshPlayUrlTime.Value);
                 };
             };
+
+            //转简体
+            RoamingSettingToSimplified.IsOn = SettingService.GetValue<bool>(SettingConstants.Player.TO_SIMPLIFIED, true);
+            RoamingSettingToSimplified.Loaded += new RoutedEventHandler((sender, e) =>
+            {
+                RoamingSettingToSimplified.Toggled += new RoutedEventHandler((obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.TO_SIMPLIFIED, RoamingSettingToSimplified.IsOn);
+                });
+            });
+
+            //显示视频底部进度条
+            SwShowVideoBottomProgress.IsOn = SettingService.GetValue(SettingConstants.Player.SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR, SettingConstants.Player.DEFAULT_SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR);
+            SwShowVideoBottomProgress.Loaded += (sender, e) =>
+            {
+                SwShowVideoBottomProgress.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR, SwShowVideoBottomProgress.IsOn);
+                };
+            };
+
+            //总是显示进度条
+            SwAlwaysShowVideoProgress.IsOn = SettingService.GetValue(SettingConstants.Player.ALWAYS_SHOW_VIDEO_PROGRESS_BAR, SettingConstants.Player.DEFAULT_ALWAYS_SHOW_VIDEO_PROGRESS_BAR);
+            SwAlwaysShowVideoProgress.Loaded += (sender, e) =>
+            {
+                SwAlwaysShowVideoProgress.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.ALWAYS_SHOW_VIDEO_PROGRESS_BAR, SwAlwaysShowVideoProgress.IsOn);
+                };
+            };
         }
 
         private async void BtnEditPlaySpeedMenu_OnClick(object sender, RoutedEventArgs e)
         {
             var dialog = App.ServiceProvider.GetRequiredService<EditPlaySpeedMenuDialog>();
-            await dialog.ShowAsync();
-        }
-
-        private void RoamingSettingTestCDN_Click(object sender, RoutedEventArgs e)
-        {
-            m_viewModel.CDNServerDelayTest();
+            await NotificationShowExtensions.ShowContentDialog(dialog);
         }
 
         private async void BtnSaveFfmpegInteropXOptions_OnClick(object sender, RoutedEventArgs e)

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using AutoMapper;
+﻿using AutoMapper;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Attributes;
 using BiliLite.Models.Common.User;
@@ -16,6 +11,12 @@ using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace BiliLite.ViewModels.User
 {
@@ -114,12 +115,12 @@ namespace BiliLite.ViewModels.User
             catch (CustomizedErrorException ex)
             {
                 _logger.Error(ex.Message, ex);
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<MyFollowVideoViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {
@@ -157,12 +158,12 @@ namespace BiliLite.ViewModels.User
             catch (CustomizedErrorException ex)
             {
                 _logger.Error(ex.Message, ex);
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<MyFollowVideoViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
         }
 
@@ -180,12 +181,12 @@ namespace BiliLite.ViewModels.User
             catch (CustomizedErrorException ex)
             {
                 _logger.Error(ex.Message, ex);
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<MyFollowVideoViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             return false;
         }
@@ -210,12 +211,12 @@ namespace BiliLite.ViewModels.User
             catch (CustomizedErrorException ex)
             {
                 _logger.Error(ex.Message, ex);
-                Notify.ShowMessageToast(ex.Message);
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
             }
             catch (Exception ex)
             {
                 var handel = HandelError<MyFollowVideoViewModel>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             return false;
         }
@@ -244,12 +245,12 @@ namespace BiliLite.ViewModels.User
 
                 var data = await result.GetData<object>();
                 if (!data.success) throw new CustomizedErrorException(data.code + ":" + data.message);
-                Notify.ShowMessageToast("排序成功");
+                NotificationShowExtensions.ShowMessageToast("排序成功");
             }
             catch (Exception ex)
             {
                 _logger.Error("排序失败" + ex.Message);
-                Notify.ShowMessageToast("排序失败" + ex.Message);
+                NotificationShowExtensions.ShowMessageToast("排序失败" + ex.Message);
             }
         }
 

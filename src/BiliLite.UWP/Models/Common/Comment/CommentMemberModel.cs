@@ -1,8 +1,4 @@
-﻿using Windows.UI;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media;
-using BiliLite.Controls;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace BiliLite.Models.Common.Comment
 {
@@ -56,7 +52,7 @@ namespace BiliLite.Models.Common.Comment
                 }
             }
         }
-        
+
         public string PendantStr
         {
             get
@@ -115,19 +111,6 @@ namespace BiliLite.Models.Common.Comment
 
         public int VipType { get; set; }
 
-        public SolidColorBrush VipCo
-        {
-            get
-            {
-                if (Vip.VipType == 2)
-                {
-                    return new SolidColorBrush(Colors.DeepPink);
-                }
-                else
-                {
-                    return new SolidColorBrush((Color)Application.Current.Resources["TextColor"]);
-                }
-            }
-        }
+        public bool IsVip => VipType == 2;
     }
 }

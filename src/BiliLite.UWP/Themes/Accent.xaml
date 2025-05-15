@@ -39,18 +39,20 @@
                     <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
                     <SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected" Color="Transparent" />
 
-                    <ResourceDictionary.ThemeDictionaries>
-                        <ResourceDictionary x:Key="Light">
-                            <StaticResource x:Key="AccentButtonForeground" ResourceKey="SystemControlForegroundBaseHighBrush" />
-                            <StaticResource x:Key="AccentButtonForegroundPointerOver" ResourceKey="SystemControlForegroundBaseHighBrush" />
-                            <StaticResource x:Key="AccentButtonForegroundPressed" ResourceKey="SystemControlForegroundBaseMediumBrush" />
-                        </ResourceDictionary>
-                        <ResourceDictionary x:Key="Dark">
-                            <StaticResource x:Key="AccentButtonForeground" ResourceKey="SystemControlForegroundBaseHighBrush" />
-                            <StaticResource x:Key="AccentButtonForegroundPointerOver" ResourceKey="SystemControlForegroundBaseHighBrush" />
-                            <StaticResource x:Key="AccentButtonForegroundPressed" ResourceKey="SystemControlForegroundBaseMediumBrush" />
-                        </ResourceDictionary>
-                    </ResourceDictionary.ThemeDictionaries>
+                    <SolidColorBrush x:Key="AccentButtonForeground" Color="White" />
+                    <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="White" />
+                    <SolidColorBrush
+                        x:Key="AccentButtonForegroundPressed"
+                        Opacity="0.5"
+                        Color="White" />
+
+                    <SolidColorBrush x:Key="GridViewItemForegroundSelected" Color="White" />
+                    <SolidColorBrush x:Key="GridViewItemForegroundPointerOver" Color="{ThemeResource SystemAccentColor}" />
+                    <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource SystemAccentColor}" />
+                    <SolidColorBrush x:Key="GridViewItemBackgroundSelectedPointerOver" Color="{ThemeResource SystemAccentColor}" />
+                    <SolidColorBrush x:Key="GridViewItemPointerOverBorderBrush" Color="{ThemeResource SystemAccentColor}" />
+                    <SolidColorBrush x:Key="GridViewItemSelectedBorderBrush" Color="{ThemeResource SystemAccentColor}" />
+                    <SolidColorBrush x:Key="GridViewItemSelectedInnerBorderBrush" Color="Transparent" />
                 </ResourceDictionary>
             </muxc:XamlControlsResources.MergedDictionaries>
         </muxc:XamlControlsResources>

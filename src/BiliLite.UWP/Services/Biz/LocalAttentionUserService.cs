@@ -1,14 +1,14 @@
-﻿using BiliLite.Models.Attributes;
-using BiliLite.Models.Common.User;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
+using BiliLite.Models.Attributes;
 using BiliLite.Models.Common;
-using BiliLite.ViewModels.User.SendDynamic;
+using BiliLite.Models.Common.Live;
+using BiliLite.Models.Common.User;
+using BiliLite.Models.Exceptions;
+using BiliLite.Models.Requests.Api.Live;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BiliLite.Extensions;
-using BiliLite.Models.Common.Live;
-using BiliLite.Models.Requests.Api.Live;
-using BiliLite.Models.Exceptions;
 
 namespace BiliLite.Services.Biz;
 
@@ -32,18 +32,18 @@ public class LocalAttentionUserService : BaseBizService
 
         if (localAttentionUsers.Count > 5)
         {
-            Notify.ShowMessageToast("本地关注人数超出限制");
+            NotificationShowExtensions.ShowMessageToast("本地关注人数超出限制");
             return;
         }
 
         if (localAttentionUsers.Any(x => x.Id == user.Id))
         {
-            Notify.ShowMessageToast("已经关注了");
+            NotificationShowExtensions.ShowMessageToast("已经关注了");
             return;
         }
         localAttentionUsers.Add(user);
         SettingService.SetValue<List<LocalAttentionUser>>(SettingConstants.UI.LOCAL_ATTENTION_USER, localAttentionUsers);
-        Notify.ShowMessageToast("已关注");
+        NotificationShowExtensions.ShowMessageToast("已关注");
     }
 
     public void CancelAttention(string id)
@@ -63,7 +63,7 @@ public class LocalAttentionUserService : BaseBizService
         localAttentionUsers.Remove(user);
         SettingService.SetValue<List<LocalAttentionUser>>(SettingConstants.UI.LOCAL_ATTENTION_USER, localAttentionUsers);
 
-        Notify.ShowMessageToast("已取消关注");
+        NotificationShowExtensions.ShowMessageToast("已取消关注");
     }
 
     public async Task<List<LiveInfoModel>> GetLiveRooms()

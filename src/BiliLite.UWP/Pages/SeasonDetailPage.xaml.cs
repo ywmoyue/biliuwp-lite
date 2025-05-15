@@ -1,7 +1,18 @@
 ﻿using BiliLite.Controls;
-using BiliLite.Dialogs;
+
+using BiliLite.Controls.Dialogs;
+using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
+using BiliLite.Models.Common;
+using BiliLite.Models.Common.Comment;
+using BiliLite.Models.Common.Season;
+using BiliLite.Models.Common.Video;
+using BiliLite.Models.Download;
 using BiliLite.Models.Requests.Api;
-using BiliLite.Modules;
+using BiliLite.Services;
+using BiliLite.Services.Interfaces;
+using BiliLite.ViewModels.Season;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
@@ -13,17 +24,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Models.Common;
-using BiliLite.Services;
-using BiliLite.Extensions;
-using BiliLite.Models.Common.Comment;
-using BiliLite.Models.Common.Season;
-using BiliLite.Models.Common.Video;
-using BiliLite.Models.Download;
-using BiliLite.ViewModels.Season;
-using BiliLite.Services.Interfaces;
-using BiliLite.ViewModels.Download;
-using Microsoft.Extensions.DependencyInjection;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -260,13 +260,13 @@ namespace BiliLite.Pages
         private void btnShareCopy_Click(object sender, RoutedEventArgs e)
         {
             $"{m_viewModel.Detail.Title}\r\nhttp://b23.tv/ss{season_id}".SetClipboard();
-            Notify.ShowMessageToast("已复制内容到剪切板");
+            NotificationShowExtensions.ShowMessageToast("已复制内容到剪切板");
         }
 
         private void btnShareCopyUrl_Click(object sender, RoutedEventArgs e)
         {
             $"http://b23.tv/ss{season_id}".SetClipboard();
-            Notify.ShowMessageToast("已复制链接到剪切板");
+            NotificationShowExtensions.ShowMessageToast("已复制链接到剪切板");
         }
 
 
@@ -392,7 +392,7 @@ namespace BiliLite.Pages
             catch (Exception ex)
             {
                 logger.Log("创建二维码失败epid" + ep_id, LogType.Error, ex);
-                Notify.ShowMessageToast("创建二维码失败");
+                NotificationShowExtensions.ShowMessageToast("创建二维码失败");
             }
 
         }
@@ -475,14 +475,14 @@ namespace BiliLite.Pages
         private async void btnSendReview_Click(object sender, RoutedEventArgs e)
         {
             if (m_seasonReviewViewModel == null || m_seasonReviewViewModel.MediaID == 0) return;
-            if (!SettingService.Account.Logined && !await Notify.ShowLoginDialog())
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
             {
-                Notify.ShowMessageToast("请先登录后再操作");
+                NotificationShowExtensions.ShowMessageToast("请先登录后再操作");
                 return;
             }
 
             SendReviewDialog sendReviewDialog = new SendReviewDialog(m_seasonReviewViewModel.MediaID);
-            await sendReviewDialog.ShowAsync();
+            await NotificationShowExtensions.ShowContentDialog(sendReviewDialog);
         }
 
         private async void btnOpenWeb_Click(object sender, RoutedEventArgs e)
@@ -538,7 +538,7 @@ namespace BiliLite.Pages
             }
 
             DownloadDialog downloadDialog = new DownloadDialog(downloadItem);
-            await downloadDialog.ShowAsync();
+            await NotificationShowExtensions.ShowContentDialog(downloadDialog);
         }
 
         private async void btnRefresh_Click(object sender, RoutedEventArgs e)

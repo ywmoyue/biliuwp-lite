@@ -1,5 +1,4 @@
-﻿using BiliLite.Extensions;
-using BiliLite.Extensions.Notifications;
+﻿using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Home;
 using BiliLite.Models.Theme;
@@ -81,7 +80,7 @@ namespace BiliLite.Controls.Settings
             {
                 if (m_UISettingsControlViewModel.Colors.Any(item => item.Color == cpAddColor.Color))
                 {
-                    Notify.ShowMessageToast("已重复添加");
+                    NotificationShowExtensions.ShowMessageToast("已重复添加");
                     return;
                 }
 
@@ -95,7 +94,7 @@ namespace BiliLite.Controls.Settings
                     gvColor.SelectedIndex = m_UISettingsControlViewModel.Colors.Count - 1;
 
                 m_settingSqlService.SetValue(SettingConstants.UI.THEME_COLOR_MENU, m_UISettingsControlViewModel.Colors);
-                Notify.ShowMessageToast($"已添加：{name} {hexCode}");
+                NotificationShowExtensions.ShowMessageToast($"已添加：{name} {hexCode}");
             };
 
             //显示模式
@@ -107,11 +106,11 @@ namespace BiliLite.Controls.Settings
                     SettingService.SetValue(SettingConstants.UI.DISPLAY_MODE, cbDisplayMode.SelectedIndex);
                     if (cbDisplayMode.SelectedIndex == 2)
                     {
-                        Notify.ShowMessageToast("多窗口模式正在开发测试阶段，可能会有一堆问题");
+                        NotificationShowExtensions.ShowMessageToast("多窗口模式正在开发测试阶段，可能会有一堆问题");
                     }
                     else
                     {
-                        Notify.ShowMessageToast("重启生效");
+                        NotificationShowExtensions.ShowMessageToast("重启生效");
                     }
 
                 });
@@ -140,12 +139,12 @@ namespace BiliLite.Controls.Settings
             };
 
             // 显示直播页推荐直播
-            SwitchDisplayLivePageRecommendLive.IsOn = SettingService.GetValue(SettingConstants.UI.DISPLAY_LIVE_PAGE_RECOMMEND_LIVE, true);
+            SwitchDisplayLivePageRecommendLive.IsOn = !SettingService.GetValue(SettingConstants.UI.DISPLAY_LIVE_PAGE_RECOMMEND_LIVE, true);
             SwitchDisplayLivePageRecommendLive.Loaded += (sender, e) =>
             {
                 SwitchDisplayLivePageRecommendLive.Toggled += (obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.UI.DISPLAY_LIVE_PAGE_RECOMMEND_LIVE, SwitchDisplayLivePageRecommendLive.IsOn);
+                    SettingService.SetValue(SettingConstants.UI.DISPLAY_LIVE_PAGE_RECOMMEND_LIVE, !SwitchDisplayLivePageRecommendLive.IsOn);
                 };
             };
 
@@ -206,19 +205,6 @@ namespace BiliLite.Controls.Settings
                     }
                 };
             };
-
-            //图片圆角半径
-            numImageCornerRadius.Value = SettingService.GetValue<double>(SettingConstants.UI.IMAGE_CORNER_RADIUS, 0);
-            ImageCornerRadiusExample.CornerRadius = new CornerRadius(numImageCornerRadius.Value);
-            numImageCornerRadius.Loaded += new RoutedEventHandler((sender, e) =>
-            {
-                numImageCornerRadius.ValueChanged += new TypedEventHandler<NumberBox, NumberBoxValueChangedEventArgs>((obj, args) =>
-                {
-                    SettingService.SetValue(SettingConstants.UI.IMAGE_CORNER_RADIUS, args.NewValue);
-                    ImageCornerRadiusExample.CornerRadius = new CornerRadius(args.NewValue);
-                    App.Current.Resources["ImageCornerRadius"] = new CornerRadius(args.NewValue);
-                });
-            });
 
             //显示视频封面
             swVideoDetailShowCover.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.SHOW_DETAIL_COVER, true);
@@ -362,15 +348,24 @@ namespace BiliLite.Controls.Settings
                 };
             };
 
-            //显示视频底部进度条
-            SwShowVideoBottomProgress.IsOn = SettingService.GetValue(SettingConstants.UI.SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR, SettingConstants.UI.DEFAULT_SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR);
-            SwShowVideoBottomProgress.Loaded += (sender, e) =>
+            //新窗口浏览图片
+            swPreviewImageNavigateToPage.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.NEW_WINDOW_PREVIEW_IMAGE, false);
+            swPreviewImageNavigateToPage.Loaded += new RoutedEventHandler((sender, e) =>
             {
-                SwShowVideoBottomProgress.Toggled += (obj, args) =>
+                swPreviewImageNavigateToPage.Toggled += new RoutedEventHandler((obj, args) =>
                 {
-                    SettingService.SetValue(SettingConstants.UI.SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR, SwShowVideoBottomProgress.IsOn);
-                };
-            };
+                    SettingService.SetValue(SettingConstants.UI.NEW_WINDOW_PREVIEW_IMAGE, swPreviewImageNavigateToPage.IsOn);
+                });
+            });
+
+            swPreviewImageNavigateToPageFully.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.NEW_FULLY_WINDOW_PREVIEW_IMAGE, true);
+            swPreviewImageNavigateToPageFully.Loaded += new RoutedEventHandler((sender, e) =>
+            {
+                swPreviewImageNavigateToPageFully.Toggled += new RoutedEventHandler((obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.NEW_FULLY_WINDOW_PREVIEW_IMAGE, swPreviewImageNavigateToPageFully.IsOn);
+                });
+            });
 
             var navItems = SettingService.GetValue(SettingConstants.UI.HOEM_ORDER, DefaultHomeNavItems.GetDefaultHomeNavItems());
             gridHomeCustom.ItemsSource = new ObservableCollection<HomeNavItem>(navItems);
@@ -405,7 +400,7 @@ namespace BiliLite.Controls.Settings
         {
             if (!(gridHomeCustom.ItemsSource is ObservableCollection<HomeNavItem> navItems)) return;
             SettingService.SetValue(SettingConstants.UI.HOEM_ORDER, navItems.ToList());
-            Notify.ShowMessageToast("更改成功,重启生效");
+            NotificationShowExtensions.ShowMessageToast("更改成功,重启生效");
         }
 
         private void gridHomeNavItem_ItemClick(object sender, ItemClickEventArgs e)
@@ -415,21 +410,21 @@ namespace BiliLite.Controls.Settings
             navItems.Add(item);
             SettingService.SetValue(SettingConstants.UI.HOEM_ORDER, navItems.ToList());
             ExceptHomeNavItems();
-            Notify.ShowMessageToast("更改成功,重启生效");
+            NotificationShowExtensions.ShowMessageToast("更改成功,重启生效");
         }
 
-        private void menuRemoveHomeItem_Click(object sender, RoutedEventArgs e)
+        private void menuRemoveHomeItem_Click(object sender, ItemClickEventArgs e)
         {
-            var item = (sender as MenuFlyoutItem).DataContext as HomeNavItem;
+            var item = e.ClickedItem as HomeNavItem;
             if (gridHomeCustom.Items.Count == 1)
             {
-                Notify.ShowMessageToast("至少要留一个页面");
+                NotificationShowExtensions.ShowMessageToast("至少要留一个页面");
                 return;
             }
             (gridHomeCustom.ItemsSource as ObservableCollection<HomeNavItem>).Remove(item);
             SettingService.SetValue(SettingConstants.UI.HOEM_ORDER, gridHomeCustom.ItemsSource as ObservableCollection<HomeNavItem>);
             ExceptHomeNavItems();
-            Notify.ShowMessageToast("更改成功,重启生效");
+            NotificationShowExtensions.ShowMessageToast("更改成功,重启生效");
         }
 
         private void RegisterBackgroundTask()

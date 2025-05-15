@@ -1,12 +1,12 @@
-﻿using Windows.Foundation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using BiliLite.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
+using Windows.Foundation;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -74,7 +74,7 @@ namespace BiliLite.Controls.Settings
         {
             if (string.IsNullOrEmpty(DanmuSettingTxtWord.Text))
             {
-                Notify.ShowMessageToast("关键词不能为空");
+                NotificationShowExtensions.ShowMessageToast("关键词不能为空");
                 return;
             }
             m_viewModel.ShieldWords.Add(DanmuSettingTxtWord.Text);
@@ -83,7 +83,7 @@ namespace BiliLite.Controls.Settings
             DanmuSettingTxtWord.Text = "";
             if (!result)
             {
-                Notify.ShowMessageToast("已经添加到本地，但远程同步失败");
+                NotificationShowExtensions.ShowMessageToast("已经添加到本地，但远程同步失败");
             }
         }
 
@@ -122,7 +122,7 @@ namespace BiliLite.Controls.Settings
         {
             if (string.IsNullOrEmpty(DanmuSettingTxtRegex.Text))
             {
-                Notify.ShowMessageToast("正则表达式不能为空");
+                NotificationShowExtensions.ShowMessageToast("正则表达式不能为空");
                 return;
             }
             var txt = DanmuSettingTxtRegex.Text.Trim('/');
@@ -132,7 +132,7 @@ namespace BiliLite.Controls.Settings
             DanmuSettingTxtRegex.Text = "";
             if (!result)
             {
-                Notify.ShowMessageToast("已经添加到本地，但远程同步失败");
+                NotificationShowExtensions.ShowMessageToast("已经添加到本地，但远程同步失败");
             }
         }
 
@@ -140,7 +140,7 @@ namespace BiliLite.Controls.Settings
         {
             if (string.IsNullOrEmpty(DanmuSettingTxtUser.Text))
             {
-                Notify.ShowMessageToast("用户ID不能为空");
+                NotificationShowExtensions.ShowMessageToast("用户ID不能为空");
                 return;
             }
             m_viewModel.ShieldUsers.Add(DanmuSettingTxtUser.Text);
@@ -149,7 +149,7 @@ namespace BiliLite.Controls.Settings
             DanmuSettingTxtUser.Text = "";
             if (!result)
             {
-                Notify.ShowMessageToast("已经添加到本地，但远程同步失败");
+                NotificationShowExtensions.ShowMessageToast("已经添加到本地，但远程同步失败");
             }
         }
 

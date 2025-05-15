@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Services;
-using Microsoft.Extensions.DependencyInjection;
-using Windows.ApplicationModel.Core;
-using BiliLite.ViewModels.Settings;
-using Windows.Storage.Pickers;
-using Windows.Storage;
 using BiliLite.ViewModels.Plugins;
+using BiliLite.ViewModels.Settings;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json;
+using System;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using IMapper = AutoMapper.IMapper;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
@@ -90,7 +90,7 @@ namespace BiliLite.Controls.Settings
                     var text = sender2.Text;
                     if (string.IsNullOrEmpty(text))
                     {
-                        Notify.ShowMessageToast("已取消自定义BiliLiteWebApi服务器");
+                        NotificationShowExtensions.ShowMessageToast("已取消自定义BiliLiteWebApi服务器");
                         SettingService.SetValue(SettingConstants.Other.BILI_LITE_WEB_API_BASE_URL, "");
                         return;
                     }
@@ -98,13 +98,13 @@ namespace BiliLite.Controls.Settings
                     if (!text.EndsWith("/")) text += "/";
                     if (!Uri.IsWellFormedUriString(text, UriKind.Absolute))
                     {
-                        Notify.ShowMessageToast("地址格式错误");
+                        NotificationShowExtensions.ShowMessageToast("地址格式错误");
                         return;
                     }
 
                     SettingService.SetValue(SettingConstants.Other.BILI_LITE_WEB_API_BASE_URL, text);
                     sender2.Text = text;
-                    Notify.ShowMessageToast("保存成功");
+                    NotificationShowExtensions.ShowMessageToast("保存成功");
                 };
             };
 
@@ -130,12 +130,12 @@ namespace BiliLite.Controls.Settings
             var build = RequestBuildTextBox.Text;
             if (string.IsNullOrWhiteSpace(build))
             {
-                Notify.ShowMessageToast("请输入正确的build值");
+                NotificationShowExtensions.ShowMessageToast("请输入正确的build值");
                 return;
             }
 
             SettingService.SetValue(SettingConstants.Other.REQUEST_BUILD, build);
-            Notify.ShowMessageToast("已保存");
+            NotificationShowExtensions.ShowMessageToast("已保存");
         }
 
         private void RequestBuildDefaultBtn_OnClick(object sender, RoutedEventArgs e)
@@ -143,7 +143,7 @@ namespace BiliLite.Controls.Settings
             var build = SettingConstants.Other.DEFAULT_REQUEST_BUILD;
             SettingService.SetValue(SettingConstants.Other.REQUEST_BUILD, build);
             RequestBuildTextBox.Text = build;
-            Notify.ShowMessageToast("已恢复默认");
+            NotificationShowExtensions.ShowMessageToast("已恢复默认");
         }
 
         private void MirrorComboboxSelectAction(object selectedValue)
@@ -186,7 +186,7 @@ namespace BiliLite.Controls.Settings
             catch (Exception ex)
             {
                 _logger.Error("导出失败", ex);
-                Notify.ShowMessageToast("导出失败，已记录错误");
+                NotificationShowExtensions.ShowMessageToast("导出失败，已记录错误");
             }
         }
 
@@ -198,14 +198,14 @@ namespace BiliLite.Controls.Settings
                 return;
             }
 
-            Notify.ShowMessageToast("导入成功，正在重启应用");
+            NotificationShowExtensions.ShowMessageToast("导入成功，正在重启应用");
             // 等用户看提示
             await Task.Delay(3000);
             var result = await CoreApplication.RequestRestartAsync("");
 
             if (result == AppRestartFailureReason.NotInForeground || result == AppRestartFailureReason.Other)
             {
-                Notify.ShowMessageToast("重启失败，请手动重启应用");
+                NotificationShowExtensions.ShowMessageToast("重启失败，请手动重启应用");
             }
         }
 
@@ -219,7 +219,7 @@ namespace BiliLite.Controls.Settings
             catch (Exception ex)
             {
                 _logger.Error("导出失败", ex);
-                Notify.ShowMessageToast("导出失败，已记录错误");
+                NotificationShowExtensions.ShowMessageToast("导出失败，已记录错误");
             }
         }
 
@@ -237,7 +237,7 @@ namespace BiliLite.Controls.Settings
 
         private async void BtnSettingPlugin_OnClick(object sender, RoutedEventArgs e)
         {
-            await PluginsDialog.ShowAsync();
+            await NotificationShowExtensions.ShowContentDialog(PluginsDialog);
         }
 
         private async void BtnImportPluginInfo_OnClick(object sender, RoutedEventArgs e)

@@ -1,9 +1,10 @@
-﻿using BiliLite.Models.Requests.Api.Live;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
+using BiliLite.Models.Requests.Api.Live;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BiliLite.Extensions;
 
 namespace BiliLite.Modules.Live.LiveCenter
 {
@@ -96,19 +97,19 @@ namespace BiliLite.Modules.Live.LiveCenter
                     }
                     else
                     {
-                        Notify.ShowMessageToast(data.message);
+                        NotificationShowExtensions.ShowMessageToast(data.message);
                     }
                 }
                 else
                 {
-                    Notify.ShowMessageToast(results.message);
+                    NotificationShowExtensions.ShowMessageToast(results.message);
 
                 }
             }
             catch (Exception ex)
             {
                 var handel = HandelError<LiveCenterHistoryVM>(ex);
-                Notify.ShowMessageToast(handel.message);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally
             {
