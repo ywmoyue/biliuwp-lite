@@ -758,7 +758,7 @@
                                     Value="{Binding ElementName=Player, Path=Position, Mode=OneWay}" />-->
                                     <local:PlayerProgressBar
                                         x:Name="BottomProgress"
-                                        Position="{x:Bind m_viewModel.Position, Mode=OneWay}"
+                                        Position="{Binding ElementName=Player, Path=Position, Mode=OneWay}"
                                         PositionChanged="BottomProgress_OnPositionChanged"
                                         Duration="{Binding ElementName=Player, Path=Duration, Mode=OneWay}" />
                                     <Canvas x:Name="BottomProgressCanvas" />
