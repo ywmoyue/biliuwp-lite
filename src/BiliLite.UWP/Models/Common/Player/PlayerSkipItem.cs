@@ -23,14 +23,30 @@
         /// <summary>
         /// 片段类型对应的名称。
         /// </summary>
-        public string SectionName => Category switch
+        public string SectionName => CategoryEnum switch
         {
-            "sponsor" => "广告",
-            "intro" => "过场/开场动画",
-            "outro" => "鸣谢/结束画面",
-            "selfpromo" => "无偿/自我推广",
-            "poi_highlight" => "精彩时刻/重点",
+            SponsorBlockType.Sponsor => "广告",
+            SponsorBlockType.Intro => "过场/开场动画",
+            SponsorBlockType.Outro => "鸣谢/结束画面",
+            SponsorBlockType.SelfPromo => "无偿/自我推广",
+            SponsorBlockType.PoiHighlight => "精彩时刻/重点",
+            SponsorBlockType.Interaction => "三连/订阅提醒",
+            SponsorBlockType.Preview => "回顾/概要",
+            SponsorBlockType.MusicOfftopic => "非音乐部分",
             _ => "",
+        };
+
+        public SponsorBlockType CategoryEnum => Category switch
+        {
+            "sponsor" => SponsorBlockType.Sponsor,
+            "intro" => SponsorBlockType.Intro,
+            "outro" => SponsorBlockType.Outro,
+            "selfpromo" => SponsorBlockType.SelfPromo,
+            "poi_highlight" => SponsorBlockType.PoiHighlight,
+            "interaction" => SponsorBlockType.Interaction,
+            "preview" => SponsorBlockType.Preview,
+            "music_offtopic" => SponsorBlockType.MusicOfftopic,
+            _ => SponsorBlockType.None,
         };
 
         /// <summary>

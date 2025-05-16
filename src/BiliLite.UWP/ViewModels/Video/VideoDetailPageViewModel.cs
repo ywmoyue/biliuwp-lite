@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Bilibili.Polymer.App.Search.V1;
 using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
@@ -281,22 +280,17 @@ namespace BiliLite.Modules
 
             var video = data.FirstOrDefault(video => video.VideoId == bvid);
             if (video is null) return;
-
-            List<SponsorBlockSegment> skipSegment = [];
-            skipSegment.AddRange(video.Segments.Where(seg => seg.Category == "sponsor"));
-            // TODO: 添加开关
-            if (true) skipSegment.AddRange(video.Segments.Where(seg => seg.Category == "intro"));
-            if (true) skipSegment.AddRange(video.Segments.Where(seg => seg.Category == "outro"));
-            if (true) skipSegment.AddRange(video.Segments.Where(seg => seg.Category == "selfpromp"));
-            foreach (var seg in skipSegment)
+            foreach (var seg in video.Segments)
             {
+                if (Math.Abs(VideoInfo.Duration - seg.VideoDuration) > 2.0) continue; //视频长度不等, 有可能换过源
                 var item = new PlayerSkipItem
                 {
-                    Start = seg.Segment[0],
-                    End = seg.Segment[1],
+                    Start = seg.Segment[0] != 0 ? seg.Segment[0] : seg.Segment[0] + 0.75, //完全贴合视频开头的片段会报错. 加偏移量
+                    End = Math.Abs(seg.Segment[1] - seg.VideoDuration) > 0.5 ? seg.Segment[1] : seg.Segment[1] - 1.5, //完全贴合视频结尾的片段会卡死播放器，加偏移量
                     Category = seg.Category,
                     VideoDuration = seg.VideoDuration,
                 };
+                if(!item.IsSectionValid || item.CategoryEnum == SponsorBlockType.PoiHighlight) continue; //暂不支持精彩时刻
                 SponsorBlockList.Add(item);
             }
         }
