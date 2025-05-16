@@ -174,7 +174,7 @@ namespace BiliLite.Controls
             danmuTimer.Interval = TimeSpan.FromSeconds(1);
             danmuTimer.Tick += DanmuTimer_Tick;
 
-            m_positionTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(0.02) };
+            m_positionTimer = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(100) };
             m_positionTimer.Tick += PositionTimer_Tick;
             m_autoSkipOpEdFlag = SettingService.GetValue(SettingConstants.Player.AUTO_SKIP_OP_ED,
                 SettingConstants.Player.DEFAULT_AUTO_SKIP_OP_ED);
@@ -918,16 +918,15 @@ namespace BiliLite.Controls
         {
             if (section == null) return;
             var gap = Math.Abs(Player.Position - section.Start);
-            if (!IsSectionValid(section) || gap > 0.1) return;
-            m_playerToastService.Show(toastId, message);
-            Pause();
+            if (!IsSectionValid(section) || gap > 0.5) return; //更大的宽容范围检测
+            Task.Delay(TimeSpan.FromSeconds(gap));
             SetPosition(section.End);
-            Player.Play();
+            m_playerToastService.Show(toastId, message);
         }
 
         private bool IsSectionValid(PlayerSkipItem section)
         {
-            return section.Start != 0 && section.End != 0 && section.Start != section.End;
+            return section.Start != 0 && section.End != 0 && section.Start < section.End;
         }
 
         private async Task SetPlayItem(int index)
