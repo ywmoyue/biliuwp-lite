@@ -34,11 +34,23 @@
             <Border.RenderTransform>
                 <CompositeTransform TranslateY="0" />
             </Border.RenderTransform>
-            <TextBlock
-                x:Name="TxtToolTip"
-                FontSize="14"
-                Foreground="Black"
-                Text="{x:Bind m_viewModel.Text, Mode=OneWay}" />
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
+                <TextBlock
+                    x:Name="TxtToolTip"
+                    FontSize="14"
+                    Foreground="Black"
+                    VerticalAlignment="Center"
+                    Text="{x:Bind m_viewModel.Text, Mode=OneWay}" />
+                <Button Margin="16 0 0 0" 
+                        VerticalAlignment="Center"
+                        FontSize="14" 
+                        Visibility="{x:Bind m_viewModel.ShowSkipButton}"
+                        Click="SkipButton_OnClick"
+                        Content="跳过"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        Foreground="Black" />
+            </StackPanel>
         </Border>
     </Grid>
 </UserControl>

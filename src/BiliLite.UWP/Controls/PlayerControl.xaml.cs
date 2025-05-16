@@ -909,7 +909,7 @@ namespace BiliLite.Controls
             {
                 foreach (var seg in CurrentPlayItem.SegmentSkip)
                 {
-                    SkipSection(seg, "SkipSponsor", $"自动跳过{seg.SectionName}");
+                    SkipSection(seg, "SkipSponsor", "");
                 }
             }
         }
@@ -917,14 +917,21 @@ namespace BiliLite.Controls
         private void SkipSection(PlayerSkipItem section, string toastId, string message)
         {
             if (section == null) return;
-            if (Math.Abs(section.VideoDuration - (CurrentPlayItem.duration / 1000.0)) > 1.0) return; //视频长度不等, 有可能换过源
 
             var gap = Math.Abs(Player.Position - section.Start);
             if (!section.IsSectionValid || gap > 0.5) return; //更大的宽容范围检测
 
             Task.Delay(TimeSpan.FromSeconds(gap));
-            SetPosition(section.End);
-            m_playerToastService.Show(toastId, message);
+            if (section.CategoryEnum == SponsorBlockType.Sponsor)
+            {
+                SetPosition(section.End);
+                m_playerToastService.Show(toastId, $"自动跳过 {section.SectionName}");
+            }
+            else
+            {
+                var showTime = (long)((section.End - section.Start) * 1000);
+                m_playerToastService.Show(toastId, $"跳过 {section.SectionName} ？", showTime > 10000 ? 10000 : showTime - 1500, section.End);
+            }
         }
 
         private async Task SetPlayItem(int index)

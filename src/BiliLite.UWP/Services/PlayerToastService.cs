@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Timers;
-using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
-using BiliLite.Controls;
-using Windows.UI.Core;
+﻿using BiliLite.Controls;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Timers;
+using Windows.UI.Core;
+using Windows.UI.Xaml.Controls;
 
 namespace BiliLite.Services
 {
@@ -65,7 +65,14 @@ namespace BiliLite.Services
             m_showPlayerToasts.Remove(key);
         }
 
-        public async void Show(string key, string msg)
+        /// <summary>
+        /// 显示Toast信息
+        /// </summary>
+        /// <param name="key">ToastId</param>
+        /// <param name="msg">显示信息</param>
+        /// <param name="showTime">显示时间(毫秒)</param>
+        /// <param name="position">跳转位置. 用于SponsorBlock功能，可选</param>
+        public async void Show(string key, string msg, long showTime, double? position = null)
         {
             if (m_showPlayerToasts.TryGetValue(key, out var toast))
             {
@@ -80,6 +87,13 @@ namespace BiliLite.Services
             newToast.Height = 80;
             newToast.Width = 200;
             newToast.Text = msg;
+            if (position != null)
+            {
+                newToast.Width = 300;
+                newToast.ShowSkipButton = true;
+                newToast.SkipButtonClick += (_, _) => m_playerControl.SetPosition(position.Value);
+            }
+
             Canvas.SetLeft(newToast, 0);
             double distanceFromBottom = m_bottomList[m_showPlayerToasts.Count];
             while (m_playerControl.ActualHeight == 0)
@@ -93,19 +107,24 @@ namespace BiliLite.Services
             newToast.Show();
 
             var newTimer = new Timer();
-            newTimer.Interval = 2000;
-            newTimer.Elapsed += async (o, e) =>
-            {
-                await m_playerControl.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                {
-                    newTimer.Stop();
-                    m_playerControl.PlayerToastContainer.Children.Remove(newToast);
-                    m_showPlayerToasts.Remove(key);
-                    m_showPlayerToastTimers.Remove(key);
-                });
-            };
+            newTimer.Interval = showTime;
+            newTimer.Elapsed += async (_, _) => await Hide(key, newToast, newTimer);
+            newToast.HideToast += async (_, _) => await Hide(key, newToast, newTimer);
             m_showPlayerToastTimers.Add(key, newTimer);
             newTimer.Start();
+        }
+
+        public void Show(string key, string msg) => Show(key, msg, 2000);
+
+        public async Task Hide(string key, PlayerToast toast, Timer timer)
+        {
+            await m_playerControl.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                timer.Stop();
+                m_playerControl.PlayerToastContainer.Children.Remove(toast);
+                m_showPlayerToasts.Remove(key);
+                m_showPlayerToastTimers.Remove(key);
+            });
         }
     }
 }
