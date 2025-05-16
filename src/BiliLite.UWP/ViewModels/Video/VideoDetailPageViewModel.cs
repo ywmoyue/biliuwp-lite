@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Bilibili.Polymer.App.Search.V1;
 using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
@@ -280,15 +281,21 @@ namespace BiliLite.Modules
 
             var video = data.FirstOrDefault(video => video.VideoId == bvid);
             if (video is null) return;
-            // 先做出跳过效果
-            // TODO: 其他类型
-            var skipSegment = video.Segments.Where(seg => seg.Category == "sponsor").ToList();
+
+            List<SponsorBlockSegment> skipSegment = [];
+            skipSegment.AddRange(video.Segments.Where(seg => seg.Category == "sponsor"));
+            // TODO: 添加开关
+            if (true) skipSegment.AddRange(video.Segments.Where(seg => seg.Category == "intro"));
+            if (true) skipSegment.AddRange(video.Segments.Where(seg => seg.Category == "outro"));
+            if (true) skipSegment.AddRange(video.Segments.Where(seg => seg.Category == "selfpromp"));
             foreach (var seg in skipSegment)
             {
                 var item = new PlayerSkipItem
                 {
                     Start = seg.Segment[0],
-                    End = seg.Segment[1]
+                    End = seg.Segment[1],
+                    Category = seg.Category,
+                    VideoDuration = seg.VideoDuration,
                 };
                 SponsorBlockList.Add(item);
             }
