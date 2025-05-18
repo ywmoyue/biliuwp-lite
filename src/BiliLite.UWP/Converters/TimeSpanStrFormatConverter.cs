@@ -1,9 +1,28 @@
 ﻿using System;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Data;
 
 namespace BiliLite.Converters;
 
-public static class TimeSpanStrFormatConverter
+public class TimeSpanStrFormatConverter: IValueConverter
 {
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        return value switch
+        {
+            string timeSpanStr => Convert(timeSpanStr),
+            TimeSpan timeSpan => Convert(timeSpan),
+            double seconds => Convert(seconds),
+            long milliseconds => Convert(milliseconds),
+            _ => DependencyProperty.UnsetValue
+        };
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        throw new NotImplementedException();
+    }
+
     public static string Convert(string timeSpanStr)
     {
         // 解析输入字符串
@@ -45,5 +64,28 @@ public static class TimeSpanStrFormatConverter
         var format = timeSpan.Hours == 0 ? @"mm\:ss" : @"hh\:mm\:ss";
         // 根据指定格式格式化 TimeSpan
         return timeSpan.ToString(format);
+    }
+
+    /// <summary>
+    /// 将秒数转换为字符串格式
+    /// </summary>
+    /// <param name="secondTime">时间(秒)</param>
+    public static string Convert(double secondTime)
+    {
+        // 将 double 秒数转换为 TimeSpan
+        var timeSpan = TimeSpan.FromSeconds(secondTime);
+        // 根据小时是否为0来动态调整格式字符串
+        var format = timeSpan.Hours == 0 ? @"mm\:ss" : @"hh\:mm\:ss";
+        // 根据指定格式格式化 TimeSpan
+        return timeSpan.ToString(format);
+    }
+
+    /// <summary>
+    /// 将毫秒数转换为字符串格式
+    /// </summary>
+    /// <param name="millisecondTime">时间(毫秒)</param>
+    public static string Convert(long millisecondTime)
+    {
+        return Convert(millisecondTime / 1000.0);
     }
 }
