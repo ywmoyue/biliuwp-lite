@@ -266,6 +266,8 @@ namespace BiliLite.Modules
 
         public async Task LoadSponsorBlock(string bvid)
         {
+            SponsorBlockList.Clear();
+
             var results = await sponsorBlockAPI.GetSponsorBlock(bvid).Request();
             if (!results.status)
             {

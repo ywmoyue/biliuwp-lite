@@ -711,6 +711,7 @@ namespace BiliLite.Controls
 
             m_viewModel.SponsorBlockSegmentList = CurrentPlayItem.SegmentSkip.OrderBy(x => x.Start).ToList();
 
+            SponsorBlockStackPanel.Children.Clear();
             AddSegmentToStackPanel(m_viewModel.SponsorBlockSegmentList);
 
             SponsorBlockStackPanel.Visibility =
