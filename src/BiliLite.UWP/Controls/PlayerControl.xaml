@@ -677,7 +677,7 @@
                                         Height="48"
                                         Padding="0"
                                         Background="Transparent"
-                                        Visibility="{x:Bind m_viewModel.ShowSponsorBlockBtn}"
+                                        Visibility="{x:Bind m_viewModel.ShowSponsorBlockBtn, Mode=OneWay}"
                                         ToolTipService.ToolTip="空降助手">
                                         <fa:FontAwesome
                                             Width="28"
