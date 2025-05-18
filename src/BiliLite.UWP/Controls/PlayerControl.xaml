@@ -692,6 +692,7 @@
                                                         <RowDefinition Height="Auto"/>
                                                         <RowDefinition Height="Auto"/>
                                                         <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
                                                     </Grid.RowDefinitions>
                                                     <Grid Grid.Row="0">
                                                         <Grid HorizontalAlignment="Center">
@@ -712,10 +713,17 @@
 
                                                     <StackPanel Grid.Row="2" x:Name="SponsorBlockStackPanel" HorizontalAlignment="Stretch" Margin="0 8" Spacing="8"/>
 
-                                                    <TextBlock Grid.Row="3" FontSize="12" HorizontalAlignment="Center" Margin="0 8" Foreground="Gray" TextDecorations="Underline">
+                                                    <TextBlock Grid.Row="3" FontSize="12" HorizontalAlignment="Center" Margin="0 16 0 4" Foreground="Gray">
                                                         本功能灵感与数据库来自
                                                         <Hyperlink NavigateUri="https://github.com/hanydd/BilibiliSponsorBlock">
                                                             <Run Text="B站空降助手" />
+                                                        </Hyperlink>
+                                                    </TextBlock>
+
+                                                    <TextBlock Grid.Row="4" FontSize="12" HorizontalAlignment="Center" Foreground="Gray">
+                                                        赠人玫瑰，手有余香🌹
+                                                        <Hyperlink NavigateUri="https://bsbsb.top/donate/">
+                                                            <Run Text="支持原作者提供的数据库" />
                                                         </Hyperlink>
                                                     </TextBlock>
                                                 </Grid>
