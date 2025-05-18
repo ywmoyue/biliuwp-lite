@@ -123,6 +123,7 @@ namespace BiliLite.Controls
         }
 
         private readonly bool m_autoSkipOpEdFlag = false;
+        private readonly bool m_sponsorBlockFlag;
         private DispatcherTimer m_autoRefreshTimer;
         private DispatcherTimer m_positionTimer;
         DispatcherTimer danmuTimer;
@@ -178,6 +179,8 @@ namespace BiliLite.Controls
             m_positionTimer.Tick += PositionTimer_Tick;
             m_autoSkipOpEdFlag = SettingService.GetValue(SettingConstants.Player.AUTO_SKIP_OP_ED,
                 SettingConstants.Player.DEFAULT_AUTO_SKIP_OP_ED);
+            m_sponsorBlockFlag = SettingService.GetValue(SettingConstants.Player.SPONSOR_BLOCK,
+                SettingConstants.Player.DEFAULT_SPONSOR_BLOCK);
 
             Loaded += PlayerControl_Loaded;
             Unloaded += PlayerControl_Unloaded;
@@ -703,7 +706,9 @@ namespace BiliLite.Controls
 
         public void LoadSponsorBlock()
         {
-            if(CurrentPlayItem == null) return;
+            if(CurrentPlayItem == null || !m_sponsorBlockFlag) return;
+            m_viewModel.ShowSponsorBlockBtn = true;
+
             m_viewModel.SponsorBlockSegmentList = CurrentPlayItem.SegmentSkip.OrderBy(x => x.Start).ToList();
 
             AddSegmentToStackPanel(m_viewModel.SponsorBlockSegmentList);

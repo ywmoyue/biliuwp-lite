@@ -183,6 +183,9 @@ namespace BiliLite.Modules
 
         public List<PlayerSkipItem> SponsorBlockList { get; set; } = [];
 
+        public bool ShowSponsorBlock => 
+            SettingService.GetValue(SettingConstants.Player.SPONSOR_BLOCK, SettingConstants.Player.DEFAULT_SPONSOR_BLOCK);
+
         #endregion
 
         #region Private Methods
@@ -371,7 +374,7 @@ namespace BiliLite.Modules
 
                 await LoadVideoTags(data.data.Aid);
 
-                await LoadSponsorBlock(data.data.Bvid);
+                if (ShowSponsorBlock) await LoadSponsorBlock(data.data.Bvid);
             }
             catch (Exception ex)
             {

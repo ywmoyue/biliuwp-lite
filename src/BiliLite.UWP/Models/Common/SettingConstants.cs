@@ -809,6 +809,12 @@ namespace BiliLite.Models.Common
             public const string SPONSOR_BLOCK = "SponsorBlock";
 
             /// <summary>
+            /// 默认开启空降助手开关 bool
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_SPONSOR_BLOCK = true;
+
+            /// <summary>
             /// 自动播放 bool
             /// </summary>
             [SettingKey(typeof(bool))]

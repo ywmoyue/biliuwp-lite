@@ -108,7 +108,7 @@ namespace BiliLite.Controls.Settings
             //});
 
             //空降助手
-            swSponsorBlock.IsOn = SettingService.GetValue<bool>(SettingConstants.Player.SPONSOR_BLOCK, true);
+            swSponsorBlock.IsOn = SettingService.GetValue<bool>(SettingConstants.Player.SPONSOR_BLOCK, SettingConstants.Player.DEFAULT_SPONSOR_BLOCK);
             swSponsorBlock.Loaded += (_, _) =>
             {
                 swSponsorBlock.Toggled += (_, _) =>

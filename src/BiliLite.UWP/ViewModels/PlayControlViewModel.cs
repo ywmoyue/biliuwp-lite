@@ -22,7 +22,7 @@ namespace BiliLite.ViewModels
 
         public bool ShowWebPlayerToolbar { get; set; }
 
-        public bool ShowSponsorBlockBtn { get; set; } = true;
+        public bool ShowSponsorBlockBtn { get; set; } = false;
 
         public List<PlayerSkipItem> SponsorBlockSegmentList { get; set; }
 
