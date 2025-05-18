@@ -1,4 +1,5 @@
 ﻿using BiliLite.Models.Common;
+using BiliLite.Services;
 using BiliLite.ViewModels.Video;
 using Newtonsoft.Json;
 using System;
@@ -13,7 +14,7 @@ namespace BiliLite.Models.Requests.Api
     {
         /// <summary>
         /// 获取视频的SponsorBlock数据。
-        /// <para>使用sha256HashPrefix作为视频的唯一标识符，保证隐私。</para>
+        /// <para>使用sha256HashPrefix作为视频的标识符，保证隐私。</para>
         /// </summary>
         /// <param name="bvid">视频的BVID</param>
         public ApiModel GetSponsorBlock(string bvid)
@@ -29,7 +30,7 @@ namespace BiliLite.Models.Requests.Api
             var api = new ApiModel()
             {
                 method = HttpMethods.Get,
-                baseUrl = $"http://115.190.32.254:8080/api/skipSegments/{sha256HashPrefix}"
+                baseUrl = $"{ApiHelper.SPONSOR_BLOCK_URL}/skipSegments/{sha256HashPrefix}"
             };
             return api;
         }
@@ -48,7 +49,7 @@ namespace BiliLite.Models.Requests.Api
             var api = new ApiModel()
             {
                 method = HttpMethods.Post,
-                baseUrl = "http://115.190.32.254:8080/api/skipSegments",
+                baseUrl = $"{ApiHelper.SPONSOR_BLOCK_URL}/api/skipSegments",
                 body = JsonConvert.SerializeObject(new 
                 {
                     videoID = bvid,

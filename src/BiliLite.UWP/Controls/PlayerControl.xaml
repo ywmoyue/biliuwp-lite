@@ -716,7 +716,7 @@
                                                     <TextBlock Grid.Row="3" FontSize="12" HorizontalAlignment="Center" Margin="0 8" Foreground="Gray" TextDecorations="Underline">
                                                         本功能灵感与数据库来自
                                                         <Hyperlink NavigateUri="https://github.com/hanydd/BilibiliSponsorBlock">
-                                                            <Run Text="B站空降助手(浏览器插件)" />
+                                                            <Run Text="B站空降助手" />
                                                         </Hyperlink>
                                                     </TextBlock>
                                                 </Grid>
