@@ -701,6 +701,103 @@ namespace BiliLite.Controls
             });
         }
 
+        public void LoadSponsorBlock()
+        {
+            if(CurrentPlayItem == null) return;
+            m_viewModel.SponsorBlockSegmentList = CurrentPlayItem.SegmentSkip.OrderBy(x => x.Start).ToList();
+
+            AddSegmentToStackPanel(m_viewModel.SponsorBlockSegmentList);
+
+            SponsorBlockStackPanel.Visibility =
+                SponsorBlockStackPanel.Children.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+
+            SponsorBlockMsg.Text = m_viewModel.SponsorBlockSegmentList.Count > 0 ? 
+                $"🎉此视频在数据库中有 {m_viewModel.SponsorBlockSegmentList.Count} 个可跳过片段！" :
+                "😢在数据库中未找到此视频的可跳过片段";
+        }
+
+        public void AddSegmentToStackPanel(List<PlayerSkipItem> list)
+        {
+            if (list == null || list.Count == 0) return;
+
+            foreach (var item in list)
+            {
+                // 创建Button
+                var button = new Button
+                {
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                    VerticalContentAlignment = VerticalAlignment.Stretch,
+                    Background = new SolidColorBrush(Colors.Transparent),
+                };
+
+                // 创建Grid作为Button的内容
+                var grid = new Grid
+                {
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Stretch
+                };
+
+                // 添加列定义
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+                // 创建圆形提示
+                var ellipse = new Ellipse
+                {
+                    Width = 10,
+                    Height = 10,
+                    Fill = item.Brush,
+                    VerticalAlignment = VerticalAlignment.Stretch,
+                    Margin = new Thickness(0, 0, 8, 0)
+                };
+                Grid.SetColumn(ellipse, 0);
+
+                // 创建第一个TextBlock
+                var textBlock1 = new TextBlock
+                {
+                    Padding = new Thickness(0),
+                    FontSize = 14,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(0, 0, 0, 2),
+                    Text = item.SegmentName
+                };
+                Grid.SetColumn(textBlock1, 1);
+
+                // 创建第二个TextBlock
+                var textBlock2 = new TextBlock
+                {
+                    Padding = new Thickness(0),
+                    FontSize = 14,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(0, 0, 0, 2),
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    Text = $"{TimeSpanStrFormatConverter.Convert(item.Start)} ➡️ {TimeSpanStrFormatConverter.Convert(item.End)}"
+                };
+                Grid.SetColumn(textBlock2, 3);
+
+                // 将控件添加到Grid中
+                grid.Children.Add(ellipse);
+                grid.Children.Add(textBlock1);
+                grid.Children.Add(textBlock2);
+
+                // 将Grid设置为Button的内容
+                button.Content = grid;
+
+                // 设置按钮点击事件为跳到片段结尾并关闭Flyout
+                button.Click += (_, _) =>
+                {
+                    SetPosition(item.End);
+                    SponsorBlockFlyout.Hide();
+                };
+
+                // 将Button添加到StackPanel中
+                SponsorBlockStackPanel.Children.Add(button);
+            }
+        }
+
         public void InitializePlayInfo(List<PlayInfo> playInfos, int index)
         {
             //保持屏幕常亮
@@ -925,12 +1022,12 @@ namespace BiliLite.Controls
             if (section.CategoryEnum == SponsorBlockType.Sponsor)
             {
                 SetPosition(section.End);
-                m_playerToastService.Show(toastId, $"自动跳过 {section.SectionName}");
+                m_playerToastService.Show(toastId, $"自动跳过{section.SegmentName}", seg: section);
             }
             else
             {
                 var showTime = (long)((section.End - section.Start) * 1000);
-                m_playerToastService.Show(toastId, $"跳过 {section.SectionName} ？", showTime > 10000 ? 10000 : showTime - 1500, section.End);
+                m_playerToastService.Show(toastId, $"跳过{section.SegmentName}？", showTime > 10000 ? 10000 : showTime - 1500, section);
             }
         }
 
@@ -1038,6 +1135,8 @@ namespace BiliLite.Controls
                 if (Player.ABPlay.PointB != double.MaxValue)
                     PlayerSettingABPlaySetPointB.Content = "B: " + TimeSpan.FromSeconds(Player.ABPlay.PointB).ToString(@"hh\:mm\:ss\.fff");
             }
+
+            LoadSponsorBlock();
         }
 
 

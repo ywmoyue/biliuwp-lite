@@ -290,7 +290,9 @@ namespace BiliLite.Modules
                     Category = seg.Category,
                     VideoDuration = seg.VideoDuration,
                 };
-                if(!item.IsSectionValid || item.CategoryEnum == SponsorBlockType.PoiHighlight) continue; //暂不支持精彩时刻
+                if (!item.IsSectionValid || 
+                    item.CategoryEnum == SponsorBlockType.PoiHighlight || 
+                    item.CategoryEnum == SponsorBlockType.None) continue; //暂不支持精彩时刻
                 SponsorBlockList.Add(item);
             }
         }

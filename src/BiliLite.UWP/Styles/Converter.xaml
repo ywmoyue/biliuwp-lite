@@ -23,6 +23,7 @@
     <Convert:CountOrTextConvert x:Name="CountOrTextConvert" />
     <Convert:LiveStatusConverter x:Name="LiveStatusConverter" />
     <Convert:RealPlayerTypeDisplayConverter x:Name="RealPlayerTypeDisplayConverter" />
+    <Convert:TimeSpanStrFormatConverter x:Name="TimeSpanStrFormatConverter"/>
 
     <ToolKitConvert:ColorToDisplayNameConverter x:Key="ColorToDisplayNameConverter" />
 </ResourceDictionary>

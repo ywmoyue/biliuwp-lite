@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
+using BiliLite.Models.Common.Player;
 
 namespace BiliLite.Services
 {
@@ -70,9 +71,9 @@ namespace BiliLite.Services
         /// </summary>
         /// <param name="key">ToastId</param>
         /// <param name="msg">显示信息</param>
-        /// <param name="showTime">显示时间(毫秒)</param>
-        /// <param name="position">跳转位置. 用于SponsorBlock功能，可选</param>
-        public async void Show(string key, string msg, long showTime, double? position = null)
+        /// <param name="showTime">显示时间(毫秒) 默认2000</param>
+        /// <param name="seg">用于SponsorBlock功能，可选</param>
+        public async void Show(string key, string msg, long showTime = 2000, PlayerSkipItem seg = null)
         {
             if (m_showPlayerToasts.TryGetValue(key, out var toast))
             {
@@ -87,11 +88,12 @@ namespace BiliLite.Services
             newToast.Height = 80;
             newToast.Width = 200;
             newToast.Text = msg;
-            if (position != null)
+            if (seg != null)
             {
                 newToast.Width = 300;
-                newToast.ShowSkipButton = true;
-                newToast.SkipButtonClick += (_, _) => m_playerControl.SetPosition(position.Value);
+                if (seg.NeedSkipButton) newToast.ShowSkipButton = true;
+                newToast.IconBrush = seg.Brush;
+                newToast.SkipButtonClick += (_, _) => m_playerControl.SetPosition(seg.End);
             }
 
             Canvas.SetLeft(newToast, 0);
@@ -113,8 +115,6 @@ namespace BiliLite.Services
             m_showPlayerToastTimers.Add(key, newTimer);
             newTimer.Start();
         }
-
-        public void Show(string key, string msg) => Show(key, msg, 2000);
 
         public async Task Hide(string key, PlayerToast toast, Timer timer)
         {

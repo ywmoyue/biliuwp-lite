@@ -2,6 +2,7 @@
 using BiliLite.ViewModels.Common;
 using System.Collections.Generic;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Player;
 using BiliLite.Services;
 using BiliLite.Modules;
 
@@ -20,6 +21,10 @@ namespace BiliLite.ViewModels
         public bool ShowViewPointsBtn { get; set; }
 
         public bool ShowWebPlayerToolbar { get; set; }
+
+        public bool ShowSponsorBlockBtn { get; set; } = true;
+
+        public List<PlayerSkipItem> SponsorBlockSegmentList { get; set; }
 
         public List<PlayerInfoViewPoint> ViewPoints { get; set; }
 

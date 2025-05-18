@@ -1,8 +1,10 @@
 ﻿using BiliLite.ViewModels;
 using System;
 using System.Threading.Tasks;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
@@ -26,11 +28,11 @@ namespace BiliLite.Controls
             set => m_viewModel.Text = value;
         }
 
-        public bool ShowSkipButton
-        {
-            get => m_viewModel.ShowSkipButton;
-            set => m_viewModel.ShowSkipButton = value;
-        }
+        public bool ShowSkipButton { get; set; } = false;
+
+        public SolidColorBrush IconBrush { get; set; }
+
+        public bool ShowIcon => IconBrush != null && IconBrush != new SolidColorBrush(Colors.Transparent);
 
         public void Show()
         {
