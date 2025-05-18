@@ -1636,7 +1636,7 @@ namespace BiliLite.Controls
             try
             {
                 ClosePlay();
-                m_webPlayer.Dispose();
+                m_webPlayer?.Dispose();
             }
             catch (Exception ex)
             {

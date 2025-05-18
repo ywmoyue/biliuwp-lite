@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
+    xmlns:IsWin11="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:Player="using:BiliLite.Models.Common.Player"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -22,6 +23,13 @@
     <Page.Resources>
         <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource SystemAccentColor}" />
         <SolidColorBrush x:Key="GridViewItemForegroundSelected" Color="{ThemeResource SystemAccentColor}" />
+
+        <Style x:Key="LiveChatListViewItemStyle" TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Padding" Value="8,2" />
+        </Style>
         <DataTemplate
             x:Key="chat"
             x:Name="chat"
@@ -1970,6 +1978,7 @@
                                 x:Name="list_chat"
                                 Grid.Row="1"
                                 IsWin10:ItemContainerStyle="{StaticResource LocalListViewItemStyle}"
+                                IsWin11:ItemContainerStyle="{StaticResource LiveChatListViewItemStyle}"
                                 IsItemClickEnabled="False"
                                 ItemTemplate="{StaticResource chat}"
                                 ItemsSource="{x:Bind Path=m_liveRoomViewModel.Messages, Mode=OneWay}"
@@ -1979,14 +1988,6 @@
                                         <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" />
                                     </ItemsPanelTemplate>
                                 </ListView.ItemsPanel>
-                                <ListView.ItemContainerStyle>
-                                    <Style TargetType="ListViewItem">
-                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                        <Setter Property="MinHeight" Value="0" />
-                                        <Setter Property="Margin" Value="0" />
-                                        <Setter Property="Padding" Value="8,2" />
-                                    </Style>
-                                </ListView.ItemContainerStyle>
                             </ListView>
 
 

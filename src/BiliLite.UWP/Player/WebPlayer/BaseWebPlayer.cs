@@ -97,7 +97,7 @@ public abstract class BaseWebPlayer : Grid, IDisposable
         var @event = JsonConvert.DeserializeObject<BaseShakaPlayerEventMessage>(json);
         if (@event.Event == ShakaPlayerEventLists.POSITION_CHANGED)
         {
-            if (@event.Data is int)
+            if (@event.Data is int or long)
             {
                 PositionChanged?.Invoke(this, @event.Data.ToDouble());
             }
