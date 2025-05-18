@@ -266,7 +266,7 @@ namespace BiliLite.Modules
             var results = await sponsorBlockAPI.GetSponsorBlock(bvid).Request();
             if (!results.status)
             {
-                if(results.code is 400 or 404) NotificationShowExtensions.ShowMessageToast("SponsorBlock参数错误/片段为空");
+                if(results.code is 400 or 404) NotificationShowExtensions.ShowMessageToast($"视频{bvid} SponsorBlock API请求错误: {results.code}");
                 _logger.Warn(results.message);
                 return;
             }

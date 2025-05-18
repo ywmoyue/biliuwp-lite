@@ -803,6 +803,12 @@ namespace BiliLite.Models.Common
             public const string HARDWARE_DECODING = "PlayerHardwareDecoding";
 
             /// <summary>
+            /// 空降助手开关 bool
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string SPONSOR_BLOCK = "SponsorBlock";
+
+            /// <summary>
             /// 自动播放 bool
             /// </summary>
             [SettingKey(typeof(bool))]
