@@ -82,6 +82,11 @@ namespace BiliLite.Models.Common.Player
         public float VideoDuration { get; set; }
 
         /// <summary>
+        /// cid 用于区分一个视频的多个分P
+        /// </summary>
+        public string Cid { get; set; }
+
+        /// <summary>
         /// 判断片段区间是否合法。
         /// <para>前后可相等是因为有"poi_highlight"即"精彩时刻/重点"这种类型.</para>
         /// </summary>

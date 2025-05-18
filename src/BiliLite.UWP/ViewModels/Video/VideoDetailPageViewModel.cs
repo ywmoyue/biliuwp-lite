@@ -287,13 +287,13 @@ namespace BiliLite.Modules
             if (video is null) return;
             foreach (var seg in video.Segments)
             {
-                if (Math.Abs(VideoInfo.Duration - seg.VideoDuration) > 2.0) continue; //视频长度不等, 有可能换过源
                 var item = new PlayerSkipItem
                 {
                     Start = seg.Segment[0] != 0 ? seg.Segment[0] : seg.Segment[0] + 0.75, //完全贴合视频开头的片段会报错. 加偏移量
                     End = Math.Abs(seg.Segment[1] - seg.VideoDuration) > 0.5 ? seg.Segment[1] : seg.Segment[1] - 1.5, //完全贴合视频结尾的片段会卡死播放器，加偏移量
                     Category = seg.Category,
                     VideoDuration = seg.VideoDuration,
+                    Cid = seg.Cid,
                 };
                 if (!item.IsSectionValid || 
                     item.CategoryEnum == SponsorBlockType.PoiHighlight || 

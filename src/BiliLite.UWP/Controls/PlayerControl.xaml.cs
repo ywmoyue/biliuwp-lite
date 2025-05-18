@@ -709,7 +709,12 @@ namespace BiliLite.Controls
             if(CurrentPlayItem == null || !m_sponsorBlockFlag) return;
             m_viewModel.ShowSponsorBlockBtn = true;
 
-            m_viewModel.SponsorBlockSegmentList = CurrentPlayItem.SegmentSkip.OrderBy(x => x.Start).ToList();
+            var vaildSeg = CurrentPlayItem.SegmentSkip
+                .Where(x => x.Cid == CurrentPlayItem.cid) // 区分cid用于多P视频
+                .Where(x => Math.Abs(x.VideoDuration - CurrentPlayItem.duration) <= 2.0) // 剔除视频长度不等，可能换源的视频
+                .OrderBy(x => x.Start) // 排个序
+                .ToList();
+            m_viewModel.SponsorBlockSegmentList = vaildSeg;
 
             SponsorBlockStackPanel.Children.Clear();
             AddSegmentToStackPanel(m_viewModel.SponsorBlockSegmentList);

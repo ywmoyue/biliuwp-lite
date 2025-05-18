@@ -53,7 +53,7 @@ namespace BiliLite.Models.Common.Video
         /// </summary>
         public int node_id { get; set; } = 0;
         /// <summary>
-        /// 时长（毫秒）
+        /// 时长（秒）
         /// </summary>
         public long duration { get; set; }
         public LocalPlayInfo LocalPlayInfo { get; set; }
