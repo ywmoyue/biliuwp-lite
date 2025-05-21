@@ -155,6 +155,13 @@
                 <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE811;" />
             </controls:SettingsExpander.HeaderIcon>
             <controls:SettingsExpander.Items>
+                <controls:SettingsCard Description="自动化跳过视频中的不受欢迎片段" Header="空降助手">
+                    <controls:SettingsCard.HeaderIcon>
+                        <font:FontAwesome Icon="Solid_ShieldAlt" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <ToggleSwitch x:Name="swSponsorBlock" />
+                </controls:SettingsCard>
+
                 <controls:SettingsCard Description="播放完成自动切换下一P" Header="连续播放分P视频">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xF8AD;" />

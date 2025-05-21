@@ -107,6 +107,16 @@ namespace BiliLite.Controls.Settings
             //    });
             //});
 
+            //空降助手
+            swSponsorBlock.IsOn = SettingService.GetValue<bool>(SettingConstants.Player.SPONSOR_BLOCK, SettingConstants.Player.DEFAULT_SPONSOR_BLOCK);
+            swSponsorBlock.Loaded += (_, _) =>
+            {
+                swSponsorBlock.Toggled += (_, _) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.SPONSOR_BLOCK, swSponsorBlock.IsOn);
+                };
+            };
+
             //自动播放
             swAutoPlay.IsOn = SettingService.GetValue<bool>(SettingConstants.Player.AUTO_PLAY, false);
             swAutoPlay.Loaded += new RoutedEventHandler((sender, e) =>
