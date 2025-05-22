@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using BiliLite.Modules.ExtraInterface;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -22,6 +23,7 @@ namespace BiliLite.Controls.Settings
         private readonly PlaySpeedMenuService m_playSpeedMenuService;
         private readonly RealPlayerTypes m_realPlayerTypes = new RealPlayerTypes();
         private readonly RealPlayerTypeOption[] m_livePlayerTypes = LivePlayerTypeOptions.Options;
+        private readonly ISponsorBlockService m_sponsorBlockService;
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
 
         public PlaySettingsControl()
@@ -30,6 +32,7 @@ namespace BiliLite.Controls.Settings
             {
                 m_viewModel = App.ServiceProvider.GetRequiredService<PlaySettingsControlViewModel>();
                 m_playSpeedMenuService = App.ServiceProvider.GetRequiredService<PlaySpeedMenuService>();
+                m_sponsorBlockService = App.ServiceProvider.GetService<ISponsorBlockService>();
                 InitializeComponent();
                 LoadPlayer();
             }
@@ -106,6 +109,50 @@ namespace BiliLite.Controls.Settings
             //        SettingService.SetValue(SettingConstants.Player.HARDWARE_DECODING, swHardwareDecode.IsOn);
             //    });
             //});
+
+            //空降助手
+            if (m_sponsorBlockService == null)
+            {
+                SpBlockCard.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                swSponsorBlock.IsOn = SettingService.GetValue<bool>(SettingConstants.Player.SPONSOR_BLOCK, SettingConstants.Player.DEFAULT_SPONSOR_BLOCK);
+                swSponsorBlock.Loaded += (_, _) =>
+                {
+                    swSponsorBlock.Toggled += (_, _) =>
+                    {
+                        SettingService.SetValue(SettingConstants.Player.SPONSOR_BLOCK, swSponsorBlock.IsOn);
+                    };
+                };
+                SpBlockApiTextBox.Text =
+                    SettingService.GetValue(
+                        SettingConstants.Player.SPONSOR_BLOCK_API, m_sponsorBlockService.DefaultApiUrl);
+                SpBlockApiTextBox.Loaded += (_, _) =>
+                {
+                    SpBlockApiTextBox.QuerySubmitted += (sender, args) =>
+                    {
+                        var text = sender.Text;
+                        if (string.IsNullOrEmpty(text))
+                        {
+                            NotificationShowExtensions.ShowMessageToast("已取消自定义空降助手Api服务器");
+                            SettingService.SetValue(SettingConstants.Player.SPONSOR_BLOCK_API, "");
+                            return;
+                        }
+
+                        if (!text.EndsWith("/")) text = text.TrimEnd('/');
+                        if (!Uri.IsWellFormedUriString(text, UriKind.Absolute))
+                        {
+                            NotificationShowExtensions.ShowMessageToast("地址格式错误");
+                            return;
+                        }
+
+                        SettingService.SetValue(SettingConstants.Player.SPONSOR_BLOCK_API, text);
+                        sender.Text = text;
+                        NotificationShowExtensions.ShowMessageToast("保存成功");
+                    };
+                };
+            }
 
             //自动播放
             swAutoPlay.IsOn = SettingService.GetValue<bool>(SettingConstants.Player.AUTO_PLAY, false);
