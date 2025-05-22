@@ -229,7 +229,6 @@
     <Compile Include="Models\Common\Video\QualityDictonary.cs" />
     <Compile Include="Models\Common\WebPageNavigationInfo.cs" />
     <Compile Include="Models\Exceptions\UnLoginException.cs" />
-    <Compile Include="Models\Requests\Api\SponsorBlockApi.cs" />
     <Compile Include="Models\Theme\ColorItemModel.cs" />
     <Compile Include="Models\Common\Anime\ISeasonItem.cs" />
     <Compile Include="Models\Common\Comment\HotReply.cs" />
@@ -346,6 +345,14 @@
     <Compile Include="Models\Requests\Api\User\MessageApi.cs" />
     <Compile Include="Modules\ExtraInterface\IPlayerSponsorBlockControl.cs" />
     <Compile Include="Modules\ExtraInterface\ISponsorBlockService.cs" />
+    <Compile Include="Modules\SpBlock\Api\SponsorBlockApi.cs" />
+    <Compile Include="Modules\SpBlock\Controls\PlayerSponsorBlockControl.xaml.cs">
+      <DependentUpon>PlayerSponsorBlockControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\SpBlock\Models\SponsorBlockSegment.cs" />
+    <Compile Include="Modules\SpBlock\Models\SponsorBlockVideo.cs" />
+    <Compile Include="Modules\SpBlock\Services\SponsorBlockService.cs" />
+    <Compile Include="Modules\SpBlock\ViewModels\PlayerSponsorBlockControlViewModel.cs" />
     <Compile Include="Pages\MessagesPage.xaml.cs">
       <DependentUpon>MessagesPage.xaml</DependentUpon>
     </Compile>
@@ -719,7 +726,6 @@
     <Compile Include="ViewModels\Season\SeasonDetailViewModel.cs" />
     <Compile Include="ViewModels\User\UserSubmitCollectionViewModel.cs" />
     <Compile Include="ViewModels\Video\DanmakuViewModel.cs" />
-    <Compile Include="ViewModels\Video\SponsorBlockViewModel.cs" />
     <Compile Include="ViewModels\Video\VideoDetailReqUserViewModel.cs" />
     <Compile Include="ViewModels\Video\VideoDetailRelatesViewModel.cs" />
     <Compile Include="ViewModels\Video\VideoDetailStatViewModel.cs" />
@@ -1340,6 +1346,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dialogs\SendDynamicV2Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\SpBlock\Controls\PlayerSponsorBlockControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

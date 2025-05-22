@@ -1,17 +1,22 @@
-﻿using BiliLite.Models.Common;
-using BiliLite.Services;
-using BiliLite.ViewModels.Video;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using BiliLite.Models.Attributes;
+using BiliLite.Models.Common;
+using BiliLite.Models.Requests;
+using BiliLite.ViewModels.Video;
+using Microsoft.Toolkit.Uwp.Helpers;
 using System.Text;
-using Windows.ApplicationModel;
+using Newtonsoft.Json;
+using BiliLite.Services;
 
-namespace BiliLite.Models.Requests.Api
+namespace BiliLite.Modules.SpBlock.Api
 {
+    [RegisterTransientService]
     public class SponsorBlockApi
     {
+        public string BaseUrl { get; set; }
+
         /// <summary>
         /// 获取视频的SponsorBlock数据。
         /// <para>使用sha256HashPrefix作为视频的标识符，保证隐私。</para>
@@ -30,7 +35,7 @@ namespace BiliLite.Models.Requests.Api
             var api = new ApiModel()
             {
                 method = HttpMethods.Get,
-                baseUrl = $"{ApiHelper.SPONSOR_BLOCK_URL}/skipSegments/{sha256HashPrefix}"
+                baseUrl = $"{BaseUrl}/skipSegments/{sha256HashPrefix}"
             };
             return api;
         }
@@ -49,13 +54,13 @@ namespace BiliLite.Models.Requests.Api
             var api = new ApiModel()
             {
                 method = HttpMethods.Post,
-                baseUrl = $"{ApiHelper.SPONSOR_BLOCK_URL}/api/skipSegments",
+                baseUrl = $"{BaseUrl}/api/skipSegments",
                 body = JsonConvert.SerializeObject(new 
                 {
                     videoID = bvid,
                     cid = cvid,
                     userID = userId,
-                    userAgent = $"BiliUWP-Lite/{Package.Current.Id.Version.Major}.{Package.Current.Id.Version.Minor}.{Package.Current.Id.Version.Build}",
+                    userAgent = $"BiliUWP-Lite/{SystemInformation.ApplicationVersion.Major}.{SystemInformation.ApplicationVersion.Minor}.{SystemInformation.ApplicationVersion.Build}",
                     videoDuration = videoDuration,
                     segments = segments
                 })
