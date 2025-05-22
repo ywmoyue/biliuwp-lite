@@ -44,6 +44,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Shapes;
+using BiliLite.Modules.ExtraInterface;
 using PlayInfo = BiliLite.Models.Common.Video.PlayInfo;
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -67,6 +68,7 @@ namespace BiliLite.Controls
         private bool m_firstMediaOpened;
         private ThemeService m_themeService;
         private bool m_isLocalFileMode;
+        private readonly IPlayerSponsorBlockControl m_playerSponsorBlockControl;
 
         private void DoPropertyChanged(string name)
         {
@@ -204,6 +206,22 @@ namespace BiliLite.Controls
             {
                 m_danmakuController = App.ServiceProvider.GetRequiredService<FrostMasterDanmakuController>();
                 m_danmakuController.Init(DanmakuCanvas);
+            }
+
+            // 加载 SponsorBlockControl 如果有的话
+            if (SettingService.GetValue(SettingConstants.Player.SPONSOR_BLOCK, SettingConstants.Player.DEFAULT_SPONSOR_BLOCK))
+            {
+                m_playerSponsorBlockControl = App.ServiceProvider.GetService<IPlayerSponsorBlockControl>();
+                if (m_playerSponsorBlockControl != null)
+                {
+                    ExtraToolsPanel.Children.Add(m_playerSponsorBlockControl as UIElement);
+                    m_playerSponsorBlockControl.UpdatePosition += PlayerSponsorBlockControlOnUpdatePosition;
+
+                    void PlayerSponsorBlockControlOnUpdatePosition(object sender, double e)
+                    {
+                        SetPosition(e);
+                    }
+                }
             }
         }
 
@@ -706,107 +724,8 @@ namespace BiliLite.Controls
 
         public void LoadSponsorBlock()
         {
-            if(CurrentPlayItem == null || !m_sponsorBlockFlag) return;
-            m_viewModel.ShowSponsorBlockBtn = true;
-
-            var vaildSeg = CurrentPlayItem.SegmentSkip
-                .Where(x => x.Cid == CurrentPlayItem.cid) // 区分cid用于多P视频
-                .Where(x => Math.Abs(x.VideoDuration - CurrentPlayItem.duration) <= 2.0) // 剔除视频长度不等，可能换源的视频
-                .OrderBy(x => x.Start) // 排个序
-                .ToList();
-            m_viewModel.SponsorBlockSegmentList = vaildSeg;
-
-            SponsorBlockStackPanel.Children.Clear();
-            AddSegmentToStackPanel(m_viewModel.SponsorBlockSegmentList);
-
-            SponsorBlockStackPanel.Visibility =
-                SponsorBlockStackPanel.Children.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
-
-            SponsorBlockMsg.Text = m_viewModel.SponsorBlockSegmentList.Count > 0 ? 
-                $"🎉此视频在数据库中有 {m_viewModel.SponsorBlockSegmentList.Count} 个可跳过片段！" :
-                "😢在数据库中未找到此视频的可跳过片段";
-        }
-
-        public void AddSegmentToStackPanel(List<PlayerSkipItem> list)
-        {
-            if (list == null || list.Count == 0) return;
-
-            foreach (var item in list)
-            {
-                // 创建Button
-                var button = new Button
-                {
-                    HorizontalAlignment = HorizontalAlignment.Stretch,
-                    HorizontalContentAlignment = HorizontalAlignment.Stretch,
-                    VerticalContentAlignment = VerticalAlignment.Stretch,
-                    Background = new SolidColorBrush(Colors.Transparent),
-                };
-
-                // 创建Grid作为Button的内容
-                var grid = new Grid
-                {
-                    HorizontalAlignment = HorizontalAlignment.Stretch,
-                    VerticalAlignment = VerticalAlignment.Stretch
-                };
-
-                // 添加列定义
-                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-
-                // 创建圆形提示
-                var ellipse = new Ellipse
-                {
-                    Width = 10,
-                    Height = 10,
-                    Fill = item.Brush,
-                    VerticalAlignment = VerticalAlignment.Stretch,
-                    Margin = new Thickness(0, 0, 8, 0)
-                };
-                Grid.SetColumn(ellipse, 0);
-
-                // 创建第一个TextBlock
-                var textBlock1 = new TextBlock
-                {
-                    Padding = new Thickness(0),
-                    FontSize = 14,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Margin = new Thickness(0, 0, 0, 2),
-                    Text = item.SegmentName
-                };
-                Grid.SetColumn(textBlock1, 1);
-
-                // 创建第二个TextBlock
-                var textBlock2 = new TextBlock
-                {
-                    Padding = new Thickness(0),
-                    FontSize = 14,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Margin = new Thickness(0, 0, 0, 2),
-                    HorizontalAlignment = HorizontalAlignment.Right,
-                    Text = $"{TimeSpanStrFormatConverter.Convert(item.Start)} ➡️ {TimeSpanStrFormatConverter.Convert(item.End)}"
-                };
-                Grid.SetColumn(textBlock2, 3);
-
-                // 将控件添加到Grid中
-                grid.Children.Add(ellipse);
-                grid.Children.Add(textBlock1);
-                grid.Children.Add(textBlock2);
-
-                // 将Grid设置为Button的内容
-                button.Content = grid;
-
-                // 设置按钮点击事件为跳到片段结尾并关闭Flyout
-                button.Click += (_, _) =>
-                {
-                    SetPosition(item.End);
-                    SponsorBlockFlyout.Hide();
-                };
-
-                // 将Button添加到StackPanel中
-                SponsorBlockStackPanel.Children.Add(button);
-            }
+            if (CurrentPlayItem == null) return;
+            m_playerSponsorBlockControl?.LoadSponsorBlock(CurrentPlayItem.bvid, CurrentPlayItem.cid, CurrentPlayItem.duration);
         }
 
         public void InitializePlayInfo(List<PlayInfo> playInfos, int index)
@@ -1013,9 +932,10 @@ namespace BiliLite.Controls
                 SkipSection(CurrentPlayItem.EpisodeSkip.Ed, "SkipEd", "自动跳过ED");
             }
 
-            if (CurrentPlayItem.SegmentSkip != null)
+            if (m_playerSponsorBlockControl == null) return;
+            if (m_playerSponsorBlockControl.SegmentSkipItems != null)
             {
-                foreach (var seg in CurrentPlayItem.SegmentSkip)
+                foreach (var seg in m_playerSponsorBlockControl.SegmentSkipItems)
                 {
                     SkipSection(seg, "SkipSponsor", "");
                 }

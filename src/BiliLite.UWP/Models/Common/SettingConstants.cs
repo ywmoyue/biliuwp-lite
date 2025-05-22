@@ -803,6 +803,12 @@ namespace BiliLite.Models.Common
             public const string HARDWARE_DECODING = "PlayerHardwareDecoding";
 
             /// <summary>
+            /// 空降助手Api
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string SPONSOR_BLOCK_API = "SponsorBlockApi";
+
+            /// <summary>
             /// 空降助手开关 bool
             /// </summary>
             [SettingKey(typeof(bool))]
@@ -812,7 +818,7 @@ namespace BiliLite.Models.Common
             /// 默认开启空降助手开关 bool
             /// </summary>
             [SettingDefaultValue]
-            public const bool DEFAULT_SPONSOR_BLOCK = true;
+            public const bool DEFAULT_SPONSOR_BLOCK = false;
 
             /// <summary>
             /// 自动播放 bool
@@ -1071,7 +1077,7 @@ namespace BiliLite.Models.Common
             [SettingKey(typeof(int))]
             public const string DEFAULT_LIVE_PLAYER_MODE = "DefaultLivePlayerMode";
 
-            
+
             /// <summary>
             /// 直播播放器使用播放器类型
             /// </summary>

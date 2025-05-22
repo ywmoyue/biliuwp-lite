@@ -671,65 +671,7 @@
                                         FontSize="16"
                                         Foreground="White" />
 
-                                    <Button
-                                        x:Name="BtnSponsorBlock"
-                                        Width="48"
-                                        Height="48"
-                                        Padding="0"
-                                        Background="Transparent"
-                                        Visibility="{x:Bind m_viewModel.ShowSponsorBlockBtn, Mode=OneWay}"
-                                        ToolTipService.ToolTip="空降助手">
-                                        <fa:FontAwesome
-                                            Width="28"
-                                            Height="28"
-                                            Foreground="White"
-                                            Icon="Solid_ShieldAlt" />
-                                        <Button.Flyout>
-                                            <Flyout x:Name="SponsorBlockFlyout">
-                                                <Grid Width="300">
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="Auto"/>
-                                                        <RowDefinition Height="Auto"/>
-                                                        <RowDefinition Height="Auto"/>
-                                                        <RowDefinition Height="Auto"/>
-                                                        <RowDefinition Height="Auto"/>
-                                                    </Grid.RowDefinitions>
-                                                    <Grid Grid.Row="0">
-                                                        <Grid HorizontalAlignment="Center">
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="Auto"/>
-                                                                <ColumnDefinition Width="*"/>
-                                                            </Grid.ColumnDefinitions>
-                                                            <Grid Grid.Column="0" Margin="0 0 10 0" >
-                                                                <fa:FontAwesome Grid.Column="0" FontSize="64" Foreground="DeepSkyBlue" Icon="Solid_ShieldVirus"/>
-                                                                <Ellipse Width="48" Height="48" Fill="DeepSkyBlue" />
-                                                                <fa:FontAwesome Grid.Column="0" Margin="6 0 0 8" FontSize="22" Foreground="White" Icon="Solid_Play"/>
-                                                                <!--因源项目为GPLv3而本项目许可证不明, 因此不能直接引用图标, 选择手动绘制-->
-                                                            </Grid>
-                                                            <TextBlock Grid.Column="1" FontSize="24" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center">空降助手</TextBlock>
-                                                        </Grid>
-                                                    </Grid>
-                                                    <TextBlock Grid.Row="1" x:Name="SponsorBlockMsg" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0 16" FontSize="15"/>
-
-                                                    <StackPanel Grid.Row="2" x:Name="SponsorBlockStackPanel" HorizontalAlignment="Stretch" Margin="0 8" Spacing="8"/>
-
-                                                    <TextBlock Grid.Row="3" FontSize="12" HorizontalAlignment="Center" Margin="0 16 0 4" Foreground="Gray">
-                                                        本功能灵感与数据库来自
-                                                        <Hyperlink NavigateUri="https://github.com/hanydd/BilibiliSponsorBlock">
-                                                            <Run Text="B站空降助手" />
-                                                        </Hyperlink>
-                                                    </TextBlock>
-
-                                                    <TextBlock Grid.Row="4" FontSize="12" HorizontalAlignment="Center" Foreground="Gray">
-                                                        赠人玫瑰，手有余香🌹
-                                                        <Hyperlink NavigateUri="https://bsbsb.top/donate/">
-                                                            <Run Text="支持原作者提供的数据库" />
-                                                        </Hyperlink>
-                                                    </TextBlock>
-                                                </Grid>
-                                            </Flyout>
-                                        </Button.Flyout>
-                                    </Button>
+                                    <StackPanel x:Name="ExtraToolsPanel"></StackPanel>
 
                                     <Button
                                         x:Name="BtnOpenWebPlayerToolbar"

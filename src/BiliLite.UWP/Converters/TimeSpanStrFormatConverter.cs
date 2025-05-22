@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Data;
 
 namespace BiliLite.Converters;
 
-public class TimeSpanStrFormatConverter: IValueConverter
+public class TimeSpanStrFormatConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {

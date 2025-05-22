@@ -27,6 +27,7 @@ using System.Windows.Input;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
+using BiliLite.Modules.ExtraInterface;
 
 namespace BiliLite.Modules
 {
@@ -43,6 +44,7 @@ namespace BiliLite.Modules
         readonly SponsorBlockApi sponsorBlockAPI;
         private readonly IMapper m_mapper;
         private readonly ThemeService m_themeService;
+        private readonly ISponsorBlockService m_sponsorBlockService;
 
         #endregion
 
@@ -52,6 +54,7 @@ namespace BiliLite.Modules
         {
             m_mapper = App.ServiceProvider.GetRequiredService<IMapper>();
             m_themeService = App.ServiceProvider.GetRequiredService<ThemeService>();
+            m_sponsorBlockService = App.ServiceProvider.GetService<ISponsorBlockService>();
             videoAPI = new VideoAPI();
             favoriteAPI = new FavoriteApi();
             PlayerAPI = new PlayerAPI();
@@ -266,39 +269,9 @@ namespace BiliLite.Modules
 
         public async Task LoadSponsorBlock(string bvid)
         {
-            SponsorBlockList.Clear();
-
-            var results = await sponsorBlockAPI.GetSponsorBlock(bvid).Request();
-            if (!results.status)
+            if (SettingService.GetValue(SettingConstants.Player.SPONSOR_BLOCK, SettingConstants.Player.DEFAULT_SPONSOR_BLOCK))
             {
-                if(results.code is 400 or 404) NotificationShowExtensions.ShowMessageToast($"视频{bvid} SponsorBlock API请求错误: {results.code}");
-                _logger.Warn(results.message);
-                return;
-            }
-            
-            var data = await results.GetJson<List<SponsorBlockVideo>>();
-            if (data is null)
-            {
-                _logger.Warn("SponsorBlock转换错误");
-                return;
-            }
-
-            var video = data.FirstOrDefault(video => video.VideoId == bvid);
-            if (video is null) return;
-            foreach (var seg in video.Segments)
-            {
-                var item = new PlayerSkipItem
-                {
-                    Start = seg.Segment[0] != 0 ? seg.Segment[0] : seg.Segment[0] + 0.75, //完全贴合视频开头的片段会报错. 加偏移量
-                    End = Math.Abs(seg.Segment[1] - seg.VideoDuration) > 0.5 ? seg.Segment[1] : seg.Segment[1] - 1.5, //完全贴合视频结尾的片段会卡死播放器，加偏移量
-                    Category = seg.Category,
-                    VideoDuration = seg.VideoDuration,
-                    Cid = seg.Cid,
-                };
-                if (!item.IsSectionValid || 
-                    item.CategoryEnum == SponsorBlockType.PoiHighlight || 
-                    item.CategoryEnum == SponsorBlockType.None) continue; //暂不支持精彩时刻
-                SponsorBlockList.Add(item);
+                await m_sponsorBlockService?.LoadSponsorBlock(bvid);
             }
         }
 
@@ -376,7 +349,7 @@ namespace BiliLite.Modules
 
                 await LoadVideoTags(data.data.Aid);
 
-                if (ShowSponsorBlock) await LoadSponsorBlock(data.data.Bvid);
+                await LoadSponsorBlock(data.data.Bvid);
             }
             catch (Exception ex)
             {
@@ -763,6 +736,12 @@ namespace BiliLite.Modules
                 NotificationShowExtensions.ShowMessageToast(handel.message);
                 return "";
             }
+        }
+
+        public void Dispose()
+        {
+            m_sponsorBlockService?.RemoveSponsorBlockCache(VideoInfo.Bvid);
+
         }
 
         #endregion

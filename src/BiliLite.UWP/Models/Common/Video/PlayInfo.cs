@@ -33,6 +33,10 @@ namespace BiliLite.Models.Common.Video
         /// </summary>
         public string avid { get; set; }
         /// <summary>
+        /// 视频bvid
+        /// </summary>
+        public string bvid { get; set; }
+        /// <summary>
         /// 必须，视频分集ID
         /// </summary>
         public string cid { get; set; }

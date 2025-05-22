@@ -433,7 +433,8 @@
         OnlineCountChange,
     }
 
-    public enum MessageDelayType {
+    public enum MessageDelayType
+    {
 
         /// <summary>
         /// 常规弹幕消息
