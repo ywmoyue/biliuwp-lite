@@ -33,9 +33,6 @@ namespace BiliLite.Services
         //漫游默认的服务器
         public const string ROMAING_PROXY_URL = "https://b.chuchai.vip";
 
-        // SponsorBlock API, 由B站空降助手提供
-        public const string SPONSOR_BLOCK_URL = "https://bsbsb.top/api";
-
         // 抓取ipad端appkey
         public static ApiKeyInfo IPadOsKey = new ApiKeyInfo(Constants.IOS_APP_KEY, "c2ed53a74eeefe3cf99fbd01d8c9c375", Constants.IOS_MOBI_APP, Constants.IOS_USER_AGENT);
 

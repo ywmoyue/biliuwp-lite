@@ -3,7 +3,6 @@ using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Common;
-using BiliLite.Models.Common.Player;
 using BiliLite.Models.Common.User;
 using BiliLite.Models.Common.Video;
 using BiliLite.Models.Common.Video.Detail;
@@ -41,7 +40,6 @@ namespace BiliLite.Modules
         readonly VideoAPI videoAPI;
         readonly PlayerAPI PlayerAPI;
         readonly FollowAPI followAPI;
-        readonly SponsorBlockApi sponsorBlockAPI;
         private readonly IMapper m_mapper;
         private readonly ThemeService m_themeService;
         private readonly ISponsorBlockService m_sponsorBlockService;
@@ -59,7 +57,6 @@ namespace BiliLite.Modules
             favoriteAPI = new FavoriteApi();
             PlayerAPI = new PlayerAPI();
             followAPI = new FollowAPI();
-            sponsorBlockAPI = new SponsorBlockApi();
             RefreshCommand = new RelayCommand(Refresh);
             LikeCommand = new RelayCommand(DoLike);
             DislikeCommand = new RelayCommand(DoDislike);
@@ -183,11 +180,6 @@ namespace BiliLite.Modules
         }
 
         public List<BiliVideoTag> Tags { get; set; }
-
-        public List<PlayerSkipItem> SponsorBlockList { get; set; } = [];
-
-        public bool ShowSponsorBlock => 
-            SettingService.GetValue(SettingConstants.Player.SPONSOR_BLOCK, SettingConstants.Player.DEFAULT_SPONSOR_BLOCK);
 
         #endregion
 

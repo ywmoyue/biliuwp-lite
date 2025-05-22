@@ -72,7 +72,5 @@ namespace BiliLite.Models.Common.Video
         public bool ShowTitlePart => TitlePage != null;
 
         public EpisodeSkip EpisodeSkip { get; set; }
-
-        public List<PlayerSkipItem> SegmentSkip { get; set; }
     }
 }
