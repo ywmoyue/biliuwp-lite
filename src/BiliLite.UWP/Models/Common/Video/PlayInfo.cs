@@ -1,6 +1,8 @@
 ﻿//https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
+using BiliLite.Models.Common.Player;
 using BiliLite.Models.Common.Season;
+using System.Collections.Generic;
 
 namespace BiliLite.Models.Common.Video
 {
@@ -31,6 +33,10 @@ namespace BiliLite.Models.Common.Video
         /// </summary>
         public string avid { get; set; }
         /// <summary>
+        /// 视频bvid
+        /// </summary>
+        public string bvid { get; set; }
+        /// <summary>
         /// 必须，视频分集ID
         /// </summary>
         public string cid { get; set; }
@@ -51,7 +57,7 @@ namespace BiliLite.Models.Common.Video
         /// </summary>
         public int node_id { get; set; } = 0;
         /// <summary>
-        /// 时长（毫秒）
+        /// 时长（秒）
         /// </summary>
         public long duration { get; set; }
         public LocalPlayInfo LocalPlayInfo { get; set; }
