@@ -433,7 +433,8 @@
         OnlineCountChange,
     }
 
-    public enum MessageDelayType {
+    public enum MessageDelayType
+    {
 
         /// <summary>
         /// 常规弹幕消息
@@ -586,5 +587,45 @@
         TimeAsc,
         TitleDesc,
         TitleAsc,
+    }
+
+    public enum SponsorBlockType
+    {
+        /// <summary>
+        /// 广告
+        /// </summary>
+        Sponsor,
+        /// <summary>
+        /// 片头
+        /// </summary>
+        Intro,
+        /// <summary>
+        /// 片尾
+        /// </summary>
+        Outro,
+        /// <summary>
+        /// 无偿/自我推广
+        /// </summary>
+        SelfPromo,
+        /// <summary>
+        /// 精彩时刻/重点
+        /// </summary>
+        PoiHighlight,
+        /// <summary>
+        /// 三连/订阅提醒
+        /// </summary>
+        Interaction,
+        /// <summary>
+        /// 回顾/概要
+        /// </summary>
+        Preview,
+        /// <summary>
+        /// 非音乐部分（仅用于音乐相关视频）
+        /// </summary>
+        MusicOfftopic,
+        /// <summary>
+        /// 空项目
+        /// </summary>
+        None,
     }
 }

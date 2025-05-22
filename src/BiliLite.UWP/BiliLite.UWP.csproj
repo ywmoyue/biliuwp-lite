@@ -343,6 +343,8 @@
     <Compile Include="Models\Common\Season\SeasonIndexResultItemModel.cs" />
     <Compile Include="Models\Common\Season\SeasonIndexResultItemOrderModel.cs" />
     <Compile Include="Models\Requests\Api\User\MessageApi.cs" />
+    <Compile Include="Modules\ExtraInterface\IPlayerSponsorBlockControl.cs" />
+    <Compile Include="Modules\ExtraInterface\ISponsorBlockService.cs" />
     <Compile Include="Pages\MessagesPage.xaml.cs">
       <DependentUpon>MessagesPage.xaml</DependentUpon>
     </Compile>
