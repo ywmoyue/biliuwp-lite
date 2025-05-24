@@ -364,19 +364,21 @@ namespace BiliLite.Pages
             {
                 return;
             }
+
             if (!selectProview)
             {
                 listEpisode.SelectedIndex = -1;
                 selectProview = true;
                 UpdatePlayInfoToPreview(listPreview.SelectedIndex);
             }
+
             player.ChangePlayIndex(listPreview.SelectedIndex);
-            ep_id = m_viewModel.Episodes[listPreview.SelectedIndex].Id.ToString();
+            ep_id = m_viewModel.Previews[listPreview.SelectedIndex].Id.ToString();
             comment.LoadComment(new LoadCommentInfo()
             {
                 CommentMode = (int)CommentApi.CommentType.Video,
                 CommentSort = CommentApi.CommentSort.Hot,
-                Oid = m_viewModel.Episodes[listPreview.SelectedIndex].Aid
+                Oid = m_viewModel.Previews[listPreview.SelectedIndex].Aid
             });
             await CreateQR();
         }
