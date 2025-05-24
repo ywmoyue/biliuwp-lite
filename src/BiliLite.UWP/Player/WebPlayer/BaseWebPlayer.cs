@@ -126,7 +126,7 @@ public abstract class BaseWebPlayer : Grid, IDisposable
         }
         else if (@event.Event == ShakaPlayerEventLists.VOLUME_CHANGED)
         {
-            if (@event.Data is int)
+            if (@event.Data is int or long)
             {
                 Volume = @event.Data.ToDouble();
             }
