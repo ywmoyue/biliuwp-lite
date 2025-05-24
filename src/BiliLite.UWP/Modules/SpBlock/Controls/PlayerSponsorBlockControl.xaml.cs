@@ -24,6 +24,7 @@ namespace BiliLite.Modules.SpBlock.Controls
         private readonly PlayerSponsorBlockControlViewModel m_viewModel; 
         private readonly bool m_sponsorBlockFlag;
         private readonly ISponsorBlockService m_sponsorBlockService;
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
 
         public PlayerSponsorBlockControl()
         {
@@ -45,6 +46,8 @@ namespace BiliLite.Modules.SpBlock.Controls
 
             var vaildSeg = m_sponsorBlockService.GetVideoSponsorBlocks(bvid, cid, duration);
             m_viewModel.SponsorBlockSegmentList = vaildSeg;
+
+            _logger.Debug($"可跳过片段数量:{m_viewModel.SponsorBlockSegmentList.Count}");
 
             SponsorBlockStackPanel.Children.Clear();
             AddSegmentToStackPanel(m_viewModel.SponsorBlockSegmentList);
