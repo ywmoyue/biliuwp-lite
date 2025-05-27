@@ -3,6 +3,7 @@ using BiliLite.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Live;
 using Newtonsoft.Json;
@@ -359,7 +360,7 @@ namespace BiliLite.Models.Requests.Api.Live
         /// </summary>
         /// <param name="roomId">房间号</param>
         /// <returns></returns>
-        public ApiModel GetDanmuInfo(int roomId)
+        public async Task<ApiModel> GetDanmuInfo(int roomId)
         {
             var api = new ApiModel()
             {
@@ -368,6 +369,7 @@ namespace BiliLite.Models.Requests.Api.Live
                 parameter = $"?id={roomId}",
                 need_cookie = true
             };
+            api.parameter = await ApiHelper.GetWbiSign(api.parameter);
             return api;
         }
 
