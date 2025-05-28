@@ -722,6 +722,7 @@ namespace BiliLite.Controls
         public void LoadSponsorBlock()
         {
             if (CurrentPlayItem == null || CurrentPlayItem.bvid == null) return;
+            if (m_playerSponsorBlockControl == null) return;
             m_playerSponsorBlockControl?.LoadSponsorBlock(CurrentPlayItem.bvid, CurrentPlayItem.cid, CurrentPlayItem.duration);
         }
 

@@ -389,8 +389,10 @@ namespace BiliLite.ViewModels.Live
                 }
                 m_liveMessage ??= new LiveMessage();
 
-                var danmuResults = await m_liveRoomApi.GetDanmuInfo(roomId).Request();
+                var danmuResults = await (await m_liveRoomApi.GetDanmuInfo(roomId)).Request();
+                if (!danmuResults.status) throw new CustomizedErrorException("API信息获取失败:" + danmuResults.message);
                 var danmuData = await danmuResults.GetJson<ApiDataModel<LiveDanmukuInfoModel>>();
+                if (!danmuData.success) throw new CustomizedErrorException("API信息解析失败" + danmuData.message);
                 var token = danmuData.data.Token;
                 var host = danmuData.data.HostList[0].Host;
 
@@ -398,10 +400,18 @@ namespace BiliLite.ViewModels.Live
             }
             catch (TaskCanceledException)
             {
-                Messages.Add(new DanmuMsgModel()
+                Messages?.Add(new DanmuMsgModel()
                 {
                     UserName = "取消连接"
                 });
+            }
+            catch (CustomizedErrorException ex)
+            {
+                Messages?.Add(new DanmuMsgModel()
+                {
+                    UserName = "连接失败:" + ex.Message
+                });
+                _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
@@ -409,6 +419,7 @@ namespace BiliLite.ViewModels.Live
                 {
                     UserName = "连接失败:" + ex.Message
                 });
+                _logger.Error(ex.Message, ex);
             }
 
         }
