@@ -226,6 +226,7 @@
     <Compile Include="Models\Attributes\SettingDefaultValueAttribute.cs" />
     <Compile Include="Models\Attributes\SettingKeyAttribute.cs" />
     <Compile Include="Models\Common\Download\DownloadTrackInfo.cs" />
+    <Compile Include="Models\Common\Season\SeasonEpListResult.cs" />
     <Compile Include="Models\Common\Video\QualityDictonary.cs" />
     <Compile Include="Models\Common\WebPageNavigationInfo.cs" />
     <Compile Include="Models\Exceptions\UnLoginException.cs" />
