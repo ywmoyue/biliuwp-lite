@@ -13,28 +13,51 @@ namespace BiliLite.Extensions
 
             foreach (var type in types)
             {
-                if (type.GetCustomAttributes(typeof(RegisterSingletonUIServiceAttribute), false).Any())
+                // Handle RegisterSingletonUIServiceAttribute
+                var uiServiceAttr = type.GetCustomAttribute<RegisterSingletonUIServiceAttribute>();
+                if (uiServiceAttr != null)
                 {
                     if (displayMode == 2)
                     {
                         services.AddTransient(type);
+                        if (uiServiceAttr.SuperType != null)
+                        {
+                            services.AddTransient(uiServiceAttr.SuperType, type);
+                        }
                     }
                     else
                     {
                         services.AddSingleton(type);
+                        if (uiServiceAttr.SuperType != null)
+                        {
+                            services.AddSingleton(uiServiceAttr.SuperType, type);
+                        }
                     }
                 }
 
-                if (type.GetCustomAttributes(typeof(RegisterSingletonServiceAttribute), false).Any())
+                // Handle RegisterSingletonServiceAttribute
+                var singletonAttr = type.GetCustomAttribute<RegisterSingletonServiceAttribute>();
+                if (singletonAttr != null)
                 {
                     services.AddSingleton(type);
+                    if (singletonAttr.SuperType != null)
+                    {
+                        services.AddSingleton(singletonAttr.SuperType, type);
+                    }
                 }
 
-                if (type.GetCustomAttributes(typeof(RegisterTransientServiceAttribute), false).Any())
+                // Handle RegisterTransientServiceAttribute
+                var transientAttr = type.GetCustomAttribute<RegisterTransientServiceAttribute>();
+                if (transientAttr != null)
                 {
                     services.AddTransient(type);
+                    if (transientAttr.SuperType != null)
+                    {
+                        services.AddTransient(transientAttr.SuperType, type);
+                    }
                 }
             }
+
         }
     }
 }

@@ -29,6 +29,7 @@
     <PackageCertificateThumbprint>C4FA34A878A0528F84922932FEC6746BCBCA5CEA</PackageCertificateThumbprint>
     <PackageCertificateKeyFile />
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+    <PreBuildEvent>powershell.exe -ExecutionPolicy RemoteSigned -File "$(MSBuildThisFileDirectory)PreBuildScript.ps1"</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -226,6 +227,7 @@
     <Compile Include="Models\Attributes\SettingDefaultValueAttribute.cs" />
     <Compile Include="Models\Attributes\SettingKeyAttribute.cs" />
     <Compile Include="Models\Common\Download\DownloadTrackInfo.cs" />
+    <Compile Include="Models\Common\Season\SeasonEpListResult.cs" />
     <Compile Include="Models\Common\Video\QualityDictonary.cs" />
     <Compile Include="Models\Common\WebPageNavigationInfo.cs" />
     <Compile Include="Models\Exceptions\UnLoginException.cs" />
@@ -343,6 +345,8 @@
     <Compile Include="Models\Common\Season\SeasonIndexResultItemModel.cs" />
     <Compile Include="Models\Common\Season\SeasonIndexResultItemOrderModel.cs" />
     <Compile Include="Models\Requests\Api\User\MessageApi.cs" />
+    <Compile Include="Modules\ExtraInterface\IPlayerSponsorBlockControl.cs" />
+    <Compile Include="Modules\ExtraInterface\ISponsorBlockService.cs" />
     <Compile Include="Pages\MessagesPage.xaml.cs">
       <DependentUpon>MessagesPage.xaml</DependentUpon>
     </Compile>
@@ -1236,6 +1240,7 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Properties\Default.rd.xml" />
+    <None Include="PreBuildScript.ps1" />
     <PRIResource Include="Strings\en\Resources.resw" />
   </ItemGroup>
   <ItemGroup>

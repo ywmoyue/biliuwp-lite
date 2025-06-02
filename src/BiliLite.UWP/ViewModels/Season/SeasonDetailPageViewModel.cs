@@ -185,53 +185,40 @@ namespace BiliLite.ViewModels.Season
                     throw new CustomizedErrorException(data.message);
                 }
 
+                var epListResults = await m_seasonApi.EpList(seasonId).Request();
+
+                if (!epListResults.status)
+                {
+                    throw new CustomizedErrorException(epListResults.message);
+                }
+
+                var epListData = await epListResults.GetResult<SeasonEpListResult>();
+
+                if (!epListData.success)
+                {
+                    throw new CustomizedErrorException(epListData.message);
+                }
+
                 try
                 {
-                    //build 75900200
-                    data.data.Episodes = JsonConvert.DeserializeObject<List<SeasonDetailEpisodeModel>>(
-                        data.data.Modules.FirstOrDefault(x => x["style"].ToString() == "positive")?["data"]?["episodes"]
-                            ?.ToString() ?? "[]");
-                    data.data.Seasons = JsonConvert.DeserializeObject<List<SeasonDetailSeasonItemModel>>(
-                        data.data.Modules.FirstOrDefault(x => x["style"].ToString() == "season")?["data"]?["seasons"]
-                            ?.ToString() ?? "[]");
-
-                    var sections = data.data.Modules.Where(x => x["style"].ToString() == "section").ToList();
-                    foreach (var section in sections)
+                    var preview = epListData.result.Section.SelectMany(x => x.Episodes).ToList();
+                    foreach (var episode in preview)
                     {
-                        var extra = JsonConvert.DeserializeObject<List<SeasonDetailEpisodeModel>>(
-                            section?["data"]?["episodes"]?.ToString() ?? "[]");
-
-                        foreach (var item in extra)
-                        {
-                            item.SectionType = 1;
-                            data.data.Episodes.Add(item);
-                        }
+                        episode.SectionType = 1;
                     }
+                    epListData.result.Episodes.AddRange(preview);
                 }
                 catch (Exception ex)
                 {
                     _logger.Warn("解析番剧相关数据失败", ex);
                 }
 
-                if (data.data.Section != null)
-                {
-                    foreach (var item in data.data.Section)
-                    {
-                        foreach (var item2 in item.Episodes)
-                        {
-                            item2.SectionType = 1;
-                        }
-                        data.data.Episodes.InsertRange(0, item.Episodes);
-                        //data.data.episodes= data.data.episodes.Concat(item.episodes).ToList();
-                    }
-                }
-
                 var seasonDetail = m_mapper.Map<SeasonDetailViewModel>(data.data);
                 Detail = seasonDetail;
 
-                Episodes = data.data.Episodes.Where(x => !x.IsPreview).ToList();
+                Episodes = epListData.result.Episodes.Where(x => !x.IsPreview).ToList();
                 ShowEpisodes = Episodes.Count > 0;
-                Previews = data.data.Episodes.Where(x => x.IsPreview).ToList();
+                Previews = epListData.result.Episodes.Where(x => x.IsPreview).ToList();
                 ShowPreview = Previews.Count > 0;
                 NothingPlay = !ShowEpisodes && !ShowPreview;
                 Loaded = true;

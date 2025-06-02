@@ -671,13 +671,21 @@
                                         FontSize="16"
                                         Foreground="White" />
 
+                                    <StackPanel x:Name="ExtraToolsPanel"></StackPanel>
+
                                     <Button
                                         x:Name="BtnOpenWebPlayerToolbar"
+                                        Width="48"
+                                        Height="48"
+                                        Padding="0"
+                                        Background="Transparent"
                                         Click="BtnOpenWebPlayerToolbar_OnClick"
-                                        Visibility="{x:Bind Player.ShowShakaPlayer, Mode=OneWay}">
+                                        Visibility="{x:Bind Player.ShowShakaPlayer, Mode=OneWay}"
+                                        ToolTipService.ToolTip="Web播放器工具箱">
                                         <fa:FontAwesome
                                             Width="28"
                                             Height="28"
+                                            Foreground="White"
                                             Icon="Solid_Tools" />
                                     </Button>
 
@@ -688,7 +696,8 @@
                                         Padding="0"
                                         Background="Transparent"
                                         Click="TopBtnViewPoints_OnClick"
-                                        Visibility="{x:Bind m_viewModel.ShowViewPointsBtn, Mode=OneWay}">
+                                        Visibility="{x:Bind m_viewModel.ShowViewPointsBtn, Mode=OneWay}"
+                                        ToolTipService.ToolTip="看点">
                                         <Image
                                             Width="28"
                                             Height="28"
@@ -701,7 +710,8 @@
                                         Height="48"
                                         Padding="0"
                                         Background="Transparent"
-                                        Click="TopBtnSettingDanmaku_Click">
+                                        Click="TopBtnSettingDanmaku_Click"
+                                        ToolTipService.ToolTip="弹幕设置">
                                         <Image
                                             Width="28"
                                             Height="28"
@@ -713,7 +723,8 @@
                                         Height="48"
                                         Padding="0"
                                         Background="Transparent"
-                                        Click="TopBtnScreenshot_Click">
+                                        Click="TopBtnScreenshot_Click"
+                                        ToolTipService.ToolTip="截图">
                                         <Button.KeyboardAccelerators>
                                             <KeyboardAccelerator Key="F10" />
                                         </Button.KeyboardAccelerators>
@@ -728,7 +739,8 @@
                                         Height="48"
                                         Padding="0"
                                         Background="Transparent"
-                                        Click="TopBtnMore_Click">
+                                        Click="TopBtnMore_Click"
+                                        ToolTipService.ToolTip="更多">
                                         <Image
                                             Width="28"
                                             Height="28"
@@ -758,7 +770,7 @@
                                     Value="{Binding ElementName=Player, Path=Position, Mode=OneWay}" />-->
                                     <local:PlayerProgressBar
                                         x:Name="BottomProgress"
-                                        Position="{x:Bind m_viewModel.Position, Mode=OneWay}"
+                                        Position="{Binding ElementName=Player, Path=Position, Mode=OneWay}"
                                         PositionChanged="BottomProgress_OnPositionChanged"
                                         Duration="{Binding ElementName=Player, Path=Duration, Mode=OneWay}" />
                                     <Canvas x:Name="BottomProgressCanvas" />

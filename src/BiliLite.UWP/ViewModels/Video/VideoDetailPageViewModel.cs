@@ -26,6 +26,7 @@ using System.Windows.Input;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
+using BiliLite.Modules.ExtraInterface;
 
 namespace BiliLite.Modules
 {
@@ -41,6 +42,7 @@ namespace BiliLite.Modules
         readonly FollowAPI followAPI;
         private readonly IMapper m_mapper;
         private readonly ThemeService m_themeService;
+        private readonly ISponsorBlockService m_sponsorBlockService;
 
         #endregion
 
@@ -50,6 +52,7 @@ namespace BiliLite.Modules
         {
             m_mapper = App.ServiceProvider.GetRequiredService<IMapper>();
             m_themeService = App.ServiceProvider.GetRequiredService<ThemeService>();
+            m_sponsorBlockService = App.ServiceProvider.GetService<ISponsorBlockService>();
             videoAPI = new VideoAPI();
             favoriteAPI = new FavoriteApi();
             PlayerAPI = new PlayerAPI();
@@ -256,6 +259,15 @@ namespace BiliLite.Modules
             }
         }
 
+        public async Task LoadSponsorBlock(string bvid)
+        {
+            if (m_sponsorBlockService == null) return;
+            if (SettingService.GetValue(SettingConstants.Player.SPONSOR_BLOCK, SettingConstants.Player.DEFAULT_SPONSOR_BLOCK))
+            {
+                await m_sponsorBlockService?.LoadSponsorBlock(bvid);
+            }
+        }
+
         public async Task LoadVideoDetail(string id, bool isbvid = false)
         {
             try
@@ -329,6 +341,8 @@ namespace BiliLite.Modules
                 await LoadFavorite(data.data.Aid);
 
                 await LoadVideoTags(data.data.Aid);
+
+                await LoadSponsorBlock(data.data.Bvid);
             }
             catch (Exception ex)
             {
@@ -715,6 +729,12 @@ namespace BiliLite.Modules
                 NotificationShowExtensions.ShowMessageToast(handel.message);
                 return "";
             }
+        }
+
+        public void Dispose()
+        {
+            if (m_sponsorBlockService == null) return;
+            m_sponsorBlockService?.RemoveSponsorBlockCache(VideoInfo.Bvid);
         }
 
         #endregion

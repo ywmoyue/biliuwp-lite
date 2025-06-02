@@ -76,17 +76,23 @@ public sealed partial class PlayerProgressBar : UserControl
 
     private void UpdateProgress()
     {
+        var progress = UpdateProgressRectangle(Position);
+        Canvas.SetLeft(ProgressThumb, progress * (TrackGrid.ActualWidth - ProgressThumb.ActualWidth));
+    }
+
+    private double UpdateProgressRectangle(double position)
+    {
         // 更新进度条显示
         if (Duration > 0)
         {
-            double progress = Position / Duration;
+            double progress = position / Duration;
             ProgressRectangle.Width = progress * TrackGrid.ActualWidth;
-            Canvas.SetLeft(ProgressThumb, progress * (TrackGrid.ActualWidth - ProgressThumb.ActualWidth));
+            return progress;
         }
         else
         {
             ProgressRectangle.Width = 0;
-            Canvas.SetLeft(ProgressThumb, 0);
+            return 0;
         }
     }
 
@@ -98,7 +104,9 @@ public sealed partial class PlayerProgressBar : UserControl
         Canvas.SetLeft(ProgressThumb, newX);
 
         double progress = newX / (TrackGrid.ActualWidth - ProgressThumb.ActualWidth);
-        PositionChanged?.Invoke(this, progress * Duration);
+        var position = progress * Duration;
+        PositionChanged?.Invoke(this, position);
+        UpdateProgressRectangle(position);
     }
 
     private void ProgressThumb_DragCompleted(object sender, DragCompletedEventArgs e)

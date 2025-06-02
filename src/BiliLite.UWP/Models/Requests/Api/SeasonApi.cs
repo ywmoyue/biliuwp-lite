@@ -40,8 +40,30 @@ namespace BiliLite.Models.Requests.Api
                 api.parameter += $"&ep_id={id}";
             }
 
-            api.parameter = api.parameter.Replace("build=6235200", "build=75900200");
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
+            return api;
+        }
+
+        public ApiModel EpList(string id, SeasonIdType type = SeasonIdType.SeasonId)
+        {
+            var baseUrl = ApiHelper.API_BASE_URL;
+
+            var api = new ApiModel()
+            {
+                method = HttpMethods.Get,
+                baseUrl = $"{baseUrl}/pgc/view/web/ep/list",
+                need_cookie = true
+            };
+
+            if (type == SeasonIdType.SeasonId)
+            {
+                api.parameter += $"&season_id={id}";
+            }
+            else
+            {
+                api.parameter += $"&ep_id={id}";
+            }
+
             return api;
         }
 

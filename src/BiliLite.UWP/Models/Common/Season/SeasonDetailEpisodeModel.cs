@@ -96,6 +96,8 @@ namespace BiliLite.Models.Common.Season
 
         public bool IsPreview => SectionType != 0;
 
+        public object Interaction { get; set; }
+
         public EpisodeSkip Skip { get; set; }
     }
 }

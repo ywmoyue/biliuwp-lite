@@ -83,6 +83,7 @@ namespace BiliLite.Pages
             {
                 if (m_viewModel != null)
                 {
+                    m_viewModel.Dispose();
                     m_viewModel.Loaded = false;
                     m_viewModel.Loading = true;
                     m_viewModel.VideoInfo = null;
@@ -264,6 +265,7 @@ namespace BiliLite.Pages
                 playInfos.Add(new PlayInfo()
                 {
                     avid = m_viewModel.VideoInfo.Aid,
+                    bvid = m_viewModel.VideoInfo.Bvid,
                     cid = item.Cid,
                     duration = item.Duration,
                     is_interaction = m_viewModel.VideoInfo.Interaction != null,
@@ -272,7 +274,7 @@ namespace BiliLite.Pages
                     title = item.Part.StartsWith(titlePage) ? item.Part : titlePage + " " + item.Part,
                     TitlePage = titlePage,
                     TitlePart = item.Part.TrimStart(' '),
-                    area = m_viewModel.VideoInfo.Title.ParseArea(m_viewModel.VideoInfo.Owner.Mid)
+                    area = m_viewModel.VideoInfo.Title.ParseArea(m_viewModel.VideoInfo.Owner.Mid),
                 });
                 i++;
             }

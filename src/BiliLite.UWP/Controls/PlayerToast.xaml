@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:BiliLite.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:fa="using:FontAwesome5"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
@@ -34,11 +35,30 @@
             <Border.RenderTransform>
                 <CompositeTransform TranslateY="0" />
             </Border.RenderTransform>
-            <TextBlock
-                x:Name="TxtToolTip"
-                FontSize="14"
-                Foreground="Black"
-                Text="{x:Bind m_viewModel.Text, Mode=OneWay}" />
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
+                <fa:FontAwesome Icon="Solid_ShieldAlt" 
+                                FontSize="36" 
+                                Margin="0 2 12 0"
+                                Foreground="{x:Bind IconBrush}"
+                                VerticalAlignment="Center"
+                                Visibility="{x:Bind ShowIcon}"/>
+                <TextBlock
+                    x:Name="TxtToolTip"
+                    FontSize="14"
+                    Foreground="Black"
+                    VerticalAlignment="Center"
+                    Text="{x:Bind m_viewModel.Text, Mode=OneWay}" />
+                <Button Margin="6 0 0 0" 
+                        VerticalAlignment="Center"
+                        FontSize="14" 
+                        Visibility="{x:Bind ShowSkipButton}"
+                        Click="SkipButton_OnClick"
+                        Content="跳过"
+                        BorderBrush="DarkGray"
+                        BorderThickness="1"
+                        Foreground="Black"
+                        Background="Transparent"/>
+            </StackPanel>
         </Border>
     </Grid>
 </UserControl>

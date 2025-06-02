@@ -44,6 +44,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Shapes;
+using BiliLite.Modules.ExtraInterface;
 using PlayInfo = BiliLite.Models.Common.Video.PlayInfo;
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -67,6 +68,7 @@ namespace BiliLite.Controls
         private bool m_firstMediaOpened;
         private ThemeService m_themeService;
         private bool m_isLocalFileMode;
+        private readonly IPlayerSponsorBlockControl m_playerSponsorBlockControl;
 
         private void DoPropertyChanged(string name)
         {
@@ -174,7 +176,7 @@ namespace BiliLite.Controls
             danmuTimer.Interval = TimeSpan.FromSeconds(1);
             danmuTimer.Tick += DanmuTimer_Tick;
 
-            m_positionTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1) };
+            m_positionTimer = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(100) };
             m_positionTimer.Tick += PositionTimer_Tick;
             m_autoSkipOpEdFlag = SettingService.GetValue(SettingConstants.Player.AUTO_SKIP_OP_ED,
                 SettingConstants.Player.DEFAULT_AUTO_SKIP_OP_ED);
@@ -201,6 +203,22 @@ namespace BiliLite.Controls
             {
                 m_danmakuController = App.ServiceProvider.GetRequiredService<FrostMasterDanmakuController>();
                 m_danmakuController.Init(DanmakuCanvas);
+            }
+
+            // 加载 SponsorBlockControl 如果有的话
+            if (SettingService.GetValue(SettingConstants.Player.SPONSOR_BLOCK, SettingConstants.Player.DEFAULT_SPONSOR_BLOCK))
+            {
+                m_playerSponsorBlockControl = App.ServiceProvider.GetService<IPlayerSponsorBlockControl>();
+                if (m_playerSponsorBlockControl != null)
+                {
+                    ExtraToolsPanel.Children.Add(m_playerSponsorBlockControl as UIElement);
+                    m_playerSponsorBlockControl.UpdatePosition += PlayerSponsorBlockControlOnUpdatePosition;
+
+                    void PlayerSponsorBlockControlOnUpdatePosition(object sender, double e)
+                    {
+                        SetPosition(e);
+                    }
+                }
             }
         }
 
@@ -701,6 +719,13 @@ namespace BiliLite.Controls
             });
         }
 
+        public void LoadSponsorBlock()
+        {
+            if (CurrentPlayItem == null || CurrentPlayItem.bvid == null) return;
+            if (m_playerSponsorBlockControl == null) return;
+            m_playerSponsorBlockControl?.LoadSponsorBlock(CurrentPlayItem.bvid, CurrentPlayItem.cid, CurrentPlayItem.duration);
+        }
+
         public void InitializePlayInfo(List<PlayInfo> playInfos, int index)
         {
             //保持屏幕常亮
@@ -894,26 +919,45 @@ namespace BiliLite.Controls
 
         private void PositionTimer_Tick(object sender, object e)
         {
+            if (!IsPlaying) return;
             m_viewModel.Position = Player.Position;
-            PluginCenter.BroadcastPosition(this, Player.Position);
-            if (!m_autoSkipOpEdFlag) return;
+            //PluginCenter.BroadcastPosition(this, Player.Position);
             if (CurrentPlayItem == null) return;
-            if (CurrentPlayItem.EpisodeSkip == null) return;
-            SkipSection(CurrentPlayItem.EpisodeSkip.Op, "SkipOp", "自动跳过OP");
-            SkipSection(CurrentPlayItem.EpisodeSkip.Ed, "SkipEd", "自动跳过ED");
+            if (CurrentPlayItem.EpisodeSkip != null)
+            {
+                if (!m_autoSkipOpEdFlag) return;
+                SkipSection(CurrentPlayItem.EpisodeSkip.Op, "SkipOp", "自动跳过OP");
+                SkipSection(CurrentPlayItem.EpisodeSkip.Ed, "SkipEd", "自动跳过ED");
+            }
+
+            if (m_playerSponsorBlockControl == null) return;
+            if (m_playerSponsorBlockControl.SegmentSkipItems != null)
+            {
+                foreach (var seg in m_playerSponsorBlockControl.SegmentSkipItems)
+                {
+                    SkipSection(seg, "SkipSponsor", "");
+                }
+            }
         }
 
         private void SkipSection(PlayerSkipItem section, string toastId, string message)
         {
             if (section == null) return;
-            if (!IsSectionValid(section) || (int)Player.Position != section.Start) return;
-            m_playerToastService.Show(toastId, message);
-            SetPosition(section.End);
-        }
 
-        private bool IsSectionValid(PlayerSkipItem section)
-        {
-            return section.Start != 0 && section.End != 0 && section.Start != section.End;
+            var gap = Math.Abs(Player.Position - section.Start);
+            if (!section.IsSectionValid || gap > 0.5) return; //更大的宽容范围检测
+
+            Task.Delay(TimeSpan.FromSeconds(gap));
+            if (section.CategoryEnum == SponsorBlockType.Sponsor)
+            {
+                SetPosition(section.End);
+                m_playerToastService.Show(toastId, $"自动跳过{section.SegmentName}", seg: section);
+            }
+            else
+            {
+                var showTime = (long)((section.End - section.Start) * 1000);
+                m_playerToastService.Show(toastId, $"跳过{section.SegmentName}？", showTime > 10000 ? 10000 : showTime - 1500, section);
+            }
         }
 
         private async Task SetPlayItem(int index)
@@ -1020,6 +1064,8 @@ namespace BiliLite.Controls
                 if (Player.ABPlay.PointB != double.MaxValue)
                     PlayerSettingABPlaySetPointB.Content = "B: " + TimeSpan.FromSeconds(Player.ABPlay.PointB).ToString(@"hh\:mm\:ss\.fff");
             }
+
+            LoadSponsorBlock();
         }
 
 
