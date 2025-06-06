@@ -1,7 +1,7 @@
 {
-  "version": "4.7.21",
-  "version_num": 40721,
-  "version_desc": "更新内容:\r\n\r\n- 新增Mpegts播放器用于直播播放 \r\n\r\n- WebPlayer新增视频画面操作工具栏 \r\n\r\n- WebPlayer视频信息显示 \r\n\r\n- 临时修复多窗口模式不可用问题 \r\n\r\n- 调整WebPlayer初始化流程 \r\n\r\n- 修复开启自动播放后WebPlayer无声音 \r\n\r\n- 修复WebPlayer后台恢复前台时进度回退问题 \r\n\r\n- 修复番剧花絮显示不全 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.8.1",
+  "version_num": 40801,
+  "version_desc": "更新内容:\r\n\r\n- 初步加入空降助手功能 \r\n\r\n- 修复Win10打开直播间失败 \r\n\r\n- 修复进度条问题 \r\n\r\n- 修复番剧花絮加载错误 \r\n\r\n- 修复番剧花絮中的互动视频无法播放 \r\n\r\n- 修复搜索页退出时崩溃 \r\n\r\n- 修复直播间信息流无法连接的问题 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
