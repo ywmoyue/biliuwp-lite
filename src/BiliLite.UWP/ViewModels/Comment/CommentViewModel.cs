@@ -81,13 +81,13 @@ namespace BiliLite.ViewModels.Comment
         {
             get
             {
-                if (Like > 1000)
-                {
-                    return ((double)Like / 1000).ToString("0.0") + "千";
-                }
-                else if (Like > 10000)
+                if (Like > 10000)
                 {
                     return ((double)Like / 10000).ToString("0.0") + "万";
+                }
+                else if (Like > 1000)
+                {
+                    return ((double)Like / 1000).ToString("0.0") + "千";
                 }
                 else
                 {
