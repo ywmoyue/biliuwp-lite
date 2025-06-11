@@ -1027,7 +1027,7 @@ namespace BiliLite.Models.Common
             ///从头播放完播视频默认值
             /// </summary>
             [SettingKey(typeof(int))]
-            public const int REPLAY_VIEDO_FROM_END_LAST_TIME_DEFAULT = -3;
+            public const int DEFAULT_REPLAY_VIEDO_FROM_END_LAST_TIME = -3;
 
             /// <summary>
             /// 自动铺满窗口

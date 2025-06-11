@@ -436,7 +436,7 @@ namespace BiliLite.Controls.Settings
 
             SettingService.TryGetValue(
                 SettingConstants.Player.REPLAY_VIEDO_FROM_END_LAST_TIME,
-                SettingConstants.Player.REPLAY_VIEDO_FROM_END_LAST_TIME_DEFAULT, out var replayVideoFromEndLastTime);
+                SettingConstants.Player.DEFAULT_REPLAY_VIEDO_FROM_END_LAST_TIME, out var replayVideoFromEndLastTime);
             NumReplayVideoFromEndLastTime.Value = replayVideoFromEndLastTime;
 
             NumReplayVideoFromEndLastTime.Loaded += (_, _) =>

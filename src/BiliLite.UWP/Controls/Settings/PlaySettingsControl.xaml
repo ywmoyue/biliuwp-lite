@@ -268,15 +268,12 @@
 
                 <controls:SettingsCard
                     Header="从头播放完播视频"
-                    Description="单位秒，默认-3，当未播放长度小于设定值时，从头播放视频而不是从历史记录位置播放">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="秒数:" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                        <controls1:NumberBox
+                    Description="单位秒，默认-3，当未播放长度小于设定值时，从头播放视频而不是从历史记录位置播放，负数为关闭该功能">
+                    <controls1:NumberBox
                                 x:Name="NumReplayVideoFromEndLastTime"
-                                MinWidth="80"
+                                MinWidth="200"
                                 Maximum="29"
                                 Minimum="-3" />
-                    </StackPanel>
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>

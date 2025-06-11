@@ -1017,9 +1017,10 @@ namespace BiliLite.Controls
             {
                 _postion = SettingService.GetValue<double>(CurrentPlayItem.season_id != 0 ? "ep" + CurrentPlayItem.ep_id : CurrentPlayItem.cid, 0);
 
-                double totalSecend = Player.Duration;
+                //从头播放完播视频
+                long totalSecend = CurrentPlayItem.duration;
                 int lastTimeOffset = SettingService.GetValue(SettingConstants.Player.REPLAY_VIEDO_FROM_END_LAST_TIME, 
-                    SettingConstants.Player.REPLAY_VIEDO_FROM_END_LAST_TIME_DEFAULT);
+                    SettingConstants.Player.DEFAULT_REPLAY_VIEDO_FROM_END_LAST_TIME);
                 if (totalSecend - _postion < lastTimeOffset && totalSecend > 30)
                 {
                     _postion = 0;
