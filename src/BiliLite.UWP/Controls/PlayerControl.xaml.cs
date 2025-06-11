@@ -3086,6 +3086,11 @@ namespace BiliLite.Controls
             }
         }
 
+        public void OpenDevMode()
+        {
+            Player.OpenDevMode();
+        }
+
         public void ToggleDanmakuDisplay()
         {
             if (!m_danmakuController.DanmakuViewModel.IsHide)
