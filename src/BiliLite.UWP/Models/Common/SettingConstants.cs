@@ -1017,6 +1017,18 @@ namespace BiliLite.Models.Common
             [SettingKey(typeof(bool))]
             public const string AUTO_TO_POSITION = "PlayerAutoToPosition";
 
+            ///<summary>
+            ///从头播放完播视频秒数
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const string REPLAY_VIEDO_FROM_END_LAST_TIME = "ReplayVideoFromEndLastTime";
+
+            ///<summary>
+            ///从头播放完播视频默认值
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const int REPLAY_VIEDO_FROM_END_LAST_TIME_DEFAULT = -3;
+
             /// <summary>
             /// 自动铺满窗口
             /// </summary>
