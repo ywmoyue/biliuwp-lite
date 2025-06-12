@@ -1002,9 +1002,6 @@
     <Compile Include="Pages\Home\AnimePage.xaml.cs">
       <DependentUpon>AnimePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Home\ChannelPage.xaml.cs">
-      <DependentUpon>ChannelPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\Home\RegionsPage.xaml.cs">
       <DependentUpon>RegionsPage.xaml</DependentUpon>
     </Compile>
@@ -1061,9 +1058,6 @@
     </Compile>
     <Compile Include="Pages\SettingPage.xaml.cs">
       <DependentUpon>SettingPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\TagDetailPage.xaml.cs">
-      <DependentUpon>TagDetailPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\UserInfoPage.xaml.cs">
       <DependentUpon>UserInfoPage.xaml</DependentUpon>
@@ -1489,10 +1483,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\Home\ChannelPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Pages\Home\RegionsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1570,10 +1560,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\SettingPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\TagDetailPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

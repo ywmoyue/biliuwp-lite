@@ -72,11 +72,6 @@ namespace BiliLite.Services
             }
         }
 
-        public void InitStyle()
-        {
-
-        }
-
         public void SetTheme(ElementTheme theme)
         {
             m_theme = theme;

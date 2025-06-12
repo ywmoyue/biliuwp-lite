@@ -14,7 +14,6 @@
                 <ResourceDictionary Source="Styles/TabViewStyle.xaml" />
                 <ResourceDictionary Source="Styles/ButtonStyle.xaml" />
                 <ResourceDictionary Source="Styles/TextBlockStyle.xaml" />
-                <ResourceDictionary Source="Styles/ToggleSwitchStyle.xaml" />
                 <ResourceDictionary Source="Styles/ViewItemStyle.xaml" />
                 <ResourceDictionary Source="Styles/Breakpoint.xaml" />
                 <ResourceDictionary Source="Styles/Converter.xaml" />

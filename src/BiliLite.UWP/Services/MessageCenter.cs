@@ -445,34 +445,33 @@ namespace BiliLite.Services
             * https://www.bilibili.com/tag/7868838/feed
             * bilibili://tag/0/?name=bilibili%e5%a5%bd%e4%b9%a1%e9%9f%b3
             */
-            var topic = StringExtensions.RegexMatch(url, @"tag/(.*?)/feed");
-            if (topic != "")
-            {
-                NavigateToPage(null, new NavigationInfo()
-                {
-                    icon = Symbol.Tag,
-                    page = typeof(TagDetailPage),
-                    title = "话题",
-                    parameters = new object[] { "", topic },
-                    dontGoTo = dontGoTo,
-                });
-                return true;
-            }
-            var topic1 = StringExtensions.RegexMatch(url + "/", @"tag/.*?/\?name=(.*?)/");
-            if (topic1 != "")
-            {
-                var data = Uri.UnescapeDataString(topic1);
-                NavigateToPage(null, new NavigationInfo()
-                {
-                    icon = Symbol.Tag,
-                    page = typeof(TagDetailPage),
-                    title = "话题",
-                    parameters = new object[] { data, "" },
-                    dontGoTo = dontGoTo,
-                });
-                return true;
-            }
-
+            //var topic = StringExtensions.RegexMatch(url, @"tag/(.*?)/feed");
+            //if (topic != "")
+            //{
+            //    NavigateToPage(null, new NavigationInfo()
+            //    {
+            //        icon = Symbol.Tag,
+            //        page = typeof(TagDetailPage),
+            //        title = "话题",
+            //        parameters = new object[] { "", topic },
+            //        dontGoTo = dontGoTo,
+            //    });
+            //    return true;
+            //}
+            //var topic1 = StringExtensions.RegexMatch(url + "/", @"tag/.*?/\?name=(.*?)/");
+            //if (topic1 != "")
+            //{
+            //    var data = Uri.UnescapeDataString(topic1);
+            //    NavigateToPage(null, new NavigationInfo()
+            //    {
+            //        icon = Symbol.Tag,
+            //        page = typeof(TagDetailPage),
+            //        title = "话题",
+            //        parameters = new object[] { data, "" },
+            //        dontGoTo = dontGoTo,
+            //    });
+            //    return true;
+            //}
 
             /*
              * 播单
