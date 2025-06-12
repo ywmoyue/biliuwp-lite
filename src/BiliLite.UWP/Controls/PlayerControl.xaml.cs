@@ -1016,6 +1016,15 @@ namespace BiliLite.Controls
             if (SettingService.GetValue<bool>(SettingConstants.Player.AUTO_TO_POSITION, true))
             {
                 _postion = SettingService.GetValue<double>(CurrentPlayItem.season_id != 0 ? "ep" + CurrentPlayItem.ep_id : CurrentPlayItem.cid, 0);
+
+                //从头播放完播视频
+                long totalSecend = CurrentPlayItem.duration;
+                int lastTimeOffset = SettingService.GetValue(SettingConstants.Player.REPLAY_VIEDO_FROM_END_LAST_TIME, 
+                    SettingConstants.Player.DEFAULT_REPLAY_VIEDO_FROM_END_LAST_TIME);
+                if (totalSecend - _postion < lastTimeOffset && totalSecend > 30)
+                {
+                    _postion = 0;
+                }
                 //减去两秒防止视频直接结束了
                 if (_postion >= 2) _postion -= 2;
             }
