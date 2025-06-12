@@ -24,7 +24,10 @@
         </StackPanel.ChildrenTransitions>
 
         <controls:SettingsCard Header="过滤推荐页直播">
-            <ToggleSwitch x:Name="FilterRecommendLiveSwitch" />
+            <ToggleSwitch
+                x:Name="FilterRecommendLiveSwitch"
+                Margin="0,0,-88,0"
+                Style="{StaticResource DefaultToggleSwitchStyle}" />
         </controls:SettingsCard>
 
         <ListView
@@ -48,7 +51,11 @@
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="settings:FilterRuleViewModel">
                     <controls:SettingsExpander Header="{x:Bind Rule, Mode=OneWay}">
-                        <ToggleSwitch IsOn="{x:Bind Enable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Toggled="OnFilterRuleChanged" />
+                        <ToggleSwitch
+                            Margin="0,0,-88,0"
+                            IsOn="{x:Bind Enable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Style="{StaticResource DefaultToggleSwitchStyle}"
+                            Toggled="OnFilterRuleChanged" />
                         <controls:SettingsExpander.Items>
                             <controls:SettingsCard Description="{x:Bind RuleDesc, Mode=OneWay}" Header="过滤值">
                                 <TextBox
@@ -104,7 +111,11 @@
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="settings:FilterRuleViewModel">
                     <controls:SettingsExpander Header="{x:Bind Rule, Mode=OneWay}">
-                        <ToggleSwitch IsOn="{x:Bind Enable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Toggled="OnFilterRuleChanged" />
+                        <ToggleSwitch
+                            Margin="0,0,-88,0"
+                            IsOn="{x:Bind Enable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Style="{StaticResource DefaultToggleSwitchStyle}"
+                            Toggled="OnFilterRuleChanged" />
                         <controls:SettingsExpander.Items>
                             <controls:SettingsCard Description="{x:Bind RuleDesc, Mode=OneWay}" Header="过滤值">
                                 <TextBox
@@ -160,7 +171,11 @@
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="settings:FilterRuleViewModel">
                     <controls:SettingsExpander Header="{x:Bind Rule, Mode=OneWay}">
-                        <ToggleSwitch IsOn="{x:Bind Enable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Toggled="OnFilterRuleChanged" />
+                        <ToggleSwitch
+                            Margin="0,0,-88,0"
+                            IsOn="{x:Bind Enable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Style="{StaticResource DefaultToggleSwitchStyle}"
+                            Toggled="OnFilterRuleChanged" />
                         <controls:SettingsExpander.Items>
                             <controls:SettingsCard Description="{x:Bind RuleDesc, Mode=OneWay}" Header="过滤值">
                                 <TextBox

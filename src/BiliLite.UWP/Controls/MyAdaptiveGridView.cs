@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -13,9 +14,9 @@ namespace BiliLite.Controls
     {
         public MyAdaptiveGridView()
         {
-            //bool isWin11Supported = ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 14);
-            //if (isWin11Supported)
-            ItemContainerStyle = (Style)App.Current.Resources["LocalGridViewItemStyle"];
+            bool isWin11Supported = ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 14);
+            if (isWin11Supported)
+                ItemContainerStyle = (Style)App.Current.Resources["LocalGridViewItemStyle"];
         }
 
         private ICommand _LoadMoreCommand;

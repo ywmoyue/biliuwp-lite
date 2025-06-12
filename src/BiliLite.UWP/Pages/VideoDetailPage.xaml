@@ -200,6 +200,7 @@
                                 Command="{x:Bind Path=m_viewModel.DislikeCommand}"
                                 Icon="Dislike"
                                 Label="不喜欢"
+                                Style="{StaticResource AppBarButtonNoChevronStyle}"
                                 Visibility="{Binding Visibility, ElementName=AccentDislike, Converter={StaticResource DisplayConvert}}" />
                             <AppBarButton
                                 x:Name="AccentDislike"
@@ -208,6 +209,7 @@
                                 Command="{x:Bind Path=m_viewModel.DislikeCommand}"
                                 Foreground="Red"
                                 Label="不喜欢"
+                                Style="{StaticResource AppBarButtonNoChevronStyle}"
                                 Visibility="{x:Bind Path=m_viewModel.VideoInfo.ReqUser.Dislike, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=1}">
                                 <AppBarButton.Icon>
                                     <SymbolIcon Foreground="Red" Symbol="Dislike" />
@@ -288,7 +290,6 @@
                         <AppBarButton
                             x:Name="btnShare"
                             Width="56"
-                            Margin="0,0,4,0"
                             Flyout="{StaticResource ShareMenu}"
                             Foreground="{ThemeResource TextColor}"
                             Label="分享"
@@ -304,10 +305,11 @@
                         <AppBarButton
                             x:Name="btnDownload"
                             Width="56"
-                            Margin="0,0,4,0"
+                            Margin="4,0"
                             Click="btnDownload_Click"
                             Foreground="{ThemeResource TextColor}"
                             Label="下载"
+                            Style="{StaticResource AppBarButtonNoChevronStyle}"
                             Visibility="{x:Bind m_viewModel.ShowNormalDownloadBtn, Mode=OneWay}">
                             <AppBarButton.Icon>
                                 <FontIcon
@@ -359,6 +361,7 @@
                             Click="btnOpenWeb_Click"
                             Foreground="{ThemeResource TextColor}"
                             Label="浏览器"
+                            Style="{StaticResource AppBarButtonNoChevronStyle}"
                             Visibility="Collapsed">
                             <AppBarButton.Icon>
                                 <fa:FontAwesome Icon="Solid_GlobeAsia" />
@@ -369,6 +372,7 @@
                             Click="btnRefresh_Click"
                             Foreground="{ThemeResource TextColor}"
                             Label="刷新"
+                            Style="{StaticResource AppBarButtonNoChevronStyle}"
                             Visibility="Collapsed">
                             <AppBarButton.Icon>
                                 <fa:FontAwesome Icon="Solid_Sync" />
@@ -783,6 +787,8 @@
         </Grid>
         <muxc:ProgressRing
             Grid.ColumnSpan="2"
+            Width="50"
+            Height="50"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             IsActive="True"

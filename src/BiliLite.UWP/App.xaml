@@ -14,12 +14,14 @@
                 <ResourceDictionary Source="Styles/TabViewStyle.xaml" />
                 <ResourceDictionary Source="Styles/ButtonStyle.xaml" />
                 <ResourceDictionary Source="Styles/TextBlockStyle.xaml" />
+                <ResourceDictionary Source="Styles/ToggleSwitchStyle.xaml" />
                 <ResourceDictionary Source="Styles/ViewItemStyle.xaml" />
                 <ResourceDictionary Source="Styles/Breakpoint.xaml" />
                 <ResourceDictionary Source="Styles/Converter.xaml" />
                 <ResourceDictionary Source="Styles/Fonts.xaml" />
-                <ResourceDictionary Source="Themes/Default.xaml" />
-                <ResourceDictionary Source="Themes/Accent.xaml" />
+                <ResourceDictionary Source="Themes/Colors.xaml" />
+                <IsWin10:ResourceDictionary Source="Themes/Win10.xaml" />
+                <IsWin11:ResourceDictionary Source="Themes/Win11.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

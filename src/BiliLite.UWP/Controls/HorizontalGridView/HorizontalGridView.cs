@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml;
+﻿using Windows.Foundation.Metadata;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
@@ -10,9 +11,9 @@ namespace BiliLite.Controls
         {
             DefaultStyleKey = typeof(HorizontalGridView);
 
-            //bool isWin11Supported = ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 14);
-            //if (isWin11Supported)
-            ItemContainerStyle = (Style)App.Current.Resources["LocalGridViewItemStyle"];
+            bool isWin11Supported = ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 14);
+            if (isWin11Supported)
+                ItemContainerStyle = (Style)App.Current.Resources["LocalGridViewItemStyle"];
         }
 
         public Grid root;

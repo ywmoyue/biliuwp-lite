@@ -24,12 +24,6 @@
         <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource SystemAccentColor}" />
         <SolidColorBrush x:Key="GridViewItemForegroundSelected" Color="{ThemeResource SystemAccentColor}" />
 
-        <Style x:Key="LiveChatListViewItemStyle" TargetType="ListViewItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-            <Setter Property="MinHeight" Value="0" />
-            <Setter Property="Margin" Value="0" />
-            <Setter Property="Padding" Value="8,2" />
-        </Style>
         <DataTemplate
             x:Key="chat"
             x:Name="chat"
@@ -1978,7 +1972,6 @@
                                 x:Name="list_chat"
                                 Grid.Row="1"
                                 IsWin10:ItemContainerStyle="{StaticResource LocalListViewItemStyle}"
-                                IsWin11:ItemContainerStyle="{StaticResource LiveChatListViewItemStyle}"
                                 IsItemClickEnabled="False"
                                 ItemTemplate="{StaticResource chat}"
                                 ItemsSource="{x:Bind Path=m_liveRoomViewModel.Messages, Mode=OneWay}"
@@ -2340,6 +2333,8 @@
             </toolkit:GridSplitter>
         </Grid>
         <muxc:ProgressRing
+            Width="50"
+            Height="50"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             IsActive="True"

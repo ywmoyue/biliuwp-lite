@@ -48,8 +48,10 @@
             </controls:SettingsCard.HeaderIcon>
             <ToggleSwitch
                 x:Name="DanmuSettingState"
+                Margin="0,0,-88,0"
                 OffContent="关闭"
-                OnContent="打开" />
+                OnContent="打开"
+                Style="{StaticResource DefaultToggleSwitchStyle}" />
         </controls:SettingsCard>
 
         <controls:SettingsCard Description="弹幕和画面顶部的距离" Header="弹幕顶部距离">

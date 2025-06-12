@@ -75,7 +75,10 @@
             <controls:SettingsCard.HeaderIcon>
                 <SymbolIcon Symbol="SyncFolder" />
             </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="swDownloadLoadOld" />
+            <ToggleSwitch
+                x:Name="swDownloadLoadOld"
+                Margin="0,0,-88,0"
+                Style="{StaticResource DefaultToggleSwitchStyle}" />
         </controls:SettingsCard>
 
         <controls:SettingsCard Header="优先下载视频类型">
@@ -95,28 +98,40 @@
             <controls:SettingsCard.HeaderIcon>
                 <font:FontAwesome Icon="Solid_Tasks" />
             </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="swDownloadParallelDownload" />
+            <ToggleSwitch
+                x:Name="swDownloadParallelDownload"
+                Margin="0,0,-88,0"
+                Style="{StaticResource DefaultToggleSwitchStyle}" />
         </controls:SettingsCard>
 
         <controls:SettingsCard Header="允许使用流量下载">
             <controls:SettingsCard.HeaderIcon>
                 <font:FontAwesome Icon="Solid_Download" />
             </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="swDownloadAllowCostNetwork" />
+            <ToggleSwitch
+                x:Name="swDownloadAllowCostNetwork"
+                Margin="0,0,-88,0"
+                Style="{StaticResource DefaultToggleSwitchStyle}" />
         </controls:SettingsCard>
 
         <controls:SettingsCard Header="下载完成发送通知">
             <controls:SettingsCard.HeaderIcon>
                 <SymbolIcon Symbol="Message" />
             </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="swDownloadSendToast" />
+            <ToggleSwitch
+                x:Name="swDownloadSendToast"
+                Margin="0,0,-88,0"
+                Style="{StaticResource DefaultToggleSwitchStyle}" />
         </controls:SettingsCard>
 
         <controls:SettingsExpander Description="实验性功能，是否在数据库中建立下载索引而不是每次读取下载文件夹，暂不支持旧版下载的视频，下次重启生效" Header="使用下载索引">
             <controls:SettingsExpander.HeaderIcon>
                 <font:FontAwesome Icon="Solid_Database" />
             </controls:SettingsExpander.HeaderIcon>
-            <ToggleSwitch x:Name="SwUseDownloadIndex" />
+            <ToggleSwitch
+                x:Name="SwUseDownloadIndex"
+                Margin="0,0,-88,0"
+                Style="{StaticResource DefaultToggleSwitchStyle}" />
 
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard>

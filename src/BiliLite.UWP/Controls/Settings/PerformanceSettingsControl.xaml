@@ -28,7 +28,10 @@
             </Button>
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard Description="影响加载速度及加大内存占用" Header="加载原图">
-                    <ToggleSwitch x:Name="swPictureQuality" />
+                    <ToggleSwitch
+                        x:Name="swPictureQuality"
+                        Margin="0,0,-88,0"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
@@ -37,13 +40,19 @@
             Description="减少内存占用，但会自动刷新首页数据"
             Header="缓存首页"
             HeaderIcon="Page2">
-            <ToggleSwitch x:Name="swHomeCache" />
+            <ToggleSwitch
+                x:Name="swHomeCache"
+                Margin="0,0,-88,0"
+                Style="{StaticResource DefaultToggleSwitchStyle}" />
         </controls:SettingsCard>
         <controls:SettingsCard
             Description="支持接管B站内容"
             Header="使用内置浏览器"
             HeaderIcon="World">
-            <ToggleSwitch x:Name="swOpenUrlWithBrowser" />
+            <ToggleSwitch
+                x:Name="swOpenUrlWithBrowser"
+                Margin="0,0,-88,0"
+                Style="{StaticResource DefaultToggleSwitchStyle}" />
         </controls:SettingsCard>
         <controls:SettingsExpander
             Description="仅支持标签页"
@@ -52,7 +61,10 @@
             <controls:SettingsExpander.HeaderIcon>
                 <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE81C;" />
             </controls:SettingsExpander.HeaderIcon>
-            <ToggleSwitch x:Name="SwitchOpenLastPage" />
+            <ToggleSwitch
+                x:Name="SwitchOpenLastPage"
+                Margin="0,0,-88,0"
+                Style="{StaticResource DefaultToggleSwitchStyle}" />
 
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard Description="0 为不限制，不建议使用" Header="需要恢复的数量">

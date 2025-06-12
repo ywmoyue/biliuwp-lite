@@ -56,14 +56,20 @@
                     <controls:SettingsCard.HeaderIcon>
                         <font:FontAwesome Icon="Solid_UserShield" />
                     </controls:SettingsCard.HeaderIcon>
-                    <ToggleSwitch x:Name="swProtectLogInfo" />
+                    <ToggleSwitch
+                        x:Name="swProtectLogInfo"
+                        Margin="0,0,-88,0"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
                 <controls:SettingsCard Description="建议开启" Header="自动清理日志文件">
                     <controls:SettingsCard.HeaderIcon>
                         <font:FontAwesome Icon="Solid_Broom" />
                     </controls:SettingsCard.HeaderIcon>
-                    <ToggleSwitch x:Name="swAutoClearLogFile" />
+                    <ToggleSwitch
+                        x:Name="swAutoClearLogFile"
+                        Margin="0,0,-88,0"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
                 <controls:SettingsCard Header="自动清理几天前的日志" IsEnabled="{Binding IsOn, ElementName=swAutoClearLogFile, Mode=OneWay}">
@@ -129,7 +135,10 @@
             <controls:SettingsCard.HeaderIcon>
                 <font:FontAwesome Icon="Solid_Star" />
             </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="swFirstGrpcRequestDynamic" />
+            <ToggleSwitch
+                x:Name="swFirstGrpcRequestDynamic"
+                Margin="0,0,-88,0"
+                Style="{StaticResource DefaultToggleSwitchStyle}" />
         </controls:SettingsCard>
 
         <controls:SettingsCard Description="B站 App 版本号标识" Header="发起请求时使用的 Build 值">

@@ -87,8 +87,6 @@
         </ResourceDictionary>
     </Page.Resources>
     <Grid>
-
-
         <SplitView
             x:Name="splitView"
             DisplayMode="Overlay"

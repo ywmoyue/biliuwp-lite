@@ -48,6 +48,7 @@
                                 Padding="0,8"
                                 Command="{x:Bind Path=m_viewModel.FollowCommand}"
                                 Label="{x:Bind Path=m_viewModel.Detail.Stat.Favorites, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}"
+                                Style="{StaticResource AppBarButtonNoChevronStyle}"
                                 Visibility="{Binding Visibility, ElementName=AccentFollow, Converter={StaticResource DisplayConvert}}">
                                 <AppBarButton.Icon>
                                     <FontIcon
@@ -64,6 +65,7 @@
                                 Command="{x:Bind Path=m_viewModel.FollowCommand}"
                                 Foreground="{ThemeResource SystemAccentColor}"
                                 Label="{x:Bind Path=m_viewModel.Detail.Stat.Favorites, Mode=OneWay, Converter={StaticResource NumberToStringConvert}}"
+                                Style="{StaticResource AppBarButtonNoChevronStyle}"
                                 Visibility="{x:Bind Path=m_viewModel.Detail.UserStatus.Follow, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=1}">
                                 <AppBarButton.Icon>
                                     <FontIcon
@@ -79,7 +81,8 @@
                             Width="60"
                             Padding="0,8"
                             Click="btnSendReview_Click"
-                            Label="点评">
+                            Label="点评"
+                            Style="{StaticResource AppBarButtonNoChevronStyle}">
                             <AppBarButton.Icon>
                                 <FontIcon
                                     Margin="-3"
@@ -125,6 +128,7 @@
                             Margin="0,0,4,0"
                             Click="btnDownload_Click"
                             Label="下载"
+                            Style="{StaticResource AppBarButtonNoChevronStyle}"
                             Visibility="{x:Bind m_viewModel.ShowNormalDownloadBtn, Mode=OneWay}">
                             <AppBarButton.Icon>
                                 <FontIcon
@@ -172,6 +176,7 @@
                             x:Name="btnOpenWeb"
                             Click="btnOpenWeb_Click"
                             Label="浏览器"
+                            Style="{StaticResource AppBarButtonNoChevronStyle}"
                             Visibility="Collapsed">
                             <AppBarButton.Icon>
                                 <fa:FontAwesome Icon="Solid_GlobeAsia" />
@@ -181,6 +186,7 @@
                             x:Name="btnRefresh"
                             Click="btnRefresh_Click"
                             Label="刷新"
+                            Style="{StaticResource AppBarButtonNoChevronStyle}"
                             Visibility="Collapsed">
                             <AppBarButton.Icon>
                                 <fa:FontAwesome Icon="Solid_Sync" />
@@ -231,6 +237,7 @@
                             Margin="0,0,4,0"
                             Command="{x:Bind m_viewModel.OpenRightInfoCommand}"
                             Label="详情"
+                            Style="{StaticResource AppBarButtonNoChevronStyle}"
                             Visibility="{x:Bind m_viewModel.ShowOpenRightInfoBtn, Mode=OneWay}">
                             <AppBarButton.Icon>
                                 <FontIcon
@@ -239,9 +246,9 @@
                                     Glyph="&#xe68a;" />
                             </AppBarButton.Icon>
                         </AppBarButton>
-                        <!--<AppBarButton Label="磁贴">
+                        <!--<AppBarButton Label="磁贴" Style="{StaticResource AppBarButtonNoChevronStyle}">
                             <AppBarButton.Icon>
-                                <fa:FontAwesome Icon="Solid_Thumbtack"></fa:FontAwesome>
+                                <fa:FontAwesome Icon="Solid_Thumbtack" />
                             </AppBarButton.Icon>
                         </AppBarButton>-->
                     </StackPanel>
@@ -752,6 +759,8 @@
             </StackPanel>
         </Border>
         <muxc:ProgressRing
+            Width="50"
+            Height="50"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             IsActive="True"

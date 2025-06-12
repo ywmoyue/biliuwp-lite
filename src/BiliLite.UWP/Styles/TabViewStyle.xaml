@@ -595,7 +595,7 @@
                                         HighContrastAdjustment="None"
                                         Interval="100"
                                         Style="{ThemeResource TabViewScrollButtonStyle}">
-                                        <FontIcon 
+                                        <FontIcon
                                             FontFamily="{StaticResource BiliIconFont}"
                                             FontSize="10"
                                             Glyph="&#xe692;" />
@@ -614,7 +614,7 @@
                                         HighContrastAdjustment="None"
                                         Interval="100"
                                         Style="{ThemeResource TabViewScrollButtonStyle}">
-                                        <FontIcon 
+                                        <FontIcon
                                             FontFamily="{StaticResource BiliIconFont}"
                                             FontSize="10"
                                             Glyph="&#xe693;" />
@@ -636,14 +636,14 @@
         <Setter Property="Background" Value="{ThemeResource TabViewButtonBackground}" />
         <Setter Property="Foreground" Value="{ThemeResource TabViewButtonForeground}" />
         <Setter Property="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
-        <Setter Property="FontSize" Value="{ThemeResource TabViewItemAddButtonFontSize}" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}" />
-        <Setter Property="Width" Value="{ThemeResource TabViewItemAddButtonWidth}" />
+        <Setter Property="Width" Value="32" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="Height" Value="{ThemeResource TabViewItemAddButtonHeight}" />
-        <Setter Property="BorderThickness" Value="{ThemeResource TabViewButtonBorderThickness}" />
-        <Setter Property="BorderBrush" Value="{ThemeResource TabViewButtonBorderBrush}" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="{ThemeResource SubtleFillColorTransparentBrush}" />
         <Setter Property="FocusVisualMargin" Value="-3" />
         <Setter Property="Template">
             <Setter.Value>
@@ -654,7 +654,6 @@
                         VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                         AutomationProperties.AccessibilityView="Raw"
                         Background="{TemplateBinding Background}"
-                        BackgroundSizing="{TemplateBinding BackgroundSizing}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         Content="{TemplateBinding Content}"
@@ -711,8 +710,8 @@
         <Setter Property="FontSize" Value="{ThemeResource TabViewItemHeaderCloseFontSize}" />
         <Setter Property="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
         <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
-        <Setter Property="Width" Value="{ThemeResource TabViewItemHeaderCloseButtonWidth}" />
-        <Setter Property="Height" Value="{ThemeResource TabViewItemHeaderCloseButtonHeight}" />
+        <Setter Property="Width" Value="32" />
+        <Setter Property="Height" Value="24" />
         <Setter Property="Background" Value="{ThemeResource TabViewItemHeaderCloseButtonBackground}" />
         <Setter Property="Foreground" Value="{ThemeResource TabViewItemHeaderCloseButtonForeground}" />
         <Setter Property="FocusVisualMargin" Value="-3" />
@@ -725,7 +724,6 @@
                         VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                         AutomationProperties.AccessibilityView="Raw"
                         Background="{TemplateBinding Background}"
-                        BackgroundSizing="{TemplateBinding BackgroundSizing}"
                         Content="{TemplateBinding Content}"
                         ContentTemplate="{TemplateBinding ContentTemplate}"
                         ContentTransitions="{TemplateBinding ContentTransitions}">
@@ -778,7 +776,6 @@
                         VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                         AutomationProperties.AccessibilityView="Raw"
                         Background="{TemplateBinding Background}"
-                        BackgroundSizing="{TemplateBinding BackgroundSizing}"
                         Content="{TemplateBinding Content}"
                         ContentTemplate="{TemplateBinding ContentTemplate}"
                         ContentTransitions="{TemplateBinding ContentTransitions}"
@@ -815,10 +812,10 @@
                                 <VisualState x:Name="Disabled">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TabViewScrollButtonBackgroundDisabled}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SubtleFillColorTransparentBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TabViewScrollButtonForegroundDisabled}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SubtleFillColorTransparentBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>

@@ -48,8 +48,10 @@
             </controls:SettingsCard.HeaderIcon>
             <ToggleSwitch
                 x:Name="LiveDanmuSettingState"
+                Margin="0,0,-88,0"
                 OffContent="关闭"
-                OnContent="打开" />
+                OnContent="打开"
+                Style="{StaticResource DefaultToggleSwitchStyle}" />
         </controls:SettingsCard>
 
         <controls:SettingsExpander

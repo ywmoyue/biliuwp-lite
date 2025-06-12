@@ -61,17 +61,25 @@
                             <font:FontAwesome Icon="Solid_Keyboard" />
                         </controls:SettingsExpander.HeaderIcon>
                         <StackPanel Orientation="Horizontal">
-                            <Button MinWidth="120" Click="BtnRecordKeys_OnClick">
+                            <Button
+                                MinWidth="120"
+                                Margin="0,0,10,0"
+                                Click="BtnRecordKeys_OnClick">
                                 <TextBlock Text="{x:Bind KeysString, Mode=OneWay}" />
                             </Button>
                             <ToggleSwitch
-                                Margin="16,0,0,0"
+                                Margin="0,0,-88,0"
                                 IsOn="{x:Bind Enable, Mode=TwoWay}"
+                                Style="{StaticResource DefaultToggleSwitchStyle}"
                                 Toggled="ShortcutFunctionViewModel_Changed" />
                         </StackPanel>
                         <controls:SettingsExpander.Items>
                             <controls:SettingsCard Header="是否松开按键执行">
-                                <ToggleSwitch IsOn="{x:Bind NeedKeyUp, Mode=TwoWay}" Toggled="ShortcutFunctionViewModel_Changed" />
+                                <ToggleSwitch
+                                    Margin="0,0,-88,0"
+                                    IsOn="{x:Bind NeedKeyUp, Mode=TwoWay}"
+                                    Style="{StaticResource DefaultToggleSwitchStyle}"
+                                    Toggled="ShortcutFunctionViewModel_Changed" />
                             </controls:SettingsCard>
                             <controls:SettingsCard Header="删除">
                                 <Button Click="BtnDeleteShortcutFunction_OnClick">确认删除</Button>
@@ -114,7 +122,11 @@
                     </Button>
                 </controls:SettingsCard>
                 <controls:SettingsCard DataContext="{x:Bind m_viewModel.AddShortcutFunctionModel, Mode=OneWay}" Header="是否松开按键执行">
-                    <ToggleSwitch IsOn="{Binding NeedKeyUp, Mode=TwoWay}" Toggled="ShortcutFunctionViewModel_Changed" />
+                    <ToggleSwitch
+                        Margin="0,0,-88,0"
+                        IsOn="{Binding NeedKeyUp, Mode=TwoWay}"
+                        Style="{StaticResource DefaultToggleSwitchStyle}"
+                        Toggled="ShortcutFunctionViewModel_Changed" />
                 </controls:SettingsCard>
             </StackPanel>
         </ContentDialog>

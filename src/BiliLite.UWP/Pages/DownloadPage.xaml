@@ -469,11 +469,9 @@
             </Grid>
 
             <muxc:ProgressBar
-                Height="8"
                 Margin="0,4,0,0"
                 Maximum="{x:Bind Path=m_viewModel.DiskTotal, Mode=OneWay}"
                 Value="{x:Bind Path=m_viewModel.DiskUse, Mode=OneWay}" />
-
         </StackPanel>
 
     </Grid>

@@ -5,6 +5,7 @@ using BiliLite.Models.Theme;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
 using System.Linq;
+using Windows.Foundation.Metadata;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
@@ -16,31 +17,25 @@ namespace BiliLite.Services
     [RegisterSingletonUIServiceAttribute]
     public class ThemeService
     {
-        private readonly ResourceDictionary m_defaultColorsResource = App.Current.Resources.MergedDictionaries.FirstOrDefault(x => x.Source.AbsoluteUri.Contains("Default"));
-        private readonly ResourceDictionary m_accentColorsResource = GetAccentColorsResourceDictionary();
+        private ResourceDictionary m_defaultColorsResource = App.Current.Resources.MergedDictionaries.FirstOrDefault(x => x.Source.AbsoluteUri.Contains("Colors.xaml"));
+        private XamlControlsResources m_accentColorsResource = GetXamlControlsResources();
         private readonly Frame rootFrame = Window.Current.Content as Frame;
         private readonly SettingSqlService m_settingSqlService;
         private ElementTheme m_theme;
-
-        private static ResourceDictionary GetAccentColorsResourceDictionary()
-        {
-            var appResources = Application.Current.Resources;
-            var accentDictionary = appResources.MergedDictionaries
-                .FirstOrDefault(x => x.Source.AbsoluteUri.Contains("Accent.xaml"));
-
-            // 检查是否已经加载了 muxc:XamlControlsResources
-            if (accentDictionary.MergedDictionaries.OfType<XamlControlsResources>().FirstOrDefault() is XamlControlsResources xamlControlsResources)
-            {
-                return xamlControlsResources.MergedDictionaries.FirstOrDefault();
-            }
-            return accentDictionary;
-        }
 
         public ResourceDictionary DefaultThemeResource => m_theme == ElementTheme.Light
             ? m_defaultColorsResource.ThemeDictionaries["Light"] as ResourceDictionary
             : m_defaultColorsResource.ThemeDictionaries["Dark"] as ResourceDictionary;
 
-        public ResourceDictionary AccentThemeResource => m_accentColorsResource;
+        public ResourceDictionary AccentThemeResource => m_accentColorsResource?.MergedDictionaries?.FirstOrDefault();
+
+        private static XamlControlsResources GetXamlControlsResources()
+        {
+            var winVersion = ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 14) ? "Win11" : "Win10";
+            var appResourceDictionary = App.Current.Resources.MergedDictionaries.FirstOrDefault(x => x.Source.AbsoluteUri.Contains($"{winVersion}.xaml"));
+            var xamlControlsResources = appResourceDictionary.MergedDictionaries.OfType<XamlControlsResources>().FirstOrDefault();
+            return xamlControlsResources;
+        }
 
         public ThemeService(SettingSqlService settingSqlService)
         {
@@ -99,12 +94,12 @@ namespace BiliLite.Services
         {
             if (color.HasValue)
             {
-                m_accentColorsResource["SystemAccentColor"] = color;
+                AccentThemeResource["SystemAccentColor"] = color;
             }
             else
             {
-                m_accentColorsResource["SystemAccentColor"] = new UISettings().GetColorValue(UIColorType.Accent);
-                m_accentColorsResource.Remove("SystemAccentColor");
+                AccentThemeResource["SystemAccentColor"] = new UISettings().GetColorValue(UIColorType.Accent);
+                AccentThemeResource.Remove("SystemAccentColor");
             }
 
             if (isNeedRefreshTheme)
@@ -138,9 +133,6 @@ namespace BiliLite.Services
             ];
         }
 
-        public List<ColorItemModel> GetColorMenu()
-        {
-            return m_settingSqlService.GetValue(SettingConstants.UI.THEME_COLOR_MENU, GetDefaultThemeColorMenu());
-        }
+        public List<ColorItemModel> GetColorMenu() => m_settingSqlService.GetValue(SettingConstants.UI.THEME_COLOR_MENU, GetDefaultThemeColorMenu());
     }
 }
