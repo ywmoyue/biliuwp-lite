@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -66,7 +67,7 @@ namespace BiliLite.Models.Requests.Api
         /// <param name="type"></param>
         /// <param name="ps"></param>
         /// <returns></returns>
-        public ApiModel CommentV2(string oid, CommentSort sort, int pn, int type, int ps = 30, string offsetStr = null)
+        public async Task<ApiModel> CommentV2(string oid, CommentSort sort, int pn, int type, int ps = 30, string offsetStr = null)
         {
             var mode = sort == CommentSort.Hot ? 3 : 2;
             var pagination = new { offset = offsetStr };
@@ -83,10 +84,12 @@ namespace BiliLite.Models.Requests.Api
                 _logger.Warn("获取评论未登录");
             }
 
+            parameters = await ApiHelper.GetWbiSign(parameters);
+
             return new ApiModel
             {
                 method = HttpMethods.Get,
-                baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply/main",
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply/wbi/main",
                 parameter = parameters,
                 need_cookie = true,
             };
