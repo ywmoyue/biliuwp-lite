@@ -383,6 +383,7 @@
                                         Click="BtnOpenWebPlayerToolbar_OnClick"
                                         Background="Transparent"
                                         Foreground="White"
+                                        Padding="0"
                                         ToolTipService.ToolTip="Web播放器工具栏"
                                         Width="48"
                                         Height="48"
@@ -438,7 +439,7 @@
                                             <KeyboardAccelerator Key="F10" />
                                         </HyperlinkButton.KeyboardAccelerators>
                                         <fa:FontAwesome
-                                            FontSize="20"
+                                            FontSize="22"
                                             Icon="Solid_Camera"
                                         />
                                     </HyperlinkButton>
@@ -454,7 +455,7 @@
                                         ToolTipService.ToolTip="设置"
                                         Click="HyperlinkButtonOpenFlyout_OnClick">
                                         <fa:FontAwesome
-                                            FontSize="20"
+                                            FontSize="22"
                                             Icon="Solid_Cog"
                                         />
                                         <FlyoutBase.AttachedFlyout>
