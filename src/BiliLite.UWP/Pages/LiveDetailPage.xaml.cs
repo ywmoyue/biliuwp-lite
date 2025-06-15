@@ -1578,5 +1578,10 @@ namespace BiliLite.Pages
             WebPlayerToolbarControl.SetPlayer(m_player.WebPlayer);
             m_viewModel.ShowWebPlayerToolbar = true;
         }
+
+        private void HyperlinkButtonOpenFlyout_OnClick(object sender, RoutedEventArgs e)
+        {
+            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+        }
     }
 }
