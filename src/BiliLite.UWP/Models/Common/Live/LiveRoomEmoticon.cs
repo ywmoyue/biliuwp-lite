@@ -44,6 +44,11 @@ namespace BiliLite.Models.Common.Live
         public int Width { get; set; }
 
         /// <summary>
+        /// 展示宽度
+        /// </summary>
+        public int ShowWidth => IsBigSticker ? 64 : 36;
+
+        /// <summary>
         /// 是否为大表情
         /// </summary>
         public bool IsBigSticker => Width > 0;

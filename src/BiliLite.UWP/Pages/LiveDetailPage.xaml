@@ -185,7 +185,7 @@
             </toolkit:WrapPanel>
         </DataTemplate>
         <Flyout x:Name="EmojiFlyout">
-            <Grid Width="340">
+            <Grid Width="360">
                 <Pivot ItemsSource="{x:Bind Path=m_liveRoomViewModel.EmoticonsPackages, Mode=OneWay}">
                     <Pivot.Resources>
                         <Style TargetType="PivotItem">
@@ -214,16 +214,18 @@
                     <Pivot.ItemTemplate>
                         <DataTemplate x:DataType="live:LiveRoomEmoticonPackage">
                             <GridView
-                                Width="320"
                                 MaxHeight="300"
                                 IsItemClickEnabled="True"
                                 ItemClick="EmojiItem_Click"
+                                ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
                                 ItemsSource="{x:Bind Path=Emoticons, Mode=OneWay}"
                                 SelectionMode="None">
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="live:LiveRoomEmoticon">
-                                        <StackPanel Width="64" Margin="4,0">
-                                            <Grid MinHeight="56">
+                                        <StackPanel MaxWidth="64" Width="{x:Bind ShowWidth, Mode=OneWay}" VerticalAlignment="Center" Margin="2 4">
+                                            <Grid >
                                                 <FontIcon
                                                     HorizontalAlignment="Stretch"
                                                     FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
@@ -231,8 +233,7 @@
                                                     Glyph="&#xE72E;"
                                                     Visibility="{x:Bind LockIconVisibility, Mode=OneWay}" />
                                                 <Image
-                                                    MinHeight="56"
-                                                    HorizontalAlignment="Stretch"
+                                                    Width="{x:Bind ShowWidth, Mode=OneWay}"
                                                     VerticalAlignment="Center"
                                                     Opacity="{x:Bind Opacity, Mode=OneWay}"
                                                     Source="{x:Bind Url, Mode=OneWay}" />
@@ -240,6 +241,7 @@
                                             <TextBlock
                                                 HorizontalAlignment="Center"
                                                 FontSize="12"
+                                                Visibility="{x:Bind IsBigSticker, Mode=OneWay}"
                                                 Text="{x:Bind ShowText, Mode=OneWay}"
                                                 TextAlignment="Center" />
                                         </StackPanel>
