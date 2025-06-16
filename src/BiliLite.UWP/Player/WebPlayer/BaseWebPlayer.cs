@@ -23,6 +23,7 @@ public abstract class BaseWebPlayer : Grid, IDisposable
     private Grid m_gridElement;
     private const string BaseUrl = "https://www.bilibili.com";
     private const string DevBaseUrl = "http://www.bilibili.com";
+    private double m_rate = 1;
 
     public BaseWebPlayer()
     {
@@ -113,6 +114,7 @@ public abstract class BaseWebPlayer : Grid, IDisposable
             m_hasLoaded = true;
             SetSyncThreshold();
             SetVolume(Volume);
+            SetRate(m_rate);
         }
         else if (@event.Event == ShakaPlayerEventLists.ENDED)
         {
@@ -260,6 +262,7 @@ public abstract class BaseWebPlayer : Grid, IDisposable
 
     public async Task SetRate(double speed)
     {
+        m_rate = speed;
         if (!m_hasLoaded) return;
         var script = $"window.setRate({speed})";
         await WebViewElement.CoreWebView2.ExecuteScriptAsync(script);
@@ -316,5 +319,18 @@ public abstract class BaseWebPlayer : Grid, IDisposable
         if (!m_hasLoaded) return;
         var script = $"window.togglePictureInPicture()";
         await WebViewElement.CoreWebView2.ExecuteScriptAsync(script);
+    }
+
+    public void OpenDevMode()
+    {
+        try
+        {
+            WebViewElement.CoreWebView2.Settings.AreDevToolsEnabled = true;
+            WebViewElement.CoreWebView2.OpenDevToolsWindow();
+        }
+        catch (Exception ex)
+        {
+
+        }
     }
 }

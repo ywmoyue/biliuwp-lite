@@ -231,6 +231,7 @@
     <Compile Include="Models\Common\Video\QualityDictonary.cs" />
     <Compile Include="Models\Common\WebPageNavigationInfo.cs" />
     <Compile Include="Models\Exceptions\UnLoginException.cs" />
+    <Compile Include="Models\Functions\OpenDevModeShortcutFunction.cs" />
     <Compile Include="Models\Theme\ColorItemModel.cs" />
     <Compile Include="Models\Common\Anime\ISeasonItem.cs" />
     <Compile Include="Models\Common\Comment\HotReply.cs" />
