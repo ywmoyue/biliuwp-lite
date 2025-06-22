@@ -18,4 +18,6 @@ public static class ShakaPlayerEventLists
     public const string VOLUME_CHANGED = "volumeChanged";
 
     public const string STATS = "stats";
+
+    public const string CAPTURE_IMAGE_DATA = "captureImageData";
 }

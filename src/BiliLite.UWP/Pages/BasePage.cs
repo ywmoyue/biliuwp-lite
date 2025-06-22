@@ -88,6 +88,11 @@ namespace BiliLite.Pages
             Player.ToggleMute();
         }
 
+        public void OpenDevMode()
+        {
+            Player.OpenDevMode();
+        }
+
         public void StartHighRateSpeedPlay()
         {
             Player.StartHighRateSpeedPlay();

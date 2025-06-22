@@ -1186,6 +1186,7 @@ namespace BiliLite.ViewModels.Live
 
                 NotificationShowExtensions.ShowMessageToast(data.data?["send_tips"].ToString().Length > 0 ? data.data?["send_tips"].ToString() : "赠送成功"); // 鬼知道怎么有时候有返回提示有时候没有
                 await LoadWalletInfo();
+                await GetEmoticons(); // 礼物有可能刷新表情包
             }
             catch (CustomizedErrorException ex)
             {
@@ -1222,6 +1223,7 @@ namespace BiliLite.ViewModels.Live
                 }
                 NotificationShowExtensions.ShowMessageToast(data.data?["send_tips"].ToString().Length > 0 ? data.data?["send_tips"].ToString() : "赠送成功");
                 await LoadBag();
+                await GetEmoticons(); // 礼物有可能刷新表情包
             }
             catch (CustomizedErrorException ex)
             {
