@@ -357,6 +357,14 @@
     <Compile Include="Models\Common\Article\ArticleReaderHostFetchData.cs" />
     <Compile Include="Models\Common\Article\ArticleReaderOpenImgData.cs" />
     <Compile Include="Models\Common\Article\BaseArticleReaderEventMessage.cs" />
+    <Compile Include="Modules\SpBlock\Api\SponsorBlockApi.cs" />
+    <Compile Include="Modules\SpBlock\Controls\PlayerSponsorBlockControl.xaml.cs">
+      <DependentUpon>PlayerSponsorBlockControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\SpBlock\Models\SponsorBlockSegment.cs" />
+    <Compile Include="Modules\SpBlock\Models\SponsorBlockVideo.cs" />
+    <Compile Include="Modules\SpBlock\Services\SponsorBlockService.cs" />
+    <Compile Include="Modules\SpBlock\ViewModels\PlayerSponsorBlockControlViewModel.cs" />
     <Compile Include="Pages\MessagesPage.xaml.cs">
       <DependentUpon>MessagesPage.xaml</DependentUpon>
     </Compile>
@@ -1359,6 +1367,10 @@
     <Page Include="Pages\ArticlePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\SpBlock\Controls\PlayerSponsorBlockControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\Home\UserDynamicPage.xaml">
       <Generator>MSBuild:Compile</Generator>
