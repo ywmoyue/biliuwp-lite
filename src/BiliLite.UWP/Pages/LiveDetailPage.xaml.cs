@@ -980,6 +980,15 @@ namespace BiliLite.Pages
                 StorageFolder applicationFolder = KnownFolders.PicturesLibrary;
                 StorageFolder folder = await applicationFolder.CreateFolderAsync("哔哩哔哩截图", CreationCollisionOption.OpenIfExists);
                 StorageFile saveFile = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
+
+                if (m_viewModel.ShowWebPlayer)
+                {
+                    var imageData = await m_player.WebPlayer.CaptureVideo();
+                    await FileIO.WriteBytesAsync(saveFile, imageData);
+                    NotificationShowExtensions.ShowMessageToast("截图已经保存至图片库");
+                    return;
+                }
+
                 RenderTargetBitmap bitmap = new RenderTargetBitmap();
                 await bitmap.RenderAsync(playerElement);
                 var pixelBuffer = await bitmap.GetPixelsAsync();
@@ -997,8 +1006,9 @@ namespace BiliLite.Pages
                 }
                 NotificationShowExtensions.ShowMessageToast("截图已经保存至图片库");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                logger.Error("截图失败", ex);
                 NotificationShowExtensions.ShowMessageToast("截图失败");
             }
         }

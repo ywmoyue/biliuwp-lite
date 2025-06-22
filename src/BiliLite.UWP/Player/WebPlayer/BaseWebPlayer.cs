@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Controls;
 using BiliLite.Models.Common.Player;
 using BiliLite.Player.WebPlayer.Models;
 using NSDanmaku;
+using System.Threading;
 
 namespace BiliLite.Player.WebPlayer;
 
@@ -24,6 +25,8 @@ public abstract class BaseWebPlayer : Grid, IDisposable
     private const string BaseUrl = "https://www.bilibili.com";
     private const string DevBaseUrl = "http://www.bilibili.com";
     private double m_rate = 1;
+    private TaskCompletionSource<byte[]> m_captureTaskCompletionSource;
+    private readonly SemaphoreSlim m_captureLock = new SemaphoreSlim(1, 1);
 
     public BaseWebPlayer()
     {
@@ -134,6 +137,12 @@ public abstract class BaseWebPlayer : Grid, IDisposable
             }
 
             Volume = (double)@event.Data;
+        }
+        else if (@event.Event == ShakaPlayerEventLists.CAPTURE_IMAGE_DATA)
+        {
+            var data = JsonConvert.DeserializeObject<WebPlayerCaptureVideoImageData>(
+                JsonConvert.SerializeObject(@event.Data));
+            ReceiveCaptureVideoFrame(data);
         }
     }
 
@@ -272,6 +281,51 @@ public abstract class BaseWebPlayer : Grid, IDisposable
     {
         WebViewElement?.Close();
         WebViewElement = null;
+    }
+
+    public async Task<byte[]> CaptureVideo()
+    {
+        if (!m_hasLoaded) return null;
+
+        await m_captureLock.WaitAsync();
+
+        try
+        {
+            m_captureTaskCompletionSource = new TaskCompletionSource<byte[]>();
+
+            var script = $"window.captureVideo()";
+            await WebViewElement.CoreWebView2.ExecuteScriptAsync(script);
+
+            return await m_captureTaskCompletionSource.Task;
+        }
+        finally
+        {
+            m_captureLock.Release();
+        }
+    }
+
+    private void ReceiveCaptureVideoFrame(WebPlayerCaptureVideoImageData data)
+    {
+        if (m_captureTaskCompletionSource == null) return;
+        try
+        {
+            // 将Base64字符串转换为字节数组
+            if (!string.IsNullOrEmpty(data.ImageData))
+            {
+                // 删除Base64前缀（如"data:image/png;base64,"）
+                var base64Data = data.ImageData.Split(',')[1];
+                var bytes = Convert.FromBase64String(base64Data);
+                m_captureTaskCompletionSource.TrySetResult(bytes);
+            }
+            else
+            {
+                m_captureTaskCompletionSource.TrySetResult(null);
+            }
+        }
+        catch (Exception ex)
+        {
+            m_captureTaskCompletionSource.TrySetException(ex);
+        }
     }
 
     public void Dispose()
