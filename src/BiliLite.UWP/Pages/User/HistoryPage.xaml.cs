@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Models.Common.Article;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -73,9 +74,13 @@ namespace BiliLite.Pages.User
                 MessageCenter.NavigateToPage(this, new NavigationInfo()
                 {
                     icon = Symbol.Play,
-                    page = typeof(WebPage), // 专栏好像没有写专门的页面
+                    page = typeof(ArticlePage), // 专栏好像没有写专门的页面
                     title = data.Title,
-                    parameters = "https://www.bilibili.com/read/cv" + data.History.Oid
+                    parameters = new ArticlePageNavigationInfo()
+                    {
+                        Url = "https://www.bilibili.com/read/cv" + data.History.Oid,
+                        CvId = data.History.Oid + ""
+                    }
                 });
             }
             else if (data.History.Business == "article-list") // 专栏文集, 但历史记录里实际保存的为其中的专栏文章
@@ -83,9 +88,13 @@ namespace BiliLite.Pages.User
                 MessageCenter.NavigateToPage(this, new NavigationInfo()
                 {
                     icon = Symbol.Play,
-                    page = typeof(WebPage), // 专栏文集好像没有写专门的页面
+                    page = typeof(ArticlePage), // 专栏文集好像没有写专门的页面
                     title = data.Title,
-                    parameters = "https://www.bilibili.com/read/cv" + data.History.Cid
+                    parameters = new ArticlePageNavigationInfo()
+                    {
+                        Url = "https://www.bilibili.com/read/cv" + data.History.Cid,
+                        CvId = data.History.Cid + ""
+                    }
                 });
             }
             else
