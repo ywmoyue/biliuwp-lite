@@ -185,7 +185,7 @@
             </toolkit:WrapPanel>
         </DataTemplate>
         <Flyout x:Name="EmojiFlyout">
-            <Grid Width="340">
+            <Grid Width="360">
                 <Pivot ItemsSource="{x:Bind Path=m_liveRoomViewModel.EmoticonsPackages, Mode=OneWay}">
                     <Pivot.Resources>
                         <Style TargetType="PivotItem">
@@ -214,16 +214,18 @@
                     <Pivot.ItemTemplate>
                         <DataTemplate x:DataType="live:LiveRoomEmoticonPackage">
                             <GridView
-                                Width="320"
                                 MaxHeight="300"
                                 IsItemClickEnabled="True"
                                 ItemClick="EmojiItem_Click"
+                                ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
                                 ItemsSource="{x:Bind Path=Emoticons, Mode=OneWay}"
                                 SelectionMode="None">
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="live:LiveRoomEmoticon">
-                                        <StackPanel Width="64" Margin="4,0">
-                                            <Grid MinHeight="56">
+                                        <StackPanel MaxWidth="64" Width="{x:Bind ShowWidth, Mode=OneWay}" VerticalAlignment="Center" Margin="2 4">
+                                            <Grid >
                                                 <FontIcon
                                                     HorizontalAlignment="Stretch"
                                                     FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
@@ -231,8 +233,7 @@
                                                     Glyph="&#xE72E;"
                                                     Visibility="{x:Bind LockIconVisibility, Mode=OneWay}" />
                                                 <Image
-                                                    MinHeight="56"
-                                                    HorizontalAlignment="Stretch"
+                                                    Width="{x:Bind ShowWidth, Mode=OneWay}"
                                                     VerticalAlignment="Center"
                                                     Opacity="{x:Bind Opacity, Mode=OneWay}"
                                                     Source="{x:Bind Url, Mode=OneWay}" />
@@ -240,6 +241,7 @@
                                             <TextBlock
                                                 HorizontalAlignment="Center"
                                                 FontSize="12"
+                                                Visibility="{x:Bind IsBigSticker, Mode=OneWay}"
                                                 Text="{x:Bind ShowText, Mode=OneWay}"
                                                 TextAlignment="Center" />
                                         </StackPanel>
@@ -370,36 +372,45 @@
                                 </Grid.ColumnDefinitions>
                                 <TextBlock
                                     x:Name="TopTitle"
-                                    Margin="12,0"
+                                    Margin="20,0"
                                     VerticalAlignment="Center"
                                     FontSize="18"
+                                    FontWeight="Medium"
                                     Foreground="White"
                                     Text="{x:Bind Path=m_liveRoomViewModel.RoomTitle, Mode=OneWay}"
                                     TextTrimming="CharacterEllipsis" />
-                                <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                    <Button
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0 4 0 0">
+                                    <HyperlinkButton
                                         x:Name="BtnOpenWebPlayerToolbar"
                                         Click="BtnOpenWebPlayerToolbar_OnClick"
+                                        Background="Transparent"
+                                        Foreground="White"
+                                        Padding="0"
+                                        ToolTipService.ToolTip="Web播放器工具栏"
+                                        Width="48"
+                                        Height="48"
                                         Visibility="{x:Bind m_viewModel.ShowWebPlayer, Mode=OneWay}">
                                         <fa:FontAwesome
-                                            Width="28"
-                                            Height="28"
-                                            Icon="Solid_Tools" />
-                                    </Button>
+                                            FontSize="20"
+                                            Icon="Solid_Tools"
+                                            />
+                                    </HyperlinkButton>
 
-                                    <Button
+                                    <HyperlinkButton
                                         x:Name="TopBtnShare"
                                         Width="48"
                                         Height="48"
                                         Padding="0"
                                         Background="Transparent"
+                                        ToolTipService.ToolTip="分享"
                                         BorderThickness="0"
+                                        Click="HyperlinkButtonOpenFlyout_OnClick"
                                         Foreground="White">
-                                        <FontIcon
-                                            FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
-                                            FontSize="28"
-                                            Glyph="&#xE72D;" />
-                                        <Button.Flyout>
+                                        <fa:FontAwesome
+                                            FontSize="20"
+                                            Icon="Solid_ShareSquare"
+                                        />
+                                        <FlyoutBase.AttachedFlyout>
                                             <MenuFlyout>
                                                 <MenuFlyoutItem
                                                     Click="btnShareCopyUrl_Click"
@@ -414,39 +425,42 @@
                                                     Icon="Share"
                                                     Text="分享到..." />
                                             </MenuFlyout>
-                                        </Button.Flyout>
-                                    </Button>
-                                    <Button
+                                        </FlyoutBase.AttachedFlyout>
+                                    </HyperlinkButton>
+                                    <HyperlinkButton
                                         x:Name="TopBtnScreenshot"
                                         Width="48"
                                         Height="48"
-                                        Margin="8,0,0,0"
                                         Padding="0"
                                         Background="Transparent"
+                                        Foreground="White"
                                         BorderThickness="0"
+                                        ToolTipService.ToolTip="截屏"
                                         Click="TopBtnScreenshot_Click">
-                                        <Button.KeyboardAccelerators>
+                                        <HyperlinkButton.KeyboardAccelerators>
                                             <KeyboardAccelerator Key="F10" />
-                                        </Button.KeyboardAccelerators>
-                                        <Image
-                                            Width="28"
-                                            Height="28"
-                                            Source="/Assets/Icon/icon_screenshot.png" />
-                                    </Button>
+                                        </HyperlinkButton.KeyboardAccelerators>
+                                        <fa:FontAwesome
+                                            FontSize="22"
+                                            Icon="Solid_Camera"
+                                        />
+                                    </HyperlinkButton>
 
-                                    <Button
+                                    <HyperlinkButton
                                         x:Name="TopBtnSetting"
                                         Width="48"
                                         Height="48"
-                                        Margin="8,0,0,0"
                                         Padding="0"
                                         Background="Transparent"
-                                        BorderThickness="0">
-                                        <Image
-                                            Width="32"
-                                            Height="32"
-                                            Source="/Assets/Icon/icon_settings.png" />
-                                        <Button.Flyout>
+                                        Foreground="White"
+                                        BorderThickness="0"
+                                        ToolTipService.ToolTip="设置"
+                                        Click="HyperlinkButtonOpenFlyout_OnClick">
+                                        <fa:FontAwesome
+                                            FontSize="22"
+                                            Icon="Solid_Cog"
+                                        />
+                                        <FlyoutBase.AttachedFlyout>
                                             <Flyout>
                                                 <Pivot Width="325">
                                                     <PivotItem>
@@ -663,8 +677,8 @@
                                                     </PivotItem>
                                                 </Pivot>
                                             </Flyout>
-                                        </Button.Flyout>
-                                    </Button>
+                                        </FlyoutBase.AttachedFlyout>
+                                    </HyperlinkButton>
                                 </StackPanel>
                             </Grid>
                             <Grid Grid.Row="2">
@@ -722,7 +736,7 @@
                                             Foreground="White"
                                             Text="{x:Bind Path=m_liveRoomViewModel.LiveTime, Mode=OneWay}" />
 
-                                        <Button
+                                        <HyperlinkButton
                                             x:Name="TopBtnOpenDanmaku"
                                             Width="48"
                                             Height="48"
@@ -735,8 +749,8 @@
                                                 Width="28"
                                                 Height="28"
                                                 Source="/Assets/Icon/icon_danmaku_open.png" />
-                                        </Button>
-                                        <Button
+                                        </HyperlinkButton>
+                                        <HyperlinkButton
                                             x:Name="TopBtnCloseDanmaku"
                                             Width="48"
                                             Height="48"
@@ -749,19 +763,20 @@
                                                 Width="28"
                                                 Height="28"
                                                 Source="/Assets/Icon/icon_danmaku_close.png" />
-                                        </Button>
-                                        <Button
+                                        </HyperlinkButton>
+                                        <HyperlinkButton
                                             x:Name="TopBtnSettingDanmaku"
                                             Width="48"
                                             Height="48"
                                             Padding="0"
                                             Background="Transparent"
-                                            BorderThickness="0">
+                                            BorderThickness="0"
+                                            Click="HyperlinkButtonOpenFlyout_OnClick">
                                             <Image
                                                 Width="28"
                                                 Height="28"
                                                 Source="/Assets/Icon/icon_danmaku_setting.png" />
-                                            <Button.Flyout>
+                                            <FlyoutBase.AttachedFlyout>
                                                 <Flyout>
                                                     <StackPanel>
                                                         <TextBlock Margin="0,4,0,0">
@@ -834,8 +849,8 @@
 
                                                     </StackPanel>
                                                 </Flyout>
-                                            </Button.Flyout>
-                                        </Button>
+                                            </FlyoutBase.AttachedFlyout>
+                                        </HyperlinkButton>
                                         <!--<HyperlinkButton x:Name="BottomBtnSendDanmaku" Foreground="White" Padding="8" Width="48" Height="48">
                                     <fa:FontAwesome Icon="Solid_Comments" FontSize="20"></fa:FontAwesome>
                                 </HyperlinkButton>-->
@@ -866,7 +881,6 @@
                                             Height="32"
                                             Padding="0"
                                             VerticalAlignment="Center"
-                                            Background="Transparent"
                                             BorderThickness="0"
                                             Click="EmojiButton_Click">
                                             <FontIcon
@@ -882,28 +896,28 @@
                                             x:Name="BottomBtnGiftRow"
                                             Width="48"
                                             Height="48"
-                                            Margin="0,0,10,0"
-                                            Padding="8"
+                                            Padding="8 4 8 8"
                                             Click="BottomBtnSwitchGiftBar_Click"
                                             Foreground="White"
                                             ToolTipService.ToolTip="开关礼物栏">
                                             <fa:FontAwesome FontSize="22" Icon="Solid_Gift" />
                                         </HyperlinkButton>
 
-                                        <Button
+                                        <HyperlinkButton
                                             x:Name="BottomBtnVolume"
                                             Width="48"
                                             Height="48"
-                                            Padding="8"
+                                            Padding="8 4 8 8"
                                             Background="Transparent"
-                                            BorderThickness="0"
                                             Foreground="White"
-                                            ToolTipService.ToolTip="音量">
+                                            BorderThickness="0"
+                                            ToolTipService.ToolTip="音量"
+                                            Click="HyperlinkButtonOpenFlyout_OnClick">
                                             <fa:FontAwesome
                                                 x:Name="BottomBtnVolumeIcon"
                                                 FontSize="20"
                                                 Icon="Solid_VolumeUp" />
-                                            <Button.Flyout>
+                                            <FlyoutBase.AttachedFlyout>
                                                 <Flyout>
                                                     <StackPanel Orientation="Horizontal">
                                                         <TextBlock Margin="0,0,10,8" VerticalAlignment="Bottom">0</TextBlock>
@@ -920,20 +934,22 @@
                                                         <TextBlock Margin="10,0,0,8" VerticalAlignment="Bottom">1</TextBlock>
                                                     </StackPanel>
                                                 </Flyout>
-                                            </Button.Flyout>
-                                        </Button>
+                                            </FlyoutBase.AttachedFlyout>
+                                        </HyperlinkButton>
 
-                                        <Button
+                                        <HyperlinkButton
                                             x:Name="BottomBtnQuality"
                                             Height="48"
                                             Padding="8,4,8,8"
                                             Background="Transparent"
                                             BorderThickness="0"
                                             FontSize="18"
+                                            FontWeight="Medium"
                                             Foreground="White"
                                             ToolTipService.ToolTip="清晰度"
+                                            Click="HyperlinkButtonOpenFlyout_OnClick"
                                             Visibility="{x:Bind Path=m_viewModel.Living, Mode=OneWay}">
-                                            <Button.Flyout>
+                                            <FlyoutBase.AttachedFlyout>
                                                 <Flyout>
                                                     <StackPanel Orientation="Horizontal">
                                                         <TextBlock
@@ -958,20 +974,22 @@
                                                             VerticalAlignment="Bottom" />
                                                     </StackPanel>
                                                 </Flyout>
-                                            </Button.Flyout>
-                                        </Button>
+                                            </FlyoutBase.AttachedFlyout>
+                                        </HyperlinkButton>
 
-                                        <Button
+                                        <HyperlinkButton
                                             x:Name="BottomBtnLine"
                                             Height="48"
                                             Padding="8,4,8,8"
                                             Background="Transparent"
                                             BorderThickness="0"
                                             FontSize="18"
+                                            FontWeight="Medium"
                                             Foreground="White"
                                             ToolTipService.ToolTip="线路"
+                                            Click="HyperlinkButtonOpenFlyout_OnClick"
                                             Visibility="{x:Bind Path=m_viewModel.Living, Mode=OneWay}">
-                                            <Button.Flyout>
+                                            <FlyoutBase.AttachedFlyout>
                                                 <Flyout>
                                                     <StackPanel Orientation="Horizontal">
                                                         <TextBlock
@@ -995,8 +1013,8 @@
                                                             VerticalAlignment="Bottom" />
                                                     </StackPanel>
                                                 </Flyout>
-                                            </Button.Flyout>
-                                        </Button>
+                                            </FlyoutBase.AttachedFlyout>
+                                        </HyperlinkButton>
 
                                         <HyperlinkButton
                                             x:Name="BottomBtnMiniWindows"

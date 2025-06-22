@@ -1681,6 +1681,14 @@ namespace BiliLite.Controls
             }
         }
 
+        public void OpenDevMode()
+        {
+            if (ShowShakaPlayer)
+            {
+                WebPlayer.OpenDevMode();
+            }
+        }
+
         #endregion
     }
 }

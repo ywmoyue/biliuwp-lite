@@ -215,6 +215,7 @@ namespace BiliLite.ViewModels.Season
 
                 var seasonDetail = m_mapper.Map<SeasonDetailViewModel>(data.data);
                 Detail = seasonDetail;
+                Detail.Episodes = epListData.result.Episodes;
 
                 Episodes = epListData.result.Episodes.Where(x => !x.IsPreview).ToList();
                 ShowEpisodes = Episodes.Count > 0;

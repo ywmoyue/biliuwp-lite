@@ -49,7 +49,7 @@ public class UserDynamicDetailViewModel : BaseViewModel, IUserDynamicCommands
     {
         get
         {
-            var item = DynamicItems.FirstOrDefault();
+            var item = DynamicItems?.FirstOrDefault();
             return item == null ? 0 : item.Stat.Reply;
         }
     }
@@ -59,7 +59,7 @@ public class UserDynamicDetailViewModel : BaseViewModel, IUserDynamicCommands
     {
         get
         {
-            var item = DynamicItems.FirstOrDefault();
+            var item = DynamicItems?.FirstOrDefault();
             return item == null ? 0 : item.Stat.Repost;
         }
     }

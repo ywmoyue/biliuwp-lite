@@ -434,6 +434,20 @@ namespace BiliLite.Controls.Settings
                 };
             };
 
+            SettingService.TryGetValue(
+                SettingConstants.Player.REPLAY_VIEDO_FROM_END_LAST_TIME,
+                SettingConstants.Player.DEFAULT_REPLAY_VIEDO_FROM_END_LAST_TIME, out var replayVideoFromEndLastTime);
+            NumReplayVideoFromEndLastTime.Value = replayVideoFromEndLastTime;
+
+            NumReplayVideoFromEndLastTime.Loaded += (_, _) =>
+            {
+                NumReplayVideoFromEndLastTime.ValueChanged += (_, _) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.REPLAY_VIEDO_FROM_END_LAST_TIME,
+                        NumReplayVideoFromEndLastTime.Value);
+                };
+            };
+
             //自动刷新播放地址
             SwitchAutoRefreshPlayUrl.IsOn = SettingService.GetValue(SettingConstants.Player.AUTO_REFRESH_PLAY_URL,
                 SettingConstants.Player.DEFAULT_AUTO_REFRESH_PLAY_URL);
