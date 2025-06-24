@@ -3171,7 +3171,7 @@ namespace BiliLite.Controls
                     _position = 0;
                 }
 
-                Player.Position = _position;
+                SetPosition(_position);
 
                 m_playerToastService.Show(
                     PlayerToastService.PROGRESS_KEY,
@@ -3188,7 +3188,7 @@ namespace BiliLite.Controls
                 {
                     _position = Player.Duration;
                 }
-                Player.Position = _position;
+                SetPosition(_position);
 
                 m_playerToastService.Show(
                     PlayerToastService.PROGRESS_KEY, "进度:" + TimeSpan.FromSeconds(Player.Position).ToString(@"hh\:mm\:ss"));

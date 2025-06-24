@@ -237,13 +237,13 @@ namespace BiliLite.Controls
                 sender.Position = sender.ABPlay.PointA;
                 return;
             }
-            if (Math.Abs((double)e.NewValue - (double)e.OldValue) > 1)
-            {
-                if (sender.PlayState == PlayState.Playing || sender.PlayState == PlayState.Pause)
-                {
-                    sender.SetPosition((double)e.NewValue);
-                }
-            }
+            //if (Math.Abs((double)e.NewValue - (double)e.OldValue) > 1)
+            //{
+            //    if (sender.PlayState == PlayState.Playing || sender.PlayState == PlayState.Pause)
+            //    {
+            //        sender.SetPosition((double)e.NewValue);
+            //    }
+            //}
         }
 
         private static void OnVolumeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
