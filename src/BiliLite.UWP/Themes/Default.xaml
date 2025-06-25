@@ -76,7 +76,7 @@
 
             <mica:BackdropMicaBrush
                 x:Key="PageBackgroundMicaBrush"
-                BackgroundSource="WallpaperBackdrop"
+                BackgroundSource="HostBackdrop"
                 FallbackColor="Black"
                 LuminosityOpacity="0.7"
                 TintColor="Black"
