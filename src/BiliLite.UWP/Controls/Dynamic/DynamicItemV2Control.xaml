@@ -127,6 +127,14 @@
                                 <SymbolIcon Symbol="World" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
+                        <MenuFlyoutItem
+                            Command="{x:Bind Path=ViewModel.Parent.CopyDynCommand, Mode=OneWay}"
+                            CommandParameter="{Binding}"
+                            Text="复制原始数据">
+                            <MenuFlyoutItem.Icon>
+                                <SymbolIcon Symbol="World" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
                         <!--<MenuFlyoutItem Text="删除" Visibility="{x:Bind Path=IsSelf, Mode=OneWay}">
                             <MenuFlyoutItem.Icon>
                                 <SymbolIcon Symbol="Delete" />

@@ -359,8 +359,8 @@
                     HorizontalContentAlignment="Left"
                     Background="Transparent"
                     BorderThickness="0"
-                    Command="{Binding Path=Parent.LaunchUrlCommand}"
-                    CommandParameter="{Binding Path=Extend.CardUrl}"
+                    Command="{Binding Path=Parent.OpenArticleCommand}"
+                    CommandParameter="{Binding}"
                     CornerRadius="{StaticResource OverlayCornerRadius}">
                     <Grid>
                         <Grid.ColumnDefinitions>
