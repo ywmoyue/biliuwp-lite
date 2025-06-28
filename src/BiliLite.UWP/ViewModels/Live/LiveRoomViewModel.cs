@@ -7,6 +7,7 @@ using BiliLite.Models.Common.Player;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Models.Requests.Api.Live;
+using BiliLite.Models.Responses;
 using BiliLite.Modules;
 using BiliLite.Modules.Live;
 using BiliLite.Services;
@@ -378,7 +379,7 @@ namespace BiliLite.ViewModels.Live
             }
         }
 
-        private async Task ReceiveMessage(int roomId)
+        private async Task ReceiveMessage(int roomId, bool webMethod = true)
         {
             try
             {
@@ -389,10 +390,26 @@ namespace BiliLite.ViewModels.Live
                 }
                 m_liveMessage ??= new LiveMessage();
 
-                var danmuResults = await (await m_liveRoomApi.GetDanmuInfo(roomId)).Request();
-                if (!danmuResults.status) throw new CustomizedErrorException("API信息获取失败:" + danmuResults.message);
+                HttpResults danmuResults;
+                if (webMethod) danmuResults = await (await m_liveRoomApi.GetDanmuInfo(roomId)).Request();
+                else danmuResults = await (await m_liveRoomApi.GetDanmuInfoApp(roomId)).Request();
+
+                if (!danmuResults.status)
+                {
+                    if (!webMethod) throw new CustomizedErrorException( "所有API信息均获取失败: " + danmuResults.message);
+                    _logger.Error("Web弹幕API信息获取失败, 切换到App方式, 错误信息: " + danmuResults.message);
+                    await ReceiveMessage(roomId, false);
+                    return;
+                }
                 var danmuData = await danmuResults.GetJson<ApiDataModel<LiveDanmukuInfoModel>>();
-                if (!danmuData.success) throw new CustomizedErrorException("API信息解析失败" + danmuData.message);
+
+                if (!danmuData.success)
+                {
+                    if (!webMethod) throw new CustomizedErrorException("所有API信息均解析失败: " + danmuData.message);
+                    _logger.Error("Web弹幕API信息解析失败, 切换到App方式, 错误信息: " + danmuData.message);
+                    await ReceiveMessage(roomId, false);
+                    return;
+                }
                 var token = danmuData.data.Token;
                 var host = danmuData.data.HostList[0].Host;
 

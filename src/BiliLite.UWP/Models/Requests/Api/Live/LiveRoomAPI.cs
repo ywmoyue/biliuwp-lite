@@ -374,6 +374,23 @@ namespace BiliLite.Models.Requests.Api.Live
         }
 
         /// <summary>
+        /// 使用App方法获取弹幕连接信息
+        /// </summary>
+        /// <param name="roomId">房间号</param>
+        /// <returns></returns>
+        public async Task<ApiModel> GetDanmuInfoApp(int roomId)
+        {
+            var api = new ApiModel()
+            {
+                method = HttpMethods.Get,
+                baseUrl = $"https://api.live.bilibili.com/xlive/app-room/v1/index/getDanmuInfo",
+                parameter = ApiHelper.MustParameter(AppKey, true) + $"&room_id={roomId}",
+            };
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
+            return api;
+        }
+
+        /// <summary>
         /// 获取BUVID
         /// </summary>
         /// <returns></returns>
