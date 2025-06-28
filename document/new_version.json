@@ -1,7 +1,7 @@
 {
-  "version": "4.8.1",
-  "version_num": 40801,
-  "version_desc": "更新内容:\r\n\r\n- 初步加入空降助手功能 \r\n\r\n- 修复Win10打开直播间失败 \r\n\r\n- 修复进度条问题 \r\n\r\n- 修复番剧花絮加载错误 \r\n\r\n- 修复番剧花絮中的互动视频无法播放 \r\n\r\n- 修复搜索页退出时崩溃 \r\n\r\n- 修复直播间信息流无法连接的问题 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.8.2",
+  "version_num": 40802,
+  "version_desc": "更新内容:\r\n\r\n- 直播间UI元素优化 \r\n\r\n- 优化从头播放完播视频 \r\n\r\n- 专栏阅读页独立优化 \r\n\r\n- 添加播放时打开WebPlayer开发者工具快捷键\r\n\r\n- 修复番剧下载问题 \r\n\r\n- 修复评论点赞数显示错误 \r\n\r\n- 更新FFMpegCore库版本 \r\n\r\n- 修复评论重复加载问题 \r\n\r\n- 修复webPlayer开始播放时不应用倍速修改 \r\n\r\n- 修复WebPlayer截图问题 \r\n\r\n- 修复动态详情打开报错 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
