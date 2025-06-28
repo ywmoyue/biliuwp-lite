@@ -1,6 +1,7 @@
 ﻿using BiliLite.Controls.Dialogs;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Article;
 using BiliLite.Models.Common.UserDynamic;
 using BiliLite.Pages;
 using BiliLite.Pages.User;
@@ -90,6 +91,34 @@ namespace BiliLite.Extensions
         {
             var dataStr = data.SourceJson;
             NotificationShowExtensions.ShowMessageToast(dataStr.SetClipboard() ? "已复制" : "复制失败");
+        }
+
+        public static void OpenArticle(DynamicV2ItemViewModel data)
+        {
+            if (!string.IsNullOrEmpty(data.Extend.CardUrl))
+            {
+                LaunchUrl(data.Extend.CardUrl);
+            }
+
+            if (data.Dynamic == null || data.Dynamic.DynArticle == null)
+            {
+                NotificationShowExtensions.ShowMessageToast("无法打开专栏，请点击动态右上角复制数据发给开发者适配");
+            }
+
+            var id = data.Dynamic.DynArticle.Id + "";
+
+            MessageCenter.NavigateToPage(null, new NavigationInfo()
+            {
+                icon = Symbol.Document,
+                page = typeof(ArticlePage),
+                title = "专栏加载中...",
+                parameters = new ArticlePageNavigationInfo()
+                {
+                    CvId = id,
+                    Url = "https://www.bilibili.com/read/cv" + id,
+                },
+                dontGoTo = false,
+            });
         }
 
         public static async void OpenWebDetail(string dynId)

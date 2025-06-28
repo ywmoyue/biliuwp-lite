@@ -33,7 +33,7 @@ namespace BiliLite.Pages.User
 
         private void SetStaggered()
         {
-            var staggered = SettingService.GetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 0) == 1;
+            var staggered = SettingService.GetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 0) == 0;
             if (staggered != m_isStaggered)
             {
                 m_isStaggered = staggered;
