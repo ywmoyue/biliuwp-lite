@@ -464,7 +464,7 @@ namespace BiliLite.Controls.Settings
             m_themeService.SetMicaBrushBackgroundSource(m_UISettingsControlViewModel.MicaBackgroundSource,
                 !m_UISettingsControlViewModel.EnableMicaBackground);
             SettingService.SetValue(SettingConstants.UI.MICA_BACKGROUND_SOURCE, (int)m_UISettingsControlViewModel.MicaBackgroundSource);
-            SettingService.GetValue(SettingConstants.UI.ENABLE_MICA_BACKGROUND_SOURCE, m_UISettingsControlViewModel.EnableMicaBackground);
+            SettingService.SetValue(SettingConstants.UI.ENABLE_MICA_BACKGROUND_SOURCE, m_UISettingsControlViewModel.EnableMicaBackground);
         }
     }
 }
