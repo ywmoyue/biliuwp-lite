@@ -1,7 +1,7 @@
 {
-  "version": "4.8.1",
-  "version_num": 40801,
-  "version_desc": "更新内容:\r\n\r\n- 初步加入空降助手功能 \r\n\r\n- 修复Win10打开直播间失败 \r\n\r\n- 修复进度条问题 \r\n\r\n- 修复番剧花絮加载错误 \r\n\r\n- 修复番剧花絮中的互动视频无法播放 \r\n\r\n- 修复搜索页退出时崩溃 \r\n\r\n- 修复直播间信息流无法连接的问题 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.8.3",
+  "version_num": 40803,
+  "version_desc": "更新内容:\r\n\r\n- 支持设置主题mica背景源 \r\n\r\n- 修复空间动态页布局设置错误 \r\n\r\n- 修复首页直播页错误 \r\n\r\n- 修复专栏图片样式问题 \r\n\r\n- 修复ffmpegInterop播放器快捷键设置进度错误问题 \r\n\r\n- 修复专栏动态打开失败 \r\n\r\n- 增加App方式来获取直播弹幕信息，修复直播间弹幕连接失败 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }

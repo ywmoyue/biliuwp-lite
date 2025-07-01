@@ -110,6 +110,11 @@ namespace BiliLite.Services
             }
 
             _logger.Debug($"处理链接：{url}");
+
+            if (url.Length == 0)
+            {
+                return false;
+            }
             if (url.First() == '@')
             {
                 return false;
