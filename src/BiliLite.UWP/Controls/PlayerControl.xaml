@@ -2,7 +2,6 @@
     x:Class="BiliLite.Controls.PlayerControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     xmlns:common="using:BiliLite.Models.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -55,7 +54,6 @@
                             <Grid>
                                 <ListView
                                     x:Name="EpisodeList"
-                                    IsWin10:ItemContainerStyle="{StaticResource LocalListViewItemStyle}"
                                     Loaded="EpisodeList_Loaded"
                                     SelectionChanged="EpisodeList_SelectionChanged">
                                     <ListView.ItemTemplate>
@@ -90,7 +88,6 @@
                                 <ListView
                                     x:Name="NodeList"
                                     Margin="0,4"
-                                    IsWin10:ItemContainerStyle="{StaticResource LocalListViewItemStyle}"
                                     ItemsSource="{Binding Path=List, Mode=OneWay}"
                                     SelectedItem="{Binding Path=Select, Mode=OneWay}"
                                     SelectionChanged="NodeList_SelectionChanged"
@@ -671,7 +668,7 @@
                                         FontSize="16"
                                         Foreground="White" />
 
-                                    <StackPanel x:Name="ExtraToolsPanel"></StackPanel>
+                                    <StackPanel x:Name="ExtraToolsPanel" />
 
                                     <Button
                                         x:Name="BtnOpenWebPlayerToolbar"
@@ -680,8 +677,8 @@
                                         Padding="0"
                                         Background="Transparent"
                                         Click="BtnOpenWebPlayerToolbar_OnClick"
-                                        Visibility="{x:Bind Player.ShowShakaPlayer, Mode=OneWay}"
-                                        ToolTipService.ToolTip="Web播放器工具箱">
+                                        ToolTipService.ToolTip="Web播放器工具箱"
+                                        Visibility="{x:Bind Player.ShowShakaPlayer, Mode=OneWay}">
                                         <fa:FontAwesome
                                             Width="28"
                                             Height="28"
@@ -696,8 +693,8 @@
                                         Padding="0"
                                         Background="Transparent"
                                         Click="TopBtnViewPoints_OnClick"
-                                        Visibility="{x:Bind m_viewModel.ShowViewPointsBtn, Mode=OneWay}"
-                                        ToolTipService.ToolTip="看点">
+                                        ToolTipService.ToolTip="看点"
+                                        Visibility="{x:Bind m_viewModel.ShowViewPointsBtn, Mode=OneWay}">
                                         <Image
                                             Width="28"
                                             Height="28"
@@ -1300,10 +1297,7 @@
                             Width="320"
                             HorizontalAlignment="Right"
                             Background="#C8000000">
-                            <ListView
-                                IsWin10:ItemContainerStyle="{StaticResource LocalListViewItemStyle}"
-                                ItemsSource="{x:Bind m_viewModel.ViewPoints, Mode=OneWay}"
-                                SelectionMode="Single">
+                            <ListView ItemsSource="{x:Bind m_viewModel.ViewPoints, Mode=OneWay}" SelectionMode="Single">
                                 <ListView.ItemTemplate>
                                     <DataTemplate x:DataType="modules:PlayerInfoViewPoint">
                                         <ListViewItem>

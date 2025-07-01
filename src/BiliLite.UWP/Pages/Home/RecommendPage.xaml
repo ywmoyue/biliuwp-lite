@@ -2,7 +2,6 @@
     x:Class="BiliLite.Pages.Home.RecommendPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:controls="using:BiliLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="using:FontAwesome5"
@@ -18,7 +17,6 @@
     <Page.Resources>
         <Flyout x:Name="Menu" Placement="RightEdgeAlignedBottom">
             <ListView
-                IsWin10:ItemContainerStyle="{StaticResource LocalListViewItemStyle}"
                 IsItemClickEnabled="True"
                 ItemClick="ListMenu_ItemClick"
                 ItemsSource="{Binding Path=ThreePointV2}"
@@ -47,7 +45,7 @@
                                     <DataTemplate x:DataType="recommend:RecommendThreePointV2ItemReasonsModel">
                                         <Border Padding="0,11" Background="{ThemeResource CardColor}">
                                             <TextBlock
-                                                MinWidth="193"
+                                                MinWidth="175"
                                                 HorizontalAlignment="Center"
                                                 VerticalAlignment="Center"
                                                 Text="{x:Bind Name}"

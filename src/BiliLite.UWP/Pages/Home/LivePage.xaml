@@ -52,13 +52,14 @@
                         HorizontalAlignment="Center"
                         IsItemClickEnabled="True"
                         ItemClick="GridView_ItemClick"
+                        ItemContainerStyle="{StaticResource DefaultGridViewItemStyle}"
                         ItemsSource="{x:Bind Path=m_viewModel.Areas, Mode=OneWay}"
                         ScrollViewer.VerticalScrollBarVisibility="Hidden"
                         ScrollViewer.VerticalScrollMode="Disabled"
                         SelectionMode="None">
                         <GridView.ItemTemplate>
                             <DataTemplate x:DataType="home:LiveHomeAreaModel">
-                                <StackPanel MinWidth="85" Padding="10">
+                                <StackPanel MinWidth="80" Padding="10">
                                     <toolkit:ImageEx
                                         Width="48"
                                         Height="48"

@@ -118,6 +118,7 @@
                                 x:Name="gvColor"
                                 Margin="0,0,0,-4"
                                 Padding="0"
+                                ItemContainerStyle="{StaticResource DefaultGridViewItemStyle}"
                                 ItemTemplate="{StaticResource ColorItemTemplate}"
                                 ItemsSource="{x:Bind m_UISettingsControlViewModel.Colors}" />
                             <StackPanel Grid.Column="1" Orientation="Horizontal">
@@ -306,6 +307,7 @@
                                         <Grid
                                             MinWidth="115"
                                             MinHeight="42"
+                                            Padding="-50,0"
                                             Background="{ThemeResource CardBackground}">
                                             <StackPanel
                                                 HorizontalAlignment="Center"
@@ -454,7 +456,7 @@
                     <StackPanel Orientation="Horizontal">
                         <ToggleSwitch
                             x:Name="swEnableCommentShrink"
-                            Margin="-88,0,30,0"
+                            Margin="0,0,-58,0"
                             Style="{StaticResource DefaultToggleSwitchStyle}" />
                         <muxc:NumberBox
                             x:Name="numCommentShrinkLength"
@@ -559,7 +561,7 @@
             <StackPanel Orientation="Horizontal">
                 <ToggleSwitch
                     x:Name="SwitchQuickDoFav"
-                    Margin="-88,0,30,0"
+                    Margin="0,0,-58,0"
                     Style="{StaticResource DefaultToggleSwitchStyle}" />
                 <TextBox
                     x:Name="DefaultUseFav"
