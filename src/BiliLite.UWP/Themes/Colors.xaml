@@ -9,6 +9,7 @@
         <ResourceDictionary x:Key="Light">
             <Color x:Key="TextColor">#000000</Color>
             <Color x:Key="CardColor">#B3FFFFFF</Color>
+            <Color x:Key="CardBackground">#1ACFCFCF</Color>
             <Color x:Key="HighLightTextColor">#FF000000</Color>
             <Color x:Key="DefaultTextColor">#CC000000</Color>
             <Color x:Key="LinkTextColor">#008ac5</Color>
@@ -47,6 +48,7 @@
         <ResourceDictionary x:Key="Dark">
             <Color x:Key="TextColor">#FFFFFF</Color>
             <Color x:Key="CardColor">#0DFFFFFF</Color>
+            <Color x:Key="CardBackground">#1ACFCFCF</Color>
             <Color x:Key="HighLightTextColor">#FFFFFFFF</Color>
             <Color x:Key="DefaultTextColor">#CC000000</Color>
             <Color x:Key="LinkTextColor">#008ac5</Color>
