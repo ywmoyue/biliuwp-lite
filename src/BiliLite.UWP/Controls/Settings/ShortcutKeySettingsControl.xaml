@@ -66,7 +66,7 @@
                                 <TextBlock Text="{x:Bind KeysString, Mode=OneWay}" />
                             </Button>
                             <ToggleSwitch
-                                Margin="0,0,-88,0"
+                                Margin="0,-5,-88,-5"
                                 IsOn="{x:Bind Enable, Mode=TwoWay}"
                                 Style="{StaticResource DefaultToggleSwitchStyle}"
                                 Toggled="ShortcutFunctionViewModel_Changed" />
@@ -74,7 +74,7 @@
                         <controls:SettingsExpander.Items>
                             <controls:SettingsCard Header="是否松开按键执行">
                                 <ToggleSwitch
-                                    Margin="0,0,-88,0"
+                                    Margin="0,-5,-88,-5"
                                     IsOn="{x:Bind NeedKeyUp, Mode=TwoWay}"
                                     Style="{StaticResource DefaultToggleSwitchStyle}"
                                     Toggled="ShortcutFunctionViewModel_Changed" />
@@ -121,7 +121,7 @@
                 </controls:SettingsCard>
                 <controls:SettingsCard DataContext="{x:Bind m_viewModel.AddShortcutFunctionModel, Mode=OneWay}" Header="是否松开按键执行">
                     <ToggleSwitch
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         IsOn="{Binding NeedKeyUp, Mode=TwoWay}"
                         Style="{StaticResource DefaultToggleSwitchStyle}"
                         Toggled="ShortcutFunctionViewModel_Changed" />

@@ -30,7 +30,7 @@
                 <controls:SettingsCard Description="影响加载速度及加大内存占用" Header="加载原图">
                     <ToggleSwitch
                         x:Name="swPictureQuality"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
@@ -42,7 +42,7 @@
             HeaderIcon="Page2">
             <ToggleSwitch
                 x:Name="swHomeCache"
-                Margin="0,0,-88,0"
+                Margin="0,-5,-88,-5"
                 Style="{StaticResource DefaultToggleSwitchStyle}" />
         </controls:SettingsCard>
         <controls:SettingsCard
@@ -51,7 +51,7 @@
             HeaderIcon="World">
             <ToggleSwitch
                 x:Name="swOpenUrlWithBrowser"
-                Margin="0,0,-88,0"
+                Margin="0,-5,-88,-5"
                 Style="{StaticResource DefaultToggleSwitchStyle}" />
         </controls:SettingsCard>
         <controls:SettingsExpander
@@ -63,7 +63,7 @@
             </controls:SettingsExpander.HeaderIcon>
             <ToggleSwitch
                 x:Name="SwitchOpenLastPage"
-                Margin="0,0,-88,0"
+                Margin="0,-5,-88,-5"
                 Style="{StaticResource DefaultToggleSwitchStyle}" />
 
             <controls:SettingsExpander.Items>

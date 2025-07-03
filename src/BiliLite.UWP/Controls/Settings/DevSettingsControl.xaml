@@ -57,7 +57,7 @@
                     </controls:SettingsCard.HeaderIcon>
                     <ToggleSwitch
                         x:Name="swProtectLogInfo"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
@@ -67,7 +67,7 @@
                     </controls:SettingsCard.HeaderIcon>
                     <ToggleSwitch
                         x:Name="swAutoClearLogFile"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
@@ -136,7 +136,7 @@
             </controls:SettingsCard.HeaderIcon>
             <ToggleSwitch
                 x:Name="swFirstGrpcRequestDynamic"
-                Margin="0,0,-88,0"
+                Margin="0,-5,-88,-5"
                 Style="{StaticResource DefaultToggleSwitchStyle}" />
         </controls:SettingsCard>
 

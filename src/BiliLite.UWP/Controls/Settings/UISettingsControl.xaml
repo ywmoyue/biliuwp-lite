@@ -244,7 +244,7 @@
                     <StackPanel Orientation="Horizontal">
                         <ToggleSwitch
                             x:Name="SwitchTabItemFixedWidth"
-                            Margin="0,0,-88,0"
+                            Margin="0,-5,-88,-5"
                             Style="{StaticResource DefaultToggleSwitchStyle}" />
                         <muxc:NumberBox
                             x:Name="NumTabItemFixedWidth"
@@ -305,7 +305,7 @@
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="home:HomeNavItem">
                                         <Grid
-                                            MinWidth="115"
+                                            MinWidth="158"
                                             MinHeight="42"
                                             Padding="-50,0"
                                             Background="{ThemeResource CardBackground}">
@@ -336,7 +336,7 @@
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="home:HomeNavItem">
                                         <Grid
-                                            MinWidth="115"
+                                            MinWidth="158"
                                             MinHeight="42"
                                             Background="{ThemeResource CardBackground}">
                                             <StackPanel
@@ -395,14 +395,14 @@
                 <controls:SettingsCard Header="启用推荐页横幅">
                     <ToggleSwitch
                         x:Name="SwitchDisplayRecommendBanner"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
                 <controls:SettingsCard Header="启用直播页横幅">
                     <ToggleSwitch
                         x:Name="SwitchDisplayLiveBanner"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
@@ -419,7 +419,7 @@
                     </controls:SettingsCard.HeaderIcon>
                     <ToggleSwitch
                         x:Name="swPreviewImageNavigateToPage"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
@@ -430,7 +430,7 @@
                     IsEnabled="{Binding IsOn, ElementName=swPreviewImageNavigateToPage, Mode=OneWay}">
                     <ToggleSwitch
                         x:Name="swPreviewImageNavigateToPageFully"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
@@ -456,7 +456,7 @@
                     <StackPanel Orientation="Horizontal">
                         <ToggleSwitch
                             x:Name="swEnableCommentShrink"
-                            Margin="0,0,-58,0"
+                            Margin="0,-5,-58,-5"
                             Style="{StaticResource DefaultToggleSwitchStyle}" />
                         <muxc:NumberBox
                             x:Name="numCommentShrinkLength"
@@ -472,7 +472,7 @@
                 <controls:SettingsCard Description="连续在评论下显示热门回复" Header="展示评论热门回复">
                     <ToggleSwitch
                         x:Name="swShowHotReplies"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
@@ -486,7 +486,7 @@
                 <controls:SettingsCard Header="关闭推荐直播">
                     <ToggleSwitch
                         x:Name="SwitchDisplayLivePageRecommendLive"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
@@ -503,7 +503,7 @@
                     HeaderIcon="DockLeft">
                     <ToggleSwitch
                         x:Name="swRightWidthChangeable"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
@@ -548,7 +548,7 @@
                 <controls:SettingsCard Header="显示封面" HeaderIcon="DockRight">
                     <ToggleSwitch
                         x:Name="swVideoDetailShowCover"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
@@ -561,7 +561,7 @@
             <StackPanel Orientation="Horizontal">
                 <ToggleSwitch
                     x:Name="SwitchQuickDoFav"
-                    Margin="0,0,-58,0"
+                    Margin="0,-5,-58,-5"
                     Style="{StaticResource DefaultToggleSwitchStyle}" />
                 <TextBox
                     x:Name="DefaultUseFav"
@@ -576,7 +576,7 @@
             HeaderIcon="ViewAll">
             <ToggleSwitch
                 x:Name="SwitchTile"
-                Margin="0,0,-88,0"
+                Margin="0,-5,-88,-5"
                 Style="{StaticResource DefaultToggleSwitchStyle}" />
         </controls:SettingsCard>
     </StackPanel>

@@ -104,13 +104,13 @@
                 <controls:SettingsCard Description="每次播放时打开控制台" Header="启用调试模式">
                     <ToggleSwitch
                         x:Name="SwitchEnableWebPlayerDebugMode"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
                 <controls:SettingsCard Description="取消挂载播放器 html 文件，并以 http://www.bilibili.com 作为播放器进行使用。播放器前端开发时使用，普通用户请勿开启。" Header="启用开发模式">
                     <ToggleSwitch
                         x:Name="SwitchEnableWebPlayerDevMode"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
                 <controls:SettingsCard Description="当音视频进度偏差大于此阈值时调整音频播放速度，随后恢复" Header="WebPlayer 音视频进度同步阈值1">
@@ -177,7 +177,7 @@
                             QueryIcon="Accept" />
                         <ToggleSwitch
                             x:Name="swSponsorBlock"
-                            Margin="0,0,-88,0"
+                            Margin="0,-5,-88,-5"
                             Style="{StaticResource DefaultToggleSwitchStyle}" />
                     </StackPanel>
                 </controls:SettingsCard>
@@ -188,7 +188,7 @@
                     </controls:SettingsCard.HeaderIcon>
                     <ToggleSwitch
                         x:Name="swAutoNext"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
@@ -198,7 +198,7 @@
                     HeaderIcon="Play">
                     <ToggleSwitch
                         x:Name="swAutoPlay"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
@@ -208,7 +208,7 @@
                     </controls:SettingsCard.HeaderIcon>
                     <ToggleSwitch
                         x:Name="SwSkipOpEd"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
@@ -218,7 +218,7 @@
                     </controls:SettingsCard.HeaderIcon>
                     <ToggleSwitch
                         x:Name="swPlayerSettingAutoFullScreen"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
@@ -228,7 +228,7 @@
                     </controls:SettingsCard.HeaderIcon>
                     <ToggleSwitch
                         x:Name="swPlayerSettingAutoFullWindows"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
@@ -238,7 +238,7 @@
                     </controls:SettingsCard.HeaderIcon>
                     <ToggleSwitch
                         x:Name="SwitchEnableDefaultMaxSoundQuality"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
@@ -257,7 +257,7 @@
                 <controls:SettingsCard Description="仅允许在这里修改默认音量" Header="锁定默认音量">
                     <ToggleSwitch
                         x:Name="SwLockPlayerVolume"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
@@ -275,7 +275,7 @@
                 <controls:SettingsCard Description="仅允许在这里修改默认亮度" Header="锁定默认亮度">
                     <ToggleSwitch
                         x:Name="SwLockPlayerBrightness"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
@@ -290,14 +290,14 @@
                 <controls:SettingsCard Header="从已有的记录位置继续观看">
                     <ToggleSwitch
                         x:Name="swPlayerSettingAutoToPosition"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
                 <controls:SettingsCard Header="上报历史记录">
                     <ToggleSwitch
                         x:Name="SwitchPlayerReportHistory"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
@@ -307,7 +307,7 @@
                     IsEnabled="{Binding IsOn, ElementName=SwitchPlayerReportHistory}">
                     <ToggleSwitch
                         x:Name="SwitchReportHistoryZeroWhenVideoEnd"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
@@ -318,7 +318,7 @@
                 <controls:SettingsCard Description="持续播放长视频时自动刷新播放地址并提示，下次打开视频生效" Header="自动刷新">
                     <ToggleSwitch
                         x:Name="SwitchAutoRefreshPlayUrl"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
@@ -344,14 +344,14 @@
                 <controls:SettingsCard Header="总是显示进度条">
                     <ToggleSwitch
                         x:Name="SwAlwaysShowVideoProgress"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
                 <controls:SettingsCard Header="自动最小化到播放窗口底部">
                     <ToggleSwitch
                         x:Name="SwShowVideoBottomProgress"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
@@ -371,7 +371,7 @@
                     </controls:SettingsCard.Description>
                     <ToggleSwitch
                         x:Name="swPlayerSettingAutoOpenAISubtitle"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
@@ -381,7 +381,7 @@
                     </controls:SettingsCard.HeaderIcon>
                     <ToggleSwitch
                         x:Name="RoamingSettingToSimplified"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
@@ -404,7 +404,7 @@
                 <controls:SettingsCard Description="可被其他手势取消，如按住时上划取消行为" Header="最低优先级">
                     <ToggleSwitch
                         x:Name="swPlayerHoldingGestureCanCancel"
-                        Margin="0,0,-88,0"
+                        Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
@@ -416,7 +416,7 @@
             </controls:SettingsCard.HeaderIcon>
             <ToggleSwitch
                 x:Name="swPlayerSettingDoubleClickFullScreen"
-                Margin="0,0,-88,0"
+                Margin="0,-5,-88,-5"
                 Style="{StaticResource DefaultToggleSwitchStyle}" />
         </controls:SettingsCard>
     </StackPanel>
