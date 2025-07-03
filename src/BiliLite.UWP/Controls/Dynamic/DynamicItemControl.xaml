@@ -14,7 +14,7 @@
     <StackPanel
         Padding="12"
         Background="{ThemeResource ControlFillColorDefaultBrush}"
-        CornerRadius="{StaticResource OverlayCornerRadius}">
+        CornerRadius="{ThemeResource OverlayCornerRadius}">
         <!--  用户信息  -->
         <Grid Height="64" Visibility="{x:Bind Path=ViewModel.IsRepost, Converter={StaticResource DisplayConvert}, Mode=OneWay}">
             <Grid.ColumnDefinitions>
@@ -63,7 +63,7 @@
                             <Border
                                 Margin="0,0,4,0"
                                 Background="{ThemeResource SystemAccentColor}"
-                                CornerRadius="{StaticResource ControlCornerRadius}"
+                                CornerRadius="{ThemeResource ControlCornerRadius}"
                                 Visibility="{x:Bind Path=ViewModel.ShowTag, Mode=OneWay}">
                                 <TextBlock
                                     Margin="4,2"

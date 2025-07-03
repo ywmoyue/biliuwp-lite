@@ -307,7 +307,7 @@
                                                     <Border
                                                         Padding="8,4"
                                                         Background="Gray"
-                                                        CornerRadius="{StaticResource ControlCornerRadius}">
+                                                        CornerRadius="{ThemeResource ControlCornerRadius}">
                                                         <TextBlock FontSize="12" Text="{Binding}" />
                                                     </Border>
                                                 </HyperlinkButton>
@@ -872,7 +872,7 @@
                                         Grid.Column="1"
                                         MaxWidth="400"
                                         VerticalAlignment="Center"
-                                        CornerRadius="{StaticResource ControlCornerRadius}">
+                                        CornerRadius="{ThemeResource ControlCornerRadius}">
                                         <TextBox
                                             x:Name="SendDanmakuTextBox"
                                             Padding="45,8,56,10"
@@ -923,7 +923,7 @@
                                                                 Width="64"
                                                                 Margin="4,0,0,0"
                                                                 Background="{Binding ElementName=SendDanmakuColorText, Path=Text, Converter={StaticResource ColorConvert}, Mode=OneWay}"
-                                                                CornerRadius="{StaticResource ControlCornerRadius}" />
+                                                                CornerRadius="{ThemeResource ControlCornerRadius}" />
                                                         </Grid>
                                                         <GridView
                                                             MaxWidth="240"
@@ -938,7 +938,7 @@
                                                                         Width="24"
                                                                         Height="24"
                                                                         Background="{x:Bind Converter={StaticResource ColorConvert}}"
-                                                                        CornerRadius="{StaticResource ControlCornerRadius}" />
+                                                                        CornerRadius="{ThemeResource ControlCornerRadius}" />
                                                                 </DataTemplate>
                                                             </GridView.ItemTemplate>
                                                         </GridView>

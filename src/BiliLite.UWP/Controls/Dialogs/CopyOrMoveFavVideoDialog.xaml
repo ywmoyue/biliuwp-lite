@@ -11,7 +11,7 @@
     Title="复制到"
     Background="{ThemeResource SystemControlAcrylicElementBrush}"
     CloseButtonStyle="{StaticResource DefaultButtonStyle}"
-    CornerRadius="{StaticResource OverlayCornerRadius}"
+    CornerRadius="{ThemeResource OverlayCornerRadius}"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
     PrimaryButtonText="提交"

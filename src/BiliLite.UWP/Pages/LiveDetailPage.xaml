@@ -67,7 +67,7 @@
                             Background="DarkOrange"
                             BorderBrush="DarkOrange"
                             BorderThickness="1"
-                            CornerRadius="{StaticResource ControlCornerRadius}"
+                            CornerRadius="{ThemeResource ControlCornerRadius}"
                             Visibility="{x:Bind ShowAdmin}">
                             <TextBlock
                                 HorizontalAlignment="Center"
@@ -100,7 +100,7 @@
                                     VerticalAlignment="Center"
                                     BorderBrush="{x:Bind Path=MedalColor, Converter={StaticResource ColorConvert}}"
                                     BorderThickness="1"
-                                    CornerRadius="{StaticResource ControlCornerRadius}"
+                                    CornerRadius="{ThemeResource ControlCornerRadius}"
                                     Visibility="{x:Bind ShowMedal}">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
@@ -156,7 +156,7 @@
                             HorizontalAlignment="Left"
                             Background="{x:Bind CardColor}"
                             BorderThickness="1"
-                            CornerRadius="{StaticResource OverlayCornerRadius}"
+                            CornerRadius="{ThemeResource OverlayCornerRadius}"
                             Visibility="{x:Bind ShowRichText}">
                             <Grid>
                                 <StackPanel Orientation="Vertical">
@@ -334,7 +334,7 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Background="#CCFFFFFF"
-                        CornerRadius="{StaticResource OverlayCornerRadius}"
+                        CornerRadius="{ThemeResource OverlayCornerRadius}"
                         Visibility="Collapsed">
                         <TextBlock
                             x:Name="TxtToolTip"
@@ -561,7 +561,7 @@
                                                                             <Border
                                                                                 Padding="8,4"
                                                                                 Background="Gray"
-                                                                                CornerRadius="{StaticResource ControlCornerRadius}">
+                                                                                CornerRadius="{ThemeResource ControlCornerRadius}">
                                                                                 <TextBlock
                                                                                     FontSize="12"
                                                                                     Foreground="white"
@@ -1901,7 +1901,7 @@
                                                         <StackPanel
                                                             Width="280"
                                                             Margin="-12"
-                                                            CornerRadius="{StaticResource OverlayCornerRadius}">
+                                                            CornerRadius="{ThemeResource OverlayCornerRadius}">
                                                             <Grid Height="56" Background="{x:Bind Path=BackgroundColor, Mode=OneWay, Converter={StaticResource ColorConvert}}">
                                                                 <Grid.ColumnDefinitions>
                                                                     <ColumnDefinition Width="Auto" />
@@ -2160,7 +2160,7 @@
                                                                 VerticalAlignment="Center"
                                                                 BorderBrush="{x:Bind Path=Color, Converter={StaticResource ColorConvert}}"
                                                                 BorderThickness="1"
-                                                                CornerRadius="{StaticResource ControlCornerRadius}"
+                                                                CornerRadius="{ThemeResource ControlCornerRadius}"
                                                                 Visibility="{x:Bind ShowMedal}">
                                                                 <Grid>
                                                                     <Grid.ColumnDefinitions>

@@ -271,7 +271,7 @@
                                         <ColumnDefinition Width="120" />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <Grid VerticalAlignment="Stretch" CornerRadius="{StaticResource OverlayCornerRadius}">
+                                    <Grid VerticalAlignment="Stretch" CornerRadius="{ThemeResource OverlayCornerRadius}">
                                         <Image
                                             Source="{x:Bind Path=m_viewModel.Detail.Cover, Mode=OneWay, Converter={StaticResource ImageSourceConvert}, ConverterParameter='200w'}"
                                             Stretch="Fill"
@@ -282,7 +282,7 @@
                                             HorizontalAlignment="Right"
                                             VerticalAlignment="Top"
                                             Background="Orange"
-                                            CornerRadius="{StaticResource ControlCornerRadius}"
+                                            CornerRadius="{ThemeResource ControlCornerRadius}"
                                             Opacity="1"
                                             Visibility="{x:Bind Path=m_viewModel.Detail.ShowBadge, Mode=OneWay}">
                                             <TextBlock
@@ -523,7 +523,7 @@
                                                 <Border
                                                     Padding="8,4"
                                                     Background="Transparent"
-                                                    CornerRadius="{StaticResource ControlCornerRadius}">
+                                                    CornerRadius="{ThemeResource ControlCornerRadius}">
                                                     <TextBlock FontSize="14" Text="{x:Bind Path=Name}" />
                                                 </Border>
                                             </HyperlinkButton>
@@ -551,7 +551,7 @@
                                                 <Border
                                                     Padding="8,4"
                                                     Background="Transparent"
-                                                    CornerRadius="{StaticResource ControlCornerRadius}">
+                                                    CornerRadius="{ThemeResource ControlCornerRadius}">
                                                     <TextBlock FontSize="14" Text="{x:Bind Path=Name}" />
                                                 </Border>
                                             </HyperlinkButton>
@@ -737,7 +737,7 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Background="#33FFFFFF"
-            CornerRadius="{StaticResource ControlCornerRadius}"
+            CornerRadius="{ThemeResource ControlCornerRadius}"
             Visibility="{x:Bind Path=m_viewModel.ShowError, Mode=OneWay}">
             <StackPanel VerticalAlignment="Center">
                 <FontIcon

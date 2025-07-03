@@ -16,7 +16,7 @@
             Opacity="0.5"
             Color="{ThemeResource SystemAccentColor}" />
         <Style TargetType="AppBarButton">
-            <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
+            <Setter Property="CornerRadius" Value="{ThemeResource OverlayCornerRadius}" />
         </Style>
     </UserControl.Resources>
 
@@ -35,7 +35,7 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Bottom"
                 Orientation="Horizontal">
-                <Border Background="#CC000000" CornerRadius="{StaticResource OverlayCornerRadius}">
+                <Border Background="#CC000000" CornerRadius="{ThemeResource OverlayCornerRadius}">
                     <StackPanel Orientation="Horizontal">
                         <AppBarButton
                             x:Name="btnSave"
@@ -64,7 +64,7 @@
                 <Border
                     Margin="12,0,0,0"
                     Background="#CC000000"
-                    CornerRadius="{StaticResource OverlayCornerRadius}">
+                    CornerRadius="{ThemeResource OverlayCornerRadius}">
                     <StackPanel Orientation="Horizontal">
                         <AppBarButton
                             x:Name="btnOrigin"
@@ -117,7 +117,7 @@
                 <Border
                     Margin="12,0,0,0"
                     Background="#CC000000"
-                    CornerRadius="{StaticResource OverlayCornerRadius}">
+                    CornerRadius="{ThemeResource OverlayCornerRadius}">
                     <StackPanel Orientation="Horizontal">
                         <AppBarButton
                             x:Name="btnPrevious"
@@ -162,7 +162,7 @@
                 <Border
                     Margin="12,0,0,0"
                     Background="#CC000000"
-                    CornerRadius="{StaticResource OverlayCornerRadius}">
+                    CornerRadius="{ThemeResource OverlayCornerRadius}">
                     <StackPanel Orientation="Horizontal">
                         <AppBarButton
                             x:Name="btnHelp"

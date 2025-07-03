@@ -80,7 +80,7 @@
                                                     <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
                                                 <!--  此处不能使用ImageEx，否则程序崩溃，原因未知  -->
-                                                <Grid CornerRadius="{StaticResource OverlayCornerRadius}">
+                                                <Grid CornerRadius="{ThemeResource OverlayCornerRadius}">
                                                     <Image
                                                         Grid.Column="0"
                                                         Width="140"

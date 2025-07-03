@@ -82,7 +82,7 @@
                                         Padding="4,2"
                                         HorizontalAlignment="Center"
                                         Background="{ThemeResource SystemAccentColor}"
-                                        CornerRadius="{StaticResource ControlCornerRadius}"
+                                        CornerRadius="{ThemeResource ControlCornerRadius}"
                                         Visibility="{x:Bind Path=m_viewModel.Profile.show_vip, Mode=OneWay}">
                                         <TextBlock
                                             FontSize="12"

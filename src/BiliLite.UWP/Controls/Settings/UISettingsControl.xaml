@@ -24,7 +24,7 @@
                 Height="40"
                 Padding="0"
                 Background="{x:Bind Color, Converter={StaticResource ColorConvert}}"
-                CornerRadius="{StaticResource ControlCornerRadius}"
+                CornerRadius="{ThemeResource ControlCornerRadius}"
                 ToolTipService.ToolTip="{x:Bind Name}">
                 <SymbolIcon
                     Foreground="White"
@@ -140,7 +140,7 @@
                                                     Height="40"
                                                     VerticalAlignment="Top"
                                                     Background="{Binding Color, ElementName=cpAddColor, Converter={StaticResource ColorConvert}}"
-                                                    CornerRadius="{StaticResource ControlCornerRadius}">
+                                                    CornerRadius="{ThemeResource ControlCornerRadius}">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition />
                                                         <ColumnDefinition />

@@ -10,7 +10,7 @@
     xmlns:viewModels="using:BiliLite.ViewModels"
     Background="{ThemeResource SystemControlAcrylicElementBrush}"
     CloseButtonStyle="{StaticResource DefaultButtonStyle}"
-    CornerRadius="{StaticResource OverlayCornerRadius}"
+    CornerRadius="{ThemeResource OverlayCornerRadius}"
     PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
     SecondaryButtonStyle="{StaticResource DefaultButtonStyle}"
     mc:Ignorable="d">
@@ -154,7 +154,7 @@
                 Margin="0,8"
                 Padding="8"
                 Background="#33808080"
-                CornerRadius="{StaticResource ControlCornerRadius}"
+                CornerRadius="{ThemeResource ControlCornerRadius}"
                 Visibility="{x:Bind Path=m_viewModel.IsRepost, Mode=OneWay}">
                 <TextBlock
                     MaxLines="1"
@@ -303,7 +303,7 @@
                 Margin="0,4"
                 Padding="4"
                 Background="#33808080"
-                CornerRadius="{StaticResource ControlCornerRadius}"
+                CornerRadius="{ThemeResource ControlCornerRadius}"
                 Visibility="{x:Bind Path=m_viewModel.ShowImage, Mode=OneWay}">
                 <TextBlock><Run Text="{x:Bind Path=m_viewModel.Images.Count, Mode=OneWay}" />
                 /9张图片</TextBlock>

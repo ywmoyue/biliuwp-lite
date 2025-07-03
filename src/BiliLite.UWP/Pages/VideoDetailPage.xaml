@@ -450,7 +450,7 @@
                                 <Border
                                     x:Name="VideoCover"
                                     Margin="0,0,0,8"
-                                    CornerRadius="{StaticResource OverlayCornerRadius}">
+                                    CornerRadius="{ThemeResource OverlayCornerRadius}">
                                     <toolkit:ImageEx
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                         Source="{x:Bind Path=m_viewModel.VideoInfo.Pic, Mode=OneWay, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='400w'}"
@@ -462,7 +462,7 @@
                                     Margin="0,0,0,8"
                                     Padding="8"
                                     Background="#33808080"
-                                    CornerRadius="{StaticResource ControlCornerRadius}"
+                                    CornerRadius="{ThemeResource ControlCornerRadius}"
                                     Visibility="{x:Bind Path=m_viewModel.VideoInfo.ShowArgueMsg, Mode=OneWay}">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
@@ -662,7 +662,7 @@
                                                 <Border
                                                     Padding="8,4"
                                                     Background="Transparent"
-                                                    CornerRadius="{StaticResource ControlCornerRadius}">
+                                                    CornerRadius="{ThemeResource ControlCornerRadius}">
                                                     <TextBlock
                                                         FontSize="12"
                                                         Foreground="{ThemeResource TextColor}"
@@ -712,7 +712,7 @@
                                         <toolkit:ImageEx
                                             MaxHeight="80"
                                             Margin="0,2,0,3"
-                                            CornerRadius="{StaticResource OverlayCornerRadius}"
+                                            CornerRadius="{ThemeResource OverlayCornerRadius}"
                                             Source="{x:Bind Path=Pic, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='100h'}"
                                             Stretch="UniformToFill" />
                                         <StackPanel Grid.Column="1" Margin="8,2,0,2">

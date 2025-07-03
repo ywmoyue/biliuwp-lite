@@ -47,7 +47,7 @@
                             <ColumnDefinition Width="200" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <Grid CornerRadius="{StaticResource OverlayCornerRadius}">
+                        <Grid CornerRadius="{ThemeResource OverlayCornerRadius}">
                             <toolkit:ImageEx
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"

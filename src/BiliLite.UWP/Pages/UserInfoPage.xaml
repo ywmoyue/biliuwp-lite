@@ -235,7 +235,7 @@
                                                     <ColumnDefinition Width="200" />
                                                     <ColumnDefinition />
                                                 </Grid.ColumnDefinitions>
-                                                <Grid CornerRadius="{StaticResource OverlayCornerRadius}">
+                                                <Grid CornerRadius="{ThemeResource OverlayCornerRadius}">
                                                     <toolkit:ImageEx
                                                         HorizontalAlignment="Stretch"
                                                         VerticalAlignment="Stretch"
@@ -370,7 +370,7 @@
                                                     <ColumnDefinition Width="200" />
                                                     <ColumnDefinition />
                                                 </Grid.ColumnDefinitions>
-                                                <Grid CornerRadius="{StaticResource OverlayCornerRadius}">
+                                                <Grid CornerRadius="{ThemeResource OverlayCornerRadius}">
                                                     <toolkit:ImageEx
                                                         HorizontalAlignment="Stretch"
                                                         VerticalAlignment="Stretch"
@@ -479,7 +479,7 @@
                                                     <ColumnDefinition Width="200" />
                                                     <ColumnDefinition />
                                                 </Grid.ColumnDefinitions>
-                                                <Grid CornerRadius="{StaticResource OverlayCornerRadius}">
+                                                <Grid CornerRadius="{ThemeResource OverlayCornerRadius}">
                                                     <toolkit:ImageEx
                                                         HorizontalAlignment="Stretch"
                                                         VerticalAlignment="Stretch"
@@ -843,7 +843,7 @@
                                                             <Border
                                                                 Margin="8,0"
                                                                 Background="{x:Bind Path=m_viewModel.UserSpaceInfo.LevelColor, Mode=OneWay}"
-                                                                CornerRadius="{StaticResource ControlCornerRadius}"
+                                                                CornerRadius="{ThemeResource ControlCornerRadius}"
                                                                 Opacity=".8">
                                                                 <TextBlock
                                                                     Margin="4,2"
@@ -853,7 +853,7 @@
                                                             </Border>
                                                             <Border
                                                                 Background="{ThemeResource SystemAccentColor}"
-                                                                CornerRadius="{StaticResource ControlCornerRadius}"
+                                                                CornerRadius="{ThemeResource ControlCornerRadius}"
                                                                 Opacity=".8"
                                                                 Visibility="{x:Bind Path=m_viewModel.UserSpaceInfo.Vip.Status, Mode=OneWay, Converter={StaticResource DisplayConvert}, ConverterParameter=1}">
                                                                 <TextBlock

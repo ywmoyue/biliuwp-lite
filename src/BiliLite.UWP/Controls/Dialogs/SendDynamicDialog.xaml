@@ -10,7 +10,7 @@
     xmlns:viewModels="using:BiliLite.ViewModels"
     Background="{ThemeResource SystemControlAcrylicElementBrush}"
     CloseButtonStyle="{StaticResource DefaultButtonStyle}"
-    CornerRadius="{StaticResource OverlayCornerRadius}"
+    CornerRadius="{ThemeResource OverlayCornerRadius}"
     PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
     SecondaryButtonStyle="{StaticResource DefaultButtonStyle}"
     mc:Ignorable="d">

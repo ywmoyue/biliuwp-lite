@@ -14,7 +14,7 @@
     <StackPanel
         Padding="12"
         Background="{ThemeResource CardBackground}"
-        CornerRadius="{StaticResource OverlayCornerRadius}">
+        CornerRadius="{ThemeResource OverlayCornerRadius}">
         <!--  用户信息  -->
         <Grid>
             <Grid.ColumnDefinitions>

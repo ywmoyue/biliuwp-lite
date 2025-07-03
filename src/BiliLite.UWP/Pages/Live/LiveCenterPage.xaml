@@ -72,7 +72,7 @@
                                     <toolkit:ImageEx
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
-                                        CornerRadius="{StaticResource OverlayCornerRadius}"
+                                        CornerRadius="{ThemeResource OverlayCornerRadius}"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                         Source="{x:Bind Path=cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
                                         Stretch="UniformToFill" />
@@ -235,7 +235,7 @@
                                     <toolkit:ImageEx
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
-                                        CornerRadius="{StaticResource OverlayCornerRadius}"
+                                        CornerRadius="{ThemeResource OverlayCornerRadius}"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                         Source="{x:Bind Path=cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
                                         Stretch="UniformToFill" />

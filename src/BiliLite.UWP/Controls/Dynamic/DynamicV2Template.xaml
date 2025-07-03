@@ -41,7 +41,7 @@
                         BorderThickness="0"
                         Command="{Binding Path=Parent.LaunchUrlCommand}"
                         CommandParameter="{Binding Path=Dynamic.DynArchive.Uri}"
-                        CornerRadius="{StaticResource OverlayCornerRadius}">
+                        CornerRadius="{ThemeResource OverlayCornerRadius}">
                         <Button.ContextFlyout>
                             <MenuFlyout>
                                 <MenuFlyoutItem
@@ -67,7 +67,7 @@
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
                                     Background="{ThemeResource SystemAccentColor}"
-                                    CornerRadius="{StaticResource ControlCornerRadius}">
+                                    CornerRadius="{ThemeResource ControlCornerRadius}">
                                     <TextBlock
                                         FontSize="12"
                                         Foreground="White"
@@ -128,7 +128,7 @@
                         BorderThickness="0"
                         Command="{Binding Path=Parent.LaunchUrlCommand}"
                         CommandParameter="{Binding Path=Dynamic.DynPgc.Uri}"
-                        CornerRadius="{StaticResource OverlayCornerRadius}"
+                        CornerRadius="{ThemeResource OverlayCornerRadius}"
                         Visibility="{Binding Dynamic.DynPgc, Converter={StaticResource DisplayConvert}}">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -143,7 +143,7 @@
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
                                     Background="{ThemeResource SystemAccentColor}"
-                                    CornerRadius="{StaticResource ControlCornerRadius}">
+                                    CornerRadius="{ThemeResource ControlCornerRadius}">
                                     <TextBlock
                                         FontSize="12"
                                         Foreground="White"
@@ -186,7 +186,7 @@
                         BorderThickness="0"
                         Command="{Binding Path=Parent.LaunchUrlCommand}"
                         CommandParameter="{Binding Path=Dynamic.DynArchive.Uri}"
-                        CornerRadius="{StaticResource OverlayCornerRadius}"
+                        CornerRadius="{ThemeResource OverlayCornerRadius}"
                         Visibility="{Binding Dynamic.DynArchive, Converter={StaticResource DisplayConvert}}">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -201,7 +201,7 @@
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
                                     Background="{ThemeResource SystemAccentColor}"
-                                    CornerRadius="{StaticResource ControlCornerRadius}">
+                                    CornerRadius="{ThemeResource ControlCornerRadius}">
                                     <TextBlock
                                         FontSize="12"
                                         Foreground="White"
@@ -253,7 +253,7 @@
                     BorderThickness="0"
                     Command="{Binding Path=Parent.LaunchUrlCommand}"
                     CommandParameter="{Binding Path=Extend.CardUrl}"
-                    CornerRadius="{StaticResource OverlayCornerRadius}">
+                    CornerRadius="{ThemeResource OverlayCornerRadius}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -267,7 +267,7 @@
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
-                                CornerRadius="{StaticResource ControlCornerRadius}">
+                                CornerRadius="{ThemeResource ControlCornerRadius}">
                                 <TextBlock
                                     FontSize="12"
                                     Foreground="White"
@@ -318,7 +318,7 @@
                 <Grid>
                     <Border
                         BorderThickness="1"
-                        CornerRadius="{StaticResource OverlayCornerRadius}"
+                        CornerRadius="{ThemeResource OverlayCornerRadius}"
                         Visibility="{Binding ForwardMissed, Converter={StaticResource DisplayConvert}}">
                         <ListView
                             Margin="-20,0"
@@ -332,7 +332,7 @@
                         HorizontalAlignment="Stretch"
                         BorderBrush="#C8E5E9EF"
                         BorderThickness="1"
-                        CornerRadius="{StaticResource OverlayCornerRadius}"
+                        CornerRadius="{ThemeResource OverlayCornerRadius}"
                         Visibility="{Binding ForwardMissed}">
                         <StackPanel Margin="12" Orientation="Horizontal">
                             <FontIcon
@@ -359,7 +359,7 @@
                     BorderThickness="0"
                     Command="{Binding Path=Parent.LaunchUrlCommand}"
                     CommandParameter="{Binding Path=Extend.CardUrl}"
-                    CornerRadius="{StaticResource OverlayCornerRadius}">
+                    CornerRadius="{ThemeResource OverlayCornerRadius}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -373,7 +373,7 @@
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
-                                CornerRadius="{StaticResource ControlCornerRadius}">
+                                CornerRadius="{ThemeResource ControlCornerRadius}">
                                 <TextBlock
                                     FontSize="12"
                                     Foreground="White"
@@ -410,7 +410,7 @@
                     BorderThickness="0"
                     Command="{Binding Path=Parent.LaunchUrlCommand}"
                     CommandParameter="{Binding Path=Extend.CardUrl}"
-                    CornerRadius="{StaticResource OverlayCornerRadius}">
+                    CornerRadius="{ThemeResource OverlayCornerRadius}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -424,7 +424,7 @@
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
-                                CornerRadius="{StaticResource ControlCornerRadius}">
+                                CornerRadius="{ThemeResource ControlCornerRadius}">
                                 <TextBlock
                                     FontSize="12"
                                     Foreground="White"
@@ -456,15 +456,15 @@
                 <Border
                     MaxWidth="240"
                     HorizontalAlignment="Left"
-                    CornerRadius="{StaticResource OverlayCornerRadius}">
+                    CornerRadius="{ThemeResource OverlayCornerRadius}">
                     <Grid>
                         <HyperlinkButton
                             Padding="5"
                             Command="{Binding Path=ImageInfos[0].ImageCommand, Mode=OneWay}"
                             CommandParameter="{Binding ImageInfos[0]}"
-                            CornerRadius="{StaticResource OverlayCornerRadius}">
+                            CornerRadius="{ThemeResource OverlayCornerRadius}">
                             <controls:ImageEx
-                                CornerRadius="{StaticResource OverlayCornerRadius}"
+                                CornerRadius="{ThemeResource OverlayCornerRadius}"
                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                 Source="{Binding ImageInfos[0].ImageUrlWithPar}"
                                 Stretch="UniformToFill" />
@@ -475,7 +475,7 @@
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"
                             Background="#66000000"
-                            CornerRadius="{StaticResource ControlCornerRadius}"
+                            CornerRadius="{ThemeResource ControlCornerRadius}"
                             Visibility="{Binding Path=ImageInfos[0].LongImage, Mode=OneWay}">
                             <TextBlock FontSize="12" Foreground="White">
                                 长图
@@ -501,11 +501,11 @@
                                 Padding="5"
                                 Command="{Binding Path=ImageCommand, Mode=OneWay}"
                                 CommandParameter="{Binding}"
-                                CornerRadius="{StaticResource OverlayCornerRadius}">
+                                CornerRadius="{ThemeResource OverlayCornerRadius}">
                                 <controls:ImageEx
                                     Width="120"
                                     Height="120"
-                                    CornerRadius="{StaticResource OverlayCornerRadius}"
+                                    CornerRadius="{ThemeResource OverlayCornerRadius}"
                                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png"
                                     Source="{Binding Path=ImageUrl, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='200w_200h_1c'}"
                                     Stretch="UniformToFill" />
@@ -532,11 +532,11 @@
                                 Padding="5"
                                 Command="{Binding Path=ImageCommand, Mode=OneWay}"
                                 CommandParameter="{Binding}"
-                                CornerRadius="{StaticResource OverlayCornerRadius}">
+                                CornerRadius="{ThemeResource OverlayCornerRadius}">
                                 <controls:ImageEx
                                     Width="100"
                                     Height="100"
-                                    CornerRadius="{StaticResource OverlayCornerRadius}"
+                                    CornerRadius="{ThemeResource OverlayCornerRadius}"
                                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png"
                                     Source="{Binding Path=ImageUrl, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='200w_200h_1c'}"
                                     Stretch="UniformToFill" />
@@ -559,7 +559,7 @@
                     BorderThickness="0"
                     Command="{Binding Path=Parent.LaunchUrlCommand}"
                     CommandParameter="{Binding Path=Dynamic.DynCommon.Uri}"
-                    CornerRadius="{StaticResource OverlayCornerRadius}">
+                    CornerRadius="{ThemeResource OverlayCornerRadius}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -573,7 +573,7 @@
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
-                                CornerRadius="{StaticResource ControlCornerRadius}">
+                                CornerRadius="{ThemeResource ControlCornerRadius}">
                                 <TextBlock
                                     FontSize="12"
                                     Foreground="White"
@@ -615,7 +615,7 @@
                     BorderThickness="0"
                     Command="{Binding Path=Parent.LaunchUrlCommand}"
                     CommandParameter="{Binding Path=Extend.CardUrl}"
-                    CornerRadius="{StaticResource OverlayCornerRadius}">
+                    CornerRadius="{ThemeResource OverlayCornerRadius}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -629,7 +629,7 @@
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
-                                CornerRadius="{StaticResource ControlCornerRadius}">
+                                CornerRadius="{ThemeResource ControlCornerRadius}">
                                 <TextBlock
                                     FontSize="12"
                                     Foreground="White"
@@ -668,14 +668,14 @@
             HorizontalAlignment="Stretch"
             BorderBrush="#C8E5E9EF"
             BorderThickness="1"
-            CornerRadius="{StaticResource OverlayCornerRadius}">
+            CornerRadius="{ThemeResource OverlayCornerRadius}">
             <Button
                 Padding="0"
                 HorizontalAlignment="Stretch"
                 BorderThickness="0"
                 Command="{Binding Parent.DetailCommand, Mode=OneWay}"
                 CommandParameter="{Binding Extend.DynIdStr, Mode=OneWay}"
-                CornerRadius="{StaticResource OverlayCornerRadius}">
+                CornerRadius="{ThemeResource OverlayCornerRadius}">
                 <TextBlock HorizontalAlignment="Center" Text="{Binding Fold.Text}" />
             </Button>
         </Border>
@@ -692,7 +692,7 @@
                     BorderThickness="0"
                     Command="{Binding Path=Parent.LaunchUrlCommand}"
                     CommandParameter="{Binding Path=Extend.CardUrl}"
-                    CornerRadius="{StaticResource OverlayCornerRadius}">
+                    CornerRadius="{ThemeResource OverlayCornerRadius}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -706,7 +706,7 @@
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
-                                CornerRadius="{StaticResource ControlCornerRadius}">
+                                CornerRadius="{ThemeResource ControlCornerRadius}">
                                 <TextBlock
                                     FontSize="12"
                                     Foreground="White"
@@ -746,7 +746,7 @@
             BorderThickness="0"
             Command="{Binding Path=Parent.LaunchUrlCommand}"
             CommandParameter="{Binding Path=Season.Url}"
-            CornerRadius="{StaticResource OverlayCornerRadius}">
+            CornerRadius="{ThemeResource OverlayCornerRadius}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -777,7 +777,7 @@
     <DataTemplate x:Key="DynamicCustomArticle">
         <local:DynamicItemV2Control ViewModel="{Binding}">
             <local:DynamicItemV2Control.CardContent>
-                <StackPanel Padding="12" CornerRadius="{StaticResource OverlayCornerRadius}">
+                <StackPanel Padding="12" CornerRadius="{ThemeResource OverlayCornerRadius}">
                     <Button
                         Padding="0"
                         HorizontalAlignment="Stretch"
@@ -786,7 +786,7 @@
                         BorderThickness="0"
                         Command="{Binding Path=Parent.LaunchUrlCommand}"
                         CommandParameter="{Binding Path=CustomArticle.JumpUrl}"
-                        CornerRadius="{StaticResource OverlayCornerRadius}">
+                        CornerRadius="{ThemeResource OverlayCornerRadius}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -800,7 +800,7 @@
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
                                     Background="{ThemeResource SystemAccentColor}"
-                                    CornerRadius="{StaticResource ControlCornerRadius}">
+                                    CornerRadius="{ThemeResource ControlCornerRadius}">
                                     <TextBlock
                                         FontSize="12"
                                         Foreground="White"
@@ -832,7 +832,7 @@
             HorizontalAlignment="Stretch"
             BorderBrush="#C8E5E9EF"
             BorderThickness="1"
-            CornerRadius="{StaticResource OverlayCornerRadius}">
+            CornerRadius="{ThemeResource OverlayCornerRadius}">
             <StackPanel Margin="12">
                 <TextBlock TextAlignment="Justify" TextWrapping="Wrap">无法显示此动态,请点击以下按钮复制内容给开发者适配</TextBlock>
                 <Button

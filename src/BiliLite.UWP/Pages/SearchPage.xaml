@@ -78,7 +78,7 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Grid CornerRadius="{StaticResource OverlayCornerRadius}">
+                                <Grid CornerRadius="{ThemeResource OverlayCornerRadius}">
                                     <toolkit:ImageEx
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
@@ -171,7 +171,7 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Grid CornerRadius="{StaticResource OverlayCornerRadius}">
+                                <Grid CornerRadius="{ThemeResource OverlayCornerRadius}">
                                     <toolkit:ImageEx
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
@@ -184,7 +184,7 @@
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Top"
                                         Background="Orange"
-                                        CornerRadius="{StaticResource ControlCornerRadius}"
+                                        CornerRadius="{ThemeResource ControlCornerRadius}"
                                         Visibility="{x:Bind showBadge}">
                                         <TextBlock
                                             FontSize="12"
@@ -555,7 +555,7 @@
                                 <toolkit:ImageEx
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch"
-                                    CornerRadius="{StaticResource OverlayCornerRadius}"
+                                    CornerRadius="{ThemeResource OverlayCornerRadius}"
                                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                     Source="{x:Bind Path=cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
                                     Stretch="UniformToFill" />
@@ -648,7 +648,7 @@
                                 <toolkit:ImageEx
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch"
-                                    CornerRadius="{StaticResource OverlayCornerRadius}"
+                                    CornerRadius="{ThemeResource OverlayCornerRadius}"
                                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                     Source="{x:Bind Path=cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
                                     Stretch="UniformToFill" />

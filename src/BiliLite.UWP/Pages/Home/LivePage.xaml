@@ -65,7 +65,7 @@
                                         Height="48"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
-                                        CornerRadius="{StaticResource OverlayCornerRadius}"
+                                        CornerRadius="{ThemeResource OverlayCornerRadius}"
                                         PlaceholderSource="/assets/Thumbnails/Placeholde1x1.png"
                                         PlaceholderStretch="UniformToFill"
                                         Source="{x:Bind Path=Pic, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='96w'}" />

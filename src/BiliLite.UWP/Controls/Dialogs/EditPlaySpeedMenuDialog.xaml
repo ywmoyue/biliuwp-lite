@@ -11,7 +11,7 @@
     Background="{ThemeResource SystemControlAcrylicElementBrush}"
     CloseButtonStyle="{StaticResource DefaultButtonStyle}"
     CloseButtonText="取消"
-    CornerRadius="{StaticResource OverlayCornerRadius}"
+    CornerRadius="{ThemeResource OverlayCornerRadius}"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
     PrimaryButtonText="确定"

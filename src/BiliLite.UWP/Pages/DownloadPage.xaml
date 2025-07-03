@@ -81,7 +81,7 @@
                                 <StackPanel
                                     Padding="10"
                                     Background="{ThemeResource CardBackground}"
-                                    CornerRadius="{StaticResource OverlayCornerRadius}">
+                                    CornerRadius="{ThemeResource OverlayCornerRadius}">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition />
@@ -263,7 +263,7 @@
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
-                                        <Border CornerRadius="{StaticResource OverlayCornerRadius}">
+                                        <Border CornerRadius="{ThemeResource OverlayCornerRadius}">
                                             <Image
                                                 Width="130"
                                                 Source="{Binding Path=Cover}"
@@ -397,7 +397,7 @@
                                                 <ColumnDefinition Width="200" />
                                                 <ColumnDefinition />
                                             </Grid.ColumnDefinitions>
-                                            <Grid CornerRadius="{StaticResource OverlayCornerRadius}">
+                                            <Grid CornerRadius="{ThemeResource OverlayCornerRadius}">
                                                 <Image Source="{x:Bind Path=Cover}" Stretch="UniformToFill" />
                                                 <Grid Padding="8" VerticalAlignment="Bottom">
                                                     <Grid.Background>
@@ -426,7 +426,7 @@
                                                         Padding="4,1,5,2"
                                                         HorizontalAlignment="Left"
                                                         Background="{ThemeResource SystemAccentColor}"
-                                                        CornerRadius="{StaticResource ControlCornerRadius}">
+                                                        CornerRadius="{ThemeResource ControlCornerRadius}">
                                                         <TextBlock FontSize="12" Foreground="White">
                                                             剧集
                                                         </TextBlock>

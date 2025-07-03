@@ -142,7 +142,7 @@
                         HorizontalAlignment="Center"
                         BorderBrush="{x:Bind Path=Member.FansDetail.MedalColorBorder, Converter={StaticResource ColorConvert}, Mode=OneWay}"
                         BorderThickness="1"
-                        CornerRadius="{StaticResource ControlCornerRadius}"
+                        CornerRadius="{ThemeResource ControlCornerRadius}"
                         Visibility="{x:Bind Path=Member.ShowFansDetail, Mode=OneWay}">
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
@@ -210,7 +210,7 @@
                     <Grid
                         Margin="0,2,0,0"
                         VerticalAlignment="Center"
-                        CornerRadius="{StaticResource ControlCornerRadius}"
+                        CornerRadius="{ThemeResource ControlCornerRadius}"
                         Visibility="{Binding ElementName=m_viewModel, Path=IsWideMode, Mode=OneWay}">
                         <Border Visibility="{x:Bind Path=Member.ShowFansDetail, Mode=OneWay}">
                             <Border.Background>
@@ -362,7 +362,7 @@
                         <DataTemplate x:DataType="common:NotePicture">
                             <toolkit:ImageEx
                                 Margin="10"
-                                CornerRadius="{StaticResource ControlCornerRadius}"
+                                CornerRadius="{ThemeResource ControlCornerRadius}"
                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                 Source="{x:Bind ImgSrc}" />
                         </DataTemplate>
@@ -427,7 +427,7 @@
 
                         <Border
                             Background="{ThemeResource CardColor}"
-                            CornerRadius="{StaticResource ControlCornerRadius}"
+                            CornerRadius="{ThemeResource ControlCornerRadius}"
                             Visibility="{x:Bind Path=UpAction.Like, Mode=OneWay}">
                             <TextBlock
                                 Margin="8,8"
@@ -444,7 +444,7 @@
                     Margin="0,4"
                     Padding="8"
                     Background="{ThemeResource CardBackground}"
-                    CornerRadius="{StaticResource ControlCornerRadius}"
+                    CornerRadius="{ThemeResource ControlCornerRadius}"
                     Visibility="{x:Bind Path=ShowReplies, Mode=OneWay}">
 
                     <StackPanel Margin="0,0,0,4" Visibility="{x:Bind Path=ShowReplyBox, Mode=OneWay}">
@@ -700,7 +700,7 @@
                     Grid.Row="6"
                     Margin="0,0,8,0"
                     Background="{ThemeResource CardBackground}"
-                    CornerRadius="{StaticResource ControlCornerRadius}"
+                    CornerRadius="{ThemeResource ControlCornerRadius}"
                     IsItemClickEnabled="False"
                     ItemsSource="{x:Bind HotReplies, Mode=OneWay}"
                     ScrollViewer.VerticalScrollBarVisibility="Hidden"
