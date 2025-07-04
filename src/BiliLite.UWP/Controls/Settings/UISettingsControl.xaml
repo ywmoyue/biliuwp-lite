@@ -85,7 +85,7 @@
                         IsEnabled="False"
                         SelectedIndex="0">
                         <ComboBox.Items>
-                            <ComboBoxItem>Win11</ComboBoxItem>
+                            <ComboBoxItem>开发中</ComboBoxItem>
                         </ComboBox.Items>
                     </ComboBox>
                 </controls:SettingsCard>
