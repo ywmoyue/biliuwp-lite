@@ -325,7 +325,7 @@
                                 </GridView.ItemTemplate>
 
                             </GridView>
-                            <TextBlock Margin="0,0,0,8" Visibility="{Binding ItemsSource.Count, ElementName=gridHomeNavItem, Converter={StaticResource InverseBooleanConverter}, ConverterParameter=0}">未启用的栏目</TextBlock>
+                            <TextBlock Margin="10,0,0,8" Visibility="{Binding ItemsSource.Count, ElementName=gridHomeNavItem, Converter={StaticResource InverseBooleanConverter}, ConverterParameter=0}">未启用的栏目</TextBlock>
                             <GridView
                                 x:Name="gridHomeNavItem"
                                 IsItemClickEnabled="True"
