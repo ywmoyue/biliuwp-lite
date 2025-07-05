@@ -21,28 +21,27 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel Padding="15,0">
                     <controls:Carousel
-                        x:Name="control"
-                        MaxHeight="240"
-                        AspectRatio="3.2"
-                        ItemsSource="{x:Bind Path=m_viewModel.Banners, Mode=OneWay}"
-                        MaxItems="1"
-                        SlideInterval="5000"
-                        Visibility="{x:Bind m_viewModel.DisplayRecommendBanners, Mode=OneWay}">
+                            x:Name="control"
+                            MaxHeight="240"
+                            AspectRatio="3.2"
+                            ItemsSource="{x:Bind Path=m_viewModel.Banners, Mode=OneWay}"
+                            MaxItems="1"
+                            SlideInterval="5000">
                         <controls:Carousel.ContentTemplate>
                             <DataTemplate>
                                 <HyperlinkButton
-                                    Margin="0,5,0,0"
-                                    Padding="5"
-                                    HorizontalAlignment="Stretch"
-                                    Click="BannerItem_Click"
-                                    CornerRadius="{ThemeResource OverlayCornerRadius}">
-                                    <toolkit:ImageEx
+                                        Margin="0,5,0,0"
+                                        Padding="5"
                                         HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Stretch"
-                                        CornerRadius="{ThemeResource OverlayCornerRadius}"
-                                        PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                        Source="{Binding Path=Pic, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='240h'}"
-                                        Stretch="Fill" />
+                                        Click="BannerItem_Click"
+                                        CornerRadius="{ThemeResource OverlayCornerRadius}">
+                                    <toolkit:ImageEx
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch"
+                                            CornerRadius="{ThemeResource OverlayCornerRadius}"
+                                            PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
+                                            Source="{Binding Path=Pic, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='240h'}"
+                                            Stretch="Fill" />
                                 </HyperlinkButton>
                             </DataTemplate>
                         </controls:Carousel.ContentTemplate>

@@ -195,6 +195,10 @@ namespace BiliLite.Models.Functions
                 {
                     Keys = new List<InputKey>() { new InputKey(VirtualKey.Control), new InputKey(VirtualKey.W) }
                 },
+                new OpenDevModeShortcutFunction()
+                {
+                    Keys = new List<InputKey>() { new InputKey(VirtualKey.Control), new InputKey(VirtualKey.F12 )}
+                },
             };
         }
     }

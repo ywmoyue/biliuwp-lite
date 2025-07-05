@@ -261,6 +261,7 @@ namespace BiliLite.Modules
 
         public async Task LoadSponsorBlock(string bvid)
         {
+            if (m_sponsorBlockService == null) return;
             if (SettingService.GetValue(SettingConstants.Player.SPONSOR_BLOCK, SettingConstants.Player.DEFAULT_SPONSOR_BLOCK))
             {
                 await m_sponsorBlockService?.LoadSponsorBlock(bvid);
@@ -732,8 +733,8 @@ namespace BiliLite.Modules
 
         public void Dispose()
         {
+            if (m_sponsorBlockService == null) return;
             m_sponsorBlockService?.RemoveSponsorBlockCache(VideoInfo.Bvid);
-
         }
 
         #endregion

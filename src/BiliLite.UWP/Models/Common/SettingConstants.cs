@@ -349,6 +349,31 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const double DEFAULT_SCROLL_VIEW_LOAD_MORE_BOTTOM_OFFSET = 0;
+
+
+            /// <summary>
+            /// 主题背景源，值为BackgroundSource枚举
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const string MICA_BACKGROUND_SOURCE = "MicaBackgroundSource";
+
+            /// <summary>
+            /// 默认主题背景源
+            /// </summary>
+            [SettingDefaultValue]
+            public const int DEFAULT_MICA_BACKGROUND_SOURCE = 2;
+
+            /// <summary>
+            /// 是否启用主题背景源
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string ENABLE_MICA_BACKGROUND_SOURCE = "EnableMicaBackgroundSource";
+
+            /// <summary>
+            /// 默认启用主题背景源
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_ENABLE_MICA_BACKGROUND_SOURCE = true;
         }
 
         public class Account
@@ -1016,6 +1041,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string AUTO_TO_POSITION = "PlayerAutoToPosition";
+
+            ///<summary>
+            ///从头播放完播视频秒数
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const string REPLAY_VIEDO_FROM_END_LAST_TIME = "ReplayVideoFromEndLastTime";
+
+            ///<summary>
+            ///从头播放完播视频默认值
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const int DEFAULT_REPLAY_VIEDO_FROM_END_LAST_TIME = -3;
 
             /// <summary>
             /// 自动铺满窗口

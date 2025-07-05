@@ -53,6 +53,7 @@ namespace BiliLite.ViewModels.UserDynamic
             RepostCommand = new RelayCommand<DynamicV2ItemViewModel>(DynamicExtensions.OpenSendDynamicDialog);
             LaunchUrlCommand = new RelayCommand<string>(DynamicExtensions.LaunchUrl);
             CopyDynCommand = new RelayCommand<DynamicV2ItemViewModel>(DynamicExtensions.CopyDyn);
+            OpenArticleCommand = new RelayCommand<DynamicV2ItemViewModel>(DynamicExtensions.OpenArticle);
             TagCommand = new RelayCommand<object>(DynamicExtensions.OpenTag);
         }
 
@@ -73,6 +74,8 @@ namespace BiliLite.ViewModels.UserDynamic
         public ICommand LikeCommand { get; set; }
         public ICommand CommentCommand { get; set; }
         public ICommand UserCommand { get; set; }
+
+        public ICommand OpenArticleCommand { get; set; }
 
         [DoNotNotify]
         public string ID { get; set; }

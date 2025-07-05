@@ -38,6 +38,7 @@ public class UserDynamicDetailViewModel : BaseViewModel, IUserDynamicCommands
         RepostCommand = new RelayCommand<DynamicV2ItemViewModel>(DynamicExtensions.OpenSendDynamicDialog);
         LaunchUrlCommand = new RelayCommand<string>(DynamicExtensions.LaunchUrl);
         CopyDynCommand = new RelayCommand<DynamicV2ItemViewModel>(DynamicExtensions.CopyDyn);
+        OpenArticleCommand = new RelayCommand<DynamicV2ItemViewModel>(DynamicExtensions.OpenArticle);
         TagCommand = new RelayCommand<object>(DynamicExtensions.OpenTag);
         WatchLaterCommand = m_watchLaterVm.AddCommandWithAvId;
     }
@@ -49,7 +50,7 @@ public class UserDynamicDetailViewModel : BaseViewModel, IUserDynamicCommands
     {
         get
         {
-            var item = DynamicItems.FirstOrDefault();
+            var item = DynamicItems?.FirstOrDefault();
             return item == null ? 0 : item.Stat.Reply;
         }
     }
@@ -59,7 +60,7 @@ public class UserDynamicDetailViewModel : BaseViewModel, IUserDynamicCommands
     {
         get
         {
-            var item = DynamicItems.FirstOrDefault();
+            var item = DynamicItems?.FirstOrDefault();
             return item == null ? 0 : item.Stat.Repost;
         }
     }
@@ -87,6 +88,8 @@ public class UserDynamicDetailViewModel : BaseViewModel, IUserDynamicCommands
     public ICommand WatchLaterCommand { get; set; }
 
     public ICommand CopyDynCommand { get; set; }
+
+    public ICommand OpenArticleCommand { get; set; }
 
     public ICommand TagCommand { get; set; }
 

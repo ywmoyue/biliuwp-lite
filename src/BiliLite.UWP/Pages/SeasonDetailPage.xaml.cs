@@ -181,7 +181,7 @@ namespace BiliLite.Pages
                     season_type = m_viewModel.Detail.Type,
                     ep_id = item.Id.ToString(),
                     is_vip = item.Status != 2,
-                    is_interaction = false,
+                    is_interaction = item.Interaction != null,
                     order = i,
                     play_mode = VideoPlayType.Season,
                     title = item.Title + " " + item.LongTitle,
@@ -213,7 +213,7 @@ namespace BiliLite.Pages
                     season_type = m_viewModel.Detail.Type,
                     ep_id = item.Id.ToString(),
                     is_vip = item.Status != 2,
-                    is_interaction = false,
+                    is_interaction = item.Interaction != null,
                     order = i,
                     play_mode = VideoPlayType.Season,
                     title = item.Title + " " + item.LongTitle,
@@ -364,19 +364,21 @@ namespace BiliLite.Pages
             {
                 return;
             }
+
             if (!selectProview)
             {
                 listEpisode.SelectedIndex = -1;
                 selectProview = true;
                 UpdatePlayInfoToPreview(listPreview.SelectedIndex);
             }
+
             player.ChangePlayIndex(listPreview.SelectedIndex);
-            ep_id = m_viewModel.Episodes[listPreview.SelectedIndex].Id.ToString();
+            ep_id = m_viewModel.Previews[listPreview.SelectedIndex].Id.ToString();
             comment.LoadComment(new LoadCommentInfo()
             {
                 CommentMode = (int)CommentApi.CommentType.Video,
                 CommentSort = CommentApi.CommentSort.Hot,
-                Oid = m_viewModel.Episodes[listPreview.SelectedIndex].Aid
+                Oid = m_viewModel.Previews[listPreview.SelectedIndex].Aid
             });
             await CreateQR();
         }

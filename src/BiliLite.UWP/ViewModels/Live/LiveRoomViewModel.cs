@@ -7,6 +7,7 @@ using BiliLite.Models.Common.Player;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Models.Requests.Api.Live;
+using BiliLite.Models.Responses;
 using BiliLite.Modules;
 using BiliLite.Modules.Live;
 using BiliLite.Services;
@@ -378,7 +379,7 @@ namespace BiliLite.ViewModels.Live
             }
         }
 
-        private async Task ReceiveMessage(int roomId)
+        private async Task ReceiveMessage(int roomId, bool webMethod = true)
         {
             try
             {
@@ -389,8 +390,26 @@ namespace BiliLite.ViewModels.Live
                 }
                 m_liveMessage ??= new LiveMessage();
 
-                var danmuResults = await m_liveRoomApi.GetDanmuInfo(roomId).Request();
+                HttpResults danmuResults;
+                if (webMethod) danmuResults = await (await m_liveRoomApi.GetDanmuInfo(roomId, Buvid3)).Request();
+                else danmuResults = await (await m_liveRoomApi.GetDanmuInfoApp(roomId)).Request();
+
+                if (!danmuResults.status)
+                {
+                    if (!webMethod) throw new CustomizedErrorException( "所有API信息均获取失败: " + danmuResults.message);
+                    _logger.Error("Web弹幕API信息获取失败, 切换到App方式, 错误信息: " + danmuResults.message);
+                    await ReceiveMessage(roomId, false);
+                    return;
+                }
                 var danmuData = await danmuResults.GetJson<ApiDataModel<LiveDanmukuInfoModel>>();
+
+                if (!danmuData.success)
+                {
+                    if (!webMethod) throw new CustomizedErrorException("所有API信息均解析失败: " + danmuData.message);
+                    _logger.Error("Web弹幕API信息解析失败, 切换到App方式, 错误信息: " + danmuData.message);
+                    await ReceiveMessage(roomId, false);
+                    return;
+                }
                 var token = danmuData.data.Token;
                 var host = danmuData.data.HostList[0].Host;
 
@@ -398,10 +417,18 @@ namespace BiliLite.ViewModels.Live
             }
             catch (TaskCanceledException)
             {
-                Messages.Add(new DanmuMsgModel()
+                Messages?.Add(new DanmuMsgModel()
                 {
                     UserName = "取消连接"
                 });
+            }
+            catch (CustomizedErrorException ex)
+            {
+                Messages?.Add(new DanmuMsgModel()
+                {
+                    UserName = "连接失败:" + ex.Message
+                });
+                _logger.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
@@ -409,6 +436,7 @@ namespace BiliLite.ViewModels.Live
                 {
                     UserName = "连接失败:" + ex.Message
                 });
+                _logger.Error(ex.Message, ex);
             }
 
         }
@@ -1175,6 +1203,7 @@ namespace BiliLite.ViewModels.Live
 
                 NotificationShowExtensions.ShowMessageToast(data.data?["send_tips"].ToString().Length > 0 ? data.data?["send_tips"].ToString() : "赠送成功"); // 鬼知道怎么有时候有返回提示有时候没有
                 await LoadWalletInfo();
+                await GetEmoticons(); // 礼物有可能刷新表情包
             }
             catch (CustomizedErrorException ex)
             {
@@ -1211,6 +1240,7 @@ namespace BiliLite.ViewModels.Live
                 }
                 NotificationShowExtensions.ShowMessageToast(data.data?["send_tips"].ToString().Length > 0 ? data.data?["send_tips"].ToString() : "赠送成功");
                 await LoadBag();
+                await GetEmoticons(); // 礼物有可能刷新表情包
             }
             catch (CustomizedErrorException ex)
             {

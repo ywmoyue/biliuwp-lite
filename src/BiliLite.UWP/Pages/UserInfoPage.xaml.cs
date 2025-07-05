@@ -20,6 +20,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Models.Common.Article;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -350,9 +351,13 @@ namespace BiliLite.Pages
             MessageCenter.NavigateToPage(null, new NavigationInfo()
             {
                 icon = Symbol.Document,
-                page = typeof(WebPage),
+                page = typeof(ArticlePage),
                 title = data.title,
-                parameters = "https://www.bilibili.com/read/cv" + data.id
+                parameters = new ArticlePageNavigationInfo()
+                {
+                    Url = "https://www.bilibili.com/read/cv" + data.id,
+                    CvId = data.id + "",
+                }
             });
         }
 

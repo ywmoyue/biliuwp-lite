@@ -187,6 +187,8 @@ namespace BiliLite
                 var themeService = ServiceProvider.GetRequiredService<ThemeService>();
                 themeService.InitTitleBar();
                 themeService.InitAccentColor();
+                themeService.InitMicaBrushBackgroundSource();
+                //themeService.InitStyle();
 
 #if !DEBUG
                 await BiliExtensions.CheckVersion(isSilentUpdateCheck:true);

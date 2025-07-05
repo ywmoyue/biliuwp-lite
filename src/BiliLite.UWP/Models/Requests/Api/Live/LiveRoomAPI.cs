@@ -3,6 +3,7 @@ using BiliLite.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Live;
 using Newtonsoft.Json;
@@ -358,8 +359,9 @@ namespace BiliLite.Models.Requests.Api.Live
         /// 获取弹幕连接信息 
         /// </summary>
         /// <param name="roomId">房间号</param>
+        /// <param name="buvid3">BUVID3 2025-06-27后强制使用</param>
         /// <returns></returns>
-        public ApiModel GetDanmuInfo(int roomId)
+        public async Task<ApiModel> GetDanmuInfo(int roomId, string buvid3)
         {
             var api = new ApiModel()
             {
@@ -368,6 +370,25 @@ namespace BiliLite.Models.Requests.Api.Live
                 parameter = $"?id={roomId}",
                 need_cookie = true
             };
+            api.parameter = await ApiHelper.GetWbiSign(api.parameter);
+            api.ExtraCookies = new Dictionary<string, string>() { { "buvid3", buvid3 } };
+            return api;
+        }
+
+        /// <summary>
+        /// 使用App方法获取弹幕连接信息
+        /// </summary>
+        /// <param name="roomId">房间号</param>
+        /// <returns></returns>
+        public async Task<ApiModel> GetDanmuInfoApp(int roomId)
+        {
+            var api = new ApiModel()
+            {
+                method = HttpMethods.Get,
+                baseUrl = $"https://api.live.bilibili.com/xlive/app-room/v1/index/getDanmuInfo",
+                parameter = ApiHelper.MustParameter(AppKey, true) + $"&room_id={roomId}",
+            };
+            api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
 

@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -266,7 +267,10 @@ namespace BiliLite
             var frame = tabItem.Content as MyFrame;
             if (frame.Content is Page { Content: Grid grid })
             {
-                grid.Children.Clear();
+                grid.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    grid.Children.Clear();
+                });
             }
 
             var pageSaveService = App.ServiceProvider.GetRequiredService<PageSaveService>();

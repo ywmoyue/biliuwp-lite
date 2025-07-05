@@ -265,7 +265,7 @@ namespace BiliLite.Pages
                 playInfos.Add(new PlayInfo()
                 {
                     avid = m_viewModel.VideoInfo.Aid,
-                    bvid = bvid,
+                    bvid = m_viewModel.VideoInfo.Bvid,
                     cid = item.Cid,
                     duration = item.Duration,
                     is_interaction = m_viewModel.VideoInfo.Interaction != null,

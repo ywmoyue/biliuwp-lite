@@ -2,6 +2,7 @@
 using BiliLite.Models.Attributes;
 using BiliLite.Models.Common;
 using BiliLite.Models.Theme;
+using MicaForUWP.Media;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,6 +73,18 @@ namespace BiliLite.Services
             }
         }
 
+        public void InitMicaBrushBackgroundSource()
+        {
+            var backgroundSource = (BackgroundSource)SettingService.GetValue<int>(SettingConstants.UI.MICA_BACKGROUND_SOURCE, SettingConstants.UI.DEFAULT_MICA_BACKGROUND_SOURCE);
+            var enableBackgroundSource = SettingService.GetValue(SettingConstants.UI.ENABLE_MICA_BACKGROUND_SOURCE, SettingConstants.UI.DEFAULT_ENABLE_MICA_BACKGROUND_SOURCE);
+            SetMicaBrushBackgroundSource(backgroundSource, !enableBackgroundSource);
+        }
+
+        public void InitStyle()
+        {
+
+        }
+        
         public void SetTheme(ElementTheme theme)
         {
             m_theme = theme;
@@ -99,6 +112,25 @@ namespace BiliLite.Services
 
             if (isNeedRefreshTheme)
                 RefreshTheme();
+        }
+
+        public void SetMicaBrushBackgroundSource(BackgroundSource backgroundSource, bool alwaysUseFallback)
+        {
+            // 获取当前主题的资源字典
+            var currentThemeResource = m_theme == ElementTheme.Light
+                ? m_defaultColorsResource.ThemeDictionaries["Light"] as ResourceDictionary
+                : m_defaultColorsResource.ThemeDictionaries["Dark"] as ResourceDictionary;
+
+            // 查找PageBackgroundMicaBrush
+            if (currentThemeResource.TryGetValue("PageBackgroundMicaBrush", out var brush) &&
+                brush is BackdropMicaBrush micaBrush)
+            {
+                micaBrush.BackgroundSource = backgroundSource;
+                micaBrush.AlwaysUseFallback = alwaysUseFallback;
+
+                // 强制刷新UI以应用更改
+                RefreshTheme();
+            }
         }
 
         /// <summary>

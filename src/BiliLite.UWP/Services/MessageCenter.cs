@@ -18,6 +18,7 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using BiliLite.Models.Common.Article;
 
 namespace BiliLite.Services
 {
@@ -109,6 +110,11 @@ namespace BiliLite.Services
             }
 
             _logger.Debug($"处理链接：{url}");
+
+            if (url.Length == 0)
+            {
+                return false;
+            }
             if (url.First() == '@')
             {
                 return false;
@@ -337,9 +343,13 @@ namespace BiliLite.Services
                 NavigateToPage(null, new NavigationInfo()
                 {
                     icon = Symbol.Document,
-                    page = typeof(WebPage),
+                    page = typeof(ArticlePage),
                     title = "专栏加载中...",
-                    parameters = "https://www.bilibili.com/read/cv" + article,
+                    parameters = new ArticlePageNavigationInfo()
+                    {
+                        CvId = article,
+                        Url = "https://www.bilibili.com/read/cv" + article,
+                    },
                     dontGoTo = dontGoTo,
                 });
                 return true;

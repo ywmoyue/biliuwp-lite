@@ -33,6 +33,9 @@ on:
         default: false
         type: boolean
 
+permissions:
+  contents: write
+
 jobs:
   release:
     runs-on: windows-latest
@@ -46,7 +49,6 @@ jobs:
       UWP_Project_Path: src\BiliLite.UWP\BiliLite.UWP.csproj
       UWP_X64_Native_Project_Path: src\BiliLite.UWP\BiliLite.UWP.csproj.native
       Win32_Project_Path: src\BiliLite.Win32Tools\BiliLite.Win32Tools.csproj
-      GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN  }}
       Webdav_addr: ${{ secrets.WEBDAV_ADDR }}
       Webdav_auth: ${{ secrets.WEBDAV_AUTH }}
       nuget_package_addr: ${{ secrets.NUGET_PACKAGE_ADDR }}
@@ -82,6 +84,8 @@ jobs:
       - uses: release-drafter/release-drafter@v5
         name: Create release draft
         id: release-drafter
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup MSBuild.exe
         uses: microsoft/setup-msbuild@v1.0.3
@@ -150,7 +154,7 @@ jobs:
         id: upload-release-asset-x64
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN  }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: github.event.inputs.enableX64 == 'true' && env.SKIP_BUILD == 'false'
         with:
           upload_url: ${{ steps.release-drafter.outputs.upload_url }}
@@ -205,7 +209,7 @@ jobs:
         id: upload-release-asset-x64-native
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN  }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: github.event.inputs.enableX64Native == 'true' && env.SKIP_BUILD_NATIVE == 'false'
         with:
           upload_url: ${{ steps.release-drafter.outputs.upload_url }}
@@ -254,7 +258,7 @@ jobs:
         id: upload-release-asset-x86
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN  }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: github.event.inputs.enableX86 == 'true' && env.SKIP_BUILD_X86 == 'false'
         with:
           upload_url: ${{ steps.release-drafter.outputs.upload_url }}
@@ -302,7 +306,7 @@ jobs:
         id: upload-release-asset-ARM64
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN  }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: github.event.inputs.enableArm64 == 'true' && env.SKIP_BUILD_ARM64 == 'false'
         with:
           upload_url: ${{ steps.release-drafter.outputs.upload_url }}
@@ -351,7 +355,7 @@ jobs:
         id: upload-release-asset-ARM32
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN  }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: github.event.inputs.enableArm32 == 'true' && env.SKIP_BUILD_ARM32 == 'false'
         with:
           upload_url: ${{ steps.release-drafter.outputs.upload_url }}

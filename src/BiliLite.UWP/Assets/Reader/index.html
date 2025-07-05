@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="no-referrer" />
+
+    <title>Document</title>
+  </head>
+
+  <body>
+    <div id="title"></div>
+    <div id="author"></div>
+    <div id="content"></div>
+    <style>
+      .opus-module-title:first-child {
+        padding-top: 40px;
+      }
+      .opus-module-title {
+        color: var(--text1);
+        font-size: 28px;
+        font-weight: 700;
+        line-height: 1.4;
+        padding: 20px 56px 0;
+      }
+      .opus-module-author {
+        align-items: center;
+        display: flex;
+        padding: 20px 56px;
+      }
+      .opus-module-author__left {
+        flex-shrink: 0;
+      }
+      .opus-module-author__center {
+        flex: 1;
+        overflow: hidden;
+        padding-left: 20px;
+      }
+      .opus-module-author__name {
+        color: var(--text1);
+        cursor: pointer;
+        font-size: 17px;
+        font-weight: 600;
+      }
+      .opus-module-author__pub {
+        align-items: center;
+        color: var(--text3);
+        display: flex;
+        font-size: 13px;
+        padding-top: 4px;
+      }
+      .opus-module-content p {
+        line-height: 1.69em;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      .opus-module-content {
+        color: var(--text1);
+        padding: 0 56px 40px;
+      }
+      .b-img__inner {
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+    <script>
+      let dynId = null;
+      const imgUrlList = [];
+
+      const mainTitleElement = document.querySelector("#title");
+      const mainContentElement = document.querySelector("#content");
+      const mainAuthorElement = document.querySelector("#author");
+
+      window.loadArticle = async (articleItemStr) => {
+        try {
+          console.log("articleItemStr:", articleItemStr);
+          const parseData = base64toData(articleItemStr);
+          console.log("parseData:", parseData);
+          dynId = parseData.dynId;
+          let articleSource = null;
+          if (parseData.CvId && !dynId) {
+            const oldVersionArticleSource = await hostFetch(parseData.Url);
+            dynId = extractDynIdStr(oldVersionArticleSource);
+            console.log("dynId:", dynId);
+            if (oldVersionArticleSource.indexOf("opus-module-title") > -1) {
+              articleSource = oldVersionArticleSource;
+            }
+          }
+
+          if (!dynId && !articleSource) {
+            console.error("获取文章id失败");
+            return;
+          }
+          if (!articleSource) {
+            articleSource = await hostFetch(
+              `https://www.bilibili.com/opus/${dynId}`
+            );
+          }
+          console.log("articleSource:", articleSource);
+
+          const titleElement = getElementsFromString(
+            articleSource,
+            ".opus-module-title"
+          );
+          const contentElement = getElementsFromString(
+            articleSource,
+            ".opus-module-content"
+          );
+          console.log("titleElement:", titleElement);
+          console.log("contentElement:", contentElement);
+          mainTitleElement.appendChild(titleElement);
+          mainContentElement.appendChild(contentElement);
+          addClickEventToImages();
+          initInfo(articleSource);
+          const titleTextElement = document.querySelector(
+            ".opus-module-title__text"
+          );
+          emitEvent("SetTitle", { title: titleTextElement.innerText });
+        } catch (ex) {
+          console.error(ex);
+        }
+      };
+
+      function initInfo(articleSource) {
+        try {
+          const sourceAuthorElement = getElementsFromString(
+            articleSource,
+            ".opus-module-author"
+          );
+          const sourceAuthorFaceElement = getElementsFromString(
+            articleSource,
+            ".fixed-author-header__author__face"
+          );
+          console.log("sourceAuthorElement:", sourceAuthorElement);
+          mainAuthorElement.appendChild(sourceAuthorElement);
+          const avatarElement = document.querySelector(
+            "#author > div > div.opus-module-author__left > div"
+          );
+          avatarElement.appendChild(sourceAuthorFaceElement);
+        } catch (ex) {
+          console.error(ex);
+        }
+      }
+
+      /**
+       * 从HTML字符串中提取dyn_id_str
+       * @param {string} html - HTML字符串
+       * @returns {string|null} 返回dyn_id_str，找不到则返回null
+       */
+      function extractDynIdStr(html) {
+        // 方法1：正则匹配 "dyn_id_str":"xxxx" 格式
+        const regex = /"dyn_id_str"\s*:\s*"([^"]+)"/;
+        const match = html.match(regex);
+        if (match && match[1]) {
+          return match[1];
+        }
+
+        // 方法2：如果方法1失败，尝试匹配 JavaScript 变量中的 dyn_id_str
+        const regex2 = /dyn_id_str\\":\\"([^\\"]+)/;
+        const match2 = html.match(regex2);
+        if (match2 && match2[1]) {
+          return match2[1];
+        }
+
+        return null; // 未找到则返回 null
+      }
+
+      let promises = {};
+
+      function hostFetch(url) {
+        let fetchResolve = null;
+        let id = simpleUUID();
+        let promise = new Promise((resolve) => {
+          fetchResolve = resolve;
+        });
+        promises[id] = { promise, resolve: fetchResolve };
+        emitEvent("HostFetch", {
+          url,
+          id,
+          headers: {
+            "user-agent": navigator.userAgent,
+          },
+        });
+        return promise;
+      }
+
+      window.setHostFetchResult = async (resultBase64) => {
+        console.log("resultBase64:", resultBase64);
+        const parseData = base64toData(resultBase64);
+        console.log("parseData:", parseData);
+        promises[parseData.id].resolve(parseData.result);
+        delete promises[parseData.id];
+      };
+
+      function simpleUUID() {
+        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+          /[xy]/g,
+          function (c) {
+            const r = (Math.random() * 16) | 0;
+            const v = c === "x" ? r : (r & 0x3) | 0x8;
+            return v.toString(16);
+          }
+        );
+      }
+
+      function emitEvent(eventName, eventData) {
+        window.chrome.webview.postMessage({
+          event: eventName,
+          data: eventData,
+        });
+      }
+
+      function addClickEventToImages() {
+        // 获取所有img元素并使用forEach遍历
+        document.querySelectorAll("img").forEach((img) => {
+          img.onclick = openImg;
+          imgUrlList.push(img.src);
+          img.style.cursor = "pointer";
+        });
+      }
+
+      function openImg(event) {
+        console.log("event:", event);
+        const imgUrl = event.srcElement.src;
+        console.log("imgUrl:", imgUrl);
+        const index = imgUrlList.indexOf(imgUrl);
+        console.log("imgUrlList:", imgUrlList);
+        console.log("index:", index);
+        emitEvent("OpenImg", { imgUrlList, index });
+      }
+
+      function getElementsFromString(htmlString, selector) {
+        const div = document.createElement("div");
+        div.innerHTML = htmlString;
+        return div.querySelector(selector);
+      }
+
+      function base64toData(base64) {
+        const binaryStr = atob(base64);
+        const bytes = Uint8Array.from(binaryStr, (m) => m.codePointAt(0));
+        const resultStr = new TextDecoder("utf-8").decode(bytes);
+        const parseData = JSON.parse(resultStr);
+        return parseData;
+      }
+
+      function bmgCmptOnload(imgElement) {}
+      function bmgCmptOnerror(imgElement) {}
+
+      emitEvent("Loaded");
+    </script>
+  </body>
+</html>

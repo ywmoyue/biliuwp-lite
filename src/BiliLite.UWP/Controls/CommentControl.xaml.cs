@@ -97,12 +97,13 @@ namespace BiliLite.Controls
                 m_viewModel.BtnLoadMoreVisibility = false;
                 m_viewModel.Loading = true;
 
-                var result = await m_commentApi.Comment(m_loadCommentInfo.Oid, m_loadCommentInfo.CommentSort, m_page, m_loadCommentInfo.CommentMode).Request();
+                var api = await m_commentApi.CommentV2(m_loadCommentInfo.Oid, m_loadCommentInfo.CommentSort, m_page,
+                    m_loadCommentInfo.CommentMode, offsetStr: m_nextCursor?.PaginationReply?.NextOffset);
+                var result = await api.Request();
                 var errorCheck = await result.GetResult<object>();
                 if (!result.status || errorCheck.code < 0)
                 {
-                    result = await m_commentApi.CommentV2(m_loadCommentInfo.Oid, m_loadCommentInfo.CommentSort, m_page,
-                        m_loadCommentInfo.CommentMode, offsetStr: m_nextCursor?.PaginationReply?.NextOffset).Request();
+                    result = await m_commentApi.Comment(m_loadCommentInfo.Oid, m_loadCommentInfo.CommentSort, m_page, m_loadCommentInfo.CommentMode).Request();
                 }
 
                 if (!result.status)
@@ -181,6 +182,10 @@ namespace BiliLite.Controls
             }
 
             m_nextCursor = model.Data.Cursor;
+            if (m_nextCursor.PaginationReply.NextOffset == null)
+            {
+                m_viewModel.BtnLoadMoreVisibility = false;
+            }
         }
 
         // 处理评论列表正常没有评论情况
