@@ -84,7 +84,7 @@ namespace BiliLite.Services
         {
 
         }
-        
+
         public void SetTheme(ElementTheme theme)
         {
             m_theme = theme;
@@ -116,13 +116,9 @@ namespace BiliLite.Services
 
         public void SetMicaBrushBackgroundSource(BackgroundSource backgroundSource, bool alwaysUseFallback)
         {
-            // 获取当前主题的资源字典
-            var currentThemeResource = m_theme == ElementTheme.Light
-                ? m_defaultColorsResource.ThemeDictionaries["Light"] as ResourceDictionary
-                : m_defaultColorsResource.ThemeDictionaries["Dark"] as ResourceDictionary;
 
             // 查找PageBackgroundMicaBrush
-            if (currentThemeResource.TryGetValue("PageBackgroundMicaBrush", out var brush) &&
+            if (DefaultThemeResource.TryGetValue("PageBackgroundMicaBrush", out var brush) &&
                 brush is BackdropMicaBrush micaBrush)
             {
                 micaBrush.BackgroundSource = backgroundSource;

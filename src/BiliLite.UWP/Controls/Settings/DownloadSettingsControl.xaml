@@ -96,7 +96,7 @@
 
         <controls:SettingsCard Header="同时下载多个任务">
             <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Tasks" />
+                <font:FontAwesome Margin="1,0" Icon="Solid_Tasks" />
             </controls:SettingsCard.HeaderIcon>
             <ToggleSwitch
                 x:Name="swDownloadParallelDownload"
@@ -106,7 +106,7 @@
 
         <controls:SettingsCard Header="允许使用流量下载">
             <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Download" />
+                <font:FontAwesome Margin="2,0" Icon="Solid_Download" />
             </controls:SettingsCard.HeaderIcon>
             <ToggleSwitch
                 x:Name="swDownloadAllowCostNetwork"
@@ -126,7 +126,7 @@
 
         <controls:SettingsExpander Description="实验性功能，是否在数据库中建立下载索引而不是每次读取下载文件夹，暂不支持旧版下载的视频，下次重启生效" Header="使用下载索引">
             <controls:SettingsExpander.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Database" />
+                <font:FontAwesome Margin="3,0" Icon="Solid_Database" />
             </controls:SettingsExpander.HeaderIcon>
             <ToggleSwitch
                 x:Name="SwUseDownloadIndex"

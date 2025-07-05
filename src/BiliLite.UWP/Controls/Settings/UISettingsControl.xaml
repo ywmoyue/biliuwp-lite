@@ -90,6 +90,38 @@
                     </ComboBox>
                 </controls:SettingsCard>
 
+                <controls:SettingsCard x:Name="PageBackgroundMicaBrush" HorizontalContentAlignment="Stretch">
+                    <controls:SettingsCard.HeaderIcon>
+                        <font:FontAwesome Margin="3,0" Icon="Solid_Brush" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <controls:SettingsCard.Header>
+                        <StackPanel>
+                            <TextBlock>背景</TextBlock>
+                        </StackPanel>
+                    </controls:SettingsCard.Header>
+                    <controls:SettingsCard.Description>
+                        <StackPanel>
+                            <TextBlock>更改应用背景的透明材质</TextBlock>
+                        </StackPanel>
+                    </controls:SettingsCard.Description>
+                    <StackPanel Margin="0,0,-4,0" Orientation="Horizontal">
+                        <ToggleSwitch
+                            x:Name="SwitchMicaTransparent"
+                            Margin="0,-5,-58,-5"
+                            IsOn="{x:Bind m_UISettingsControlViewModel.EnableMicaBackground, Mode=TwoWay}"
+                            Style="{StaticResource DefaultToggleSwitchStyle}"
+                            Toggled="UpdateMicaSettings" />
+                        <ComboBox
+                            x:Name="CbMicaBackgroundSource"
+                            MinWidth="200"
+                            DisplayMemberPath="Key"
+                            ItemsSource="{x:Bind m_UISettingsControlViewModel.MicaBackgroundSources}"
+                            SelectedValue="{x:Bind m_UISettingsControlViewModel.MicaBackgroundSource, Mode=TwoWay}"
+                            SelectedValuePath="Value"
+                            SelectionChanged="UpdateMicaSettings" />
+                    </StackPanel>
+                </controls:SettingsCard>
+
                 <controls:SettingsCard
                     x:Name="rootColor"
                     HorizontalContentAlignment="Stretch"
@@ -214,39 +246,6 @@
                             </StackPanel>
                         </Grid>
                     </controls:SettingsCard.Description>
-                </controls:SettingsCard>
-
-                <controls:SettingsCard
-                    x:Name="PageBackgroundMicaBrush"
-                    HorizontalContentAlignment="Stretch">
-                    <controls:SettingsCard.HeaderIcon>
-                        <font:FontAwesome Icon="Solid_Palette" />
-                    </controls:SettingsCard.HeaderIcon>
-                    <controls:SettingsCard.Header>
-                        <StackPanel>
-                            <TextBlock>主题背景透明</TextBlock>
-                        </StackPanel>
-                    </controls:SettingsCard.Header>
-                    <controls:SettingsCard.Description>
-                        <StackPanel>
-                            <TextBlock>设置主题背景源和是否透明</TextBlock>
-                        </StackPanel>
-                    </controls:SettingsCard.Description>
-                    <StackPanel Orientation="Horizontal">
-                        <!--<TextBlock>背景源</TextBlock>-->
-                        <ComboBox
-                            x:Name="CbMicaBackgroundSource"
-                            MinWidth="200"
-                            ItemsSource="{x:Bind m_UISettingsControlViewModel.MicaBackgroundSources}"
-                            DisplayMemberPath="Key"
-                            SelectedValuePath="Value"
-                            Margin="0 0 8 0"
-                            SelectedValue="{x:Bind m_UISettingsControlViewModel.MicaBackgroundSource,Mode=TwoWay}"
-                            SelectionChanged="UpdateMicaSettings">
-                        </ComboBox>
-                        <!--<TextBlock>透明效果</TextBlock>-->
-                        <ToggleSwitch x:Name="SwitchMicaTransparent" IsOn="{x:Bind m_UISettingsControlViewModel.EnableMicaBackground,Mode=TwoWay}" Toggled="UpdateMicaSettings"/>
-                    </StackPanel>
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>

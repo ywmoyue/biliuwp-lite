@@ -34,7 +34,7 @@
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard Description="需要定位闪退问题时，请设置为 Trace 级别" Header="收集级别">
                     <controls:SettingsCard.HeaderIcon>
-                        <font:FontAwesome Icon="Solid_FileMedical" />
+                        <font:FontAwesome Margin="4,0" Icon="Solid_FileMedical" />
                     </controls:SettingsCard.HeaderIcon>
                     <ComboBox
                         x:Name="cbLogLevel"
@@ -91,7 +91,7 @@
 
         <controls:SettingsCard Header="配置管理">
             <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Cog" />
+                <font:FontAwesome Margin="1,0" Icon="Solid_Cog" />
             </controls:SettingsCard.HeaderIcon>
             <StackPanel Orientation="Horizontal">
                 <Button
@@ -123,7 +123,7 @@
 
         <controls:SettingsCard Description="开发者调试用" Header="迁移数据库">
             <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Database" />
+                <font:FontAwesome Margin="5,0" Icon="Solid_Database" />
             </controls:SettingsCard.HeaderIcon>
 
             <Button Click="BtnMigrateDb_OnClick">执行全部迁移脚本</Button>
@@ -142,7 +142,7 @@
 
         <controls:SettingsCard Description="B站 App 版本号标识" Header="发起请求时使用的 Build 值">
             <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_CodeBranch" />
+                <font:FontAwesome Margin="3,0" Icon="Solid_CodeBranch" />
             </controls:SettingsCard.HeaderIcon>
             <StackPanel Orientation="Horizontal">
                 <TextBox
