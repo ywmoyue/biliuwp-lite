@@ -56,7 +56,8 @@
                 <SymbolIcon Symbol="Highlight" />
             </controls:SettingsExpander.HeaderIcon>
             <controls:SettingsExpander.Items>
-                <controls:SettingsCard Description="更改应用的日夜主题" Header="外观">
+                <controls:SettingsCard Description="更改应用的日夜主题" Header="外观"
+                                       x:Name="SCTheme">
                     <controls:SettingsCard.HeaderIcon>
                         <font:FontAwesome Icon="Solid_PaintBrush" />
                     </controls:SettingsCard.HeaderIcon>
@@ -72,7 +73,7 @@
                     </ComboBox>
                 </controls:SettingsCard>
 
-                <controls:SettingsCard Description="更改应用的边角锐度" Header="样式">
+                <controls:SettingsCard Description="更改应用的边角锐度" Header="样式" x:Name="SCStyle">
                     <controls:SettingsCard.HeaderIcon>
                         <font:FontAwesome Icon="Solid_FillDrip" />
                     </controls:SettingsCard.HeaderIcon>
@@ -248,7 +249,7 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsCard Description="选择应用的显示模式" Header="页面导航">
+        <controls:SettingsCard Description="选择应用的显示模式" Header="页面导航" x:Name="SCDisplayMode">
             <controls:SettingsCard.HeaderIcon>
                 <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE7F4;" />
             </controls:SettingsCard.HeaderIcon>

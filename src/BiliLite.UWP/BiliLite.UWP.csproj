@@ -232,6 +232,7 @@
     <Compile Include="Models\Common\Season\SeasonEpListResult.cs" />
     <Compile Include="Models\Common\Settings\KeyValueOption.cs" />
     <Compile Include="Models\Common\Settings\MicaBackgroundSources.cs" />
+    <Compile Include="Models\Common\Settings\SettingsSearchMap.cs" />
     <Compile Include="Models\Common\Video\QualityDictonary.cs" />
     <Compile Include="Models\Common\WebPageNavigationInfo.cs" />
     <Compile Include="Models\Exceptions\UnLoginException.cs" />
@@ -462,6 +463,7 @@
     <Compile Include="ViewModels\Settings\KeyValuePairViewModel.cs" />
     <Compile Include="ViewModels\Settings\LiveSettingsControlViewModel.cs" />
     <Compile Include="ViewModels\Settings\PlaySettingsControlViewModel.cs" />
+    <Compile Include="ViewModels\Settings\SettingPageViewModel.cs" />
     <Compile Include="ViewModels\Settings\ShortcutFunctionViewModel.cs" />
     <Compile Include="ViewModels\Settings\ShortcutKeySettingsControlViewModel.cs" />
     <Compile Include="ViewModels\Settings\UISettingsControlViewModel.cs" />

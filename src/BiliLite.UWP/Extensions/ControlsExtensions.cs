@@ -73,6 +73,35 @@ namespace BiliLite.Extensions
             }
         }
 
+        /// <summary>
+        /// 在可视化树中根据x:Name查找元素
+        /// </summary>
+        /// <param name="parent">起始父元素</param>
+        /// <param name="name">要查找的元素的x:Name</param>
+        /// <returns>找到的元素，如果未找到则返回null</returns>
+        public static FrameworkElement FindChildByElementName(this DependencyObject parent, string name)
+        {
+            if (parent == null || string.IsNullOrEmpty(name)) return null;
+
+            var childrenCount = VisualTreeHelper.GetChildrenCount(parent);
+            for (var i = 0; i < childrenCount; i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+
+                // 检查是否是FrameworkElement且有匹配的Name
+                if (child is FrameworkElement frameworkElement && frameworkElement.Name.ToString() == name)
+                {
+                    return frameworkElement;
+                }
+
+                // 递归查找子元素
+                var foundChild = FindChildByElementName(child, name);
+                if (foundChild != null) return foundChild;
+            }
+
+            return null;
+        }
+
         public static bool CheckFocusTextBoxNow()
         {
             var elent = FocusManager.GetFocusedElement();
