@@ -54,8 +54,7 @@ namespace BiliLite.ViewModels.Home
 
         public bool LoadingFollow { get; set; } = true;
 
-        public ObservableCollection<LiveHomeBannerModel> Banners { get; set; } =
-            new ObservableCollection<LiveHomeBannerModel>();
+        public ObservableCollection<LiveHomeBannerModel> Banners { get; set; } = null;
 
         public ObservableCollection<LiveHomeAreaModel> Areas { get; set; }
 
