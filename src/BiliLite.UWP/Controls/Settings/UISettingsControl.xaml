@@ -265,6 +265,7 @@
         <controls:SettingsExpander
             Description="样式自定义"
             Header="标签页"
+            x:Name="SETabPage"
             IsEnabled="{Binding SelectedIndex, ElementName=cbDisplayMode, Mode=OneWay, Converter={StaticResource BooleanConvert}, ConverterParameter=0}">
             <controls:SettingsExpander.HeaderIcon>
                 <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE737;" />
@@ -386,7 +387,7 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsExpander Header="视图布局">
+        <controls:SettingsExpander Header="视图布局" x:Name="SELayout">
             <controls:SettingsExpander.HeaderIcon>
                 <font:FontAwesome Icon="Solid_ThList" />
             </controls:SettingsExpander.HeaderIcon>
@@ -417,7 +418,7 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsExpander Header="横幅" HeaderIcon="DockBottom">
+        <controls:SettingsExpander Header="横幅" HeaderIcon="DockBottom" x:Name="SEBanner">
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard Header="启用推荐页横幅">
                     <ToggleSwitch x:Name="SwitchDisplayRecommendBanner" />
@@ -432,6 +433,7 @@
         <controls:SettingsExpander
             Header="图片预览"
             HeaderIcon="BrowsePhotos"
+            x:Name="SEImagePre"
             IsExpanded="False">
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard Header="使用新窗口预览图片">
@@ -451,7 +453,7 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsExpander Description="样式自定义" Header="评论页">
+        <controls:SettingsExpander Description="样式自定义" Header="评论页" x:Name="SEComment">
             <controls:SettingsExpander.HeaderIcon>
                 <font:FontAwesome Icon="Solid_Comments" />
             </controls:SettingsExpander.HeaderIcon>
@@ -487,7 +489,7 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsExpander Description="样式自定义" Header="直播页">
+        <controls:SettingsExpander Description="样式自定义" Header="直播页" x:Name="SELiveStyle">
             <controls:SettingsExpander.HeaderIcon>
                 <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE960;" />
             </controls:SettingsExpander.HeaderIcon>
@@ -501,6 +503,9 @@
         <controls:SettingsExpander
             Description="样式自定义"
             Header="视频页"
+            BorderBrush="Red"
+            BorderThickness="3"
+            x:Name="SEVideoStyle"
             HeaderIcon="Play">
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard

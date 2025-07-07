@@ -50,7 +50,7 @@
                 SelectedValuePath="Value" />
         </controls:SettingsCard>
 
-        <controls:SettingsExpander Description="如果遇到加载卡顿、磁盘占用高等问题，请尝试修改优先播放器类型" Header="优先播放器类型">
+        <controls:SettingsExpander x:Name="SEPlayerType" Description="如果遇到加载卡顿、磁盘占用高等问题，请尝试修改优先播放器类型" Header="优先播放器类型">
             <controls:SettingsExpander.HeaderIcon>
                 <font:FontAwesome Icon="Solid_PhotoVideo" />
             </controls:SettingsExpander.HeaderIcon>
@@ -150,7 +150,7 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsExpander Header="自动化">
+        <controls:SettingsExpander Header="自动化" x:Name="SEPlayerAuto">
             <controls:SettingsExpander.HeaderIcon>
                 <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE811;" />
             </controls:SettingsExpander.HeaderIcon>
@@ -217,6 +217,7 @@
         <controls:SettingsExpander
             Description="默认视频音量"
             Header="音量"
+            x:Name="SEVolume"
             HeaderIcon="Volume">
             <StackPanel Orientation="Vertical">
                 <TextBlock HorizontalAlignment="Center" Text="{Binding Value, ElementName=SliderVolume}" />
@@ -230,7 +231,7 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsExpander Description="默认视频亮度" Header="亮度">
+        <controls:SettingsExpander Description="默认视频亮度" Header="亮度" x:Name="SEBrightness">
             <controls:SettingsExpander.HeaderIcon>
                 <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE793;" />
             </controls:SettingsExpander.HeaderIcon>
@@ -245,7 +246,7 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsExpander Header="历史记录">
+        <controls:SettingsExpander Header="历史记录" x:Name="SEPlayHistory">
             <controls:SettingsExpander.HeaderIcon>
                 <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE81C;" />
             </controls:SettingsExpander.HeaderIcon>
@@ -278,7 +279,7 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsExpander Header="播放源" HeaderIcon="Sync">
+        <controls:SettingsExpander Header="播放源" HeaderIcon="Sync" x:Name="SEPlaySource">
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard Description="持续播放长视频时自动刷新播放地址并提示，下次打开视频生效" Header="自动刷新">
                     <ToggleSwitch x:Name="SwitchAutoRefreshPlayUrl" />
@@ -298,7 +299,7 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsExpander Header="进度条">
+        <controls:SettingsExpander Header="进度条" x:Name="SEProgress">
             <controls:SettingsExpander.HeaderIcon>
                 <font:FontAwesome Icon="Solid_Spinner" />
             </controls:SettingsExpander.HeaderIcon>
@@ -313,7 +314,7 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsExpander Header="字幕" HeaderIcon="ClosedCaption">
+        <controls:SettingsExpander Header="字幕" HeaderIcon="ClosedCaption" x:Name="SESub">
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard Header="自动打开 AI 字幕">
                     <controls:SettingsCard.HeaderIcon>
