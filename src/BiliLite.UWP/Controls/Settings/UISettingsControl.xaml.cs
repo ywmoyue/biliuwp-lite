@@ -1,7 +1,7 @@
 ﻿using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Home;
-using BiliLite.Models.Theme;
+using BiliLite.Models.Common.Settings;
 using BiliLite.Services;
 using BiliLite.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;

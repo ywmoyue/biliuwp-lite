@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using BiliLite.Models.Theme;
+using BiliLite.Models.Common.Settings;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using System.Collections.ObjectModel;

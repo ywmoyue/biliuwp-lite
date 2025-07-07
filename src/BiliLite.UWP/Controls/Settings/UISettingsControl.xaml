@@ -12,7 +12,7 @@
     xmlns:local="using:BiliLite.Controls.Settings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    xmlns:theme="using:BiliLite.Models.Theme"
+    xmlns:theme="using:BiliLite.Models.Common.Settings"
     x:Name="rootPanel"
     d:DesignHeight="300"
     d:DesignWidth="400"
