@@ -41,9 +41,9 @@
                 x:Key="PageBackgroundMicaBrush"
                 BackgroundSource="WallpaperBackdrop"
                 FallbackColor="White"
-                LuminosityOpacity="0.7"
+                LuminosityOpacity="0.8"
                 TintColor="White"
-                TintOpacity="0.5" />
+                TintOpacity="0" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
             <Color x:Key="TextColor">#FFFFFF</Color>
@@ -80,9 +80,9 @@
                 x:Key="PageBackgroundMicaBrush"
                 BackgroundSource="WallpaperBackdrop"
                 FallbackColor="Black"
-                LuminosityOpacity="0.7"
+                LuminosityOpacity="0.8"
                 TintColor="Black"
-                TintOpacity="0.5" />
+                TintOpacity="0" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="HighContrast" />
     </ResourceDictionary.ThemeDictionaries>
