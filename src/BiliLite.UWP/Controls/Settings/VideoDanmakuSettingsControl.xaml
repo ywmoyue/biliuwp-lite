@@ -2,7 +2,6 @@
     x:Class="BiliLite.Controls.Settings.VideoDanmakuSettingsControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:common="using:BiliLite.Models.Common"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
@@ -48,8 +47,10 @@
             </controls:SettingsCard.HeaderIcon>
             <ToggleSwitch
                 x:Name="DanmuSettingState"
+                Margin="0,0,-68,0"
                 OffContent="关闭"
-                OnContent="打开" />
+                OnContent="打开"
+                Style="{StaticResource DefaultToggleSwitchStyle}" />
         </controls:SettingsCard>
 
         <controls:SettingsCard Description="弹幕和画面顶部的距离" Header="弹幕顶部距离">
@@ -125,7 +126,6 @@
                                         Height="160"
                                         Margin="0,8,0,0"
                                         HorizontalAlignment="Left"
-                                        IsWin10:ItemContainerStyle="{StaticResource LocalListViewItemStyle}"
                                         Background="Transparent"
                                         IsItemClickEnabled="False"
                                         SelectionMode="None">
@@ -169,7 +169,6 @@
                                         Width="320"
                                         Margin="0,8,0,0"
                                         HorizontalAlignment="Left"
-                                        IsWin10:ItemContainerStyle="{StaticResource LocalListViewItemStyle}"
                                         Background="Transparent"
                                         IsItemClickEnabled="False"
                                         SelectionMode="None">
@@ -212,7 +211,6 @@
                                         Width="320"
                                         Margin="0,8"
                                         HorizontalAlignment="Left"
-                                        IsWin10:ItemContainerStyle="{StaticResource LocalListViewItemStyle}"
                                         Background="Transparent"
                                         IsItemClickEnabled="False"
                                         SelectionMode="None">

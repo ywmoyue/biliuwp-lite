@@ -30,7 +30,7 @@
                 <toolkit:ImageEx
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
-                    CornerRadius="{StaticResource OverlayCornerRadius}"
+                    CornerRadius="{ThemeResource OverlayCornerRadius}"
                     PlaceholderSource="/Assets/Thumbnails/Placeholde.png"
                     Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='180w_100h_1c'}"
                     Stretch="UniformToFill" />

@@ -2,7 +2,6 @@
     x:Class="BiliLite.Controls.Settings.ShortcutKeySettingsControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -51,7 +50,6 @@
         </Grid>
         <ListView
             Padding="-12,0"
-            IsWin10:ItemContainerStyle="{StaticResource LocalListViewItemStyle}"
             ItemsSource="{x:Bind m_viewModel.ShortcutFunctions, Mode=OneWay}"
             SelectionMode="None">
             <ListView.ItemTemplate>
@@ -61,17 +59,25 @@
                             <font:FontAwesome Icon="Solid_Keyboard" />
                         </controls:SettingsExpander.HeaderIcon>
                         <StackPanel Orientation="Horizontal">
-                            <Button MinWidth="120" Click="BtnRecordKeys_OnClick">
+                            <Button
+                                MinWidth="120"
+                                Margin="0,0,10,0"
+                                Click="BtnRecordKeys_OnClick">
                                 <TextBlock Text="{x:Bind KeysString, Mode=OneWay}" />
                             </Button>
                             <ToggleSwitch
-                                Margin="16,0,0,0"
+                                Margin="0,-5,-88,-5"
                                 IsOn="{x:Bind Enable, Mode=TwoWay}"
+                                Style="{StaticResource DefaultToggleSwitchStyle}"
                                 Toggled="ShortcutFunctionViewModel_Changed" />
                         </StackPanel>
                         <controls:SettingsExpander.Items>
                             <controls:SettingsCard Header="是否松开按键执行">
-                                <ToggleSwitch IsOn="{x:Bind NeedKeyUp, Mode=TwoWay}" Toggled="ShortcutFunctionViewModel_Changed" />
+                                <ToggleSwitch
+                                    Margin="0,-5,-88,-5"
+                                    IsOn="{x:Bind NeedKeyUp, Mode=TwoWay}"
+                                    Style="{StaticResource DefaultToggleSwitchStyle}"
+                                    Toggled="ShortcutFunctionViewModel_Changed" />
                             </controls:SettingsCard>
                             <controls:SettingsCard Header="删除">
                                 <Button Click="BtnDeleteShortcutFunction_OnClick">确认删除</Button>
@@ -114,7 +120,11 @@
                     </Button>
                 </controls:SettingsCard>
                 <controls:SettingsCard DataContext="{x:Bind m_viewModel.AddShortcutFunctionModel, Mode=OneWay}" Header="是否松开按键执行">
-                    <ToggleSwitch IsOn="{Binding NeedKeyUp, Mode=TwoWay}" Toggled="ShortcutFunctionViewModel_Changed" />
+                    <ToggleSwitch
+                        Margin="0,-5,-88,-5"
+                        IsOn="{Binding NeedKeyUp, Mode=TwoWay}"
+                        Style="{StaticResource DefaultToggleSwitchStyle}"
+                        Toggled="ShortcutFunctionViewModel_Changed" />
                 </controls:SettingsCard>
             </StackPanel>
         </ContentDialog>

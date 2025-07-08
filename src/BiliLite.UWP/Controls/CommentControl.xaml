@@ -2,7 +2,6 @@
     x:Class="BiliLite.Controls.CommentControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:comment="using:BiliLite.ViewModels.Comment"
     xmlns:common="using:BiliLite.Models.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -20,7 +19,6 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
-        <Style BasedOn="{StaticResource DefaultHyperlinkButtonStyle}" TargetType="HyperlinkButton" />
         <Style x:Key="commentStyle" TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="BorderThickness" Value="0,0,0,1" />
@@ -144,7 +142,7 @@
                         HorizontalAlignment="Center"
                         BorderBrush="{x:Bind Path=Member.FansDetail.MedalColorBorder, Converter={StaticResource ColorConvert}, Mode=OneWay}"
                         BorderThickness="1"
-                        CornerRadius="{StaticResource ControlCornerRadius}"
+                        CornerRadius="{ThemeResource ControlCornerRadius}"
                         Visibility="{x:Bind Path=Member.ShowFansDetail, Mode=OneWay}">
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
@@ -212,7 +210,7 @@
                     <Grid
                         Margin="0,2,0,0"
                         VerticalAlignment="Center"
-                        CornerRadius="{StaticResource ControlCornerRadius}"
+                        CornerRadius="{ThemeResource ControlCornerRadius}"
                         Visibility="{Binding ElementName=m_viewModel, Path=IsWideMode, Mode=OneWay}">
                         <Border Visibility="{x:Bind Path=Member.ShowFansDetail, Mode=OneWay}">
                             <Border.Background>
@@ -364,7 +362,7 @@
                         <DataTemplate x:DataType="common:NotePicture">
                             <toolkit:ImageEx
                                 Margin="10"
-                                CornerRadius="{StaticResource ControlCornerRadius}"
+                                CornerRadius="{ThemeResource ControlCornerRadius}"
                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                 Source="{x:Bind ImgSrc}" />
                         </DataTemplate>
@@ -429,7 +427,7 @@
 
                         <Border
                             Background="{ThemeResource CardColor}"
-                            CornerRadius="{StaticResource ControlCornerRadius}"
+                            CornerRadius="{ThemeResource ControlCornerRadius}"
                             Visibility="{x:Bind Path=UpAction.Like, Mode=OneWay}">
                             <TextBlock
                                 Margin="8,8"
@@ -446,7 +444,7 @@
                     Margin="0,4"
                     Padding="8"
                     Background="{ThemeResource CardBackground}"
-                    CornerRadius="{StaticResource ControlCornerRadius}"
+                    CornerRadius="{ThemeResource ControlCornerRadius}"
                     Visibility="{x:Bind Path=ShowReplies, Mode=OneWay}">
 
                     <StackPanel Margin="0,0,0,4" Visibility="{x:Bind Path=ShowReplyBox, Mode=OneWay}">
@@ -701,9 +699,8 @@
                 <ListView
                     Grid.Row="6"
                     Margin="0,0,8,0"
-                    IsWin10:ItemContainerStyle="{StaticResource LocalListViewItemStyle}"
                     Background="{ThemeResource CardBackground}"
-                    CornerRadius="{StaticResource ControlCornerRadius}"
+                    CornerRadius="{ThemeResource ControlCornerRadius}"
                     IsItemClickEnabled="False"
                     ItemsSource="{x:Bind HotReplies, Mode=OneWay}"
                     ScrollViewer.VerticalScrollBarVisibility="Hidden"

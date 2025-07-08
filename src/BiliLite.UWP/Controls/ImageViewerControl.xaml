@@ -2,6 +2,7 @@
     x:Class="BiliLite.Controls.ImageViewerControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:IsWin11="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:BiliLite.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -15,7 +16,7 @@
             Opacity="0.5"
             Color="{ThemeResource SystemAccentColor}" />
         <Style TargetType="AppBarButton">
-            <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
+            <Setter Property="CornerRadius" Value="{ThemeResource OverlayCornerRadius}" />
         </Style>
     </UserControl.Resources>
 
@@ -34,7 +35,7 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Bottom"
                 Orientation="Horizontal">
-                <Border Background="#CC000000" CornerRadius="{StaticResource OverlayCornerRadius}">
+                <Border Background="#CC000000" CornerRadius="{ThemeResource OverlayCornerRadius}">
                     <StackPanel Orientation="Horizontal">
                         <AppBarButton
                             x:Name="btnSave"
@@ -44,7 +45,7 @@
                             Foreground="White"
                             ToolTipService.ToolTip="保存">
                             <AppBarButton.Icon>
-                                <SymbolIcon Margin="0,-4,0,4" Symbol="Save" />
+                                <SymbolIcon IsWin11:Margin="0,-4,0,4" Symbol="Save" />
                             </AppBarButton.Icon>
                         </AppBarButton>
                         <AppBarButton
@@ -55,7 +56,7 @@
                             Foreground="White"
                             ToolTipService.ToolTip="复制">
                             <AppBarButton.Icon>
-                                <SymbolIcon Margin="0,-4,0,4" Symbol="Copy" />
+                                <SymbolIcon IsWin11:Margin="0,-4,0,4" Symbol="Copy" />
                             </AppBarButton.Icon>
                         </AppBarButton>
                     </StackPanel>
@@ -63,7 +64,7 @@
                 <Border
                     Margin="12,0,0,0"
                     Background="#CC000000"
-                    CornerRadius="{StaticResource OverlayCornerRadius}">
+                    CornerRadius="{ThemeResource OverlayCornerRadius}">
                     <StackPanel Orientation="Horizontal">
                         <AppBarButton
                             x:Name="btnOrigin"
@@ -74,7 +75,7 @@
                             Foreground="White"
                             ToolTipService.ToolTip="原始大小">
                             <AppBarButton.Icon>
-                                <SymbolIcon Margin="0,-4,0,4" Symbol="Pictures" />
+                                <SymbolIcon IsWin11:Margin="0,-4,0,4" Symbol="Pictures" />
                             </AppBarButton.Icon>
                         </AppBarButton>
                         <AppBarButton
@@ -85,7 +86,7 @@
                             Foreground="White"
                             ToolTipService.ToolTip="缩小">
                             <AppBarButton.Icon>
-                                <SymbolIcon Margin="0,-4,0,4" Symbol="ZoomOut" />
+                                <SymbolIcon IsWin11:Margin="0,-4,0,4" Symbol="ZoomOut" />
                             </AppBarButton.Icon>
                             <AppBarButton.KeyboardAccelerators>
                                 <KeyboardAccelerator Key="Down" Modifiers="None" />
@@ -108,7 +109,7 @@
                                 <KeyboardAccelerator Key="Up" Modifiers="None" />
                             </AppBarButton.KeyboardAccelerators>
                             <AppBarButton.Icon>
-                                <SymbolIcon Margin="0,-4,0,4" Symbol="ZoomIn" />
+                                <SymbolIcon IsWin11:Margin="0,-4,0,4" Symbol="ZoomIn" />
                             </AppBarButton.Icon>
                         </AppBarButton>
                     </StackPanel>
@@ -116,7 +117,7 @@
                 <Border
                     Margin="12,0,0,0"
                     Background="#CC000000"
-                    CornerRadius="{StaticResource OverlayCornerRadius}">
+                    CornerRadius="{ThemeResource OverlayCornerRadius}">
                     <StackPanel Orientation="Horizontal">
                         <AppBarButton
                             x:Name="btnPrevious"
@@ -126,7 +127,7 @@
                             Foreground="White"
                             ToolTipService.ToolTip="上一张">
                             <AppBarButton.Icon>
-                                <SymbolIcon Margin="0,-4,0,4" Symbol="Previous" />
+                                <SymbolIcon IsWin11:Margin="0,-4,0,4" Symbol="Previous" />
                             </AppBarButton.Icon>
                             <AppBarButton.KeyboardAccelerators>
                                 <KeyboardAccelerator Key="Left" Modifiers="None" />
@@ -149,7 +150,7 @@
                             Foreground="White"
                             ToolTipService.ToolTip="下一张">
                             <AppBarButton.Icon>
-                                <SymbolIcon Margin="0,-4,0,4" Symbol="Next" />
+                                <SymbolIcon IsWin11:Margin="0,-4,0,4" Symbol="Next" />
                             </AppBarButton.Icon>
                             <AppBarButton.KeyboardAccelerators>
                                 <KeyboardAccelerator Key="Right" Modifiers="None" />
@@ -161,7 +162,7 @@
                 <Border
                     Margin="12,0,0,0"
                     Background="#CC000000"
-                    CornerRadius="{StaticResource OverlayCornerRadius}">
+                    CornerRadius="{ThemeResource OverlayCornerRadius}">
                     <StackPanel Orientation="Horizontal">
                         <AppBarButton
                             x:Name="btnHelp"
@@ -171,7 +172,7 @@
                             Foreground="White"
                             ToolTipService.ToolTip="帮助">
                             <AppBarButton.Icon>
-                                <SymbolIcon Margin="0,-4,0,4" Symbol="Help" />
+                                <SymbolIcon IsWin11:Margin="0,-4,0,4" Symbol="Help" />
                             </AppBarButton.Icon>
                         </AppBarButton>
                     </StackPanel>
