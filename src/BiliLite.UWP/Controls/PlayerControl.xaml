@@ -1297,7 +1297,45 @@
                             Width="320"
                             HorizontalAlignment="Right"
                             Background="#C8000000">
-                            <ListView ItemsSource="{x:Bind m_viewModel.ViewPoints, Mode=OneWay}" SelectionMode="Single">
+                            <ListView ItemsSource="{x:Bind m_viewModel.ViewPoints, Mode=OneWay}" SelectionMode="Single" >
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ListViewItem">
+                                                    <Grid Background="Transparent">
+                                                        <VisualStateManager.VisualStateGroups>
+                                                            <VisualStateGroup x:Name="CommonStates">
+                                                                <VisualState x:Name="Normal"/>
+                                                                <VisualState x:Name="PointerOver">
+                                                                    <Storyboard>
+                                                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemAccentColor}"/>
+                                                                        </ObjectAnimationUsingKeyFrames>
+                                                                    </Storyboard>
+                                                                </VisualState>
+                                                                <VisualState x:Name="Pressed"/>
+                                                                <VisualState x:Name="Disabled"/>
+                                                            </VisualStateGroup>
+                                                            <VisualStateGroup x:Name="SelectionStates">
+                                                                <VisualState x:Name="Unselected"/>
+                                                                <VisualState x:Name="Selected">
+                                                                    <Storyboard>
+                                                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemAccentColor}"/>
+                                                                        </ObjectAnimationUsingKeyFrames>
+                                                                    </Storyboard>
+                                                                </VisualState>
+                                                                <VisualState x:Name="SelectedUnfocused"/>
+                                                            </VisualStateGroup>
+                                                        </VisualStateManager.VisualStateGroups>
+                                                        <ContentPresenter x:Name="ContentPresenter" Foreground="White"/>
+                                                    </Grid>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
                                 <ListView.ItemTemplate>
                                     <DataTemplate x:DataType="modules:PlayerInfoViewPoint">
                                         <ListViewItem>
@@ -1311,7 +1349,7 @@
                                                     Width="172"
                                                     Margin="10,5"
                                                     Orientation="Vertical">
-                                                    <TextBlock Text="{x:Bind Content}" TextWrapping="Wrap" />
+                                                    <TextBlock Text="{x:Bind Content}" TextWrapping="Wrap"/>
                                                     <TextBlock>
                                                         <Run Text="{x:Bind From, Converter={StaticResource ProgressToTimeConverter}}" />
                                                         -<Run Text="{x:Bind To, Converter={StaticResource ProgressToTimeConverter}}" />
