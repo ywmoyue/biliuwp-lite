@@ -95,6 +95,12 @@
                 Text="{x:Bind m_viewModel.PressActionDelayTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 ValueChanged="NumberBoxPressActionDelayTime_OnValueChanged" />
         </controls:SettingsCard>
+        <controls:SettingsCard Description="单位秒" Header="快进快退时间自定义">
+            <controls1:NumberBox
+                Minimum="0"
+                Text="{x:Bind m_viewModel.PositionMoveLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                ValueChanged="PositionMoveLength_OnValueChanged" />
+        </controls:SettingsCard>
 
         <ContentDialog
             x:Name="AddActionDialog"
