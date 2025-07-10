@@ -12,6 +12,8 @@ namespace BiliLite.ViewModels.Settings
 
         public int PressActionDelayTime { get; set; }
 
+        public double PositionMoveLength { get; set; }
+
         public ShortcutFunctionViewModel AddShortcutFunctionModel { get; set; }
 
         public List<KeyValuePair<string, string>> Actions

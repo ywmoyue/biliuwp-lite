@@ -247,6 +247,8 @@
             </Grid>
 
             <muxc:ProgressRing
+                Width="50"
+                Height="50"
                 Margin="8"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Bottom"

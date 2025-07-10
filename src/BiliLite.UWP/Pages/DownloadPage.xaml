@@ -2,7 +2,6 @@
     x:Class="BiliLite.Pages.DownloadPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:controls="using:BiliLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:download="using:BiliLite.Models.Common.Download"
@@ -74,7 +73,6 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <ListView
-                        IsWin10:ItemContainerStyle="{StaticResource LocalListViewItemStyle}"
                         IsItemClickEnabled="False"
                         ItemsSource="{x:Bind Path=m_viewModel.Downloadings}"
                         SelectionMode="None">
@@ -83,7 +81,7 @@
                                 <StackPanel
                                     Padding="10"
                                     Background="{ThemeResource CardBackground}"
-                                    CornerRadius="{StaticResource OverlayCornerRadius}">
+                                    CornerRadius="{ThemeResource OverlayCornerRadius}">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition />
@@ -265,7 +263,7 @@
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
-                                        <Border CornerRadius="{StaticResource OverlayCornerRadius}">
+                                        <Border CornerRadius="{ThemeResource OverlayCornerRadius}">
                                             <Image
                                                 Width="130"
                                                 Source="{Binding Path=Cover}"
@@ -295,7 +293,6 @@
                                     <ListView
                                         x:Name="listDownloadedEpisodes"
                                         Grid.Row="1"
-                                        IsWin10:ItemContainerStyle="{StaticResource LocalListViewItemStyle}"
                                         IsItemClickEnabled="True"
                                         ItemClick="listDownloadedEpisodes_ItemClick"
                                         ItemsSource="{Binding Path=Epsidoes}"
@@ -400,7 +397,7 @@
                                                 <ColumnDefinition Width="200" />
                                                 <ColumnDefinition />
                                             </Grid.ColumnDefinitions>
-                                            <Grid CornerRadius="{StaticResource OverlayCornerRadius}">
+                                            <Grid CornerRadius="{ThemeResource OverlayCornerRadius}">
                                                 <Image Source="{x:Bind Path=Cover}" Stretch="UniformToFill" />
                                                 <Grid Padding="8" VerticalAlignment="Bottom">
                                                     <Grid.Background>
@@ -429,7 +426,7 @@
                                                         Padding="4,1,5,2"
                                                         HorizontalAlignment="Left"
                                                         Background="{ThemeResource SystemAccentColor}"
-                                                        CornerRadius="{StaticResource ControlCornerRadius}">
+                                                        CornerRadius="{ThemeResource ControlCornerRadius}">
                                                         <TextBlock FontSize="12" Foreground="White">
                                                             剧集
                                                         </TextBlock>
@@ -469,11 +466,9 @@
             </Grid>
 
             <muxc:ProgressBar
-                Height="8"
                 Margin="0,4,0,0"
                 Maximum="{x:Bind Path=m_viewModel.DiskTotal, Mode=OneWay}"
                 Value="{x:Bind Path=m_viewModel.DiskUse, Mode=OneWay}" />
-
         </StackPanel>
 
     </Grid>

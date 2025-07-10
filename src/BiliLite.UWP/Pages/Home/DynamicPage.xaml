@@ -29,7 +29,7 @@
                     <ColumnDefinition Width="200" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Grid CornerRadius="{StaticResource OverlayCornerRadius}">
+                <Grid CornerRadius="{ThemeResource OverlayCornerRadius}">
                     <toolkit:ImageEx
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
@@ -118,7 +118,7 @@
                     <ColumnDefinition Width="200" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Grid CornerRadius="{StaticResource OverlayCornerRadius}">
+                <Grid CornerRadius="{ThemeResource OverlayCornerRadius}">
                     <toolkit:ImageEx
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
@@ -151,7 +151,7 @@
                             Padding="4,1,5,2"
                             HorizontalAlignment="Left"
                             Background="{ThemeResource SystemAccentColor}"
-                            CornerRadius="{StaticResource ControlCornerRadius}">
+                            CornerRadius="{ThemeResource ControlCornerRadius}">
                             <TextBlock FontSize="12" Foreground="White">合集</TextBlock>
                         </Border>
                         <TextBlock
@@ -168,7 +168,7 @@
                     <ColumnDefinition Width="200" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Grid CornerRadius="{StaticResource OverlayCornerRadius}">
+                <Grid CornerRadius="{ThemeResource OverlayCornerRadius}">
                     <toolkit:ImageEx
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
@@ -181,7 +181,7 @@
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top"
                         Background="{ThemeResource SystemAccentColor}"
-                        CornerRadius="{StaticResource ControlCornerRadius}">
+                        CornerRadius="{ThemeResource ControlCornerRadius}">
                         <TextBlock
                             FontSize="12"
                             Foreground="White"

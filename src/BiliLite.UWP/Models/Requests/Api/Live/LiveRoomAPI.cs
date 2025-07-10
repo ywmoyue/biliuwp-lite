@@ -359,8 +359,9 @@ namespace BiliLite.Models.Requests.Api.Live
         /// 获取弹幕连接信息 
         /// </summary>
         /// <param name="roomId">房间号</param>
+        /// <param name="buvid3">BUVID3 2025-06-27后强制使用</param>
         /// <returns></returns>
-        public async Task<ApiModel> GetDanmuInfo(int roomId)
+        public async Task<ApiModel> GetDanmuInfo(int roomId, string buvid3)
         {
             var api = new ApiModel()
             {
@@ -370,6 +371,7 @@ namespace BiliLite.Models.Requests.Api.Live
                 need_cookie = true
             };
             api.parameter = await ApiHelper.GetWbiSign(api.parameter);
+            api.ExtraCookies = new Dictionary<string, string>() { { "buvid3", buvid3 } };
             return api;
         }
 

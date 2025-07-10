@@ -391,7 +391,7 @@ namespace BiliLite.ViewModels.Live
                 m_liveMessage ??= new LiveMessage();
 
                 HttpResults danmuResults;
-                if (webMethod) danmuResults = await (await m_liveRoomApi.GetDanmuInfo(roomId)).Request();
+                if (webMethod) danmuResults = await (await m_liveRoomApi.GetDanmuInfo(roomId, Buvid3)).Request();
                 else danmuResults = await (await m_liveRoomApi.GetDanmuInfoApp(roomId)).Request();
 
                 if (!danmuResults.status)

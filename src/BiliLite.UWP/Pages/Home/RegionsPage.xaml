@@ -17,13 +17,14 @@
                 HorizontalAlignment="Center"
                 IsItemClickEnabled="True"
                 ItemClick="GridView_ItemClick"
+                ItemContainerStyle="{StaticResource DefaultGridViewItemStyle}"
                 ItemsSource="{x:Bind Path=m_viewModel.Regions, Mode=OneWay}"
                 ScrollViewer.VerticalScrollBarVisibility="Hidden"
                 ScrollViewer.VerticalScrollMode="Disabled"
                 SelectionMode="None">
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="home:RegionItem">
-                        <StackPanel MinWidth="115">
+                        <StackPanel MinWidth="110">
                             <Image
                                 Width="48"
                                 Height="48"
@@ -40,8 +41,8 @@
         </ScrollViewer>
 
         <muxc:ProgressRing
-            Width="56"
-            Height="56"
+            Width="50"
+            Height="50"
             HorizontalAlignment="Center"
             IsActive="True"
             Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}" />

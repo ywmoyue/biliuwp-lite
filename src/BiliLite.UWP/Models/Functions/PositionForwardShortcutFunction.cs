@@ -1,6 +1,8 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Pages;
 using System.Threading.Tasks;
+using BiliLite.Models.Common;
+using BiliLite.Services;
 
 namespace BiliLite.Models.Functions
 {
@@ -12,7 +14,9 @@ namespace BiliLite.Models.Functions
         {
             if (!(param is PlayPage page)) return;
             if (ControlsExtensions.CheckFocusTextBoxNow()) return;
-            page.PositionForward();
+            var positionMoveLength = SettingService.GetValue(SettingConstants.ShortcutKey.POSITION_MOVE_LENGTH,
+                SettingConstants.ShortcutKey.DEFAULT_POSITION_MOVE_LENGTH);
+            page.PositionForward(positionMoveLength);
         }
     }
 }

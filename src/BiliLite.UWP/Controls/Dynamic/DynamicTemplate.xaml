@@ -31,7 +31,7 @@
                     BorderThickness="0"
                     Command="{Binding Path=UserDynamicItemDisplayCommands.LaunchUrlCommand}"
                     CommandParameter="{Binding Path=OneRowInfo.Url}"
-                    CornerRadius="{StaticResource OverlayCornerRadius}">
+                    CornerRadius="{ThemeResource OverlayCornerRadius}">
                     <Button.ContextFlyout>
                         <MenuFlyout>
                             <MenuFlyoutItem
@@ -55,7 +55,7 @@
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="{ThemeResource SystemAccentColor}"
-                                CornerRadius="{StaticResource ControlCornerRadius}"
+                                CornerRadius="{ThemeResource ControlCornerRadius}"
                                 Visibility="{Binding Path=OneRowInfo.ShowTag}">
                                 <TextBlock
                                     FontSize="12"
@@ -136,15 +136,15 @@
                 <Border
                     MaxWidth="240"
                     HorizontalAlignment="Left"
-                    CornerRadius="{StaticResource ControlCornerRadius}">
+                    CornerRadius="{ThemeResource ControlCornerRadius}">
                     <Grid>
                         <HyperlinkButton
                             Padding="5"
                             Command="{Binding Path=UserDynamicItemDisplayCommands.ImageCommand}"
                             CommandParameter="{Binding Path=ImagesInfo[0]}"
-                            CornerRadius="{StaticResource OverlayCornerRadius}">
+                            CornerRadius="{ThemeResource OverlayCornerRadius}">
                             <controls:ImageEx
-                                CornerRadius="{StaticResource OverlayCornerRadius}"
+                                CornerRadius="{ThemeResource OverlayCornerRadius}"
                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                 Source="{Binding Path=ImagesInfo[0].ImageUrlWithPar}"
                                 Stretch="UniformToFill" />
@@ -155,7 +155,7 @@
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"
                             Background="#66000000"
-                            CornerRadius="{StaticResource ControlCornerRadius}"
+                            CornerRadius="{ThemeResource ControlCornerRadius}"
                             Visibility="{Binding Path=ImagesInfo[0].LongImage}">
                             <TextBlock FontSize="12" Foreground="White">
                                 长图
@@ -181,11 +181,11 @@
                                 Padding="5"
                                 Command="{Binding Path=ImageCommand}"
                                 CommandParameter="{Binding}"
-                                CornerRadius="{StaticResource OverlayCornerRadius}">
+                                CornerRadius="{ThemeResource OverlayCornerRadius}">
                                 <controls:ImageEx
                                     Width="100"
                                     Height="100"
-                                    CornerRadius="{StaticResource OverlayCornerRadius}"
+                                    CornerRadius="{ThemeResource OverlayCornerRadius}"
                                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png"
                                     Source="{Binding Path=ImageUrl, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='200w_200h_1c'}"
                                     Stretch="UniformToFill" />
@@ -210,11 +210,11 @@
                                 Padding="5"
                                 Command="{Binding Path=ImageCommand}"
                                 CommandParameter="{Binding}"
-                                CornerRadius="{StaticResource OverlayCornerRadius}">
+                                CornerRadius="{ThemeResource OverlayCornerRadius}">
                                 <controls:ImageEx
                                     Width="120"
                                     Height="120"
-                                    CornerRadius="{StaticResource OverlayCornerRadius}"
+                                    CornerRadius="{ThemeResource OverlayCornerRadius}"
                                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png"
                                     Source="{Binding Path=ImageUrl, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='200w_200h_1c'}"
                                     Stretch="UniformToFill" />
@@ -230,7 +230,7 @@
             HorizontalAlignment="Stretch"
             Background="Transparent"
             BorderThickness="0"
-            CornerRadius="{StaticResource OverlayCornerRadius}">
+            CornerRadius="{ThemeResource OverlayCornerRadius}">
             <StackPanel Margin="12" Orientation="Horizontal">
                 <FontIcon
                     FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
@@ -246,7 +246,7 @@
             HorizontalAlignment="Stretch"
             Background="Transparent"
             BorderThickness="0"
-            CornerRadius="{StaticResource OverlayCornerRadius}">
+            CornerRadius="{ThemeResource OverlayCornerRadius}">
             <StackPanel Margin="12">
                 <TextBlock TextAlignment="Justify" TextWrapping="Wrap">无法显示此动态,请将以下内容复制给开发者适配</TextBlock>
                 <TextBlock
@@ -262,7 +262,7 @@
         <StackPanel
             Padding="12"
             Background="{ThemeResource CardColor}"
-            CornerRadius="{StaticResource OverlayCornerRadius}">
+            CornerRadius="{ThemeResource OverlayCornerRadius}">
             <Button
                 Padding="-1"
                 HorizontalAlignment="Stretch"
@@ -270,7 +270,7 @@
                 Background="Transparent"
                 Command="{Binding Path=UserDynamicItemDisplayCommands.LaunchUrlCommand}"
                 CommandParameter="{Binding Path=ContentDisplayInfo.Url}"
-                CornerRadius="{StaticResource OverlayCornerRadius}">
+                CornerRadius="{ThemeResource OverlayCornerRadius}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -304,7 +304,7 @@
                 <Border
                     Background="Transparent"
                     BorderThickness="0"
-                    CornerRadius="{StaticResource OverlayCornerRadius}">
+                    CornerRadius="{ThemeResource OverlayCornerRadius}">
                     <ListView
                         IsItemClickEnabled="false"
                         ItemTemplateSelector="{StaticResource select}"
