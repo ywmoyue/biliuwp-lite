@@ -59,7 +59,7 @@
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top"
                         Background="Orange"
-                        CornerRadius="{StaticResource ControlCornerRadius}"
+                        CornerRadius="{ThemeResource ControlCornerRadius}"
                         Visibility="{x:Bind ShowBadge}">
                         <TextBlock
                             FontSize="12"
@@ -105,7 +105,7 @@
                     </MenuFlyout>
                 </Grid.ContextFlyout>
                 <toolkit:ImageEx
-                    CornerRadius="{StaticResource OverlayCornerRadius}"
+                    CornerRadius="{ThemeResource OverlayCornerRadius}"
                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png"
                     Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
                     Stretch="UniformToFill" />
@@ -153,7 +153,7 @@
                     </MenuFlyout>
                 </Grid.ContextFlyout>
                 <toolkit:ImageEx
-                    CornerRadius="{StaticResource OverlayCornerRadius}"
+                    CornerRadius="{ThemeResource OverlayCornerRadius}"
                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png"
                     Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
                     Stretch="UniformToFill" />

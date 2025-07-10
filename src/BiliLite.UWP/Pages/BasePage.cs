@@ -108,9 +108,9 @@ namespace BiliLite.Pages
             Player.SetPosition(position);
         }
 
-        public void PositionBack()
+        public void PositionBack(double progress = 3)
         {
-            Player.PositionBack();
+            Player.PositionBack(progress);
         }
 
         public void PositionForward(double progress = 3)
@@ -163,9 +163,9 @@ namespace BiliLite.Pages
             Player.MinusVolume();
         }
 
-        public void CancelFullscreen()
+        public void CancelFullscreenOrFullWindow()
         {
-            Player.CancelFullscreen();
+            Player.CancelFullscreenOrFullWindow();
         }
 
         public void DisposePlayer()
@@ -207,7 +207,7 @@ namespace BiliLite.Pages
 
         public void MinusVolume();
 
-        public void CancelFullscreen();
+        public void CancelFullscreenOrFullWindow();
 
         public Task CaptureVideo();
 

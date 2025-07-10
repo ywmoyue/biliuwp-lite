@@ -43,6 +43,7 @@
                     <ItemsControl.Resources>
                         <Style TargetType="HyperlinkButton">
                             <Setter Property="Foreground" Value="{ThemeResource TextColor}" />
+                            <Setter Property="Margin" Value="1" />
                             <Setter Property="Padding" Value="0" />
                             <Setter Property="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
                         </Style>

@@ -2,7 +2,6 @@
     x:Class="BiliLite.Controls.VideoListView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:common="using:BiliLite.Controls.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:font="using:FontAwesome5"
@@ -30,7 +29,6 @@
         <ScrollViewer x:Name="VideoListScrollViewer">
             <ListView
                 x:Name="SectionListView"
-                IsWin10:ItemContainerStyle="{StaticResource LocalListViewItemStyle}"
                 ItemsSource="{x:Bind m_viewModel.Sections, Mode=OneWay}"
                 Loaded="SectionListView_Loaded"
                 SelectionMode="None">
@@ -65,7 +63,6 @@
                                 <ListView
                                     Margin="-20,-10"
                                     HorizontalAlignment="Stretch"
-                                    IsWin10:ItemContainerStyle="{StaticResource LocalListViewItemStyle}"
                                     ItemsSource="{x:Bind Items, Mode=OneWay}"
                                     SelectedItem="{x:Bind SelectedItem, Mode=TwoWay}"
                                     SelectionChanged="ListView_OnSelectionChanged">
@@ -83,7 +80,7 @@
                                                     <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
                                                 <!--  此处不能使用ImageEx，否则程序崩溃，原因未知  -->
-                                                <Grid CornerRadius="{StaticResource OverlayCornerRadius}">
+                                                <Grid CornerRadius="{ThemeResource OverlayCornerRadius}">
                                                     <Image
                                                         Grid.Column="0"
                                                         Width="140"

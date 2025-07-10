@@ -2,6 +2,8 @@
     x:Class="BiliLite.Controls.PlayerProgressBar"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
+    xmlns:IsWin11="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:BiliLite.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -10,7 +12,7 @@
     mc:Ignorable="d">
 
     <Grid
-        Name="TrackGrid"
+        x:Name="TrackGrid"
         Height="21"
         VerticalAlignment="Center"
         Background="Transparent"
@@ -22,13 +24,14 @@
 
         <!--  可视背景条（5px 高度，位于中间）  -->
         <Rectangle
+            x:Name="BackgroundRectangle"
             Height="5"
             VerticalAlignment="Center"
             Fill="LightGray" />
 
         <!--  进度条填充（同样保持在中间 5px 高度）  -->
         <Rectangle
-            Name="ProgressRectangle"
+            x:Name="ProgressRectangle"
             Height="5"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
@@ -37,7 +40,73 @@
         <!--  Thumb 容器及组件的垂直居中处理  -->
         <Canvas Height="20" VerticalAlignment="Center">
             <Canvas.Resources>
-                <Style x:Key="SliderThumbStyle" TargetType="Thumb">
+                <IsWin10:Style x:Key="SliderThumbStyle" TargetType="Thumb">
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Background" Value="{ThemeResource SliderThumbBackground}" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Thumb">
+                                <Border
+                                    x:Name="SliderInnerThumb"
+                                    Width="20"
+                                    Height="20"
+                                    Background="{ThemeResource SystemAltHighColor}"
+                                    BorderBrush="{ThemeResource SystemAccentColor}"
+                                    BorderThickness="2"
+                                    CornerRadius="50">
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup x:Name="CommonStates">
+                                            <!--  默认状态  -->
+                                            <VisualState x:Name="Normal">
+                                                <Storyboard>
+                                                    <DoubleAnimation
+                                                        Storyboard.TargetName="SliderInnerThumb"
+                                                        Storyboard.TargetProperty="Opacity"
+                                                        To="1"
+                                                        Duration="0:0:0.2" />
+                                                </Storyboard>
+                                            </VisualState>
+
+                                            <!--  鼠标悬停（轻微半透明）  -->
+                                            <VisualState x:Name="PointerOver">
+                                                <Storyboard>
+                                                    <DoubleAnimation
+                                                        Storyboard.TargetName="SliderInnerThumb"
+                                                        Storyboard.TargetProperty="Opacity"
+                                                        To="0.7"
+                                                        Duration="0:0:0.2" />
+                                                </Storyboard>
+                                            </VisualState>
+
+                                            <!--  按下（更透明）  -->
+                                            <VisualState x:Name="Pressed">
+                                                <Storyboard>
+                                                    <DoubleAnimation
+                                                        Storyboard.TargetName="SliderInnerThumb"
+                                                        Storyboard.TargetProperty="Opacity"
+                                                        To="0.5"
+                                                        Duration="0:0:0.1" />
+                                                </Storyboard>
+                                            </VisualState>
+
+                                            <!--  禁用（完全半透明）  -->
+                                            <VisualState x:Name="Disabled">
+                                                <Storyboard>
+                                                    <DoubleAnimation
+                                                        Storyboard.TargetName="SliderInnerThumb"
+                                                        Storyboard.TargetProperty="Opacity"
+                                                        To="0.3"
+                                                        Duration="0:0:0.2" />
+                                                </Storyboard>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </IsWin10:Style>
+                <IsWin11:Style x:Key="SliderThumbStyle" TargetType="Thumb">
                     <Setter Property="BorderThickness" Value="1" />
                     <Setter Property="Background" Value="{ThemeResource SliderThumbBackground}" />
                     <Setter Property="Template">
@@ -139,10 +208,10 @@
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
-                </Style>
+                </IsWin11:Style>
             </Canvas.Resources>
             <Thumb
-                Name="ProgressThumb"
+                x:Name="ProgressThumb"
                 Width="20"
                 Height="20"
                 VerticalAlignment="Center"
@@ -152,14 +221,6 @@
                 <Thumb.RenderTransform>
                     <TranslateTransform Y="-1" />
                 </Thumb.RenderTransform>
-                <!--<Thumb.Template>
-                    <ControlTemplate TargetType="Thumb">
-                        <Ellipse
-                            Width="20"
-                            Height="20"
-                            Fill="{ThemeResource SystemAccentColor}" />
-                    </ControlTemplate>
-                </Thumb.Template>-->
             </Thumb>
         </Canvas>
     </Grid>

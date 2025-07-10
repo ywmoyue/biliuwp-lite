@@ -2,7 +2,6 @@
     x:Class="BiliLite.Controls.Dialogs.SendDynamicV2Dialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:BiliLite.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -11,7 +10,7 @@
     xmlns:viewModels="using:BiliLite.ViewModels"
     Background="{ThemeResource SystemControlAcrylicElementBrush}"
     CloseButtonStyle="{StaticResource DefaultButtonStyle}"
-    CornerRadius="{StaticResource OverlayCornerRadius}"
+    CornerRadius="{ThemeResource OverlayCornerRadius}"
     PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
     SecondaryButtonStyle="{StaticResource DefaultButtonStyle}"
     mc:Ignorable="d">
@@ -35,10 +34,10 @@
                                 <!--<GridView.ItemContainerStyle>
                                 -->
                                 <!--<Style TargetType="GridViewItem">
-                                                    <Setter Property="Margin" Value="5"></Setter>
-                                                </Style>-->
+                                <Setter Property="Margin" Value="5"></Setter>
+                                </Style>-->
                                 <!--
-                                            </GridView.ItemContainerStyle>-->
+                                </GridView.ItemContainerStyle>-->
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="viewModels:EmotePackageItemModel">
                                         <StackPanel>
@@ -83,7 +82,6 @@
                 <ListView
                     x:Name="listAt"
                     Grid.Row="1"
-                    IsWin10:ItemContainerStyle="{StaticResource LocalListViewItemStyle}"
                     DisplayMemberPath="Display"
                     IsItemClickEnabled="True"
                     ItemClick="listAt_ItemClick"
@@ -121,7 +119,6 @@
                 <ListView
                     x:Name="listTopic"
                     Grid.Row="1"
-                    IsWin10:ItemContainerStyle="{StaticResource LocalListViewItemStyle}"
                     DisplayMemberPath="display"
                     IsItemClickEnabled="True"
                     ItemClick="listTopic_ItemClick"
@@ -157,7 +154,7 @@
                 Margin="0,8"
                 Padding="8"
                 Background="#33808080"
-                CornerRadius="{StaticResource ControlCornerRadius}"
+                CornerRadius="{ThemeResource ControlCornerRadius}"
                 Visibility="{x:Bind Path=m_viewModel.IsRepost, Mode=OneWay}">
                 <TextBlock
                     MaxLines="1"
@@ -191,18 +188,18 @@
                         </StackPanel>
                     </Button>
                     <!--<Button
-                        x:Name="btnVote"
-                        Width="40"
-                        Height="40"
-                        Margin="4,0,0,0"
-                        ToolTipService.ToolTip="发起投票"
-                        Visibility="{x:Bind Path=sendDynamicVM.IsRepost, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon
-                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
-                                FontSize="14"
-                                Glyph="&#xE1E9;" />
-                        </StackPanel>
+                    x:Name="btnVote"
+                    Width="40"
+                    Height="40"
+                    Margin="4,0,0,0"
+                    ToolTipService.ToolTip="发起投票"
+                    Visibility="{x:Bind Path=sendDynamicVM.IsRepost, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
+                    <StackPanel Orientation="Horizontal">
+                    <FontIcon
+                    FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                    FontSize="14"
+                    Glyph="&#xE1E9;" />
+                    </StackPanel>
                     </Button>-->
                     <Button
                         x:Name="btnImage"
@@ -249,18 +246,18 @@
 
                     </Button>
                     <!--<Button
-                        x:Name="btnTime"
-                        Width="40"
-                        Height="40"
-                        Margin="4,0,0,0"
-                        ToolTipService.ToolTip="定时发布"
-                        Visibility="{x:Bind Path=sendDynamicVM.IsRepost, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon
-                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
-                                FontSize="14"
-                                Glyph="&#xE916;" />
-                        </StackPanel>
+                    x:Name="btnTime"
+                    Width="40"
+                    Height="40"
+                    Margin="4,0,0,0"
+                    ToolTipService.ToolTip="定时发布"
+                    Visibility="{x:Bind Path=sendDynamicVM.IsRepost, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
+                    <StackPanel Orientation="Horizontal">
+                    <FontIcon
+                    FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                    FontSize="14"
+                    Glyph="&#xE916;" />
+                    </StackPanel>
                     </Button>-->
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
@@ -306,10 +303,10 @@
                 Margin="0,4"
                 Padding="4"
                 Background="#33808080"
-                CornerRadius="{StaticResource ControlCornerRadius}"
+                CornerRadius="{ThemeResource ControlCornerRadius}"
                 Visibility="{x:Bind Path=m_viewModel.ShowImage, Mode=OneWay}">
                 <TextBlock><Run Text="{x:Bind Path=m_viewModel.Images.Count, Mode=OneWay}" />
-                    /9张图片</TextBlock>
+                /9张图片</TextBlock>
                 <GridView
                     x:Name="gv_Pics"
                     MaxHeight="200"

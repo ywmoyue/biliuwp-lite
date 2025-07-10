@@ -1,7 +1,7 @@
 ﻿using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Home;
-using BiliLite.Models.Theme;
+using BiliLite.Models.Common.Settings;
 using BiliLite.Services;
 using BiliLite.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
@@ -464,7 +464,7 @@ namespace BiliLite.Controls.Settings
             m_themeService.SetMicaBrushBackgroundSource(m_UISettingsControlViewModel.MicaBackgroundSource,
                 !m_UISettingsControlViewModel.EnableMicaBackground);
             SettingService.SetValue(SettingConstants.UI.MICA_BACKGROUND_SOURCE, (int)m_UISettingsControlViewModel.MicaBackgroundSource);
-            SettingService.GetValue(SettingConstants.UI.ENABLE_MICA_BACKGROUND_SOURCE, m_UISettingsControlViewModel.EnableMicaBackground);
+            SettingService.SetValue(SettingConstants.UI.ENABLE_MICA_BACKGROUND_SOURCE, m_UISettingsControlViewModel.EnableMicaBackground);
         }
     }
 }

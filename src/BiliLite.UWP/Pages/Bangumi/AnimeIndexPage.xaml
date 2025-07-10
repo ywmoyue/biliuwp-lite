@@ -97,7 +97,7 @@
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Background="Orange"
-                                CornerRadius="{StaticResource ControlCornerRadius}"
+                                CornerRadius="{ThemeResource ControlCornerRadius}"
                                 Visibility="{Binding ShowBadge}">
                                 <TextBlock
                                     FontSize="12"

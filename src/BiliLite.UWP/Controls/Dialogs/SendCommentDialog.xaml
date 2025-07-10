@@ -13,7 +13,7 @@
     Title="发表评论"
     Background="{ThemeResource SystemControlAcrylicElementBrush}"
     CloseButtonStyle="{StaticResource DefaultButtonStyle}"
-    CornerRadius="{StaticResource OverlayCornerRadius}"
+    CornerRadius="{ThemeResource OverlayCornerRadius}"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
     PrimaryButtonText="发送"
@@ -121,7 +121,7 @@
                     <DataTemplate x:DataType="userDynamic:DynamicPicture">
                         <Grid MaxWidth="150">
                             <toolkit:ImageEx
-                                CornerRadius="{StaticResource ControlCornerRadius}"
+                                CornerRadius="{ThemeResource ControlCornerRadius}"
                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                 Source="{x:Bind ImageUrl}"
                                 Stretch="Fill" />

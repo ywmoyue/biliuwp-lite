@@ -32,6 +32,8 @@ namespace BiliLite.Controls.Settings
             m_viewModel = App.ServiceProvider.GetRequiredService<ShortcutKeySettingsControlViewModel>();
             m_viewModel.ShortcutFunctions = m_mapper.Map<ObservableCollection<ShortcutFunctionViewModel>>(m_shortcutKeyService.ShortcutFunctions);
             m_viewModel.PressActionDelayTime = m_shortcutKeyService.PressActionDelayTime;
+            m_viewModel.PositionMoveLength = SettingService.GetValue(SettingConstants.ShortcutKey.POSITION_MOVE_LENGTH,
+                SettingConstants.ShortcutKey.DEFAULT_POSITION_MOVE_LENGTH);
             DataContext = m_viewModel;
             InitializeComponent();
 
@@ -149,6 +151,13 @@ namespace BiliLite.Controls.Settings
             m_viewModel.ShortcutFunctions.Add(m_viewModel.AddShortcutFunctionModel);
             var shortcutFunction = m_mapper.Map<ShortcutFunctionModel>(m_viewModel.AddShortcutFunctionModel);
             m_shortcutKeyService.AddShortcutFunction(shortcutFunction);
+        }
+
+        private async void PositionMoveLength_OnValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+        {
+            await Task.Delay(50);
+            SettingService.SetValue(SettingConstants.ShortcutKey.POSITION_MOVE_LENGTH,
+                m_viewModel.PositionMoveLength);
         }
     }
 }

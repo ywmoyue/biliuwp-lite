@@ -930,9 +930,16 @@ namespace BiliLite.Pages
             ToolTip.Visibility = Visibility.Collapsed;
         }
 
-        public void CancelFullscreen()
+        public void CancelFullscreenOrFullWindow()
         {
-            SetFullScreen(false);
+            if (m_playerController.ScreenState.IsFullscreen)
+            {
+                SetFullScreen(false);
+            }
+            else if (m_playerController.ContentState.IsFullWindow)
+            {
+                SetFullWindow(false);
+            }
         }
 
         Task IPlayPage.CaptureVideo()

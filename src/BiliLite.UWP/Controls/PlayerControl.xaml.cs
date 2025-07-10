@@ -3212,9 +3212,16 @@ namespace BiliLite.Controls
             m_playerToastService.Show(PlayerToastService.VOLUME_KEY, txtToolTipText);
         }
 
-        public void CancelFullscreen()
+        public void CancelFullscreenOrFullWindow()
         {
-            IsFullScreen = false;
+            if (IsFullScreen)
+            {
+                IsFullScreen = false;
+            }
+            else
+            {
+                IsFullWindow = false;
+            }
         }
 
         public void PlayerSettingABPlaySetPointA_Click(object sender, RoutedEventArgs e)

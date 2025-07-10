@@ -10,14 +10,11 @@
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <Style BasedOn="{StaticResource DefaultHyperlinkButtonStyle}" TargetType="HyperlinkButton" />
-    </UserControl.Resources>
 
     <StackPanel
         Padding="12"
         Background="{ThemeResource CardBackground}"
-        CornerRadius="{StaticResource OverlayCornerRadius}">
+        CornerRadius="{ThemeResource OverlayCornerRadius}">
         <!--  用户信息  -->
         <Grid>
             <Grid.ColumnDefinitions>

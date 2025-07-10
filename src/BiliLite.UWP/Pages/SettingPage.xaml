@@ -20,17 +20,17 @@
     </Page.Resources>
     <Grid>
         <Pivot x:Name="pivot">
-            <PivotItem Margin="0">
+            <PivotItem Margin="0" x:Name="UISettings">
                 <PivotItem.Header>
                     <TextBlock FontSize="15">个性化</TextBlock>
                 </PivotItem.Header>
-                <ScrollViewer Padding="12,0" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Padding="12,0" VerticalScrollBarVisibility="Auto" x:Name="UISettingScrollViewer">
                     <StackPanel>
                         <settings:UISettingsControl />
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
-            <PivotItem Margin="0">
+            <PivotItem Margin="0" x:Name="PlaySettings">
                 <PivotItem.Header>
                     <TextBlock FontSize="15">播放</TextBlock>
                 </PivotItem.Header>
@@ -40,7 +40,7 @@
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
-            <PivotItem Margin="0">
+            <PivotItem Margin="0" x:Name="PerformanceSettings">
                 <PivotItem.Header>
                     <TextBlock FontSize="15">性能</TextBlock>
                 </PivotItem.Header>
@@ -50,7 +50,7 @@
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
-            <PivotItem Margin="0">
+            <PivotItem Margin="0" x:Name="ProxySettings">
                 <PivotItem.Header>
                     <TextBlock FontSize="15">代理</TextBlock>
                 </PivotItem.Header>
@@ -60,7 +60,7 @@
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
-            <PivotItem Margin="0">
+            <PivotItem Margin="0" x:Name="VideoDanmakuSettings">
                 <PivotItem.Header>
                     <TextBlock FontSize="15">视频弹幕</TextBlock>
                 </PivotItem.Header>
@@ -70,7 +70,7 @@
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
-            <PivotItem Margin="0">
+            <PivotItem Margin="0" x:Name="LiveSettings">
                 <PivotItem.Header>
                     <TextBlock FontSize="15">直播弹幕</TextBlock>
                 </PivotItem.Header>
@@ -80,7 +80,7 @@
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
-            <PivotItem Margin="0">
+            <PivotItem Margin="0" x:Name="DownloadSettings">
                 <PivotItem.Header>
                     <TextBlock FontSize="15">下载</TextBlock>
                 </PivotItem.Header>
@@ -90,7 +90,7 @@
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
-            <PivotItem Margin="0">
+            <PivotItem Margin="0" x:Name="FilterSettings">
                 <PivotItem.Header>
                     <TextBlock FontSize="15">过滤</TextBlock>
                 </PivotItem.Header>
@@ -101,7 +101,7 @@
                     <settings:FilterSettingsControl />
                 </ScrollViewer>
             </PivotItem>
-            <PivotItem Margin="0">
+            <PivotItem Margin="0" x:Name="ShortcutKeySettings">
                 <PivotItem.Header>
                     <TextBlock FontSize="15">快捷键</TextBlock>
                 </PivotItem.Header>
@@ -112,7 +112,7 @@
                     <settings:ShortcutKeySettingsControl />
                 </ScrollViewer>
             </PivotItem>
-            <PivotItem Margin="0">
+            <PivotItem Margin="0" x:Name="DevSettings">
                 <PivotItem.Header>
                     <TextBlock FontSize="15">开发者选项</TextBlock>
                 </PivotItem.Header>
@@ -146,16 +146,32 @@
                 </ScrollViewer>
             </PivotItem>
             <Pivot.RightHeader>
-                <Button
-                    x:Name="RestartButton"
-                    Margin="8"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Top"
-                    Click="RestartButton_Click"
-                    Style="{StaticResource AccentButtonStyle}"
-                    ToolTipService.ToolTip="Ctrl + R">
-                    重启应用
-                </Button>
+                <StackPanel Orientation="Horizontal">
+                    <Button
+                        x:Name="RestartButton"
+                        Margin="8"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Click="RestartButton_Click"
+                        Style="{StaticResource AccentButtonStyle}"
+                        ToolTipService.ToolTip="Ctrl + R">
+                        重启应用
+                    </Button>
+
+                    <AutoSuggestBox 
+                        x:Name="SearchBox"
+                        Grid.Row="0"
+                        GotFocus="SearchBox_OnGotFocus"
+                        LostFocus="SearchBox_OnLostFocus"
+                        QuerySubmitted="SearchBox_OnQuerySubmitted"
+                        Width="150"
+                        ItemsSource="{x:Bind m_viewModel.SuggestSearchContents}"
+                        TextChanged="SearchBox_OnTextChanged"
+                        Margin="0 8 8 8"
+                        PlaceholderText="搜索设置项..."
+                        QueryIcon="Find">
+                    </AutoSuggestBox>
+                </StackPanel>
             </Pivot.RightHeader>
         </Pivot>
     </Grid>

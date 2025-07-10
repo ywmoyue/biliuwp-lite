@@ -10,7 +10,7 @@
     Title="{x:Bind Path=loginVM.Title, Mode=OneWay}"
     Background="{ThemeResource SystemControlAcrylicElementBrush}"
     CloseButtonStyle="{StaticResource DefaultButtonStyle}"
-    CornerRadius="{StaticResource OverlayCornerRadius}"
+    CornerRadius="{ThemeResource OverlayCornerRadius}"
     IsPrimaryButtonEnabled="{x:Bind Path=loginVM.PrimaryButtonEnable, Mode=OneWay}"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
