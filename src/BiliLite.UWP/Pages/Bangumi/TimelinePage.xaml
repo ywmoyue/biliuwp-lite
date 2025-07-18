@@ -126,6 +126,8 @@
             </Pivot.ItemTemplate>
         </Pivot>
         <muxc:ProgressRing
+            Width="50"
+            Height="50"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             IsActive="True"

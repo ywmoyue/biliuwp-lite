@@ -1,5 +1,6 @@
 ﻿using JiebaNet.Segmenter.Common;
 using System;
+using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
@@ -10,7 +11,8 @@ namespace BiliLite.Converters
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             var noCorner = new CornerRadius(0);
-            if (parameter.ToString().IsEmpty() || value == null || parameter == null)
+            bool isWin10 = !ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 14);
+            if (isWin10 || parameter.ToString().IsEmpty() || value == null || parameter == null)
                 return noCorner;
 
             var roundCorner = value.ToString();

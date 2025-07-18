@@ -50,7 +50,7 @@
                 SelectedValuePath="Value" />
         </controls:SettingsCard>
 
-        <controls:SettingsExpander Description="如果遇到加载卡顿、磁盘占用高等问题，请尝试修改优先播放器类型" Header="优先播放器类型">
+        <controls:SettingsExpander x:Name="SEPlayerType" Description="如果遇到加载卡顿、磁盘占用高等问题，请尝试修改优先播放器类型" Header="优先播放器类型">
             <controls:SettingsExpander.HeaderIcon>
                 <font:FontAwesome Icon="Solid_PhotoVideo" />
             </controls:SettingsExpander.HeaderIcon>
@@ -102,10 +102,16 @@
                     <Button x:Name="BtnSelectWebPlayerFile" IsEnabled="False">开发中，敬请期待</Button>
                 </controls:SettingsCard>
                 <controls:SettingsCard Description="每次播放时打开控制台" Header="启用调试模式">
-                    <ToggleSwitch x:Name="SwitchEnableWebPlayerDebugMode" />
+                    <ToggleSwitch
+                        x:Name="SwitchEnableWebPlayerDebugMode"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
                 <controls:SettingsCard Description="取消挂载播放器 html 文件，并以 http://www.bilibili.com 作为播放器进行使用。播放器前端开发时使用，普通用户请勿开启。" Header="启用开发模式">
-                    <ToggleSwitch x:Name="SwitchEnableWebPlayerDevMode" />
+                    <ToggleSwitch
+                        x:Name="SwitchEnableWebPlayerDevMode"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
                 <controls:SettingsCard Description="当音视频进度偏差大于此阈值时调整音频播放速度，随后恢复" Header="WebPlayer 音视频进度同步阈值1">
                     <controls1:NumberBox x:Name="NumberBoxWebPlayerAVPositionSyncThreshold1" MinWidth="200" />
@@ -150,12 +156,15 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsExpander Header="自动化">
+        <controls:SettingsExpander Header="自动化" x:Name="SEPlayerAuto">
             <controls:SettingsExpander.HeaderIcon>
                 <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE811;" />
             </controls:SettingsExpander.HeaderIcon>
             <controls:SettingsExpander.Items>
-                <controls:SettingsCard Description="自动化跳过视频中的不受欢迎片段" Header="空降助手" x:Name="SpBlockCard">
+                <controls:SettingsCard
+                    x:Name="SpBlockCard"
+                    Description="自动化跳过视频中的不受欢迎片段"
+                    Header="空降助手">
                     <controls:SettingsCard.HeaderIcon>
                         <font:FontAwesome Icon="Solid_ShieldAlt" />
                     </controls:SettingsCard.HeaderIcon>
@@ -166,7 +175,10 @@
                             HorizontalAlignment="Left"
                             PlaceholderText="https://example.com/api"
                             QueryIcon="Accept" />
-                        <ToggleSwitch x:Name="swSponsorBlock" />
+                        <ToggleSwitch
+                            x:Name="swSponsorBlock"
+                            Margin="0,-5,-88,-5"
+                            Style="{StaticResource DefaultToggleSwitchStyle}" />
                     </StackPanel>
                 </controls:SettingsCard>
 
@@ -174,42 +186,60 @@
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xF8AD;" />
                     </controls:SettingsCard.HeaderIcon>
-                    <ToggleSwitch x:Name="swAutoNext" />
+                    <ToggleSwitch
+                        x:Name="swAutoNext"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
                 <controls:SettingsCard
                     Description="默认自动播放"
                     Header="自动播放加载完成的视频"
                     HeaderIcon="Play">
-                    <ToggleSwitch x:Name="swAutoPlay" />
+                    <ToggleSwitch
+                        x:Name="swAutoPlay"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
                 <controls:SettingsCard Description="默认自动跳过片头/片尾" Header="自动跳过番剧 OP/ED">
                     <controls:SettingsCard.HeaderIcon>
                         <font:FontAwesome Icon="Solid_Music" />
                     </controls:SettingsCard.HeaderIcon>
-                    <ToggleSwitch x:Name="SwSkipOpEd" />
+                    <ToggleSwitch
+                        x:Name="SwSkipOpEd"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
                 <controls:SettingsCard Description="默认自动全屏" Header="自动全屏播放">
                     <controls:SettingsCard.HeaderIcon>
                         <SymbolIcon Symbol="FullScreen" />
                     </controls:SettingsCard.HeaderIcon>
-                    <ToggleSwitch x:Name="swPlayerSettingAutoFullScreen" />
+                    <ToggleSwitch
+                        x:Name="swPlayerSettingAutoFullScreen"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
                 <controls:SettingsCard Description="默认自动铺满可用窗口" Header="自动隐藏视频信息">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE89F;" />
                     </controls:SettingsCard.HeaderIcon>
-                    <ToggleSwitch x:Name="swPlayerSettingAutoFullWindows" />
+                    <ToggleSwitch
+                        x:Name="swPlayerSettingAutoFullWindows"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
                 <controls:SettingsCard Description="不指定音质或找不到指定音质时，默认使用最大音质" Header="默认最大音质">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xEC4F;" />
                     </controls:SettingsCard.HeaderIcon>
-                    <ToggleSwitch x:Name="SwitchEnableDefaultMaxSoundQuality" />
+                    <ToggleSwitch
+                        x:Name="SwitchEnableDefaultMaxSoundQuality"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
@@ -217,6 +247,7 @@
         <controls:SettingsExpander
             Description="默认视频音量"
             Header="音量"
+            x:Name="SEVolume"
             HeaderIcon="Volume">
             <StackPanel Orientation="Vertical">
                 <TextBlock HorizontalAlignment="Center" Text="{Binding Value, ElementName=SliderVolume}" />
@@ -225,12 +256,15 @@
 
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard Description="仅允许在这里修改默认音量" Header="锁定默认音量">
-                    <ToggleSwitch x:Name="SwLockPlayerVolume" />
+                    <ToggleSwitch
+                        x:Name="SwLockPlayerVolume"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsExpander Description="默认视频亮度" Header="亮度">
+        <controls:SettingsExpander Description="默认视频亮度" Header="亮度" x:Name="SEBrightness">
             <controls:SettingsExpander.HeaderIcon>
                 <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE793;" />
             </controls:SettingsExpander.HeaderIcon>
@@ -240,30 +274,42 @@
             </StackPanel>
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard Description="仅允许在这里修改默认亮度" Header="锁定默认亮度">
-                    <ToggleSwitch x:Name="SwLockPlayerBrightness" />
+                    <ToggleSwitch
+                        x:Name="SwLockPlayerBrightness"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsExpander Header="历史记录">
+        <controls:SettingsExpander Header="历史记录" x:Name="SEPlayHistory">
             <controls:SettingsExpander.HeaderIcon>
                 <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE81C;" />
             </controls:SettingsExpander.HeaderIcon>
             <controls:SettingsExpander.Items>
 
                 <controls:SettingsCard Header="从已有的记录位置继续观看">
-                    <ToggleSwitch x:Name="swPlayerSettingAutoToPosition" />
+                    <ToggleSwitch
+                        x:Name="swPlayerSettingAutoToPosition"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
                 <controls:SettingsCard Header="上报历史记录">
-                    <ToggleSwitch x:Name="SwitchPlayerReportHistory" />
+                    <ToggleSwitch
+                        x:Name="SwitchPlayerReportHistory"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
                 <controls:SettingsCard
                     Description="服务端不会储存已播放完毕的记录，相当于没有播放记录"
                     Header="视频结束后不上报历史记录"
                     IsEnabled="{Binding IsOn, ElementName=SwitchPlayerReportHistory}">
-                    <ToggleSwitch x:Name="SwitchReportHistoryZeroWhenVideoEnd" />
+                    <ToggleSwitch
+                        x:Name="SwitchReportHistoryZeroWhenVideoEnd"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
                 <controls:SettingsCard
@@ -278,10 +324,13 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsExpander Header="播放源" HeaderIcon="Sync">
+        <controls:SettingsExpander Header="播放源" HeaderIcon="Sync" x:Name="SEPlaySource">
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard Description="持续播放长视频时自动刷新播放地址并提示，下次打开视频生效" Header="自动刷新">
-                    <ToggleSwitch x:Name="SwitchAutoRefreshPlayUrl" />
+                    <ToggleSwitch
+                        x:Name="SwitchAutoRefreshPlayUrl"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
                 <controls:SettingsCard
@@ -298,22 +347,28 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsExpander Header="进度条">
+        <controls:SettingsExpander Header="进度条" x:Name="SEProgress">
             <controls:SettingsExpander.HeaderIcon>
                 <font:FontAwesome Icon="Solid_Spinner" />
             </controls:SettingsExpander.HeaderIcon>
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard Header="总是显示进度条">
-                    <ToggleSwitch x:Name="SwAlwaysShowVideoProgress" />
+                    <ToggleSwitch
+                        x:Name="SwAlwaysShowVideoProgress"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
                 <controls:SettingsCard Header="自动最小化到播放窗口底部">
-                    <ToggleSwitch x:Name="SwShowVideoBottomProgress" />
+                    <ToggleSwitch
+                        x:Name="SwShowVideoBottomProgress"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsExpander Header="字幕" HeaderIcon="ClosedCaption">
+        <controls:SettingsExpander Header="字幕" HeaderIcon="ClosedCaption" x:Name="SESub">
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard Header="自动打开 AI 字幕">
                     <controls:SettingsCard.HeaderIcon>
@@ -325,14 +380,20 @@
                             <TextBlock Margin="0,0,0,0">建议关闭，有需要时再手动打开字幕</TextBlock>
                         </StackPanel>
                     </controls:SettingsCard.Description>
-                    <ToggleSwitch x:Name="swPlayerSettingAutoOpenAISubtitle" />
+                    <ToggleSwitch
+                        x:Name="swPlayerSettingAutoOpenAISubtitle"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
                 <controls:SettingsCard Description="繁体字幕转简体" Header="繁体字幕转简体">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE8D2;" />
                     </controls:SettingsCard.HeaderIcon>
-                    <ToggleSwitch x:Name="RoamingSettingToSimplified" />
+                    <ToggleSwitch
+                        x:Name="RoamingSettingToSimplified"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
@@ -352,7 +413,10 @@
             </ComboBox>
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard Description="可被其他手势取消，如按住时上划取消行为" Header="最低优先级">
-                    <ToggleSwitch x:Name="swPlayerHoldingGestureCanCancel" />
+                    <ToggleSwitch
+                        x:Name="swPlayerHoldingGestureCanCancel"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
@@ -361,7 +425,10 @@
             <controls:SettingsCard.HeaderIcon>
                 <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xF8AF;" />
             </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="swPlayerSettingDoubleClickFullScreen" />
+            <ToggleSwitch
+                x:Name="swPlayerSettingDoubleClickFullScreen"
+                Margin="0,-5,-88,-5"
+                Style="{StaticResource DefaultToggleSwitchStyle}" />
         </controls:SettingsCard>
     </StackPanel>
 </UserControl>

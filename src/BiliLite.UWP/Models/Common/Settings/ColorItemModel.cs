@@ -1,7 +1,7 @@
 ﻿using BiliLite.ViewModels.Common;
 using Windows.UI;
 
-namespace BiliLite.Models.Theme
+namespace BiliLite.Models.Common.Settings
 {
     public class ColorItemModel(bool isActived, string name, string hexCode, Color color) : BaseViewModel
     {

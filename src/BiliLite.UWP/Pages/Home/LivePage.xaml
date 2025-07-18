@@ -51,19 +51,20 @@
                         HorizontalAlignment="Center"
                         IsItemClickEnabled="True"
                         ItemClick="GridView_ItemClick"
+                        ItemContainerStyle="{StaticResource DefaultGridViewItemStyle}"
                         ItemsSource="{x:Bind Path=m_viewModel.Areas, Mode=OneWay}"
                         ScrollViewer.VerticalScrollBarVisibility="Hidden"
                         ScrollViewer.VerticalScrollMode="Disabled"
                         SelectionMode="None">
                         <GridView.ItemTemplate>
                             <DataTemplate x:DataType="home:LiveHomeAreaModel">
-                                <StackPanel MinWidth="85" Padding="10">
+                                <StackPanel MinWidth="80" Padding="10">
                                     <toolkit:ImageEx
                                         Width="48"
                                         Height="48"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
-                                        CornerRadius="{StaticResource OverlayCornerRadius}"
+                                        CornerRadius="{ThemeResource OverlayCornerRadius}"
                                         PlaceholderSource="/assets/Thumbnails/Placeholde1x1.png"
                                         PlaceholderStretch="UniformToFill"
                                         Source="{x:Bind Path=Pic, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='96w'}" />
@@ -385,6 +386,8 @@
             Background="Transparent"
             Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}">
             <muxc:ProgressRing
+                Width="50"
+                Height="50"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 IsActive="True" />

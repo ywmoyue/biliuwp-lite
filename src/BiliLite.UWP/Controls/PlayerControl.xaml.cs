@@ -1943,6 +1943,14 @@ namespace BiliLite.Controls
             {
                 result = await Player.PlayVideoUseSYEngine(quality.FlvInfo, quality.UserAgent, quality.Referer, positon: _postion, epId: CurrentPlayItem.ep_id);
             }
+
+            var checkResult = await Player.CheckPlayUrl();
+
+            if (!checkResult)
+            {
+                NotificationShowExtensions.ShowMessageDialog("播放地址检测", "检测到播放地址无效，建议在代理设置中设置CDN地址替换。");
+            }
+
             return result;
         }
 
@@ -3212,9 +3220,16 @@ namespace BiliLite.Controls
             m_playerToastService.Show(PlayerToastService.VOLUME_KEY, txtToolTipText);
         }
 
-        public void CancelFullscreen()
+        public void CancelFullscreenOrFullWindow()
         {
-            IsFullScreen = false;
+            if (IsFullScreen)
+            {
+                IsFullScreen = false;
+            }
+            else
+            {
+                IsFullWindow = false;
+            }
         }
 
         public void PlayerSettingABPlaySetPointA_Click(object sender, RoutedEventArgs e)

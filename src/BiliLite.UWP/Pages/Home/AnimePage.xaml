@@ -118,6 +118,7 @@
                             HorizontalAlignment="Center"
                             IsItemClickEnabled="True"
                             ItemClick="GridView_ItemClick"
+                            ItemContainerStyle="{StaticResource DefaultGridViewItemStyle}"
                             ItemsSource="{x:Bind Path=m_viewModel.Entrances, Mode=OneWay}"
                             SelectionMode="None">
                             <GridView.ItemTemplate>
@@ -467,6 +468,8 @@
             Background="Transparent"
             Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}">
             <muxc:ProgressRing
+                Width="50"
+                Height="50"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 IsActive="True" />

@@ -54,7 +54,7 @@
                                         <ColumnDefinition Width="200" />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <Grid CornerRadius="{StaticResource OverlayCornerRadius}">
+                                    <Grid CornerRadius="{ThemeResource OverlayCornerRadius}">
                                         <toolkit:ImageEx
                                             HorizontalAlignment="Stretch"
                                             VerticalAlignment="Stretch"
@@ -90,7 +90,7 @@
                                                 Padding="8,4"
                                                 HorizontalAlignment="Left"
                                                 Background="Orange"
-                                                CornerRadius="{StaticResource ControlCornerRadius}"
+                                                CornerRadius="{ThemeResource ControlCornerRadius}"
                                                 Visibility="{Binding ShowBadge}">
                                                 <TextBlock
                                                     FontSize="12"
@@ -119,6 +119,8 @@
             </Pivot.ItemTemplate>
         </Pivot>
         <muxc:ProgressRing
+            Width="50"
+            Height="50"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             IsActive="True"

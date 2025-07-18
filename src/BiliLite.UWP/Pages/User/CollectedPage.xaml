@@ -26,7 +26,7 @@
                     </MenuFlyout>
                 </Grid.ContextFlyout>
                 <toolkit:ImageEx
-                    CornerRadius="{StaticResource OverlayCornerRadius}"
+                    CornerRadius="{ThemeResource OverlayCornerRadius}"
                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png"
                     Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
                     Stretch="UniformToFill" />
@@ -90,6 +90,8 @@
 
         </controls:MyAdaptiveGridView>
         <muxc:ProgressRing
+            Width="50"
+            Height="50"
             HorizontalAlignment="Center"
             IsActive="True"
             Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}" />

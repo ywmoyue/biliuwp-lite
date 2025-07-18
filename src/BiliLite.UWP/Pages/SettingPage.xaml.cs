@@ -6,13 +6,20 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Storage;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common.Settings;
 using BiliLite.ViewModels.Settings;
+using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.Controls;
 using Microsoft.Extensions.DependencyInjection;
+using BiliLite.Services;
+using System.Diagnostics;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -24,10 +31,13 @@ namespace BiliLite.Pages
     public sealed partial class SettingPage : BasePage, IUpdatePivotLayout
     {
         private readonly SettingPageViewModel m_viewModel;
+        private ThemeService m_themeService;
+        private bool m_isSearching = false;
 
         public SettingPage()
         {
             m_viewModel = App.ServiceProvider.GetRequiredService<SettingPageViewModel>();
+            m_themeService = App.ServiceProvider.GetRequiredService<ThemeService>();
             this.InitializeComponent();
             Title = "设置";
         }
@@ -97,55 +107,112 @@ namespace BiliLite.Pages
 
         private async void SearchBox_OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            // 等待Text实际变更
-            await Task.Delay(50);
-            if (!SettingsSearchMap.Map.TryGetValue(sender.Text, out var settingFullName))
+            if (m_isSearching)
             {
+                NotificationShowExtensions.ShowMessageToast("上一个搜索执行中");
                 return;
             }
 
-            var settings = settingFullName.Split(":")[0];
-            var settingName = settingFullName.Split(":")[1];
+            m_isSearching = true;
 
-            var pivotItem = this.FindChildByElementName(settings) as PivotItem;
-
-            if (pivotItem != null)
+            try
             {
-                pivot.SelectedItem = pivotItem;
+                await Task.Delay(50); // 等待Text实际变更
+
+                if (!SettingsSearchMap.Map.TryGetValue(sender.Text, out var settingFullName))
+                    return;
+
+                var settingParts = settingFullName.Split(':');
+                if (settingParts.Length < 2) return;
+
+                var settings = settingParts[0];
+                var settingName = settingParts[1];
+                var settingExpandName = settingParts.Length > 2 ? settingParts[2] : null;
+
+                // 导航到对应的PivotItem
+                if (this.FindChildByElementName(settings) is PivotItem pivotItem)
+                    pivot.SelectedItem = pivotItem;
+
+                await Task.Delay(200); // 等待渲染
+
+                // 处理扩展面板
+                if (settingExpandName != null &&
+                    this.FindChildByElementName(settingExpandName) is SettingsExpander expandElement &&
+                    !expandElement.IsExpanded)
+                {
+                    expandElement.IsExpanded = true;
+                    await Task.Delay(200); // 等待渲染
+                }
+
+                // 滚动到目标元素
+                var element = this.FindChildByElementName(settingName);
+                if (element == null) return;
+
+                var scrollViewer = element.FindAscendant<ScrollViewer>();
+                if (scrollViewer == null) return;
+
+                scrollViewer.ChangeView(null, GetVerticalOffsetBetweenElements(element, SearchBox), null);
+
+                // 高亮目标元素
+                Control card = element switch
+                {
+                    SettingsCard sc => sc,
+                    SettingsExpander se => se,
+                    _ => element.FindAscendant<SettingsCard>()
+                };
+
+                if (card != null)
+                    await HighlightElementAsync(card);
             }
-
-            var element = this.FindChildByElementName(settingName);
-            if (element == null) return;
-
-            // TODO： 滚动到设置项位置
-            //var scrollViewer = element.FindAscendant<ScrollViewer>();
-            //var pivot = scrollViewer.FindAscendant<Pivot>();
-
-            //var offset = GetVerticalOffsetFromParent(element, pivot);
-            //scrollViewer.ChangeView(null, offset, null);
+            catch (Exception ex)
+            {
+                NotificationShowExtensions.ShowMessageToast("搜索失败");
+            }
+            finally
+            {
+                m_isSearching = false;
+            }
         }
 
-        public static double GetVerticalOffsetFromParent(FrameworkElement element, FrameworkElement parent)
+        private async Task HighlightElementAsync(Control element)
         {
-            double offset = 0;
-            FrameworkElement current = element;
+            if (element == null) return;
 
-            while (current != null && current != parent)
+            // TODO: 针对SettingsExpander的样式修改无法生效
+            var accentColor = (Color)m_themeService.AccentThemeResource["SystemAccentColor"];
+            var accentBrush = new SolidColorBrush(accentColor);
+
+            var backupBackground = element.Background;
+
+            for (int i = 0; i < 2; i++)
             {
-                // 获取当前元素相对于其父元素的垂直位置
-                var transform = current.TransformToVisual(current.Parent as UIElement);
-                var point = transform.TransformPoint(new Point(0, 0));
-                offset += point.Y;
-
-                // 移动到父元素
-                current = current.Parent as FrameworkElement;
-
-                // 如果没有父元素或到达ScrollViewer则退出循环
-                if (current == null || current == parent)
-                    break;
+                element.Background = accentBrush;
+                await Task.Delay(500);
+                element.Background = backupBackground;
+                if (i < 1) await Task.Delay(500);
             }
+        }
 
-            return offset;
+        private double GetVerticalOffsetBetweenElements(FrameworkElement element1, FrameworkElement element2)
+        {
+            try
+            {
+                // 获取第一个元素相对于窗口的变换
+                var transform1 = element1.TransformToVisual(Window.Current.Content);
+                var position1 = transform1.TransformPoint(new Point(0, 0));
+
+                // 获取第二个元素相对于窗口的变换
+                var transform2 = element2.TransformToVisual(Window.Current.Content);
+                var position2 = transform2.TransformPoint(new Point(0, 0));
+
+                // 计算垂直偏移量
+                return position1.Y - position2.Y;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"获取偏移量出错: {ex.Message}");
+                return 0;
+            }
         }
     }
 }

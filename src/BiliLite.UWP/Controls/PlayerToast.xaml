@@ -31,7 +31,7 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Background="#CCFFFFFF"
-            CornerRadius="{StaticResource OverlayCornerRadius}">
+            CornerRadius="{ThemeResource OverlayCornerRadius}">
             <Border.RenderTransform>
                 <CompositeTransform TranslateY="0" />
             </Border.RenderTransform>

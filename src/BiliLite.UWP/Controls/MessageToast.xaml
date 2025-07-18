@@ -20,7 +20,7 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"
             Background="{ThemeResource SystemControlAccentAcrylicElementAccentMediumHighBrush}"
-            CornerRadius="{StaticResource OverlayCornerRadius}">
+            CornerRadius="{ThemeResource OverlayCornerRadius}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />

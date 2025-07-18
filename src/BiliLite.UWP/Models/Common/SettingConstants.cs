@@ -1382,6 +1382,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(object), useSqlDb: true)]
             public const string SHORTCUT_KEY_FUNCTIONS = "ShortcutKeyFunctions";
+
+            /// <summary>
+            /// 快捷键控制进度移动长度
+            /// </summary>
+            [SettingKey(typeof(double))]
+            public const string POSITION_MOVE_LENGTH = "PositionMoveLength";
+
+            /// <summary>
+            /// 快捷键控制进度移动长度默认3秒
+            /// </summary>
+            [SettingDefaultValue]
+            public const double DEFAULT_POSITION_MOVE_LENGTH = 3;
         }
 
         /// <summary>

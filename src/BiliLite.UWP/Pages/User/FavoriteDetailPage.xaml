@@ -40,7 +40,7 @@
                     </MenuFlyout>
                 </Grid.ContextFlyout>-->
                 <toolkit:ImageEx
-                    CornerRadius="{StaticResource OverlayCornerRadius}"
+                    CornerRadius="{ThemeResource OverlayCornerRadius}"
                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                     Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
                     Stretch="UniformToFill" />

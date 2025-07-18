@@ -140,7 +140,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="ChatMessageNotification" x:DataType="msg:ChatMessage">
-        <Grid Background="{ThemeResource DefaultCardColor}" Padding="16" CornerRadius="{StaticResource OverlayCornerRadius}" BorderThickness="1" BorderBrush="LightGray"
+        <Grid Background="{ThemeResource DefaultCardColor}" Padding="16" CornerRadius="{ThemeResource OverlayCornerRadius}" BorderThickness="1" BorderBrush="LightGray"
               MaxWidth="480"
               Margin="0 16">
             <Grid.RowDefinitions>
@@ -209,7 +209,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="ChatMessageOther">
-        <Border BorderThickness="1" HorizontalAlignment="Stretch"  BorderBrush="#C8E5E9EF" CornerRadius="{StaticResource ControlCornerRadius}">
+        <Border BorderThickness="1" HorizontalAlignment="Stretch"  BorderBrush="#C8E5E9EF" CornerRadius="{ThemeResource ControlCornerRadius}">
             <StackPanel Margin="12">
                 <TextBlock TextWrapping="Wrap" >暂不支持的消息格式</TextBlock>
             </StackPanel>
