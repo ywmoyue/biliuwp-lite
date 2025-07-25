@@ -35,6 +35,7 @@ namespace BiliLite.Models.Requests.Api.Live
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
+
         /// <summary>
         /// 钱包
         /// </summary>
@@ -71,13 +72,13 @@ namespace BiliLite.Models.Requests.Api.Live
         /// 直播礼物列表
         /// </summary>
         /// <returns></returns>
-        public ApiModel GiftList(int area_v2_id, int area_v2_parent_id, int roomId)
+        public ApiModel GiftList(int areaV2Id, int areaV2ParentId, int roomId)
         {
             var api = new ApiModel()
             {
                 method = HttpMethods.Get,
                 baseUrl = $"https://api.live.bilibili.com/gift/v4/Live/giftConfig",
-                parameter = ApiHelper.MustParameter(AppKey, true) + $"&actionKey=appkey&area_v2_id={area_v2_id}&area_v2_parent_id={area_v2_parent_id}&roomid={roomId}"
+                parameter = ApiHelper.MustParameter(AppKey, true) + $"&actionKey=appkey&area_v2_id={areaV2Id}&area_v2_parent_id={areaV2ParentId}&roomid={roomId}"
             };
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
@@ -103,13 +104,13 @@ namespace BiliLite.Models.Requests.Api.Live
         /// 直播房间可用礼物列表
         /// </summary>
         /// <returns></returns>
-        public ApiModel RoomGifts(int area_v2_id, int area_v2_parent_id, int roomId)
+        public ApiModel RoomGifts(int areaV2Id, int areaV2ParentId, int roomId)
         {
             var api = new ApiModel()
             {
                 method = HttpMethods.Get,
                 baseUrl = $"https://api.live.bilibili.com/gift/v3/live/room_gift_list",
-                parameter = ApiHelper.MustParameter(AppKey, true) + $"&actionKey=appkey&area_v2_id={area_v2_id}&area_v2_parent_id={area_v2_parent_id}&roomid={roomId}"
+                parameter = ApiHelper.MustParameter(AppKey, true) + $"&actionKey=appkey&area_v2_id={areaV2Id}&area_v2_parent_id={areaV2ParentId}&roomid={roomId}"
             };
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
@@ -244,7 +245,6 @@ namespace BiliLite.Models.Requests.Api.Live
             return api;
         }
 
-
         /// <summary>
         /// 舰队列表
         /// </summary>
@@ -283,22 +283,21 @@ namespace BiliLite.Models.Requests.Api.Live
             return api;
         }
 
-
         /// <summary>
         /// 房间榜单
         /// </summary>
         /// <param name="ruid">主播ID</param>
         /// <param name="roomId">房间号</param>
-        /// <param name="rank_type">目前仅发现为online_rank</param>
-        /// <param name="switch_type">目前仅发现为contribution_rank</param>
+        /// <param name="rankType">目前仅发现为online_rank</param>
+        /// <param name="switchType">目前仅发现为contribution_rank</param>
         /// <returns></returns>
-        public ApiModel RoomRankList(long ruid, int roomId, string rank_type, string switch_type)
+        public ApiModel RoomRankList(long ruid, int roomId, string rankType, string switchType)
         {
             var api = new ApiModel()
             {
                 method = HttpMethods.Get,
                 baseUrl = $"https://api.live.bilibili.com/xlive/general-interface/v1/rank/queryContributionRank",
-                parameter = ApiHelper.MustParameter(AppKey, true) + $"&actionKey=appkey&room_id={roomId}&ruid={ruid}&type={rank_type}&switch={switch_type}",
+                parameter = ApiHelper.MustParameter(AppKey, true) + $"&actionKey=appkey&room_id={roomId}&ruid={ruid}&type={rankType}&switch={switchType}",
             };
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
@@ -308,8 +307,9 @@ namespace BiliLite.Models.Requests.Api.Live
         /// 直播间抽奖信息
         /// </summary>
         /// <param name="roomId"></param>
+        /// <param name="buvid3">buvid鉴权 2025-07-24后强制使用</param>
         /// <returns></returns>
-        public ApiModel RoomLotteryInfo(int roomId)
+        public ApiModel RoomLotteryInfo(int roomId, string buvid3)
         {
             var api = new ApiModel()
             {
@@ -319,6 +319,7 @@ namespace BiliLite.Models.Requests.Api.Live
                 need_cookie = true,
             };
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
+            api.ExtraCookies = new Dictionary<string, string>() { { "buvid3", buvid3 } };
             return api;
         }
 
@@ -338,6 +339,7 @@ namespace BiliLite.Models.Requests.Api.Live
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
         }
+
         /// <summary>
         /// 进入房间
         /// </summary>
@@ -411,20 +413,23 @@ namespace BiliLite.Models.Requests.Api.Live
         /// 参与天选抽奖
         /// </summary>
         /// <param name="roomId">房间号</param>
-        /// <param name="lottery_id">抽奖Id</param>
+        /// <param name="lotteryId">抽奖Id</param>
+        /// <param name="buvid3">buvid鉴权</param>
+        /// <param name="giftId">礼物ID</param>
+        /// <param name="giftNum">礼物数量</param>
         /// <returns></returns>
-        public ApiModel JoinAnchorLottery(int roomId, int lottery_id, string buvid3, int gift_id = 0, int gift_num = 0)
+        public ApiModel JoinAnchorLottery(int roomId, int lotteryId, string buvid3, int giftId = 0, int giftNum = 0)
         {
             var csrf = m_cookieService.GetCSRFToken();
             var api = new ApiModel
             {
                 method = HttpMethods.Post,
                 baseUrl = "https://api.live.bilibili.com/xlive/lottery-interface/v1/Anchor/Join",
-                body = $"room_id={roomId}&id={lottery_id}&platform=pc&csrf={csrf}",
+                body = $"room_id={roomId}&id={lotteryId}&platform=pc&csrf={csrf}",
                 need_cookie = true,
                 headers = ApiHelper.GetDefaultHeaders(),
             };
-            if (gift_id != 0 && gift_num != 0) { api.body += $"&gift_id={gift_id}&gift_num={gift_num}"; }
+            if (giftId != 0 && giftNum != 0) { api.body += $"&gift_id={giftId}&gift_num={giftNum}"; }
             api.ExtraCookies = new Dictionary<string, string>() { { "buvid3", buvid3 } };
             return api;
         }
@@ -433,11 +438,11 @@ namespace BiliLite.Models.Requests.Api.Live
         /// 参与人气红包抽奖
         /// </summary>
         /// <param name="uid">用户uid</param>
-        /// <param name="room_id">房间号</param>
+        /// <param name="roomId">房间号</param>
         /// <param name="ruid">主播uid</param>
-        /// <param name="lot_id">抽奖id</param>
+        /// <param name="lotteryId">抽奖id</param>
         /// <returns></returns>
-        public ApiModel JoinRedPocketLottery(long uid, int room_id, long ruid, int lot_id)
+        public ApiModel JoinRedPocketLottery(long uid, int roomId, long ruid, int lotteryId)
         {
             var csrf = m_cookieService.GetCSRFToken();
             var api = new ApiModel()
@@ -445,7 +450,7 @@ namespace BiliLite.Models.Requests.Api.Live
                 method = HttpMethods.Post,
                 baseUrl = "https://api.live.bilibili.com/xlive/lottery-interface/v1/popularityRedPocket/RedPocketDraw",
                 parameter = $"csrf={csrf}",
-                body = $"uid={uid}&room_id={room_id}&ruid={ruid}&lot_id={lot_id}&ts={TimeExtensions.GetTimestampS()}",
+                body = $"uid={uid}&room_id={roomId}&ruid={ruid}&lot_id={lotteryId}&ts={TimeExtensions.GetTimestampS()}",
                 need_cookie = true,
                 headers = ApiHelper.GetDefaultHeaders()
             };
@@ -455,15 +460,15 @@ namespace BiliLite.Models.Requests.Api.Live
         /// <summary>
         /// 获取直播间表情
         /// </summary>
-        /// <param name="room_id">房间号</param>
+        /// <param name="roomId">房间号</param>
         /// <returns></returns>
-        public ApiModel GetLiveRoomEmoticon(int room_id)
+        public ApiModel GetLiveRoomEmoticon(int roomId)
         {
             var api = new ApiModel()
             {
                 method = HttpMethods.Get,
                 baseUrl = $"https://api.live.bilibili.com/xlive/web-ucenter/v2/emoticon/GetEmoticons",
-                parameter = ApiHelper.MustParameter(AppKey, true) + $"&actionKey=appkey&room_id={room_id}",
+                parameter = ApiHelper.MustParameter(AppKey, true) + $"&actionKey=appkey&room_id={roomId}",
             };
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
             return api;
