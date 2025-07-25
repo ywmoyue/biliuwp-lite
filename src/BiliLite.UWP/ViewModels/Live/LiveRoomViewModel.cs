@@ -766,7 +766,7 @@ namespace BiliLite.ViewModels.Live
                 if (ReceiveLotteryMsg)
                 {
                     // 天选抽奖和红包抽奖
-                    LotteryViewModel.LoadLotteryInfo(RoomID).RunWithoutAwait();
+                    LotteryViewModel.LoadLotteryInfo(RoomID, Buvid3).RunWithoutAwait();
                     RedPocketSendDanmuBtnText = Attention ? "一键发送弹幕" : "一键关注并发送弹幕";
                 }
 
