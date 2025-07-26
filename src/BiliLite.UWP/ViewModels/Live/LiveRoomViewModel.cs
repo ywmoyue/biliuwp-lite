@@ -37,7 +37,8 @@ namespace BiliLite.ViewModels.Live
         private System.Threading.CancellationTokenSource m_cancelSource;
         private Modules.Live.LiveMessage m_liveMessage;
         private readonly Timer m_timerBox;
-        private readonly Timer m_timer;
+        private readonly Timer m_timerLiveTime;
+        private readonly Timer m_timerSuperChat;
         private readonly LiveMessageHandleActionsMap m_messageHandleActionsMap;
 
         #endregion
@@ -58,11 +59,12 @@ namespace BiliLite.ViewModels.Live
             Guards = new ObservableCollection<LiveGuardRankItem>();
             BagGifts = new ObservableCollection<LiveGiftItem>();
             SuperChats = new ObservableCollection<SuperChatMsgViewModel>();
-            m_timer = new Timer(1000);
+            m_timerLiveTime = new Timer(1000);
+            m_timerSuperChat = new Timer(1000);
             m_timerBox = new Timer(1000);
             TimerAutoHideGift = new Timer(1000);
-            m_timer.Elapsed += Timer_LiveTime_Elapsed;
-            m_timer.Elapsed += Timer_SuperChats_Elapsed;
+            m_timerLiveTime.Elapsed += TimerLiveTimeElapsed;
+            m_timerSuperChat.Elapsed += TimerSuperChatElapsed;
             m_timerBox.Elapsed += Timer_box_Elapsed;
             TimerAutoHideGift.Elapsed += Timer_auto_hide_gift_Elapsed;
             LotteryViewModel.AddLotteryShieldWord += (_, e) => AddLotteryShieldWord?.Invoke(_, e);
@@ -195,9 +197,12 @@ namespace BiliLite.ViewModels.Live
 
         public LiveAnchorProfile Profile { get; set; }
 
+        /// <summary>
+        /// 远程的直播状态, 不受本地播放情况影响.
+        /// </summary>
         public bool Live { get; set; }
 
-        public string LiveTime { get; set; }
+        public string LiveTime { get; set; } = "未开播";
 
         [DoNotNotify]
         public int CleanCount { get; set; } = 200;
@@ -205,7 +210,7 @@ namespace BiliLite.ViewModels.Live
         [DoNotNotify]
         public int GuardPage { get; set; } = 1;
 
-        public bool LoadingGuard { get; set; } = false;
+        public bool LoadingGuard { get; set; }
 
         public bool LoadMoreGuard { get; set; }
 
@@ -235,7 +240,7 @@ namespace BiliLite.ViewModels.Live
         /// <summary>
         /// 有的特殊直播间没有一些娱乐内容. 例如央视新闻直播间.
         /// </summary>
-        public bool IsSpecialLiveRoom = false;
+        public bool IsSpecialLiveRoom;
 
         #endregion
 
@@ -260,6 +265,10 @@ namespace BiliLite.ViewModels.Live
         public event EventHandler SpecialLiveRoomHideElements;
 
         public event EventHandler RefreshGuardNum;
+
+        public event EventHandler StartLive;
+
+        public event EventHandler StopLive;
 
         #endregion
 
@@ -334,18 +343,10 @@ namespace BiliLite.ViewModels.Live
             //await GetFreeSilverTime();
         }
 
-        private async void Timer_LiveTime_Elapsed(object sender, ElapsedEventArgs e)
+        private async void TimerLiveTimeElapsed(object sender, ElapsedEventArgs e)
         {
             try
             {
-                if (!Live)
-                {
-                    await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-                    {
-                        LiveTime = "未开播";
-                    });
-                    return;
-                }
                 var startTime = TimeExtensions.TimestampToDatetime(LiveInfo.RoomInfo.LiveStartTime);
                 var ts = DateTime.Now - startTime;
 
@@ -360,13 +361,13 @@ namespace BiliLite.ViewModels.Live
             }
         }
 
-        private async void Timer_SuperChats_Elapsed(object sender, ElapsedEventArgs e)
+        private async void TimerSuperChatElapsed(object sender, ElapsedEventArgs e)
         {
             try
             {
                 await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                 {
-                    for (int i = 0; i < SuperChats.Count; i++)
+                    for (var i = 0; i < SuperChats.Count; i++)
                     {
                         if (SuperChats.ElementAt(i).Time <= 0) SuperChats.RemoveAt(i);
                         else SuperChats.ElementAt(i).Time -= 1;
@@ -702,8 +703,6 @@ namespace BiliLite.ViewModels.Live
                 m_liveMessage = new LiveMessage();
                 m_liveMessage.NewMessage += LiveMessage_NewMessage;
                 m_cancelSource = new System.Threading.CancellationTokenSource();
-                m_timer.Start();
-
                 Loading = true;
 
                 var result = await m_liveRoomApi.LiveRoomInfo(id).Request();
@@ -721,22 +720,20 @@ namespace BiliLite.ViewModels.Live
                 LiveInfo = data.data;
                 RoomID = LiveInfo.RoomInfo.RoomId;
                 RoomTitle = LiveInfo.RoomInfo.Title;
-                Live = LiveInfo.RoomInfo.LiveStatus == 1;
                 AnchorUid = LiveInfo.RoomInfo.Uid;
+                Live = LiveInfo.RoomInfo.LiveStatus == 1;
 
                 var buvidResults = await m_liveRoomApi.GetBuvid().Request();
                 var buvidData = await buvidResults.GetJson<ApiDataModel<LiveBuvidModel>>();
                 Buvid3 = buvidData.data.B3;
 
-                if (Live)
-                {
-                    await GetPlayUrls(RoomID, SettingService.GetValue(SettingConstants.Live.DEFAULT_QUALITY, 10000));
-                }
-
                 ReceiveMessage(LiveInfo.RoomInfo.RoomId).RunWithoutAwait(); // 连接弹幕优先级提高
+
+                if(Live) await LiveStart();
 
                 await GetEmoticons();
 
+                m_timerSuperChat.Start();
                 await LoadSuperChat();
 
                 if (LiveInfo.GuardInfo == null)
@@ -1431,6 +1428,25 @@ namespace BiliLite.ViewModels.Live
             if (Messages.Count >= CleanCount) Messages.RemoveAt(0);
         }
 
+        public async Task LiveStart()
+        {
+            Live = true;
+            m_timerLiveTime.Start();
+            await GetPlayUrls(RoomID, SettingService.GetValue(SettingConstants.Live.DEFAULT_QUALITY, 10000));
+            StartLive?.Invoke(this, null);
+        }
+
+        public async Task LiveStop()
+        {
+            Live = false;
+            m_timerLiveTime.Stop();
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                LiveTime = "未开播";
+            });
+            StopLive?.Invoke(this, null);
+        }
+
         public void Dispose()
         {
             foreach (var item in LotteryDanmu)
@@ -1441,7 +1457,8 @@ namespace BiliLite.ViewModels.Live
             m_cancelSource?.Cancel();
             m_liveMessage?.Dispose();
 
-            m_timer?.Stop();
+            m_timerSuperChat?.Stop();
+            m_timerLiveTime?.Stop();
             m_timerBox?.Stop();
             TimerAutoHideGift?.Stop();
             if (LotteryViewModel != null)
@@ -1463,14 +1480,6 @@ namespace BiliLite.ViewModels.Live
         {
             Set(nameof(SelectRank));
         }
-
-        //public void SetDelay(int ms)
-        //{
-        //    if (liveDanmaku != null)
-        //    {
-        //        liveDanmaku.delay = ms;
-        //    }
-        //}
 
         #endregion
     }
