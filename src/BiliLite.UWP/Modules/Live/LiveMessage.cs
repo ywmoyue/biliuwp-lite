@@ -132,12 +132,12 @@ namespace BiliLite.Modules.Live
             //1为房间人气值,Body为Int32；
             //2为zlib压缩过Buffer，需要解压再处理
             //3为brotli压缩过Buffer，需要解压再处理
-            int protocolVersion = BitConverter.ToInt32(new byte[4] { data[7], data[6], 0, 0 }, 0);
+            var protocolVersion = BitConverter.ToInt32([data[7], data[6], 0, 0], 0);
             //操作类型。
             //3=心跳回应，内容为房间人气值；
             //5=通知，弹幕、广播等全部信息；
             //8=进房回应，空
-            int operation = BitConverter.ToInt32(data.Skip(8).Take(4).Reverse().ToArray(), 0);
+            var operation = BitConverter.ToInt32(data.Skip(8).Take(4).Reverse().ToArray(), 0);
             //内容
             var body = data.Skip(16).ToArray();
             if (operation == 8)
@@ -170,7 +170,7 @@ namespace BiliLite.Modules.Live
                     var delay = ParseMessage(item) switch
                     {
                         MessageDelayType.DanmuMessage => danmuDelay, // 常规弹幕类型, 加延迟
-                        MessageDelayType.GiftMessage => 100 / textLines.Length, // 礼物消息类型, 加一点延迟
+                        MessageDelayType.GiftMessage => 100.0 / textLines.Length, // 礼物消息类型, 加一点延迟
                         MessageDelayType.SystemMessage => 0.0, // 其他系统消息类型, 无需加延迟
                         _ => 0.0
                     };
@@ -186,8 +186,8 @@ namespace BiliLite.Modules.Live
                 }
 
                 if (danmuCount > 0) Stopwatch.Restart();
-                }
             }
+        }
 
         private MessageDelayType ParseMessage(string jsonMessage)
         {
@@ -293,7 +293,7 @@ namespace BiliLite.Modules.Live
                         return MessageDelayType.DanmuMessage;
                     }
                 }
-                else if (cmd == "SEND_GIFT" || cmd == "POPULARITY_RED_POCKET_NEW")
+                else if (cmd is "SEND_GIFT" or "POPULARITY_RED_POCKET_NEW")
                 {
                     var msg = new GiftMsgModel();
                     if (obj["data"] != null)
@@ -474,7 +474,7 @@ namespace BiliLite.Modules.Live
                     }
                     return MessageDelayType.SystemMessage;
                 }
-                else if (cmd == "WARNING" || cmd == "CUT_OFF")
+                else if (cmd is "WARNING" or "CUT_OFF")
                 {
                     if (obj["msg"] != null)
                     {
@@ -486,9 +486,9 @@ namespace BiliLite.Modules.Live
                     }
                     return MessageDelayType.SystemMessage;
                 }
-                else if (cmd == "LIVE" || cmd == "REENTER_LIVE_ROOM")
+                else if (cmd == "LIVE")
                 {
-                    if (obj["roomid"] != null)
+                    if (obj["roomid"] != null && obj["live_time"] != null) // 有live_time的为开始直播; 重新推流时也会触发, 但没有live_time
                     {
                         NewMessage?.Invoke(MessageType.StartLive, obj["roomid"].ToString());
                     }
@@ -496,7 +496,7 @@ namespace BiliLite.Modules.Live
                 }
                 else if (cmd == "WATCHED_CHANGE")
                 {
-                    if (obj["data"] != null)
+                    if (obj["data"]?["text_large"] != null)
                     {
                         NewMessage?.Invoke(MessageType.WatchedChange, obj["data"]["text_large"].ToString());
                     }
@@ -504,32 +504,29 @@ namespace BiliLite.Modules.Live
                 }
                 else if (cmd == "ONLINE_RANK_COUNT") // 在线人数变动, 即网页端的"房间观众()括号中的数字"
                 {
-                    if (obj["data"] != null)
+                    if (obj["data"]?["online_count_text"] != null)
                     {
                         NewMessage?.Invoke(MessageType.OnlineCountChange, obj["data"]["online_count_text"].ToString());
                     }
                 }
                 else if (cmd == "ONLINE_RANK_V2")
                 {
-                    if (obj["data"] != null && obj["data"]["list"] != null)
+                    if (obj["data"]?["list"] != null)
                     {
                         NewMessage?.Invoke(MessageType.OnlineRankChange, obj["data"]["list"].ToString());
                     }
-                    if (obj["data"] != null && obj["data"]["online_list"] != null)
+                    if (obj["data"]?["online_list"] != null)
                     {
                         NewMessage?.Invoke(MessageType.OnlineRankChange, obj["data"]["online_list"].ToString());
                     }
                     return MessageDelayType.SystemMessage;
                 }
-                else if (cmd == "PREPARING") //直播准备中, 即已停止直播(并没有测试到实际信息...)
+                else if (cmd == "PREPARING") //停止直播
                 {
-                    if (obj["data"] != null)
-                    {
-                        NewMessage?.Invoke(MessageType.StopLive, null);
-                    }
+                    NewMessage?.Invoke(MessageType.StopLive, null);
                     return MessageDelayType.SystemMessage;
                 }
-                else if (cmd == "ROOM_SILENT_ON" || cmd == "ROOM_SILENT_OFF")
+                else if (cmd is "ROOM_SILENT_ON" or "ROOM_SILENT_OFF")
                 {
                     if (obj["data"] != null)
                     {
