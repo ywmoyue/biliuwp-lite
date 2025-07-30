@@ -136,11 +136,11 @@ namespace BiliLite.ViewModels.Live
 
         #region Public Methods
 
-        public async Task LoadLotteryInfo(int roomId)
+        public async Task LoadLotteryInfo(int roomId, string buvid3)
         {
             try
             {
-                var result = await m_liveRoomApi.RoomLotteryInfo(roomId).Request();
+                var result = await m_liveRoomApi.RoomLotteryInfo(roomId, buvid3).Request();
                 if (!result.status)
                 {
                     throw new CustomizedErrorException(result.message);
@@ -152,7 +152,7 @@ namespace BiliLite.ViewModels.Live
                     throw new CustomizedErrorException(obj.message);
                 }
 
-                if (obj.data["anchor"].ToArray().Length > 0)
+                if (obj.data?["anchor"] != null && obj.data["anchor"].ToArray().Length > 0)
                 {
                     var data = JsonConvert.DeserializeObject<LiveRoomAnchorLotteryInfoModel>(obj.data["anchor"].ToString());
                     AnchorLotteryInfo = data ?? throw new CustomizedErrorException("Anchor lottery data is null");
@@ -162,7 +162,7 @@ namespace BiliLite.ViewModels.Live
                     AddLotteryShieldWord?.Invoke(AnchorLotteryInfo, AnchorLotteryInfo.Danmu);
                 }
 
-                if (obj.data["popularity_red_pocket"].ToArray().Length > 0)
+                if (obj.data?["popularity_red_pocket"] != null && obj.data["popularity_red_pocket"].ToArray().Length > 0)
                 {
                     var data = JsonConvert.DeserializeObject<ObservableCollection<LiveRoomRedPocketLotteryInfoModel>>(obj.data["popularity_red_pocket"].ToString());
                     RedPocketLotteryInfo = data?[0] ?? throw new CustomizedErrorException("RedPocket lottery data is null");
