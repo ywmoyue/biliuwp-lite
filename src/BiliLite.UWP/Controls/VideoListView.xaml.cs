@@ -111,7 +111,7 @@ namespace BiliLite.Controls
             var expanders = this.FindChildrenByType<Microsoft.UI.Xaml.Controls.Expander>().ToList();
             if (!expanders.Any()) return 0;
             var expanderHeaderHeight = (expanders.First().Header as FrameworkElement).ActualHeight;
-            var videoListItemGridHeight = 87;
+            var videoListItemGridHeight = 87 + 12;
             foreach (var section in m_viewModel.Sections)
             {
                 if (section.SelectedItem != item && !section.Selected)
