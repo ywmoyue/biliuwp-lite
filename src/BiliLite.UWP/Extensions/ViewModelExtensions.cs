@@ -18,7 +18,7 @@ using System.Reflection;
 
 namespace BiliLite.Extensions
 {
-    public static class ViewModelExtensions
+    public static partial class ViewModelExtensions
     {
         public static IServiceCollection AddViewModels(this IServiceCollection services, int displayMode)
         {
@@ -57,34 +57,9 @@ namespace BiliLite.Extensions
             services.AddTransient<MainPageViewModel>();
             services.AddTransient<SearchPageViewModel>();
 
-            services.AddAttributeViewModel(displayMode);
+            services.AddAutoRegisteredViewModels(displayMode);
 
             return services;
-        }
-
-        private static void AddAttributeViewModel(this IServiceCollection services, int displayMode)
-        {
-            var types = Assembly.GetExecutingAssembly().GetTypes();
-
-            foreach (var type in types)
-            {
-                if (type.GetCustomAttributes(typeof(RegisterSingletonViewModelAttribute), false).Any())
-                {
-                    if (displayMode == 2)
-                    {
-                        services.AddTransient(type);
-                    }
-                    else
-                    {
-                        services.AddSingleton(type);
-                    }
-                }
-
-                if (type.GetCustomAttributes(typeof(RegisterTransientViewModelAttribute), false).Any())
-                {
-                    services.AddTransient(type);
-                }
-            }
         }
     }
 }

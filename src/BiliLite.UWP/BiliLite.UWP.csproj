@@ -1777,6 +1777,12 @@
     <Content Include="Assets\Fonts\SourceHanSansCN-Regular.otf" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BiliLite.Analyzer\BiliLite.Analyzer.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" >
+      <Project>{d1802c8a-7b73-4ff4-9f86-735ed12dd775}</Project>
+      <Name>BiliLite.Analyzer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BiliLite.gRPC\BiliLite.gRPC.csproj">
       <Project>{aee3dcaa-2c3c-4308-b602-4797994219d7}</Project>
       <Name>BiliLite.gRPC</Name>
