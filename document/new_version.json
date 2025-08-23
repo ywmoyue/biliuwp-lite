@@ -1,7 +1,7 @@
 {
-  "version": "4.8.3",
-  "version_num": 40803,
-  "version_desc": "更新内容:\r\n\r\n- 支持设置主题mica背景源 \r\n\r\n- 修复空间动态页布局设置错误 \r\n\r\n- 修复首页直播页错误 \r\n\r\n- 修复专栏图片样式问题 \r\n\r\n- 修复ffmpegInterop播放器快捷键设置进度错误问题 \r\n\r\n- 修复专栏动态打开失败 \r\n\r\n- 增加App方式来获取直播弹幕信息，修复直播间弹幕连接失败 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.8.4",
+  "version_num": 40804,
+  "version_desc": "更新内容:\r\n\r\n- 启用Win10风格样式，调整部分样式及文本细节 \r\n\r\n- 设置界面初步添加搜索功能 \r\n\r\n- 支持自定义快进快退快捷键时长，退出全屏快捷键同时支持退出铺满状态 \r\n\r\n- 修复web方法连接直播信息流 \r\n\r\n- 修复视频章节字体颜色问题 \r\n\r\n- 修复主题背景设置选项无法保存 \r\n\r\n- 修复首页直播页数据不会自动加载问题 \r\n\r\n- 修复ShakaPlayer单集循环播放状态异常及优化音视频进度同步代码 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }

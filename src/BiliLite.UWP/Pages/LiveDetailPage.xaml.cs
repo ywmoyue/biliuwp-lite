@@ -116,22 +116,31 @@ namespace BiliLite.Pages
             {
                 if (m_liveRoomViewModel.ShowLotteryDanmu) return;
                 AddShieldWord(word);
-                if (sender is LiveRoomAnchorLotteryInfoModel) m_liveRoomViewModel.LotteryDanmu["AnchorLottery"] = (sender as LiveRoomAnchorLotteryInfoModel).Danmu;
-                if (sender is LiveRoomRedPocketLotteryInfoModel) m_liveRoomViewModel.LotteryDanmu["RedPocketLottery"] = (sender as LiveRoomRedPocketLotteryInfoModel).Danmu;
+                switch (sender)
+                {
+                    case LiveRoomAnchorLotteryInfoModel model:
+                        m_liveRoomViewModel.LotteryDanmu["AnchorLottery"] = model.Danmu;
+                        break;
+                    case LiveRoomRedPocketLotteryInfoModel model:
+                        m_liveRoomViewModel.LotteryDanmu["RedPocketLottery"] = model.Danmu;
+                        break;
+                }
             };
             m_liveRoomViewModel.DelShieldWord += (_, word) => DelShieldWord(word);
-            m_liveRoomViewModel.SpecialLiveRoomHideElements += (_, e) =>
+            m_liveRoomViewModel.SpecialLiveRoomHideElements += (_, _) =>
             {
-                pivot.Items.Remove(pivot_Guard);
+                pivot.Items?.Remove(pivot_Guard);
                 BottomBtnGiftRow.Visibility = Visibility.Collapsed;
                 BottomGiftBar.Visibility = Visibility.Collapsed;
             };
-            m_liveRoomViewModel.RefreshGuardNum += (_, e) =>
+            m_liveRoomViewModel.RefreshGuardNum += (_, _) =>
             {
                 var temp = pivot.SelectedIndex;
                 pivot.SelectedIndex = 3;
                 pivot.SelectedIndex = temp;
             };
+            m_liveRoomViewModel.StartLive += (_, _) => m_viewModel.Living = true;
+            m_liveRoomViewModel.StopLive += (_, _) => m_viewModel.Living = false;
             this.Loaded += LiveDetailPage_Loaded;
             this.Unloaded += LiveDetailPage_Unloaded;
 

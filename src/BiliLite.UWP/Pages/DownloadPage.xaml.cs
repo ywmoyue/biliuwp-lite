@@ -20,6 +20,7 @@ using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using CommunityToolkit.WinUI;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -409,6 +410,51 @@ namespace BiliLite.Pages
         {
             pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
             pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
+        }
+
+        private void BtnUpdateDamaku_OnClick(object sender, RoutedEventArgs e)
+        {
+            DownloadedItem data = null;
+            DownloadedSubItem item = null;
+            if (sender is MenuFlyoutItem menuItem)
+            {
+                data = menuItem.DataContext as DownloadedItem;
+                if (data.Epsidoes == null || data.Epsidoes.Count == 0)
+                {
+                    NotificationShowExtensions.ShowMessageToast("没有可以更新弹幕的视频");
+                    return;
+                }
+                if (data.Epsidoes.Count > 1)
+                {
+                    NotificationShowExtensions.ShowMessageToast("多集视频，请选择指定集数更新弹幕");
+                    Pane.DataContext = data;
+                    splitView.IsPaneOpen = true;
+                    return;
+                }
+
+                item = data.Epsidoes.First();
+            }
+
+            if (sender is AppBarButton appButton)
+            {
+                item = appButton.DataContext as DownloadedSubItem;
+                var parent = appButton.FindAscendant<ListView>();
+                if (parent == null)
+                {
+                    return;
+                }
+
+                data = parent.DataContext as DownloadedItem;
+            }
+
+            if (data == null) return;
+            UpdateDanmaku(data, item);
+        }
+
+        private async Task UpdateDanmaku(DownloadedItem data, DownloadedSubItem item)
+        {
+            if(await DownloadHelper.UpdateDanmaku(item.CID, item.EpisodeID, data.ID, data.ID, data.IsSeason))
+                NotificationShowExtensions.ShowMessageToast($"{item.Title}弹幕更新完成");
         }
     }
 }

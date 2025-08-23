@@ -306,9 +306,11 @@
                                                         <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
                                                     </Grid.ColumnDefinitions>
                                                     <TextBlock
                                                         VerticalAlignment="Center"
+                                                        ToolTipService.ToolTip="{Binding Title}"
                                                         Text="{Binding Title}"
                                                         TextTrimming="CharacterEllipsis" />
                                                     <AppBarButton
@@ -334,6 +336,13 @@
                                                         ToolTipService.ToolTip="打开目录" />
                                                     <AppBarButton
                                                         Grid.Column="4"
+                                                        Width="48"
+                                                        Height="48"
+                                                        Click="BtnUpdateDamaku_OnClick"
+                                                        Icon="Document"
+                                                        ToolTipService.ToolTip="更新弹幕" />
+                                                    <AppBarButton
+                                                        Grid.Column="5"
                                                         Width="48"
                                                         Height="48"
                                                         Click="btnEpisodesDelete_Click"
@@ -385,6 +394,11 @@
                                                         Click="btnMenuFolder_Click"
                                                         Icon="MoveToFolder"
                                                         Text="打开目录" />
+                                                    <MenuFlyoutItem
+                                                        x:Name="BtnUpdateDamaku"
+                                                        Click="BtnUpdateDamaku_OnClick"
+                                                        Icon="Document"
+                                                        Text="更新弹幕" />
                                                     <MenuFlyoutSeparator />
                                                     <MenuFlyoutItem
                                                         x:Name="btnMenuDetele"

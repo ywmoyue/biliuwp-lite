@@ -281,16 +281,17 @@ namespace BiliLite.Models.Common.Live
         private void RoomChange(LiveRoomViewModel viewModel, object message)
         {
             var info = message as RoomChangeMsgModel;
+            if (viewModel.RoomTitle == info?.Title) return;
             var msg = new DanmuMsgModel
             {
                 ShowUserFace = Visibility.Collapsed,
                 ShowUserName = Visibility.Collapsed,
-                RichText = ($"直播间标题已修改:\n{viewModel.RoomTitle}\n🔽\n{info.Title}").ToRichTextBlock(null, fontWeight: "SemiBold", textAlignment:"Center", fontColor: "#ff1e653a"), //一种绿色
+                RichText = ($"直播间标题已修改:\n{viewModel.RoomTitle}\n🔽\n{info?.Title}").ToRichTextBlock(null, fontWeight: "SemiBold", textAlignment:"Center", fontColor: "#ff1e653a"), //一种绿色
                 CardColor = new SolidColorBrush(Color.FromArgb(255, 228, 255, 233)),
                 CardHorizontalAlignment = HorizontalAlignment.Center,
             };
             viewModel.Messages.Add(msg);
-            viewModel.RoomTitle = info.Title;
+            viewModel.RoomTitle = info?.Title;
         }
 
         private void RoomBlock(LiveRoomViewModel viewModel, object message)
@@ -312,8 +313,9 @@ namespace BiliLite.Models.Common.Live
                                     .Where(item => item.Uid == info.UserID)                       // 筛选出符合条件的对象
                                     .OrderByDescending(item => viewModel.Messages.IndexOf(item))  // 根据索引倒序排序
                                     .Take(3)                                                      // 取前三个
-                                    .Select(item => item.Text);                                   // 提取Text字段
-            if (previousChatList.Count() == 0) return;
+                                    .Select(item => item.Text)  // 提取Text字段
+                                    .ToList();                                   
+            if (!previousChatList.Any()) return;
 
             text += string.Join("\n", previousChatList);
             msg = new DanmuMsgModel()
@@ -354,14 +356,14 @@ namespace BiliLite.Models.Common.Live
             viewModel.Messages.Add(msg);
         }
 
-        private void StartLive(LiveRoomViewModel viewModel, object room_Id)
+        private void StartLive(LiveRoomViewModel viewModel, object roomId)
         {
-            viewModel.GetPlayUrls(room_Id.ToInt32(), SettingService.GetValue(SettingConstants.Live.DEFAULT_QUALITY, 10000)).RunWithoutAwait();
+            viewModel.LiveStart().RunWithoutAwait();
             viewModel.Messages.Add(new DanmuMsgModel()
             {
                 ShowUserFace = Visibility.Collapsed,
                 ShowUserName = Visibility.Collapsed,
-                RichText = $"直播间 {room_Id} 开始直播".ToRichTextBlock(null, fontWeight: "Medium"),
+                RichText = $"直播间 {roomId} 开始直播".ToRichTextBlock(null, fontWeight: "Medium"),
                 CardHorizontalAlignment = HorizontalAlignment.Center,
                 CardPadding = new Thickness(6, 4, 6, 4),
             });
@@ -374,7 +376,7 @@ namespace BiliLite.Models.Common.Live
 
         private void StopLive(LiveRoomViewModel viewModel, object message)
         {
-            //viewModel.GetPlayUrls(viewModel.RoomID.ToInt32(), SettingService.GetValue(SettingConstants.Live.DEFAULT_QUALITY, 10000)).RunWithoutAwait();
+            viewModel.LiveStop().RunWithoutAwait();
             viewModel.Messages.Add(new DanmuMsgModel()
             {
                 ShowUserFace = Visibility.Collapsed,

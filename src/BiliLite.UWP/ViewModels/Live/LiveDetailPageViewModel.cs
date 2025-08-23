@@ -56,8 +56,7 @@ namespace BiliLite.ViewModels.Live
         [DependsOn(nameof(PlayState))]
         public bool ShowLoading => PlayState != null && (PlayState.IsLoading || PlayState.IsBuffering);
 
-        [DependsOn(nameof(PlayState))]
-        public bool Living => PlayState is { IsStopped: false };
+        public bool Living { get; set; } = false;
 
         [DependsOn(nameof(ContentState))]
         public bool ShowFullWindowBtn => !(ContentState is { IsFullWindow: true });
