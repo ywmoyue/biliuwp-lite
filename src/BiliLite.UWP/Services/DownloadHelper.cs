@@ -80,6 +80,33 @@ namespace BiliLite.Services
             return await folder.CreateFolderAsync(OLD_DOWNLOAD_FOLDER_NAME, CreationCollisionOption.OpenIfExists);
         }
 
+        public static async Task<bool> UpdateDanmaku(string cid, string epId, string avId, string seasonId, bool isSeason)
+        {
+            var url = $"{ApiHelper.API_BASE_URL}/x/v1/dm/list.so?oid=" + cid;
+
+            //读取存储文件夹
+            StorageFolder folder = await GetDownloadFolder();
+            folder = await folder.CreateFolderAsync((isSeason ? ("ss" + seasonId) : avId),
+                CreationCollisionOption.OpenIfExists);
+            StorageFolder episodeFolder =
+                await folder.CreateFolderAsync(isSeason ? epId : cid, CreationCollisionOption.OpenIfExists);
+
+            try
+            {
+                var buffer = await url.GetBuffer();
+                StorageFile file =
+                    await episodeFolder.CreateFileAsync("danmaku.xml", CreationCollisionOption.OpenIfExists);
+                await FileIO.WriteBufferAsync(file, buffer);
+            }
+            catch (Exception ex)
+            {
+                logger.Log("弹幕下载失败:" + url, LogType.Error, ex);
+                return false;
+            }
+
+            return true;
+        }
+
         private static async Task DownloadCover(string url, StorageFolder folder)
         {
             try
