@@ -1,12 +1,70 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using BiliLite.Models.Attributes;
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace BiliLite.Extensions
 {
     public static partial class RegisterServiceExtensions
     {
+        // 存在CI编译问题，暂时仅X64架构启用该方法
+#if X64
         public static void AddAttributeService(this IServiceCollection services, int displayMode)
         {
             services.AddAutoRegisteredServices(displayMode);
         }
+#else
+        public static void AddAttributeService(this IServiceCollection services, int displayMode)
+        {
+            var types = Assembly.GetExecutingAssembly().GetTypes();
+
+            foreach (var type in types)
+            {
+                // Handle RegisterSingletonUIServiceAttribute
+                var uiServiceAttr = type.GetCustomAttribute<RegisterSingletonUIServiceAttribute>();
+                if (uiServiceAttr != null)
+                {
+                    if (displayMode == 2)
+                    {
+                        services.AddTransient(type);
+                        if (uiServiceAttr.SuperType != null)
+                        {
+                            services.AddTransient(uiServiceAttr.SuperType, type);
+                        }
+                    }
+                    else
+                    {
+                        services.AddSingleton(type);
+                        if (uiServiceAttr.SuperType != null)
+                        {
+                            services.AddSingleton(uiServiceAttr.SuperType, type);
+                        }
+                    }
+                }
+
+                // Handle RegisterSingletonServiceAttribute
+                var singletonAttr = type.GetCustomAttribute<RegisterSingletonServiceAttribute>();
+                if (singletonAttr != null)
+                {
+                    services.AddSingleton(type);
+                    if (singletonAttr.SuperType != null)
+                    {
+                        services.AddSingleton(singletonAttr.SuperType, type);
+                    }
+                }
+
+                // Handle RegisterTransientServiceAttribute
+                var transientAttr = type.GetCustomAttribute<RegisterTransientServiceAttribute>();
+                if (transientAttr != null)
+                {
+                    services.AddTransient(type);
+                    if (transientAttr.SuperType != null)
+                    {
+                        services.AddTransient(transientAttr.SuperType, type);
+                    }
+                }
+            }
+
+        }
+#endif
     }
 }
