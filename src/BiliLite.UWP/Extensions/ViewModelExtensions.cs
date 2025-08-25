@@ -57,9 +57,39 @@ namespace BiliLite.Extensions
             services.AddTransient<MainPageViewModel>();
             services.AddTransient<SearchPageViewModel>();
 
+            // 存在CI编译问题，暂时仅X64架构启用该方法
+#if X64
             services.AddAutoRegisteredViewModels(displayMode);
+#else
+            services.AddAttributeViewModel(displayMode);
+#endif
 
             return services;
+        }
+
+        private static void AddAttributeViewModel(this IServiceCollection services, int displayMode)
+        {
+            var types = Assembly.GetExecutingAssembly().GetTypes();
+
+            foreach (var type in types)
+            {
+                if (type.GetCustomAttributes(typeof(RegisterSingletonViewModelAttribute), false).Any())
+                {
+                    if (displayMode == 2)
+                    {
+                        services.AddTransient(type);
+                    }
+                    else
+                    {
+                        services.AddSingleton(type);
+                    }
+                }
+
+                if (type.GetCustomAttributes(typeof(RegisterTransientViewModelAttribute), false).Any())
+                {
+                    services.AddTransient(type);
+                }
+            }
         }
     }
 }
