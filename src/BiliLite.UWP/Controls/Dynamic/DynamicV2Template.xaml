@@ -3,7 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:dataTemplateSelectors="using:BiliLite.Controls.DataTemplateSelectors"
-    xmlns:local="using:BiliLite.Controls.Dynamic">
+    xmlns:local="using:BiliLite.Controls.Dynamic"
+    xmlns:extensions="using:BiliLite.Extensions">
     <dataTemplateSelectors:UserDynamicItemV2DataTemplateSelector
         x:Key="DynamicTemplateSelector"
         ArticleTemplate="{StaticResource DynamicArticle}"
@@ -325,7 +326,9 @@
                             IsItemClickEnabled="false"
                             ItemTemplateSelector="{StaticResource DynamicTemplateSelector}"
                             ItemsSource="{Binding Path=Items}"
-                            SelectionMode="None" />
+                            extensions:DisableScrollExtension.DisableScroll="True"
+                            SelectionMode="None" >
+                        </ListView>
                     </Border>
 
                     <Border
