@@ -1,7 +1,7 @@
 {
-  "version": "4.8.4",
-  "version_num": 40804,
-  "version_desc": "更新内容:\r\n\r\n- 启用Win10风格样式，调整部分样式及文本细节 \r\n\r\n- 设置界面初步添加搜索功能 \r\n\r\n- 支持自定义快进快退快捷键时长，退出全屏快捷键同时支持退出铺满状态 \r\n\r\n- 修复web方法连接直播信息流 \r\n\r\n- 修复视频章节字体颜色问题 \r\n\r\n- 修复主题背景设置选项无法保存 \r\n\r\n- 修复首页直播页数据不会自动加载问题 \r\n\r\n- 修复ShakaPlayer单集循环播放状态异常及优化音视频进度同步代码 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.8.5",
+  "version_num": 40805,
+  "version_desc": "更新内容:\r\n\r\n- 检测播放地址无效时提示设置替换CDN  \r\n\r\n- 已下载视频可更新弹幕 \r\n\r\n- 视频详情页显示当前评论数量 \r\n\r\n- 依赖注入服务注入代码改为编译时生成 \r\n\r\n- 修复直播间无法获取抽奖信息的问题 \r\n\r\n- 修改直播间直播状态的相关逻辑 \r\n\r\n- WebPlayer修复设置同步偏差阈值失效问题\r\n\r\n- WebPlayer mpegts错误重试 \r\n\r\n- 修复播放列表定位视频错误  \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }

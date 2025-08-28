@@ -1,12 +1,18 @@
 ﻿using BiliLite.Models.Attributes;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
 using System.Reflection;
 
 namespace BiliLite.Extensions
 {
-    public static class RegisterServiceExtensions
+    public static partial class RegisterServiceExtensions
     {
+        // 存在CI编译问题，暂时仅X64架构启用该方法
+#if X64
+        public static void AddAttributeService(this IServiceCollection services, int displayMode)
+        {
+            services.AddAutoRegisteredServices(displayMode);
+        }
+#else
         public static void AddAttributeService(this IServiceCollection services, int displayMode)
         {
             var types = Assembly.GetExecutingAssembly().GetTypes();
@@ -59,5 +65,6 @@ namespace BiliLite.Extensions
             }
 
         }
+#endif
     }
 }

@@ -18,7 +18,7 @@ using System.Reflection;
 
 namespace BiliLite.Extensions
 {
-    public static class ViewModelExtensions
+    public static partial class ViewModelExtensions
     {
         public static IServiceCollection AddViewModels(this IServiceCollection services, int displayMode)
         {
@@ -57,7 +57,12 @@ namespace BiliLite.Extensions
             services.AddTransient<MainPageViewModel>();
             services.AddTransient<SearchPageViewModel>();
 
+            // 存在CI编译问题，暂时仅X64架构启用该方法
+#if X64
+            services.AddAutoRegisteredViewModels(displayMode);
+#else
             services.AddAttributeViewModel(displayMode);
+#endif
 
             return services;
         }
