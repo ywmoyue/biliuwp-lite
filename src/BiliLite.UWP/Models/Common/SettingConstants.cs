@@ -606,6 +606,12 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string DISABLE_COLORFUL = "DisableColorful";
+
+            /// <summary>
+            /// 弹幕调试模式
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string DANMAKU_DEBUG_MODE = "DanmakuDebugMode";
         }
 
         public class Live
