@@ -948,6 +948,7 @@ namespace BiliLite.Controls
             if (!section.IsSectionValid || gap > 0.5) return; //更大的宽容范围检测
 
             Task.Delay(TimeSpan.FromSeconds(gap));
+            // TODO: 用户可选手动跳过Sponsor
             if (section.CategoryEnum == SponsorBlockType.Sponsor)
             {
                 SetPosition(section.End);

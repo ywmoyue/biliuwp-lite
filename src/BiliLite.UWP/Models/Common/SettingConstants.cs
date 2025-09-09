@@ -852,6 +852,18 @@ namespace BiliLite.Models.Common
             public const bool DEFAULT_SPONSOR_BLOCK = false;
 
             /// <summary>
+            /// 空降助手开关手动提示 bool
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string SPONSOR_BLOCK_TIPS = "SponsorBlockTips";
+
+            /// <summary>
+            /// 默认开启空降助手开关手动提示 bool
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_SPONSOR_BLOCK_TIPS = false;
+
+            /// <summary>
             /// 自动播放 bool
             /// </summary>
             [SettingKey(typeof(bool))]

@@ -182,6 +182,21 @@
                     </StackPanel>
                 </controls:SettingsCard>
 
+                <controls:SettingsCard
+                    x:Name="SpBlockCard2"
+                    Description="播放不受欢迎片段提示是否跳过，启用空降助手时生效"
+                    Header="空降助手(手动)">
+                    <controls:SettingsCard.HeaderIcon>
+                        <font:FontAwesome Icon="Solid_ShieldAlt" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <StackPanel Orientation="Horizontal">
+                        <ToggleSwitch
+                            x:Name="swSponsorBlockTips"
+                            Margin="0,-5,-88,-5"
+                            Style="{StaticResource DefaultToggleSwitchStyle}" />
+                    </StackPanel>
+                </controls:SettingsCard>
+
                 <controls:SettingsCard Description="播放完成自动切换下一P" Header="连续播放分P视频">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xF8AD;" />
