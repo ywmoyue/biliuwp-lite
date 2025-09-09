@@ -40,6 +40,7 @@ namespace BiliLite.Models.Common.Settings
             { "视频页显示封面", "UISettings:swVideoDetailShowCover:SEVideoStyle" },
             { "快速收藏", "UISettings:SwitchQuickDoFav" },
             { "动态磁贴", "UISettings:SwitchTile" },
+            { "显示网页链接原文", "UISettings:SwDisplayLinkSource" },
 
 
             // Play Settings

@@ -510,6 +510,13 @@
                         Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
+
+                <controls:SettingsCard Description="是否显示网页链接原文，重启应用生效" Header="显示网页链接原文">
+                    <ToggleSwitch
+                        x:Name="SwDisplayLinkSource"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
+                </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 

@@ -374,6 +374,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const bool DEFAULT_ENABLE_MICA_BACKGROUND_SOURCE = true;
+
+            /// <summary>
+            /// 是否显示网页链接原文
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string DISPLAY_LINK_SOURCE = "DisplayLinkSource";
+
+            /// <summary>
+            /// 默认不显示网页链接原文
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_DISPLAY_LINK_SOURCE = false;
         }
 
         public class Account
