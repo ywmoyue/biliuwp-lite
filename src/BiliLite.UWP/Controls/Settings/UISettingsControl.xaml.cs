@@ -277,6 +277,16 @@ namespace BiliLite.Controls.Settings
                 };
             };
 
+            // 显示网页链接原文
+            SwDisplayLinkSource.IsOn = SettingService.GetValue(SettingConstants.UI.DISPLAY_LINK_SOURCE, SettingConstants.UI.DEFAULT_DISPLAY_LINK_SOURCE);
+            SwDisplayLinkSource.Loaded += (sender, e) =>
+            {
+                SwDisplayLinkSource.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.DISPLAY_LINK_SOURCE, SwDisplayLinkSource.IsOn);
+                };
+            };
+
             //动态显示
             cbDynamicDisplayMode.SelectedIndex = SettingService.GetValue<int>(SettingConstants.UI.DYNAMIC_DISPLAY_MODE, 0);
             cbDynamicDisplayMode.Loaded += new RoutedEventHandler((sender, e) =>

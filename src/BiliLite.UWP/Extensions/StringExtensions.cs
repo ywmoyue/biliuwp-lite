@@ -32,6 +32,7 @@ namespace BiliLite.Extensions
     public static class StringExtensions
     {
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+        private static bool _commentDisplayLinkSource = SettingService.GetValue(SettingConstants.UI.DISPLAY_LINK_SOURCE, SettingConstants.UI.DEFAULT_DISPLAY_LINK_SOURCE);
 
         public static string CcConvertToSrt(this string json, bool toSimplified = false)
         {
@@ -572,6 +573,7 @@ namespace BiliLite.Extensions
             List<string> keyword = new List<string>();
             MatchCollection url = Regex.Matches(input,
                 @"(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]");
+
             foreach (Match item in url)
             {
                 if (keyword.Contains(item.Groups[0].Value))
@@ -580,11 +582,23 @@ namespace BiliLite.Extensions
                 }
 
                 keyword.Add(item.Groups[0].Value);
-                var data =
-                    @"<InlineUIContainer><HyperlinkButton x:Name=""btn"" Command=""{Binding LaunchUrlCommand}""  IsEnabled=""True"" Margin=""2 -3 2 -5"" Padding=""0 2 0 0"" " +
-                    string.Format(
-                        @"ToolTipService.ToolTip=""{0}"" CommandParameter=""{0}"" ><TextBlock>🔗网页链接</TextBlock></HyperlinkButton></InlineUIContainer>",
-                        item.Groups[0].Value.IsUrl() ? item.Groups[0].Value : ApiHelper.NOT_FOUND_URL);
+                var data = "";
+                if (_commentDisplayLinkSource)
+                {
+                    data =
+                        @"<InlineUIContainer><HyperlinkButton x:Name=""btn"" Command=""{Binding LaunchUrlCommand}""  IsEnabled=""True"" Margin=""2 -3 2 -5"" Padding=""0 2 0 0"" " +
+                        string.Format(
+                            @"ToolTipService.ToolTip=""{0}"" CommandParameter=""{0}"" ><TextBlock>{0}</TextBlock></HyperlinkButton></InlineUIContainer>",
+                            item.Groups[0].Value.IsUrl() ? item.Groups[0].Value : ApiHelper.NOT_FOUND_URL);
+                }
+                else
+                {
+                    data =
+                        @"<InlineUIContainer><HyperlinkButton x:Name=""btn"" Command=""{Binding LaunchUrlCommand}""  IsEnabled=""True"" Margin=""2 -3 2 -5"" Padding=""0 2 0 0"" " +
+                        string.Format(
+                            @"ToolTipService.ToolTip=""{0}"" CommandParameter=""{0}"" ><TextBlock>🔗网页链接</TextBlock></HyperlinkButton></InlineUIContainer>",
+                            item.Groups[0].Value.IsUrl() ? item.Groups[0].Value : ApiHelper.NOT_FOUND_URL);
+                }
                 input = input.Replace(item.Groups[0].Value, data);
             }
 

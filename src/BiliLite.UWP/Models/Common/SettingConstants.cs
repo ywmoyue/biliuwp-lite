@@ -374,6 +374,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const bool DEFAULT_ENABLE_MICA_BACKGROUND_SOURCE = true;
+
+            /// <summary>
+            /// 是否显示网页链接原文
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string DISPLAY_LINK_SOURCE = "DisplayLinkSource";
+
+            /// <summary>
+            /// 默认不显示网页链接原文
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_DISPLAY_LINK_SOURCE = false;
         }
 
         public class Account
@@ -850,6 +862,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const bool DEFAULT_SPONSOR_BLOCK = false;
+
+            /// <summary>
+            /// 空降助手开关手动提示 bool
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string SPONSOR_BLOCK_TIPS = "SponsorBlockTips";
+
+            /// <summary>
+            /// 默认开启空降助手开关手动提示 bool
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_SPONSOR_BLOCK_TIPS = false;
 
             /// <summary>
             /// 自动播放 bool
