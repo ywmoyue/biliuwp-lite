@@ -948,8 +948,7 @@ namespace BiliLite.Controls
             if (!section.IsSectionValid || gap > 0.5) return; //更大的宽容范围检测
 
             Task.Delay(TimeSpan.FromSeconds(gap));
-            // TODO: 用户可选手动跳过Sponsor
-            if (section.CategoryEnum == SponsorBlockType.Sponsor)
+            if (section.CategoryEnum == SponsorBlockType.Sponsor && !SettingService.GetValue<bool>(SettingConstants.Player.SPONSOR_BLOCK_TIPS, SettingConstants.Player.DEFAULT_SPONSOR_BLOCK_TIPS))
             {
                 SetPosition(section.End);
                 m_playerToastService.Show(toastId, $"自动跳过{section.SegmentName}", seg: section);
@@ -957,7 +956,7 @@ namespace BiliLite.Controls
             else
             {
                 var showTime = (long)((section.End - section.Start) * 1000);
-                m_playerToastService.Show(toastId, $"跳过{section.SegmentName}？", showTime > 10000 ? 10000 : showTime - 1500, section);
+                m_playerToastService.Show(toastId, $"跳过{section.SegmentName}？", showTime > 10000 ? 10000 : showTime - 1500, section, true);
             }
         }
 
