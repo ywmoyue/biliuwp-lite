@@ -606,6 +606,15 @@ namespace BiliLite.Controls
             throw new NotImplementedException();
         }
 
+        private async void BtnShowCommentSource_OnClick(object sender, RoutedEventArgs e)
+        {
+            var comment = (sender as FrameworkElement).DataContext as CommentViewModel;
+            var source = comment.Content.Message;
+
+            var dialog = new CommentSourceDialog(source);
+            await dialog.ShowAsync(ContentDialogPlacement.Popup);
+        }
+
         #endregion
 
         #region Public Methods

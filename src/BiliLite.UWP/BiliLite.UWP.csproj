@@ -148,6 +148,9 @@
     </Compile>
     <Compile Include="Controls\DataTemplateSelectors\ChatMessageDataTemplateSelector.cs" />
     <Compile Include="Controls\DataTemplateSelectors\UserDynamicItemV2DataTemplateSelector.cs" />
+    <Compile Include="Controls\Dialogs\CommentSourceDialog.xaml.cs">
+      <DependentUpon>CommentSourceDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Dynamic\DynamicItemV2Control.xaml.cs">
       <DependentUpon>DynamicItemV2Control.xaml</DependentUpon>
     </Compile>
@@ -1276,6 +1279,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Common\PieControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\CommentSourceDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
