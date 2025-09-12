@@ -387,7 +387,6 @@
                                         ItemClick="gvFall_ItemClick"
                                         ItemHeight="168"
                                         ItemsSource="{x:Bind Path=Items, Mode=OneWay}"
-                                        OneRowModeEnabled="False"
                                         ScrollViewer.VerticalScrollBarVisibility="Hidden"
                                         ScrollViewer.VerticalScrollMode="Disabled"
                                         SelectionMode="None"

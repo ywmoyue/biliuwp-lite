@@ -216,7 +216,6 @@
                                     ItemsSource="{x:Bind Path=m_userSubmitVideoViewModel.SubmitVideoItems, Mode=OneWay}"
                                     LoadMoreBottomOffset="0"
                                     LoadMoreCommand="{x:Bind Path=m_userSubmitVideoViewModel.LoadMoreSubmitVideoCommand}"
-                                    OneRowModeEnabled="False"
                                     SelectionMode="None"
                                     StretchContentForSingleRow="False">
                                     <toolkit:AdaptiveGridView.ItemTemplate>
@@ -346,7 +345,6 @@
                                     ItemsSource="{x:Bind Path=userSubmitArticleVM.SubmitArticleItems, Mode=OneWay}"
                                     LoadMoreBottomOffset="0"
                                     LoadMoreCommand="{x:Bind Path=userSubmitArticleVM.LoadMoreSubmitArticleCommand}"
-                                    OneRowModeEnabled="False"
                                     SelectionMode="None"
                                     StretchContentForSingleRow="False">
                                     <toolkit:AdaptiveGridView.Header>
@@ -473,7 +471,6 @@
                                     ItemsSource="{x:Bind Path=m_userSubmitCollectionViewModel.SubmitCollectionItems, Mode=OneWay}"
                                     LoadMoreBottomOffset="0"
                                     LoadMoreCommand="{x:Bind Path=m_userSubmitCollectionViewModel.LoadMoreSubmitCollectionCommand}"
-                                    OneRowModeEnabled="False"
                                     SelectionMode="None"
                                     StretchContentForSingleRow="False">
                                     <toolkit:AdaptiveGridView.ItemTemplate>
@@ -597,7 +594,6 @@
                                     IsItemClickEnabled="True"
                                     ItemClick="FavList_ItemClick"
                                     ItemsSource="{x:Bind Path=userFavlistVM.Items, Mode=OneWay}"
-                                    OneRowModeEnabled="False"
                                     SelectionMode="None"
                                     StretchContentForSingleRow="False">
                                     <toolkit:AdaptiveGridView.ItemTemplate>
@@ -684,7 +680,6 @@
                                     ItemsSource="{x:Bind Path=followVM.Items, Mode=OneWay}"
                                     LoadMoreBottomOffset="0"
                                     LoadMoreCommand="{x:Bind Path=followVM.LoadMoreCommand}"
-                                    OneRowModeEnabled="False"
                                     SelectionMode="None"
                                     StretchContentForSingleRow="False">
 
@@ -740,7 +735,6 @@
                                     ItemsSource="{x:Bind Path=fansVM.Items, Mode=OneWay}"
                                     LoadMoreBottomOffset="0"
                                     LoadMoreCommand="{x:Bind Path=fansVM.LoadMoreCommand}"
-                                    OneRowModeEnabled="False"
                                     SelectionMode="None"
                                     StretchContentForSingleRow="False">
                                     <toolkit:AdaptiveGridView.Footer>

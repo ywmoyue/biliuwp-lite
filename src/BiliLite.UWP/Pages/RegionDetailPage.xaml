@@ -27,7 +27,6 @@
                     ItemsSource="{x:Bind Path=Videos, Mode=OneWay}"
                     LoadMoreBottomOffset="0"
                     LoadMoreCommand="{x:Bind Path=LoadMoreCommand, Mode=OneWay}"
-                    OneRowModeEnabled="False"
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
                     <toolkit:AdaptiveGridView.Header>
@@ -159,7 +158,6 @@
                     ItemsSource="{x:Bind Path=Videos, Mode=OneWay}"
                     LoadMoreBottomOffset="0"
                     LoadMoreCommand="{x:Bind Path=LoadMoreCommand, Mode=OneWay}"
-                    OneRowModeEnabled="False"
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
                     <toolkit:AdaptiveGridView.ItemTemplate>

@@ -54,7 +54,6 @@
                     ItemHeight="196"
                     ItemsSource="{x:Bind Path=liveAreaDetailVM.Items, Mode=OneWay}"
                     LoadMoreCommand="{x:Bind Path=liveAreaDetailVM.LoadMoreCommand, Mode=OneWay}"
-                    OneRowModeEnabled="False"
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
                     <controls:MyAdaptiveGridView.ItemTemplate>

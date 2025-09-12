@@ -59,7 +59,6 @@
                         ItemClick="AttentionlList_ItemClick"
                         ItemHeight="120"
                         ItemsSource="{x:Bind Path=liveAttentionVM.Follow, Mode=OneWay}"
-                        OneRowModeEnabled="False"
                         SelectionMode="None"
                         StretchContentForSingleRow="False">
                         <control:MyAdaptiveGridView.ItemTemplate>
@@ -140,7 +139,6 @@
                         ItemsSource="{x:Bind Path=liveAttentionUnLiveVM.Items, Mode=OneWay}"
                         LoadMoreBottomOffset="0"
                         LoadMoreCommand="{x:Bind Path=liveAttentionUnLiveVM.LoadMoreCommand}"
-                        OneRowModeEnabled="False"
                         SelectionMode="None"
                         StretchContentForSingleRow="False">
                         <toolkit:AdaptiveGridView.ItemTemplate>
@@ -226,7 +224,6 @@
                         ItemsSource="{x:Bind Path=liveCenterHistoryVM.Items, Mode=OneWay}"
                         LoadMoreBottomOffset="0"
                         LoadMoreCommand="{x:Bind Path=liveCenterHistoryVM.LoadMoreCommand}"
-                        OneRowModeEnabled="False"
                         SelectionMode="None"
                         StretchContentForSingleRow="False">
                         <toolkit:AdaptiveGridView.ItemTemplate>

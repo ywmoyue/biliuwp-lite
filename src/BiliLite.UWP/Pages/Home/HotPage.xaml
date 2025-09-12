@@ -27,7 +27,6 @@
             LoadMoreBottomOffset="{x:Bind m_viewModel.ScrollViewLoadMoreBottomOffset}"
             LoadMoreCommand="{x:Bind Path=m_viewModel.LoadMoreCommand}"
             Loading="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}"
-            OneRowModeEnabled="False"
             PointerPressed="gridHot_ItemPressed"
             SelectionMode="None"
             StretchContentForSingleRow="False">

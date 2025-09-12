@@ -47,7 +47,6 @@
                                 ItemHeight="196"
                                 ItemsSource="{x:Bind Path=Items, Mode=OneWay}"
                                 LoadMoreCommand="{x:Bind Path=LoadMoreCommand, Mode=OneWay}"
-                                OneRowModeEnabled="False"
                                 ScrollViewer.IsDeferredScrollingEnabled="True"
                                 SelectionMode="None"
                                 StretchContentForSingleRow="False">
