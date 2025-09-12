@@ -295,6 +295,8 @@
                                                 <TextBlock>加载更多</TextBlock>
                                             </HyperlinkButton>
                                             <muxc:ProgressRing
+                                                Width="50"
+                                                Height="50"
                                                 HorizontalAlignment="Center"
                                                 IsActive="True"
                                                 Visibility="{x:Bind Path=m_userSubmitVideoViewModel.LoadingSubmitVideo, Mode=OneWay}" />
@@ -433,6 +435,8 @@
                                                 <TextBlock>加载更多</TextBlock>
                                             </HyperlinkButton>
                                             <muxc:ProgressRing
+                                                Width="50"
+                                                Height="50"
                                                 HorizontalAlignment="Center"
                                                 IsActive="True"
                                                 Visibility="{x:Bind Path=userSubmitArticleVM.LoadingSubmitArticle, Mode=OneWay}" />
@@ -558,6 +562,8 @@
                                                 <TextBlock>加载更多</TextBlock>
                                             </HyperlinkButton>
                                             <muxc:ProgressRing
+                                                Width="50"
+                                                Height="50"
                                                 HorizontalAlignment="Center"
                                                 IsActive="True"
                                                 Visibility="{x:Bind Path=m_userSubmitCollectionViewModel.LoadingSubmitCollection, Mode=OneWay}" />
@@ -692,6 +698,8 @@
                                                 <TextBlock>加载更多</TextBlock>
                                             </HyperlinkButton>
                                             <muxc:ProgressRing
+                                                Width="50"
+                                                Height="50"
                                                 HorizontalAlignment="Center"
                                                 IsActive="True"
                                                 Visibility="{x:Bind Path=followVM.Loading, Mode=OneWay}" />
@@ -745,6 +753,8 @@
                                                 <TextBlock>加载更多</TextBlock>
                                             </HyperlinkButton>
                                             <muxc:ProgressRing
+                                                Width="50"
+                                                Height="50"
                                                 HorizontalAlignment="Center"
                                                 IsActive="True"
                                                 Visibility="{x:Bind Path=fansVM.Loading, Mode=OneWay}" />

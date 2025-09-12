@@ -130,6 +130,8 @@
                                 <TextBlock>加载更多</TextBlock>
                             </HyperlinkButton>
                             <muxc:ProgressRing
+                                Width="50"
+                                Height="50"
                                 HorizontalAlignment="Center"
                                 IsActive="True"
                                 Visibility="{x:Bind Path=Loading, Mode=OneWay}" />
@@ -217,6 +219,8 @@
                                 <TextBlock>加载更多</TextBlock>
                             </HyperlinkButton>
                             <muxc:ProgressRing
+                                Width="50"
+                                Height="50"
                                 HorizontalAlignment="Center"
                                 IsActive="True"
                                 Visibility="{x:Bind Path=Loading, Mode=OneWay}" />

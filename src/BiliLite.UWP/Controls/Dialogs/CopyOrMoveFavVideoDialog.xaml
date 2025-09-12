@@ -21,9 +21,7 @@
     mc:Ignorable="d">
 
     <Grid>
-        <ListView
-            x:Name="listView"
-            SelectionMode="Single">
+        <ListView x:Name="listView" SelectionMode="Single">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="user:FavoriteItemViewModel">
                     <Grid>
@@ -48,6 +46,10 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <muxc:ProgressRing x:Name="prLoading" IsActive="True" />
+        <muxc:ProgressRing
+            x:Name="prLoading"
+            Width="50"
+            Height="50"
+            IsActive="True" />
     </Grid>
 </ContentDialog>
