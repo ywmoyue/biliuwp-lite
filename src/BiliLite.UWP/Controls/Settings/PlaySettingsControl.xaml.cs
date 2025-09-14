@@ -114,6 +114,7 @@ namespace BiliLite.Controls.Settings
             if (m_sponsorBlockService == null)
             {
                 SpBlockCard.Visibility = Visibility.Collapsed;
+                SpBlockCard2.Visibility = Visibility.Collapsed;
             }
             else
             {
@@ -125,6 +126,16 @@ namespace BiliLite.Controls.Settings
                         SettingService.SetValue(SettingConstants.Player.SPONSOR_BLOCK, swSponsorBlock.IsOn);
                     };
                 };
+
+                swSponsorBlockTips.IsOn = SettingService.GetValue<bool>(SettingConstants.Player.SPONSOR_BLOCK_TIPS, SettingConstants.Player.DEFAULT_SPONSOR_BLOCK_TIPS);
+                swSponsorBlockTips.Loaded += (_, _) =>
+                {
+                    swSponsorBlockTips.Toggled += (_, _) =>
+                    {
+                        SettingService.SetValue(SettingConstants.Player.SPONSOR_BLOCK_TIPS, swSponsorBlockTips.IsOn);
+                    };
+                };
+
                 SpBlockApiTextBox.Text =
                     SettingService.GetValue(
                         SettingConstants.Player.SPONSOR_BLOCK_API, m_sponsorBlockService.DefaultApiUrl);

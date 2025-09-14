@@ -40,6 +40,7 @@ namespace BiliLite.Models.Common.Settings
             { "视频页显示封面", "UISettings:swVideoDetailShowCover:SEVideoStyle" },
             { "快速收藏", "UISettings:SwitchQuickDoFav" },
             { "动态磁贴", "UISettings:SwitchTile" },
+            { "显示网页链接原文", "UISettings:SwDisplayLinkSource" },
 
 
             // Play Settings
@@ -104,6 +105,7 @@ namespace BiliLite.Models.Common.Settings
             { "关键词屏蔽", "VideoDanmakuSettings:DanmuSettingTxtWord" },
             { "正则屏蔽", "VideoDanmakuSettings:DanmuSettingTxtRegex" },
             { "用户屏蔽", "VideoDanmakuSettings:DanmuSettingTxtUser" },
+            { "弹幕引擎调试模式", "VideoDanmakuSettings:SwitchDanmakuDebugMode" },
 
             // Live Settings
             { "直播弹幕引擎", "LiveSettings:cbLiveDanmakuEngine" },

@@ -68,6 +68,16 @@ namespace BiliLite.Controls.Settings
                     SettingService.SetValue(SettingConstants.VideoDanmaku.MAX_NUM, args.NewValue);
                 });
             });
+
+            SwitchDanmakuDebugMode.IsOn = SettingService.GetValue(SettingConstants.VideoDanmaku.DANMAKU_DEBUG_MODE, false);
+            SwitchDanmakuDebugMode.Loaded += (_, _) =>
+            {
+                SwitchDanmakuDebugMode.Toggled += (_, _) =>
+                {
+                    SettingService.SetValue(SettingConstants.VideoDanmaku.DANMAKU_DEBUG_MODE,
+                        SwitchDanmakuDebugMode.IsOn);
+                };
+            };
         }
 
         private async void DanmuSettingAddWord_Click(object sender, RoutedEventArgs e)

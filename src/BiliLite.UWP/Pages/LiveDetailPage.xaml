@@ -207,17 +207,21 @@
                         <DataTemplate x:DataType="live:LiveRoomEmoticonPackage">
                             <GridView
                                 MaxHeight="300"
-                                IsItemClickEnabled="True"
-                                ItemClick="EmojiItem_Click"
-                                ScrollViewer.VerticalScrollBarVisibility="Hidden"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
+                                IsItemClickEnabled="True"
+                                ItemClick="EmojiItem_Click"
                                 ItemsSource="{x:Bind Path=Emoticons, Mode=OneWay}"
+                                ScrollViewer.VerticalScrollBarVisibility="Hidden"
                                 SelectionMode="None">
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="live:LiveRoomEmoticon">
-                                        <StackPanel MaxWidth="64" Width="{x:Bind ShowWidth, Mode=OneWay}" VerticalAlignment="Center" Margin="2 4">
-                                            <Grid >
+                                        <StackPanel
+                                            Width="{x:Bind ShowWidth, Mode=OneWay}"
+                                            MaxWidth="64"
+                                            Margin="2,4"
+                                            VerticalAlignment="Center">
+                                            <Grid>
                                                 <FontIcon
                                                     HorizontalAlignment="Stretch"
                                                     FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
@@ -233,9 +237,9 @@
                                             <TextBlock
                                                 HorizontalAlignment="Center"
                                                 FontSize="12"
-                                                Visibility="{x:Bind IsBigSticker, Mode=OneWay}"
                                                 Text="{x:Bind ShowText, Mode=OneWay}"
-                                                TextAlignment="Center" />
+                                                TextAlignment="Center"
+                                                Visibility="{x:Bind IsBigSticker, Mode=OneWay}" />
                                         </StackPanel>
                                     </DataTemplate>
                                 </GridView.ItemTemplate>
@@ -320,8 +324,8 @@
                         VerticalAlignment="Center"
                         Visibility="{x:Bind m_viewModel.ShowLoading, Mode=OneWay}">
                         <muxc:ProgressRing
-                            Width="56"
-                            Height="56"
+                            Width="50"
+                            Height="50"
                             IsActive="True" />
                         <TextBlock
                             x:Name="PlayerLoadText"
@@ -371,21 +375,21 @@
                                     Foreground="White"
                                     Text="{x:Bind Path=m_liveRoomViewModel.RoomTitle, Mode=OneWay}"
                                     TextTrimming="CharacterEllipsis" />
-                                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0 4 0 0">
+                                <StackPanel
+                                    Grid.Column="1"
+                                    Margin="0,4,0,0"
+                                    Orientation="Horizontal">
                                     <HyperlinkButton
                                         x:Name="BtnOpenWebPlayerToolbar"
-                                        Click="BtnOpenWebPlayerToolbar_OnClick"
-                                        Background="Transparent"
-                                        Foreground="White"
-                                        Padding="0"
-                                        ToolTipService.ToolTip="Web播放器工具栏"
                                         Width="48"
                                         Height="48"
+                                        Padding="0"
+                                        Background="Transparent"
+                                        Click="BtnOpenWebPlayerToolbar_OnClick"
+                                        Foreground="White"
+                                        ToolTipService.ToolTip="Web播放器工具栏"
                                         Visibility="{x:Bind m_viewModel.ShowWebPlayer, Mode=OneWay}">
-                                        <fa:FontAwesome
-                                            FontSize="20"
-                                            Icon="Solid_Tools"
-                                            />
+                                        <fa:FontAwesome FontSize="20" Icon="Solid_Tools" />
                                     </HyperlinkButton>
 
                                     <HyperlinkButton
@@ -394,14 +398,11 @@
                                         Height="48"
                                         Padding="0"
                                         Background="Transparent"
-                                        ToolTipService.ToolTip="分享"
                                         BorderThickness="0"
                                         Click="HyperlinkButtonOpenFlyout_OnClick"
-                                        Foreground="White">
-                                        <fa:FontAwesome
-                                            FontSize="20"
-                                            Icon="Solid_ShareSquare"
-                                        />
+                                        Foreground="White"
+                                        ToolTipService.ToolTip="分享">
+                                        <fa:FontAwesome FontSize="20" Icon="Solid_ShareSquare" />
                                         <FlyoutBase.AttachedFlyout>
                                             <MenuFlyout>
                                                 <MenuFlyoutItem
@@ -425,17 +426,14 @@
                                         Height="48"
                                         Padding="0"
                                         Background="Transparent"
-                                        Foreground="White"
                                         BorderThickness="0"
-                                        ToolTipService.ToolTip="截屏"
-                                        Click="TopBtnScreenshot_Click">
+                                        Click="TopBtnScreenshot_Click"
+                                        Foreground="White"
+                                        ToolTipService.ToolTip="截屏">
                                         <HyperlinkButton.KeyboardAccelerators>
                                             <KeyboardAccelerator Key="F10" />
                                         </HyperlinkButton.KeyboardAccelerators>
-                                        <fa:FontAwesome
-                                            FontSize="22"
-                                            Icon="Solid_Camera"
-                                        />
+                                        <fa:FontAwesome FontSize="22" Icon="Solid_Camera" />
                                     </HyperlinkButton>
 
                                     <HyperlinkButton
@@ -444,14 +442,11 @@
                                         Height="48"
                                         Padding="0"
                                         Background="Transparent"
-                                        Foreground="White"
                                         BorderThickness="0"
-                                        ToolTipService.ToolTip="设置"
-                                        Click="HyperlinkButtonOpenFlyout_OnClick">
-                                        <fa:FontAwesome
-                                            FontSize="22"
-                                            Icon="Solid_Cog"
-                                        />
+                                        Click="HyperlinkButtonOpenFlyout_OnClick"
+                                        Foreground="White"
+                                        ToolTipService.ToolTip="设置">
+                                        <fa:FontAwesome FontSize="22" Icon="Solid_Cog" />
                                         <FlyoutBase.AttachedFlyout>
                                             <Flyout>
                                                 <Pivot Width="325">
@@ -888,7 +883,7 @@
                                             x:Name="BottomBtnGiftRow"
                                             Width="48"
                                             Height="48"
-                                            Padding="8 4 8 8"
+                                            Padding="8,4,8,8"
                                             Click="BottomBtnSwitchGiftBar_Click"
                                             Foreground="White"
                                             ToolTipService.ToolTip="开关礼物栏">
@@ -899,12 +894,12 @@
                                             x:Name="BottomBtnVolume"
                                             Width="48"
                                             Height="48"
-                                            Padding="8 4 8 8"
+                                            Padding="8,4,8,8"
                                             Background="Transparent"
-                                            Foreground="White"
                                             BorderThickness="0"
-                                            ToolTipService.ToolTip="音量"
-                                            Click="HyperlinkButtonOpenFlyout_OnClick">
+                                            Click="HyperlinkButtonOpenFlyout_OnClick"
+                                            Foreground="White"
+                                            ToolTipService.ToolTip="音量">
                                             <fa:FontAwesome
                                                 x:Name="BottomBtnVolumeIcon"
                                                 FontSize="20"
@@ -935,11 +930,11 @@
                                             Padding="8,4,8,8"
                                             Background="Transparent"
                                             BorderThickness="0"
+                                            Click="HyperlinkButtonOpenFlyout_OnClick"
                                             FontSize="18"
                                             FontWeight="Medium"
                                             Foreground="White"
                                             ToolTipService.ToolTip="清晰度"
-                                            Click="HyperlinkButtonOpenFlyout_OnClick"
                                             Visibility="{x:Bind Path=m_viewModel.Living, Mode=OneWay}">
                                             <FlyoutBase.AttachedFlyout>
                                                 <Flyout>
@@ -975,11 +970,11 @@
                                             Padding="8,4,8,8"
                                             Background="Transparent"
                                             BorderThickness="0"
+                                            Click="HyperlinkButtonOpenFlyout_OnClick"
                                             FontSize="18"
                                             FontWeight="Medium"
                                             Foreground="White"
                                             ToolTipService.ToolTip="线路"
-                                            Click="HyperlinkButtonOpenFlyout_OnClick"
                                             Visibility="{x:Bind Path=m_viewModel.Living, Mode=OneWay}">
                                             <FlyoutBase.AttachedFlyout>
                                                 <Flyout>
@@ -2237,6 +2232,8 @@
                                             <TextBlock>加载更多</TextBlock>
                                         </HyperlinkButton>
                                         <muxc:ProgressRing
+                                            Width="50"
+                                            Height="50"
                                             HorizontalAlignment="Center"
                                             IsActive="True"
                                             Visibility="{x:Bind Path=m_liveRoomViewModel.SelectRank.Loading, Mode=OneWay}" />
@@ -2305,6 +2302,8 @@
                                         <TextBlock>加载更多</TextBlock>
                                     </HyperlinkButton>
                                     <muxc:ProgressRing
+                                        Width="50"
+                                        Height="50"
                                         HorizontalAlignment="Center"
                                         IsActive="True"
                                         Visibility="{x:Bind Path=m_liveRoomViewModel.LoadingGuard, Mode=OneWay}" />

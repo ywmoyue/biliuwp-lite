@@ -541,8 +541,8 @@
                             VerticalAlignment="Center"
                             Visibility="{Binding ElementName=Player, Path=Buffering, Mode=OneWay}">
                             <muxc:ProgressRing
-                                Width="36"
-                                Height="36"
+                                Width="50"
+                                Height="50"
                                 Foreground="{ThemeResource SystemAccentColor}"
                                 IsActive="True" />
                             <TextBlock
@@ -554,8 +554,8 @@
                         </StackPanel>
                         <StackPanel x:Name="VideoLoading" VerticalAlignment="Center">
                             <muxc:ProgressRing
-                                Width="36"
-                                Height="36"
+                                Width="50"
+                                Height="50"
                                 Foreground="{ThemeResource SystemAccentColor}"
                                 IsActive="True" />
                             <TextBlock
@@ -800,8 +800,8 @@
                                         </HyperlinkButton>
                                         <muxc:ProgressRing
                                             x:Name="BottomBtnLoading"
-                                            Width="48"
-                                            Height="48"
+                                            Width="50"
+                                            Height="50"
                                             Padding="8"
                                             Foreground="White"
                                             IsActive="True"
@@ -1297,39 +1297,39 @@
                             Width="320"
                             HorizontalAlignment="Right"
                             Background="#C8000000">
-                            <ListView ItemsSource="{x:Bind m_viewModel.ViewPoints, Mode=OneWay}" SelectionMode="Single" >
+                            <ListView ItemsSource="{x:Bind m_viewModel.ViewPoints, Mode=OneWay}" SelectionMode="Single">
                                 <ListView.ItemContainerStyle>
                                     <Style TargetType="ListViewItem">
                                         <Setter Property="Template">
                                             <Setter.Value>
                                                 <ControlTemplate TargetType="ListViewItem">
                                                     <Grid Background="Transparent">
+                                                        <ContentPresenter x:Name="ContentPresenter" Foreground="White" />
                                                         <VisualStateManager.VisualStateGroups>
                                                             <VisualStateGroup x:Name="CommonStates">
-                                                                <VisualState x:Name="Normal"/>
+                                                                <VisualState x:Name="Normal" />
                                                                 <VisualState x:Name="PointerOver">
                                                                     <Storyboard>
                                                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemAccentColor}"/>
+                                                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemAccentColor}" />
                                                                         </ObjectAnimationUsingKeyFrames>
                                                                     </Storyboard>
                                                                 </VisualState>
-                                                                <VisualState x:Name="Pressed"/>
-                                                                <VisualState x:Name="Disabled"/>
+                                                                <VisualState x:Name="Pressed" />
+                                                                <VisualState x:Name="Disabled" />
                                                             </VisualStateGroup>
                                                             <VisualStateGroup x:Name="SelectionStates">
-                                                                <VisualState x:Name="Unselected"/>
+                                                                <VisualState x:Name="Unselected" />
                                                                 <VisualState x:Name="Selected">
                                                                     <Storyboard>
                                                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemAccentColor}"/>
+                                                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemAccentColor}" />
                                                                         </ObjectAnimationUsingKeyFrames>
                                                                     </Storyboard>
                                                                 </VisualState>
-                                                                <VisualState x:Name="SelectedUnfocused"/>
+                                                                <VisualState x:Name="SelectedUnfocused" />
                                                             </VisualStateGroup>
                                                         </VisualStateManager.VisualStateGroups>
-                                                        <ContentPresenter x:Name="ContentPresenter" Foreground="White"/>
                                                     </Grid>
                                                 </ControlTemplate>
                                             </Setter.Value>
@@ -1349,7 +1349,7 @@
                                                     Width="172"
                                                     Margin="10,5"
                                                     Orientation="Vertical">
-                                                    <TextBlock Text="{x:Bind Content}" TextWrapping="Wrap"/>
+                                                    <TextBlock Text="{x:Bind Content}" TextWrapping="Wrap" />
                                                     <TextBlock>
                                                         <Run Text="{x:Bind From, Converter={StaticResource ProgressToTimeConverter}}" />
                                                         -<Run Text="{x:Bind To, Converter={StaticResource ProgressToTimeConverter}}" />

@@ -224,7 +224,6 @@
                 ItemsSource="{x:Bind Path=m_viewModel.Items, Mode=OneWay}"
                 LoadMoreCommand="{x:Bind Path=m_viewModel.LoadMoreCommand, Mode=OneWay}"
                 Loading="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}"
-                OneRowModeEnabled="False"
                 PointerPressed="AdaptiveGridView_PointerPressed"
                 SelectionMode="None"
                 StretchContentForSingleRow="False">
@@ -240,6 +239,8 @@
                             <TextBlock>加载更多</TextBlock>
                         </HyperlinkButton>
                         <muxc:ProgressRing
+                            Width="50"
+                            Height="50"
                             HorizontalAlignment="Center"
                             IsActive="True"
                             Visibility="{x:Bind Path=m_viewModel.Loading, Mode=OneWay}" />
