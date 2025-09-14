@@ -148,6 +148,9 @@
     </Compile>
     <Compile Include="Controls\DataTemplateSelectors\ChatMessageDataTemplateSelector.cs" />
     <Compile Include="Controls\DataTemplateSelectors\UserDynamicItemV2DataTemplateSelector.cs" />
+    <Compile Include="Controls\Dialogs\CommentSourceDialog.xaml.cs">
+      <DependentUpon>CommentSourceDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Dynamic\DynamicItemV2Control.xaml.cs">
       <DependentUpon>DynamicItemV2Control.xaml</DependentUpon>
     </Compile>
@@ -215,7 +218,9 @@
     </Compile>
     <Compile Include="Extensions\AppExtensions.cs" />
     <Compile Include="Extensions\BizServicesExtensions.cs" />
+    <Compile Include="Extensions\CommAntifraudExtensions.cs" />
     <Compile Include="Extensions\ControlsExtensions.cs" />
+    <Compile Include="Extensions\DisableScrollExtension.cs" />
     <Compile Include="Extensions\DownloadExtensions.cs" />
     <Compile Include="Extensions\FileExtensions.cs" />
     <Compile Include="Extensions\HttpFormatExtension.cs" />
@@ -228,6 +233,7 @@
     <Compile Include="Models\Attributes\SettingKeyAttribute.cs" />
     <Compile Include="Models\Common\Article\ArticlePageNavigationInfo.cs" />
     <Compile Include="Models\Common\Article\ArticleReaderSetTitleData.cs" />
+    <Compile Include="Models\Common\Comment\SendCommentResult.cs" />
     <Compile Include="Models\Common\Download\DownloadTrackInfo.cs" />
     <Compile Include="Models\Common\Season\SeasonEpListResult.cs" />
     <Compile Include="Models\Common\Settings\KeyValueOption.cs" />
@@ -1286,6 +1292,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Dialogs\CommentSourceDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Dynamic\DynamicItemV2Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1789,9 +1799,7 @@
     <Content Include="Assets\Fonts\SourceHanSansCN-Regular.otf" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BiliLite.Analyzer\BiliLite.Analyzer.csproj"
-                      OutputItemType="Analyzer"
-                      ReferenceOutputAssembly="false" >
+    <ProjectReference Include="..\BiliLite.Analyzer\BiliLite.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false">
       <Project>{d1802c8a-7b73-4ff4-9f86-735ed12dd775}</Project>
       <Name>BiliLite.Analyzer</Name>
     </ProjectReference>

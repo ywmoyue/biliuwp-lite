@@ -6,6 +6,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Atelier39;
 using AutoMapper;
+using BiliLite.Models.Common;
 using BiliLite.Models.Common.Danmaku;
 using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels.Video;
@@ -41,6 +42,10 @@ namespace BiliLite.Services
             m_danmakuMaster.SetRollingDensity(-1);
             m_danmakuMaster.SetIsTextBold(true);
             m_danmakuMaster.SetBorderColor(Colors.Blue);
+            if (SettingService.GetValue(SettingConstants.VideoDanmaku.DANMAKU_DEBUG_MODE, false))
+            {
+                m_danmakuMaster.DebugMode = true;
+            }
         }
 
         public override void Clear()

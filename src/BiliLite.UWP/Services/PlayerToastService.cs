@@ -73,7 +73,7 @@ namespace BiliLite.Services
         /// <param name="msg">显示信息</param>
         /// <param name="showTime">显示时间(毫秒) 默认2000</param>
         /// <param name="seg">用于SponsorBlock功能，可选</param>
-        public async void Show(string key, string msg, long showTime = 2000, PlayerSkipItem seg = null)
+        public async void Show(string key, string msg, long showTime = 2000, PlayerSkipItem seg = null, bool showSkipButton = false)
         {
             if (m_showPlayerToasts.TryGetValue(key, out var toast))
             {
@@ -91,7 +91,7 @@ namespace BiliLite.Services
             if (seg != null)
             {
                 newToast.Width = 300;
-                if (seg.NeedSkipButton) newToast.ShowSkipButton = true;
+                if (showSkipButton) newToast.ShowSkipButton = true;
                 newToast.IconBrush = seg.Brush;
                 newToast.SkipButtonClick += (_, _) => m_playerControl.SetPosition(seg.End);
             }

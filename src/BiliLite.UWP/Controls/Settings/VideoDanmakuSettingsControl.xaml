@@ -83,6 +83,13 @@
                 Value="0" />
         </controls:SettingsCard>
 
+        <controls:SettingsCard Description="仅寒霜弹幕使引擎可启用" Header="调试模式">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_ListOl" />
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch x:Name="SwitchDanmakuDebugMode"></ToggleSwitch>
+        </controls:SettingsCard>
+
         <controls:SettingsExpander Header="弹幕屏蔽" IsExpanded="True">
             <controls:SettingsExpander.HeaderIcon>
                 <font:FontAwesome Icon="Solid_Filter" />

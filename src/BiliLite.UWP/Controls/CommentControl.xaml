@@ -82,6 +82,7 @@
         <MenuFlyout x:Key="menu">
             <MenuFlyoutItem Click="BtnDeleteComment_Click" Visibility="{Binding ShowDelete}">删除</MenuFlyoutItem>
             <MenuFlyoutItem Click="MenuFlyoutItem_OnClick">举报</MenuFlyoutItem>
+            <MenuFlyoutItem x:Name="BtnShowCommentSource" Click="BtnShowCommentSource_OnClick">显示原文</MenuFlyoutItem>
         </MenuFlyout>
         <DataTemplate x:Key="commentTemplate" x:DataType="comment:CommentViewModel">
             <Grid>
@@ -251,6 +252,7 @@
                 <Grid
                     Grid.RowSpan="2"
                     Grid.Column="2"
+                    ContextFlyout="{StaticResource menu}"
                     Visibility="{x:Bind Path=Member.ShowCardBg, Mode=OneWay}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />

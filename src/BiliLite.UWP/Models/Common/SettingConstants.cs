@@ -109,6 +109,18 @@ namespace BiliLite.Models.Common
             public const double DEFAULT_DYNAMIC_COMMENT_WIDTH = 480;
 
             /// <summary>
+            /// 发评反诈
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string COMM_ANTIFRAUD = "CommAntifraud";
+
+            /// <summary>
+            /// 默认不启用发评反诈
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_COMM_ANTIFRAUD = false;
+
+            /// <summary>
             /// 视频详情显示封面
             /// </summary>
             [SettingKey(typeof(bool))]
@@ -374,6 +386,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const bool DEFAULT_ENABLE_MICA_BACKGROUND_SOURCE = true;
+
+            /// <summary>
+            /// 是否显示网页链接原文
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string DISPLAY_LINK_SOURCE = "DisplayLinkSource";
+
+            /// <summary>
+            /// 默认不显示网页链接原文
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_DISPLAY_LINK_SOURCE = false;
         }
 
         public class Account
@@ -606,6 +630,12 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string DISABLE_COLORFUL = "DisableColorful";
+
+            /// <summary>
+            /// 弹幕调试模式
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string DANMAKU_DEBUG_MODE = "DanmakuDebugMode";
         }
 
         public class Live
@@ -844,6 +874,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const bool DEFAULT_SPONSOR_BLOCK = false;
+
+            /// <summary>
+            /// 空降助手开关手动提示 bool
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string SPONSOR_BLOCK_TIPS = "SponsorBlockTips";
+
+            /// <summary>
+            /// 默认开启空降助手开关手动提示 bool
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_SPONSOR_BLOCK_TIPS = false;
 
             /// <summary>
             /// 自动播放 bool

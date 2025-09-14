@@ -114,7 +114,6 @@
             <toolkit:AdaptiveGridView
                 IsItemClickEnabled="False"
                 ItemsSource="{x:Bind Path=m_viewModel.Pictures, Mode=OneWay}"
-                OneRowModeEnabled="True"
                 SelectionMode="None"
                 StretchContentForSingleRow="False">
                 <toolkit:AdaptiveGridView.ItemTemplate>

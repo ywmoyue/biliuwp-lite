@@ -407,11 +407,19 @@ namespace BiliLite.Controls
                     JObject obj = JObject.Parse(re.results);
                     if (obj["code"].ToInt32() == 0)
                     {
+                        var text = m.ReplyText;
                         NotificationShowExtensions.ShowMessageToast("回复评论成功");
                         m.LoadPage = 1;
                         m.Replies.Clear();
                         m.ReplyText = "";
-                        GetReply(m).RunWithoutAwait();
+                        await GetReply(m);
+
+                        if (SettingService.GetValue(SettingConstants.UI.COMM_ANTIFRAUD,
+                                SettingConstants.UI.DEFAULT_COMM_ANTIFRAUD))
+                        {
+                            await CommAntifraudExtensions.CheckReplyAsync(m_loadCommentInfo.Oid,
+                                m_loadCommentInfo.CommentMode, obj["data"]["rpid_str"].ToString(), text, m.RpidStr);
+                        }
                     }
                     else
                     {
@@ -604,6 +612,15 @@ namespace BiliLite.Controls
         private void MenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
         {
             throw new NotImplementedException();
+        }
+
+        private async void BtnShowCommentSource_OnClick(object sender, RoutedEventArgs e)
+        {
+            var comment = (sender as FrameworkElement).DataContext as CommentViewModel;
+            var source = comment.Content.Message;
+
+            var dialog = new CommentSourceDialog(source);
+            await dialog.ShowAsync(ContentDialogPlacement.Popup);
         }
 
         #endregion

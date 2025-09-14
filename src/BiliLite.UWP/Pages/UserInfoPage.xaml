@@ -216,7 +216,6 @@
                                     ItemsSource="{x:Bind Path=m_userSubmitVideoViewModel.SubmitVideoItems, Mode=OneWay}"
                                     LoadMoreBottomOffset="0"
                                     LoadMoreCommand="{x:Bind Path=m_userSubmitVideoViewModel.LoadMoreSubmitVideoCommand}"
-                                    OneRowModeEnabled="False"
                                     SelectionMode="None"
                                     StretchContentForSingleRow="False">
                                     <toolkit:AdaptiveGridView.ItemTemplate>
@@ -295,6 +294,8 @@
                                                 <TextBlock>加载更多</TextBlock>
                                             </HyperlinkButton>
                                             <muxc:ProgressRing
+                                                Width="50"
+                                                Height="50"
                                                 HorizontalAlignment="Center"
                                                 IsActive="True"
                                                 Visibility="{x:Bind Path=m_userSubmitVideoViewModel.LoadingSubmitVideo, Mode=OneWay}" />
@@ -344,7 +345,6 @@
                                     ItemsSource="{x:Bind Path=userSubmitArticleVM.SubmitArticleItems, Mode=OneWay}"
                                     LoadMoreBottomOffset="0"
                                     LoadMoreCommand="{x:Bind Path=userSubmitArticleVM.LoadMoreSubmitArticleCommand}"
-                                    OneRowModeEnabled="False"
                                     SelectionMode="None"
                                     StretchContentForSingleRow="False">
                                     <toolkit:AdaptiveGridView.Header>
@@ -433,6 +433,8 @@
                                                 <TextBlock>加载更多</TextBlock>
                                             </HyperlinkButton>
                                             <muxc:ProgressRing
+                                                Width="50"
+                                                Height="50"
                                                 HorizontalAlignment="Center"
                                                 IsActive="True"
                                                 Visibility="{x:Bind Path=userSubmitArticleVM.LoadingSubmitArticle, Mode=OneWay}" />
@@ -469,7 +471,6 @@
                                     ItemsSource="{x:Bind Path=m_userSubmitCollectionViewModel.SubmitCollectionItems, Mode=OneWay}"
                                     LoadMoreBottomOffset="0"
                                     LoadMoreCommand="{x:Bind Path=m_userSubmitCollectionViewModel.LoadMoreSubmitCollectionCommand}"
-                                    OneRowModeEnabled="False"
                                     SelectionMode="None"
                                     StretchContentForSingleRow="False">
                                     <toolkit:AdaptiveGridView.ItemTemplate>
@@ -558,6 +559,8 @@
                                                 <TextBlock>加载更多</TextBlock>
                                             </HyperlinkButton>
                                             <muxc:ProgressRing
+                                                Width="50"
+                                                Height="50"
                                                 HorizontalAlignment="Center"
                                                 IsActive="True"
                                                 Visibility="{x:Bind Path=m_userSubmitCollectionViewModel.LoadingSubmitCollection, Mode=OneWay}" />
@@ -591,7 +594,6 @@
                                     IsItemClickEnabled="True"
                                     ItemClick="FavList_ItemClick"
                                     ItemsSource="{x:Bind Path=userFavlistVM.Items, Mode=OneWay}"
-                                    OneRowModeEnabled="False"
                                     SelectionMode="None"
                                     StretchContentForSingleRow="False">
                                     <toolkit:AdaptiveGridView.ItemTemplate>
@@ -678,7 +680,6 @@
                                     ItemsSource="{x:Bind Path=followVM.Items, Mode=OneWay}"
                                     LoadMoreBottomOffset="0"
                                     LoadMoreCommand="{x:Bind Path=followVM.LoadMoreCommand}"
-                                    OneRowModeEnabled="False"
                                     SelectionMode="None"
                                     StretchContentForSingleRow="False">
 
@@ -692,6 +693,8 @@
                                                 <TextBlock>加载更多</TextBlock>
                                             </HyperlinkButton>
                                             <muxc:ProgressRing
+                                                Width="50"
+                                                Height="50"
                                                 HorizontalAlignment="Center"
                                                 IsActive="True"
                                                 Visibility="{x:Bind Path=followVM.Loading, Mode=OneWay}" />
@@ -732,7 +735,6 @@
                                     ItemsSource="{x:Bind Path=fansVM.Items, Mode=OneWay}"
                                     LoadMoreBottomOffset="0"
                                     LoadMoreCommand="{x:Bind Path=fansVM.LoadMoreCommand}"
-                                    OneRowModeEnabled="False"
                                     SelectionMode="None"
                                     StretchContentForSingleRow="False">
                                     <toolkit:AdaptiveGridView.Footer>
@@ -745,6 +747,8 @@
                                                 <TextBlock>加载更多</TextBlock>
                                             </HyperlinkButton>
                                             <muxc:ProgressRing
+                                                Width="50"
+                                                Height="50"
                                                 HorizontalAlignment="Center"
                                                 IsActive="True"
                                                 Visibility="{x:Bind Path=fansVM.Loading, Mode=OneWay}" />

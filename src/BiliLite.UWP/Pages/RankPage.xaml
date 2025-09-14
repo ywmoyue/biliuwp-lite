@@ -51,7 +51,6 @@
                         ItemClick="AdaptiveGridView_ItemClick"
                         ItemHeight="120"
                         ItemsSource="{x:Bind Path=Items, Mode=OneWay}"
-                        OneRowModeEnabled="False"
                         PointerPressed="AdaptiveGridView_PointerPressed"
                         SelectionMode="None"
                         StretchContentForSingleRow="False">
