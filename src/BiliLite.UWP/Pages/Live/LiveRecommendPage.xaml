@@ -47,7 +47,6 @@
                                 ItemHeight="196"
                                 ItemsSource="{x:Bind Path=Items, Mode=OneWay}"
                                 LoadMoreCommand="{x:Bind Path=LoadMoreCommand, Mode=OneWay}"
-                                OneRowModeEnabled="False"
                                 ScrollViewer.IsDeferredScrollingEnabled="True"
                                 SelectionMode="None"
                                 StretchContentForSingleRow="False">
@@ -135,7 +134,8 @@
                                             <TextBlock>加载更多</TextBlock>
                                         </HyperlinkButton>
                                         <muxc:ProgressRing
-                                            Width="24"
+                                            Width="50"
+                                            Height="50"
                                             VerticalAlignment="Center"
                                             IsActive="True"
                                             Visibility="{x:Bind Path=Loading, Mode=OneWay}" />
@@ -149,6 +149,8 @@
                                 <SymbolIcon Symbol="Refresh" />
                             </Button>
                             <muxc:ProgressRing
+                                Width="50"
+                                Height="50"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 IsActive="True"

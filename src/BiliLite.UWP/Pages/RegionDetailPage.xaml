@@ -27,7 +27,6 @@
                     ItemsSource="{x:Bind Path=Videos, Mode=OneWay}"
                     LoadMoreBottomOffset="0"
                     LoadMoreCommand="{x:Bind Path=LoadMoreCommand, Mode=OneWay}"
-                    OneRowModeEnabled="False"
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
                     <toolkit:AdaptiveGridView.Header>
@@ -130,6 +129,8 @@
                                 <TextBlock>加载更多</TextBlock>
                             </HyperlinkButton>
                             <muxc:ProgressRing
+                                Width="50"
+                                Height="50"
                                 HorizontalAlignment="Center"
                                 IsActive="True"
                                 Visibility="{x:Bind Path=Loading, Mode=OneWay}" />
@@ -157,7 +158,6 @@
                     ItemsSource="{x:Bind Path=Videos, Mode=OneWay}"
                     LoadMoreBottomOffset="0"
                     LoadMoreCommand="{x:Bind Path=LoadMoreCommand, Mode=OneWay}"
-                    OneRowModeEnabled="False"
                     SelectionMode="None"
                     StretchContentForSingleRow="False">
                     <toolkit:AdaptiveGridView.ItemTemplate>
@@ -217,6 +217,8 @@
                                 <TextBlock>加载更多</TextBlock>
                             </HyperlinkButton>
                             <muxc:ProgressRing
+                                Width="50"
+                                Height="50"
                                 HorizontalAlignment="Center"
                                 IsActive="True"
                                 Visibility="{x:Bind Path=Loading, Mode=OneWay}" />

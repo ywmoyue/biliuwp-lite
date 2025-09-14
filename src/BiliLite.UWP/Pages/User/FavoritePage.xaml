@@ -277,6 +277,8 @@
                     </ScrollViewer>
 
                     <muxc:ProgressRing
+                        Width="50"
+                        Height="50"
                         HorizontalAlignment="Center"
                         IsActive="True"
                         Visibility="{x:Bind Path=m_videoViewModel.Loading, Mode=OneWay}" />
@@ -371,6 +373,8 @@
                                     <TextBlock>加载更多</TextBlock>
                                 </HyperlinkButton>
                                 <muxc:ProgressRing
+                                    Width="50"
+                                    Height="50"
                                     HorizontalAlignment="Center"
                                     IsActive="True"
                                     Visibility="{x:Bind Path=animeVM.Loading, Mode=OneWay}" />
@@ -473,6 +477,8 @@
                                     <TextBlock>加载更多</TextBlock>
                                 </HyperlinkButton>
                                 <muxc:ProgressRing
+                                    Width="50"
+                                    Height="50"
                                     HorizontalAlignment="Center"
                                     IsActive="True"
                                     Visibility="{x:Bind Path=cinemaVM.Loading, Mode=OneWay}" />

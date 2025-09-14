@@ -679,8 +679,8 @@
                     </PivotItem>
                     <PivotItem Margin="0">
                         <PivotItem.Header>
-                            <TextBlock FontSize="18" Text="评论" >
-                                <Run FontSize="12" Text="{x:Bind m_viewModel.VideoInfo.Stat.Reply,Mode=OneWay,Converter={StaticResource CountOrTextConvert}}"></Run>
+                            <TextBlock FontSize="18" Text="评论">
+                                <Run FontSize="12" Text="{x:Bind m_viewModel.VideoInfo.Stat.Reply, Mode=OneWay, Converter={StaticResource CountOrTextConvert}}" />
                             </TextBlock>
                         </PivotItem.Header>
                         <control:CommentControl x:Name="comment" />
