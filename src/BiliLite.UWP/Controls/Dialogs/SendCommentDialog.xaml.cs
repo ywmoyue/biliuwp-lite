@@ -1,6 +1,7 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Comment;
 using BiliLite.Models.Common.UserDynamic;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests.Api;
@@ -52,12 +53,19 @@ namespace BiliLite.Controls.Dialogs
                 IsPrimaryButtonEnabled = false;
                 var text = txt_Comment.Text;
                 var result = await commentApi.AddComment(oid, commentType, text, m_viewModel.Pictures.ToList()).Request();
-                var data = await result.GetData<object>();
+                var data = await result.GetData<SendCommentResult>();
                 if (data.code == 0)
                 {
                     NotificationShowExtensions.ShowMessageToast("发表评论成功");
                     this.Hide();
 
+                    // 发评反诈
+                    if (SettingService.GetValue(SettingConstants.UI.COMM_ANTIFRAUD,
+                            SettingConstants.UI.DEFAULT_COMM_ANTIFRAUD))
+                    {
+                        await CommAntifraudExtensions.CheckReplyAsync(oid, (int)commentType, data.data.RpidStr, text,
+                            "0");
+                    }
                 }
                 else
                 {

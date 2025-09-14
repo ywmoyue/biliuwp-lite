@@ -7,6 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Title="评论原文"
+    Background="{ThemeResource SystemControlAcrylicElementBrush}"
+    CornerRadius="{ThemeResource OverlayCornerRadius}"
+    PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
     PrimaryButtonText="关闭"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick">
 

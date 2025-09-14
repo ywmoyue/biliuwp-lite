@@ -218,6 +218,7 @@
     </Compile>
     <Compile Include="Extensions\AppExtensions.cs" />
     <Compile Include="Extensions\BizServicesExtensions.cs" />
+    <Compile Include="Extensions\CommAntifraudExtensions.cs" />
     <Compile Include="Extensions\ControlsExtensions.cs" />
     <Compile Include="Extensions\DisableScrollExtension.cs" />
     <Compile Include="Extensions\DownloadExtensions.cs" />
@@ -232,6 +233,7 @@
     <Compile Include="Models\Attributes\SettingKeyAttribute.cs" />
     <Compile Include="Models\Common\Article\ArticlePageNavigationInfo.cs" />
     <Compile Include="Models\Common\Article\ArticleReaderSetTitleData.cs" />
+    <Compile Include="Models\Common\Comment\SendCommentResult.cs" />
     <Compile Include="Models\Common\Download\DownloadTrackInfo.cs" />
     <Compile Include="Models\Common\Season\SeasonEpListResult.cs" />
     <Compile Include="Models\Common\Settings\KeyValueOption.cs" />
