@@ -140,6 +140,11 @@ namespace BiliLite.Models.Common.Live
         }
 
         /// <summary>
+        /// 发送时间, 用于历史弹幕排序
+        /// </summary>
+        public int Timestamp { get; set; }
+
+        /// <summary>
         /// 弹幕富文本卡片背景颜色
         /// </summary>
         public SolidColorBrush CardColor { get; set; } = new SolidColorBrush((Color)Application.Current.Resources["CardColor"]);

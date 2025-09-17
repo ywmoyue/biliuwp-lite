@@ -380,6 +380,38 @@ namespace BiliLite.ViewModels.Live
             }
         }
 
+        private async Task GetHistoryDanmu(int roomId, string buvid)
+        {
+            try
+            {
+                var result = await(await m_liveRoomApi.GetHistoryDanmu(roomId, buvid)).Request();
+                if (!result.status) throw new CustomizedErrorException(result.message);
+                var data = await result.GetJson<ApiDataModel<LiveRoomHistoryDanmu>>();
+                if (!data.success) throw new CustomizedErrorException(result.message);
+
+                foreach (var danmu in data.data.GetHistoryDanmuList())
+                {
+                    LiveMessage_NewMessage(MessageType.Danmu, danmu);
+                }
+            }
+            catch (CustomizedErrorException ex)
+            {
+                Messages?.Add(new DanmuMsgModel()
+                {
+                    UserName = "获取历史弹幕失败:" + ex.Message
+                });
+                _logger.Error(ex.Message, ex);
+            }
+            catch (Exception ex)
+            {
+                Messages?.Add(new DanmuMsgModel()
+                {
+                    UserName = "获取历史弹幕失败:" + ex.Message
+                });
+                _logger.Error(ex.Message, ex);
+            }
+        }
+
         private async Task ReceiveMessage(int roomId, bool webMethod = true)
         {
             try
@@ -681,7 +713,7 @@ namespace BiliLite.ViewModels.Live
         }
 
         /// <summary>
-        /// 读取直播间详细信息
+        /// 加载直播间详细信息
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -727,6 +759,7 @@ namespace BiliLite.ViewModels.Live
                 var buvidData = await buvidResults.GetJson<ApiDataModel<LiveBuvidModel>>();
                 Buvid3 = buvidData.data.B3;
 
+                await GetHistoryDanmu(RoomID, Buvid3);
                 ReceiveMessage(LiveInfo.RoomInfo.RoomId).RunWithoutAwait(); // 连接弹幕优先级提高
 
                 if(Live) await LiveStart();
