@@ -235,6 +235,7 @@
     <Compile Include="Models\Common\Article\ArticleReaderSetTitleData.cs" />
     <Compile Include="Models\Common\Comment\SendCommentResult.cs" />
     <Compile Include="Models\Common\Download\DownloadTrackInfo.cs" />
+    <Compile Include="Models\Common\Live\LiveRoomHistoryDanmu.cs" />
     <Compile Include="Models\Common\Season\SeasonEpListResult.cs" />
     <Compile Include="Models\Common\Settings\KeyValueOption.cs" />
     <Compile Include="Models\Common\Settings\MicaBackgroundSources.cs" />
