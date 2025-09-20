@@ -1,7 +1,7 @@
 {
-  "version": "4.8.5",
-  "version_num": 40805,
-  "version_desc": "更新内容:\r\n\r\n- 检测播放地址无效时提示设置替换CDN  \r\n\r\n- 已下载视频可更新弹幕 \r\n\r\n- 视频详情页显示当前评论数量 \r\n\r\n- 依赖注入服务注入代码改为编译时生成 \r\n\r\n- 修复直播间无法获取抽奖信息的问题 \r\n\r\n- 修改直播间直播状态的相关逻辑 \r\n\r\n- WebPlayer修复设置同步偏差阈值失效问题\r\n\r\n- WebPlayer mpegts错误重试 \r\n\r\n- 修复播放列表定位视频错误  \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.8.6",
+  "version_num": 40806,
+  "version_desc": "更新内容:\r\n\r\n- 新增发评反诈功能 \r\n\r\n- 可设置评论显示链接原文，右键评论用户名菜单新增显示原文按键 \r\n\r\n- 空降助手支持Sponsor类型提示手动跳过 \r\n\r\n- 更新排行榜分区id \r\n\r\n- 优化动态页面的触摸板操作 \r\n\r\n- 修复ProgressRing强制拉伸，删除报错的OneRowModeEnabled属性  \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
