@@ -1753,7 +1753,7 @@ namespace BiliLite.Controls
                     noneItem.Click += Menuitem_Click;
                     menu.Items.Add(noneItem);
                     var firstMenuItem = (menu.Items[0] as ToggleMenuFlyoutItem);
-                    if ((firstMenuItem.Text.Contains("自动") || firstMenuItem.Text.Contains("AI")) && !autoAISubtitle)
+                    if (!(firstMenuItem.Text.Contains("自动") || firstMenuItem.Text.Contains("AI")) && !autoAISubtitle)
                     {
                         noneItem.IsChecked = true;
                         CurrentSubtitleName = noneItem.Text;
@@ -1793,7 +1793,7 @@ namespace BiliLite.Controls
                 noneItem.Click += Menuitem_Click;
                 menu.Items.Add(noneItem);
                 var firstMenuItem = (menu.Items[0] as ToggleMenuFlyoutItem);
-                if ((firstMenuItem.Text.Contains("自动") || firstMenuItem.Text.Contains("AI")) && !autoAISubtitle)
+                if (!(firstMenuItem.Text.Contains("自动") || firstMenuItem.Text.Contains("AI")) && !autoAISubtitle)
                 {
                     noneItem.IsChecked = true;
                     CurrentSubtitleName = noneItem.Text;
