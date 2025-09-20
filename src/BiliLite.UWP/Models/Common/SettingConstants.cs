@@ -109,6 +109,18 @@ namespace BiliLite.Models.Common
             public const double DEFAULT_DYNAMIC_COMMENT_WIDTH = 480;
 
             /// <summary>
+            /// 发评反诈
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string COMM_ANTIFRAUD = "CommAntifraud";
+
+            /// <summary>
+            /// 默认不启用发评反诈
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_COMM_ANTIFRAUD = false;
+
+            /// <summary>
             /// 视频详情显示封面
             /// </summary>
             [SettingKey(typeof(bool))]

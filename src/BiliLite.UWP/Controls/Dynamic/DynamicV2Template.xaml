@@ -496,6 +496,7 @@
                 <GridView
                     MaxWidth="300"
                     HorizontalAlignment="Left"
+                    extensions:DisableScrollExtension.DisableScroll="True"
                     ItemsSource="{Binding Path=ImageInfos}"
                     SelectionMode="None">
                     <GridView.ItemTemplate>

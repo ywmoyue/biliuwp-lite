@@ -59,7 +59,6 @@
                         ItemClick="AttentionlList_ItemClick"
                         ItemHeight="120"
                         ItemsSource="{x:Bind Path=liveAttentionVM.Follow, Mode=OneWay}"
-                        OneRowModeEnabled="False"
                         SelectionMode="None"
                         StretchContentForSingleRow="False">
                         <control:MyAdaptiveGridView.ItemTemplate>
@@ -109,6 +108,8 @@
                         <toolkit:AdaptiveGridView.Footer>
                             <StackPanel>
                                 <muxc:ProgressRing
+                                    Width="50"
+                                    Height="50"
                                     HorizontalAlignment="Center"
                                     IsActive="True"
                                     Visibility="{x:Bind Path=liveAttentionVM.Loading, Mode=OneWay}" />
@@ -138,7 +139,6 @@
                         ItemsSource="{x:Bind Path=liveAttentionUnLiveVM.Items, Mode=OneWay}"
                         LoadMoreBottomOffset="0"
                         LoadMoreCommand="{x:Bind Path=liveAttentionUnLiveVM.LoadMoreCommand}"
-                        OneRowModeEnabled="False"
                         SelectionMode="None"
                         StretchContentForSingleRow="False">
                         <toolkit:AdaptiveGridView.ItemTemplate>
@@ -190,6 +190,8 @@
                                     <TextBlock>加载更多</TextBlock>
                                 </HyperlinkButton>
                                 <muxc:ProgressRing
+                                    Width="50"
+                                    Height="50"
                                     HorizontalAlignment="Center"
                                     IsActive="True"
                                     Visibility="{x:Bind Path=liveAttentionUnLiveVM.Loading, Mode=OneWay}" />
@@ -222,7 +224,6 @@
                         ItemsSource="{x:Bind Path=liveCenterHistoryVM.Items, Mode=OneWay}"
                         LoadMoreBottomOffset="0"
                         LoadMoreCommand="{x:Bind Path=liveCenterHistoryVM.LoadMoreCommand}"
-                        OneRowModeEnabled="False"
                         SelectionMode="None"
                         StretchContentForSingleRow="False">
                         <toolkit:AdaptiveGridView.ItemTemplate>
@@ -274,6 +275,8 @@
                                     <TextBlock>加载更多</TextBlock>
                                 </HyperlinkButton>
                                 <muxc:ProgressRing
+                                    Width="50"
+                                    Height="50"
                                     HorizontalAlignment="Center"
                                     IsActive="True"
                                     Visibility="{x:Bind Path=liveCenterHistoryVM.Loading, Mode=OneWay}" />

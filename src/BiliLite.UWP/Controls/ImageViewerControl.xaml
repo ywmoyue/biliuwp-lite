@@ -196,6 +196,8 @@
         </StackPanel>
         <ProgressRing
             x:Name="loading"
+            Width="50"
+            Height="50"
             Foreground="{ThemeResource SystemAccentColor}"
             IsActive="True"
             Visibility="Collapsed" />

@@ -151,8 +151,8 @@
                         Height="200"
                         Source="{x:Bind Path=loginVM.QRImageSource, Mode=OneWay}" />
                     <muxc:ProgressRing
-                        Width="48"
-                        Height="48"
+                        Width="50"
+                        Height="50"
                         IsActive="True"
                         Visibility="{x:Bind Path=loginVM.QRLoadding, Mode=OneWay}" />
                 </Grid>

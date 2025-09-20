@@ -517,6 +517,13 @@
                         Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
+
+                <controls:SettingsCard Description="发送评论8秒后提示发评反诈结果" Header="发评反诈（实验性）">
+                    <ToggleSwitch
+                        x:Name="SwCommAntifraud"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
+                </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 

@@ -67,21 +67,24 @@ namespace BiliLite.Models.Requests.Api
         /// <param name="type"></param>
         /// <param name="ps"></param>
         /// <returns></returns>
-        public async Task<ApiModel> CommentV2(string oid, CommentSort sort, int pn, int type, int ps = 30, string offsetStr = null)
+        public async Task<ApiModel> CommentV2(string oid, CommentSort sort, int pn, int type, int ps = 30, string offsetStr = null, bool login = true)
         {
             var mode = sort == CommentSort.Hot ? 3 : 2;
             var pagination = new { offset = offsetStr };
             var paginationStr = JsonConvert.SerializeObject(pagination);
             var parameters = $"oid={oid}&ps={ps}&mode={mode}&type={type}&pagination_str={paginationStr}";
 
-            try
+            if (login)
             {
-                var csrf = m_cookieService.GetCSRFToken();
-                parameters += $"&csrf={csrf}";
-            }
-            catch (UnLoginException)
-            {
-                _logger.Warn("获取评论未登录");
+                try
+                {
+                    var csrf = m_cookieService.GetCSRFToken();
+                    parameters += $"&csrf={csrf}";
+                }
+                catch (UnLoginException)
+                {
+                    _logger.Warn("获取评论未登录");
+                }
             }
 
             parameters = await ApiHelper.GetWbiSign(parameters);
@@ -91,19 +94,19 @@ namespace BiliLite.Models.Requests.Api
                 method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply/wbi/main",
                 parameter = parameters,
-                need_cookie = true,
+                need_cookie = login,
             };
         }
 
 
-        public ApiModel Reply(string oid, string root, int pn, int type, int ps = 30)
+        public ApiModel Reply(string oid, string root, int pn, int type, int ps = 30, bool login = true)
         {
             var api = new ApiModel()
             {
                 method = HttpMethods.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply/reply",
                 parameter = $"oid={oid}&plat=2&pn={pn}&ps={ps}&root={root}&type={type}",
-                need_cookie = true,
+                need_cookie = login,
             };
             //api.parameter += ApiHelper.GetSign(api.parameter, appKey);
             return api;
