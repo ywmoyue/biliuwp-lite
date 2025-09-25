@@ -48,8 +48,6 @@
             <ToggleSwitch
                 x:Name="DanmuSettingState"
                 Margin="0,0,-68,0"
-                OffContent="关闭"
-                OnContent="打开"
                 Style="{StaticResource DefaultToggleSwitchStyle}" />
         </controls:SettingsCard>
 
@@ -87,7 +85,10 @@
             <controls:SettingsCard.HeaderIcon>
                 <font:FontAwesome Icon="Solid_ListOl" />
             </controls:SettingsCard.HeaderIcon>
-            <ToggleSwitch x:Name="SwitchDanmakuDebugMode"></ToggleSwitch>
+            <ToggleSwitch
+                x:Name="SwitchDanmakuDebugMode"
+                Margin="0,0,-68,0"
+                Style="{StaticResource DefaultToggleSwitchStyle}" />
         </controls:SettingsCard>
 
         <controls:SettingsExpander Header="弹幕屏蔽" IsExpanded="True">

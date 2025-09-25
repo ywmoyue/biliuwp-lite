@@ -92,6 +92,16 @@ namespace BiliLite.Services
         {
             try
             {
+                // 检查是否已有事务，如果已有事务则等待事务结束
+                {
+                    var retryTimes = 0;
+                    while (m_biliLiteDbContext.Database.CurrentTransaction != null && retryTimes < 10)
+                    {
+                        await Task.Delay(100); // 等待100ms再检查
+                        retryTimes++;
+                    }
+                }
+
                 await using var transaction = await m_biliLiteDbContext.Database.BeginTransactionAsync();
                 try
                 {

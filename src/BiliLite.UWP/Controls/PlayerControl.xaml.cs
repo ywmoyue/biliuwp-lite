@@ -66,6 +66,7 @@ namespace BiliLite.Controls
         public event PropertyChangedEventHandler PropertyChanged;
         private GestureRecognizer gestureRecognizer;
         private bool m_firstMediaOpened;
+        private bool m_firstMediaPlayed;
         private ThemeService m_themeService;
         private bool m_isLocalFileMode;
         private readonly IPlayerSponsorBlockControl m_playerSponsorBlockControl;
@@ -1853,6 +1854,8 @@ namespace BiliLite.Controls
                 progress = Player.Position;
             }
 
+            if (!m_firstMediaPlayed) return;
+
             await playerHelper.ReportHistory(CurrentPlayItem, progress);
         }
 
@@ -3160,6 +3163,12 @@ namespace BiliLite.Controls
             {
                 SetPosition(0);
             }
+
+            if (!m_firstMediaPlayed)
+            {
+                m_firstMediaPlayed = true;
+            }
+
             Player.Play();
         }
 
