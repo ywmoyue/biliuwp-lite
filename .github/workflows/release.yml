@@ -58,8 +58,8 @@ jobs:
       - name: Configure Pagefile
         uses: al-cheb/configure-pagefile-action@v1.2
         with:
-          minimum-size: 32GB
-          maximum-size: 32GB
+          minimum-size: 16GB
+          maximum-size: 64GB
           disk-root: "C:"
 
       - name: Checkout
