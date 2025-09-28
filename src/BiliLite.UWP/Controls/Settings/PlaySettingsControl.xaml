@@ -445,5 +445,20 @@
                 Margin="0,-5,-88,-5"
                 Style="{StaticResource DefaultToggleSwitchStyle}" />
         </controls:SettingsCard>
+
+        <controls:SettingsExpander Description="实验性解决关闭播放器后仍在播放问题" Header="重试关闭播放器">
+            <controls:SettingsExpander.HeaderIcon>
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE72C;" />
+            </controls:SettingsExpander.HeaderIcon>
+            <ToggleSwitch
+                x:Name="SwRetryClosePlayer"
+                Margin="0,-5,-88,-5"
+                Style="{StaticResource DefaultToggleSwitchStyle}" />
+            <controls:SettingsExpander.Items>
+                <controls:SettingsCard Description="单位毫秒" Header="重试关闭播放器延迟时间">
+                    <controls1:NumberBox x:Name="NumberBoxRetryClosePlayerDelay" MinWidth="200" />
+                </controls:SettingsCard>
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>
     </StackPanel>
 </UserControl>
