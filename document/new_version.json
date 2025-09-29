@@ -1,7 +1,7 @@
 {
-  "version": "4.8.6",
-  "version_num": 40806,
-  "version_desc": "更新内容:\r\n\r\n- 新增发评反诈功能 \r\n\r\n- 可设置评论显示链接原文，右键评论用户名菜单新增显示原文按键 \r\n\r\n- 空降助手支持Sponsor类型提示手动跳过 \r\n\r\n- 更新排行榜分区id \r\n\r\n- 优化动态页面的触摸板操作 \r\n\r\n- 修复ProgressRing强制拉伸，删除报错的OneRowModeEnabled属性  \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.8.7",
+  "version_num": 40807,
+  "version_desc": "更新内容:\r\n\r\n- 添加直播间历史弹幕功能 \r\n\r\n- 自动AI字幕开关更新适配 \r\n\r\n- 更新证书 \r\n\r\n- 修复页面保存错误 \r\n\r\n- 视频加载完成未播放退出时不上报历史记录 \r\n\r\n- 修复settingscard闪退 \r\n\r\n- 修复部分视频显示up主粉丝数量错误 \r\n\r\n- 添加关闭播放器延迟重试机制 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
