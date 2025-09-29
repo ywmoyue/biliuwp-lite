@@ -514,6 +514,29 @@ namespace BiliLite.Controls.Settings
                     SettingService.SetValue(SettingConstants.Player.ALWAYS_SHOW_VIDEO_PROGRESS_BAR, SwAlwaysShowVideoProgress.IsOn);
                 };
             };
+
+            //重试关闭播放器
+            SwRetryClosePlayer.IsOn = SettingService.GetValue(SettingConstants.Player.RETRY_CLOSE_PLAYER, SettingConstants.Player.DEFAULT_RETRY_CLOSE_PLAYER);
+            SwRetryClosePlayer.Loaded += (sender, e) =>
+            {
+                SwRetryClosePlayer.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.RETRY_CLOSE_PLAYER, SwRetryClosePlayer.IsOn);
+                };
+            };
+
+            //重试关闭播放器延迟时间，单位毫秒
+            NumberBoxRetryClosePlayerDelay.Value = SettingService.GetValue(
+                SettingConstants.Player.RETRY_CLOSE_PLAYER_DELAY,
+                SettingConstants.Player.DEFAULT_RETRY_CLOSE_PLAYER_DELAY);
+            NumberBoxRetryClosePlayerDelay.Loaded += (_, _) =>
+            {
+                NumberBoxRetryClosePlayerDelay.ValueChanged += (_, _) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.RETRY_CLOSE_PLAYER_DELAY,
+                        NumberBoxRetryClosePlayerDelay.Value);
+                };
+            };
         }
 
         private async void BtnEditPlaySpeedMenu_OnClick(object sender, RoutedEventArgs e)

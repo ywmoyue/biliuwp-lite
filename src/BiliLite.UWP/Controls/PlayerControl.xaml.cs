@@ -66,6 +66,7 @@ namespace BiliLite.Controls
         public event PropertyChangedEventHandler PropertyChanged;
         private GestureRecognizer gestureRecognizer;
         private bool m_firstMediaOpened;
+        private bool m_firstMediaPlayed;
         private ThemeService m_themeService;
         private bool m_isLocalFileMode;
         private readonly IPlayerSponsorBlockControl m_playerSponsorBlockControl;
@@ -1753,7 +1754,7 @@ namespace BiliLite.Controls
                     noneItem.Click += Menuitem_Click;
                     menu.Items.Add(noneItem);
                     var firstMenuItem = (menu.Items[0] as ToggleMenuFlyoutItem);
-                    if ((firstMenuItem.Text.Contains("自动") || firstMenuItem.Text.Contains("AI")) && !autoAISubtitle)
+                    if ((firstMenuItem.Text.Contains("自动") || firstMenuItem.Text.Contains("AI") || firstMenuItem.Text.Contains("ai")) && !autoAISubtitle)
                     {
                         noneItem.IsChecked = true;
                         CurrentSubtitleName = noneItem.Text;
@@ -1785,7 +1786,7 @@ namespace BiliLite.Controls
                 var menu = new MenuFlyout();
                 foreach (var item in player_info.subtitle.subtitles)
                 {
-                    ToggleMenuFlyoutItem menuitem = new ToggleMenuFlyoutItem() { Text = item.lan_doc, Tag = item.subtitle_url };
+                    ToggleMenuFlyoutItem menuitem = new ToggleMenuFlyoutItem() { Text = $"{item.lan_doc}({item.lan})", Tag = item.subtitle_url };
                     menuitem.Click += Menuitem_Click;
                     menu.Items.Add(menuitem);
                 }
@@ -1793,7 +1794,7 @@ namespace BiliLite.Controls
                 noneItem.Click += Menuitem_Click;
                 menu.Items.Add(noneItem);
                 var firstMenuItem = (menu.Items[0] as ToggleMenuFlyoutItem);
-                if ((firstMenuItem.Text.Contains("自动") || firstMenuItem.Text.Contains("AI")) && !autoAISubtitle)
+                if ((firstMenuItem.Text.Contains("自动") || firstMenuItem.Text.Contains("AI") || firstMenuItem.Text.Contains("ai")) && !autoAISubtitle)
                 {
                     noneItem.IsChecked = true;
                     CurrentSubtitleName = noneItem.Text;
@@ -1852,6 +1853,8 @@ namespace BiliLite.Controls
             {
                 progress = Player.Position;
             }
+
+            if (!m_firstMediaPlayed) return;
 
             await playerHelper.ReportHistory(CurrentPlayItem, progress);
         }
@@ -3160,6 +3163,12 @@ namespace BiliLite.Controls
             {
                 SetPosition(0);
             }
+
+            if (!m_firstMediaPlayed)
+            {
+                m_firstMediaPlayed = true;
+            }
+
             Player.Play();
         }
 

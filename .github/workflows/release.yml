@@ -38,7 +38,7 @@ permissions:
 
 jobs:
   release:
-    runs-on: windows-latest
+    runs-on: windows-2022
 
     env:
       SigningCertificate: BiliLite.UWP_TemporaryKey.pfx
@@ -58,8 +58,8 @@ jobs:
       - name: Configure Pagefile
         uses: al-cheb/configure-pagefile-action@v1.2
         with:
-          minimum-size: 32GB
-          maximum-size: 32GB
+          minimum-size: 64GB
+          maximum-size: 64GB
           disk-root: "C:"
 
       - name: Checkout
