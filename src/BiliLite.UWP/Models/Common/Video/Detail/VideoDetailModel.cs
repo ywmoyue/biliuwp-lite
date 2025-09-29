@@ -70,7 +70,7 @@ namespace BiliLite.Models.Common.Video.Detail
         /// UP主信息扩展
         /// </summary>
         [JsonProperty("owner_ext")]
-        public VideoDetailOwnerExtModel OwnerExt { get; set; } = new VideoDetailOwnerExtModel();
+        public VideoDetailOwnerExtModel OwnerExt { get; set; }
 
         /// <summary>
         /// 数据

@@ -240,6 +240,7 @@
     <Compile Include="Models\Common\Settings\KeyValueOption.cs" />
     <Compile Include="Models\Common\Settings\MicaBackgroundSources.cs" />
     <Compile Include="Models\Common\Settings\SettingsSearchMap.cs" />
+    <Compile Include="Models\Common\User\UserCardInfo.cs" />
     <Compile Include="Models\Common\Video\QualityDictonary.cs" />
     <Compile Include="Models\Common\WebPageNavigationInfo.cs" />
     <Compile Include="Models\Exceptions\UnLoginException.cs" />
