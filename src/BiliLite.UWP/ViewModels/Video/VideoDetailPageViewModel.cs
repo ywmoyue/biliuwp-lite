@@ -330,6 +330,25 @@ namespace BiliLite.Modules
                     data.data.UgcSeason = webData.data.UgcSeason;
                 }
 
+                if (data.data.OwnerExt == null)
+                {
+                    data.data.OwnerExt = new VideoDetailOwnerExtModel();
+                    try
+                    {
+                        var request = new UserDetailAPI().UserCard(data.data.Owner.Mid);
+                        var userResults = await request.Request();
+                        if (userResults.status)
+                        {
+                            var userData = await userResults.GetData<UserCardInfo>();
+                            data.data.OwnerExt.Fans = userData.data.Follower;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Warn("get userCard error", ex);
+                    }
+                }
+
                 var videoInfoViewModel = m_mapper.Map<VideoDetailViewModel>(data.data);
                 VideoInfo = videoInfoViewModel;
                 if (needGetUserReq)

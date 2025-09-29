@@ -489,5 +489,25 @@ namespace BiliLite.Models.Requests.Api.Live
             };
             return api;
         }
+
+        /// <summary>
+        /// 获取直播间历史弹幕, 使用网页端接口
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <param name="buvid3"></param>
+        /// <returns></returns>
+        public async Task<ApiModel> GetHistoryDanmu(int roomId, string buvid3)
+        {
+            var api = new ApiModel()
+            {
+                method = HttpMethods.Get,
+                baseUrl = $"https://api.live.bilibili.com/xlive/web-room/v1/dM/gethistory",
+                parameter = $"roomid={roomId}",
+            };
+
+            api.parameter = await ApiHelper.GetWbiSign(api.parameter);
+            api.ExtraCookies = new Dictionary<string, string>() { { "buvid3", buvid3 } };
+            return api;
+        }
     }
 }
