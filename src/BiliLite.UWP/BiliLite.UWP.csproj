@@ -154,6 +154,13 @@
     <Compile Include="Controls\Dynamic\DynamicItemV2Control.xaml.cs">
       <DependentUpon>DynamicItemV2Control.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\IPlayerControlToolBar.cs" />
+    <Compile Include="Controls\PlayerControlToolBarWithComboBox.xaml.cs">
+      <DependentUpon>PlayerControlToolBarWithComboBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PlayerControlToolBarWithSlider.xaml.cs">
+      <DependentUpon>PlayerControlToolBarWithSlider.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PlayerProgressBar.xaml.cs">
       <DependentUpon>PlayerProgressBar.xaml</DependentUpon>
     </Compile>
@@ -1297,6 +1304,14 @@
     <Page Include="Controls\Dynamic\DynamicV2Template.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\PlayerControlToolBarWithComboBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PlayerControlToolBarWithSlider.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\PlayerProgressBar.xaml">
       <SubType>Designer</SubType>

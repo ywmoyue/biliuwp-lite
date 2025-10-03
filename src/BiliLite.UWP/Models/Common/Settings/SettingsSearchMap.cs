@@ -76,6 +76,7 @@ namespace BiliLite.Models.Common.Settings
             { "自动最小化到播放窗口底部", "PlaySettings:SwShowVideoBottomProgress:SEProgress" },
             { "自动打开 AI 字幕", "PlaySettings:swPlayerSettingAutoOpenAISubtitle:SESub" },
             { "繁体字幕转简体", "PlaySettings:RoamingSettingToSimplified:SESub" },
+            { "播放器部分选项控件类型设置", "PlaySettings:CbToolBarStyleType" },
             { "播放器按住手势行为", "PlaySettings:cbPlayerHoldingGestureAction" },
             { "双击播放器全屏", "PlaySettings:swPlayerSettingDoubleClickFullScreen" },
 
