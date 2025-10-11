@@ -16,21 +16,37 @@
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:video="using:BiliLite.Models.Common.Video"
     xmlns:webPlayer="using:BiliLite.Player.WebPlayer"
+    xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
+    xmlns:IsWin11="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,14)"
     d:DesignHeight="800"
     d:DesignWidth="1000"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <SolidColorBrush x:Key="HyperlinkButtonForegroundPointerOver" Color="{ThemeResource SystemAccentColor}" />
-        <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="{ThemeResource SystemAccentColor}" />
-        <SolidColorBrush x:Key="ListViewItemForegroundPointerOver" Color="{ThemeResource SystemAccentColor}" />
-        <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="Transparent" />
-        <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="Transparent" />
-        <SolidColorBrush x:Key="ListViewItemForegroundSelected" Color="{ThemeResource SystemAccentColor}" />
-        <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
-            <Style.Setters>
-                <Setter Property="BorderThickness" Value="0" />
-            </Style.Setters>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <SolidColorBrush x:Key="HyperlinkButtonForegroundPointerOver" Color="{ThemeResource SystemAccentColor}" />
+                    <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="{ThemeResource SystemAccentColor}" />
+                    <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
+                        <Style.Setters>
+                            <Setter Property="BorderThickness" Value="0" />
+                        </Style.Setters>
+                    </Style>
+                </ResourceDictionary>
+                <IsWin10:ResourceDictionary>
+                    <SolidColorBrush x:Key="ListViewItemForegroundPointerOver" Color="{ThemeResource SystemAccentColor}" />
+                    <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="{ThemeResource SystemAccentColor}" />
+                    <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="{ThemeResource SystemAccentColor}" />
+                    <SolidColorBrush x:Key="ListViewItemForegroundSelected" Color="{ThemeResource SystemAccentColor}" />
+                </IsWin10:ResourceDictionary>
+                <IsWin11:ResourceDictionary>
+                    <SolidColorBrush x:Key="ListViewItemForegroundPointerOver" Color="{ThemeResource SystemAccentColor}" />
+                    <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="Transparent" />
+                    <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="Transparent" />
+                    <SolidColorBrush x:Key="ListViewItemForegroundSelected" Color="{ThemeResource SystemAccentColor}" />
+                </IsWin11:ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
     <Grid Background="Black">
         <SplitView
