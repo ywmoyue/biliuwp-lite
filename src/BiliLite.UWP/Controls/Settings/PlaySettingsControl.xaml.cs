@@ -297,6 +297,18 @@ namespace BiliLite.Controls.Settings
                 };
             };
 
+            // 播放器部分选项控件类型设置
+            CbToolBarStyleType.SelectedIndex =
+                SettingService.GetValue(SettingConstants.Player.PLAYER_TOOL_BAR_STYLE_TYPE, SettingConstants.Player.DEFAULT_PLAYER_TOOL_BAR_STYLE_TYPE);
+            CbToolBarStyleType.Loaded += (sender, e) =>
+            {
+                CbToolBarStyleType.SelectionChanged += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.PLAYER_TOOL_BAR_STYLE_TYPE,
+                        CbToolBarStyleType.SelectedIndex);
+                };
+            };
+
             // 倍速播放速度
             cbRatePlaySpeed.SelectedIndex =
                 SettingConstants.Player.HIGH_RATE_PLAY_SPEED_LIST.IndexOf(
@@ -512,6 +524,29 @@ namespace BiliLite.Controls.Settings
                 SwAlwaysShowVideoProgress.Toggled += (obj, args) =>
                 {
                     SettingService.SetValue(SettingConstants.Player.ALWAYS_SHOW_VIDEO_PROGRESS_BAR, SwAlwaysShowVideoProgress.IsOn);
+                };
+            };
+
+            //重试关闭播放器
+            SwRetryClosePlayer.IsOn = SettingService.GetValue(SettingConstants.Player.RETRY_CLOSE_PLAYER, SettingConstants.Player.DEFAULT_RETRY_CLOSE_PLAYER);
+            SwRetryClosePlayer.Loaded += (sender, e) =>
+            {
+                SwRetryClosePlayer.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.RETRY_CLOSE_PLAYER, SwRetryClosePlayer.IsOn);
+                };
+            };
+
+            //重试关闭播放器延迟时间，单位毫秒
+            NumberBoxRetryClosePlayerDelay.Value = SettingService.GetValue(
+                SettingConstants.Player.RETRY_CLOSE_PLAYER_DELAY,
+                SettingConstants.Player.DEFAULT_RETRY_CLOSE_PLAYER_DELAY);
+            NumberBoxRetryClosePlayerDelay.Loaded += (_, _) =>
+            {
+                NumberBoxRetryClosePlayerDelay.ValueChanged += (_, _) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.RETRY_CLOSE_PLAYER_DELAY,
+                        NumberBoxRetryClosePlayerDelay.Value);
                 };
             };
         }

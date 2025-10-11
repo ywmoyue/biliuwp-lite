@@ -436,6 +436,21 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
+        <controls:SettingsCard Description="音质、画质、倍速选项的控件类型" Header="播放器部分选项控件类型设置">
+            <controls:SettingsCard.HeaderIcon>
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE74C;" />
+            </controls:SettingsCard.HeaderIcon>
+            <ComboBox
+                x:Name="CbToolBarStyleType"
+                MinWidth="200"
+                SelectedIndex="0">
+                <ComboBox.Items>
+                    <ComboBoxItem Content="滑块" />
+                    <ComboBoxItem Content="组合框" />
+                </ComboBox.Items>
+            </ComboBox>
+        </controls:SettingsCard>
+
         <controls:SettingsCard Description="默认双击暂停" Header="双击播放器全屏">
             <controls:SettingsCard.HeaderIcon>
                 <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xF8AF;" />
@@ -445,5 +460,20 @@
                 Margin="0,-5,-88,-5"
                 Style="{StaticResource DefaultToggleSwitchStyle}" />
         </controls:SettingsCard>
+
+        <controls:SettingsExpander Description="实验性解决关闭播放器后仍在播放问题" Header="重试关闭播放器">
+            <controls:SettingsExpander.HeaderIcon>
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE72C;" />
+            </controls:SettingsExpander.HeaderIcon>
+            <ToggleSwitch
+                x:Name="SwRetryClosePlayer"
+                Margin="0,-5,-88,-5"
+                Style="{StaticResource DefaultToggleSwitchStyle}" />
+            <controls:SettingsExpander.Items>
+                <controls:SettingsCard Description="单位毫秒" Header="重试关闭播放器延迟时间">
+                    <controls1:NumberBox x:Name="NumberBoxRetryClosePlayerDelay" MinWidth="200" />
+                </controls:SettingsCard>
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>
     </StackPanel>
 </UserControl>

@@ -1263,6 +1263,42 @@ namespace BiliLite.Models.Common
 
             [SettingDefaultValue]
             public const double DEFAULT_WEB_PLAYER_AV_POSITION_SYNC_THRESHOLD_2 = 0.6d;
+
+            /// <summary>
+            /// 重试关闭播放器
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string RETRY_CLOSE_PLAYER = "RetryClosePlayer";
+
+            /// <summary>
+            /// 默认启用重试关闭播放器
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_RETRY_CLOSE_PLAYER = true;
+
+            /// <summary>
+            /// 重试关闭播放器延迟时间，单位毫秒
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string RETRY_CLOSE_PLAYER_DELAY = "RetryClosePlayerDelay";
+
+            /// <summary>
+            /// 默认重试关闭播放器延迟时间5s
+            /// </summary>
+            [SettingDefaultValue]
+            public const int DEFAULT_RETRY_CLOSE_PLAYER_DELAY = 5000;
+
+            /// <summary>
+            /// 播放器工具栏样式类型, 枚举 PlayerToolBarStyleTypes
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const string PLAYER_TOOL_BAR_STYLE_TYPE = "PlayerToolBarStyleType";
+
+            /// <summary>
+            /// 默认播放器工具栏样式类型，默认为 组合框
+            /// </summary>
+            [SettingDefaultValue]
+            public const int DEFAULT_PLAYER_TOOL_BAR_STYLE_TYPE = (int)PlayerToolBarStyleTypes.ComboBox;
         }
 
         public class Filter

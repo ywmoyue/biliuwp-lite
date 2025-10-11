@@ -152,7 +152,7 @@ namespace BiliLite.Controls.Dialogs
                     {
                         downloadInfo.Subtitles = info.subtitle.subtitles.Select(sub => new DownloadSubtitleInfo
                         {
-                            Name = sub.lan_doc,
+                            Name = $"{sub.lan_doc}({sub.lan})",
                             Url = sub.subtitle_url
                         }).ToList();
                     }

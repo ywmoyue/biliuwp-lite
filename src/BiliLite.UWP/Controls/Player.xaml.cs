@@ -28,6 +28,8 @@ using BiliLite.Player.ShakaPlayer.Extensions;
 using BiliLite.Player.WebPlayer;
 using BiliLite.Player.WebPlayer.Models;
 using PropertyChanged;
+using Bilibili.Community.Service.Dm.V1;
+using BiliLite.Extensions.Notifications;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -1635,6 +1637,24 @@ namespace BiliLite.Controls
         {
             try
             {
+                if(SettingService.GetValue(SettingConstants.Player.RETRY_CLOSE_PLAYER, SettingConstants.Player.DEFAULT_RETRY_CLOSE_PLAYER))
+                {
+                    // 打开新线程延迟重试
+                    Task.Run(async () =>
+                    {
+                        await Task.Delay(SettingService.GetValue(
+                            SettingConstants.Player.RETRY_CLOSE_PLAYER_DELAY,
+                            SettingConstants.Player.DEFAULT_RETRY_CLOSE_PLAYER_DELAY));
+                        await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => {
+                            try
+                            {
+                                ClosePlay();
+                            }
+                            catch { }
+                            m_webPlayer?.Dispose();
+                        });
+                    });
+                }
                 ClosePlay();
                 m_webPlayer?.Dispose();
             }

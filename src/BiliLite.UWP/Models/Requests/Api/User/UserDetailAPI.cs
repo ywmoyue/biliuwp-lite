@@ -33,6 +33,18 @@ namespace BiliLite.Models.Requests.Api.User
             api.parameter = await ApiHelper.GetWbiSign(api.parameter);
             return api;
         }
+
+        public ApiModel UserCard(string mid)
+        {
+            var api = new ApiModel()
+            {
+                method = HttpMethods.Get,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/web-interface/card",
+                parameter = $"mid={mid}",
+            };
+            return api;
+        }
+
         /// <summary>
         /// 个人空间
         /// </summary>
