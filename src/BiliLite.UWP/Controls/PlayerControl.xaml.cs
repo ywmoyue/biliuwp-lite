@@ -67,6 +67,7 @@ namespace BiliLite.Controls
         private GestureRecognizer gestureRecognizer;
         private bool m_firstMediaOpened;
         private bool m_firstMediaPlayed;
+        private bool m_mediaIsLoading = true;
         private ThemeService m_themeService;
         private bool m_isLocalFileMode;
         private readonly IPlayerSponsorBlockControl m_playerSponsorBlockControl;
@@ -988,6 +989,7 @@ namespace BiliLite.Controls
             subtitleTimer?.Stop();
             subtitleTimer = null;
             Pause();
+            m_mediaIsLoading = true;
             Player.ClosePlay();
 
             m_autoRefreshTimer?.Stop();
@@ -1562,6 +1564,7 @@ namespace BiliLite.Controls
 
         private async void PlayerControlToolBar_OnSoundQualityChanged(object sender, BiliDashAudioPlayUrlInfo e)
         {
+            if (m_mediaIsLoading) return;
             _postion = Player.Position;
             _autoPlay = Player.PlayState == PlayState.Playing;
             if (m_isLocalFileMode)
@@ -1578,6 +1581,7 @@ namespace BiliLite.Controls
 
         private async void PlayerToolBar_OnQualityChanged(object sender, BiliPlayUrlInfo e)
         {
+            if (m_mediaIsLoading) return;
             _postion = Player.Position;
             _autoPlay = Player.PlayState == PlayState.Playing;
 
@@ -2752,6 +2756,7 @@ namespace BiliLite.Controls
 
         private async void Player_PlayMediaOpened(object sender, EventArgs e)
         {
+            m_mediaIsLoading = false;
             txtInfo.Text = Player.GetMediaInfo();
             VideoLoading.Visibility = Visibility.Collapsed;
             if (_postion != 0 && _postion < Player.Duration)
