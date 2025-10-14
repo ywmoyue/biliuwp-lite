@@ -238,6 +238,13 @@ namespace BiliLite.Controls
                     }
                 }
             }
+
+
+            m_danmakuController.Clear();
+
+            LoadPlayerSetting();
+            LoadDanmuSetting();
+            LoadSutitleSetting();
         }
 
         private async void AutoRefreshTimer_Tick(object sender, object e)
@@ -303,12 +310,14 @@ namespace BiliLite.Controls
                 _systemMediaTransportControls.IsEnabled = false;
                 _systemMediaTransportControls = null;
             }
+
+            danmuTimer.Stop();
             timer_focus.Stop();
+            m_positionTimer.Stop();
         }
 
         private async void PlayerControl_Loaded(object sender, RoutedEventArgs e)
         {
-            m_danmakuController.Clear();
             BtnFoucs.Focus(FocusState.Programmatic);
             _systemMediaTransportControls = SystemMediaTransportControls.GetForCurrentView();
             _systemMediaTransportControls.IsPlayEnabled = true;
@@ -322,10 +331,6 @@ namespace BiliLite.Controls
             }
 
             _systemMediaTransportControls.ButtonPressed += _systemMediaTransportControls_ButtonPressed;
-
-            LoadPlayerSetting();
-            LoadDanmuSetting();
-            LoadSutitleSetting();
 
             danmuTimer.Start();
             timer_focus.Start();
