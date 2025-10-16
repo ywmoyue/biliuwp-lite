@@ -216,6 +216,7 @@
     {
         NSDanmaku = 0,
         FrostDanmakuMaster = 1,
+        DanmuJs = 2,
     }
 
     public enum PlayUrlCodecMode

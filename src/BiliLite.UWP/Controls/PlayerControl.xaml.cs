@@ -44,8 +44,11 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Shapes;
+using BiliLite.Controls.Common;
 using BiliLite.Modules.ExtraInterface;
 using PlayInfo = BiliLite.Models.Common.Video.PlayInfo;
+using NSDanmaku.Controls;
+using Microsoft.Graphics.Canvas.UI.Xaml;
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
 namespace BiliLite.Controls
@@ -53,7 +56,7 @@ namespace BiliLite.Controls
     public sealed partial class PlayerControl : UserControl, IDisposable
     {
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
-        private readonly bool m_useNsDanmaku = true;
+        private readonly DanmakuEngineType m_danmakuEngineType = DanmakuEngineType.NSDanmaku;
         private readonly IDanmakuController m_danmakuController;
         private readonly VideoDanmakuSettingsControlViewModel m_danmakuSettingsControlViewModel;
         private readonly PlayControlViewModel m_viewModel;
@@ -195,18 +198,30 @@ namespace BiliLite.Controls
             m_qualitySliderTooltipConverter = new QualitySliderTooltipConverter();
             m_playSpeedSliderTooltipConverter = new PlaySpeedSliderTooltipConverter(m_playSpeedMenuService);
 
-            m_useNsDanmaku = (DanmakuEngineType)SettingService.GetValue(SettingConstants.VideoDanmaku.DANMAKU_ENGINE,
-                (int)SettingConstants.VideoDanmaku.DEFAULT_DANMAKU_ENGINE) == DanmakuEngineType.NSDanmaku;
-            if (m_useNsDanmaku)
+            m_danmakuEngineType = (DanmakuEngineType)SettingService.GetValue(SettingConstants.VideoDanmaku.DANMAKU_ENGINE,
+                (int)SettingConstants.VideoDanmaku.DEFAULT_DANMAKU_ENGINE);
+            if (m_danmakuEngineType == DanmakuEngineType.NSDanmaku)
             {
+                var danmaku = new Danmaku();
+                DanmakuContainer.Children.Add(danmaku);
                 m_danmakuController = App.ServiceProvider.GetRequiredService<NsDanmakuController>();
-                m_danmakuController.Init(DanmuControl);
+                m_danmakuController.Init(danmaku);
+            }
+            else if(m_danmakuEngineType==DanmakuEngineType.FrostDanmakuMaster)
+            {
+                var danmakuCanvas = new CanvasAnimatedControl();
+                DanmakuContainer.Children.Add(danmakuCanvas);
+                m_danmakuController = App.ServiceProvider.GetRequiredService<FrostMasterDanmakuController>();
+                m_danmakuController.Init(danmakuCanvas);
             }
             else
             {
-                m_danmakuController = App.ServiceProvider.GetRequiredService<FrostMasterDanmakuController>();
-                m_danmakuController.Init(DanmakuCanvas);
+                var danmakuWeb = new DanmakuWeb();
+                DanmakuContainer.Children.Add(danmakuWeb);
+                m_danmakuController = new DanmakuJsController();
+                m_danmakuController.Init(danmakuWeb);
             }
+
 
             if ((PlayerToolBarStyleTypes)SettingService.GetValue(SettingConstants.Player.PLAYER_TOOL_BAR_STYLE_TYPE,
                     SettingConstants.Player.DEFAULT_PLAYER_TOOL_BAR_STYLE_TYPE) == PlayerToolBarStyleTypes.ComboBox)
@@ -301,9 +316,11 @@ namespace BiliLite.Controls
             }
             runing = false;
         }
+
         private void PlayerControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
+            Window.Current.CoreWindow.PointerCursor =
+                new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
             if (_systemMediaTransportControls != null)
             {
                 _systemMediaTransportControls.DisplayUpdater.ClearAll();
@@ -311,9 +328,9 @@ namespace BiliLite.Controls
                 _systemMediaTransportControls = null;
             }
 
-            danmuTimer.Stop();
-            timer_focus.Stop();
-            m_positionTimer.Stop();
+            danmuTimer?.Stop();
+            timer_focus?.Stop();
+            m_positionTimer?.Stop();
         }
 
         private async void PlayerControl_Loaded(object sender, RoutedEventArgs e)
@@ -488,7 +505,7 @@ namespace BiliLite.Controls
                 {
                     SettingService.SetValue<double>(SettingConstants.VideoDanmaku.MAX_NUM, DanmuSettingMaxNum.Value);
                     m_danmakuController.SetDensity((int)DanmuSettingMaxNum.Value);
-                    if (!m_useNsDanmaku)
+                    if (m_danmakuEngineType != DanmakuEngineType.NSDanmaku)
                     {
                         var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
                         if (segIndex <= 0) segIndex = 1;
@@ -501,7 +518,7 @@ namespace BiliLite.Controls
                 DanmuSettingShieldLevel.ValueChanged += async (e, args) =>
                 {
                     SettingService.SetValue<int>(SettingConstants.VideoDanmaku.SHIELD_LEVEL, System.Convert.ToInt32(DanmuSettingShieldLevel.Value));
-                    if (!m_useNsDanmaku)
+                    if (m_danmakuEngineType == DanmakuEngineType.FrostDanmakuMaster)
                     {
                         var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
                         if (segIndex <= 0) segIndex = 1;
@@ -541,7 +558,7 @@ namespace BiliLite.Controls
                 DanmuSettingMerge.Toggled += async (e, args) =>
                 {
                     SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.MERGE, DanmuSettingMerge.IsOn);
-                    if (!m_useNsDanmaku)
+                    if (m_danmakuEngineType == DanmakuEngineType.FrostDanmakuMaster)
                     {
                         var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
                         if (segIndex <= 0) segIndex = 1;
@@ -553,7 +570,7 @@ namespace BiliLite.Controls
                 DanmuSettingDisableColorful.Toggled += async (e, args) =>
                 {
                     SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.DISABLE_COLORFUL, DanmuSettingDisableColorful.IsOn);
-                    if (!m_useNsDanmaku)
+                    if (m_danmakuEngineType == DanmakuEngineType.FrostDanmakuMaster)
                     {
                         var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
                         if (segIndex <= 0) segIndex = 1;
@@ -807,7 +824,7 @@ namespace BiliLite.Controls
                 if (max > 0)
                 {
                     // 弹幕按每秒分组，每组取前x项
-                    danmakus = danmakus.GroupBy(x => (x.StartMs / 1000) * 1000)
+                     danmakus = danmakus.GroupBy(x => (x.StartMs / 1000) * 1000)
                         .ToDictionary(x => (int)x.Key, x => x.ToList())
                         .SelectMany(x => x.Value.Take(max));
                 }
@@ -905,7 +922,7 @@ namespace BiliLite.Controls
             {
                 await LoadDanmaku(segIndex);
             }
-            else if (position < m_danmakuController.Position && !m_useNsDanmaku && Player.PlayState == PlayState.Playing)
+            else if (position < m_danmakuController.Position && m_danmakuEngineType == DanmakuEngineType.FrostDanmakuMaster && Player.PlayState == PlayState.Playing)
             {
                 await LoadDanmaku(segIndex);
             }
@@ -929,7 +946,7 @@ namespace BiliLite.Controls
             var level = DanmuSettingShieldLevel.Value;
             var max = System.Convert.ToInt32(DanmuSettingMaxNum.Value);
 
-            if (m_useNsDanmaku)
+            if (m_danmakuEngineType == DanmakuEngineType.NSDanmaku)
             {
                 await SelectNsDanmakuAndLoad(position, level, needDistinct, max);
             }
@@ -1369,7 +1386,7 @@ namespace BiliLite.Controls
                 if (CurrentPlayItem.play_mode == VideoPlayType.Download && !update)
                 {
                     var danmakuFile = await StorageFile.GetFileFromPathAsync(CurrentPlayItem.LocalPlayInfo.DanmakuPath);
-                    if (m_useNsDanmaku)
+                    if (m_danmakuEngineType == DanmakuEngineType.NSDanmaku)
                     {
                         var danmuList = danmakuParse.ParseBiliBili(await FileIO.ReadTextAsync(danmakuFile));
                         danmakuPool = danmuList.GroupBy(x => x.time_s).ToDictionary(x => x.Key, x => x.ToList());
@@ -1460,7 +1477,7 @@ namespace BiliLite.Controls
                     segmentIndex = 1;
                 }
 
-                if (m_useNsDanmaku)
+                if (m_danmakuEngineType == DanmakuEngineType.NSDanmaku)
                 {
                     await LoadNSDanmaku(segmentIndex);
                 }

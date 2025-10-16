@@ -34,7 +34,7 @@ namespace BiliLite.Services
 
         public bool IsShow => DanmakuViewModel.IsHide;
 
-        public override void Init(UserControl danmakuElement)
+        public override void Init(object danmakuElement)
         {
             m_danmakuCanvas = danmakuElement as CanvasAnimatedControl;
             m_danmakuMaster = new DanmakuFrostMaster(m_danmakuCanvas);

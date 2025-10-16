@@ -143,6 +143,7 @@
     <Compile Include="Controls\ChatMessages\ChatMessageTemplate.xaml.cs">
       <DependentUpon>ChatMessageTemplate.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Common\DanmakuWeb.cs" />
     <Compile Include="Controls\Common\PieControl.xaml.cs">
       <DependentUpon>PieControl.xaml</DependentUpon>
     </Compile>
@@ -398,6 +399,7 @@
     <Compile Include="Services\Biz\LocalAttentionUserService.cs" />
     <Compile Include="Services\Biz\MessagesService.cs" />
     <Compile Include="Services\Biz\UserDynamicService.cs" />
+    <Compile Include="Services\DanmuJsController.cs" />
     <Compile Include="Services\Interfaces\IUpdatePivotLayout.cs" />
     <Compile Include="Services\PageSaveService.cs" />
     <Compile Include="Models\Common\Msg\BiliMessageSession.cs" />

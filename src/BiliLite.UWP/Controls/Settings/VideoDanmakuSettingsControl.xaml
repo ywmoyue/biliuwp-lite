@@ -37,6 +37,7 @@
                 <ComboBox.Items>
                     <common:ComboBoxItemData Text="NSDanmaku" Value="0" />
                     <common:ComboBoxItemData Text="寒霜弹幕使" Value="1" />
+                    <common:ComboBoxItemData Text="danmu.js" Value="2" />
                 </ComboBox.Items>
             </ComboBox>
         </controls:SettingsCard>

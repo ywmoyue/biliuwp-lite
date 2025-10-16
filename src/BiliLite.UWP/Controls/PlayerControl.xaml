@@ -537,11 +537,7 @@
                         Opacity="{Binding ElementName=SubtitleSettingOpacity, Path=Value, Mode=OneWay}"
                         Visibility="Collapsed" />
                     <!--  弹幕  -->
-                    <Grid>
-                        <danmaku:Danmaku x:Name="DanmuControl" />
-                    </Grid>
-                    <Grid>
-                        <canvas:CanvasAnimatedControl x:Name="DanmakuCanvas" />
+                    <Grid x:Name="DanmakuContainer">
                     </Grid>
                     <!--  亮度  -->
                     <Grid
@@ -1144,7 +1140,7 @@
                                     Background="Transparent"
                                     Click="TopBtnOpenDanmaku_Click"
                                     ToolTipService.ToolTip="打开弹幕"
-                                    Visibility="{x:Bind Path=DanmuControl.Visibility, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
+                                    Visibility="{x:Bind Path=DanmakuContainer.Visibility, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
                                     <Image
                                         Width="28"
                                         Height="28"
@@ -1157,7 +1153,7 @@
                                     Background="Transparent"
                                     Click="TopBtnCloseDanmaku_Click"
                                     ToolTipService.ToolTip="关闭弹幕"
-                                    Visibility="{x:Bind Path=DanmuControl.Visibility, Mode=OneWay}">
+                                    Visibility="{x:Bind Path=DanmakuContainer.Visibility, Mode=OneWay}">
                                     <Image
                                         Width="28"
                                         Height="28"

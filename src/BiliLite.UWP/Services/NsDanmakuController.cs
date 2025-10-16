@@ -32,7 +32,7 @@ namespace BiliLite.Services
             };
         }
 
-        public override void Init(UserControl danmakuElement)
+        public override void Init(object danmakuElement)
         {
             m_danmakuControl = danmakuElement as Danmaku;
         }

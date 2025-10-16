@@ -20,7 +20,7 @@ namespace BiliLite.Services.Interfaces
         /// <summary>
         /// 初始化
         /// </summary>
-        public abstract void Init(UserControl danmakuElement);
+        public abstract void Init(object danmakuElement);
 
         /// <summary>
         /// 清空
