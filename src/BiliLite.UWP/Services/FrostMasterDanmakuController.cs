@@ -19,6 +19,7 @@ namespace BiliLite.Services
         private readonly IMapper m_mapper;
         private CanvasAnimatedControl m_danmakuCanvas;
         private DanmakuFrostMaster m_danmakuMaster;
+        private List<DanmakuItem> m_danmakuItems;
 
         public FrostMasterDanmakuController(IMapper mapper)
         {
@@ -149,6 +150,7 @@ namespace BiliLite.Services
         public override void Load(IEnumerable danmakuList)
         {
             var realDanmakuList = (danmakuList as List<DanmakuItem>).ToList();
+            m_danmakuItems = realDanmakuList;
             m_danmakuMaster.SetDanmakuList(realDanmakuList);
         }
 
@@ -183,6 +185,17 @@ namespace BiliLite.Services
         {
             base.UpdateTime(position);
             m_danmakuMaster.UpdateTime((uint)position * 1000);
+        }
+
+        public override List<DanmakuSimpleItem> FindDanmakus(int? progress = null)
+        {
+            var query = m_danmakuItems.AsEnumerable();
+            if (progress != null)
+            {
+                query = query.Where(x => x.StartMs / 1000 > progress - 10 && x.StartMs / 1000 < progress + 10);
+            }
+
+            return m_mapper.Map<List<DanmakuSimpleItem>>(query);
         }
     }
 }

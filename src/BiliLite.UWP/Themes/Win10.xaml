@@ -50,7 +50,7 @@
                         Opacity="0.5"
                         Color="White" />
 
-                    <SolidColorBrush x:Key="GridViewItemForegroundSelected" Color="White" />
+                    <SolidColorBrush x:Key="GridViewItemForegroundSelected" Color="{ThemeResource SystemAccentColor}" />
                     <SolidColorBrush x:Key="GridViewItemForegroundPointerOver" Color="{ThemeResource SystemAccentColor}" />
                     <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="{ThemeResource SystemAccentColor}" />
                     <SolidColorBrush x:Key="GridViewItemBackgroundSelectedPointerOver" Color="{ThemeResource SystemAccentColor}" />

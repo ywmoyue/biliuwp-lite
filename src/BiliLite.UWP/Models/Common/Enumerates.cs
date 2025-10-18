@@ -628,4 +628,16 @@
         /// </summary>
         None,
     }
+
+    public enum PlayerToolBarStyleTypes
+    {
+        /// <summary>
+        /// 滑块
+        /// </summary>
+        Slider,
+        /// <summary>
+        /// 组合框
+        /// </summary>
+        ComboBox,
+    }
 }

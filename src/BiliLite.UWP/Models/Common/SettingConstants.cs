@@ -1287,6 +1287,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const int DEFAULT_RETRY_CLOSE_PLAYER_DELAY = 5000;
+
+            /// <summary>
+            /// 播放器工具栏样式类型, 枚举 PlayerToolBarStyleTypes
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const string PLAYER_TOOL_BAR_STYLE_TYPE = "PlayerToolBarStyleType";
+
+            /// <summary>
+            /// 默认播放器工具栏样式类型，默认为 组合框
+            /// </summary>
+            [SettingDefaultValue]
+            public const int DEFAULT_PLAYER_TOOL_BAR_STYLE_TYPE = (int)PlayerToolBarStyleTypes.ComboBox;
         }
 
         public class Filter

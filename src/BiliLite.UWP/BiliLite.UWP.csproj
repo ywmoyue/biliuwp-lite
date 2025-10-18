@@ -143,6 +143,11 @@
     <Compile Include="Controls\ChatMessages\ChatMessageTemplate.xaml.cs">
       <DependentUpon>ChatMessageTemplate.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Common\DanmakuListControl.xaml.cs">
+      <DependentUpon>DanmakuListControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\Common\DanmakuListViewModel.cs" />
+    <Compile Include="Models\Common\Danmaku\DanmakuSimpleItem.cs" />
     <Compile Include="Controls\Common\PieControl.xaml.cs">
       <DependentUpon>PieControl.xaml</DependentUpon>
     </Compile>
@@ -153,6 +158,13 @@
     </Compile>
     <Compile Include="Controls\Dynamic\DynamicItemV2Control.xaml.cs">
       <DependentUpon>DynamicItemV2Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\IPlayerControlToolBar.cs" />
+    <Compile Include="Controls\PlayerControlToolBarWithComboBox.xaml.cs">
+      <DependentUpon>PlayerControlToolBarWithComboBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PlayerControlToolBarWithSlider.xaml.cs">
+      <DependentUpon>PlayerControlToolBarWithSlider.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\PlayerProgressBar.xaml.cs">
       <DependentUpon>PlayerProgressBar.xaml</DependentUpon>
@@ -358,6 +370,7 @@
     <Compile Include="Models\Common\Season\SeasonIndexParameter.cs" />
     <Compile Include="Models\Common\Season\SeasonIndexResultItemModel.cs" />
     <Compile Include="Models\Common\Season\SeasonIndexResultItemOrderModel.cs" />
+    <Compile Include="Models\Requests\Api\DanmakuApi.cs" />
     <Compile Include="Models\Requests\Api\User\MessageApi.cs" />
     <Compile Include="Modules\ExtraInterface\IPlayerSponsorBlockControl.cs" />
     <Compile Include="Modules\ExtraInterface\ISponsorBlockService.cs" />
@@ -1282,6 +1295,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Common\DanmakuListControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\Common\PieControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1297,6 +1314,14 @@
     <Page Include="Controls\Dynamic\DynamicV2Template.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\PlayerControlToolBarWithComboBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PlayerControlToolBarWithSlider.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\PlayerProgressBar.xaml">
       <SubType>Designer</SubType>
