@@ -297,6 +297,18 @@ namespace BiliLite.Controls.Settings
                 };
             };
 
+            // 播放器部分选项控件类型设置
+            CbToolBarStyleType.SelectedIndex =
+                SettingService.GetValue(SettingConstants.Player.PLAYER_TOOL_BAR_STYLE_TYPE, SettingConstants.Player.DEFAULT_PLAYER_TOOL_BAR_STYLE_TYPE);
+            CbToolBarStyleType.Loaded += (sender, e) =>
+            {
+                CbToolBarStyleType.SelectionChanged += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.PLAYER_TOOL_BAR_STYLE_TYPE,
+                        CbToolBarStyleType.SelectedIndex);
+                };
+            };
+
             // 倍速播放速度
             cbRatePlaySpeed.SelectedIndex =
                 SettingConstants.Player.HIGH_RATE_PLAY_SPEED_LIST.IndexOf(

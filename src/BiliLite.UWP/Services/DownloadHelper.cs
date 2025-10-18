@@ -274,6 +274,7 @@ namespace BiliLite.Services
             //创建视频文件
             StorageFile file = await episodeFolder.CreateFileAsync(url.FileName, CreationCollisionOption.OpenIfExists);
             DownloadOperation downloadOp = downloader.CreateDownload(new Uri(url.Url), file);
+            logger.Info("download task created: " + url);
             //设置下载策略
             if (allowCostNetwork)
             {
@@ -299,9 +300,11 @@ namespace BiliLite.Services
             try
             {
                 await downloadOp.StartAsync();
+                logger.Info("download task started: " + url);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                logger.Error("download task error", ex);
             }
 
         }

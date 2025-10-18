@@ -436,6 +436,21 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
+        <controls:SettingsCard Description="音质、画质、倍速选项的控件类型" Header="播放器部分选项控件类型设置">
+            <controls:SettingsCard.HeaderIcon>
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE74C;" />
+            </controls:SettingsCard.HeaderIcon>
+            <ComboBox
+                x:Name="CbToolBarStyleType"
+                MinWidth="200"
+                SelectedIndex="0">
+                <ComboBox.Items>
+                    <ComboBoxItem Content="滑块" />
+                    <ComboBoxItem Content="组合框" />
+                </ComboBox.Items>
+            </ComboBox>
+        </controls:SettingsCard>
+
         <controls:SettingsCard Description="默认双击暂停" Header="双击播放器全屏">
             <controls:SettingsCard.HeaderIcon>
                 <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xF8AF;" />
