@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using Windows.UI;
 using Windows.UI.Xaml.Controls;
 using BiliLite.Models.Common.Danmaku;
@@ -153,6 +154,10 @@ namespace BiliLite.Services.Interfaces
             DanmakuViewModel.BolderStyle = bolderStyle;
         }
 
+        public virtual void LoadDanmakuPool(IDictionary<int, List<NSDanmaku.Model.DanmakuModel>> danmakuPool)
+        {
+        }
+
         /// <summary>
         /// 加载弹幕
         /// </summary>
@@ -192,6 +197,11 @@ namespace BiliLite.Services.Interfaces
         public virtual void UpdateTime(long position)
         {
             Position = position;
+        }
+
+        public virtual List<DanmakuSimpleItem> FindDanmakus(int? progress = null)
+        {
+            return new List<DanmakuSimpleItem>();
         }
     }
 }

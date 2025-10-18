@@ -1,0 +1,133 @@
+﻿<UserControl
+    x:Class="BiliLite.Controls.Common.DanmakuListControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BiliLite.Controls.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:fontAwesome5="using:FontAwesome5"
+    xmlns:danmaku="using:BiliLite.Models.Common.Danmaku"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <UserControl.Resources>
+        <Style x:Key="DanmakuListViewItemStyle" TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListViewItem">
+                        <Grid x:Name="RootGrid"
+                              Background="{TemplateBinding Background}"
+                              BorderBrush="{TemplateBinding BorderBrush}"
+                              BorderThickness="{TemplateBinding BorderThickness}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HoverCommandBar" Storyboard.TargetProperty="Visibility">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed"/>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="SelectionStates">
+                                    <VisualState x:Name="Unselected"/>
+                                    <VisualState x:Name="Selected"/>
+                                    <VisualState x:Name="SelectedUnfocused"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+
+                            <ContentPresenter x:Name="ContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+
+                            <!-- 悬浮时显示的CommandBar -->
+                            <CommandBar x:Name="HoverCommandBar"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Top"
+                                       Background="{ThemeResource NoTapGridBackground}"
+                                       Margin="0"
+                                       Height="40"
+                                       Visibility="Collapsed">
+                                <AppBarButton Icon="Copy" Width="40" Padding="0" Margin="0"
+                                              ToolTipService.ToolTip="复制" x:Name="BtnCopy" Click="BtnCopy_OnClick"
+                                              DataContext="{Binding DataContext, ElementName=DanmakuItemGrid}"/>
+                                <AppBarButton Icon="Like" Width="40" Padding="0" Margin="0"
+                                              ToolTipService.ToolTip="点赞" x:Name="BtnLike" Click="BtnLike_OnClick"
+                                              DataContext="{Binding DataContext, ElementName=RootGrid}"/>
+                                <!--<AppBarButton Icon="ReportHacked" Width="40" Padding="0" Margin="0"
+                                              ToolTipService.ToolTip="举报" x:Name="BtnReport"/>-->
+                                <AppBarButton Icon="BlockContact" Width="40" Padding="0" Margin="0"
+                                              ToolTipService.ToolTip="屏蔽用户" x:Name="BtnBlockUser" Click="BtnBlockUser_OnClick"/>
+                                <!--<AppBarButton Icon="Filter" Width="40" Padding="0" Margin="0"
+                                              ToolTipService.ToolTip="屏蔽关键词"/>-->
+                            </CommandBar>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+		<Button
+				Width="48"
+				Height="48"
+				Padding="0"
+				Background="Transparent"
+                Click="BtnOpenDanmakuList_OnClick"
+				ToolTipService.ToolTip="弹幕列表">
+			<fontAwesome5:FontAwesome
+				Width="28"
+				Height="28"
+				Foreground="White"
+				Icon="Solid_EnvelopeOpenText" />
+			<Button.Flyout>
+				<Flyout>
+					<Grid Width="320">
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid>
+                            <TextBlock Text="{x:Bind m_viewModel.Title,Mode=OneWay}" VerticalAlignment="Center"></TextBlock>
+                            <Button Click="BtnReplaceShowMode_OnClick" HorizontalAlignment="Right">
+                                <fontAwesome5:FontAwesome
+                                    Width="28"
+                                    Height="28"
+                                    Icon="Solid_Random" />
+                            </Button>
+                        </Grid>
+                        <ListView Grid.Row="1" MaxHeight="680" ItemsSource="{x:Bind m_viewModel.Danmakus,Mode=TwoWay}"
+                                  ItemContainerStyle="{StaticResource DanmakuListViewItemStyle}">
+							<ListView.ItemTemplate>
+                                <DataTemplate x:DataType="danmaku:DanmakuSimpleItem">
+                                    <Grid x:Name="DanmakuItemGrid">
+										<Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock 
+                                            Margin="0 0 8 0"
+                                            VerticalAlignment="Center"
+                                            Text="{x:Bind ProgressS,Converter={StaticResource ProgressToTimeConverter}}"></TextBlock>
+                                        <TextBlock Grid.Column="1" 
+                                                   Text="{x:Bind Content}"
+                                                   VerticalAlignment="Center"
+                                                   TextWrapping="Wrap"></TextBlock>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+					</Grid>
+				</Flyout>
+			</Button.Flyout>
+		</Button>
+    </Grid>
+</UserControl>
