@@ -311,9 +311,9 @@ namespace BiliLite.Controls
                 _systemMediaTransportControls = null;
             }
 
-            danmuTimer.Stop();
-            timer_focus.Stop();
-            m_positionTimer.Stop();
+            danmuTimer?.Stop();
+            timer_focus?.Stop();
+            m_positionTimer?.Stop();
         }
 
         private async void PlayerControl_Loaded(object sender, RoutedEventArgs e)
