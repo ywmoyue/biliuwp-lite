@@ -1,7 +1,7 @@
 {
-  "version": "4.8.5",
-  "version_num": 40805,
-  "version_desc": "更新内容:\r\n\r\n- 检测播放地址无效时提示设置替换CDN  \r\n\r\n- 已下载视频可更新弹幕 \r\n\r\n- 视频详情页显示当前评论数量 \r\n\r\n- 依赖注入服务注入代码改为编译时生成 \r\n\r\n- 修复直播间无法获取抽奖信息的问题 \r\n\r\n- 修改直播间直播状态的相关逻辑 \r\n\r\n- WebPlayer修复设置同步偏差阈值失效问题\r\n\r\n- WebPlayer mpegts错误重试 \r\n\r\n- 修复播放列表定位视频错误  \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.8.8",
+  "version_num": 40808,
+  "version_desc": "更新内容:\r\n\r\n- 播放器中添加查看弹幕列表功能，支持复制、点赞、屏蔽用户操作  \r\n\r\n- 支持设置播放器部分控件使用滑块或组合框，部分控件默认变更为组合框 \r\n\r\n- 发评反诈弹窗添加打开浏览器手动申诉按钮 \r\n\r\n- 修复 Win10 列表选中项高亮样式 \r\n\r\n- 修复连续自动播放分p视频失效 \r\n\r\n- 播放器控件部分初始化代码顺序调整 \r\n\r\n- 文章阅读器样式错误 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
