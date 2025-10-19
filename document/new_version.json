@@ -1,7 +1,7 @@
 {
-  "version": "4.8.7",
-  "version_num": 40807,
-  "version_desc": "更新内容:\r\n\r\n- 添加直播间历史弹幕功能 \r\n\r\n- 自动AI字幕开关更新适配 \r\n\r\n- 更新证书 \r\n\r\n- 修复页面保存错误 \r\n\r\n- 视频加载完成未播放退出时不上报历史记录 \r\n\r\n- 修复settingscard闪退 \r\n\r\n- 修复部分视频显示up主粉丝数量错误 \r\n\r\n- 添加关闭播放器延迟重试机制 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.8.8",
+  "version_num": 40808,
+  "version_desc": "更新内容:\r\n\r\n- 播放器中添加查看弹幕列表功能，支持复制、点赞、屏蔽用户操作  \r\n\r\n- 支持设置播放器部分控件使用滑块或组合框，部分控件默认变更为组合框 \r\n\r\n- 发评反诈弹窗添加打开浏览器手动申诉按钮 \r\n\r\n- 修复 Win10 列表选中项高亮样式 \r\n\r\n- 修复连续自动播放分p视频失效 \r\n\r\n- 播放器控件部分初始化代码顺序调整 \r\n\r\n- 文章阅读器样式错误 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
