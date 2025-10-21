@@ -143,6 +143,11 @@
     <Compile Include="Controls\ChatMessages\ChatMessageTemplate.xaml.cs">
       <DependentUpon>ChatMessageTemplate.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Common\DanmakuListControl.xaml.cs">
+      <DependentUpon>DanmakuListControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\Common\DanmakuListViewModel.cs" />
+    <Compile Include="Models\Common\Danmaku\DanmakuSimpleItem.cs" />
     <Compile Include="Controls\Common\PieControl.xaml.cs">
       <DependentUpon>PieControl.xaml</DependentUpon>
     </Compile>
@@ -365,6 +370,7 @@
     <Compile Include="Models\Common\Season\SeasonIndexParameter.cs" />
     <Compile Include="Models\Common\Season\SeasonIndexResultItemModel.cs" />
     <Compile Include="Models\Common\Season\SeasonIndexResultItemOrderModel.cs" />
+    <Compile Include="Models\Requests\Api\DanmakuApi.cs" />
     <Compile Include="Models\Requests\Api\User\MessageApi.cs" />
     <Compile Include="Modules\ExtraInterface\IPlayerSponsorBlockControl.cs" />
     <Compile Include="Modules\ExtraInterface\ISponsorBlockService.cs" />
@@ -1296,6 +1302,10 @@
     <Page Include="Controls\CommentControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Common\DanmakuListControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Common\PieControl.xaml">
       <SubType>Designer</SubType>

@@ -19,6 +19,7 @@ namespace BiliLite.Services
     {
         private readonly IMapper m_mapper;
         private Danmaku m_danmakuControl;
+        private IDictionary<int, List<NSDanmaku.Model.DanmakuModel>> m_danmakuPool;
 
         public NsDanmakuController(IMapper mapper)
         {
@@ -132,6 +133,11 @@ namespace BiliLite.Services
             m_danmakuControl.DanmakuStyle = (DanmakuBorderStyle)bolderStyle;
         }
 
+        public override void LoadDanmakuPool(IDictionary<int, List<NSDanmaku.Model.DanmakuModel>> danmakuPool)
+        {
+            m_danmakuPool = danmakuPool;
+        }
+
         public override void Load(IEnumerable danmakuList)
         {
             var realDanmakuList = (danmakuList as IEnumerable<DanmakuModel>).ToList();
@@ -167,6 +173,21 @@ namespace BiliLite.Services
             var rectangle = new RectangleGeometry();
             rectangle.Rect = new Rect(0, 0, width, height);
             m_danmakuControl.Clip = rectangle;
+        }
+
+        public override List<DanmakuSimpleItem> FindDanmakus(int? progress = null)
+        {
+            if (m_danmakuPool == null) return new List<DanmakuSimpleItem>();
+            var query = m_danmakuPool.AsEnumerable();
+            if (progress != null)
+            {
+                query = query.Where(x => x.Key > progress - 10 && x.Key < progress + 10);
+            }
+
+            return m_mapper.Map<List<DanmakuSimpleItem>>(
+                query
+                    .SelectMany(x => x.Value)
+                    .OrderBy(x => x.time));
         }
     }
 }

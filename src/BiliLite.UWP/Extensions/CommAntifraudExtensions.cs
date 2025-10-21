@@ -58,7 +58,7 @@ public static class CommAntifraudExtensions
             if (index != -1)
             {
                 // 找到评论
-                NotificationShowExtensions.ShowMessageDialog("发评反诈",$"无账号状态下找到了你的评论，评论正常！\n\n你的评论：{message}");
+                NotificationShowExtensions.ShowCommAntifraudDialog($"无账号状态下找到了你的评论，评论正常！\n\n你的评论：{message}");
                 return;
             }
 
@@ -68,7 +68,7 @@ public static class CommAntifraudExtensions
             if (!cookieResponse.status)
             {
                 // 带cookie也没找到
-                NotificationShowExtensions.ShowMessageDialog("发评反诈", $"无法找到你的评论。\n\n你的评论：{message}");
+                NotificationShowExtensions.ShowCommAntifraudDialog($"无法找到你的评论。\n\n你的评论：{message}");
                 return;
             }
 
@@ -79,7 +79,7 @@ public static class CommAntifraudExtensions
             {
                 // 无cookie获取不到
                 var isShadowBan = noCookieDetailResponse.message?.StartsWith("12022") == true;
-                NotificationShowExtensions.ShowMessageDialog("发评反诈",
+                NotificationShowExtensions.ShowCommAntifraudDialog(
                     isShadowBan
                         ? $"你的评论被shadow ban（仅自己可见）！\n\n你的评论: {message}"
                         : $"评论不可见({noCookieDetailResponse.message}): {message}");
@@ -87,7 +87,7 @@ public static class CommAntifraudExtensions
             else
             {
                 // 无cookie也能获取到
-                NotificationShowExtensions.ShowMessageDialog("发评反诈",
+                NotificationShowExtensions.ShowCommAntifraudDialog(
                     isManual
                         ? $"无账号状态下找到了你的评论，评论正常！\n\n你的评论：{message}"
                         : $"你评论状态有点可疑，虽然无账号翻找评论区获取不到你的评论，但是无账号可通过\n" +
@@ -102,9 +102,9 @@ public static class CommAntifraudExtensions
     {
         var api = new CommentApi();
         // 无cookie检查
-        for (int i = 1; ; i++)
+        for (int i = 1;; i++)
         {
-            var response = await api.Reply(oid, root, 1, type,login:false).Request();
+            var response = await api.Reply(oid, root, 1, type, login: false).Request();
 
             if (!response.status)
             {
@@ -127,13 +127,13 @@ public static class CommAntifraudExtensions
             var index = dataCommentModel.Data.Replies.FindIndex(r => r.RpId.ToString() == id);
             if (index != -1)
             {
-                NotificationShowExtensions.ShowMessageDialog("发评反诈", $"无账号状态下找到了你的评论，评论正常！\n\n你的评论：{message}");
+                NotificationShowExtensions.ShowCommAntifraudDialog($"无账号状态下找到了你的评论，评论正常！\n\n你的评论：{message}");
                 return;
             }
         }
 
         // 带cookie检查
-        for (int i = 1; ; i++)
+        for (int i = 1;; i++)
         {
             var response = await api.Reply(oid, root, 1, type).Request();
 
@@ -149,6 +149,7 @@ public static class CommAntifraudExtensions
                 NotificationShowExtensions.ShowMessageToast($"发评反诈：{dataCommentModel.Code}:{dataCommentModel.Message}");
                 break;
             }
+
             if (dataCommentModel.Data.Replies?.Any() != true)
             {
                 break;
@@ -157,12 +158,11 @@ public static class CommAntifraudExtensions
             var index = dataCommentModel.Data.Replies.FindIndex(r => r.RpId.ToString() == id);
             if (index != -1)
             {
-                NotificationShowExtensions.ShowMessageDialog("发评反诈", $"你的评论被shadow ban（仅自己可见）！\n\n你的评论: {message}");
+                NotificationShowExtensions.ShowCommAntifraudDialog($"你的评论被shadow ban（仅自己可见）！\n\n你的评论: {message}");
                 return;
             }
         }
 
-        NotificationShowExtensions.ShowMessageDialog("发评反诈",  $"评论不可见: {message}");
+        NotificationShowExtensions.ShowCommAntifraudDialog($"评论不可见: {message}");
     }
-
 }

@@ -44,6 +44,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Shapes;
+using BiliLite.Controls.Common;
 using BiliLite.Modules.ExtraInterface;
 using PlayInfo = BiliLite.Models.Common.Video.PlayInfo;
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
@@ -67,6 +68,7 @@ namespace BiliLite.Controls
         private GestureRecognizer gestureRecognizer;
         private bool m_firstMediaOpened;
         private bool m_firstMediaPlayed;
+        private bool m_mediaIsLoading = true;
         private ThemeService m_themeService;
         private bool m_isLocalFileMode;
         private readonly IPlayerSponsorBlockControl m_playerSponsorBlockControl;
@@ -138,6 +140,7 @@ namespace BiliLite.Controls
         DisplayRequest dispRequest;
         SystemMediaTransportControls _systemMediaTransportControls;
         DispatcherTimer timer_focus;
+        private readonly DanmakuListControl m_danmakuListControl;
         public Player PlayerInstance { get { return Player; } }
         /// <summary>
         /// 当前选中的字幕名称
@@ -237,6 +240,18 @@ namespace BiliLite.Controls
                     }
                 }
             }
+
+            m_danmakuListControl = new DanmakuListControl();
+
+            ExtraToolsPanel.Children.Add(m_danmakuListControl);
+            m_danmakuListControl.PlayerControl = this;
+            m_danmakuListControl.DanmakuController = m_danmakuController;
+
+            m_danmakuController.Clear();
+
+            LoadPlayerSetting();
+            LoadDanmuSetting();
+            LoadSutitleSetting();
         }
 
         private async void AutoRefreshTimer_Tick(object sender, object e)
@@ -302,12 +317,14 @@ namespace BiliLite.Controls
                 _systemMediaTransportControls.IsEnabled = false;
                 _systemMediaTransportControls = null;
             }
-            timer_focus.Stop();
+
+            danmuTimer?.Stop();
+            timer_focus?.Stop();
+            m_positionTimer?.Stop();
         }
 
         private async void PlayerControl_Loaded(object sender, RoutedEventArgs e)
         {
-            m_danmakuController.Clear();
             BtnFoucs.Focus(FocusState.Programmatic);
             _systemMediaTransportControls = SystemMediaTransportControls.GetForCurrentView();
             _systemMediaTransportControls.IsPlayEnabled = true;
@@ -321,10 +338,6 @@ namespace BiliLite.Controls
             }
 
             _systemMediaTransportControls.ButtonPressed += _systemMediaTransportControls_ButtonPressed;
-
-            LoadPlayerSetting();
-            LoadDanmuSetting();
-            LoadSutitleSetting();
 
             danmuTimer.Start();
             timer_focus.Start();
@@ -988,6 +1001,7 @@ namespace BiliLite.Controls
             subtitleTimer?.Stop();
             subtitleTimer = null;
             Pause();
+            m_mediaIsLoading = true;
             Player.ClosePlay();
 
             m_autoRefreshTimer?.Stop();
@@ -1366,6 +1380,7 @@ namespace BiliLite.Controls
                     {
                         var danmuList = danmakuParse.ParseBiliBili(await FileIO.ReadTextAsync(danmakuFile));
                         danmakuPool = danmuList.GroupBy(x => x.time_s).ToDictionary(x => x.Key, x => x.ToList());
+                        m_danmakuController.LoadDanmakuPool(danmakuPool);
                         TxtDanmuCount.Text = danmuList.Count.ToString();
                         danmuList.Clear();
                         danmuList = null;
@@ -1427,6 +1442,7 @@ namespace BiliLite.Controls
                     danmakuPool.Add(item.Key, item.Value);
                 }
             }
+            m_danmakuController.LoadDanmakuPool(danmakuPool);
             TxtDanmuCount.Text = danmuList.Count.ToString();
             danmuList.Clear();
         }
@@ -1562,6 +1578,7 @@ namespace BiliLite.Controls
 
         private async void PlayerControlToolBar_OnSoundQualityChanged(object sender, BiliDashAudioPlayUrlInfo e)
         {
+            if (m_mediaIsLoading) return;
             _postion = Player.Position;
             _autoPlay = Player.PlayState == PlayState.Playing;
             if (m_isLocalFileMode)
@@ -1578,6 +1595,7 @@ namespace BiliLite.Controls
 
         private async void PlayerToolBar_OnQualityChanged(object sender, BiliPlayUrlInfo e)
         {
+            if (m_mediaIsLoading) return;
             _postion = Player.Position;
             _autoPlay = Player.PlayState == PlayState.Playing;
 
@@ -2752,6 +2770,7 @@ namespace BiliLite.Controls
 
         private async void Player_PlayMediaOpened(object sender, EventArgs e)
         {
+            m_mediaIsLoading = false;
             txtInfo.Text = Player.GetMediaInfo();
             VideoLoading.Visibility = Visibility.Collapsed;
             if (_postion != 0 && _postion < Player.Duration)
@@ -2803,6 +2822,17 @@ namespace BiliLite.Controls
             SettingService.SetValue(SettingConstants.VideoDanmaku.SHIELD_WORD, m_danmakuSettingsControlViewModel.ShieldWords);
             var result = await m_danmakuSettingsControlViewModel.AddDanmuFilterItem(DanmuSettingTxtWord.Text, 0);
             DanmuSettingTxtWord.Text = "";
+            if (!result)
+            {
+                NotificationShowExtensions.ShowMessageToast("已经添加到本地，但远程同步失败");
+            }
+        }
+
+        public async Task DanmuSettingAddUser(string userHash)
+        {
+            m_danmakuSettingsControlViewModel.ShieldUsers.Add(userHash);
+            SettingService.SetValue(SettingConstants.VideoDanmaku.SHIELD_USER, m_danmakuSettingsControlViewModel.ShieldUsers);
+            var result = await m_danmakuSettingsControlViewModel.AddDanmuFilterItem(userHash, 2);
             if (!result)
             {
                 NotificationShowExtensions.ShowMessageToast("已经添加到本地，但远程同步失败");

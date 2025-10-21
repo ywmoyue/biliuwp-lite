@@ -211,5 +211,24 @@ namespace BiliLite.Models.Requests.Api
             //api.body += ApiHelper.GetSign(api.body, appKey);
             return api;
         }
+
+        public ApiModel AppealComment(string reason, string oid)
+        {
+            var csrf = m_cookieService.GetCSRFToken();
+            var api = new ApiModel()
+            {
+                method = HttpMethods.Post,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply/appeal/submit",
+                FormData = new Dictionary<string, object>()
+                {
+                    { "type", "1" },
+                    { "reason", reason },
+                    { "oid", oid },
+                    { "csrf", csrf },
+                },
+                need_cookie = true,
+            };
+            return api;
+        }
     }
 }

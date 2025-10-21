@@ -264,6 +264,7 @@ namespace BiliLite
         }
         private async Task ClosePage(TabViewItem tabItem)
         {
+            tabView.TabItems.Remove(tabItem);
             var frame = tabItem.Content as MyFrame;
             if (frame.Content is Page { Content: Grid grid })
             {
@@ -280,7 +281,6 @@ namespace BiliLite
             //frame.Navigate(typeof(BlankPage));
             // frame.BackStack.Clear();
             tabItem.Content = null;
-            tabView.TabItems.Remove(tabItem);
             GC.Collect();
         }
         private void tabView_Loaded(object sender, RoutedEventArgs e)

@@ -266,6 +266,31 @@ namespace BiliLite.Extensions
                     .ForMember(dest => dest.Url,
                         opt => opt.MapFrom(src =>
                             src.Item.NativeUri));
+
+                expression.CreateMap<DanmakuItem, DanmakuSimpleItem>()
+                    .ForMember(dest => dest.ProgressMs,
+                        opt => opt.MapFrom(src =>
+                            src.StartMs))
+                    .ForMember(dest => dest.Id,
+                        opt => opt.MapFrom(src =>
+                            src.Id.ToString()))
+                    .ForMember(dest => dest.Content,
+                        opt => opt.MapFrom(src =>
+                            src.Text));
+
+                expression.CreateMap<DanmakuModel, DanmakuSimpleItem>()
+                    .ForMember(dest => dest.ProgressMs,
+                        opt => opt.MapFrom(src =>
+                            src.time*1000))
+                    .ForMember(dest => dest.Id,
+                        opt => opt.MapFrom(src =>
+                            src.rowID))
+                    .ForMember(dest => dest.MidHash,
+                        opt => opt.MapFrom(src =>
+                            src.sendID))
+                    .ForMember(dest => dest.Content,
+                        opt => opt.MapFrom(src =>
+                            src.text));
             }));
 
             services.AddSingleton<IMapper>(mapper);
