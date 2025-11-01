@@ -684,7 +684,7 @@
                                         FontSize="16"
                                         Foreground="White" />
 
-                                    <StackPanel x:Name="ExtraToolsPanel" />
+                                    <StackPanel x:Name="ExtraToolsPanel" Orientation="Horizontal"/>
 
                                     <Button
                                         x:Name="BtnOpenWebPlayerToolbar"
