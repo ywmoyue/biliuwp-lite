@@ -181,6 +181,14 @@ namespace BiliLite.Models.Common.Home
                 },
                 new HomeNavItem()
                 {
+                    Icon = FontAwesome5.EFontAwesomeIcon.Solid_Tv,
+                    Page = typeof(Pages.Live.LiveCenterPage),
+                    Title = "直播中心",
+                    NeedLogin = true,
+                    Show = false
+                },
+                new HomeNavItem()
+                {
                     Icon = FontAwesome5.EFontAwesomeIcon.Regular_Star,
                     Page = typeof(Pages.User.FavoritePage),
                     Title = "我的收藏",
