@@ -18,7 +18,10 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common.Article;
+using BiliLite.Models.Common.Video;
+using BiliLite.Services.Biz;
 
 namespace BiliLite.Services
 {
@@ -263,18 +266,50 @@ namespace BiliLite.Services
                 return true;
             }
 
-            // 目前无法将此类型播放列表的所有视频正确加载进视频页面
+            // 懒加载的播放列表合集
             video = StringExtensions.RegexMatch(url, @"bilibili://music/playlist/playpage/(\d+)");
             if (video != "")
             {
+                var mediaListService = App.ServiceProvider.GetRequiredService<MediaListService>();
+
+                var mediaList = await mediaListService.GetMediaList(video);
+
+                if (mediaList == null)
+                {
+                    NotificationShowExtensions.ShowMessageToast("查询播放列表失败");
+                    return false;
+                }
+
+                var items = new List<VideoPlaylistItem>();
+                foreach (var item in mediaList.MediaList)
+                {
+                    items.Add(new VideoPlaylistItem()
+                    {
+                        Cover = item.Cover,
+                        Author = item.Upper.Name,
+                        Id = item.Id.ToString(),
+                        Title = item.Title,
+                        Duration = TimeSpan.FromSeconds(item.Duration),
+                    });
+                }
+
                 NavigateToPage(null, new NavigationInfo()
                 {
                     icon = Symbol.Play,
-                    page = typeof(WebPage),
+                    page = typeof(VideoDetailPage),
                     title = "视频加载中...",
-                    parameters = $"https://www.bilibili.com/list/1?sid={video}",
+                    parameters = new VideoPlaylist()
+                    {
+                        Index = 0,
+                        Playlist = items,
+                        Title = $"合集视频",
+                        MediaListId = video,
+                        IsOnlineMediaList = true,
+                        Info = $"共{mediaList.TotalCount}集"
+                    },
                     dontGoTo = dontGoTo,
                 });
+
                 return true;
             }
 
