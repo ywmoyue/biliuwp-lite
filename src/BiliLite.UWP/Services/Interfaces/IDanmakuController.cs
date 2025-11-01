@@ -199,6 +199,11 @@ namespace BiliLite.Services.Interfaces
             Position = position;
         }
 
+        public virtual void SetPositionOffset(int offset)
+        {
+            DanmakuViewModel.PositionOffset = offset;
+        }
+
         public virtual List<DanmakuSimpleItem> FindDanmakus(int? progress = null)
         {
             return new List<DanmakuSimpleItem>();
