@@ -805,6 +805,17 @@ namespace BiliLite.Controls
                 {
                     danmakus = danmakus.Where(x => !Regex.IsMatch(x.Text, item));
                 }
+
+                // 偏移
+                if (m_danmakuController.DanmakuViewModel.PositionOffset != 0)
+                {
+                    danmakus = danmakus.Select(x =>
+                    {
+                        x.StartMs += (uint)(m_danmakuController.DanmakuViewModel.PositionOffset * 1000);
+                        return x;
+                    });
+                }
+
                 //彩色
                 danmakus = danmakus.WhereIf(
                     DanmuSettingDisableColorful.IsOn,
@@ -861,6 +872,18 @@ namespace BiliLite.Controls
                     {
                         data = data.Where(x => !Regex.IsMatch(x.text, item));
                     }
+
+                    // 偏移
+                    if(m_danmakuController.DanmakuViewModel.PositionOffset!=0)
+                    {
+                        data = data.Select(x =>
+                        {
+                            x.time_s += m_danmakuController.DanmakuViewModel.PositionOffset;
+                            x.time += m_danmakuController.DanmakuViewModel.PositionOffset;
+                            return x;
+                        });
+                    }
+
                     //彩色
                     data = data.WhereIf(
                         DanmuSettingDisableColorful.IsOn,
@@ -3327,6 +3350,30 @@ namespace BiliLite.Controls
         private void Player_OnStatsUpdated(object sender, EventArgs e)
         {
             txtInfo.Text = Player.GetMediaInfo();
+        }
+
+        private async void BtnDanmakuAddOffset1S_OnClick(object sender, RoutedEventArgs e)
+        {
+            m_danmakuController.SetPositionOffset(m_danmakuController.DanmakuViewModel.PositionOffset + 1);
+
+            if (!m_useNsDanmaku)
+            {
+                var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                if (segIndex <= 0) segIndex = 1;
+                await LoadDanmaku(segIndex);
+            }
+        }
+
+        private async void BtnDanmakuMinOffset1S_OnClick(object sender, RoutedEventArgs e)
+        {
+            m_danmakuController.SetPositionOffset(m_danmakuController.DanmakuViewModel.PositionOffset - 1);
+
+            if (!m_useNsDanmaku)
+            {
+                var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                if (segIndex <= 0) segIndex = 1;
+                await LoadDanmaku(segIndex);
+            }
         }
     }
 }
