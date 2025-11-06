@@ -1,4 +1,5 @@
-﻿using BiliLite.Extensions.Notifications;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Home;
@@ -10,6 +11,7 @@ using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -79,14 +81,28 @@ namespace BiliLite.Pages.Home
             await LoadData();
         }
 
-        private async void gvFall_ItemClick(object sender, ItemClickEventArgs e)
+        private async Task OpenGvFall(CinemaHomeFallItemModel cinemaHomeFallItem, bool dontGoTo = false)
         {
-            var result = await MessageCenter.HandelUrl((e.ClickedItem as CinemaHomeFallItemModel).Link);
+            var result = await MessageCenter.HandelUrl(cinemaHomeFallItem.Link, dontGoTo);
             if (!result)
             {
                 NotificationShowExtensions.ShowMessageToast("不支持打开的链接");
             }
         }
+
+        private async void gvFall_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            await OpenGvFall(e.ClickedItem as CinemaHomeFallItemModel);
+        }
+
+        private async void gvFall_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            if (!e.IsMiddleButtonNewTap(sender)) return;
+            var element = e.OriginalSource as FrameworkElement;
+            var item = element.DataContext as CinemaHomeFallItemModel;
+            await OpenGvFall(item, true);
+        }
+
         private async void RefreshContainer_RefreshRequested(Microsoft.UI.Xaml.Controls.RefreshContainer sender, Microsoft.UI.Xaml.Controls.RefreshRequestedEventArgs args)
         {
             await Refresh();
@@ -176,7 +192,19 @@ namespace BiliLite.Pages.Home
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as PageEntranceModel;
+            item.NavigationInfo.dontGoTo = false;
             MessageCenter.NavigateToPage(this, item.NavigationInfo);
+        }
+
+        private void GridView_OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            if (!e.IsMiddleButtonNewTap(sender)) return;
+            var element = e.OriginalSource as FrameworkElement;
+            if (element.DataContext is PageEntranceModel pageModel)
+            {
+                pageModel.NavigationInfo.dontGoTo = true;
+                MessageCenter.NavigateToPage(this, pageModel.NavigationInfo);
+            }
         }
 
         public async Task Refresh()

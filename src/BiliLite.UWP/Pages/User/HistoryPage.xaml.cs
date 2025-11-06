@@ -1,4 +1,6 @@
-﻿using BiliLite.Models.Common;
+﻿using BiliLite.Extensions;
+using BiliLite.Models.Common;
+using BiliLite.Models.Common.Article;
 using BiliLite.Models.Common.User;
 using BiliLite.Services;
 using BiliLite.Services.Interfaces;
@@ -7,8 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Models.Common.Article;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -38,75 +40,7 @@ namespace BiliLite.Pages.User
         private void Video_ItemClick(object sender, ItemClickEventArgs e)
         {
             var data = e.ClickedItem as UserHistoryItem;
-            // TODO: 改用方法Map
-            if (data.History.Business == "pgc")
-            {
-                MessageCenter.NavigateToPage(this, new NavigationInfo()
-                {
-                    icon = Symbol.Play,
-                    page = typeof(SeasonDetailPage),
-                    title = data.Title,
-                    parameters = data.Kid
-                });
-            }
-            else if (data.History.Business == "live") // 直播
-            {
-                MessageCenter.NavigateToPage(this, new NavigationInfo()
-                {
-                    icon = Symbol.Play,
-                    page = typeof(LiveDetailPage),
-                    title = data.Title,
-                    parameters = data.History.Oid
-                });
-            }
-            else if (data.History.Business == "archive") // 普通视频
-            {
-                MessageCenter.NavigateToPage(this, new NavigationInfo()
-                {
-                    icon = Symbol.Play,
-                    page = typeof(VideoDetailPage),
-                    title = data.Title,
-                    parameters = data.History.Bvid
-                });
-            }
-            else if (data.History.Business == "article") // 专栏
-            {
-                MessageCenter.NavigateToPage(this, new NavigationInfo()
-                {
-                    icon = Symbol.Play,
-                    page = typeof(ArticlePage), // 专栏好像没有写专门的页面
-                    title = data.Title,
-                    parameters = new ArticlePageNavigationInfo()
-                    {
-                        Url = "https://www.bilibili.com/read/cv" + data.History.Oid,
-                        CvId = data.History.Oid + ""
-                    }
-                });
-            }
-            else if (data.History.Business == "article-list") // 专栏文集, 但历史记录里实际保存的为其中的专栏文章
-            {
-                MessageCenter.NavigateToPage(this, new NavigationInfo()
-                {
-                    icon = Symbol.Play,
-                    page = typeof(ArticlePage), // 专栏文集好像没有写专门的页面
-                    title = data.Title,
-                    parameters = new ArticlePageNavigationInfo()
-                    {
-                        Url = "https://www.bilibili.com/read/cv" + data.History.Cid,
-                        CvId = data.History.Cid + ""
-                    }
-                });
-            }
-            else
-            {
-                MessageCenter.NavigateToPage(this, new NavigationInfo()
-                {
-                    icon = Symbol.Play,
-                    page = typeof(VideoDetailPage),
-                    title = data.Title,
-                    parameters = data.History.Bvid
-                });
-            }
+            OpenVideoItem(data);
         }
 
         private void removeVideoHistory_Click(object sender, RoutedEventArgs e)
@@ -130,6 +64,94 @@ namespace BiliLite.Pages.User
         {
             pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
             pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
+        }
+
+        private void VideoItem_OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            if (!e.IsMiddleButtonNewTap(sender)) return;
+            var element = e.OriginalSource as FrameworkElement;
+            var item = element.DataContext as UserHistoryItem;
+            OpenVideoItem(item, true);
+        }
+
+        private void OpenVideoItem(UserHistoryItem userHistoryItem, bool dontGoTo = false)
+        {
+            var data = userHistoryItem;
+            // TODO: 改用方法Map
+            if (data.History.Business == "pgc")
+            {
+                MessageCenter.NavigateToPage(this, new NavigationInfo()
+                {
+                    icon = Symbol.Play,
+                    page = typeof(SeasonDetailPage),
+                    title = data.Title,
+                    parameters = data.Kid,
+                    dontGoTo = dontGoTo,
+                });
+            }
+            else if (data.History.Business == "live") // 直播
+            {
+                MessageCenter.NavigateToPage(this, new NavigationInfo()
+                {
+                    icon = Symbol.Play,
+                    page = typeof(LiveDetailPage),
+                    title = data.Title,
+                    parameters = data.History.Oid,
+                    dontGoTo = dontGoTo,
+                });
+            }
+            else if (data.History.Business == "archive") // 普通视频
+            {
+                MessageCenter.NavigateToPage(this, new NavigationInfo()
+                {
+                    icon = Symbol.Play,
+                    page = typeof(VideoDetailPage),
+                    title = data.Title,
+                    parameters = data.History.Bvid,
+                    dontGoTo = dontGoTo,
+                });
+            }
+            else if (data.History.Business == "article") // 专栏
+            {
+                MessageCenter.NavigateToPage(this, new NavigationInfo()
+                {
+                    icon = Symbol.Play,
+                    page = typeof(ArticlePage), // 专栏好像没有写专门的页面
+                    title = data.Title,
+                    parameters = new ArticlePageNavigationInfo()
+                    {
+                        Url = "https://www.bilibili.com/read/cv" + data.History.Oid,
+                        CvId = data.History.Oid + ""
+                    },
+                    dontGoTo = dontGoTo,
+                });
+            }
+            else if (data.History.Business == "article-list") // 专栏文集, 但历史记录里实际保存的为其中的专栏文章
+            {
+                MessageCenter.NavigateToPage(this, new NavigationInfo()
+                {
+                    icon = Symbol.Play,
+                    page = typeof(ArticlePage), // 专栏文集好像没有写专门的页面
+                    title = data.Title,
+                    parameters = new ArticlePageNavigationInfo()
+                    {
+                        Url = "https://www.bilibili.com/read/cv" + data.History.Cid,
+                        CvId = data.History.Cid + ""
+                    },
+                    dontGoTo = dontGoTo,
+                });
+            }
+            else
+            {
+                MessageCenter.NavigateToPage(this, new NavigationInfo()
+                {
+                    icon = Symbol.Play,
+                    page = typeof(VideoDetailPage),
+                    title = data.Title,
+                    parameters = data.History.Bvid,
+                    dontGoTo = dontGoTo,
+                });
+            }
         }
     }
 }
