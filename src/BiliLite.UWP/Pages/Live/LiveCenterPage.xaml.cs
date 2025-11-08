@@ -1,10 +1,13 @@
-﻿using BiliLite.Models.Common;
+﻿using BiliLite.Extensions;
+using BiliLite.Models.Common;
 using BiliLite.Modules.Live.LiveCenter;
 using BiliLite.Services;
 using BiliLite.Services.Interfaces;
 using System;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -44,36 +47,59 @@ namespace BiliLite.Pages.Live
         private void AttentionlList_ItemClick(object sender, ItemClickEventArgs e)
         {
             var data = e.ClickedItem as LiveFollowAnchorModel;
+            OpenAttentionlItem(data);
+        }
+
+        private void OpenAttentionlItem(LiveFollowAnchorModel data, bool dontGoTo = false)
+        {
             MessageCenter.NavigateToPage(this, new NavigationInfo()
             {
                 icon = Symbol.Video,
                 page = typeof(LiveDetailPage),
                 title = data.uname + "的直播间",
-                parameters = data.roomid
+                parameters = data.roomid,
+                dontGoTo = dontGoTo,
             });
         }
 
         private void UnLiveList_ItemClick(object sender, ItemClickEventArgs e)
         {
             var data = e.ClickedItem as LiveFollowUnliveAnchorModel;
+            OpenUnLiveItem(data);
+        }
+
+        private void OpenUnLiveItem(LiveFollowUnliveAnchorModel data, bool dontGoTo = false)
+        {
             MessageCenter.NavigateToPage(this, new NavigationInfo()
             {
                 icon = Symbol.Video,
                 page = typeof(LiveDetailPage),
                 title = data.uname + "的直播间",
-                parameters = data.roomid
+                parameters = data.roomid,
+                dontGoTo = dontGoTo,
             });
         }
 
         private void HistoryList_ItemClick(object sender, ItemClickEventArgs e)
         {
             var data = e.ClickedItem as LiveHistoryItemModel;
+            OpenHistoryItem(data);
+        }
+
+        private void OpenHistoryItem(LiveHistoryItemModel data, bool dontGoTo = false)
+        {
+            var bizId = data.roomid;
+            if (bizId == 0)
+            {
+                bizId = data.history.oid;
+            }
             MessageCenter.NavigateToPage(this, new NavigationInfo()
             {
                 icon = Symbol.Video,
                 page = typeof(LiveDetailPage),
                 title = data.name + "的直播间",
-                parameters = data.history.oid
+                parameters = bizId,
+                dontGoTo = dontGoTo,
             });
         }
 
@@ -98,6 +124,24 @@ namespace BiliLite.Pages.Live
         {
             pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
             pivot.UseLayoutRounding = !pivot.UseLayoutRounding;
+        }
+
+        private void LiveItem_OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            if (!e.IsMiddleButtonNewTap(sender)) return;
+            var element = e.OriginalSource as FrameworkElement;
+            if (element.DataContext is LiveFollowAnchorModel attentionItem)
+            {
+                OpenAttentionlItem(attentionItem, true);
+            }
+            else if (element.DataContext is LiveFollowUnliveAnchorModel unLiveItem)
+            {
+                OpenUnLiveItem(unLiveItem, true);
+            }
+            else if (element.DataContext is LiveHistoryItemModel historyItem)
+            {
+                OpenHistoryItem(historyItem, true);
+            }
         }
     }
 }

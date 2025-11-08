@@ -186,6 +186,7 @@
                             IsItemClickEnabled="True"
                             ItemClick="GridView_ItemClick"
                             ItemContainerStyle="{StaticResource DefaultGridViewItemStyle}"
+                            PointerPressed="GridView_OnPointerPressed"
                             ItemsSource="{x:Bind Path=m_viewModel.Entrances, Mode=OneWay}"
                             SelectionMode="None">
                             <GridView.ItemTemplate>
@@ -222,6 +223,7 @@
                             IsItemClickEnabled="True"
                             ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}"
                             ItemsSource="{x:Bind Path=m_viewModel.Follows, Mode=OneWay}"
+                            PointerPressed="{x:Bind m_viewModel.SeasonItemPressed}"
                             MoveOffset="600"
                             SelectionMode="None">
                             <GridView.ItemsPanel>
@@ -308,6 +310,7 @@
                             IsItemClickEnabled="True"
                             ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}"
                             ItemsSource="{x:Bind Path=m_viewModel.HomeData.Update, Mode=OneWay}"
+                            PointerPressed="{x:Bind m_viewModel.SeasonItemPressed}"
                             MoveOffset="600"
                             SelectionMode="None">
                             <GridView.ItemTemplate>
@@ -402,6 +405,7 @@
                             ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}"
                             ItemTemplate="{StaticResource HotAnimeItem}"
                             ItemsSource="{x:Bind Path=m_viewModel.HomeData.Documentary, Mode=OneWay}"
+                            PointerPressed="{x:Bind m_viewModel.SeasonItemPressed}"
                             MoveOffset="600"
                             SelectionMode="None">
                             <GridView.ItemsPanel>
@@ -429,6 +433,7 @@
                             ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}"
                             ItemTemplate="{StaticResource HotAnimeItem}"
                             ItemsSource="{x:Bind Path=m_viewModel.HomeData.Movie, Mode=OneWay}"
+                            PointerPressed="{x:Bind m_viewModel.SeasonItemPressed}"
                             MoveOffset="600"
                             SelectionMode="None">
                             <GridView.ItemsPanel>
@@ -456,6 +461,7 @@
                             ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}"
                             ItemTemplate="{StaticResource HotAnimeItemWide}"
                             ItemsSource="{x:Bind Path=m_viewModel.HomeData.Tv, Mode=OneWay}"
+                            PointerPressed="{x:Bind m_viewModel.SeasonItemPressed}"
                             MoveOffset="600"
                             SelectionMode="None">
                             <GridView.ItemsPanel>
@@ -483,6 +489,7 @@
                             ItemClick="{x:Bind Path=m_viewModel.SeasonItemClick}"
                             ItemTemplate="{StaticResource HotAnimeItemWide}"
                             ItemsSource="{x:Bind Path=m_viewModel.HomeData.Variety, Mode=OneWay}"
+                            PointerPressed="{x:Bind m_viewModel.SeasonItemPressed}"
                             MoveOffset="600"
                             SelectionMode="None">
                             <GridView.ItemsPanel>
@@ -508,6 +515,7 @@
                                         ItemClick="gvFall_ItemClick"
                                         ItemHeight="168"
                                         ItemsSource="{x:Bind Path=Items, Mode=OneWay}"
+                                        PointerPressed="gvFall_PointerPressed"
                                         ScrollViewer.VerticalScrollBarVisibility="Hidden"
                                         ScrollViewer.VerticalScrollMode="Disabled"
                                         SelectionMode="None"

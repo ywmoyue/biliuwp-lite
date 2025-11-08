@@ -1,6 +1,8 @@
-﻿using BiliLite.Extensions;
+﻿using BiliLite.Controls;
+using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Article;
 using BiliLite.Models.Common.Search;
 using BiliLite.Services;
 using BiliLite.Services.Biz;
@@ -16,7 +18,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using BiliLite.Models.Common.Article;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -89,6 +90,12 @@ namespace BiliLite.Pages
             }
             m_viewModel.SelectItem.Refresh();
             ChangeTitle("搜索:" + queryText);
+
+            if (this.Frame is MyFrame frame)
+            {
+                var pageSaveService = App.ServiceProvider.GetRequiredService<PageSaveService>();
+                pageSaveService.UpdatePage(frame.PageId, "搜索:" + queryText, typeof(SearchPage), queryText, Symbol.Find);
+            }
         }
 
         public void ChangeTitle(string title)

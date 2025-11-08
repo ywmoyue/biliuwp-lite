@@ -50,9 +50,10 @@
                         Margin="0,10,0,0"
                         HorizontalAlignment="Center"
                         IsItemClickEnabled="True"
-                        ItemClick="GridView_ItemClick"
+                        ItemClick="Area_ItemClick"
                         ItemContainerStyle="{StaticResource DefaultGridViewItemStyle}"
                         ItemsSource="{x:Bind Path=m_viewModel.Areas, Mode=OneWay}"
+                        PointerPressed="UIElement_OnPointerPressed"
                         ScrollViewer.VerticalScrollBarVisibility="Hidden"
                         ScrollViewer.VerticalScrollMode="Disabled"
                         SelectionMode="None">
@@ -83,6 +84,7 @@
                             IsItemClickEnabled="True"
                             ItemClick="FollowLive_ItemClick"
                             ItemsSource="{x:Bind Path=m_viewModel.LiveAttentionVm.LocalFollows, Mode=OneWay}"
+                            PointerPressed="UIElement_OnPointerPressed"
                             MoveOffset="600"
                             SelectionMode="None">
                             <GridView.ItemsPanel>
@@ -92,7 +94,7 @@
                             </GridView.ItemsPanel>
                             <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="live1:LiveInfoModel">
-                                    <Grid Width="260" Background="{ThemeResource CardBackground}">
+                                    <Grid Width="260" Background="{ThemeResource CardBackground}" >
                                         <Grid.ContextFlyout>
                                             <MenuFlyout>
                                                 <MenuFlyoutItem Click="CancelLocalAttention_OnClick">取消本地关注</MenuFlyoutItem>
@@ -172,6 +174,7 @@
                             IsItemClickEnabled="True"
                             ItemClick="FollowLive_ItemClick"
                             ItemsSource="{x:Bind Path=m_viewModel.LiveAttentionVm.Follow, Mode=OneWay}"
+                            PointerPressed="UIElement_OnPointerPressed"
                             MoveOffset="600"
                             SelectionMode="None">
                             <GridView.ItemsPanel>
@@ -275,6 +278,7 @@
                                         <HyperlinkButton
                                             Margin="8,-4,0,0"
                                             HorizontalAlignment="Right"
+                                            PointerPressed="UIElement_OnPointerPressed"
                                             Click="loadMore_Click">
                                             <TextBlock>查看更多</TextBlock>
                                         </HyperlinkButton>
@@ -285,6 +289,7 @@
                                         IsItemClickEnabled="True"
                                         ItemClick="LiveItems_ItemClick"
                                         ItemsSource="{x:Bind Path=List, Mode=OneWay}"
+                                        PointerPressed="UIElement_OnPointerPressed"
                                         MoveOffset="600"
                                         SelectionMode="None">
                                         <GridView.ItemsPanel>

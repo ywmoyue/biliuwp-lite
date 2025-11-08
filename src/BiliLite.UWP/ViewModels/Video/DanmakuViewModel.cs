@@ -34,5 +34,7 @@ namespace BiliLite.ViewModels.Video
         public bool Bold { get; set; }
 
         public bool IsHide { get; set; }
+
+        public int PositionOffset { get; set; } = 0;
     }
 }

@@ -719,14 +719,14 @@ namespace BiliLite.Controls
             }
         }
 
-        public async Task<PlayerOpenResult> PlayDashUseWebPlayer(BaseWebPlayer webPlayer, BiliPlayUrlInfo quality, string userAgent, string referer, double positon = 0)
+        public async Task<PlayerOpenResult> PlayDashUseWebPlayer(BaseWebPlayer webPlayer, BiliDashPlayUrlInfo dashInfo, string userAgent, string referer, double positon = 0, bool isLocal = false)
         {
             try
             {
                 m_webPlayer = webPlayer;
                 mediaPlayerVideo.Visibility = Visibility.Visible;
                 //vlcVideoView.Visibility = Visibility.Collapsed;
-                m_dashInfo = quality.DashInfo;
+                m_dashInfo = dashInfo;
                 m_referer = referer;
                 m_userAgent = userAgent;
 
@@ -739,26 +739,26 @@ namespace BiliLite.Controls
                 ClosePlay();
 
 
-                var mpdModel = new GenerateMPDModel()
-                {
-                    AudioBandwidth = quality.DashInfo.Audio.BandWidth.ToString(),
-                    AudioCodec = quality.DashInfo.Audio.Codecs,
-                    AudioID = quality.DashInfo.Audio.ID.ToString(),
-                    AudioUrl = quality.DashInfo.Audio.Url,
-                    Duration = quality.DashInfo.Duration,
-                    DurationMS = quality.Timelength,
-                    VideoBandwidth = quality.DashInfo.Video.BandWidth.ToString(),
-                    VideoCodec = quality.DashInfo.Video.Codecs,
-                    VideoID = quality.DashInfo.Video.ID.ToString(),
-                    VideoFrameRate = quality.DashInfo.Video.FrameRate.ToString(),
-                    VideoHeight = quality.DashInfo.Video.Height,
-                    VideoWidth = quality.DashInfo.Video.Width,
-                    VideoUrl = quality.DashInfo.Video.Url,
-                };
-                var mpdUrl = await mpdModel.CreateMpdFiles();
+                //var mpdModel = new GenerateMPDModel()
+                //{
+                //    AudioBandwidth = dashInfo.Audio.BandWidth.ToString(),
+                //    AudioCodec = dashInfo.Audio.Codecs,
+                //    AudioID = dashInfo.Audio.ID.ToString(),
+                //    AudioUrl = dashInfo.Audio.Url,
+                //    Duration = dashInfo.Duration,
+                //    DurationMS = dashInfo.Duration * 1000,
+                //    VideoBandwidth = dashInfo.Video.BandWidth.ToString(),
+                //    VideoCodec = dashInfo.Video.Codecs,
+                //    VideoID = dashInfo.Video.ID.ToString(),
+                //    VideoFrameRate = dashInfo.Video.FrameRate.ToString(),
+                //    VideoHeight = dashInfo.Video.Height,
+                //    VideoWidth = dashInfo.Video.Width,
+                //    VideoUrl = dashInfo.Video.Url,
+                //};
+                //var mpdUrl = await mpdModel.CreateMpdFiles();
 
                 //设置播放器
-                await webPlayer.LoadUrl(quality.DashInfo.Video.Url, quality.DashInfo.Audio.Url);
+                await webPlayer.LoadUrl(dashInfo.Video.Url, dashInfo.Audio.Url, isLocal);
 
                 Buffering = true;
 
@@ -786,10 +786,11 @@ namespace BiliLite.Controls
             }
         }
 
-        public async Task<PlayerOpenResult> PlayerDashUseShaka(BiliPlayUrlInfo quality, string userAgent, string referer, double positon = 0)
+        public async Task<PlayerOpenResult> PlayerDashUseShaka(BiliDashPlayUrlInfo dashInfo, string userAgent,
+            string referer, double positon = 0, bool isLocal = false)
         {
             RealPlayerType = RealPlayerType.ShakaPlayer;
-            return await PlayDashUseWebPlayer(ShakaPlayer, quality, userAgent, referer, positon);
+            return await PlayDashUseWebPlayer(ShakaPlayer, dashInfo, userAgent, referer, positon, isLocal);
         }
 
         /// <summary>
