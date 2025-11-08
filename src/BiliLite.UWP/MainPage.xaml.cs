@@ -163,6 +163,8 @@ namespace BiliLite
 
         private async void NavigationHelper_NavigateToPageEvent(object sender, NavigationInfo e)
         {
+            int lastItemIndex = tabView.SelectedIndex;
+
             var item = new CustomTabViewItem()
             {
                 Header = e.title,
@@ -175,8 +177,7 @@ namespace BiliLite
             item.Content = frame;
             var pageSaveService = App.ServiceProvider.GetRequiredService<PageSaveService>();
             frame.PageId = await pageSaveService.AddPage(e.title, e.page, e.parameters, e.icon);
-
-            tabView.TabItems.Add(item);
+            tabView.TabItems.Insert(lastItemIndex + 1, item);
             if (!e.dontGoTo)
                 tabView.SelectedItem = item;
             item.UpdateLayout();
