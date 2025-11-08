@@ -21,7 +21,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace BiliLite.ViewModels.Home
 {
@@ -138,12 +140,11 @@ namespace BiliLite.ViewModels.Home
 
         #endregion
 
-        #region Public Methods
+        #region Private Methods
 
-        public async void SeasonItemClick(object sender, ItemClickEventArgs e)
+        private async Task SeasonItemOpen(object sender, object seasonId, string title,string link, bool dontGoTo = false)
         {
-            var seasonId = e.ClickedItem.GetType().GetProperty(nameof(ISeasonItem.SeasonId)).GetValue(e.ClickedItem, null);
-            var title = e.ClickedItem.GetType().GetProperty(nameof(ISeasonItem.SeasonId))?.GetValue(e.ClickedItem, null) ?? "";
+            if (seasonId == null) return;
             if (seasonId != null && seasonId.ToInt32() != 0)
             {
                 MessageCenter.NavigateToPage(sender, new NavigationInfo()
@@ -151,15 +152,44 @@ namespace BiliLite.ViewModels.Home
                     icon = Symbol.Play,
                     page = typeof(Pages.SeasonDetailPage),
                     parameters = seasonId,
-                    title = title.ToString()
+                    title = title.ToString(),
+                    dontGoTo = dontGoTo,
                 });
             }
             else
             {
-                var weblink = e.ClickedItem.GetType().GetProperty("link").GetValue(e.ClickedItem, null) ?? "";
-                var result = await MessageCenter.HandelUrl(weblink.ToString());
+                var weblink = link;
+                var result = await MessageCenter.HandelUrl(weblink.ToString(), dontGoTo);
                 if (!result) NotificationShowExtensions.ShowMessageToast("无法打开此链接");
             }
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        public async void SeasonItemClick(object sender, ItemClickEventArgs e)
+        {
+            var seasonId = e.ClickedItem.GetType().GetProperty(nameof(ISeasonItem.SeasonId))
+                .GetValue(e.ClickedItem, null);
+            var title =
+                e.ClickedItem.GetType().GetProperty(nameof(ISeasonItem.SeasonId))?.GetValue(e.ClickedItem, null) ?? "";
+            var weblink = (e.ClickedItem.GetType().GetProperty("link")?.GetValue(e.ClickedItem, null) ?? "") as string;
+            await SeasonItemOpen(sender, seasonId, title?.ToString(), weblink);
+        }
+
+        public async void SeasonItemPressed(object sender, PointerRoutedEventArgs e)
+        {
+            if (!e.IsMiddleButtonNewTap(sender)) return;
+            var element = e.OriginalSource as FrameworkElement;
+            var seasonId = element.DataContext.GetType().GetProperty(nameof(ISeasonItem.SeasonId))
+                .GetValue(element.DataContext, null);
+            var title = element.DataContext.GetType().GetProperty(nameof(ISeasonItem.SeasonId))
+                ?.GetValue(element.DataContext, null) ?? "";
+            var weblink =
+                (element.DataContext.GetType().GetProperty("link")?.GetValue(element.DataContext, null) ??
+                 "") as string;
+            await SeasonItemOpen(sender, seasonId, title?.ToString(), weblink, true);
         }
 
         public void LinkItemClick(object sender, ItemClickEventArgs e)

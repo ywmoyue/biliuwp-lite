@@ -59,6 +59,7 @@
                         ItemClick="AttentionlList_ItemClick"
                         ItemHeight="120"
                         ItemsSource="{x:Bind Path=liveAttentionVM.Follow, Mode=OneWay}"
+                        PointerPressed="LiveItem_OnPointerPressed"
                         SelectionMode="None"
                         StretchContentForSingleRow="False">
                         <control:MyAdaptiveGridView.ItemTemplate>
@@ -137,6 +138,7 @@
                         IsItemClickEnabled="True"
                         ItemClick="UnLiveList_ItemClick"
                         ItemsSource="{x:Bind Path=liveAttentionUnLiveVM.Items, Mode=OneWay}"
+                        PointerPressed="LiveItem_OnPointerPressed"
                         LoadMoreBottomOffset="0"
                         LoadMoreCommand="{x:Bind Path=liveAttentionUnLiveVM.LoadMoreCommand}"
                         SelectionMode="None"
@@ -222,6 +224,7 @@
                         ItemClick="HistoryList_ItemClick"
                         ItemHeight="120"
                         ItemsSource="{x:Bind Path=liveCenterHistoryVM.Items, Mode=OneWay}"
+                        PointerPressed="LiveItem_OnPointerPressed"
                         LoadMoreBottomOffset="0"
                         LoadMoreCommand="{x:Bind Path=liveCenterHistoryVM.LoadMoreCommand}"
                         SelectionMode="None"

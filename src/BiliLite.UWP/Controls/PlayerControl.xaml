@@ -223,6 +223,15 @@
                                     </TextBlock>
                                     <AutoSuggestBox x:Name="DanmuSettingFont" QueryIcon="Accept" />
 
+                                    <TextBlock Margin="0,4,0,0">
+                                        弹幕偏移
+                                    </TextBlock>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBox Text="{x:Bind m_danmakuController.DanmakuViewModel.PositionOffset,Mode=OneWay}" IsEnabled="False"></TextBox>
+                                        <Button Click="BtnDanmakuMinOffset1S_OnClick">-1s</Button>
+                                        <Button Click="BtnDanmakuAddOffset1S_OnClick">+1s</Button>
+                                    </StackPanel>
+
                                     <Grid Margin="0,4,0,0">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition />
@@ -684,7 +693,7 @@
                                         FontSize="16"
                                         Foreground="White" />
 
-                                    <StackPanel x:Name="ExtraToolsPanel" />
+                                    <StackPanel x:Name="ExtraToolsPanel" Orientation="Horizontal"/>
 
                                     <Button
                                         x:Name="BtnOpenWebPlayerToolbar"

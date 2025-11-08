@@ -1,4 +1,5 @@
-﻿using BiliLite.Extensions.Notifications;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Anime;
@@ -10,6 +11,7 @@ using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -151,7 +153,19 @@ namespace BiliLite.Pages.Home
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as PageEntranceModel;
+            item.NavigationInfo.dontGoTo = false;
             MessageCenter.NavigateToPage(this, item.NavigationInfo);
+        }
+
+        private void GridView_OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            if (!e.IsMiddleButtonNewTap(sender)) return;
+            var element = e.OriginalSource as FrameworkElement;
+            if (element.DataContext is PageEntranceModel pageModel)
+            {
+                pageModel.NavigationInfo.dontGoTo = true;
+                MessageCenter.NavigateToPage(this, pageModel.NavigationInfo);
+            }
         }
     }
 }

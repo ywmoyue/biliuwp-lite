@@ -27,6 +27,8 @@ public abstract class BaseWebPlayer : Grid, IDisposable
     private double m_rate = 1;
     private TaskCompletionSource<byte[]> m_captureTaskCompletionSource;
     private readonly SemaphoreSlim m_captureLock = new SemaphoreSlim(1, 1);
+    private string m_localVideoLibsPath;
+    private string m_localOldVideoLibsPath;
 
     public BaseWebPlayer()
     {
@@ -69,9 +71,18 @@ public abstract class BaseWebPlayer : Grid, IDisposable
         var assetsFolder = await installFolder.GetFolderAsync("Assets");
         var shakaAssetsFolder = await assetsFolder.GetFolderAsync("ShakaPlayer");
         await WebViewElement.EnsureCoreWebView2Async();
-        // TODO: 挂载下载目录
-        //WebViewElement.CoreWebView2.SetVirtualHostNameToFolderMapping("videolibs.bililte.service", "",
-        //    CoreWebView2HostResourceAccessKind.Allow);
+        // 挂载下载目录
+        if (m_localVideoLibsPath != null)
+        {
+            WebViewElement.CoreWebView2.SetVirtualHostNameToFolderMapping("videolibs.bililte.service",
+                m_localVideoLibsPath,
+                CoreWebView2HostResourceAccessKind.Allow);
+            WebViewElement.CoreWebView2.SetVirtualHostNameToFolderMapping("oldvideolibs.bililte.service",
+                m_localOldVideoLibsPath,
+                CoreWebView2HostResourceAccessKind.Allow);
+        }
+
+        // 挂载临时目录
         WebViewElement.CoreWebView2.SetVirtualHostNameToFolderMapping("temp.bililte.service", tempFolder.Path,
             CoreWebView2HostResourceAccessKind.Allow);
 
@@ -184,12 +195,31 @@ public abstract class BaseWebPlayer : Grid, IDisposable
         await LoadCore(json);
     }
 
-    public async Task LoadUrl(string videoUrl, string audioUrl)
+    public async Task LoadUrl(string videoUrl, string audioUrl, bool isLocal = false)
     {
         if (!m_webViewLoaded)
         {
             await Task.Delay(100);
         }
+
+        if (isLocal)
+        {
+            var folder = await DownloadHelper.GetDownloadFolder();
+            m_localVideoLibsPath = folder.Path;
+            var oldFolder = await DownloadHelper.GetDownloadOldFolder();
+            m_localOldVideoLibsPath = oldFolder.Path;
+
+            videoUrl = videoUrl
+                .Replace(folder.Path, "https://videolibs.bililte.service")
+                .Replace(oldFolder.Path, "https://oldvideolibs.bililte.service")
+                .Replace("\\", "/");
+
+            audioUrl = audioUrl
+                .Replace(folder.Path, "https://videolibs.bililte.service")
+                .Replace(oldFolder.Path, "https://oldvideolibs.bililte.service")
+                .Replace("\\", "/");
+        }
+
         var playData = new
         {
             video = new
