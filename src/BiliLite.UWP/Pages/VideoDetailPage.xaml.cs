@@ -148,6 +148,7 @@ namespace BiliLite.Pages
                         Items = new List<VideoListItem>(),
                         IsLazyOnlineList = videoPlaylist.IsOnlineMediaList,
                         OnlineListId = videoPlaylist.MediaListId,
+                        OnlineListType = videoPlaylist.MediaListType,
                     });
                     foreach (var videoPlaylistItem in videoPlaylist.Playlist)
                     {

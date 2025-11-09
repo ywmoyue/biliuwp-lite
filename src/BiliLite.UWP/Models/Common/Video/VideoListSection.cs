@@ -18,6 +18,8 @@ namespace BiliLite.Models.Common.Video
 
         public string OnlineListId { get; set; }
 
+        public int OnlineListType { get; set; } = 1;
+
         public string Info { get; set; }
 
         public string Description { get; set; }

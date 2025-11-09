@@ -14,6 +14,8 @@ namespace BiliLite.Models.Common.Video
 
         public string MediaListId { get; set; }
 
+        public int MediaListType { get; set; } = 1;
+
         public string Info { get; set; }
     }
 }
