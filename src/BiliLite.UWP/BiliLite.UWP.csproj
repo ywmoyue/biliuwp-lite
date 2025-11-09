@@ -143,6 +143,7 @@
     <Compile Include="Controls\ChatMessages\ChatMessageTemplate.xaml.cs">
       <DependentUpon>ChatMessageTemplate.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Common\CustomTabViewItem.cs" />
     <Compile Include="Controls\Common\DanmakuListControl.xaml.cs">
       <DependentUpon>DanmakuListControl.xaml</DependentUpon>
     </Compile>

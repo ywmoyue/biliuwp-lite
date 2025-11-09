@@ -18,6 +18,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Controls.Common;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -162,7 +163,9 @@ namespace BiliLite
 
         private async void NavigationHelper_NavigateToPageEvent(object sender, NavigationInfo e)
         {
-            var item = new TabViewItem()
+            int lastItemIndex = tabView.SelectedIndex;
+
+            var item = new CustomTabViewItem()
             {
                 Header = e.title,
                 IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = e.icon }
@@ -174,12 +177,12 @@ namespace BiliLite
             item.Content = frame;
             var pageSaveService = App.ServiceProvider.GetRequiredService<PageSaveService>();
             frame.PageId = await pageSaveService.AddPage(e.title, e.page, e.parameters, e.icon);
-
-            tabView.TabItems.Add(item);
+            tabView.TabItems.Insert(lastItemIndex + 1, item);
             if (!e.dontGoTo)
                 tabView.SelectedItem = item;
             item.UpdateLayout();
         }
+
         private void Content_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             if (SettingService.GetValue(SettingConstants.UI.MOUSE_MIDDLE_ACTION, (int)MouseMiddleActions.Back) == (int)MouseMiddleActions.Back
@@ -340,20 +343,46 @@ namespace BiliLite
             var resources = Application.Current.Resources;
             var dict = resources.MergedDictionaries.FirstOrDefault(x => x.Source.AbsoluteUri.Contains("TabViewStyle"));
 
-            var styleKvp = dict.FirstOrDefault(x => x.Key.ToString().Contains("TabViewItem"));
+            if (dict == null) return;
+
+            // 配置 TabViewItem 样式
+            ConfigureTabViewItemStyle(dict, "TabViewItem", TabViewItem.MinWidthProperty,
+                                     TabViewItem.MaxWidthProperty, TabViewItem.HeightProperty);
+
+            // 配置 TabViewListView 样式
+            ConfigureTabViewHeight(dict, "TabViewListView", TabViewItem.HeightProperty);
+
+            // 配置 CustomTabViewItem 样式
+            ConfigureTabViewItemStyle(dict, "CustomTabViewItem", CustomTabViewItem.MinWidthProperty,
+                                     CustomTabViewItem.MaxWidthProperty, CustomTabViewItem.HeightProperty);
+
+            // 再次配置 TabViewListView 样式（使用 CustomTabViewItem）
+            ConfigureTabViewHeight(dict, "TabViewListView", CustomTabViewItem.HeightProperty);
+        }
+
+        private void ConfigureTabViewItemStyle(ResourceDictionary dict, string styleKey,
+                                              DependencyProperty minWidthProperty,
+                                              DependencyProperty maxWidthProperty,
+                                              DependencyProperty heightProperty)
+        {
+            var styleKvp = dict.FirstOrDefault(x => x.Key.ToString().Contains(styleKey));
 
             if (styleKvp.Value is Style style)
             {
-                style.Setters.Add(new Setter(TabViewItem.MinWidthProperty, m_viewModel.TabItemMinWidth));
-                style.Setters.Add(new Setter(TabViewItem.MaxWidthProperty, m_viewModel.TabItemMaxWidth));
-                style.Setters.Add(new Setter(TabViewItem.HeightProperty, m_viewModel.TabHeight));
+                style.Setters.Add(new Setter(minWidthProperty, m_viewModel.TabItemMinWidth));
+                style.Setters.Add(new Setter(maxWidthProperty, m_viewModel.TabItemMaxWidth));
+                style.Setters.Add(new Setter(heightProperty, m_viewModel.TabHeight));
             }
+        }
 
-            var tabStyleKvp = dict.FirstOrDefault(x => x.Key.ToString().Contains("TabViewListView"));
+        private void ConfigureTabViewHeight(ResourceDictionary dict, string styleKey,
+                                           DependencyProperty heightProperty)
+        {
+            var tabStyleKvp = dict.FirstOrDefault(x => x.Key.ToString().Contains(styleKey));
 
             if (tabStyleKvp.Value is Style tabStyle)
             {
-                tabStyle.Setters.Add(new Setter(TabViewItem.HeightProperty, m_viewModel.TabHeight));
+                tabStyle.Setters.Add(new Setter(heightProperty, m_viewModel.TabHeight));
             }
         }
 

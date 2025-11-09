@@ -1,12 +1,12 @@
 ﻿using BiliLite.Controls;
 using BiliLite.Models.Common;
 using BiliLite.Services;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using CommunityToolkit.WinUI;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using BiliLite.Controls.Common;
 
 namespace BiliLite.Pages
 {
@@ -40,6 +40,41 @@ namespace BiliLite.Pages
 
     public class PlayPage : BasePage, IPlayPage
     {
+        private CustomTabViewItem m_customTabViewItem;
+        private bool m_isLoaded;
+
+        public PlayPage() : base()
+        {
+            Loaded += PlayPage_Loaded;
+        }
+
+        private void PlayPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (m_isLoaded) return;
+            m_isLoaded = true;
+            m_customTabViewItem = this.FindParent<CustomTabViewItem>();
+            m_customTabViewItem.IsPlayButtonVisible = true;
+            m_customTabViewItem.PlayButtonClick += CustomTabViewItem_PlayButtonClick;
+            Player.PlayerInstance.PlayStateChanged += PlayerInstance_PlayStateChanged;
+        }
+
+        private void CustomTabViewItem_PlayButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (m_customTabViewItem != null)
+            {
+                if (IsPlaying) Pause();
+                else Play();
+            }
+        }
+
+        private void PlayerInstance_PlayStateChanged(object sender, PlayState e)
+        {
+            if (m_customTabViewItem != null)
+            {
+                m_customTabViewItem.IsPlaying = IsPlaying;
+            }
+        }
+
         public PlayerControl Player { get; set; }
 
         public bool IsPlaying => Player.IsPlaying;

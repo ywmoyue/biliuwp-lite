@@ -1,4 +1,5 @@
 ﻿using Atelier39;
+using BiliLite.Controls.Common;
 using BiliLite.Controls.Dialogs;
 using BiliLite.Converters;
 using BiliLite.Extensions;
@@ -9,6 +10,7 @@ using BiliLite.Models.Common.Player;
 using BiliLite.Models.Common.Video;
 using BiliLite.Models.Common.Video.PlayUrlInfos;
 using BiliLite.Modules;
+using BiliLite.Modules.ExtraInterface;
 using BiliLite.Modules.Player;
 using BiliLite.Services;
 using BiliLite.Services.Interfaces;
@@ -44,8 +46,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Shapes;
-using BiliLite.Controls.Common;
-using BiliLite.Modules.ExtraInterface;
 using PlayInfo = BiliLite.Models.Common.Video.PlayInfo;
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -1679,8 +1679,16 @@ namespace BiliLite.Controls
                 CurrentPlayItem.LocalPlayInfo.Info.DashInfo = playInfo.DashInfo;
                 playInfo.DashInfo.Audio = CurrentPlayItem.LocalPlayInfo.CurrentAudioTrack?.Audio;
                 playInfo.DashInfo.Video = CurrentPlayItem.LocalPlayInfo.CurrentVideoTrack?.DashInfo.Video;
-                result = await Player.PlayDashUseFFmpegInterop(playInfo.DashInfo, "", "", positon: _postion,
-                    isLocal: true);
+
+                var realPlayerType = (RealPlayerType)SettingService.GetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE, (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
+                if (realPlayerType == RealPlayerType.Native || realPlayerType == RealPlayerType.FFmpegInterop)
+                {
+                    result = await Player.PlayDashUseFFmpegInterop(playInfo.DashInfo, "", "", positon: _postion, isLocal: true);
+                }
+                else
+                {
+                    result = await Player.PlayerDashUseShaka(playInfo.DashInfo, "", "", positon: _postion, isLocal: true);
+                }
             }
             else if (CurrentPlayItem.LocalPlayInfo.Info.PlayUrlType == BiliPlayUrlType.SingleFLV)
             {
@@ -1859,8 +1867,21 @@ namespace BiliLite.Controls
         {
             Pause();
             VideoLoading.Visibility = Visibility.Visible;
-            var result = await Player.PlayDashUseFFmpegInterop(dashInfo, "", "", positon: _postion,
-            isLocal: true);
+
+            PlayerOpenResult result = new PlayerOpenResult()
+            {
+                result = false
+            };
+            var realPlayerType = (RealPlayerType)SettingService.GetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE, (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
+            if (realPlayerType == RealPlayerType.Native || realPlayerType == RealPlayerType.FFmpegInterop)
+            {
+                result = await Player.PlayDashUseFFmpegInterop(dashInfo, "", "", positon: _postion, isLocal: true);
+            }
+            else
+            {
+                result = await Player.PlayerDashUseShaka(dashInfo, "", "", positon: _postion, isLocal: true);
+            }
+
             if (result.result)
             {
                 VideoLoading.Visibility = Visibility.Collapsed;
@@ -1902,7 +1923,7 @@ namespace BiliLite.Controls
                 }
                 else if (realPlayerType == RealPlayerType.ShakaPlayer)
                 {
-                    result = await Player.PlayerDashUseShaka(quality, quality.UserAgent, quality.Referer, positon: _postion);
+                    result = await Player.PlayerDashUseShaka(quality.DashInfo, quality.UserAgent, quality.Referer, positon: _postion);
                 }
             }
             else if (quality.PlayUrlType == BiliPlayUrlType.SingleFLV)

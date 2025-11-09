@@ -120,6 +120,7 @@
                             ItemClick="GridView_ItemClick"
                             ItemContainerStyle="{StaticResource DefaultGridViewItemStyle}"
                             ItemsSource="{x:Bind Path=m_viewModel.Entrances, Mode=OneWay}"
+                            PointerPressed="GridView_OnPointerPressed"
                             SelectionMode="None">
                             <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="models:PageEntranceModel">

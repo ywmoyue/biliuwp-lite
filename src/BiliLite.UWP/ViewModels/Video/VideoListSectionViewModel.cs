@@ -59,5 +59,8 @@ namespace BiliLite.ViewModels.Video
 
         [DoNotNotify]
         public string OnlineListId { get; set; }
+
+        [DoNotNotify]
+        public int OnlineListType { get; set; } = 1;
     }
 }

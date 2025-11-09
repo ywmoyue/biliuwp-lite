@@ -111,6 +111,7 @@
                         ItemHeight="120"
                         ItemTemplate="{StaticResource VideoDataTemplate}"
                         ItemsSource="{x:Bind Path=m_viewModel.Videos, Mode=OneWay}"
+                        PointerPressed="VideoItem_OnPointerPressed"
                         SelectionMode="None"
                         StretchContentForSingleRow="False">
 

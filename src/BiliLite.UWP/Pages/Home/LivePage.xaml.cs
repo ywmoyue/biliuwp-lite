@@ -15,6 +15,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -90,106 +91,127 @@ namespace BiliLite.Pages.Home
 
         private void FollowLive_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (e.ClickedItem is LiveFollowAnchorModel data)
+            OpenItem(e.ClickedItem);
+        }
+
+        private void OpenItem(object liveItem, bool dontGoTo = false)
+        {
+            if (liveItem is LiveFollowAnchorModel data)
             {
                 MessageCenter.NavigateToPage(this, new NavigationInfo()
                 {
                     icon = Symbol.Video,
                     page = typeof(LiveDetailPage),
                     title = data.uname + "的直播间",
-                    parameters = data.roomid
+                    parameters = data.roomid,
+                    dontGoTo = dontGoTo,
                 });
             }
-            else if (e.ClickedItem is LiveInfoModel info)
+            else if (liveItem is LiveInfoModel info)
             {
                 MessageCenter.NavigateToPage(this, new NavigationInfo()
                 {
                     icon = Symbol.Video,
                     page = typeof(LiveDetailPage),
                     title = info.AnchorInfo.BaseInfo.Uname + "的直播间",
-                    parameters = info.RoomInfo.RoomId
+                    parameters = info.RoomInfo.RoomId,
+                    dontGoTo = dontGoTo,
                 });
+            }
+            else if (liveItem is LiveHomeAreaModel area)
+            {
+                if (area.Id == 0)
+                {
+                    MessageCenter.NavigateToPage(this, new NavigationInfo()
+                    {
+                        icon = Symbol.Document,
+                        page = typeof(LiveAreaPage),
+                        title = area.Title,
+                        dontGoTo = dontGoTo,
+                    });
+                    return;
+                }
+
+                MessageCenter.NavigateToPage(this, new NavigationInfo()
+                {
+                    icon = Symbol.Document,
+                    page = typeof(LiveAreaDetailPage),
+                    title = area.Title,
+                    parameters = new LiveAreaPar()
+                    {
+                        parent_id = area.AreaV2ParentId,
+                        area_id = area.AreaV2Id
+                    },
+                    dontGoTo = dontGoTo,
+                });
+            }
+            else if (liveItem is LiveHomeItemsItemModel homeItem)
+            {
+                MessageCenter.NavigateToPage(this, new NavigationInfo()
+                {
+                    icon = Symbol.Video,
+                    page = typeof(LiveDetailPage),
+                    title = homeItem.Uname + "的直播间",
+                    parameters = homeItem.Roomid,
+                    dontGoTo = dontGoTo,
+                });
+            }
+            else if (liveItem is LiveHomeItemsModel home)
+            {
+                if (home.ModuleInfo.Title == "推荐直播")
+                {
+                    MessageCenter.NavigateToPage(this, new NavigationInfo()
+                    {
+                        icon = Symbol.Document,
+                        page = typeof(LiveRecommendPage),
+                        title = "全部直播",
+                        dontGoTo = dontGoTo,
+                    });
+                }
+
+                if (!string.IsNullOrEmpty(home.ModuleInfo.Link))
+                {
+                    try
+                    {
+                        var match = Regex.Match(home.ModuleInfo.Link, @"parentAreaId=(\d+)&areaId=(\d+)");
+                        if (match.Groups.Count == 3)
+                        {
+                            MessageCenter.NavigateToPage(this, new NavigationInfo()
+                            {
+                                icon = Symbol.Document,
+                                page = typeof(LiveAreaDetailPage),
+                                title = home.ModuleInfo.Title,
+                                parameters = new LiveAreaPar()
+                                {
+                                    parent_id = match.Groups[1].Value.ToInt32(),
+                                    area_id = match.Groups[2].Value.ToInt32()
+                                },
+                                dontGoTo = dontGoTo,
+                            });
+
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
             }
         }
 
         private void LiveItems_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var data = e.ClickedItem as LiveHomeItemsItemModel;
-            MessageCenter.NavigateToPage(this, new NavigationInfo()
-            {
-                icon = Symbol.Video,
-                page = typeof(LiveDetailPage),
-                title = data.Uname + "的直播间",
-                parameters = data.Roomid
-            });
+            OpenItem(e.ClickedItem);
         }
 
         private void loadMore_Click(object sender, RoutedEventArgs e)
         {
-            var data = (sender as HyperlinkButton).DataContext as LiveHomeItemsModel;
-            if (data.ModuleInfo.Title == "推荐直播")
-            {
-                MessageCenter.NavigateToPage(this, new NavigationInfo()
-                {
-                    icon = Symbol.Document,
-                    page = typeof(LiveRecommendPage),
-                    title = "全部直播"
-                });
-            }
-            if (!string.IsNullOrEmpty(data.ModuleInfo.Link))
-            {
-                try
-                {
-                    var match = Regex.Match(data.ModuleInfo.Link, @"parentAreaId=(\d+)&areaId=(\d+)");
-                    if (match.Groups.Count == 3)
-                    {
-                        MessageCenter.NavigateToPage(this, new NavigationInfo()
-                        {
-                            icon = Symbol.Document,
-                            page = typeof(LiveAreaDetailPage),
-                            title = data.ModuleInfo.Title,
-                            parameters = new LiveAreaPar()
-                            {
-                                parent_id = match.Groups[1].Value.ToInt32(),
-                                area_id = match.Groups[2].Value.ToInt32()
-                            }
-                        });
-
-                    }
-                }
-                catch (Exception)
-                {
-                }
-
-
-            }
-
+            OpenItem((sender as HyperlinkButton).DataContext);
         }
 
-        private void GridView_ItemClick(object sender, ItemClickEventArgs e)
+        private void Area_ItemClick(object sender, ItemClickEventArgs e)
         {
             var area = e.ClickedItem as LiveHomeAreaModel;
-            if (area.Id == 0)
-            {
-                MessageCenter.NavigateToPage(this, new NavigationInfo()
-                {
-                    icon = Symbol.Document,
-                    page = typeof(LiveAreaPage),
-                    title = area.Title
-                });
-                return;
-            }
-            MessageCenter.NavigateToPage(this, new NavigationInfo()
-            {
-                icon = Symbol.Document,
-                page = typeof(LiveAreaDetailPage),
-                title = area.Title,
-                parameters = new LiveAreaPar()
-                {
-                    parent_id = area.AreaV2ParentId,
-                    area_id = area.AreaV2Id
-                }
-            });
+            OpenItem(area);
         }
 
         private async void btnOpenLiveCenter_Click(object sender, RoutedEventArgs e)
@@ -204,7 +226,6 @@ namespace BiliLite.Pages.Home
                 icon = Symbol.Contact,
                 page = typeof(Live.LiveCenterPage),
                 title = "直播中心",
-
             });
         }
 
@@ -218,6 +239,14 @@ namespace BiliLite.Pages.Home
             var localAttentionUserService = App.ServiceProvider.GetRequiredService<LocalAttentionUserService>();
             localAttentionUserService.CancelAttention(roomInfo.RoomInfo.Uid + "");
             m_viewModel.LiveAttentionVm.LocalFollows.Remove(roomInfo);
+        }
+
+        private void UIElement_OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            if (!e.IsMiddleButtonNewTap(sender)) return;
+            var element = e.OriginalSource as FrameworkElement;
+
+            OpenItem(element.DataContext, true);
         }
     }
 }

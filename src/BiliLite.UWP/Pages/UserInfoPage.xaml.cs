@@ -444,7 +444,7 @@ namespace BiliLite.Pages
         private async void BtnPlayAll_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             var items = new List<VideoPlaylistItem>();
-            var mediaList = await m_mediaListService.GetMediaList(m_userSubmitVideoViewModel.PlayAllMediaListId);
+            var mediaList = await m_mediaListService.GetMediaList(m_userSubmitVideoViewModel.PlayAllMediaListId, 1);
 
             if (mediaList == null)
             {

@@ -21,7 +21,7 @@ namespace BiliLite.Services.Biz
 
         public async Task LoadMoreMediaList(VideoListSectionViewModel videoListSectionViewModel)
         {
-            var api = new VideoAPI().GetMediaList(videoListSectionViewModel.OnlineListId, videoListSectionViewModel.Items.Last().Id);
+            var api = new VideoAPI().GetMediaList(videoListSectionViewModel.OnlineListId, videoListSectionViewModel.Items.Last().Id, videoListSectionViewModel.OnlineListType);
             var results = await api.Request();
             var data = await results.GetData<MediaListResources>();
             var mapper = App.ServiceProvider.GetRequiredService<IMapper>();
@@ -29,11 +29,19 @@ namespace BiliLite.Services.Biz
             videoListSectionViewModel.Items.AddRange(moreItems);
         }
 
-        public async Task<MediaListResources> GetMediaList(string mediaListId)
+        public async Task<MediaListResources> GetMediaList(string mediaListId, int typeId = 1)
         {
-            var api = new VideoAPI().GetMediaList(mediaListId, "");
+            var api = new VideoAPI().GetMediaList(mediaListId, "", typeId);
             var results = await api.Request();
             var data = await results.GetData<MediaListResources>();
+
+            if (data.data.MediaList == null)
+            {
+                api = new VideoAPI().GetMediaListNotLogin(mediaListId, "", typeId);
+                results = await api.Request();
+                data = await results.GetData<MediaListResources>();
+            }
+
             return data.data;
         }
     }

@@ -148,6 +148,7 @@ namespace BiliLite.Pages
                         Items = new List<VideoListItem>(),
                         IsLazyOnlineList = videoPlaylist.IsOnlineMediaList,
                         OnlineListId = videoPlaylist.MediaListId,
+                        OnlineListType = videoPlaylist.MediaListType,
                     });
                     foreach (var videoPlaylistItem in videoPlaylist.Playlist)
                     {
@@ -216,6 +217,12 @@ namespace BiliLite.Pages
             {
                 flag = false;
                 return;
+            }
+
+            if (this.Frame is MyFrame frame)
+            {
+                var pageSaveService = App.ServiceProvider.GetRequiredService<PageSaveService>();
+                pageSaveService.UpdatePage(frame.PageId, m_viewModel.VideoInfo.Title, typeof(VideoDetailPage), m_viewModel.VideoInfo.Aid, Symbol.Play);
             }
 
             avid = m_viewModel.VideoInfo.Aid;
