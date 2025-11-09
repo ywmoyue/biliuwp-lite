@@ -53,9 +53,12 @@ namespace BiliLite.Pages
             if (m_isLoaded) return;
             m_isLoaded = true;
             m_customTabViewItem = this.FindParent<CustomTabViewItem>();
-            m_customTabViewItem.IsPlayButtonVisible = true;
-            m_customTabViewItem.PlayButtonClick += CustomTabViewItem_PlayButtonClick;
-            Player.PlayerInstance.PlayStateChanged += PlayerInstance_PlayStateChanged;
+            if (m_customTabViewItem != null)
+            {
+                m_customTabViewItem.IsPlayButtonVisible = true;
+                m_customTabViewItem.PlayButtonClick += CustomTabViewItem_PlayButtonClick;
+                Player.PlayerInstance.PlayStateChanged += PlayerInstance_PlayStateChanged;
+            }
         }
 
         private void CustomTabViewItem_PlayButtonClick(object sender, RoutedEventArgs e)
