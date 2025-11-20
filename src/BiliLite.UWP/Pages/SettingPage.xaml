@@ -11,7 +11,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:modules="using:BiliLite.Modules"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    xmlns:settings="using:BiliLite.Controls.Settings"
+    xmlns:settings="using:BiliLite.Controls.Settings" xmlns:controls11="using:CommunityToolkit.WinUI.Controls"
     Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
@@ -127,12 +127,12 @@
                     <TextBlock FontSize="15">帮助</TextBlock>
                 </PivotItem.Header>
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <controls1:MarkdownTextBlock
+                    <controls11:MarkdownTextBlock
                         x:Name="txtHelp"
                         Padding="16"
                         Background="Transparent"
-                        IsTextSelectionEnabled="True"
-                        LinkClicked="txtHelp_LinkClicked" />
+                        OnLinkClicked="txtHelp_LinkClicked"
+                        IsTextSelectionEnabled="True" />
                 </ScrollViewer>
             </PivotItem>
             <PivotItem Margin="0">

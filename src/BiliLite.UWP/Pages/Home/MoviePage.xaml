@@ -12,7 +12,7 @@
     xmlns:model="using:BiliLite.Modules"
     xmlns:models="using:BiliLite.Models"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls" xmlns:imageEx="using:ImageEx"
     Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
@@ -24,7 +24,7 @@
                     <RowDefinition Height="24" />
                 </Grid.RowDefinitions>
                 <Grid>
-                    <toolkit:ImageEx
+                    <imageEx:ImageEx
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -89,7 +89,7 @@
                     <RowDefinition Height="24" />
                 </Grid.RowDefinitions>
                 <Grid>
-                    <toolkit:ImageEx
+                    <imageEx:ImageEx
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -167,7 +167,7 @@
                                     HorizontalAlignment="Stretch"
                                     Click="BannerItem_Click"
                                     CornerRadius="{ThemeResource OverlayCornerRadius}">
-                                    <toolkit:ImageEx
+                                    <imageEx:ImageEx
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
                                         CornerRadius="{ThemeResource OverlayCornerRadius}"
@@ -240,7 +240,7 @@
                                             <RowDefinition Height="24" />
                                         </Grid.RowDefinitions>
                                         <Grid>
-                                            <toolkit:ImageEx
+                                            <imageEx:ImageEx
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch"
                                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -322,7 +322,7 @@
                                             <RowDefinition Height="24" />
                                         </Grid.RowDefinitions>
                                         <Grid>
-                                            <toolkit:ImageEx
+                                            <imageEx:ImageEx
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch"
                                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -537,7 +537,7 @@
                                                         <RowDefinition Height="28" />
                                                         <!--<RowDefinition Height="48"/>-->
                                                     </Grid.RowDefinitions>
-                                                    <toolkit:ImageEx
+                                                    <imageEx:ImageEx
                                                         HorizontalAlignment="Stretch"
                                                         VerticalAlignment="Stretch"
                                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"

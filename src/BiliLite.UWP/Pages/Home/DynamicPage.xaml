@@ -9,7 +9,7 @@
     xmlns:local="using:BiliLite.Pages.Home"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls" xmlns:imageEx="using:ImageEx"
     Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
@@ -30,7 +30,7 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid CornerRadius="{ThemeResource OverlayCornerRadius}">
-                    <toolkit:ImageEx
+                    <imageEx:ImageEx
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -119,7 +119,7 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid CornerRadius="{ThemeResource OverlayCornerRadius}">
-                    <toolkit:ImageEx
+                    <imageEx:ImageEx
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -169,7 +169,7 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid CornerRadius="{ThemeResource OverlayCornerRadius}">
-                    <toolkit:ImageEx
+                    <imageEx:ImageEx
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"

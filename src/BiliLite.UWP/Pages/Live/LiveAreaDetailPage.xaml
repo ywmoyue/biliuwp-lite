@@ -10,7 +10,7 @@
     xmlns:modules="using:BiliLite.Modules.Live"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pages="using:BiliLite.Pages"
-    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls" xmlns:imageEx="using:ImageEx"
     Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
@@ -65,7 +65,7 @@
                                     <RowDefinition Height="24" />
                                 </Grid.RowDefinitions>
                                 <Grid>
-                                    <toolkit:ImageEx
+                                    <imageEx:ImageEx
                                         MinHeight="140"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"

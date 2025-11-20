@@ -16,7 +16,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 
 namespace BiliLite.ViewModels.User
 {

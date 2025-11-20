@@ -4,7 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using PropertyChanged;
 using System;
 using Windows.UI;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI;
 
 namespace BiliLite.ViewModels.Messages;
 

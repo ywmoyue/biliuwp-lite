@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using BiliLite.ViewModels.Live;
 using Newtonsoft.Json;
 using BiliLite.Extensions;
 using BiliLite.Services;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media;
 using Color = Windows.UI.Color;
 using System.Text.RegularExpressions;
 
@@ -202,7 +202,7 @@ namespace BiliLite.Models.Common.Live
             viewModel.LotteryViewModel.SetAnchorLotteryInfo(info);
         }
 
-        private void RedPocketLotteryStart(LiveRoomViewModel viewModel, object message) 
+        private void RedPocketLotteryStart(LiveRoomViewModel viewModel, object message)
         {
             if (!viewModel.ReceiveLotteryMsg) return;
             var info = JsonConvert.DeserializeObject<LiveRoomRedPocketLotteryInfoModel>(message.ToString());
@@ -256,9 +256,9 @@ namespace BiliLite.Models.Common.Live
             var match = Regex.Match(info.Message, @"今天是TA陪伴主播的第(\d+)天");
             if (match.Success) accompanyDays = match.Groups[1].Value.ToInt32();
 
-            var text = info.UserName + 
+            var text = info.UserName +
                        (isNewGuard ? "\n开通了" : "\n续费了") +
-                       $"主播的{info.GiftName}" + 
+                       $"主播的{info.GiftName}" +
                        (info.Num > 1 ? $"×{info.Num}个{info.Unit}" : "") +
                        "🎉" +
                        ((match.Success && accompanyDays > 1) ? $"\nTA已陪伴主播{accompanyDays}天💖" : "");
@@ -271,7 +271,7 @@ namespace BiliLite.Models.Common.Live
                 CardColor = new SolidColorBrush(info.CardColor),
                 CardHorizontalAlignment = HorizontalAlignment.Center,
             };
-            
+
             viewModel.Messages.Add(msg);
             if (isNewGuard) viewModel.ReloadGuardList().RunWithoutAwait();
 
@@ -301,7 +301,7 @@ namespace BiliLite.Models.Common.Live
             {
                 ShowUserFace = Visibility.Collapsed,
                 ShowUserName = Visibility.Collapsed,
-                RichText = (info.UserName + " 被直播间禁言🚫").ToRichTextBlock(null, fontWeight: "SemiBold", fontColor: "White", textAlignment: "Center"), 
+                RichText = (info.UserName + " 被直播间禁言🚫").ToRichTextBlock(null, fontWeight: "SemiBold", fontColor: "White", textAlignment: "Center"),
                 CardColor = new SolidColorBrush(Color.FromArgb(255, 235, 45, 80)), // 一种红色
                 CardHorizontalAlignment = HorizontalAlignment.Center,
             };
@@ -314,7 +314,7 @@ namespace BiliLite.Models.Common.Live
                                     .OrderByDescending(item => viewModel.Messages.IndexOf(item))  // 根据索引倒序排序
                                     .Take(3)                                                      // 取前三个
                                     .Select(item => item.Text)  // 提取Text字段
-                                    .ToList();                                   
+                                    .ToList();
             if (!previousChatList.Any()) return;
 
             text += string.Join("\n", previousChatList);
@@ -322,7 +322,7 @@ namespace BiliLite.Models.Common.Live
             {
                 ShowUserFace = Visibility.Collapsed,
                 ShowUserName = Visibility.Collapsed,
-                RichText = (text).ToRichTextBlock(null, fontWeight: "SemiBold", fontColor: "White", textAlignment: "Center"), 
+                RichText = (text).ToRichTextBlock(null, fontWeight: "SemiBold", fontColor: "White", textAlignment: "Center"),
                 CardColor = new SolidColorBrush(Color.FromArgb(255, 235, 45, 80)), // 一种红色
                 CardHorizontalAlignment = HorizontalAlignment.Center,
             };
@@ -348,7 +348,7 @@ namespace BiliLite.Models.Common.Live
             {
                 ShowUserFace = Visibility.Collapsed,
                 ShowUserName = Visibility.Collapsed,
-                RichText = (text + "\n" + info.Message).ToRichTextBlock(null, fontColor: "White", fontWeight: "SemiBold", textAlignment: "Center"), 
+                RichText = (text + "\n" + info.Message).ToRichTextBlock(null, fontColor: "White", fontWeight: "SemiBold", textAlignment: "Center"),
                 CardColor = cardColor,
                 CardHorizontalAlignment = HorizontalAlignment.Center,
             };
@@ -386,7 +386,7 @@ namespace BiliLite.Models.Common.Live
                 CardPadding = new Thickness(6, 4, 6, 4),
             });
         }
-        
+
         private void ChatLevelMute(LiveRoomViewModel viewModel, object level)
         {
             viewModel.Messages.Add(new DanmuMsgModel()

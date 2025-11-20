@@ -9,7 +9,7 @@
     xmlns:modules="using:BiliLite.Modules"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:userDynamic="using:BiliLite.Models.Common.UserDynamic"
-    xmlns:viewModels="using:BiliLite.ViewModels"
+    xmlns:viewModels="using:BiliLite.ViewModels" xmlns:imageEx="using:ImageEx"
     Title="发表评论"
     Background="{ThemeResource SystemControlAcrylicElementBrush}"
     CloseButtonStyle="{StaticResource DefaultButtonStyle}"
@@ -119,7 +119,7 @@
                 <toolkit:AdaptiveGridView.ItemTemplate>
                     <DataTemplate x:DataType="userDynamic:DynamicPicture">
                         <Grid MaxWidth="150">
-                            <toolkit:ImageEx
+                            <imageEx:ImageEx
                                 CornerRadius="{ThemeResource ControlCornerRadius}"
                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                 Source="{x:Bind ImageUrl}"

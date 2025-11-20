@@ -606,9 +606,9 @@ namespace BiliLite.Modules.User
             set { qrLoadding = value; DoPropertyChanged("QRLoadding"); }
         }
 
-        private Windows.UI.Xaml.Media.ImageSource qrImageSource;
+        private Microsoft.UI.Xaml.Media.ImageSource qrImageSource;
 
-        public Windows.UI.Xaml.Media.ImageSource QRImageSource
+        public Microsoft.UI.Xaml.Media.ImageSource QRImageSource
         {
             get { return qrImageSource; }
             set { qrImageSource = value; DoPropertyChanged("QRImageSource"); }

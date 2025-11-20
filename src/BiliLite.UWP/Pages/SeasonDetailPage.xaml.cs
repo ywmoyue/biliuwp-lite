@@ -20,10 +20,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -50,8 +50,8 @@ namespace BiliLite.Pages
             this.Loaded += SeasonDetailPage_Loaded;
             this.Player = this.player;
             NavigationCacheMode = NavigationCacheMode.Enabled;
-            DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
-            dataTransferManager.DataRequested += DataTransferManager_DataRequested;
+            //DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
+            //dataTransferManager.DataRequested += DataTransferManager_DataRequested;
             m_viewModel.DefaultRightInfoWidth = new GridLength(SettingService.GetValue<double>(SettingConstants.UI.RIGHT_DETAIL_WIDTH, 320), GridUnitType.Pixel);
             this.RightInfoGridSplitter.IsEnabled = SettingService.GetValue<bool>(SettingConstants.UI.RIGHT_WIDTH_CHANGEABLE, false);
         }
@@ -255,7 +255,8 @@ namespace BiliLite.Pages
         }
         private void btnShare_Click(object sender, RoutedEventArgs e)
         {
-            DataTransferManager.ShowShareUI();
+            throw new NotImplementedException();
+            //DataTransferManager.ShowShareUI();
         }
         private void btnShareCopy_Click(object sender, RoutedEventArgs e)
         {
@@ -283,7 +284,8 @@ namespace BiliLite.Pages
                 }
 
                 m_viewModel.DefaultRightInfoWidth = new GridLength(0, GridUnitType.Pixel);
-                BottomInfo.Height = new GridLength(0, GridUnitType.Pixel);
+                // TODO: WinUI3渲染bug,隐藏全部3个部分导致播放器画面消失，暂时保留1像素
+                BottomInfo.Height = new GridLength(1, GridUnitType.Pixel);
             }
             else
             {

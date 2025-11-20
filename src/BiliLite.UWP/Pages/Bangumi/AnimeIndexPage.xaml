@@ -10,7 +10,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pages="using:BiliLite.Pages"
     xmlns:season="using:BiliLite.Models.Common.Season"
-    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls" xmlns:imageEx="using:ImageEx" xmlns:toolkit1="using:CommunityToolkit.WinUI.Controls"
     Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Grid>
@@ -22,7 +22,7 @@
             <ItemsControl ItemsSource="{x:Bind Path=m_viewModel.Conditions, Mode=OneWay}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <toolkit:WrapPanel Orientation="Horizontal" />
+                        <toolkit1:WrapPanel Orientation="Horizontal" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
@@ -63,7 +63,7 @@
                             <RowDefinition Height="24" />
                         </Grid.RowDefinitions>
                         <Grid>
-                            <toolkit:ImageEx
+                            <imageEx:ImageEx
                                 MaxHeight="240"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"

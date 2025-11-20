@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Search;
 using BiliLite.ViewModels.Common;
@@ -30,7 +30,7 @@ namespace BiliLite.ViewModels.Search
             new SearchArea("香港地区","hk"),
             new SearchArea("台湾地区","tw"),
         };
-        
+
         [DoNotNotify]
         public SearchArea Area { get; set; }
 
@@ -47,7 +47,7 @@ namespace BiliLite.ViewModels.Search
 
         public double PageWidth { get; set; }
 
-        [DoNotNotify] 
+        [DoNotNotify]
         public double SearchBoxWidth { get; } = 334;
 
         [DependsOn(nameof(PivotHeaderWidth), nameof(PageWidth))]

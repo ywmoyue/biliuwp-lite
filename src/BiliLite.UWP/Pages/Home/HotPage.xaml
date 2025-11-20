@@ -9,7 +9,7 @@
     xmlns:modules="using:BiliLite.Modules"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:viewModel="using:BiliLite.ViewModels.Home"
+    xmlns:viewModel="using:BiliLite.ViewModels.Home" xmlns:imageEx="using:ImageEx"
     d:DataContext="{d:DesignInstance Type=viewModel:HotViewModel}"
     Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
@@ -47,7 +47,7 @@
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Grid CornerRadius="{ThemeResource OverlayCornerRadius}">
-                            <toolkit:ImageEx
+                            <imageEx:ImageEx
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"

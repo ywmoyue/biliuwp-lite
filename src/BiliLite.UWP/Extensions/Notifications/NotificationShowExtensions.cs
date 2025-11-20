@@ -1,17 +1,22 @@
 ﻿using BiliLite.Controls;
 using BiliLite.Controls.Dialogs;
-using BiliLite.Models.Common.Notifications.Template;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Services;
 using BiliLite.Services.Notification;
+using BiliLite.Controls.Dialogs;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.Windows.AppNotifications;
+using Microsoft.Windows.AppNotifications.Builder;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Notifications;
 using Windows.UI.Popups;
-using Windows.UI.Xaml.Controls;
+using MessageDialog = BiliLite.Controls.Dialogs.MessageDialog;
+// using Windows.UI.Popups;
 
 namespace BiliLite.Extensions.Notifications
 {
@@ -21,23 +26,23 @@ namespace BiliLite.Extensions.Notifications
 
         public static async Task ShowTile()
         {
-            // Create a tile update manager for the specified syndication feed.
-            var updater = TileUpdateManager.CreateTileUpdaterForApplication();
-            updater.Clear();
-            updater.EnableNotificationQueue(true);
+            //// Create a tile update manager for the specified syndication feed.
+            //var updater = TileUpdateManager.CreateTileUpdaterForApplication();
+            //updater.Clear();
+            //updater.EnableNotificationQueue(true);
 
-            var liveTileHelper = App.ServiceProvider.GetRequiredService<LiveTileService>();
+            //var liveTileHelper = App.ServiceProvider.GetRequiredService<LiveTileService>();
 
-            await liveTileHelper.RefreshTile();
-            foreach (var tile in liveTileHelper.TileFurnace)
-            {
-                var content = TileTemplate.LiveTile(tile);
-                var notification = new TileNotification(content.GetXml())
-                {
-                    Tag = tile.Name,
-                };
-                updater.Update(notification);
-            }
+            //await liveTileHelper.RefreshTile();
+            //foreach (var tile in liveTileHelper.TileFurnace)
+            //{
+            //    var content = TileTemplate.LiveTile(tile);
+            //    var notification = new TileNotification(content.GetXml())
+            //    {
+            //        Tag = tile.Name,
+            //    };
+            //    updater.Update(notification);
+            //}
         }
 
         public static void ShowToast()
@@ -94,18 +99,39 @@ namespace BiliLite.Extensions.Notifications
 
         public static void ShowMessageToast(string message, int seconds = 2)
         {
-            MessageToast ms = new MessageToast(message, TimeSpan.FromSeconds(seconds));
+            AppNotification notification = new AppNotificationBuilder()
+                .AddText(message)
+                .BuildNotification();
+
+            AppNotificationManager.Default.Show(notification);
+        }
+
+        public static void ShowMessageToastV2(this FrameworkElement element, string message, int seconds = 2)
+        {
+            if(element.XamlRoot == null)
+            {
+                ShowMessageToast(message, seconds);
+            }
+            MessageToast ms = new MessageToast(element.XamlRoot, message, TimeSpan.FromSeconds(seconds));
             ms.Show();
         }
 
         public static void ShowMessageToast(string message, List<MyUICommand> commands, int seconds = 15)
         {
-            MessageToast ms = new MessageToast(message, TimeSpan.FromSeconds(seconds), commands);
-            ms.Show();
+            var builder = new AppNotificationBuilder()
+                .AddText(message);
+
+            var notification = builder.BuildNotification();
+
+            AppNotificationManager.Default.Show(notification);
         }
 
         public static async Task ShowContentDialog(ContentDialog ms)
         {
+            if (ms.XamlRoot == null) {
+                // TODO: 设置当前活动窗口
+                ms.XamlRoot = (App.MainWindow.Content as Frame).XamlRoot;
+            }
             await ms.ShowAsync();
         }
 
@@ -118,6 +144,8 @@ namespace BiliLite.Extensions.Notifications
             if (!dialogShowing)
             {
                 LoginDialog ms = new LoginDialog();
+                // TODO: 设置当前活动窗口
+                ms.XamlRoot = (App.MainWindow.Content as Frame).XamlRoot;
                 dialogShowing = true;
                 await ShowContentDialog(ms);
                 dialogShowing = false;
@@ -141,6 +169,8 @@ namespace BiliLite.Extensions.Notifications
         public static void ShowCommentDialog(string oid, int commentMode, CommentApi.CommentSort commentSort)
         {
             CommentDialog ms = new CommentDialog();
+            // TODO: 设置当前活动窗口
+            ms.XamlRoot = (App.MainWindow.Content as Frame).XamlRoot;
             ms.Show(oid, commentMode, commentSort);
         }
     }

@@ -11,7 +11,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:rank="using:BiliLite.Models.Common.Rank"
     xmlns:rank1="using:BiliLite.ViewModels.Rank"
-    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls" xmlns:imageEx="using:ImageEx"
     Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
@@ -88,7 +88,7 @@
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
                                     <Grid CornerRadius="{ThemeResource OverlayCornerRadius}">
-                                        <toolkit:ImageEx
+                                        <imageEx:ImageEx
                                             PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                             Source="{x:Bind Path=Pic, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
                                             Stretch="UniformToFill" />

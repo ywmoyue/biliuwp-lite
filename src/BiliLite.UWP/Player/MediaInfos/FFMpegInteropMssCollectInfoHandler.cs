@@ -32,27 +32,27 @@ namespace BiliLite.Player.MediaInfos
 
         private void CollectMediaInfo()
         {
-            if (!(m_collectInfo.Data is FFMpegInteropMssCollectInfoData collectInfoData)) return;
-            var ffMpegInteropMss = collectInfoData.FFMpegInteropMss;
-            if (ffMpegInteropMss.VideoStreams.Count > 0)
-            {
-                m_mediaInfosCollector.MediaInfo.VideoBitRate = ffMpegInteropMss.VideoStreams[0].Bitrate;
-                m_mediaInfosCollector.MediaInfo.VideoCodec = ffMpegInteropMss.VideoStreams[0].CodecName;
-                m_mediaInfosCollector.MediaInfo.Fps = ffMpegInteropMss.VideoStreams[0].FramesPerSecond;
-                m_mediaInfosCollector.MediaInfo.VideoHeight = ffMpegInteropMss.VideoStreams[0].PixelHeight;
-                m_mediaInfosCollector.MediaInfo.VideoWidth = ffMpegInteropMss.VideoStreams[0].PixelWidth;
-            }
+            //if (!(m_collectInfo.Data is FFMpegInteropMssCollectInfoData collectInfoData)) return;
+            //var ffMpegInteropMss = collectInfoData.FFMpegInteropMss;
+            //if (ffMpegInteropMss.VideoStreams.Count > 0)
+            //{
+            //    m_mediaInfosCollector.MediaInfo.VideoBitRate = ffMpegInteropMss.VideoStreams[0].Bitrate;
+            //    m_mediaInfosCollector.MediaInfo.VideoCodec = ffMpegInteropMss.VideoStreams[0].CodecName;
+            //    m_mediaInfosCollector.MediaInfo.Fps = ffMpegInteropMss.VideoStreams[0].FramesPerSecond;
+            //    m_mediaInfosCollector.MediaInfo.VideoHeight = ffMpegInteropMss.VideoStreams[0].PixelHeight;
+            //    m_mediaInfosCollector.MediaInfo.VideoWidth = ffMpegInteropMss.VideoStreams[0].PixelWidth;
+            //}
 
-            if (ffMpegInteropMss.AudioStreams.Count > 0)
-            {
-                m_mediaInfosCollector.MediaInfo.AudioBitRate = ffMpegInteropMss.AudioStreams[0].Bitrate;
-                m_mediaInfosCollector.MediaInfo.AudioCodec = ffMpegInteropMss.AudioStreams[0].CodecName;
-            }
+            //if (ffMpegInteropMss.AudioStreams.Count > 0)
+            //{
+            //    m_mediaInfosCollector.MediaInfo.AudioBitRate = ffMpegInteropMss.AudioStreams[0].Bitrate;
+            //    m_mediaInfosCollector.MediaInfo.AudioCodec = ffMpegInteropMss.AudioStreams[0].CodecName;
+            //}
 
-            m_mediaInfosCollector.MediaInfo.BufferingProgress = collectInfoData.MediaPlayer.PlaybackSession.DownloadProgress;
-            m_mediaInfosCollector.MediaInfo.BufferTime = ffMpegInteropMss.BufferTime.ToString("g");
+            //m_mediaInfosCollector.MediaInfo.BufferingProgress = collectInfoData.MediaPlayer.PlaybackSession.DownloadProgress;
+            //m_mediaInfosCollector.MediaInfo.BufferTime = ffMpegInteropMss.BufferTime.ToString("g");
             
-            m_mediaInfosCollector.EmitUpdateMediaInfos();
+            //m_mediaInfosCollector.EmitUpdateMediaInfos();
         }
     }
 }

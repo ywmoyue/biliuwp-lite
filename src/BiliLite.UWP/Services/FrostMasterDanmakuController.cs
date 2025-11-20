@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Atelier39;
 using AutoMapper;
 using BiliLite.Models.Common;
@@ -11,6 +11,7 @@ using BiliLite.Models.Common.Danmaku;
 using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels.Video;
 using Microsoft.Graphics.Canvas.UI.Xaml;
+using Microsoft.UI;
 
 namespace BiliLite.Services
 {
@@ -138,7 +139,7 @@ namespace BiliLite.Services
         public override void SetArea(double area)
         {
             base.SetArea(area);
-            m_danmakuMaster.SetRollingAreaRatio((int)(area*10));
+            m_danmakuMaster.SetRollingAreaRatio((int)(area * 10));
         }
 
         //public override void SetDensity(int density)

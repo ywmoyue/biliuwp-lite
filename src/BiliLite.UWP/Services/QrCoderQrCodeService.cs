@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media;
 using BiliLite.Services.Interfaces;
 using QRCoder;
 using Windows.Storage.Streams;
-using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace BiliLite.Services
 {

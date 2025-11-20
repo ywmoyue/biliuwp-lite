@@ -10,7 +10,7 @@
     xmlns:model="using:BiliLite.Models.Common.Season"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:viewModel="using:BiliLite.ViewModels.Season"
+    xmlns:viewModel="using:BiliLite.ViewModels.Season" xmlns:toolkit1="using:CommunityToolkit.WinUI.Controls"
     Background="Transparent"
     SizeChanged="SeasonDetailPage_OnSizeChanged"
     mc:Ignorable="d">
@@ -511,7 +511,7 @@
                                 <ItemsControl ItemsSource="{x:Bind Path=m_viewModel.Detail.Areas, Mode=OneWay}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
-                                            <toolkit:WrapPanel VerticalSpacing="4" />
+                                            <toolkit1:WrapPanel VerticalSpacing="4" />
                                         </ItemsPanelTemplate>
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
@@ -539,7 +539,7 @@
                                 <ItemsControl ItemsSource="{x:Bind Path=m_viewModel.Detail.Styles, Mode=OneWay}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
-                                            <toolkit:WrapPanel VerticalSpacing="4" />
+                                            <toolkit1:WrapPanel VerticalSpacing="4" />
                                         </ItemsPanelTemplate>
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
@@ -712,26 +712,24 @@
                     </PivotItem>
                 </Pivot>
             </Grid>
-            <toolkit:GridSplitter
+            <toolkit1:GridSplitter
                 x:Name="RightInfoGridSplitter"
                 Grid.Column="1"
                 Width="16"
                 HorizontalAlignment="Left"
-                CursorBehavior="ChangeOnSplitterHover"
-                GripperCursor="Default"
                 IsEnabled="False"
                 ResizeBehavior="BasedOnAlignment"
                 ResizeDirection="Auto">
-                <toolkit:GridSplitter.Background>
+                <toolkit1:GridSplitter.Background>
                     <SolidColorBrush Opacity="0" />
-                </toolkit:GridSplitter.Background>
-                <toolkit:GridSplitter.GripperForeground>
+                </toolkit1:GridSplitter.Background>
+                <toolkit1:GridSplitter.Foreground>
                     <SolidColorBrush Opacity="0" />
-                </toolkit:GridSplitter.GripperForeground>
-                <toolkit:GridSplitter.RenderTransform>
+                </toolkit1:GridSplitter.Foreground>
+                <toolkit1:GridSplitter.RenderTransform>
                     <TranslateTransform X="-8" />
-                </toolkit:GridSplitter.RenderTransform>
-            </toolkit:GridSplitter>
+                </toolkit1:GridSplitter.RenderTransform>
+            </toolkit1:GridSplitter>
         </Grid>
         <Border
             Padding="48,24"

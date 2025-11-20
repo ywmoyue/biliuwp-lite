@@ -11,7 +11,7 @@
     xmlns:modules="using:BiliLite.Modules"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:viewModels="using:BiliLite.ViewModels"
+    xmlns:viewModels="using:BiliLite.ViewModels" xmlns:imageEx="using:ImageEx" xmlns:toolkit1="using:CommunityToolkit.WinUI.Controls"
     x:Name="CommentControlContent"
     d:DesignHeight="300"
     d:DesignWidth="400"
@@ -357,12 +357,12 @@
                     Visibility="{x:Bind Path=ShowPics}">
                     <GridView.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <toolkit:StaggeredPanel DesiredColumnWidth="240" />
+                            <toolkit1:StaggeredPanel DesiredColumnWidth="240" />
                         </ItemsPanelTemplate>
                     </GridView.ItemsPanel>
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="common:NotePicture">
-                            <toolkit:ImageEx
+                            <imageEx:ImageEx
                                 Margin="10"
                                 CornerRadius="{ThemeResource ControlCornerRadius}"
                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"

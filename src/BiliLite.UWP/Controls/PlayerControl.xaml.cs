@@ -20,11 +20,23 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Geometry;
 using Microsoft.Graphics.Canvas.Text;
+using Microsoft.UI;
+using Microsoft.UI.Input;
+using Microsoft.UI.Text;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Shapes;
 using NSDanmaku.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -36,16 +48,8 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System.Display;
 using Windows.UI;
-using Windows.UI.Input;
 using Windows.UI.Text;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Shapes;
 using PlayInfo = BiliLite.Models.Common.Video.PlayInfo;
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -116,7 +120,7 @@ namespace BiliLite.Controls
         /// </summary>
         public PlayInfo CurrentPlayItem { get; set; }
         readonly PlayerVM playerHelper;
-        readonly NSDanmaku.Helper.DanmakuParse danmakuParse;
+        readonly NSDanmaku.WinUI.Helper.DanmakuParse danmakuParse;
         private BiliPlayUrlQualitesInfo _playUrlInfo;
         private PlayerKeyRightAction m_playerKeyRightAction;
         /// <summary>
@@ -147,7 +151,7 @@ namespace BiliLite.Controls
         /// </summary>
         private string CurrentSubtitleName { get; set; } = "无";
 
-        DisplayInformation displayInformation = DisplayInformation.GetForCurrentView();
+        //DisplayInformation displayInformation = DisplayInformation.GetForCurrentView();
 
         public PlayerControl()
         {
@@ -161,7 +165,7 @@ namespace BiliLite.Controls
             playerHelper = new PlayerVM();
             m_danmakuSettingsControlViewModel = App.ServiceProvider.GetRequiredService<VideoDanmakuSettingsControlViewModel>();
 
-            danmakuParse = new NSDanmaku.Helper.DanmakuParse();
+            danmakuParse = new NSDanmaku.WinUI.Helper.DanmakuParse();
             //每过2秒就设置焦点
             timer_focus = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(2) };
             timer_focus.Tick += Timer_focus_Tick;
@@ -213,7 +217,7 @@ namespace BiliLite.Controls
             if ((PlayerToolBarStyleTypes)SettingService.GetValue(SettingConstants.Player.PLAYER_TOOL_BAR_STYLE_TYPE,
                     SettingConstants.Player.DEFAULT_PLAYER_TOOL_BAR_STYLE_TYPE) == PlayerToolBarStyleTypes.ComboBox)
             {
-                m_playerControlToolBar = App.ServiceProvider.GetRequiredService<PlayerControlToolBarWithComboBox>(); 
+                m_playerControlToolBar = App.ServiceProvider.GetRequiredService<PlayerControlToolBarWithComboBox>();
             }
             else
             {
@@ -269,7 +273,7 @@ namespace BiliLite.Controls
                 InitSoundQuality();
                 InitQuality();
             }
-            NotificationShowExtensions.ShowMessageToast("已根据设置自动刷新播放地址");
+            this.ShowMessageToastV2("已根据设置自动刷新播放地址");
             m_startTime = DateTime.Now;
         }
         private void Timer_focus_Tick(object sender, object e)
@@ -284,6 +288,7 @@ namespace BiliLite.Controls
 
         bool runing = false;
         bool pointer_in_player = false;
+        InputCursor _temp = null;
         private async void ShowControl(bool show)
         {
             if (runing) return;
@@ -299,7 +304,7 @@ namespace BiliLite.Controls
             {
                 if (pointer_in_player)
                 {
-                    Window.Current.CoreWindow.PointerCursor = null;
+                    HideCursor();
                 }
                 BottomImageBtnPlay.Margin = new Thickness(24, 24, 24, 24);
                 await control.FadeOutAsync(400);
@@ -310,7 +315,8 @@ namespace BiliLite.Controls
         }
         private void PlayerControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
+            ShowCursor();
+            //MainWindow.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
             if (_systemMediaTransportControls != null)
             {
                 _systemMediaTransportControls.DisplayUpdater.ClearAll();
@@ -326,18 +332,26 @@ namespace BiliLite.Controls
         private async void PlayerControl_Loaded(object sender, RoutedEventArgs e)
         {
             BtnFoucs.Focus(FocusState.Programmatic);
-            _systemMediaTransportControls = SystemMediaTransportControls.GetForCurrentView();
-            _systemMediaTransportControls.IsPlayEnabled = true;
-            _systemMediaTransportControls.IsPauseEnabled = true;
-            if (CurrentPlayItem != null)
-            {
-                SystemMediaTransportControlsDisplayUpdater updater = _systemMediaTransportControls.DisplayUpdater;
-                updater.Type = MediaPlaybackType.Video;
-                updater.VideoProperties.Title = CurrentPlayItem.title;
-                updater.Update();
-            }
+            _systemMediaTransportControls = null;
 
-            _systemMediaTransportControls.ButtonPressed += _systemMediaTransportControls_ButtonPressed;
+            // TODO: 功能经验证无效，待重新实现
+            //{
+            //    var _nativeMp = new Windows.Media.Playback.MediaPlayer();
+            //    _nativeMp.CommandManager.IsEnabled = false; // 禁用原生播放器的命令管理器.
+            //    _systemMediaTransportControls = _nativeMp.SystemMediaTransportControls;
+            //    _systemMediaTransportControls.IsEnabled = true; // 启用系统媒体控制.
+            //    _systemMediaTransportControls.IsPlayEnabled = true;
+            //    _systemMediaTransportControls.IsPauseEnabled = true;
+            //    if (CurrentPlayItem != null)
+            //    {
+            //        SystemMediaTransportControlsDisplayUpdater updater = _systemMediaTransportControls?.DisplayUpdater;
+            //        updater.Type = MediaPlaybackType.Video;
+            //        updater.VideoProperties.Title = CurrentPlayItem.title;
+            //        updater.Update();
+            //    }
+            //    _systemMediaTransportControls.ButtonPressed += _systemMediaTransportControls_ButtonPressed;
+            //}
+
 
             danmuTimer.Start();
             timer_focus.Start();
@@ -355,7 +369,7 @@ namespace BiliLite.Controls
                     });
                     break;
                 case SystemMediaTransportControlsButton.Pause:
-                    await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
                     {
                         Pause();
                     });
@@ -874,7 +888,7 @@ namespace BiliLite.Controls
                     }
 
                     // 偏移
-                    if(m_danmakuController.DanmakuViewModel.PositionOffset!=0)
+                    if (m_danmakuController.DanmakuViewModel.PositionOffset != 0)
                     {
                         data = data.Select(x =>
                         {
@@ -1073,7 +1087,7 @@ namespace BiliLite.Controls
 
                 //从头播放完播视频
                 long totalSecend = CurrentPlayItem.duration;
-                int lastTimeOffset = SettingService.GetValue(SettingConstants.Player.REPLAY_VIEDO_FROM_END_LAST_TIME, 
+                int lastTimeOffset = SettingService.GetValue(SettingConstants.Player.REPLAY_VIEDO_FROM_END_LAST_TIME,
                     SettingConstants.Player.DEFAULT_REPLAY_VIEDO_FROM_END_LAST_TIME);
                 if (totalSecend - _postion < lastTimeOffset && totalSecend > 30)
                 {
@@ -1195,7 +1209,7 @@ namespace BiliLite.Controls
             }
             catch (Exception)
             {
-                NotificationShowExtensions.ShowMessageToast("加载字幕失败了");
+                this.ShowMessageToastV2("加载字幕失败了");
             }
 
 
@@ -1237,6 +1251,9 @@ namespace BiliLite.Controls
 
         }
 
+        [DllImport("User32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        public static extern int GetDpiForWindow(IntPtr hwnd);
+
         private async Task<Grid> GenerateSubtitleItem(string text)
         {
             //行首行尾加空格，防止字体描边超出
@@ -1269,7 +1286,10 @@ namespace BiliLite.Controls
 
             tb.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 
-            var myBitmap = new CanvasRenderTarget(device, (float)tb.DesiredSize.Width + 4, (float)tb.DesiredSize.Height, displayInformation.LogicalDpi);
+            IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this.GetCurrentWindow());
+            var dpi = GetDpiForWindow(hWnd);
+
+            var myBitmap = new CanvasRenderTarget(device, (float)tb.DesiredSize.Width + 4, (float)tb.DesiredSize.Height, dpi);
 
             CanvasTextLayout canvasTextLayout = new CanvasTextLayout(device, text, fmt, (float)tb.DesiredSize.Width + 4, (float)tb.DesiredSize.Height);
 
@@ -1426,7 +1446,7 @@ namespace BiliLite.Controls
                     {
                         var segIndex = Math.Ceiling(Player.Position / (60 * 6d));
                         await LoadDanmaku(segIndex.ToInt32());
-                        NotificationShowExtensions.ShowMessageToast($"已更新弹幕");
+                        this.ShowMessageToastV2($"已更新弹幕");
                     }
                     else
                     {
@@ -1445,7 +1465,7 @@ namespace BiliLite.Controls
             }
             catch (Exception ex)
             {
-                NotificationShowExtensions.ShowMessageToast("弹幕加载失败");
+                this.ShowMessageToastV2("弹幕加载失败");
                 _logger.Error("弹幕加载失败", ex);
             }
         }
@@ -1975,9 +1995,10 @@ namespace BiliLite.Controls
         }
 
         #region 全屏处理
-        public void FullScreen(bool fullScreen)
+        public async void FullScreen(bool fullScreen)
         {
-            ApplicationView view = ApplicationView.GetForCurrentView();
+            //ApplicationView view = ApplicationView.GetForCurrentView();
+            var window = this.GetCurrentWindow();
             FullScreenEvent?.Invoke(this, fullScreen);
             MessageCenter.SetFullscreen(fullScreen);
             m_danmakuController.SetFullscreen(fullScreen);
@@ -1989,9 +2010,9 @@ namespace BiliLite.Controls
                 BottomBtnExitFullWindows.Visibility = Visibility.Collapsed;
 
                 //全屏
-                if (!view.IsFullScreenMode)
+                if (window.Presenter.Kind != AppWindowPresenterKind.FullScreen)
                 {
-                    view.TryEnterFullScreenMode();
+                    window.AppWindow.SetPresenter(AppWindowPresenterKind.FullScreen);
                 }
             }
             else
@@ -2015,9 +2036,9 @@ namespace BiliLite.Controls
                     BottomBtnExitFullWindows.Visibility = Visibility.Collapsed;
                 }
                 //退出全屏
-                if (view.IsFullScreenMode)
+                if (window.Presenter.Kind == AppWindowPresenterKind.FullScreen)
                 {
-                    view.ExitFullScreenMode();
+                    window.AppWindow.SetPresenter(AppWindowPresenterKind.Overlapped);
                 }
             }
             BtnFoucs.Focus(FocusState.Programmatic);
@@ -2291,9 +2312,10 @@ namespace BiliLite.Controls
             {
                 var par = e.GetCurrentPoint(sender as Frame).Properties.PointerUpdateKind;
                 if (SettingService.GetValue(SettingConstants.UI.MOUSE_MIDDLE_ACTION, (int)MouseMiddleActions.Back) == (int)MouseMiddleActions.Back
-                && par == Windows.UI.Input.PointerUpdateKind.XButton1Pressed || par == Windows.UI.Input.PointerUpdateKind.MiddleButtonPressed)
+                && par == Microsoft.UI.Input.PointerUpdateKind.XButton1Pressed || par == Microsoft.UI.Input.PointerUpdateKind.MiddleButtonPressed)
                 {
-                    Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
+                    ShowCursor();
+                    //Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
                     MessageCenter.GoBack(this);
                     return;
                 }
@@ -2334,7 +2356,7 @@ namespace BiliLite.Controls
         {
             //showControlsFlag = 3;
             pointer_in_player = false;
-            Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
+            ShowCursor();
         }
 
         private void Grid_PointerMoved(object sender, PointerRoutedEventArgs e)
@@ -2342,10 +2364,8 @@ namespace BiliLite.Controls
             //showControlsFlag = 0;
             //ShowControl(true);
             ////control.Visibility = Visibility.Visible;
-            if (Window.Current.CoreWindow.PointerCursor == null)
-            {
-                Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
-            }
+
+            ShowCursor();
             gestureRecognizer.ProcessMoveEvents(e.GetIntermediatePoints(null));
             e.Handled = true;
         }
@@ -2634,7 +2654,7 @@ namespace BiliLite.Controls
             {
                 if (interactionVideoVM.Info.is_leaf == 1)
                 {
-                    NotificationShowExtensions.ShowMessageToast("播放完毕，请点击右下角节点，重新开始");
+                    this.ShowMessageToastV2("播放完毕，请点击右下角节点，重新开始");
                     return;
                 }
                 m_danmakuController.Pause();
@@ -2668,7 +2688,7 @@ namespace BiliLite.Controls
                     }
                     else
                     {
-                        NotificationShowExtensions.ShowMessageToast("播放完毕");
+                        this.ShowMessageToastV2("播放完毕");
                     }
 
                 }
@@ -2681,7 +2701,7 @@ namespace BiliLite.Controls
                     }
                     else
                     {
-                        NotificationShowExtensions.ShowMessageToast("本P播放完成");
+                        this.ShowMessageToastV2("本P播放完成");
                     }
 
                 }
@@ -2700,7 +2720,7 @@ namespace BiliLite.Controls
             {
                 if (!PlayerSettingAutoNext.IsOn)
                 {
-                    NotificationShowExtensions.ShowMessageToast("本P播放完成");
+                    this.ShowMessageToastV2("本P播放完成");
                     return;
                 }
                 //只有一P,重新播放
@@ -2754,31 +2774,32 @@ namespace BiliLite.Controls
                 {
                     var imageData = await Player.WebPlayer.CaptureVideo();
                     await FileIO.WriteBytesAsync(saveFile, imageData);
-                    NotificationShowExtensions.ShowMessageToast("截图已经保存至图片库");
+                    this.ShowMessageToastV2("截图已经保存至图片库");
                     return;
                 }
+                throw new NotImplementedException();
 
-                RenderTargetBitmap bitmap = new RenderTargetBitmap();
-                await bitmap.RenderAsync(Player);
-                var pixelBuffer = await bitmap.GetPixelsAsync();
-                using (var fileStream = await saveFile.OpenAsync(FileAccessMode.ReadWrite))
-                {
-                    var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
-                    encoder.SetPixelData(BitmapPixelFormat.Bgra8,
-                        BitmapAlphaMode.Ignore,
-                         (uint)bitmap.PixelWidth,
-                         (uint)bitmap.PixelHeight,
-                         displayInformation.LogicalDpi,
-                         displayInformation.LogicalDpi,
-                         pixelBuffer.ToArray());
-                    await encoder.FlushAsync();
-                }
-                NotificationShowExtensions.ShowMessageToast("截图已经保存至图片库");
+                //RenderTargetBitmap bitmap = new RenderTargetBitmap();
+                //await bitmap.RenderAsync(Player);
+                //var pixelBuffer = await bitmap.GetPixelsAsync();
+                //using (var fileStream = await saveFile.OpenAsync(FileAccessMode.ReadWrite))
+                //{
+                //    var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
+                //    encoder.SetPixelData(BitmapPixelFormat.Bgra8,
+                //        BitmapAlphaMode.Ignore,
+                //         (uint)bitmap.PixelWidth,
+                //         (uint)bitmap.PixelHeight,
+                //         displayInformation.LogicalDpi,
+                //         displayInformation.LogicalDpi,
+                //         pixelBuffer.ToArray());
+                //    await encoder.FlushAsync();
+                //}
+                //NotificationShowExtensions.ShowMessageToast("截图已经保存至图片库");
             }
             catch (Exception ex)
             {
                 _logger.Error("截图失败", ex);
-                NotificationShowExtensions.ShowMessageToast("截图失败");
+                this.ShowMessageToastV2("截图失败");
             }
         }
 
@@ -2839,7 +2860,7 @@ namespace BiliLite.Controls
             {
                 m_danmakuController.Add(new BiliDanmakuItem()
                 {
-                    Color = NSDanmaku.Utils.ToColor(arg.color),
+                    Color = NSDanmaku.WinUI.Utils.ToColor(arg.color),
                     Text = arg.text,
                     Location = (DanmakuLocation)arg.location,
                     Size = 25,
@@ -2859,7 +2880,7 @@ namespace BiliLite.Controls
         {
             if (string.IsNullOrEmpty(DanmuSettingTxtWord.Text))
             {
-                NotificationShowExtensions.ShowMessageToast("关键词不能为空");
+                this.ShowMessageToastV2("关键词不能为空");
                 return;
             }
             m_danmakuSettingsControlViewModel.ShieldWords.Add(DanmuSettingTxtWord.Text);
@@ -2868,7 +2889,7 @@ namespace BiliLite.Controls
             DanmuSettingTxtWord.Text = "";
             if (!result)
             {
-                NotificationShowExtensions.ShowMessageToast("已经添加到本地，但远程同步失败");
+                this.ShowMessageToastV2("已经添加到本地，但远程同步失败");
             }
         }
 
@@ -2879,7 +2900,7 @@ namespace BiliLite.Controls
             var result = await m_danmakuSettingsControlViewModel.AddDanmuFilterItem(userHash, 2);
             if (!result)
             {
-                NotificationShowExtensions.ShowMessageToast("已经添加到本地，但远程同步失败");
+                this.ShowMessageToastV2("已经添加到本地，但远程同步失败");
             }
         }
 
@@ -2991,7 +3012,7 @@ namespace BiliLite.Controls
             {
                 m_danmakuController.Add(new BiliDanmakuItem()
                 {
-                    Color = NSDanmaku.Utils.ToColor(color),
+                    Color = NSDanmaku.WinUI.Utils.ToColor(color),
                     Text = SendDanmakuTextBox.Text,
                     Location = location,
                     Size = 25,
@@ -3016,49 +3037,53 @@ namespace BiliLite.Controls
 
         public async void MiniWidnows(bool mini)
         {
-            miniWin = mini;
-            ApplicationView view = ApplicationView.GetForCurrentView();
-            FullWindowEvent?.Invoke(this, IsFullWindow);
-            if (mini)
-            {
-                IsFullWindow = true;
-                StandardControl.Visibility = Visibility.Collapsed;
-                MiniControl.Visibility = Visibility.Visible;
-                //处理CC字幕
-                if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.CompactOverlay))
-                {
-                    Margin = new Thickness(0, -40, 0, 0);
-                    await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay);
-                    SubtitleSettingSize.Value = 14;
+            if (mini) 
+                this.ShowMessageToastV2("功能未实现");
+            //miniWin = mini;
+            //var window = this.GetCurrentWindow();
+            
+            //FullWindowEvent?.Invoke(this, IsFullWindow);
+            //if (mini)
+            //{
+            //    IsFullWindow = true;
+            //    StandardControl.Visibility = Visibility.Collapsed;
+            //    MiniControl.Visibility = Visibility.Visible;
+            //    //处理CC字幕
+            //    if (window.AppWindow.Presenter.Kind==(AppWindowPresenterKind.CompactOverlay))
+            //    {
+            //        Margin = new Thickness(0, -40, 0, 0);
+            //        window.AppWindow.SetPresenter(AppWindowPresenterKind.CompactOverlay);
+            //        //await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay);
+            //        SubtitleSettingSize.Value = 14;
 
-                    m_danmakuController.SetFontZoom(0.5);
-                    m_danmakuController.SetSpeed(6);
-                    m_danmakuController.Clear();
-                }
-            }
-            else
-            {
-                Margin = new Thickness(0, 0, 0, 0);
-                StandardControl.Visibility = Visibility.Visible;
-                MiniControl.Visibility = Visibility.Collapsed;
-                await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default);
+            //        m_danmakuController.SetFontZoom(0.5);
+            //        m_danmakuController.SetSpeed(6);
+            //        m_danmakuController.Clear();
+            //    }
+            //}
+            //else
+            //{
+            //    Margin = new Thickness(0, 0, 0, 0);
+            //    StandardControl.Visibility = Visibility.Visible;
+            //    MiniControl.Visibility = Visibility.Collapsed;
+            //    await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default);
 
-                m_danmakuController.SetFontZoom(SettingService.GetValue<double>(SettingConstants.VideoDanmaku.FONT_ZOOM, 1));
-                m_danmakuController.SetSpeed(SettingService.GetValue<int>(SettingConstants.VideoDanmaku.SPEED, 10));
-                m_danmakuController.Clear();
-                if (SettingService.GetValue<Visibility>(SettingConstants.VideoDanmaku.SHOW, Visibility.Visible) == Visibility.Visible)
-                {
-                    m_danmakuController.Show();
-                }
-                else
-                {
-                    m_danmakuController.Hide();
-                }
+            //    m_danmakuController.SetFontZoom(SettingService.GetValue<double>(SettingConstants.VideoDanmaku.FONT_ZOOM, 1));
+            //    m_danmakuController.SetSpeed(SettingService.GetValue<int>(SettingConstants.VideoDanmaku.SPEED, 10));
+            //    m_danmakuController.Clear();
+            //    if (SettingService.GetValue<Visibility>(SettingConstants.VideoDanmaku.SHOW, Visibility.Visible) == Visibility.Visible)
+            //    {
+            //        m_danmakuController.Show();
+            //    }
+            //    else
+            //    {
+            //        m_danmakuController.Hide();
+            //    }
 
-                SubtitleSettingSize.Value = SettingService.GetValue<double>(SettingConstants.Player.SUBTITLE_SIZE, 40);
-            }
-            BtnFoucs.Focus(FocusState.Programmatic);
-            MessageCenter.SetMiniWindow(mini);
+            //    SubtitleSettingSize.Value = SettingService.GetValue<double>(SettingConstants.Player.SUBTITLE_SIZE, 40);
+            //}
+            //BtnFoucs.Focus(FocusState.Programmatic);
+            //MessageCenter.SetMiniWindow(mini);
         }
 
         public void ToggleMiniWindows()
@@ -3085,7 +3110,7 @@ namespace BiliLite.Controls
         {
             if (EpisodeList.SelectedIndex == 0)
             {
-                NotificationShowExtensions.ShowMessageToast("已经是第一P了");
+                this.ShowMessageToastV2("已经是第一P了");
             }
             else
             {
@@ -3097,7 +3122,7 @@ namespace BiliLite.Controls
         {
             if (EpisodeList.SelectedIndex == EpisodeList.Items.Count - 1)
             {
-                NotificationShowExtensions.ShowMessageToast("已经是最后一P了");
+                this.ShowMessageToastV2("已经是最后一P了");
             }
             else
             {
@@ -3153,7 +3178,7 @@ namespace BiliLite.Controls
                         InitSoundQuality();
                         InitQuality();
                     }
-                    NotificationShowExtensions.ShowMessageToast("检测到视频地址失效，已自动刷新");
+                    this.ShowMessageToastV2("检测到视频地址失效，已自动刷新");
                     m_startTime = DateTime.Now;
                     return;
                 }
@@ -3252,7 +3277,7 @@ namespace BiliLite.Controls
                 PlayerSettingABPlaySetPointB.Content = "设置B点";
                 PlayerSettingABPlaySetPointB.Visibility = Visibility.Collapsed;
 
-                NotificationShowExtensions.ShowMessageToast("已取消设置A点");
+                this.ShowMessageToastV2("已取消设置A点");
             }
             else
             {
@@ -3263,7 +3288,7 @@ namespace BiliLite.Controls
                 PlayerSettingABPlaySetPointA.Content = "A: " + TimeSpan.FromSeconds(Player.ABPlay.PointA).ToString(@"hh\:mm\:ss\.fff");
                 PlayerSettingABPlaySetPointB.Visibility = Visibility.Visible;
 
-                NotificationShowExtensions.ShowMessageToast("已设置A点, 再次点击可取消设置");
+                this.ShowMessageToastV2("已设置A点, 再次点击可取消设置");
             }
         }
 
@@ -3274,13 +3299,13 @@ namespace BiliLite.Controls
                 Player.ABPlay.PointB = double.MaxValue;
                 PlayerSettingABPlaySetPointB.Content = "设置B点";
 
-                NotificationShowExtensions.ShowMessageToast("已取消设置B点");
+                this.ShowMessageToastV2("已取消设置B点");
             }
             else
             {
                 if (Player.Position <= Player.ABPlay.PointA)
                 {
-                    NotificationShowExtensions.ShowMessageToast("B点必须在A点之后");
+                    this.ShowMessageToastV2("B点必须在A点之后");
                 }
                 else
                 {
@@ -3288,10 +3313,24 @@ namespace BiliLite.Controls
                     VideoPlayHistoryHelper.SetABPlayHistory(CurrentPlayItem, Player.ABPlay);
                     PlayerSettingABPlaySetPointB.Content = "B: " + TimeSpan.FromSeconds(Player.ABPlay.PointB).ToString(@"hh\:mm\:ss\.fff");
 
-                    NotificationShowExtensions.ShowMessageToast("已设置B点, 再次点击可取消设置");
+                    this.ShowMessageToastV2("已设置B点, 再次点击可取消设置");
                 }
             }
         }
+
+        /// <summary>
+        /// 隐藏光标.
+        /// </summary>
+        public void HideCursor()
+        {
+            ProtectedCursor?.Dispose();
+        }
+
+        /// <summary>
+        /// 显示光标.
+        /// </summary>
+        public void ShowCursor()
+            => ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
 
         private void Player_SizeChanged(object sender, SizeChangedEventArgs e)
         {

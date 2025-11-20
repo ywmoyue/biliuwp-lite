@@ -54,28 +54,20 @@ namespace BiliLite.Extensions
 
         public static T ObjectClone<T>(this T obj)
         {
-            var type = typeof(T);
-
-            if (!type.IsSerializable)
-                return default;
-
             if (ReferenceEquals(obj, null))
                 return default;
 
-            IFormatter format = new BinaryFormatter();
-
-            using MemoryStream ms = new MemoryStream();
             try
             {
-                format.Serialize(ms, obj);
-                ms.Seek(0, SeekOrigin.Begin);
-                return (T)format.Deserialize(ms);
+                var json = System.Text.Json.JsonSerializer.Serialize(obj);
+                return System.Text.Json.JsonSerializer.Deserialize<T>(json);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return default;
             }
         }
+
 
         public static T ObjectCloneWithoutSerializable<T>(this T obj)
         {

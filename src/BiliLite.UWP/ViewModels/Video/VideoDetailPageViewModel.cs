@@ -24,9 +24,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.UI;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
 using BiliLite.Modules.ExtraInterface;
+using Microsoft.UI;
 
 namespace BiliLite.Modules
 {

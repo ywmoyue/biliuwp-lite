@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using AutoMapper;
 using Bilibili.App.Dynamic.V2;
 using BiliLite.Extensions;
@@ -14,7 +14,7 @@ using PropertyChanged;
 
 namespace BiliLite.ViewModels.UserDynamic
 {
-    public class DynamicV2ItemViewModel:BaseViewModel
+    public class DynamicV2ItemViewModel : BaseViewModel
     {
         private ModuleDynamic m_dynamic;
         private ModuleStat m_stat;
@@ -31,7 +31,7 @@ namespace BiliLite.ViewModels.UserDynamic
             get
             {
                 // Dynamic.DynArchive.Title
-                if (Dynamic is { DynArchive: { }})
+                if (Dynamic is { DynArchive: { } })
                 {
                     return Dynamic.DynArchive.Title;
                 }
@@ -225,7 +225,7 @@ namespace BiliLite.ViewModels.UserDynamic
             }
         }
 
-        [DependsOn(nameof(Desc),nameof(OpusSummary))]
+        [DependsOn(nameof(Desc), nameof(OpusSummary))]
         public RichTextBlock Content
         {
             get
@@ -290,7 +290,7 @@ namespace BiliLite.ViewModels.UserDynamic
             }
         }
 
-        [DependsOn(nameof(AuthorForward),nameof(CardType),nameof(ItemType))]
+        [DependsOn(nameof(AuthorForward), nameof(CardType), nameof(ItemType))]
         public bool IsRepost => AuthorForward != null;
 
         public List<UserDynamicItemDisplayImageInfo> ImageInfos
@@ -301,14 +301,14 @@ namespace BiliLite.ViewModels.UserDynamic
                 var allImages = drawItems.Select(x => x.Src).ToList();
 
                 return drawItems.Select((t, i) => new UserDynamicItemDisplayImageInfo()
-                    {
-                        AllImages = allImages,
-                        Height = t.Height,
-                        ImageUrl = t.Src,
-                        Width = t.Width,
-                        Index = i,
-                        ImageCommand = Parent.ImageCommand,
-                    })
+                {
+                    AllImages = allImages,
+                    Height = t.Height,
+                    ImageUrl = t.Src,
+                    Width = t.Width,
+                    Index = i,
+                    ImageCommand = Parent.ImageCommand,
+                })
                     .ToList();
             }
         }

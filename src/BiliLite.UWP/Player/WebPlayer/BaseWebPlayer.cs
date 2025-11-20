@@ -8,12 +8,14 @@ using System;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Controls;
 using BiliLite.Models.Common.Player;
 using BiliLite.Player.WebPlayer.Models;
 using NSDanmaku;
 using System.Threading;
+using NSDanmaku.WinUI;
+using Microsoft.UI;
 
 namespace BiliLite.Player.WebPlayer;
 
@@ -61,7 +63,8 @@ public abstract class BaseWebPlayer : Grid, IDisposable
     private async Task InitWebView2()
     {
         WebViewElement = new WebView2();
-        WebViewElement.Background = new SolidColorBrush(Colors.Black);
+        //WebViewElement.Background = new SolidColorBrush(Colors.Black);
+        WebViewElement.DefaultBackgroundColor = Colors.Transparent;
         // 由于加载白屏，需要设置WebViewElement高度为0，loaded事件后再恢复默认高度
         // TODO： 这个做法效果不大，需要设置一个遮罩在loaded事件后隐藏该遮罩
         WebViewElement.Height = 0;

@@ -1,15 +1,15 @@
 ﻿using BiliLite.Models.Common.Comment;
 using BiliLite.Models.Requests.Api;
-using Microsoft.Toolkit.Uwp.UI.Animations;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Input;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Input;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
 namespace BiliLite.Controls.Dialogs
 {
+    // TODO: 实际已没有用到此控件的地方，可以移除
     public sealed partial class CommentDialog : UserControl
     {
         private Popup popup;
@@ -41,7 +41,7 @@ namespace BiliLite.Controls.Dialogs
         }
         public async void Close()
         {
-            await RootBorder.Fade(value: 0, duration: 200, delay: 0, easingType: EasingType.Default, easingMode: Windows.UI.Xaml.Media.Animation.EasingMode.EaseOut).StartAsync();
+            //await RootBorder.Fade(value: 0, duration: 200, delay: 0, easingType: EasingType.Default, easingMode: Microsoft.UI.Xaml.Media.Animation.EasingMode.EaseOut).StartAsync();
             this.popup.IsOpen = false;
         }
         private async void CommentDialog_Loaded(object sender, RoutedEventArgs e)
@@ -50,12 +50,12 @@ namespace BiliLite.Controls.Dialogs
 
             Window.Current.SizeChanged += Current_SizeChanged;
 
-            await RootBorder.Fade(value: 1, duration: 200, delay: 0, easingType: EasingType.Default, easingMode: Windows.UI.Xaml.Media.Animation.EasingMode.EaseIn).StartAsync();
+            //await RootBorder.Fade(value: 1, duration: 200, delay: 0, easingType: EasingType.Default, easingMode: Microsoft.UI.Xaml.Media.Animation.EasingMode.EaseIn).StartAsync();
 
 
         }
 
-        private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
+        private void Current_SizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
             this.Width = e.Size.Width;
             this.Height = e.Size.Height;

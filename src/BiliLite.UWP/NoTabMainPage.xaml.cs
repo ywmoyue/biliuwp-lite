@@ -4,16 +4,18 @@ using BiliLite.Models.Common;
 using BiliLite.Pages;
 using BiliLite.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Input;
+using WinUIEx;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -32,9 +34,7 @@ namespace BiliLite
             m_shortcutKeyService = App.ServiceProvider.GetRequiredService<ShortcutKeyService>();
             m_shortcutKeyService.SetMainPage(this);
             this.InitializeComponent();
-            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             mode = SettingService.GetValue<int>(SettingConstants.UI.DISPLAY_MODE, 0);
-            Window.Current.SetTitleBar(TitleBar);
             frame.Navigated += Frame_Navigated;
             MessageCenter.NavigateToPageEvent += NavigationHelper_NavigateToPageEvent;
             MessageCenter.ChangeTitleEvent += MessageCenter_ChangeTitleEvent;
@@ -42,24 +42,35 @@ namespace BiliLite
             MessageCenter.MiniWindowEvent += MessageCenter_MiniWindowEvent;
             MessageCenter.FullscreenEvent += MessageCenter_FullscreenEvent;
             MessageCenter.SeekEvent += MessageCenter_SeekEvent;
-            Window.Current.Content.PointerPressed += Content_PointerPressed;
 
-            Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
+            PreviewKeyUp += MainPage_KeyUp;
+            PreviewKeyDown += MainPage_KeyDown;
         }
 
         public event EventHandler MainPageLoaded;
 
         public object CurrentPage => frame.Content;
 
+        private void MainPage_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            m_shortcutKeyService.HandleKeyDown(this.GetCurrentWindow(), e.Key);
+        }
+
+        private void MainPage_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            m_shortcutKeyService.HandleKeyUp(this.GetCurrentWindow(), e.Key);
+        }
+
+
         private void Dispatcher_AcceleratorKeyActivated(Windows.UI.Core.CoreDispatcher sender, Windows.UI.Core.AcceleratorKeyEventArgs args)
         {
             if (args.EventType.ToString().Contains("Down"))
             {
-                m_shortcutKeyService.HandleKeyDown(args.VirtualKey);
+                m_shortcutKeyService.HandleKeyDown(this.GetCurrentWindow(), args.VirtualKey);
             }
             if (args.EventType.ToString().Contains("Up"))
             {
-                m_shortcutKeyService.HandleKeyUp(args.VirtualKey);
+                m_shortcutKeyService.HandleKeyUp(this.GetCurrentWindow(), args.VirtualKey);
             }
         }
 
@@ -68,12 +79,12 @@ namespace BiliLite
             if (e)
             {
                 MiniWindowsTitleBar.Visibility = Visibility.Visible;
-                Window.Current.SetTitleBar(MiniWindowsTitleBar);
+                this.GetCurrentWindow().SetTitleBar(MiniWindowsTitleBar);
             }
             else
             {
                 MiniWindowsTitleBar.Visibility = Visibility.Collapsed;
-                Window.Current.SetTitleBar(TitleBar);
+                this.GetCurrentWindow().SetTitleBar(TitleBar);
             }
         }
 
@@ -92,7 +103,7 @@ namespace BiliLite
         {
             var par = e.GetCurrentPoint(sender as Frame).Properties.PointerUpdateKind;
             if (SettingService.GetValue(SettingConstants.UI.MOUSE_MIDDLE_ACTION, (int)MouseMiddleActions.Back) == (int)MouseMiddleActions.Back
-                && par == Windows.UI.Input.PointerUpdateKind.XButton1Pressed || par == Windows.UI.Input.PointerUpdateKind.MiddleButtonPressed)
+                && par == PointerUpdateKind.XButton1Pressed || par == PointerUpdateKind.MiddleButtonPressed)
             {
                 //如果打开了图片浏览，则关闭图片浏览
                 if (gridViewer.Visibility == Visibility.Visible)
@@ -192,25 +203,19 @@ namespace BiliLite
 
         private async void OpenNewWindow(NavigationInfo e)
         {
-
-            CoreApplicationView newView = CoreApplication.CreateNewView();
-            int newViewId = 0;
-            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-             {
-                 var res = App.Current.Resources;
-                 Frame frame = new Frame();
-                 frame.Navigate(e.page, e.parameters);
-                 Window.Current.Content = frame;
-                 Window.Current.Activate();
-                 newViewId = ApplicationView.GetForCurrentView().Id;
-                 ApplicationView.GetForCurrentView().Consolidated += (sender, args) =>
-                 {
-                     frame.Navigate(typeof(BlankPage));
-                     CoreWindow.GetForCurrentThread().Close();
-                 };
-             });
-            bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
+            WindowEx window = new WindowEx();
+            var res = App.Current.Resources;
+            WindowFrame frame = new WindowFrame();
+            frame.CurrentWindow = window;
+            frame.Navigate(e.page, e.parameters);
+            window.Content = frame;
+            window.Closed += (_, _) =>
+            {
+                //frame.Navigate(typeof(BlankPage));
+            };
+            window.Show();
         }
+
         private void MessageCenter_ViewImageEvent(object sender, ImageViewerParameter e)
         {
             gridViewer.Visibility = Visibility.Visible;
@@ -251,6 +256,9 @@ namespace BiliLite
 
         private void NoTabMainPage_OnLoaded(object sender, RoutedEventArgs e)
         {
+            var window = this.GetCurrentWindow();
+            window.SetTitleBar(TitleBar);
+            window.Content.PointerPressed += Content_PointerPressed;
             frame.Navigate(typeof(Pages.HomePage));
             MainPageLoaded?.Invoke(this, EventArgs.Empty);
         }
@@ -374,5 +382,4 @@ namespace BiliLite
             return false;
         }
     }
-    public class BlankPage : Page { }
 }

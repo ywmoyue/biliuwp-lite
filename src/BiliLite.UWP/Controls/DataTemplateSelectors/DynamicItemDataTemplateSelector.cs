@@ -1,5 +1,5 @@
-﻿using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using BiliLite.Models.Common.Dynamic;
 
 namespace BiliLite.Controls.DataTemplateSelectors
@@ -14,7 +14,7 @@ namespace BiliLite.Controls.DataTemplateSelectors
             {
                 return Resource["DynamicVideo"] as DataTemplate;
             }
-            else if(item is DynamicItemModel ugcSeasonCard && ugcSeasonCard.Desc.Type == 4310)
+            else if (item is DynamicItemModel ugcSeasonCard && ugcSeasonCard.Desc.Type == 4310)
             {
                 return Resource["DynamicUgcSeason"] as DataTemplate;
             }

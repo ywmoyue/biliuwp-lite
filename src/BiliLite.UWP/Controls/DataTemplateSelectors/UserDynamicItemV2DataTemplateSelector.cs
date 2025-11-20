@@ -2,8 +2,8 @@
 using BiliLite.ViewModels.UserDynamic;
 using System;
 using System.Collections.Generic;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 namespace BiliLite.Controls.DataTemplateSelectors
 {
@@ -17,7 +17,7 @@ namespace BiliLite.Controls.DataTemplateSelectors
                 new Dictionary<string, Func<UserDynamicItemV2DataTemplateSelector,
                     DynamicV2ItemViewModel, DataTemplate>>()
                 {
-                    { 
+                    {
                         Constants.DynamicTypes.DRAW, (selector, model) =>
                         {
                             if (model.Dynamic == null) return selector.WordTemplate;

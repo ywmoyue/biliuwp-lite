@@ -10,10 +10,10 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Navigation;
 using NavigationView = Microsoft.UI.Xaml.Controls.NavigationView;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -111,7 +111,7 @@ namespace BiliLite.Pages
 
         private async void btnSetBackground_Click(object sender, RoutedEventArgs e)
         {
-            FileOpenPicker fileOpenPicker = new FileOpenPicker();
+            FileOpenPicker fileOpenPicker = FileExtensions.GetFileOpenPicker();
             fileOpenPicker.FileTypeFilter.Add(".png");
             fileOpenPicker.FileTypeFilter.Add(".jpg");
             StorageFile file = await fileOpenPicker.PickSingleFileAsync();

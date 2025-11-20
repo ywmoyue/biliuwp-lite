@@ -5,7 +5,7 @@
     xmlns:Player="using:BiliLite.Models.Common.Player"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:danmaku="using:NSDanmaku.Controls"
+    xmlns:danmaku="using:NSDanmaku.WinUI.Controls"
     xmlns:fa="using:FontAwesome5"
     xmlns:live="using:BiliLite.Models.Common.Live"
     xmlns:live1="using:BiliLite.ViewModels.Live"
@@ -13,8 +13,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model_live="using:BiliLite.Modules.Live"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:webPlayer="using:BiliLite.Player.WebPlayer"
+    xmlns:webPlayer="using:BiliLite.Player.WebPlayer" 
+    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
     Margin="{x:Bind m_viewModel.Margin, Mode=OneWay}"
     Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
@@ -2327,17 +2327,15 @@
                 Grid.Column="1"
                 Width="16"
                 HorizontalAlignment="Left"
-                CursorBehavior="ChangeOnSplitterHover"
-                GripperCursor="Default"
                 IsEnabled="True"
                 ResizeBehavior="BasedOnAlignment"
                 ResizeDirection="Auto">
                 <toolkit:GridSplitter.Background>
                     <SolidColorBrush Opacity="0" />
                 </toolkit:GridSplitter.Background>
-                <toolkit:GridSplitter.GripperForeground>
+                <!--<toolkit:GridSplitter.GripperForeground>
                     <SolidColorBrush Opacity="0" />
-                </toolkit:GridSplitter.GripperForeground>
+                </toolkit:GridSplitter.GripperForeground>-->
                 <toolkit:GridSplitter.RenderTransform>
                     <TranslateTransform X="-8" />
                 </toolkit:GridSplitter.RenderTransform>

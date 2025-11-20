@@ -11,8 +11,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Windows.Foundation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -388,12 +388,12 @@ namespace BiliLite.Controls.Settings
                 });
             });
 
-            CbMicaBackgroundSource.Loaded += (_, _) =>
-            {
-                CbMicaBackgroundSource.SelectedIndex =
-                    m_UISettingsControlViewModel.MicaBackgroundSources.FindIndex(x =>
-                        x.Value == m_UISettingsControlViewModel.MicaBackgroundSource);
-            };
+            //CbMicaBackgroundSource.Loaded += (_, _) =>
+            //{
+            //    //CbMicaBackgroundSource.SelectedIndex =
+            //    //    m_UISettingsControlViewModel.MicaBackgroundSources.FindIndex(x =>
+            //    //        x.Value == m_UISettingsControlViewModel.MicaBackgroundSource);
+            //};
 
             var navItems = SettingService.GetValue(SettingConstants.UI.HOEM_ORDER, DefaultHomeNavItems.GetDefaultHomeNavItems());
             gridHomeCustom.ItemsSource = new ObservableCollection<HomeNavItem>(navItems);
@@ -480,11 +480,11 @@ namespace BiliLite.Controls.Settings
 
         private async void UpdateMicaSettings(object sender, object e)
         {
-            await Task.Delay(50);
-            m_themeService.SetMicaBrushBackgroundSource(m_UISettingsControlViewModel.MicaBackgroundSource,
-                !m_UISettingsControlViewModel.EnableMicaBackground);
-            SettingService.SetValue(SettingConstants.UI.MICA_BACKGROUND_SOURCE, (int)m_UISettingsControlViewModel.MicaBackgroundSource);
-            SettingService.SetValue(SettingConstants.UI.ENABLE_MICA_BACKGROUND_SOURCE, m_UISettingsControlViewModel.EnableMicaBackground);
+            //await Task.Delay(50);
+            //m_themeService.SetMicaBrushBackgroundSource(m_UISettingsControlViewModel.MicaBackgroundSource,
+            //    !m_UISettingsControlViewModel.EnableMicaBackground);
+            //SettingService.SetValue(SettingConstants.UI.MICA_BACKGROUND_SOURCE, (int)m_UISettingsControlViewModel.MicaBackgroundSource);
+            //SettingService.SetValue(SettingConstants.UI.ENABLE_MICA_BACKGROUND_SOURCE, m_UISettingsControlViewModel.EnableMicaBackground);
         }
     }
 }

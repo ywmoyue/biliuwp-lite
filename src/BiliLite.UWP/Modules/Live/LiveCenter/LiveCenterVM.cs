@@ -106,7 +106,7 @@ namespace BiliLite.Modules.Live.LiveCenter
         {
             MessageCenter.NavigateToPage(this, new NavigationInfo()
             {
-                icon = Windows.UI.Xaml.Controls.Symbol.World,
+                icon = Microsoft.UI.Xaml.Controls.Symbol.World,
                 title = "佩戴中心",
                 page = typeof(Pages.WebPage),
                 parameters = "https://link.bilibili.com/p/center/index#/user-center/wearing-center/my-medal"

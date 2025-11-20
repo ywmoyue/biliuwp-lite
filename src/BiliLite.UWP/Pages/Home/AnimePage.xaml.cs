@@ -1,5 +1,4 @@
-﻿using BiliLite.Extensions;
-using BiliLite.Extensions.Notifications;
+﻿using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Anime;
@@ -9,10 +8,11 @@ using BiliLite.ViewModels.Home;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Input;
+using BiliLite.Extensions;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 

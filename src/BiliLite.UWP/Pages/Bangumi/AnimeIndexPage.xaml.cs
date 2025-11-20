@@ -1,10 +1,10 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Services;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Navigation;
 using BiliLite.Models.Common.Season;
 using BiliLite.ViewModels.Season;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,13 +40,13 @@ namespace BiliLite.Pages.Bangumi
                 }
                 else
                 {
-                    indexParameter=e.Parameter as SeasonIndexParameter;
+                    indexParameter = e.Parameter as SeasonIndexParameter;
                     if (indexParameter == null)
                     {
                         indexParameter = JsonConvert.DeserializeObject<SeasonIndexParameter>(JsonConvert.SerializeObject(e.Parameter));
                     }
                 }
-              
+
                 m_viewModel.Parameter = indexParameter;
                 await m_viewModel.LoadConditions();
                 if (m_viewModel.Conditions != null)
@@ -86,7 +86,7 @@ namespace BiliLite.Pages.Bangumi
         private async void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var combox = sender as ComboBox;
-            if (combox.SelectedItem == null || m_viewModel.ConditionsLoading|| m_viewModel.Loading)
+            if (combox.SelectedItem == null || m_viewModel.ConditionsLoading || m_viewModel.Loading)
             {
                 return;
             }
@@ -95,5 +95,5 @@ namespace BiliLite.Pages.Bangumi
         }
     }
 
-    
+
 }

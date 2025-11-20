@@ -1,12 +1,13 @@
-﻿using BiliLite.Controls;
+﻿using Bilibili.Pgc.Gateway.Player.V2;
+using BiliLite.Controls;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Video;
 using BiliLite.Services;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Navigation;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Navigation;
-using Newtonsoft.Json;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -30,7 +31,11 @@ namespace BiliLite.Pages
         {
             if (e)
             {
-                this.Margin = new Thickness(0, SettingService.GetValue<int>(SettingConstants.UI.DISPLAY_MODE, 0) == 0 ? -48 : -48, 0, 0);
+                // TODO: WinUI3渲染bug,隐藏全部3个部分导致播放器画面消失，暂时保留1像素
+                var marginOffset = SettingService.GetValue(SettingConstants.UI.TAB_HEIGHT,
+                    SettingConstants.UI.DEFAULT_TAB_HEIGHT);
+                marginOffset -= 1;
+                this.Margin = new Thickness(0, -1 * marginOffset, 0, 0);
             }
             else
             {

@@ -330,7 +330,7 @@ namespace BiliLite.Services
 
         public async Task<bool> ImportSettings()
         {
-            var filePicker = new FileOpenPicker();
+            var filePicker = FileExtensions.GetFileOpenPicker();
             filePicker.FileTypeFilter.Add(".bililiteSettings");
             var file = await filePicker.PickSingleFileAsync();
             if (file == null) return false;

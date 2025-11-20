@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
 using BiliLite.Models.Common.Msg;
 
 namespace BiliLite.Controls.DataTemplateSelectors

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using BiliLite.Controls.Dynamic;
 using BiliLite.Models.Common;
-using Windows.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using BiliLite.ViewModels.UserDynamic;
 
 namespace BiliLite.Controls.DataTemplateSelectors

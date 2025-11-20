@@ -11,9 +11,10 @@ using System.Linq;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.System;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+using BiliLite.Extensions;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -110,7 +111,7 @@ namespace BiliLite.Pages
 
         private async void BtnSendImage_Click(object sender, RoutedEventArgs e)
         {
-            var filePicker = new FileOpenPicker();
+            var filePicker = FileExtensions.GetFileOpenPicker();
             filePicker.FileTypeFilter.Add(".jpg");
             filePicker.FileTypeFilter.Add(".png");
             filePicker.FileTypeFilter.Add(".jpeg");
@@ -184,7 +185,7 @@ namespace BiliLite.Pages
 
         private void AtMeGrid_OnLoaded(object sender, RoutedEventArgs e)
         {
-            
+
         }
     }
 }

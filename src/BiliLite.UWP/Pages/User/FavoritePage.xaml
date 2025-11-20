@@ -11,7 +11,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pages="using:BiliLite.Pages"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:user="using:BiliLite.ViewModels.User"
+    xmlns:user="using:BiliLite.ViewModels.User" xmlns:imageEx="using:ImageEx"
     Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
@@ -47,7 +47,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid>
-                    <toolkit:ImageEx
+                    <imageEx:ImageEx
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -104,7 +104,7 @@
                         <MenuFlyoutItem x:Name="btnFavBoxDel" Click="btnFavBoxDel_Click">删除</MenuFlyoutItem>
                     </MenuFlyout>
                 </Grid.ContextFlyout>
-                <toolkit:ImageEx
+                <imageEx:ImageEx
                     CornerRadius="{ThemeResource OverlayCornerRadius}"
                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png"
                     Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"
@@ -152,7 +152,7 @@
                         <MenuFlyoutItem x:Name="BtnCollectedDel" Click="BtnCollectedDel_OnClick">取消订阅</MenuFlyoutItem>
                     </MenuFlyout>
                 </Grid.ContextFlyout>
-                <toolkit:ImageEx
+                <imageEx:ImageEx
                     CornerRadius="{ThemeResource OverlayCornerRadius}"
                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png"
                     Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"

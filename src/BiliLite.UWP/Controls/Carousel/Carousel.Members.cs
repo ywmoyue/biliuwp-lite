@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Input;
 
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
 using Windows.Foundation.Metadata;
 
 namespace BiliLite.Controls

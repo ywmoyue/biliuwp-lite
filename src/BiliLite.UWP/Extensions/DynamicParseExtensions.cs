@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Documents;
-using Windows.UI.Xaml.Markup;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Documents;
+using Microsoft.UI.Xaml.Markup;
 using Bilibili.App.Dynamic.V2;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.UserDynamic;
@@ -13,7 +13,7 @@ using BiliLite.Models.Exceptions;
 using BiliLite.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Paragraph = Windows.UI.Xaml.Documents.Paragraph;
+using Paragraph = Microsoft.UI.Xaml.Documents.Paragraph;
 
 namespace BiliLite.Extensions
 {
@@ -75,7 +75,7 @@ namespace BiliLite.Extensions
             JObject extend_json = null,
             List<Bilibili.App.Dynamic.V2.TextNode> wordNodes = null,
             string title = null,
-            string bindingCommands= "UserDynamicItemDisplayCommands")
+            string bindingCommands = "UserDynamicItemDisplayCommands")
         {
             if (string.IsNullOrEmpty(txt)) return new RichTextBlock();
             var input = txt;
@@ -209,7 +209,7 @@ namespace BiliLite.Extensions
                         var run = @"<InlineUIContainer>"
                                   + $@"<HyperlinkButton Command=""{{Binding {bindingCommands}.UserCommand}}""  IsEnabled=""True"" Margin=""0 -4 4 -4"" Padding=""0"" "
                                   + string.Format(@" Tag=""{1}""  CommandParameter=""{1}"" ><TextBlock>{0}</TextBlock></HyperlinkButton>"
-                                                  +"</InlineUIContainer>"
+                                                  + "</InlineUIContainer>"
                                       , atItem.RawText.Replace("@", "^x$%^"), atItem.Link.Link);
 
                         input = input.Replace(atItem.RawText, run);
@@ -229,7 +229,7 @@ namespace BiliLite.Extensions
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        private static string HandelTag(string input,string bindingCommands)
+        private static string HandelTag(string input, string bindingCommands)
         {
             //处理话题
             var avMatchCollection = Regex.Matches(input, @"\#(.*?)\#");

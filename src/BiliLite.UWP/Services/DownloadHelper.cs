@@ -20,8 +20,11 @@ namespace BiliLite.Services
 
         public static BackgroundTransferGroup group = BackgroundTransferGroup.CreateGroup("BiliDownlad");//下载组，方便管理
 
+        public static string groupName = "BiliDownlad";//下载组，方便管理
+
         public static async Task AddDownload(DownloadInfo downloadInfo)
         {
+            throw new NotImplementedException();
             //读取存储文件夹
             StorageFolder folder = await GetDownloadFolder();
             folder = await folder.CreateFolderAsync((downloadInfo.Type == DownloadType.Season ? ("ss" + downloadInfo.SeasonID) : downloadInfo.AVID), CreationCollisionOption.OpenIfExists);
@@ -58,7 +61,7 @@ namespace BiliLite.Services
             //保存文件
             await SaveInfo(downloadInfo, folder, episodeFolder);
         }
-        
+
         public static async Task<StorageFolder> GetDownloadFolder()
         {
             var path = SettingService.GetValue(SettingConstants.Download.DOWNLOAD_PATH, SettingConstants.Download.DEFAULT_PATH);

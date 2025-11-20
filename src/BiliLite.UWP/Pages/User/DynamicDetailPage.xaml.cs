@@ -1,7 +1,7 @@
 
-﻿using BiliLite.Models.Requests.Api;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+using BiliLite.Models.Requests.Api;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using BiliLite.Models.Common;
 using BiliLite.ViewModels.UserDynamic;
 using Microsoft.Extensions.DependencyInjection;

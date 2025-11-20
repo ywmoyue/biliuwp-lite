@@ -1,7 +1,7 @@
 ﻿using BiliLite.Models.Common.Video.PlayUrlInfos;
 using System;
 using System.Collections.Generic;
-using Windows.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Data;
 
 namespace BiliLite.Converters;
 

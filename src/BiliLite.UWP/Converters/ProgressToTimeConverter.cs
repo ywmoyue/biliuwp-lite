@@ -1,5 +1,5 @@
 ﻿using System;
-using Windows.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Data;
 
 namespace BiliLite.Converters
 {
@@ -12,24 +12,24 @@ namespace BiliLite.Converters
                 case null:
                     return "00:00";
                 case double second:
-                {
-                    var ts = TimeSpan.FromSeconds(second);
-                
-                    return ts.ToString(ts.TotalHours>=1? @"hh\:mm\:ss" : @"mm\:ss");
-                }
+                    {
+                        var ts = TimeSpan.FromSeconds(second);
+
+                        return ts.ToString(ts.TotalHours >= 1 ? @"hh\:mm\:ss" : @"mm\:ss");
+                    }
                 case int _:
                 case long _:
-                {
-                    var ts = TimeSpan.FromSeconds(System.Convert.ToDouble(value));
-                    return ts.ToString(ts.TotalHours >= 1 ? @"hh\:mm\:ss" : @"mm\:ss");
-                }
+                    {
+                        var ts = TimeSpan.FromSeconds(System.Convert.ToDouble(value));
+                        return ts.ToString(ts.TotalHours >= 1 ? @"hh\:mm\:ss" : @"mm\:ss");
+                    }
                 case TimeSpan secondSpan:
                     return secondSpan.ToString(secondSpan.TotalHours >= 1 ? @"hh\:mm\:ss" : @"mm\:ss");
                 case string secondStr:
-                {
-                    var ts = TimeSpan.FromSeconds(long.Parse(secondStr));
-                    return ts.ToString(ts.TotalHours >= 1 ? @"hh\:mm\:ss" : @"mm\:ss");
-                }
+                    {
+                        var ts = TimeSpan.FromSeconds(long.Parse(secondStr));
+                        return ts.ToString(ts.TotalHours >= 1 ? @"hh\:mm\:ss" : @"mm\:ss");
+                    }
                 default:
                     return value.ToString();
             }

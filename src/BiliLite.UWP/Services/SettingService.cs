@@ -3,7 +3,6 @@ using System.Linq;
 using BiliLite.Models;
 using BiliLite.Models.Common;
 using BiliLite.Models.Databases;
-using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json;
 
 namespace BiliLite.Services
@@ -35,11 +34,18 @@ namespace BiliLite.Services
 
         public static T GetValue<T>(string key, T _default)
         {
-            if (storageHelper.KeyExists(key))
+            try
             {
-                return storageHelper.Read<T>(key);
+                if (storageHelper.KeyExists(key))
+                {
+                    return storageHelper.Read<T>(key);
+                }
+                else
+                {
+                    return _default;
+                }
             }
-            else
+            catch(Exception ex)
             {
                 return _default;
             }
@@ -79,7 +85,7 @@ namespace BiliLite.Services
 
             public static MyProfileModel Profile => storageHelper.Read<MyProfileModel>(SettingConstants.Account.USER_PROFILE);
 
-            public static bool Logined => storageHelper.KeyExists(SettingConstants.Account.ACCESS_KEY) && !string.IsNullOrEmpty(storageHelper.Read<string>(SettingConstants.Account.ACCESS_KEY, null));
+            public static bool Logined => storageHelper.KeyExists(SettingConstants.Account.ACCESS_KEY) && !string.IsNullOrEmpty(SettingService.GetValue<string>(SettingConstants.Account.ACCESS_KEY, null));
 
             public static string AccessKey => GetValue(SettingConstants.Account.ACCESS_KEY, "");
 

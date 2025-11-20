@@ -1,5 +1,4 @@
-﻿using Microsoft.Toolkit.Uwp.UI.Animations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,9 +6,9 @@ using System.Threading.Tasks;
 using Windows.Security.Cryptography;
 using Windows.Security.Cryptography.Core;
 using Windows.Storage.Streams;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 
 namespace BiliLite.Controls
 {
@@ -58,7 +57,7 @@ namespace BiliLite.Controls
         {
             if (element.GetTranslateX() != x)
             {
-               // await element.Offset(offsetX: (float)element.GetTranslateX(), offsetY: 0, duration: duration, delay: 0, easingType: EasingType.Default).StartAsync();  //Offset animation can be awaited
+                // await element.Offset(offsetX: (float)element.GetTranslateX(), offsetY: 0, duration: duration, delay: 0, easingType: EasingType.Default).StartAsync();  //Offset animation can be awaited
                 await AnimateDoublePropertyAsync(element.GetCompositeTransform(), "TranslateX", element.GetTranslateX(), x, duration, easingFunction);
             }
         }
@@ -68,7 +67,7 @@ namespace BiliLite.Controls
         }
         public static int Mod(this int value, int module)
         {
-            if (module==0)
+            if (module == 0)
             {
                 return 0;
             }

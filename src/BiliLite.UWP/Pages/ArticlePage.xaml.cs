@@ -2,8 +2,8 @@
 using System;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Navigation;
 using BiliLite.Extensions;
 using Flurl.Http;
 using Microsoft.UI.Xaml.Controls;
@@ -11,7 +11,7 @@ using Microsoft.Web.WebView2.Core;
 using Newtonsoft.Json;
 using BiliLite.Services;
 using BiliLite.Models.Common.Article;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -84,7 +84,8 @@ public sealed partial class ArticlePage : BasePage
             var articleModelStr = JsonConvert.SerializeObject(m_articlePageNavigationInfo).ToBase64();
 
             await WebView.CoreWebView2.ExecuteScriptAsync($"window.loadArticle('{articleModelStr}')");
-        }else if (@event.Event == ArticleReaderEventLists.HOST_FETCH)
+        }
+        else if (@event.Event == ArticleReaderEventLists.HOST_FETCH)
         {
             var data = JsonConvert.DeserializeObject<ArticleReaderHostFetchData>(JsonConvert.SerializeObject(@event.Data));
             await HostFetch(data);

@@ -1,4 +1,4 @@
-﻿using Windows.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 
 namespace BiliLite.Models.Common.Live
 {
@@ -7,7 +7,7 @@ namespace BiliLite.Models.Common.Live
         public string UserName { get; set; }
 
         public string UserID { get; set; }
-        
+
         public int MsgType { get; set; }
 
         public string MedalName { get; set; }

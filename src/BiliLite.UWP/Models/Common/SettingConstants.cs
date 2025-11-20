@@ -10,6 +10,12 @@ namespace BiliLite.Models.Common
         public class UI
         {
             /// <summary>
+            /// 第一次运行
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string IS_FIRST_RUN = "IsFirstRun";
+
+            /// <summary>
             /// 加载原图
             /// </summary>
             [SettingKey(typeof(bool))]

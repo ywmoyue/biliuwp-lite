@@ -9,7 +9,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pages="using:BiliLite.Pages"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:user="using:BiliLite.Modules.User"
+    xmlns:user="using:BiliLite.Modules.User" xmlns:imageEx="using:ImageEx"
     Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
@@ -27,7 +27,7 @@
                             Text="移除" />
                     </MenuFlyout>
                 </Grid.ContextFlyout>
-                <toolkit:ImageEx
+                <imageEx:ImageEx
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     CornerRadius="{ThemeResource OverlayCornerRadius}"

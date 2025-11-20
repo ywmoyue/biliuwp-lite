@@ -1,5 +1,6 @@
 ﻿using Windows.UI;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI;
 
 namespace BiliLite.Models.Common.Player
 {

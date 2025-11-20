@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Core;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
 
 namespace BiliLite.Extensions
 {
@@ -30,7 +30,7 @@ namespace BiliLite.Extensions
 
             if ((bool)e.NewValue)
             {
-                element.Dispatcher.RunAsync(CoreDispatcherPriority.Low,() =>
+                element.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
                 {
                     var scrollViewer = FindScrollViewer(element);
                     if (scrollViewer != null)

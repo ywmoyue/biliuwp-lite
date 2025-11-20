@@ -13,12 +13,20 @@ using BiliLite.Player.States.ContentStates;
 using BiliLite.Player.States.PauseStates;
 using BiliLite.Player.States.PlayStates;
 using BiliLite.Player.States.ScreenStates;
+using BiliLite.Player.WebPlayer;
 using BiliLite.Services;
 using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels.Live;
 using BiliLite.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Input;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,13 +39,6 @@ using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.System.Display;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
-using BiliLite.Player.WebPlayer;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -92,8 +93,8 @@ namespace BiliLite.Pages
             Title = "直播间";
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
             dispRequest = new DisplayRequest();
-            DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
-            dataTransferManager.DataRequested += DataTransferManager_DataRequested;
+            //DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
+            //dataTransferManager.DataRequested += DataTransferManager_DataRequested;
             //每过2秒就设置焦点
             timer_focus = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(2) };
             timer_focus.Tick += Timer_focus_Tick;
@@ -356,7 +357,7 @@ namespace BiliLite.Pages
 
         private async void PlayerController_ScreenStateChanged(object sender, ScreenStateChangedEventArgs e)
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
             {
                 m_viewModel.ScreenState = e.NewState;
                 var view = ApplicationView.GetForCurrentView();
@@ -386,7 +387,7 @@ namespace BiliLite.Pages
 
         private async void PlayerController_ContentStateChanged(object sender, ContentStateChangedEventArgs e)
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
             {
                 m_viewModel.ContentState = e.NewState;
             });
@@ -394,7 +395,7 @@ namespace BiliLite.Pages
 
         private async void PlayerController_PauseStateChanged(object sender, PauseStateChangedEventArgs e)
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
             {
                 m_viewModel.IsPaused = e.NewState.IsPaused;
             });
@@ -407,7 +408,7 @@ namespace BiliLite.Pages
 
         private async void PlayerController_PlayStateChanged(object sender, PlayStateChangedEventArgs e)
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
             {
                 m_viewModel.PlayState = e.NewState;
             });
@@ -436,7 +437,7 @@ namespace BiliLite.Pages
 
         private async Task MediaOpened()
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
             {
                 //保持屏幕常亮
                 dispRequest.RequestActive();
@@ -988,6 +989,20 @@ namespace BiliLite.Pages
 
         }
 
+        /// <summary>
+        /// 隐藏光标.
+        /// </summary>
+        public void HideCursor()
+        {
+            ProtectedCursor?.Dispose();
+        }
+
+        /// <summary>
+        /// 显示光标.
+        /// </summary>
+        public void ShowCursor()
+            => ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
+
         private async Task CaptureVideo()
         {
             try
@@ -1005,22 +1020,23 @@ namespace BiliLite.Pages
                     return;
                 }
 
-                RenderTargetBitmap bitmap = new RenderTargetBitmap();
-                await bitmap.RenderAsync(playerElement);
-                var pixelBuffer = await bitmap.GetPixelsAsync();
-                using (var fileStream = await saveFile.OpenAsync(FileAccessMode.ReadWrite))
-                {
-                    var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
-                    encoder.SetPixelData(BitmapPixelFormat.Bgra8,
-                        BitmapAlphaMode.Ignore,
-                         (uint)bitmap.PixelWidth,
-                         (uint)bitmap.PixelHeight,
-                         DisplayInformation.GetForCurrentView().LogicalDpi,
-                         DisplayInformation.GetForCurrentView().LogicalDpi,
-                         pixelBuffer.ToArray());
-                    await encoder.FlushAsync();
-                }
-                NotificationShowExtensions.ShowMessageToast("截图已经保存至图片库");
+                throw new NotImplementedException();
+                // RenderTargetBitmap bitmap = new RenderTargetBitmap();
+                // await bitmap.RenderAsync(playerElement);
+                // var pixelBuffer = await bitmap.GetPixelsAsync();
+                // using (var fileStream = await saveFile.OpenAsync(FileAccessMode.ReadWrite))
+                // {
+                //     var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
+                //     encoder.SetPixelData(BitmapPixelFormat.Bgra8,
+                //         BitmapAlphaMode.Ignore,
+                //          (uint)bitmap.PixelWidth,
+                //          (uint)bitmap.PixelHeight,
+                //          DisplayInformation.GetForCurrentView().LogicalDpi,
+                //          DisplayInformation.GetForCurrentView().LogicalDpi,
+                //          pixelBuffer.ToArray());
+                //     await encoder.FlushAsync();
+                // }
+                // NotificationShowExtensions.ShowMessageToast("截图已经保存至图片库");
             }
             catch (Exception ex)
             {
@@ -1210,45 +1226,49 @@ namespace BiliLite.Pages
         bool isMini = false;
         private async void MiniWidnows(bool mini)
         {
-            isMini = mini;
-            ApplicationView view = ApplicationView.GetForCurrentView();
             if (mini)
             {
-                BottomBtnFullWindows_Click(this, null);
-                StandardControl.Visibility = Visibility.Collapsed;
-                MiniControl.Visibility = Visibility.Visible;
-
-                if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.CompactOverlay))
-                {
-                    //隐藏标题栏
-                    this.Margin = new Thickness(0, -40, 0, 0);
-                    await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay);
-
-                    m_danmakuController.SetFontZoom(0.5);
-                    m_danmakuController.SetSpeed(6);
-                    m_danmakuController.Clear();
-                }
+                throw new NotImplementedException();
             }
-            else
-            {
-                BottomBtnExitFullWindows_Click(this, null);
-                this.Margin = new Thickness(0, 0, 0, 0);
-                StandardControl.Visibility = Visibility.Visible;
-                MiniControl.Visibility = Visibility.Collapsed;
-                await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default);
-                m_danmakuController.SetFontZoom(SettingService.GetValue<double>(SettingConstants.VideoDanmaku.FONT_ZOOM, 1));
-                m_danmakuController.SetSpeed(SettingService.GetValue<int>(SettingConstants.VideoDanmaku.SPEED, 10));
-                m_danmakuController.Clear();
-                if (SettingService.GetValue<Visibility>(SettingConstants.VideoDanmaku.SHOW, Visibility.Visible) == Visibility.Visible)
-                {
-                    m_danmakuController.Show();
-                }
-                else
-                {
-                    m_danmakuController.Hide();
-                }
-            }
-            MessageCenter.SetMiniWindow(mini);
+            // isMini = mini;
+            // ApplicationView view = ApplicationView.GetForCurrentView();
+            // if (mini)
+            // {
+            //     BottomBtnFullWindows_Click(this, null);
+            //     StandardControl.Visibility = Visibility.Collapsed;
+            //     MiniControl.Visibility = Visibility.Visible;
+
+            //     if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.CompactOverlay))
+            //     {
+            //         //隐藏标题栏
+            //         this.Margin = new Thickness(0, -40, 0, 0);
+            //         await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay);
+
+            //         m_danmakuController.SetFontZoom(0.5);
+            //         m_danmakuController.SetSpeed(6);
+            //         m_danmakuController.Clear();
+            //     }
+            // }
+            // else
+            // {
+            //     BottomBtnExitFullWindows_Click(this, null);
+            //     this.Margin = new Thickness(0, 0, 0, 0);
+            //     StandardControl.Visibility = Visibility.Visible;
+            //     MiniControl.Visibility = Visibility.Collapsed;
+            //     await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default);
+            //     m_danmakuController.SetFontZoom(SettingService.GetValue<double>(SettingConstants.VideoDanmaku.FONT_ZOOM, 1));
+            //     m_danmakuController.SetSpeed(SettingService.GetValue<int>(SettingConstants.VideoDanmaku.SPEED, 10));
+            //     m_danmakuController.Clear();
+            //     if (SettingService.GetValue<Visibility>(SettingConstants.VideoDanmaku.SHOW, Visibility.Visible) == Visibility.Visible)
+            //     {
+            //         m_danmakuController.Show();
+            //     }
+            //     else
+            //     {
+            //         m_danmakuController.Hide();
+            //     }
+            // }
+            // MessageCenter.SetMiniWindow(mini);
         }
 
         private void btnRemoveShieldWord_Click(object sender, RoutedEventArgs e)
@@ -1309,7 +1329,7 @@ namespace BiliLite.Pages
             {
                 if (pointer_in_player)
                 {
-                    Window.Current.CoreWindow.PointerCursor = null;
+                    HideCursor();
                 }
                 await control.FadeOutAsync(280);
                 control.Visibility = Visibility.Collapsed;
@@ -1335,15 +1355,12 @@ namespace BiliLite.Pages
         private void Grid_PointerExited(object sender, PointerRoutedEventArgs e)
         {
             pointer_in_player = false;
-            Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
+            ShowCursor();
         }
 
         private void Grid_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            if (Window.Current.CoreWindow.PointerCursor == null)
-            {
-                Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
-            }
+            ShowCursor();
 
         }
 
@@ -1437,7 +1454,8 @@ namespace BiliLite.Pages
 
         private void btnShare_Click(object sender, RoutedEventArgs e)
         {
-            DataTransferManager.ShowShareUI();
+            throw new NotImplementedException();
+            //DataTransferManager.ShowShareUI();
         }
 
         private void btnShareCopy_Click(object sender, RoutedEventArgs e)

@@ -2,7 +2,6 @@
 using BiliLite.Models.Attributes;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Settings;
-using MicaForUWP.Media;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +9,9 @@ using Windows.Foundation.Metadata;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using CommunityToolkit.WinUI.Helpers;
 
 namespace BiliLite.Services
 {
@@ -20,7 +20,7 @@ namespace BiliLite.Services
 	{
 		private ResourceDictionary m_defaultColorsResource = App.Current.Resources.MergedDictionaries.FirstOrDefault(x => x.Source.AbsoluteUri.Contains("Colors.xaml"));
 		private XamlControlsResources m_accentColorsResource = GetXamlControlsResources();
-		private readonly Frame rootFrame = Window.Current.Content as Frame;
+		private readonly Frame rootFrame = MainWindow.Current.Content as Frame;
 		private readonly SettingSqlService m_settingSqlService;
 		private ElementTheme m_theme;
 
@@ -75,9 +75,9 @@ namespace BiliLite.Services
 
 		public void InitMicaBrushBackgroundSource()
 		{
-			var backgroundSource = (BackgroundSource)SettingService.GetValue<int>(SettingConstants.UI.MICA_BACKGROUND_SOURCE, SettingConstants.UI.DEFAULT_MICA_BACKGROUND_SOURCE);
-			var enableBackgroundSource = SettingService.GetValue(SettingConstants.UI.ENABLE_MICA_BACKGROUND_SOURCE, SettingConstants.UI.DEFAULT_ENABLE_MICA_BACKGROUND_SOURCE);
-			SetMicaBrushBackgroundSource(backgroundSource, !enableBackgroundSource);
+			//var backgroundSource = (BackgroundSource)SettingService.GetValue<int>(SettingConstants.UI.MICA_BACKGROUND_SOURCE, SettingConstants.UI.DEFAULT_MICA_BACKGROUND_SOURCE);
+			//var enableBackgroundSource = SettingService.GetValue(SettingConstants.UI.ENABLE_MICA_BACKGROUND_SOURCE, SettingConstants.UI.DEFAULT_ENABLE_MICA_BACKGROUND_SOURCE);
+			//SetMicaBrushBackgroundSource(backgroundSource, !enableBackgroundSource);
 		}
 
 		public void InitStyle()
@@ -114,20 +114,20 @@ namespace BiliLite.Services
 				RefreshTheme();
 		}
 
-		public void SetMicaBrushBackgroundSource(BackgroundSource backgroundSource, bool alwaysUseFallback)
-		{
+		//public void SetMicaBrushBackgroundSource(BackgroundSource backgroundSource, bool alwaysUseFallback)
+		//{
 
-			// 查找PageBackgroundMicaBrush
-			if (DefaultThemeResource.TryGetValue("PageBackgroundMicaBrush", out var brush) &&
-				brush is BackdropMicaBrush micaBrush)
-			{
-				micaBrush.BackgroundSource = backgroundSource;
-				micaBrush.AlwaysUseFallback = alwaysUseFallback;
+		//	// 查找PageBackgroundMicaBrush
+		//	if (DefaultThemeResource.TryGetValue("PageBackgroundMicaBrush", out var brush) &&
+		//		brush is BackdropMicaBrush micaBrush)
+		//	{
+		//		micaBrush.BackgroundSource = backgroundSource;
+		//		micaBrush.AlwaysUseFallback = alwaysUseFallback;
 
-				// 强制刷新UI以应用更改
-				RefreshTheme();
-			}
-		}
+		//		// 强制刷新UI以应用更改
+		//		RefreshTheme();
+		//	}
+		//}
 
 		/// <summary>
 		/// 强制刷新主题
@@ -135,24 +135,24 @@ namespace BiliLite.Services
 		/// <returns></returns>
 		public void RefreshTheme()
 		{
-			Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Wait, 1);
+			//Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Wait, 1);
 			rootFrame.RequestedTheme = ElementTheme.Light;
 			rootFrame.RequestedTheme = ElementTheme.Dark;
 			rootFrame.RequestedTheme = (ElementTheme)SettingService.GetValue<int>(SettingConstants.UI.THEME, 0);
-			Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
+			//Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
 		}
 
 		public List<ColorItemModel> GetDefaultThemeColorMenu()
 		{
 			return
 			[
-				new(true, "少女粉", "#D14E65", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#D14E65")),
-				new(false, "胖次蓝", "#0092D0", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#0092D0")),
-				new(false, "咸蛋黄", "#C5963C", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#C5963C")),
-				new(false, "早苗绿", "#5B8F30", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#5B8F30")),
-				new(false, "基佬紫", "#9664DB", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#9664DB")),
-				new(false, "绅士灰", "#6D8AA6", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#6D8AA6")),
-				new(false, "高能红", "#D63F41", Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#D63F41"))
+				new(true, "少女粉", "#D14E65","#D14E65".ToColor()),
+				new(false, "胖次蓝", "#0092D0", "#0092D0".ToColor()),
+				new(false, "咸蛋黄", "#C5963C", "#C5963C".ToColor()),
+				new(false, "早苗绿", "#5B8F30", "#5B8F30".ToColor()),
+				new(false, "基佬紫", "#9664DB", "#9664DB".ToColor()),
+				new(false, "绅士灰", "#6D8AA6", "#6D8AA6".ToColor()),
+				new(false, "高能红", "#D63F41", "#D63F41".ToColor())
 			];
 		}
 

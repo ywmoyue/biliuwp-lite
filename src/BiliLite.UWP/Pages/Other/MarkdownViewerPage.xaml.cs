@@ -1,12 +1,12 @@
 ﻿using System;
 using System.IO;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using BiliLite.Models.Common;
-using Microsoft.Toolkit.Uwp.UI.Controls;
 using Windows.Storage;
 using BiliLite.Extensions;
-using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media.Imaging;
+using CommunityToolkit.WinUI.Controls;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -40,21 +40,21 @@ namespace BiliLite.Pages.Other
 
         private async void MdBlock_OnLinkClicked(object sender, LinkClickedEventArgs e)
         {
-            await Windows.System.Launcher.LaunchUriAsync(new Uri(e.Link));
+            await Windows.System.Launcher.LaunchUriAsync(e.Uri);
         }
 
-        private void MdBlock_OnImageResolving(object sender, ImageResolvingEventArgs e)
-        {
-            if (e.Url.IsUrl(UriKind.Absolute))
-            {
-                e.Image = new BitmapImage(new Uri(e.Url));
-            }
-            else if(e.Url.IsUrl(UriKind.Relative)&& m_mdFileForderPath!=null)
-            {
-                e.Image = new BitmapImage(new Uri(Path.Combine(m_mdFileForderPath, e.Url)));
-            }
-            
-            e.Handled = true;
-        }
+        //private void MdBlock_OnImageResolving(object sender, ImageResolvingEventArgs e)
+        //{
+        //    if (e.Url.IsUrl(UriKind.Absolute))
+        //    {
+        //        e.Image = new BitmapImage(new Uri(e.Url));
+        //    }
+        //    else if (e.Url.IsUrl(UriKind.Relative) && m_mdFileForderPath != null)
+        //    {
+        //        e.Image = new BitmapImage(new Uri(Path.Combine(m_mdFileForderPath, e.Url)));
+        //    }
+
+        //    e.Handled = true;
+        //}
     }
 }

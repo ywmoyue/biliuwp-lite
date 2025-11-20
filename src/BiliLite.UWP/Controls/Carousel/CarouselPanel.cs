@@ -1,7 +1,7 @@
 ﻿using System;
 
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Windows.Foundation;
 
 namespace BiliLite.Controls
@@ -75,7 +75,8 @@ namespace BiliLite.Controls
         #region ArrangePanes
         private void ArrangePanes(double availableWidth)
         {
-            double visibleWidth = Math.Min(Window.Current.Bounds.Width, availableWidth);
+            var window = this.GetCurrentWindow();
+            double visibleWidth = Math.Min(window.Bounds.Width, availableWidth);
             double viewportWidth = visibleWidth + 2 * ItemWidth;
 
             int visibleItems = (int)Math.Ceiling(viewportWidth / ItemWidth);

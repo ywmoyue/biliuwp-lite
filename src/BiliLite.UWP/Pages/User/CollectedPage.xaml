@@ -9,7 +9,7 @@
     xmlns:modules="using:BiliLite.Modules"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:user="using:BiliLite.ViewModels.User"
+    xmlns:user="using:BiliLite.ViewModels.User" xmlns:imageEx="using:ImageEx"
     Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
 
@@ -25,7 +25,7 @@
                         <MenuFlyoutItem x:Name="BtnCollectedDel" Click="BtnCollectedDel_OnClick">取消订阅</MenuFlyoutItem>
                     </MenuFlyout>
                 </Grid.ContextFlyout>
-                <toolkit:ImageEx
+                <imageEx:ImageEx
                     CornerRadius="{ThemeResource OverlayCornerRadius}"
                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde1x1.png"
                     Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='160w'}"

@@ -6,7 +6,6 @@ using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Models.Responses;
 using BiliLite.Services;
-using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Newtonsoft.Json;
 using System;
@@ -15,8 +14,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using CommunityToolkit.WinUI.Controls;
+using Microsoft.UI;
+using Microsoft.UI.Xaml;
 
 namespace BiliLite.Extensions
 {
@@ -98,7 +100,7 @@ namespace BiliLite.Extensions
             return false;
         }
 
-        public static async Task CheckVersion(bool isSilentUpdateCheck = false)
+        public static async Task CheckVersion(FrameworkElement element, bool isSilentUpdateCheck = false)
         {
             try
             {
@@ -118,16 +120,24 @@ namespace BiliLite.Extensions
                     MarkdownTextBlock markdownText = new MarkdownTextBlock()
                     {
                         Text = ver.VersionDesc,
-                        TextWrapping = Windows.UI.Xaml.TextWrapping.Wrap,
+                        //TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap,
                         IsTextSelectionEnabled = true,
                         Background = new SolidColorBrush(Colors.Transparent)
                     };
-                    markdownText.LinkClicked += new EventHandler<LinkClickedEventArgs>(async (sender, args) =>
+                    markdownText.OnLinkClicked += new EventHandler<LinkClickedEventArgs>(async (sender, args) =>
                     {
-                        await Launcher.LaunchUriAsync(new Uri(args.Link));
+                        await Launcher.LaunchUriAsync(args.Uri);
                     });
                     dialog.Content = markdownText;
-                    dialog.PrimaryButtonText = "查看详情";
+                    if(element != null)
+                    {
+                        dialog.XamlRoot = element.XamlRoot;
+                    }
+                    else
+                    {
+                        dialog.XamlRoot = App.MainWindow.Content.XamlRoot;
+                    }
+                        dialog.PrimaryButtonText = "查看详情";
                     dialog.CloseButtonText = "取消";
                     dialog.SecondaryButtonText = "忽略该版本";
 

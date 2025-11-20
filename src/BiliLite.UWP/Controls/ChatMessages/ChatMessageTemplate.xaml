@@ -1,16 +1,16 @@
 ﻿<ResourceDictionary
     x:Class="BiliLite.Controls.ChatMessages.ChatMessageTemplate"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:dataTemplateSelectors="using:BiliLite.Controls.DataTemplateSelectors"
-    xmlns:msg="using:BiliLite.Models.Common.Msg"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls">
-    <dataTemplateSelectors:ChatMessageDataTemplateSelector x:Key="ChatMessageDataTemplateSelector" 
-                                                           NotificationTemplate="{StaticResource ChatMessageNotification}"
-                                                           ImageTemplate="{StaticResource ChatMessageImage}"
-                                                           TextTemplate="{StaticResource ChatMessageText}"
-                                                           RevokeTemplate="{StaticResource ChatMessageRevoke}"
-                                                           OtherTemplate="{StaticResource ChatMessageOther}">
+    xmlns:imageEx="using:ImageEx"
+    xmlns:msg="using:BiliLite.Models.Common.Msg">
+    <dataTemplateSelectors:ChatMessageDataTemplateSelector x:Key="ChatMessageDataTemplateSelector"
+                        NotificationTemplate="{StaticResource ChatMessageNotification}"
+                        ImageTemplate="{StaticResource ChatMessageImage}"
+                        TextTemplate="{StaticResource ChatMessageText}"
+                        RevokeTemplate="{StaticResource ChatMessageRevoke}"
+                        OtherTemplate="{StaticResource ChatMessageOther}">
     </dataTemplateSelectors:ChatMessageDataTemplateSelector>
 
     <DataTemplate x:Key="ChatMessageText" x:DataType="msg:ChatMessage">
@@ -21,16 +21,16 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Ellipse Width="40" Height="40" Margin="10,0,10,0"
-                                 VerticalAlignment="Top">
+                    VerticalAlignment="Top">
                     <Ellipse.Fill>
                         <ImageBrush ImageSource="{Binding Path=Face,Mode=OneWay,Converter={StaticResource ImageSourceConvert},ConverterParameter='42w'}"></ImageBrush>
                     </Ellipse.Fill>
                 </Ellipse>
 
                 <!--消息气泡-->
-                <Border Background="{ThemeResource ChatBorderColor}" 
-                                Grid.Column="1"
-                                CornerRadius="10" Padding="10" >
+                <Border Background="{ThemeResource ChatBorderColor}"
+                    Grid.Column="1"
+                    CornerRadius="10" Padding="10" >
                     <StackPanel>
                         <TextBlock Text="{Binding TextContent.Content}" TextWrapping="Wrap" />
                     </StackPanel>
@@ -43,7 +43,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Ellipse Grid.Column="1" Width="40" Height="40" Margin="10,0,10,0"
-                                 VerticalAlignment="Top">
+                    VerticalAlignment="Top">
                     <Ellipse.Fill>
                         <ImageBrush ImageSource="{Binding Path=Face,Mode=OneWay,Converter={StaticResource ImageSourceConvert},ConverterParameter='42w'}"></ImageBrush>
                     </Ellipse.Fill>
@@ -89,12 +89,12 @@
                         <HyperlinkButton Padding="0" 
                                          Command="{Binding ImageCommand}"
                                          CommandParameter="{Binding ImageContent}">
-                            <controls:ImageEx  
-                                IsCacheEnabled="True" 
+                            <imageEx:ImageEx
+                                IsCacheEnabled="True"
                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                 MaxHeight="150"
                                 MaxWidth="300"
-                                Source="{Binding ImageContent.Url}" ></controls:ImageEx>
+                                Source="{Binding ImageContent.Url}" ></imageEx:ImageEx>
                         </HyperlinkButton>
                     </StackPanel>
                 </Border>
@@ -126,12 +126,12 @@
                         <HyperlinkButton Padding="0" 
                                          Command="{Binding ImageCommand}"
                                          CommandParameter="{Binding ImageContent}">
-                            <controls:ImageEx  
-                                IsCacheEnabled="True" 
+                            <imageEx:ImageEx
+                                IsCacheEnabled="True"
                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                 MaxHeight="150"
                                 MaxWidth="300"
-                                Source="{Binding ImageContent.Url}" ></controls:ImageEx>
+                                Source="{Binding ImageContent.Url}" />
                         </HyperlinkButton>
                     </StackPanel>
                 </Border>
@@ -175,18 +175,18 @@
 
             <!-- 操作按钮 -->
             <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Right">
-                <Button Content="{Binding NotificationContent.JumpText}" 
-                        Visibility="{Binding NotificationContent.ShowJumpBtn}" 
-                        Command="{Binding NotificationActionCommand}"  
-                        CommandParameter="{Binding NotificationContent.JumpUri}"/>
-                <Button Content="{Binding NotificationContent.JumpText2}" 
-                        Visibility="{Binding NotificationContent.ShowJumpBtn2}" 
-                        Command="{Binding NotificationActionCommand}"  
-                        CommandParameter="{Binding NotificationContent.JumpUri2}"/>
-                <Button Content="{Binding NotificationContent.JumpText3}" 
-                        Visibility="{Binding NotificationContent.ShowJumpBtn3}" 
-                        Command="{Binding NotificationActionCommand}"  
-                        CommandParameter="{Binding NotificationContent.JumpUri3}" />
+                <Button Content="{Binding NotificationContent.JumpText}"
+                    Visibility="{Binding NotificationContent.ShowJumpBtn}"
+                    Command="{Binding NotificationActionCommand}"
+                    CommandParameter="{Binding NotificationContent.JumpUri}"/>
+                <Button Content="{Binding NotificationContent.JumpText2}"
+                    Visibility="{Binding NotificationContent.ShowJumpBtn2}" 
+                    Command="{Binding NotificationActionCommand}"
+                    CommandParameter="{Binding NotificationContent.JumpUri2}"/>
+                <Button Content="{Binding NotificationContent.JumpText3}"
+                    Visibility="{Binding NotificationContent.ShowJumpBtn3}"
+                    Command="{Binding NotificationActionCommand}"
+                    CommandParameter="{Binding NotificationContent.JumpUri3}" />
             </StackPanel>
         </Grid>
     </DataTemplate>
@@ -200,7 +200,7 @@
             BorderThickness="0">
             <!-- 文字内容 -->
             <TextBlock
-                Text="{Binding RevokeContent.Text}"
+                Text="{Binding RevokeContent.Text}" 
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 FontSize="12"

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 namespace BiliLite.Player
 {
-    public class BiliPlayer: UserControl,IBiliPlayer
+    public class BiliPlayer : UserControl, IBiliPlayer
     {
 
         public PlayerState PlayState
@@ -92,7 +92,7 @@ namespace BiliLite.Player
         {
             PlayState = PlayerState.Pause;
         }
-        
+
 
         public virtual void Play()
         {
@@ -126,7 +126,7 @@ namespace BiliLite.Player
 
         public virtual void TakeScreenshot()
         {
-            
+
         }
 
         public virtual bool SetMedia(MediaItem media, bool autoPlay = false)

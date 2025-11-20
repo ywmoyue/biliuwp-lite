@@ -12,8 +12,15 @@ using BiliLite.Modules;
 using BiliLite.Services;
 using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels.Video;
+using CommunityToolkit.WinUI;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -22,11 +29,6 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.UI.Core;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -53,8 +55,8 @@ namespace BiliLite.Pages
             NavigationCacheMode = NavigationCacheMode.Enabled;
             m_viewModel = new VideoDetailPageViewModel();
             this.DataContext = m_viewModel;
-            DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
-            dataTransferManager.DataRequested += DataTransferManager_DataRequested;
+            //DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
+            //dataTransferManager.DataRequested += DataTransferManager_DataRequested;
             m_viewModel.DefaultRightInfoWidth = new GridLength(SettingService.GetValue<double>(SettingConstants.UI.RIGHT_DETAIL_WIDTH, 320), GridUnitType.Pixel);
             this.RightInfoGridSplitter.IsEnabled = SettingService.GetValue<bool>(SettingConstants.UI.RIGHT_WIDTH_CHANGEABLE, false);
             Unloaded += VideoDetailPage_Unloaded;
@@ -79,7 +81,7 @@ namespace BiliLite.Pages
 
         private void ClosePage()
         {
-            Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
             {
                 if (m_viewModel != null)
                 {
@@ -165,7 +167,7 @@ namespace BiliLite.Pages
                     videoSections.First().SelectedItem = videoSections.First().Items.ElementAt(videoPlaylist.Index);
                     m_videoListView = App.ServiceProvider.GetRequiredService<VideoListView>();
                     m_videoListView.LoadData(videoSections);
-                    var pivotItem = PlayListTpl.GetElement(new Windows.UI.Xaml.ElementFactoryGetArgs()) as PivotItem;
+                    var pivotItem = PlayListTpl.GetElement(new Microsoft.UI.Xaml.ElementFactoryGetArgs()) as PivotItem;
                     pivotItem.Content = m_videoListView;
                     m_videoListView.OnSelectionChanged += VideoListView_SelectionChanged;
 
@@ -349,7 +351,7 @@ namespace BiliLite.Pages
                 m_videoListView = App.ServiceProvider.GetRequiredService<VideoListView>();
                 m_videoListView.LoadData(videoSections);
                 m_videoListView.OnSelectionChanged += VideoListView_SelectionChanged;
-                var pivotItem = PlayListTpl.GetElement(new Windows.UI.Xaml.ElementFactoryGetArgs()) as PivotItem;
+                var pivotItem = PlayListTpl.GetElement(new Microsoft.UI.Xaml.ElementFactoryGetArgs()) as PivotItem;
                 pivotItem.Content = m_videoListView;
                 pivot.Items.Insert(0, pivotItem);
             }
@@ -476,7 +478,8 @@ namespace BiliLite.Pages
 
         private void btnShare_Click(object sender, RoutedEventArgs e)
         {
-            DataTransferManager.ShowShareUI();
+            throw new NotImplementedException();
+            //DataTransferManager.ShowShareUI();
         }
         private void btnShareCopy_Click(object sender, RoutedEventArgs e)
         {
@@ -503,7 +506,8 @@ namespace BiliLite.Pages
                 }
 
                 m_viewModel.DefaultRightInfoWidth = new GridLength(0, GridUnitType.Pixel);
-                BottomInfo.Height = new GridLength(0, GridUnitType.Pixel);
+                // TODO: WinUI3渲染bug,隐藏全部3个部分导致播放器画面消失，暂时保留1像素
+                BottomInfo.Height = new GridLength(1, GridUnitType.Pixel);
             }
             else
             {

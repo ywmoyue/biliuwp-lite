@@ -1,9 +1,9 @@
-﻿using Microsoft.Toolkit.Uwp.UI.Animations;
+﻿using BiliLite.UWP;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using System;
 using System.Collections.Generic;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -16,18 +16,18 @@ namespace BiliLite.Controls
 
         private string m_TextBlockContent = "";
         private TimeSpan m_ShowTime;
-        public MessageToast()
+        public MessageToast(XamlRoot xamlRoot)
         {
             InitializeComponent();
+            this.XamlRoot = xamlRoot;
             m_Popup = new Popup();
-            Width = Window.Current.Bounds.Width;
-            Height = Window.Current.Bounds.Height;
+            m_Popup.XamlRoot = xamlRoot;
             m_Popup.Child = this;
             Loaded += NotifyPopup_Loaded;
             Unloaded += NotifyPopup_Unloaded;
         }
 
-        public MessageToast(string content, TimeSpan showTime) : this()
+        public MessageToast(XamlRoot xamlRoot, string content, TimeSpan showTime) : this(xamlRoot)
         {
             if (m_TextBlockContent == null)
             {
@@ -36,7 +36,7 @@ namespace BiliLite.Controls
             m_TextBlockContent = content;
             m_ShowTime = showTime;
         }
-        public MessageToast(string content, TimeSpan showTime, List<MyUICommand> commands) : this()
+        public MessageToast(XamlRoot xamlRoot, string content, TimeSpan showTime, List<MyUICommand> commands) : this(xamlRoot)
         {
             if (m_TextBlockContent == null)
             {
@@ -68,25 +68,28 @@ namespace BiliLite.Controls
         }
         public async void Close()
         {
-            await this.Offset(offsetX: 0, offsetY: (float)border.ActualHeight, duration: 200, delay: 0, easingType: EasingType.Default).StartAsync();
+            await this.Offset(offsetX: 0, offsetY: (float)border.ActualHeight, duration: 200, delay: 0);
             m_Popup.IsOpen = false;
         }
         private async void NotifyPopup_Loaded(object sender, RoutedEventArgs e)
         {
+            var window = this.GetCurrentWindow();
+            Width = window.Bounds.Width;
+            Height = window.Bounds.Height;
             if (m_TextBlockContent == null)
             {
                 m_TextBlockContent = "";
             }
             tbNotify.Text = m_TextBlockContent;
-            Window.Current.SizeChanged += Current_SizeChanged;
+            window.SizeChanged += Current_SizeChanged;
 
-            await this.Offset(offsetX: 0, offsetY: -72, duration: 200, delay: 0, easingType: EasingType.Default).StartAsync();
-            await this.Offset(offsetX: 0, offsetY: (float)border.ActualHeight, duration: 200, delay: m_ShowTime.TotalMilliseconds, easingType: EasingType.Default).StartAsync();
+            await this.Offset(offsetX: 0, offsetY: -72, duration: 200, delay: 0);
+            await this.Offset(offsetX: 0, offsetY: (float)border.ActualHeight, duration: 200, delay: (int)m_ShowTime.TotalMilliseconds);
             m_Popup.IsOpen = false;
         }
 
 
-        private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
+        private void Current_SizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
             Width = e.Size.Width;
             Height = e.Size.Height;
@@ -94,11 +97,13 @@ namespace BiliLite.Controls
 
         private void NotifyPopup_Unloaded(object sender, RoutedEventArgs e)
         {
-            Window.Current.SizeChanged -= Current_SizeChanged;
+            var window = this.GetCurrentWindow();
+            window.SizeChanged -= Current_SizeChanged;
         }
 
 
     }
+
     public class MyUICommand
     {
         public MyUICommand(string lable)

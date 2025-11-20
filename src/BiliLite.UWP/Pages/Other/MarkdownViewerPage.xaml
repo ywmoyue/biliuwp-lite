@@ -2,10 +2,10 @@
     x:Class="BiliLite.Pages.Other.MarkdownViewerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:BiliLite.Pages.Other"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
 
@@ -14,10 +14,9 @@
             <controls:MarkdownTextBlock
                 x:Name="MdBlock"
                 Padding="16"
+                OnLinkClicked="MdBlock_OnLinkClicked"
                 Background="Transparent"
-                ImageResolving="MdBlock_OnImageResolving"
-                IsTextSelectionEnabled="True"
-                LinkClicked="MdBlock_OnLinkClicked" />
+                IsTextSelectionEnabled="True" />
         </ScrollViewer>
     </Grid>
 </Page>

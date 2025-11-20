@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using BiliLite.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -59,7 +59,7 @@ namespace BiliLite.Models.Common.Live
 
                 // 舰长房管相关
                 msg.ShowAdmin = danmu["isadmin"].ToInt32() == 1 ? Visibility.Visible : Visibility.Collapsed;
-                msg.Role = danmu["isadmin"].ToInt32() == 1 ? "房管" : ""; 
+                msg.Role = danmu["isadmin"].ToInt32() == 1 ? "房管" : "";
                 msg.UserCaptain = (UserCaptainType)danmu["guard_level"].ToInt32();
                 msg.ShowCaptain = msg.UserCaptain > 0 ? Visibility.Visible : Visibility.Collapsed;
 
@@ -81,4 +81,3 @@ namespace BiliLite.Models.Common.Live
         }
     }
 }
-    

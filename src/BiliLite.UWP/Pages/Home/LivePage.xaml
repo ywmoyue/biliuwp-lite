@@ -12,7 +12,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:BiliLite.Modules"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls" xmlns:imageEx="using:ImageEx"
     Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
 
@@ -35,7 +35,7 @@
                                     HorizontalAlignment="Stretch"
                                     Click="BannerItem_Click"
                                     CornerRadius="{ThemeResource OverlayCornerRadius}">
-                                    <toolkit:ImageEx
+                                    <imageEx:ImageEx
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
                                         CornerRadius="{ThemeResource OverlayCornerRadius}"
@@ -60,7 +60,7 @@
                         <GridView.ItemTemplate>
                             <DataTemplate x:DataType="home:LiveHomeAreaModel">
                                 <StackPanel MinWidth="80" Padding="10">
-                                    <toolkit:ImageEx
+                                    <imageEx:ImageEx
                                         Width="48"
                                         Height="48"
                                         HorizontalAlignment="Stretch"
@@ -111,7 +111,7 @@
                                                     <MenuFlyoutItem Click="CancelLocalAttention_OnClick">取消本地关注</MenuFlyoutItem>
                                                 </MenuFlyout>
                                             </Grid.ContextFlyout>
-                                            <toolkit:ImageEx
+                                            <imageEx:ImageEx
                                                 Height="160"
                                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                                 Source="{x:Bind Path=RoomInfo.Cover, Converter={StaticResource ImageSourceConvert}, ConverterParameter='460w_260h_1c'}"
@@ -191,7 +191,7 @@
                                             <RowDefinition Height="24" />
                                         </Grid.RowDefinitions>
                                         <Grid>
-                                            <toolkit:ImageEx
+                                            <imageEx:ImageEx
                                                 Height="160"
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch"
@@ -306,7 +306,7 @@
                                                         <RowDefinition Height="24" />
                                                     </Grid.RowDefinitions>
                                                     <Grid>
-                                                        <toolkit:ImageEx
+                                                        <imageEx:ImageEx
                                                             Height="160"
                                                             HorizontalAlignment="Stretch"
                                                             VerticalAlignment="Stretch"

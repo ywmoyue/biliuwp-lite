@@ -1,10 +1,10 @@
 ﻿using System.Linq;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using BiliLite.ViewModels.Live;
 using Newtonsoft.Json.Linq;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using Windows.UI;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media;
 
 namespace BiliLite.Models.Common.Live
 {
@@ -34,18 +34,18 @@ namespace BiliLite.Models.Common.Live
         /// <summary>
         /// 用户名颜色, 默认灰色
         /// </summary>
-        public string UserNameColor 
-        { 
-            get => _userNameColor ?? 
+        public string UserNameColor
+        {
+            get => _userNameColor ??
                 UserCaptain switch
                 {
                     UserCaptainType.JianZhang => "#FF23709E",
                     UserCaptainType.Tidu => "#FF7B166F",
                     UserCaptainType.Zongdu => "#FFC01039",
                     _ => "#FF808080"
-                }; 
+                };
 
-            set => _userNameColor = value; 
+            set => _userNameColor = value;
         }
 
         /// <summary>
@@ -111,26 +111,26 @@ namespace BiliLite.Models.Common.Live
         /// <summary>
         /// 用户上的舰的图片
         /// </summary>
-        public string UserCaptainImage 
+        public string UserCaptainImage
         {
-             get => UserCaptain switch
-                    {
-                        UserCaptainType.JianZhang => "ms-appx:///Assets/Live/ic_live_guard_3.png", //舰长
-                        UserCaptainType.Tidu => "ms-appx:///Assets/Live/ic_live_guard_2.png", //提督
-                        UserCaptainType.Zongdu => "ms-appx:///Assets/Live/ic_live_guard_1.png", //总督
-                        _ => null,
-                    };
+            get => UserCaptain switch
+            {
+                UserCaptainType.JianZhang => "ms-appx:///Assets/Live/ic_live_guard_3.png", //舰长
+                UserCaptainType.Tidu => "ms-appx:///Assets/Live/ic_live_guard_2.png", //提督
+                UserCaptainType.Zongdu => "ms-appx:///Assets/Live/ic_live_guard_1.png", //总督
+                _ => null,
+            };
         }
 
         /// <summary>
         /// 黄豆表情
         /// </summary>
-        public JObject Emoji {  get; set; }
+        public JObject Emoji { get; set; }
 
         /// <summary>
         /// 各类大表情
         /// </summary>
-        public BigStickerInfo BigSticker {  get; set; }
+        public BigStickerInfo BigSticker { get; set; }
 
         public class BigStickerInfo
         {
@@ -177,7 +177,7 @@ namespace BiliLite.Models.Common.Live
         /// <summary>
         /// 是否显示大表情
         /// </summary>
-        
+
         public Visibility ShowBigSticker { get; set; } = Visibility.Collapsed;
 
         /// <summary>

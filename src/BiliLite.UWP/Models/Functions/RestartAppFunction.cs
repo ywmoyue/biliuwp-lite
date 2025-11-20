@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Windows.AppLifecycle;
+using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 
@@ -8,6 +9,6 @@ namespace BiliLite.Models.Functions
     {
         public override string Name { get; } = "重启应用";
 
-        public override async Task Action(object param) => await CoreApplication.RequestRestartAsync(string.Empty);
+        public override async Task Action(object param) => AppInstance.Restart(string.Empty);
     }
 }

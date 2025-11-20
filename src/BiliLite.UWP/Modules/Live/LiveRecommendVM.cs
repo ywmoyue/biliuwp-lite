@@ -3,7 +3,6 @@ using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Requests.Api.Live;
 using BiliLite.Services;
-using Microsoft.Toolkit.Collections;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -12,7 +11,8 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media.Imaging;
+using CommunityToolkit.Common.Collections;
 
 namespace BiliLite.Modules.Live
 {

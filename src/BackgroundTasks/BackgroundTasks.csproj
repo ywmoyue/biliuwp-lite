@@ -131,12 +131,6 @@
       <Version>6.2.14</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BiliLite.UWP\BiliLite.UWP.csproj">
-      <Project>{8b90b3b3-844b-4610-9dcf-c9b250182ae3}</Project>
-      <Name>BiliLite.UWP</Name>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

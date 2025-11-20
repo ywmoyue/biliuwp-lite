@@ -3,13 +3,17 @@ using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Functions;
 using BiliLite.Pages;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Core;
-using Windows.UI.Xaml;
+using WinUIEx;
+using DispatcherQueuePriority = Microsoft.UI.Dispatching.DispatcherQueuePriority;
 
 namespace BiliLite.Services
 {
@@ -69,7 +73,37 @@ namespace BiliLite.Services
             OnRecordStoped?.Invoke(this, EventArgs.Empty);
         }
 
-        public async void HandleKeyDown(VirtualKey virtualKey)
+        [DllImport("user32.dll")]
+        private static extern short GetAsyncKeyState(int vKey);
+
+        /// <summary>
+        /// 获取指定虚拟键的实时状态
+        /// </summary>
+        /// <param name="virtualKey">要检查的虚拟键</param>
+        /// <returns>按键的状态标志</returns>
+        public static CoreVirtualKeyStates GetKeyState(VirtualKey virtualKey)
+        {
+            int vKey = (int)virtualKey;
+            short keyState = GetAsyncKeyState(vKey);
+
+            CoreVirtualKeyStates result = CoreVirtualKeyStates.None;
+
+            // 检查按键是否被按下（高位为1表示按下）
+            if ((keyState & 0x8000) != 0)
+            {
+                result |= CoreVirtualKeyStates.Down;
+            }
+
+            // 检查按键是否被切换（低位为1表示切换状态，如CapsLock、NumLock等）
+            if ((keyState & 0x0001) != 0)
+            {
+                result |= CoreVirtualKeyStates.Locked;
+            }
+
+            return result;
+        }
+
+        public async void HandleKeyDown(Window window, VirtualKey virtualKey)
         {
             var key = new InputKey(virtualKey);
             _logger.Trace("key down: " + key);
@@ -86,7 +120,7 @@ namespace BiliLite.Services
                 var shortcutKeyCodes = shortcutKeyFunction.Keys;
                 if (!shortcutKeyCodes.LastOrDefault().Equals(key)) continue;
                 if (shortcutKeyCodes
-                        .Select(keyCode => Window.Current.CoreWindow.GetKeyState(keyCode.BoardKey))
+                        .Select(keyCode => GetKeyState(keyCode.BoardKey))
                         .Any(keyState => !keyState.HasFlag(CoreVirtualKeyStates.Down)))
                 {
                     continue;
@@ -106,8 +140,8 @@ namespace BiliLite.Services
                                 {
                                     var page = m_mainPage.CurrentPage;
                                     _logger.Trace("keyPressAction: " + shortcutKeyFunction.GetType().ToString());
-                                    Window.Current.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                                        () => { shortcutKeyFunction.Action(page); });
+                                    window.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, 
+                                        () => { shortcutKeyFunction.Action(page); }); 
                                 }
                             }
                             catch (Exception ex)
@@ -131,7 +165,7 @@ namespace BiliLite.Services
             }
         }
 
-        public void HandleKeyUp(VirtualKey virtualKey)
+        public void HandleKeyUp(Window window, VirtualKey virtualKey)
         {
             var key = new InputKey(virtualKey);
             _logger.Trace("key up: " + key);
@@ -156,7 +190,7 @@ namespace BiliLite.Services
                     if (!shortcutKeyCodes.LastOrDefault().Equals(key)) continue;
 
                     if (shortcutKeyCodes.Take(shortcutKeyCodes.Count - 1)
-                        .Select(keyCode => Window.Current.CoreWindow.GetKeyState(keyCode.BoardKey))
+                        .Select(keyCode => GetKeyState(keyCode.BoardKey))
                         .Any(keyState => !keyState.HasFlag(CoreVirtualKeyStates.Down)))
                     {
                         continue;

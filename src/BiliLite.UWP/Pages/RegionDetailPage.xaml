@@ -10,7 +10,7 @@
     xmlns:model="using:BiliLite.Models.Common.Region"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:region="using:BiliLite.ViewModels.Region"
-    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls" xmlns:imageEx="using:ImageEx"
     Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
@@ -50,7 +50,7 @@
                                             HorizontalAlignment="Stretch"
                                             Click="BtnOpenBanner_Click"
                                             CornerRadius="{ThemeResource OverlayCornerRadius}">
-                                            <toolkit:ImageEx
+                                            <imageEx:ImageEx
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch"
                                                 CornerRadius="{ThemeResource OverlayCornerRadius}"
@@ -89,7 +89,7 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <toolkit:ImageEx
+                                <imageEx:ImageEx
                                     CornerRadius="{ThemeResource OverlayCornerRadius}"
                                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                     Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"
@@ -176,7 +176,7 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <toolkit:ImageEx
+                                <imageEx:ImageEx
                                     CornerRadius="{ThemeResource OverlayCornerRadius}"
                                     PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                     Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='120h'}"

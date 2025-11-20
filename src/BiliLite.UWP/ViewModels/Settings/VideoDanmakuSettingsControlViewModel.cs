@@ -5,7 +5,6 @@ using BiliLite.Models.Common.Danmaku;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
-using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -17,6 +16,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using WinUIEx;
 
 namespace BiliLite.ViewModels.Settings
 {
@@ -51,12 +51,11 @@ namespace BiliLite.ViewModels.Settings
 
         public async Task ImportDanmuFilter()
         {
-            var filePicker = new FileOpenPicker();
+            var filePicker = FileExtensions.GetFileOpenPicker();
             filePicker.FileTypeFilter.Add(".json");
             var file = await filePicker.PickSingleFileAsync();
             if (file == null) return;
-            using var stream = await file.OpenReadAsync();
-            var text = await stream.ReadTextAsync(Encoding.UTF8);
+            var text = await FileIO.ReadTextAsync(file, Windows.Storage.Streams.UnicodeEncoding.Utf8);
             var filterList = JsonConvert.DeserializeObject<List<DanmuFilterItem>>(text);
 
             ImportDanmakuFilterCore(filterList);

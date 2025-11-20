@@ -1,6 +1,6 @@
 ﻿using System;
 
-using Windows.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Input;
 
 namespace BiliLite.Controls
 {

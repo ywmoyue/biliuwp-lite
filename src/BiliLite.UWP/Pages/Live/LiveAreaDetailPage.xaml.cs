@@ -4,10 +4,10 @@ using BiliLite.Services;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -66,7 +66,7 @@ namespace BiliLite.Pages.Live
         {
             var data = (sender as ToggleButton).DataContext as LiveTagItemModel;
             if (data.Select) return;
-            var select=liveAreaDetailVM.Tags.FirstOrDefault(x => x.Select);
+            var select = liveAreaDetailVM.Tags.FirstOrDefault(x => x.Select);
             select.Select = false;
             data.Select = true;
             liveAreaDetailVM.SelectTag = data;

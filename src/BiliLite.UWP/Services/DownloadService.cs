@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 using Windows.Networking.BackgroundTransfer;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace BiliLite.Services
 {
@@ -760,8 +760,16 @@ namespace BiliLite.Services
             m_downloadOperations ??= new List<DownloadOperation>();
             var subItems = new ObservableCollection<DownloadingSubItemViewModel>();
             m_downloadPageViewModel.Downloadings.Clear();
-            var downloadOperations = await BackgroundDownloader.GetCurrentDownloadsForTransferGroupAsync(DownloadHelper.group);
-            foreach (var downloadOperation in downloadOperations)
+            //var downloadOperations = await BackgroundDownloader.GetCurrentDownloadsForTransferGroupAsync(DownloadHelper.group);
+
+            // 在 WinUI 3 中，你需要使用不同的方式来获取当前下载
+            var downloadOperations = await BackgroundDownloader.GetCurrentDownloadsAsync();
+
+            // 然后通过 Group 属性进行筛选
+            var groupDownloads = downloadOperations.Where(op => op.Group == DownloadHelper.groupName);
+
+
+            foreach (var downloadOperation in groupDownloads)
             {
                 LoadDownloadingAddSubItemFromDownloadOperation(subItems, downloadOperation);
             }

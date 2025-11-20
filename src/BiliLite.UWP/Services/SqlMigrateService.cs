@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using BiliLite.Models.Common;
 using Windows.Storage;
 using BiliLite.Extensions;
-using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace BiliLite.Services

@@ -1,9 +1,9 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using Windows.UI;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using BiliLite.Models.Common.Danmaku;
 using BiliLite.ViewModels.Video;
+using System.Collections.Generic;
 
 namespace BiliLite.Services.Interfaces
 {
@@ -188,7 +188,7 @@ namespace BiliLite.Services.Interfaces
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public virtual void UpdateSize(double width, double height){}
+        public virtual void UpdateSize(double width, double height) { }
 
         /// <summary>
         /// 更新时间

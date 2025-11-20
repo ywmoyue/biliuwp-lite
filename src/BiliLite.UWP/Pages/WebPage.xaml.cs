@@ -13,9 +13,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -37,8 +37,8 @@ namespace BiliLite.Pages
             this.InitializeComponent();
             Title = "网页浏览";
             this.Loaded += WebPage_Loaded;
-            DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
-            dataTransferManager.DataRequested += DataTransferManager_DataRequested;
+            //DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
+            //dataTransferManager.DataRequested += DataTransferManager_DataRequested;
         }
 
         private void WebPage_Loaded(object sender, RoutedEventArgs e)
@@ -159,23 +159,23 @@ namespace BiliLite.Pages
         }
 
         // webview2中没找到代替的api，暂时不用
-        private async void webView_UnsupportedUriSchemeIdentified(object sender, WebViewUnsupportedUriSchemeIdentifiedEventArgs args)
-        {
-            if (args.Uri.AbsoluteUri.Contains("article"))
-            {
-                args.Handled = true;
-                return;
-            }
-            if (args.Uri.AbsoluteUri.Contains("bilibili://"))
-            {
-                args.Handled = true;
-                var re = await MessageCenter.HandelUrl(args.Uri.AbsoluteUri);
-                if (!re)
-                {
-                    NotificationShowExtensions.ShowMessageToast("不支持打开的链接" + args.Uri.AbsoluteUri);
-                }
-            }
-        }
+        //private async void webView_UnsupportedUriSchemeIdentified(object sender, WebViewUnsupportedUriSchemeIdentifiedEventArgs args)
+        //{
+        //    if (args.Uri.AbsoluteUri.Contains("article"))
+        //    {
+        //        args.Handled = true;
+        //        return;
+        //    }
+        //    if (args.Uri.AbsoluteUri.Contains("bilibili://"))
+        //    {
+        //        args.Handled = true;
+        //        var re = await MessageCenter.HandelUrl(args.Uri.AbsoluteUri);
+        //        if (!re)
+        //        {
+        //            NotificationShowExtensions.ShowMessageToast("不支持打开的链接" + args.Uri.AbsoluteUri);
+        //        }
+        //    }
+        //}
 
         private async void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
@@ -203,7 +203,8 @@ namespace BiliLite.Pages
                     UseMoblieUserAgent();
                     break;
                 case "Share":
-                    DataTransferManager.ShowShareUI();
+                    throw new NotImplementedException();
+                    //DataTransferManager.ShowShareUI();
                     break;
                 case "OpenBrowser":
                     await Windows.System.Launcher.LaunchUriAsync(webView.Source);

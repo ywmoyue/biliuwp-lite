@@ -17,9 +17,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using CommunityToolkit.WinUI;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -359,7 +359,7 @@ namespace BiliLite.Pages
 
             }
 
-            var savePicker = new Windows.Storage.Pickers.FileSavePicker();
+            var savePicker = FileExtensions.GetFileSavePicker();
             savePicker.SuggestedStartLocation =
                 Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary;
             savePicker.FileTypeChoices.Add("MKV", new List<string>() { ".mkv" });

@@ -1,8 +1,8 @@
 ﻿using System;
 using Windows.Foundation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -20,7 +20,7 @@ namespace BiliLite.Player.WebPlayer
             this.InitializeComponent();
         }
 
-        public event EventHandler ExitToolbar; 
+        public event EventHandler ExitToolbar;
 
         public void SetPlayer(BaseWebPlayer webPlayer)
         {

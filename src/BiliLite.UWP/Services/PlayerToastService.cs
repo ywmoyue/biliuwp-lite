@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Timers;
 using Windows.UI.Core;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using BiliLite.Models.Common.Player;
+using Microsoft.UI.Dispatching;
 
 namespace BiliLite.Services
 {
@@ -118,7 +119,7 @@ namespace BiliLite.Services
 
         public async Task Hide(string key, PlayerToast toast, Timer timer)
         {
-            await m_playerControl.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            m_playerControl.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () =>
             {
                 timer.Stop();
                 m_playerControl.PlayerToastContainer.Children.Remove(toast);

@@ -4,7 +4,6 @@ using BiliLite.Services;
 using BiliLite.ViewModels.Plugins;
 using BiliLite.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.ObjectModel;
@@ -12,9 +11,10 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using IMapper = AutoMapper.IMapper;
+using Microsoft.Windows.AppLifecycle;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -200,8 +200,8 @@ namespace BiliLite.Controls.Settings
 
             NotificationShowExtensions.ShowMessageToast("导入成功，正在重启应用");
             // 等用户看提示
-            await Task.Delay(3000);
-            var result = await CoreApplication.RequestRestartAsync("");
+            await Task.Delay(1500);
+            var result = AppInstance.Restart("");
 
             if (result == AppRestartFailureReason.NotInForeground || result == AppRestartFailureReason.Other)
             {
@@ -242,15 +242,7 @@ namespace BiliLite.Controls.Settings
 
         private async void BtnImportPluginInfo_OnClick(object sender, RoutedEventArgs e)
         {
-            var filePicker = new FileOpenPicker();
-            filePicker.FileTypeFilter.Add(".json");
-            var file = await filePicker.PickSingleFileAsync();
-            if (file == null) return;
-            using var openFile = await file.OpenAsync(FileAccessMode.Read);
-            var text = await openFile.ReadTextAsync();
-            var plugin = JsonConvert.DeserializeObject<WebSocketPlugin>(text);
-            await m_pluginService.AddPlugin(plugin);
-            m_viewModel.AddPlugin(m_mapper.Map<WebSocketPluginViewModel>(plugin));
+            throw new NotImplementedException();
         }
 
         private async void BtnDeletePlugin_OnClick(object sender, RoutedEventArgs e)

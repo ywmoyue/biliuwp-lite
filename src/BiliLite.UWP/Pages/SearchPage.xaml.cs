@@ -1,8 +1,6 @@
-﻿using BiliLite.Controls;
-using BiliLite.Extensions;
+﻿using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
-using BiliLite.Models.Common.Article;
 using BiliLite.Models.Common.Search;
 using BiliLite.Services;
 using BiliLite.Services.Biz;
@@ -13,11 +11,13 @@ using Microsoft.UI.Xaml.Controls;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Navigation;
+using BiliLite.Models.Common.Article;
+using BiliLite.Controls;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 

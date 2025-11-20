@@ -1,7 +1,7 @@
 ﻿using BiliLite.Models.Common;
 using System;
 using System.Linq;
-using Windows.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Data;
 using BiliLite.Models.Common.Settings;
 
 namespace BiliLite.Converters
@@ -14,7 +14,7 @@ namespace BiliLite.Converters
             {
                 return FilterRuleTypes.FilterTypeOptions.FirstOrDefault(x => x.Type == filterType);
             }
-            else if(value is FilterContentType contentType)
+            else if (value is FilterContentType contentType)
             {
                 return FilterRuleTypes.FilterTargetOptions.FirstOrDefault(x => x.Type == contentType);
             }

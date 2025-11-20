@@ -105,7 +105,10 @@
                             <TextBlock>更改应用背景的透明材质</TextBlock>
                         </StackPanel>
                     </controls:SettingsCard.Description>
-                    <StackPanel Margin="0,0,-4,0" Orientation="Horizontal">
+                        <StackPanel>
+                            <TextBlock>暂不可用</TextBlock>
+                        </StackPanel>
+                    <!--<StackPanel Margin="0,0,-4,0" Orientation="Horizontal">
                         <ToggleSwitch
                             x:Name="SwitchMicaTransparent"
                             Margin="0,-5,-58,-5"
@@ -120,7 +123,7 @@
                             SelectedValue="{x:Bind m_UISettingsControlViewModel.MicaBackgroundSource, Mode=TwoWay}"
                             SelectedValuePath="Value"
                             SelectionChanged="UpdateMicaSettings" />
-                    </StackPanel>
+                    </StackPanel>-->
                 </controls:SettingsCard>
 
                 <controls:SettingsCard

@@ -1,13 +1,15 @@
-﻿using BiliLite.Models.Requests.Api;
+﻿using BiliLite.Extensions;
+using BiliLite.Models.Common;
+using BiliLite.Models.Common.Home;
+using BiliLite.Models.Requests.Api;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
-using BiliLite.Extensions;
-using BiliLite.Models.Common;
-using BiliLite.Models.Common.Home;
 
 namespace BiliLite.Services
 {
@@ -87,7 +89,16 @@ namespace BiliLite.Services
             });
             logger.Debug("videoConverterInfo: " + videoConverterInfo);
             ApplicationData.Current.LocalSettings.Values["VideoConverterInfo"] = videoConverterInfo;
-            await Windows.ApplicationModel.FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+
+            var path = Path.Combine(AppContext.BaseDirectory, "../BiliLite.Win32Tools/BiliLite.Win32Tools.exe");
+
+            var processStartInfo = new ProcessStartInfo
+            {
+                FileName = path,
+                UseShellExecute = true
+            };
+
+            Process.Start(processStartInfo);
         }
     }
 }

@@ -6,9 +6,9 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Documents;
-using Windows.UI.Xaml.Markup;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Documents;
+using Microsoft.UI.Xaml.Markup;
 using OpenCCNET;
 using BiliLite.Services;
 using Windows.UI;
@@ -111,7 +111,7 @@ namespace BiliLite.Extensions
                     {
                         input = HandleTimeSeek(input);
                     }
-                    
+
                     //处理表情
                     input = !isLive ? HandelEmoji(input, emote) : HandleLiveEmoji(input, emote);
 
@@ -128,7 +128,7 @@ namespace BiliLite.Extensions
                                             xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"" xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
                                             xmlns:mc = ""http://schemas.openxmlformats.org/markup-compatibility/2006"" LineHeight=""{1}"" {2} {3}>
                                             <Paragraph {5}>{4}{0}</Paragraph>
-                                            </RichTextBlock>",  input, 
+                                            </RichTextBlock>", input,
                                                                 isLive ? 22 : 20,
                                                                 fontColor == null ? "" : $"Foreground=\"{fontColor}\"",
                                                                 $"FontWeight=\"{fontWeight}\"",
@@ -170,7 +170,7 @@ namespace BiliLite.Extensions
             return newInput.Length;
         }
 
-        public static string SubstringCommentText(this string input,int length)
+        public static string SubstringCommentText(this string input, int length)
         {
             var regex = new Regex(Constants.COMMENT_SPECIAL_TEXT_REGULAR);
             var matches = new Dictionary<int, string>();
@@ -515,7 +515,7 @@ namespace BiliLite.Extensions
                 }
 
                 //处理AV号
-                MatchCollection av = Regex.Matches(input, @"[aA][vV](\d+)"); 
+                MatchCollection av = Regex.Matches(input, @"[aA][vV](\d+)");
                 foreach (Match item in av)
                 {
                     if (keyword.Contains(item.Groups[0].Value) || haveHandledOffset.Where(index => (item.Index + offset > index[0] && item.Index + offset < index[1])).ToList().Count > 0 || item.Groups[1].Value.ToInt64() < 2)

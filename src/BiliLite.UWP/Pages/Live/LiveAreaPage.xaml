@@ -2,13 +2,12 @@
     x:Class="BiliLite.Pages.Live.LiveAreaPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:BiliLite.Pages.Live"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:modules="using:BiliLite.Modules.Live"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    xmlns:pages="using:BiliLite.Pages"
+    xmlns:pages="using:BiliLite.Pages" xmlns:imageEx="using:ImageEx"
     Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
@@ -40,7 +39,7 @@
                             <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="modules:LiveAreaItemModel">
                                     <StackPanel MinWidth="120">
-                                        <controls:ImageEx
+                                        <imageEx:ImageEx
                                             Width="60"
                                             Height="60"
                                             Margin="0,4"

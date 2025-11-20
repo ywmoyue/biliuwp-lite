@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.UserDynamic;
 using BiliLite.ViewModels.Common;
@@ -141,12 +141,12 @@ namespace BiliLite.ViewModels.UserDynamic
         /// </summary>
         [DoNotNotify]
         public bool ShowContent { get; set; } = true;
-        
+
         /// <summary>
         /// 分享数量
         /// </summary>
         public int ShareCount { get; set; }
-        
+
         /// <summary>
         /// 评价数量
         /// </summary>

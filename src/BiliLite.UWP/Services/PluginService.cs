@@ -14,7 +14,7 @@ using System.Timers;
 using WebSocket4Net;
 using Windows.System;
 using Windows.UI.Core;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 
 namespace BiliLite.Services
 {

@@ -2,9 +2,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:dataTemplateSelectors="using:BiliLite.Controls.DataTemplateSelectors"
     xmlns:fa="using:FontAwesome5"
+    xmlns:imageEx="using:ImageEx"
     xmlns:local="using:BiliLite.Controls.Dynamic"
     xmlns:userDynamic="using:BiliLite.ViewModels.UserDynamic">
     <dataTemplateSelectors:UserDynamicItemDataTemplateSelector
@@ -117,11 +117,11 @@
         <local:DynamicItemControl ViewModel="{Binding}">
             <local:DynamicItemControl.CardContent>
                 <Grid>
-                    <MediaElement
+                    <!--<MediaElement
                         MaxHeight="320"
                         AreTransportControlsEnabled="True"
                         AutoPlay="False"
-                        Source="{Binding Path=ShortVideoInfo.VideoPlayurl}" />
+                        Source="{Binding Path=ShortVideoInfo.VideoPlayurl}" />-->
                 </Grid>
             </local:DynamicItemControl.CardContent>
 
@@ -143,7 +143,7 @@
                             Command="{Binding Path=UserDynamicItemDisplayCommands.ImageCommand}"
                             CommandParameter="{Binding Path=ImagesInfo[0]}"
                             CornerRadius="{ThemeResource OverlayCornerRadius}">
-                            <controls:ImageEx
+                            <imageEx:ImageEx
                                 CornerRadius="{ThemeResource OverlayCornerRadius}"
                                 PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
                                 Source="{Binding Path=ImagesInfo[0].ImageUrlWithPar}"
@@ -182,7 +182,7 @@
                                 Command="{Binding Path=ImageCommand}"
                                 CommandParameter="{Binding}"
                                 CornerRadius="{ThemeResource OverlayCornerRadius}">
-                                <controls:ImageEx
+                                <imageEx:ImageEx
                                     Width="100"
                                     Height="100"
                                     CornerRadius="{ThemeResource OverlayCornerRadius}"
@@ -211,7 +211,7 @@
                                 Command="{Binding Path=ImageCommand}"
                                 CommandParameter="{Binding}"
                                 CornerRadius="{ThemeResource OverlayCornerRadius}">
-                                <controls:ImageEx
+                                <imageEx:ImageEx
                                     Width="120"
                                     Height="120"
                                     CornerRadius="{ThemeResource OverlayCornerRadius}"

@@ -5,8 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using BiliLite.Extensions;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -43,7 +44,7 @@ namespace BiliLite.Controls.Settings
             });
             DownloadChangePath.Click += new RoutedEventHandler(async (e, args) =>
             {
-                FolderPicker folderPicker = new FolderPicker();
+                FolderPicker folderPicker = FileExtensions.GetFolderPicker();
                 folderPicker.FileTypeFilter.Add("*");
                 folderPicker.SuggestedStartLocation = PickerLocationId.VideosLibrary;
                 var folder = await folderPicker.PickSingleFolderAsync();

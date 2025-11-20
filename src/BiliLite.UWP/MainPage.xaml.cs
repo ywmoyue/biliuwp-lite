@@ -1,4 +1,5 @@
 ﻿using BiliLite.Controls;
+using BiliLite.Controls.Common;
 using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
@@ -7,7 +8,11 @@ using BiliLite.Services;
 using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels.Common;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,10 +20,6 @@ using Windows.ApplicationModel.Core;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Navigation;
-using BiliLite.Controls.Common;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -42,11 +43,6 @@ namespace BiliLite
             InitTabViewStyle();
 
             this.InitializeComponent();
-            // 处理标题栏
-            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-            coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
-
-            Window.Current.SetTitleBar(AvailableDragRegion);
 
             //处理页面跳转
             MessageCenter.NavigateToPageEvent += NavigationHelper_NavigateToPageEvent;
@@ -56,10 +52,22 @@ namespace BiliLite
             MessageCenter.GoBackEvent += MessageCenter_GoBackEvent;
             MessageCenter.SeekEvent += MessageCenter_SeekEvent;
 
-            App.Current.Suspending += Current_Suspending;
+            // App.Current.Suspending += Current_Suspending;
             // Window.Current.Content.PointerPressed += Content_PointerPressed;
 
-            Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
+            //Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
+            PreviewKeyDown += MainPage_KeyDown;
+            PreviewKeyUp += MainPage_KeyUp;
+        }
+
+        private void MainPage_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            m_shortcutKeyService.HandleKeyDown(this.GetCurrentWindow(), e.Key);
+        }
+
+        private void MainPage_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            m_shortcutKeyService.HandleKeyUp(this.GetCurrentWindow(), e.Key);
         }
 
         public event EventHandler MainPageLoaded;
@@ -78,11 +86,11 @@ namespace BiliLite
         {
             if (args.EventType.ToString().Contains("Down"))
             {
-                m_shortcutKeyService.HandleKeyDown(args.VirtualKey);
+                m_shortcutKeyService.HandleKeyDown(this.GetCurrentWindow(), args.VirtualKey);
             }
             if (args.EventType.ToString().Contains("Up"))
             {
-                m_shortcutKeyService.HandleKeyUp(args.VirtualKey);
+                m_shortcutKeyService.HandleKeyUp(this.GetCurrentWindow(), args.VirtualKey);
             }
         }
 
@@ -118,12 +126,14 @@ namespace BiliLite
             if (e)
             {
                 MiniWindowsTitleBar.Visibility = Visibility.Visible;
-                Window.Current.SetTitleBar(MiniWindowsTitleBar);
+                var window = this.GetCurrentWindow();
+                window.SetTitleBar(MiniWindowsTitleBar);
             }
             else
             {
                 MiniWindowsTitleBar.Visibility = Visibility.Collapsed;
-                Window.Current.SetTitleBar(AvailableDragRegion);
+                var window = this.GetCurrentWindow();
+                window.SetTitleBar(AvailableDragRegion);
             }
         }
 
@@ -271,7 +281,7 @@ namespace BiliLite
             var frame = tabItem.Content as MyFrame;
             if (frame.Content is Page { Content: Grid grid })
             {
-                grid.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                grid.DispatcherQueue.TryEnqueue(() =>
                 {
                     grid.Children.Clear();
                 });
@@ -388,6 +398,7 @@ namespace BiliLite
 
         private void MainPage_OnLoaded(object sender, RoutedEventArgs e)
         {
+            this.GetCurrentWindow().SetTitleBar(AvailableDragRegion);
             MainPageLoaded?.Invoke(this, EventArgs.Empty);
         }
 

@@ -28,7 +28,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.UI.Popups;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using DynamicItemDataTemplateSelector = BiliLite.Controls.DataTemplateSelectors.DynamicItemDataTemplateSelector;
 using DynamicType = BiliLite.Models.Common.DynamicType;
 
@@ -236,7 +236,7 @@ namespace BiliLite.ViewModels.UserDynamic
 
         private async Task<bool> ConfirmDeleteDialog()
         {
-            var messageDialog = new MessageDialog("确定要删除动态吗?", "删除动态");
+            var messageDialog = new Controls.Dialogs.MessageDialog("确定要删除动态吗?", "删除动态");
             messageDialog.Commands.Add(new UICommand("确定", cmd => { }, commandId: 0));
             messageDialog.Commands.Add(new UICommand("取消", cmd => { }, commandId: 1));
             var result = await messageDialog.ShowAsync();

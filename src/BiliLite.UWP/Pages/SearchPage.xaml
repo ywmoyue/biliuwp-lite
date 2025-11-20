@@ -12,7 +12,7 @@
     xmlns:modules="using:BiliLite.Modules"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:viewModel="using:BiliLite.ViewModels.Search"
+    xmlns:viewModel="using:BiliLite.ViewModels.Search" xmlns:imageEx="using:ImageEx"
     Background="{ThemeResource PageBackgroundMicaBrush}"
     Loaded="SearchPage_Loaded"
     SizeChanged="SearchPage_OnSizeChanged"
@@ -79,7 +79,7 @@
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Grid CornerRadius="{ThemeResource OverlayCornerRadius}">
-                                    <toolkit:ImageEx
+                                    <imageEx:ImageEx
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -174,7 +174,7 @@
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Grid CornerRadius="{ThemeResource OverlayCornerRadius}">
-                                    <toolkit:ImageEx
+                                    <imageEx:ImageEx
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -423,7 +423,7 @@
                                     <RowDefinition Height="32" />
                                 </Grid.RowDefinitions>
                                 <Grid>
-                                    <toolkit:ImageEx
+                                    <imageEx:ImageEx
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
                                         PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
@@ -560,7 +560,7 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <toolkit:ImageEx
+                                <imageEx:ImageEx
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch"
                                     CornerRadius="{ThemeResource OverlayCornerRadius}"
@@ -655,7 +655,7 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <toolkit:ImageEx
+                                <imageEx:ImageEx
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch"
                                     CornerRadius="{ThemeResource OverlayCornerRadius}"

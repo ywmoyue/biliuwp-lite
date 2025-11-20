@@ -14,8 +14,8 @@ using System.IO;
 using System.Linq;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using static BiliLite.Models.Requests.Api.CommentApi;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
@@ -104,7 +104,7 @@ namespace BiliLite.Controls.Dialogs
         {
             try
             {
-                var filePicker = new FileOpenPicker();
+                var filePicker = FileExtensions.GetFileOpenPicker();
                 filePicker.FileTypeFilter.Add(".jpg");
                 filePicker.FileTypeFilter.Add(".png");
                 filePicker.FileTypeFilter.Add(".jpeg");

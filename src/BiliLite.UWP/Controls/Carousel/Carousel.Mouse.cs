@@ -1,8 +1,7 @@
-﻿using Microsoft.Toolkit.Uwp.UI.Animations;
-using System;
+﻿using System;
 
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Input;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Input;
 
 namespace BiliLite.Controls
 {
@@ -61,7 +60,7 @@ namespace BiliLite.Controls
         {
             if (!_isArrowVisible)
             {
-                // _arrows.Fade(easingMode: Windows.UI.Xaml.Media.Animation.EasingMode.EaseIn).Start();
+                // _arrows.Fade(easingMode: Microsoft.UI.Xaml.Media.Animation.EasingMode.EaseIn).Start();
                 _arrows.FadeIn();
                 _isArrowVisible = true;
             }
@@ -73,7 +72,7 @@ namespace BiliLite.Controls
             if (_isArrowVisible && !_isArrowOver)
             {
                 _isArrowVisible = false;
-                //_arrows.Fade(easingMode: Windows.UI.Xaml.Media.Animation.EasingMode.EaseOut).Start();
+                //_arrows.Fade(easingMode: Microsoft.UI.Xaml.Media.Animation.EasingMode.EaseOut).Start();
                 _arrows.FadeOut();
             }
         }

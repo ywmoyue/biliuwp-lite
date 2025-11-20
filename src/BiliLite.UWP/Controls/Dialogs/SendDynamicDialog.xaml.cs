@@ -6,8 +6,9 @@ using BiliLite.ViewModels.User.SendDynamic;
 using BiliLite.ViewModels.UserDynamic;
 using System;
 using Windows.Storage.Pickers;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using BiliLite.Extensions;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 
@@ -121,7 +122,7 @@ namespace BiliLite.Controls.Dialogs
                 NotificationShowExtensions.ShowMessageToast("只能上传9张图片哦");
                 return;
             }
-            var picker = new FileOpenPicker();
+            var picker = FileExtensions.GetFileOpenPicker();
             picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
             picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
             picker.FileTypeFilter.Add(".jpg");

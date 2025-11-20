@@ -10,7 +10,7 @@
     xmlns:pages="using:BiliLite.Pages"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:user="using:BiliLite.ViewModels.User"
-    xmlns:userModel="using:BiliLite.Models.Common.User"
+    xmlns:userModel="using:BiliLite.Models.Common.User" xmlns:imageEx="using:ImageEx"
     d:DataContext="{d:DesignInstance Type=user:HistoryViewModel}"
     Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
@@ -27,7 +27,7 @@
                         <MenuFlyoutItem Click="removeVideoHistory_Click" Text="移除" />
                     </MenuFlyout>
                 </Grid.ContextFlyout>
-                <toolkit:ImageEx
+                <imageEx:ImageEx
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     CornerRadius="{ThemeResource OverlayCornerRadius}"

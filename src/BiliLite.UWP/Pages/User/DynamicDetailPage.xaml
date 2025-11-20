@@ -21,7 +21,6 @@
             </ResourceDictionary.MergedDictionaries>
             <AcrylicBrush
                 x:Key="SystemControlBaseHighAcrylicElementBrush"
-                BackgroundSource="Backdrop"
                 FallbackColor="{StaticResource SystemChromeAltHighColor}"
                 TintColor="{StaticResource SystemChromeAltHighColor}"
                 TintOpacity="0.8" />
@@ -38,14 +37,14 @@
             <SplitView.Pane>
                 <Border x:Name="RootBorder" Padding="12,0,0,0">
                     <Grid>
-                        <controls1:DropShadowPanel
+                        <!--<controls1:DropShadowPanel
                             HorizontalContentAlignment="Stretch"
                             VerticalContentAlignment="Stretch"
                             BlurRadius="12"
                             Opacity="0.3"
                             Color="Black">
                             <Rectangle Fill="White" />
-                        </controls1:DropShadowPanel>
+                        </controls1:DropShadowPanel>-->
                         <Grid Background="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}">
                             <Pivot x:Name="pivotRight" SelectionChanged="pivotRight_SelectionChanged">
                                 <PivotItem Margin="0">

@@ -1,5 +1,5 @@
 ﻿using Windows.UI;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 
 namespace BiliLite.Models.Common.Live
 {
@@ -71,7 +71,7 @@ namespace BiliLite.Models.Common.Live
         /// <summary>
         /// 购买的时间单位, 如"月"
         /// </summary>
-        public string Unit { get; set;}
+        public string Unit { get; set; }
 
         /// <summary>
         /// 庆祝消息正文

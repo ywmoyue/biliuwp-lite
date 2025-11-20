@@ -1,20 +1,46 @@
-﻿using System;
+﻿using Microsoft.UI.Xaml.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using WinUIEx;
 
 namespace BiliLite.Extensions
 {
     public static class FileExtensions
     {
+        public static FileOpenPicker GetFileOpenPicker()
+        {
+            var filePicker = new FileOpenPicker();
+            var hwnd = App.MainWindow.GetWindowHandle();
+            WinRT.Interop.InitializeWithWindow.Initialize(filePicker, hwnd);
+            return filePicker;
+        }
+
+        public static FileSavePicker GetFileSavePicker()
+        {
+            var filePicker = new FileSavePicker();
+            var hwnd = App.MainWindow.GetWindowHandle();
+            WinRT.Interop.InitializeWithWindow.Initialize(filePicker, hwnd);
+            return filePicker;
+        }
+
+        public static FolderPicker GetFolderPicker()
+        {
+            var folderPicker = new FolderPicker();
+            var hwnd = App.MainWindow.GetWindowHandle();
+            WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, hwnd);
+            return folderPicker;
+        }
+
         public static async Task<StorageFile> GetExportFile(string fileTypeChoiceKey, string fileTypeChoiceValue,
             string suggestedFileName,
             PickerLocationId suggestedStartLocation = PickerLocationId.DocumentsLibrary)
         {
-            var savePicker = new FileSavePicker();
+            var savePicker = GetFileSavePicker();
             savePicker.SuggestedStartLocation = suggestedStartLocation;
 
             savePicker.FileTypeChoices.Add(fileTypeChoiceKey, new List<string>() { fileTypeChoiceValue });

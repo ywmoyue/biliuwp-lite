@@ -1,7 +1,7 @@
 ﻿using BiliLite.Models.Common;
 using BiliLite.Services;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using BiliLite.Models.Common.Home;
 using BiliLite.ViewModels.Home;
 using Microsoft.Extensions.DependencyInjection;

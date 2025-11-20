@@ -5,7 +5,7 @@ using BiliLite.Player.States.ScreenStates;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using PropertyChanged;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using BiliLite.Models.Common.Player;
 
 namespace BiliLite.ViewModels.Live

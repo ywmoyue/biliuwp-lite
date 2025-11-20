@@ -3,8 +3,8 @@ using BiliLite.Models.Common;
 using BiliLite.Services;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -98,7 +98,8 @@ namespace BiliLite.Controls.Settings
 
         private async void btnCleanImageCache_Click(object sender, RoutedEventArgs e)
         {
-            await ImageCache.Instance.ClearAsync();
+            throw new NotImplementedException();
+            // await ImageCache.Instance.ClearAsync();            
             NotificationShowExtensions.ShowMessageToast("已清除图片缓存");
         }
     }

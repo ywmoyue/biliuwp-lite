@@ -9,8 +9,8 @@ using Microsoft.UI.Xaml.Controls;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -24,6 +24,7 @@ namespace BiliLite.Controls.Settings
         private ShortcutFunctionViewModel m_recordingKeysShortcutFunction;
         private bool m_isRecording;
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+        private bool m_loaded = false;
 
         public ShortcutKeySettingsControl()
         {
@@ -49,6 +50,13 @@ namespace BiliLite.Controls.Settings
                     SettingService.SetValue(SettingConstants.UI.MOUSE_MIDDLE_ACTION, cbMouseMiddleAction.SelectedIndex);
                 });
             });
+
+            Loaded += ShortcutKeySettingsControl_Loaded;
+        }
+
+        private void ShortcutKeySettingsControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            m_loaded = true;
         }
 
         private async void ShortcutKeyService_OnRecordStoped(object sender, System.EventArgs e)
@@ -104,7 +112,7 @@ namespace BiliLite.Controls.Settings
         private async void ShortcutFunctionViewModel_Changed<T>(object sender, T e)
         {
             //TODO:  恢复默认过程中也应该停止写入设置
-            if (!IsLoaded) return;
+            if (!m_loaded) return;
 
             // 等ViewModel实际更新
             await Task.Delay(50);

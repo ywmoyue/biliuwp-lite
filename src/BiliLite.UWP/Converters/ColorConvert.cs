@@ -1,7 +1,9 @@
 ﻿using System;
 using Windows.UI;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI;
+using CommunityToolkit.WinUI.Helpers;
 
 namespace BiliLite.Converters
 {
@@ -35,7 +37,7 @@ namespace BiliLite.Converters
 
                         stringValue = "#" + stringValue;
                     }
-                    color = Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor(stringValue);
+                    color = stringValue.ToColor();// Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor(stringValue);
                 }
                 catch (Exception)
                 {

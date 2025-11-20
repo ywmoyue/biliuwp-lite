@@ -7,10 +7,10 @@ using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
 using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common.Settings;
@@ -20,6 +20,7 @@ using CommunityToolkit.WinUI.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using BiliLite.Services;
 using System.Diagnostics;
+using Microsoft.Windows.AppLifecycle;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -56,20 +57,20 @@ namespace BiliLite.Pages
             }
         }
 
-        private async void txtHelp_LinkClicked(object sender, Microsoft.Toolkit.Uwp.UI.Controls.LinkClickedEventArgs e)
+        private async void txtHelp_LinkClicked(object sender, LinkClickedEventArgs e)
         {
-            if (e.Link == "OpenLog")
+            if (e.Uri.ToString() == "OpenLog")
             {
                 var path = Windows.Storage.ApplicationData.Current.LocalFolder.Path + @"\log\";
                 await Windows.System.Launcher.LaunchFolderPathAsync(path);
             }
             else
             {
-                await Windows.System.Launcher.LaunchUriAsync(new Uri(e.Link));
+                await Windows.System.Launcher.LaunchUriAsync(e.Uri);
             }
         }
 
-        private async void RestartButton_Click(object sender, RoutedEventArgs e) => await CoreApplication.RequestRestartAsync(string.Empty);
+        private async void RestartButton_Click(object sender, RoutedEventArgs e) => AppInstance.Restart("");
 
         public void UpdatePivotLayout()
         {
@@ -85,7 +86,7 @@ namespace BiliLite.Pages
             var searchTextList = SettingsSearchMap.Map.Keys.ToList();
 
             var searchResults = new List<string>();
-            
+
             foreach (var text in searchTextList.Where(text => text.Contains(keyword)))
             {
                 searchResults.Add(text);
@@ -198,11 +199,11 @@ namespace BiliLite.Pages
             try
             {
                 // 获取第一个元素相对于窗口的变换
-                var transform1 = element1.TransformToVisual(Window.Current.Content);
+                var transform1 = element1.TransformToVisual(this.XamlRoot.Content);
                 var position1 = transform1.TransformPoint(new Point(0, 0));
 
                 // 获取第二个元素相对于窗口的变换
-                var transform2 = element2.TransformToVisual(Window.Current.Content);
+                var transform2 = element2.TransformToVisual(this.XamlRoot.Content);
                 var position2 = transform2.TransformPoint(new Point(0, 0));
 
                 // 计算垂直偏移量

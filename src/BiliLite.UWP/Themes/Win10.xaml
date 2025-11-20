@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls">
     <ResourceDictionary.MergedDictionaries>
-        <muxc:XamlControlsResources ControlsResourcesVersion="Version1">
+        <muxc:XamlControlsResources>
             <muxc:XamlControlsResources.MergedDictionaries>
                 <ResourceDictionary>
                     <CornerRadius x:Key="OverlayCornerRadius">0</CornerRadius>

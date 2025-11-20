@@ -16,12 +16,13 @@ using Windows.Foundation;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common.Article;
 using BiliLite.Models.Common.Video;
 using BiliLite.Services.Biz;
+using WinUIEx;
 
 namespace BiliLite.Services
 {
@@ -274,7 +275,7 @@ namespace BiliLite.Services
                 int pageType = 2;
                 try
                 {
-                    var pageTypeStr = StringExtensions.RegexMatch(url, @"bilibili://music/playlist/playpage/.*page_type=(\d+)"); 
+                    var pageTypeStr = StringExtensions.RegexMatch(url, @"bilibili://music/playlist/playpage/.*page_type=(\d+)");
                     pageType = int.Parse(pageTypeStr);
                 }
                 catch { }
@@ -683,39 +684,25 @@ namespace BiliLite.Services
         }
         public static async void OpenWindow(Type page, object par)
         {
-
-            var newView = CoreApplication.CreateNewView();
-            var newViewId = 0;
-
-            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            var window = new WindowEx();
+            var frame = new WindowFrame()
             {
-                var frame = new Frame();
-                frame.Navigate(page, par);
-                Window.Current.Content = frame;
-                Window.Current.Activate();
-                if (SettingService.GetValue<bool>(SettingConstants.UI.NEW_FULLY_WINDOW_PREVIEW_IMAGE, true))
-                {
-                    Window.Current.Activated += (sender, args) =>
-                    {
-                        ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
-                    };
-                }
+                CurrentWindow = window,
+            };
+            frame.Navigate(page, par);
 
-                newViewId = ApplicationView.GetForCurrentView().Id;
-                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(800, 800));
-                ApplicationView.GetForCurrentView().Consolidated += (sender, args) =>
+            if (SettingService.GetValue<bool>(SettingConstants.UI.NEW_FULLY_WINDOW_PREVIEW_IMAGE, true))
+            {
+                window.Activated += (sender, args) =>
                 {
-                    try
-                    {
-                        newView.CoreWindow.Close();
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Error("关闭窗口错误", ex);
-                    }
+                    ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
                 };
-            });
-            var viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
+            }
+            window.SetWindowSize(800, 600);
+            window.Closed += (_,_) =>
+            {
+            };
+            window.Show();
         }
 
     }

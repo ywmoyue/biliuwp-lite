@@ -5,7 +5,7 @@
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     xmlns:common="using:BiliLite.Models.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:danmaku="using:NSDanmaku.Controls"
+    xmlns:danmaku="using:NSDanmaku.WinUI.Controls"
     xmlns:fa="using:FontAwesome5"
     xmlns:local="using:BiliLite.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -17,7 +17,7 @@
     xmlns:video="using:BiliLite.Models.Common.Video"
     xmlns:webPlayer="using:BiliLite.Player.WebPlayer"
     xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
-    xmlns:IsWin11="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,14)"
+    xmlns:IsWin11="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,14)" xmlns:toolkit1="using:CommunityToolkit.WinUI.Controls"
     d:DesignHeight="800"
     d:DesignWidth="1000"
     mc:Ignorable="d">
@@ -323,7 +323,7 @@
                                     <ItemsControl x:Name="DanmuSettingWords" Margin="0,8,0,0">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
-                                                <toolkit:WrapPanel VerticalSpacing="4" />
+                                                <toolkit1:WrapPanel VerticalSpacing="4" />
                                             </ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>

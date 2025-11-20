@@ -8,7 +8,7 @@
     xmlns:dynamic="using:BiliLite.Controls.Dynamic"
     xmlns:local="using:BiliLite.Pages.User"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls" xmlns:controls11="using:CommunityToolkit.WinUI.Controls"
     Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
 
@@ -18,7 +18,7 @@
                 <ResourceDictionary Source="/Controls/Dynamic/DynamicV2Template.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <ItemsPanelTemplate x:Key="GridPanel">
-                <controls1:StaggeredPanel
+                <controls11:StaggeredPanel
                     HorizontalAlignment="Stretch"
                     ColumnSpacing="-12"
                     DesiredColumnWidth="500"

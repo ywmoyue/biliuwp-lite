@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "BiliLite.UWP (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "BiliLite.UWP (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

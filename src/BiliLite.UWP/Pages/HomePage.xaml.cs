@@ -8,12 +8,12 @@ using BiliLite.Services.Biz;
 using BiliLite.ViewModels.Download;
 using BiliLite.ViewModels.Home;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Uwp.Connectivity;
 using System;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+using CommunityToolkit.WinUI.Helpers;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 

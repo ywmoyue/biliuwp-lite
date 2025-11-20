@@ -2,7 +2,7 @@
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Video.PlayUrlInfos;
 using BiliLite.Services;
-using FFmpegInteropX;
+//using FFmpegInteropX;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,9 +17,9 @@ using Windows.Media.Editing;
 using Windows.Media.Playback;
 using Windows.Media.Streaming.Adaptive;
 using Windows.Storage;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using Windows.Web.Http;
 using BiliLite.Models.Common.Player;
 using Newtonsoft.Json;
@@ -28,8 +28,6 @@ using BiliLite.Player.ShakaPlayer.Extensions;
 using BiliLite.Player.WebPlayer;
 using BiliLite.Player.WebPlayer.Models;
 using PropertyChanged;
-using Bilibili.Community.Service.Dm.V1;
-using BiliLite.Extensions.Notifications;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -47,15 +45,15 @@ namespace BiliLite.Controls
         private BiliDashPlayUrlInfo m_dashInfo;
         private PlayEngine m_currentEngine;
 
-        private FFmpegMediaSource m_ffmpegMssVideo;
+        //private FFmpegMediaSource m_ffmpegMssVideo;
         private MediaPlayer m_playerVideo;
         //音视频分离
-        private FFmpegMediaSource m_ffmpegMssAudio;
+        //private FFmpegMediaSource m_ffmpegMssAudio;
         private MediaPlayer m_playerAudio;
         private MediaTimelineController m_mediaTimelineController;
 
         //多段FLV
-        private List<FFmpegMediaSource> m_ffmpegMssItems;
+        //private List<FFmpegMediaSource> m_ffmpegMssItems;
         private MediaPlaybackList m_mediaPlaybackList;
         private BaseWebPlayer m_webPlayer;
         private WebPlayerStatsUpdatedData m_webPlayerStatsData;
@@ -70,8 +68,8 @@ namespace BiliLite.Controls
             // We don't have ARM64 support of SYEngine.
             if (RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
             {
-                SYEngine.Core.ForceNetworkMode = true;
-                SYEngine.Core.ForceSoftwareDecode = !SettingService.GetValue<bool>(SettingConstants.Player.HARDWARE_DECODING, false);
+                //SYEngine.Core.ForceNetworkMode = true;
+                //SYEngine.Core.ForceSoftwareDecode = !SettingService.GetValue<bool>(SettingConstants.Player.HARDWARE_DECODING, false);
             }
             //_ffmpegConfig.StreamBufferSize = 655360;//1024 * 30;
 
@@ -220,7 +218,7 @@ namespace BiliLite.Controls
         /// </summary>
         public event EventHandler<ChangePlayerEngine> ChangeEngine;
 
-        public event EventHandler StatsUpdated; 
+        public event EventHandler StatsUpdated;
 
         #endregion
 
@@ -344,75 +342,75 @@ namespace BiliLite.Controls
             }
 
         }
-        private MediaSourceConfig CreateFFmpegInteropConfig(string userAgent, string referer)
-        {
+        //private MediaSourceConfig CreateFFmpegInteropConfig(string userAgent, string referer)
+        //{
 
-            var passthrough = SettingService.GetValue<bool>(SettingConstants.Player.HARDWARE_DECODING, true);
-            var _ffmpegConfig = new MediaSourceConfig();
-            if (userAgent != null && userAgent.Length > 0)
-            {
-                _ffmpegConfig.FFmpegOptions.Add("user_agent", userAgent);
-            }
-            if (referer != null && referer.Length > 0)
-            {
-                _ffmpegConfig.FFmpegOptions.Add("referer", referer);
-                _ffmpegConfig.FFmpegOptions.Add("headers", $"Referer: {referer}");
-            }
+        //    var passthrough = SettingService.GetValue<bool>(SettingConstants.Player.HARDWARE_DECODING, true);
+        //    var _ffmpegConfig = new MediaSourceConfig();
+        //    if (userAgent != null && userAgent.Length > 0)
+        //    {
+        //        _ffmpegConfig.FFmpegOptions.Add("user_agent", userAgent);
+        //    }
+        //    if (referer != null && referer.Length > 0)
+        //    {
+        //        _ffmpegConfig.FFmpegOptions.Add("referer", referer);
+        //        _ffmpegConfig.FFmpegOptions.Add("headers", $"Referer: {referer}");
+        //    }
 
-            _ffmpegConfig.FFmpegOptions.Add("allowed_extensions","ALL");
-            _ffmpegConfig.FFmpegOptions.Add("reconnect", "1");
-            _ffmpegConfig.FFmpegOptions.Add("reconnect_streamed", "1");
-            _ffmpegConfig.FFmpegOptions.Add("reconnect_on_network_error", "1");
-            //_ffmpegConfig.BufferTime
-            var ffmpegOptionsStr =
-                SettingService.GetValue(SettingConstants.Player.FFMPEG_INTEROP_X_OPTIONS, "");
-            var ffmpegOptions = new Dictionary<string, string>();
-            try
-            {
-                if (!string.IsNullOrEmpty(ffmpegOptionsStr))
-                {
-                    var options = ffmpegOptionsStr.Split(",");
-                    foreach (var optionStr in options)
-                    {
-                        var option = optionStr.Split(':').Select(x => x.Trim()).ToList();
-                        ffmpegOptions.Add(option[0], option[1]);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Warn("解析额外参数错误", ex);
-            }
+        //    _ffmpegConfig.FFmpegOptions.Add("allowed_extensions", "ALL");
+        //    _ffmpegConfig.FFmpegOptions.Add("reconnect", "1");
+        //    _ffmpegConfig.FFmpegOptions.Add("reconnect_streamed", "1");
+        //    _ffmpegConfig.FFmpegOptions.Add("reconnect_on_network_error", "1");
+        //    //_ffmpegConfig.BufferTime
+        //    var ffmpegOptionsStr =
+        //        SettingService.GetValue(SettingConstants.Player.FFMPEG_INTEROP_X_OPTIONS, "");
+        //    var ffmpegOptions = new Dictionary<string, string>();
+        //    try
+        //    {
+        //        if (!string.IsNullOrEmpty(ffmpegOptionsStr))
+        //        {
+        //            var options = ffmpegOptionsStr.Split(",");
+        //            foreach (var optionStr in options)
+        //            {
+        //                var option = optionStr.Split(':').Select(x => x.Trim()).ToList();
+        //                ffmpegOptions.Add(option[0], option[1]);
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.Warn("解析额外参数错误", ex);
+        //    }
 
-            if (ffmpegOptions.Any())
-            {
-                foreach (var keyValuePair in ffmpegOptions)
-                {
-                    _ffmpegConfig.FFmpegOptions.Add(keyValuePair.Key,keyValuePair.Value);
-                }
-            }
-            return _ffmpegConfig;
-        }
+        //    if (ffmpegOptions.Any())
+        //    {
+        //        foreach (var keyValuePair in ffmpegOptions)
+        //        {
+        //            _ffmpegConfig.FFmpegOptions.Add(keyValuePair.Key, keyValuePair.Value);
+        //        }
+        //    }
+        //    return _ffmpegConfig;
+        //}
 
-        private SYEngine.PlaylistNetworkConfigs CreatePlaylistNetworkConfigs(string userAgent, string referer, string epId = "")
-        {
+        //private SYEngine.PlaylistNetworkConfigs CreatePlaylistNetworkConfigs(string userAgent, string referer, string epId = "")
+        //{
 
-            SYEngine.PlaylistNetworkConfigs config = new SYEngine.PlaylistNetworkConfigs();
-            config.DownloadRetryOnFail = true;
-            config.HttpCookie = string.Empty;
-            config.UniqueId = string.Empty;
-            config.HttpReferer = string.Empty;
-            config.HttpUserAgent = string.Empty;
-            if (userAgent != null && userAgent.Length > 0)
-            {
-                config.HttpUserAgent = userAgent;
-            }
-            if (referer != null && referer.Length > 0)
-            {
-                config.HttpReferer = referer;
-            }
-            return config;
-        }
+        //    SYEngine.PlaylistNetworkConfigs config = new SYEngine.PlaylistNetworkConfigs();
+        //    config.DownloadRetryOnFail = true;
+        //    config.HttpCookie = string.Empty;
+        //    config.UniqueId = string.Empty;
+        //    config.HttpReferer = string.Empty;
+        //    config.HttpUserAgent = string.Empty;
+        //    if (userAgent != null && userAgent.Length > 0)
+        //    {
+        //        config.HttpUserAgent = userAgent;
+        //    }
+        //    if (referer != null && referer.Length > 0)
+        //    {
+        //        config.HttpReferer = referer;
+        //    }
+        //    return config;
+        //}
 
         //private void vlcVideoView_Initialized(object sender, LibVLCSharp.Platforms.UWP.InitializedEventArgs e)
         //{
@@ -438,7 +436,7 @@ namespace BiliLite.Controls
         private async Task OnPlayerMediaOpened(Action specificPlayerAction = null)
         {
             Opening = false;
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
             {
                 specificPlayerAction?.Invoke();
                 PlayMediaOpened?.Invoke(this, EventArgs.Empty);
@@ -447,7 +445,7 @@ namespace BiliLite.Controls
 
         private async Task OnPlayerMediaEnded()
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
             {
                 if (PlayState == PlayState.End)
                 {
@@ -466,7 +464,7 @@ namespace BiliLite.Controls
 
         private async Task OnPlayerPositionChanged(TimeSpan position)
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
             {
                 try
                 {
@@ -480,7 +478,7 @@ namespace BiliLite.Controls
 
         private async Task OnPlayerMediaFailed(ChangePlayerEngine changeEngineEventArgs)
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
             {
                 PlayState = PlayState.Error;
                 PlayStateChanged?.Invoke(this, PlayState);
@@ -490,7 +488,7 @@ namespace BiliLite.Controls
 
         private async Task OnPlayerBufferingStarted()
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
             {
                 Buffering = true;
             });
@@ -498,7 +496,7 @@ namespace BiliLite.Controls
 
         private async Task OnPlayerBufferingProgressChanged(MediaPlaybackSession session)
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
             {
                 Buffering = true;
                 BufferCache = session.BufferingProgress;
@@ -507,7 +505,7 @@ namespace BiliLite.Controls
 
         private async Task OnPlayerBufferingEnded()
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
             {
                 Buffering = false;
             });
@@ -622,7 +620,7 @@ namespace BiliLite.Controls
         {
             Duration = e.Duration;
             Opening = false;
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
             {
                 PlayMediaOpened?.Invoke(this, EventArgs.Empty);
 
@@ -674,7 +672,7 @@ namespace BiliLite.Controls
                         message = "创建MediaSource失败"
                     };
                 }
-                
+
                 m_playerVideo.Source = MediaSource.CreateFromAdaptiveMediaSource(mediaSource);
                 Buffering = true;
 
@@ -877,122 +875,123 @@ namespace BiliLite.Controls
         /// <returns></returns>
         public async Task<PlayerOpenResult> PlayDashUseFFmpegInterop(BiliDashPlayUrlInfo dashPlayUrlInfo, string userAgent, string referer, double positon = 0, bool needConfig = true, bool isLocal = false)
         {
-            try
-            {
-                mediaPlayerVideo.Visibility = Visibility.Visible;
-                //vlcVideoView.Visibility = Visibility.Collapsed;
-                Opening = true;
-                m_dashInfo = dashPlayUrlInfo;
-                m_referer = referer;
-                m_userAgent = userAgent;
+            throw new NotImplementedException();
+            //try
+            //{
+            //    mediaPlayerVideo.Visibility = Visibility.Visible;
+            //    //vlcVideoView.Visibility = Visibility.Collapsed;
+            //    Opening = true;
+            //    m_dashInfo = dashPlayUrlInfo;
+            //    m_referer = referer;
+            //    m_userAgent = userAgent;
 
-                m_currentEngine = PlayEngine.FFmpegInteropMSS;
+            //    m_currentEngine = PlayEngine.FFmpegInteropMSS;
 
-                PlayMediaType = PlayMediaType.Dash;
-                //加载中
-                PlayState = PlayState.Loading;
-                PlayStateChanged?.Invoke(this, PlayState);
-                //关闭正在播放的视频
-                ClosePlay();
-                var _ffmpegConfig = CreateFFmpegInteropConfig(userAgent, referer);
-                
-                if (isLocal)
-                {
+            //    PlayMediaType = PlayMediaType.Dash;
+            //    //加载中
+            //    PlayState = PlayState.Loading;
+            //    PlayStateChanged?.Invoke(this, PlayState);
+            //    //关闭正在播放的视频
+            //    ClosePlay();
+            //    var _ffmpegConfig = CreateFFmpegInteropConfig(userAgent, referer);
 
-                    var videoFile = await StorageFile.GetFileFromPathAsync(dashPlayUrlInfo.Video.Url);
-                    m_ffmpegMssVideo = await FFmpegMediaSource.CreateFromStreamAsync(await videoFile.OpenAsync(FileAccessMode.Read), _ffmpegConfig);
-                    if (dashPlayUrlInfo.Audio != null)
-                    {
-                        var audioFile = await StorageFile.GetFileFromPathAsync(dashPlayUrlInfo.Audio.Url);
-                        m_ffmpegMssAudio = await FFmpegMediaSource.CreateFromStreamAsync(await audioFile.OpenAsync(FileAccessMode.Read), _ffmpegConfig);
-                    }
-                }
-                else
-                {
-                    m_ffmpegMssVideo = await FFmpegMediaSource.CreateFromUriAsync(dashPlayUrlInfo.Video.Url, _ffmpegConfig);
-                    if (dashPlayUrlInfo.Audio != null)
-                    {
-                        m_ffmpegMssAudio = await FFmpegMediaSource.CreateFromUriAsync(dashPlayUrlInfo.Audio.Url, _ffmpegConfig);
-                    }
+            //    if (isLocal)
+            //    {
 
-                }
+            //        var videoFile = await StorageFile.GetFileFromPathAsync(dashPlayUrlInfo.Video.Url);
+            //        m_ffmpegMssVideo = await FFmpegMediaSource.CreateFromStreamAsync(await videoFile.OpenAsync(FileAccessMode.Read), _ffmpegConfig);
+            //        if (dashPlayUrlInfo.Audio != null)
+            //        {
+            //            var audioFile = await StorageFile.GetFileFromPathAsync(dashPlayUrlInfo.Audio.Url);
+            //            m_ffmpegMssAudio = await FFmpegMediaSource.CreateFromStreamAsync(await audioFile.OpenAsync(FileAccessMode.Read), _ffmpegConfig);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        m_ffmpegMssVideo = await FFmpegMediaSource.CreateFromUriAsync(dashPlayUrlInfo.Video.Url, _ffmpegConfig);
+            //        if (dashPlayUrlInfo.Audio != null)
+            //        {
+            //            m_ffmpegMssAudio = await FFmpegMediaSource.CreateFromUriAsync(dashPlayUrlInfo.Audio.Url, _ffmpegConfig);
+            //        }
+
+            //    }
 
 
-                //设置时长
-                Duration = m_ffmpegMssVideo.Duration.TotalSeconds;
-                //设置视频
-                m_playerVideo = new MediaPlayer();
-                m_playerVideo.Source = m_ffmpegMssVideo.CreateMediaPlaybackItem();
-                //设置音频
-                if (dashPlayUrlInfo.Audio != null)
-                {
-                    m_playerAudio = new MediaPlayer();
-                    m_playerAudio.Source = m_ffmpegMssAudio.CreateMediaPlaybackItem();
-                }
+            //    //设置时长
+            //    Duration = m_ffmpegMssVideo.Duration.TotalSeconds;
+            //    //设置视频
+            //    m_playerVideo = new MediaPlayer();
+            //    m_playerVideo.Source = m_ffmpegMssVideo.CreateMediaPlaybackItem();
+            //    //设置音频
+            //    if (dashPlayUrlInfo.Audio != null)
+            //    {
+            //        m_playerAudio = new MediaPlayer();
+            //        m_playerAudio.Source = m_ffmpegMssAudio.CreateMediaPlaybackItem();
+            //    }
 
-                //设置时间线控制器
-                m_mediaTimelineController = new MediaTimelineController();
-                m_playerVideo.CommandManager.IsEnabled = false;
-                m_playerVideo.TimelineController = m_mediaTimelineController;
-                if (dashPlayUrlInfo.Audio != null)
-                {
-                    m_playerAudio.CommandManager.IsEnabled = true;
-                    m_playerAudio.TimelineController = m_mediaTimelineController;
-                }
+            //    //设置时间线控制器
+            //    m_mediaTimelineController = new MediaTimelineController();
+            //    m_playerVideo.CommandManager.IsEnabled = false;
+            //    m_playerVideo.TimelineController = m_mediaTimelineController;
+            //    if (dashPlayUrlInfo.Audio != null)
+            //    {
+            //        m_playerAudio.CommandManager.IsEnabled = true;
+            //        m_playerAudio.TimelineController = m_mediaTimelineController;
+            //    }
 
-                var playFailedChangeEngineArgs = new ChangePlayerEngine()
-                {
-                    need_change = false,
-                };
+            //    var playFailedChangeEngineArgs = new ChangePlayerEngine()
+            //    {
+            //        need_change = false,
+            //    };
 
-                HookVideoPlayerEvent(playFailedChangeEngineArgs);
+            //    HookVideoPlayerEvent(playFailedChangeEngineArgs);
 
-                if (dashPlayUrlInfo.Audio != null)
-                {
-                    m_playerAudio.PlaybackSession.BufferingStarted += async (e, arg) =>
-                    {
-                        await OnPlayerBufferingStarted();
-                    };
-                    m_playerAudio.PlaybackSession.BufferingProgressChanged += async (e, arg) =>
-                    {
-                        await OnPlayerBufferingProgressChanged(e);
-                    };
-                    m_playerAudio.PlaybackSession.BufferingEnded += async (e, arg) =>
-                    {
-                        await OnPlayerBufferingEnded();
-                    };
-                    //设置音量
-                    m_playerAudio.Volume = Volume;
-                    mediaPlayerAudio.SetMediaPlayer(m_playerAudio);
-                }
-                else
-                {
-                    m_playerVideo.Volume = Volume;
-                }
-                PlayState = PlayState.Pause;
-                PlayStateChanged?.Invoke(this, PlayState);
+            //    if (dashPlayUrlInfo.Audio != null)
+            //    {
+            //        m_playerAudio.PlaybackSession.BufferingStarted += async (e, arg) =>
+            //        {
+            //            await OnPlayerBufferingStarted();
+            //        };
+            //        m_playerAudio.PlaybackSession.BufferingProgressChanged += async (e, arg) =>
+            //        {
+            //            await OnPlayerBufferingProgressChanged(e);
+            //        };
+            //        m_playerAudio.PlaybackSession.BufferingEnded += async (e, arg) =>
+            //        {
+            //            await OnPlayerBufferingEnded();
+            //        };
+            //        //设置音量
+            //        m_playerAudio.Volume = Volume;
+            //        mediaPlayerAudio.SetMediaPlayer(m_playerAudio);
+            //    }
+            //    else
+            //    {
+            //        m_playerVideo.Volume = Volume;
+            //    }
+            //    PlayState = PlayState.Pause;
+            //    PlayStateChanged?.Invoke(this, PlayState);
 
-                //绑定MediaPlayer
-                mediaPlayerVideo.SetMediaPlayer(m_playerVideo);
+            //    //绑定MediaPlayer
+            //    mediaPlayerVideo.SetMediaPlayer(m_playerVideo);
 
-                //设置速率
-                m_mediaTimelineController.ClockRate = Rate;
+            //    //设置速率
+            //    m_mediaTimelineController.ClockRate = Rate;
 
-                return new PlayerOpenResult()
-                {
-                    result = true
-                };
-            }
-            catch (Exception ex)
-            {
-                //PlayMediaError?.Invoke(this, "视频加载时出错:" + ex.Message);
-                return new PlayerOpenResult()
-                {
-                    result = false,
-                    message = ex.Message,
-                    detail_message = ex.StackTrace
-                };
-            }
+            //    return new PlayerOpenResult()
+            //    {
+            //        result = true
+            //    };
+            //}
+            //catch (Exception ex)
+            //{
+            //    //PlayMediaError?.Invoke(this, "视频加载时出错:" + ex.Message);
+            //    return new PlayerOpenResult()
+            //    {
+            //        result = false,
+            //        message = ex.Message,
+            //        detail_message = ex.StackTrace
+            //    };
+            //}
         }
 
         /// <summary>
@@ -1004,64 +1003,65 @@ namespace BiliLite.Controls
         /// <returns></returns>
         public async Task<PlayerOpenResult> PlayDashUrlUseFFmpegInterop(string url, string userAgent, string referer, double positon = 0, bool needConfig = true)
         {
+            throw new NotImplementedException();
 
-            try
-            {
-                mediaPlayerVideo.Visibility = Visibility.Visible;
-                Opening = true;
-                m_currentEngine = PlayEngine.FFmpegInteropMSS;
+            //try
+            //{
+            //    mediaPlayerVideo.Visibility = Visibility.Visible;
+            //    Opening = true;
+            //    m_currentEngine = PlayEngine.FFmpegInteropMSS;
 
-                PlayMediaType = PlayMediaType.Single;
-                //加载中
-                PlayState = PlayState.Loading;
-                PlayStateChanged?.Invoke(this, PlayState);
-                //关闭正在播放的视频
-                ClosePlay();
+            //    PlayMediaType = PlayMediaType.Single;
+            //    //加载中
+            //    PlayState = PlayState.Loading;
+            //    PlayStateChanged?.Invoke(this, PlayState);
+            //    //关闭正在播放的视频
+            //    ClosePlay();
 
-                var _ffmpegConfig = CreateFFmpegInteropConfig(userAgent, referer);
-                m_ffmpegMssVideo = await FFmpegMediaSource.CreateFromUriAsync(url, _ffmpegConfig);
+            //    var _ffmpegConfig = CreateFFmpegInteropConfig(userAgent, referer);
+            //    m_ffmpegMssVideo = await FFmpegMediaSource.CreateFromUriAsync(url, _ffmpegConfig);
 
 
-                //设置时长
-                Duration = m_ffmpegMssVideo.Duration.TotalSeconds;
-                //设置播放器
-                m_playerVideo = new MediaPlayer();
-                var mediaSource = m_ffmpegMssVideo.CreateMediaPlaybackItem();
-                m_playerVideo.Source = mediaSource;
+            //    //设置时长
+            //    Duration = m_ffmpegMssVideo.Duration.TotalSeconds;
+            //    //设置播放器
+            //    m_playerVideo = new MediaPlayer();
+            //    var mediaSource = m_ffmpegMssVideo.CreateMediaPlaybackItem();
+            //    m_playerVideo.Source = mediaSource;
 
-                var playFailedChangeEngineArgs = new ChangePlayerEngine()
-                {
-                    change_engine = PlayEngine.SYEngine,
-                    current_mode = PlayEngine.FFmpegInteropMSS,
-                    need_change = true,
-                    play_type = PlayMediaType.Single
-                };
+            //    var playFailedChangeEngineArgs = new ChangePlayerEngine()
+            //    {
+            //        change_engine = PlayEngine.SYEngine,
+            //        current_mode = PlayEngine.FFmpegInteropMSS,
+            //        need_change = true,
+            //        play_type = PlayMediaType.Single
+            //    };
 
-                HookVideoPlayerEvent(playFailedChangeEngineArgs);
+            //    HookVideoPlayerEvent(playFailedChangeEngineArgs);
 
-                PlayState = PlayState.Pause;
-                PlayStateChanged?.Invoke(this, PlayState);
-                //设置音量
-                m_playerVideo.Volume = Volume;
-                //设置速率
-                m_playerVideo.PlaybackSession.PlaybackRate = Rate;
-                //绑定MediaPlayer
-                mediaPlayerVideo.SetMediaPlayer(m_playerVideo);
-                return new PlayerOpenResult()
-                {
-                    result = true
-                };
-            }
-            catch (Exception ex)
-            {
-                //PlayMediaError?.Invoke(this, "视频加载时出错:" + ex.Message);
-                return new PlayerOpenResult()
-                {
-                    result = false,
-                    message = ex.Message,
-                    detail_message = ex.StackTrace
-                };
-            }
+            //    PlayState = PlayState.Pause;
+            //    PlayStateChanged?.Invoke(this, PlayState);
+            //    //设置音量
+            //    m_playerVideo.Volume = Volume;
+            //    //设置速率
+            //    m_playerVideo.PlaybackSession.PlaybackRate = Rate;
+            //    //绑定MediaPlayer
+            //    mediaPlayerVideo.SetMediaPlayer(m_playerVideo);
+            //    return new PlayerOpenResult()
+            //    {
+            //        result = true
+            //    };
+            //}
+            //catch (Exception ex)
+            //{
+            //    //PlayMediaError?.Invoke(this, "视频加载时出错:" + ex.Message);
+            //    return new PlayerOpenResult()
+            //    {
+            //        result = false,
+            //        message = ex.Message,
+            //        detail_message = ex.StackTrace
+            //    };
+            //}
         }
 
         /// <summary>
@@ -1073,65 +1073,65 @@ namespace BiliLite.Controls
         /// <returns></returns>
         public async Task<PlayerOpenResult> PlaySingleFlvUseFFmpegInterop(string url, string userAgent, string referer, double positon = 0, bool needConfig = true)
         {
+            throw new NotImplementedException();
+            //try
+            //{
+            //    mediaPlayerVideo.Visibility = Visibility.Visible;
+            //    //vlcVideoView.Visibility = Visibility.Collapsed;
+            //    Opening = true;
+            //    m_currentEngine = PlayEngine.FFmpegInteropMSS;
 
-            try
-            {
-                mediaPlayerVideo.Visibility = Visibility.Visible;
-                //vlcVideoView.Visibility = Visibility.Collapsed;
-                Opening = true;
-                m_currentEngine = PlayEngine.FFmpegInteropMSS;
+            //    PlayMediaType = PlayMediaType.Single;
+            //    //加载中
+            //    PlayState = PlayState.Loading;
+            //    PlayStateChanged?.Invoke(this, PlayState);
+            //    //关闭正在播放的视频
+            //    ClosePlay();
 
-                PlayMediaType = PlayMediaType.Single;
-                //加载中
-                PlayState = PlayState.Loading;
-                PlayStateChanged?.Invoke(this, PlayState);
-                //关闭正在播放的视频
-                ClosePlay();
-
-                var _ffmpegConfig = CreateFFmpegInteropConfig(userAgent, referer);
-                m_ffmpegMssVideo = await FFmpegMediaSource.CreateFromUriAsync(url, _ffmpegConfig);
+            //    var _ffmpegConfig = CreateFFmpegInteropConfig(userAgent, referer);
+            //    m_ffmpegMssVideo = await FFmpegMediaSource.CreateFromUriAsync(url, _ffmpegConfig);
 
 
-                //设置时长
-                Duration = m_ffmpegMssVideo.Duration.TotalSeconds;
-                //设置播放器
-                m_playerVideo = new MediaPlayer();
-                var mediaSource = m_ffmpegMssVideo.CreateMediaPlaybackItem();
-                m_playerVideo.Source = mediaSource;
+            //    //设置时长
+            //    Duration = m_ffmpegMssVideo.Duration.TotalSeconds;
+            //    //设置播放器
+            //    m_playerVideo = new MediaPlayer();
+            //    var mediaSource = m_ffmpegMssVideo.CreateMediaPlaybackItem();
+            //    m_playerVideo.Source = mediaSource;
 
-                var playFailedChangeEngineArgs = new ChangePlayerEngine()
-                {
-                    change_engine = PlayEngine.SYEngine,
-                    current_mode = PlayEngine.FFmpegInteropMSS,
-                    need_change = true,
-                    play_type = PlayMediaType.Single
-                };
+            //    var playFailedChangeEngineArgs = new ChangePlayerEngine()
+            //    {
+            //        change_engine = PlayEngine.SYEngine,
+            //        current_mode = PlayEngine.FFmpegInteropMSS,
+            //        need_change = true,
+            //        play_type = PlayMediaType.Single
+            //    };
 
-                HookVideoPlayerEvent(playFailedChangeEngineArgs);
+            //    HookVideoPlayerEvent(playFailedChangeEngineArgs);
 
-                PlayState = PlayState.Pause;
-                PlayStateChanged?.Invoke(this, PlayState);
-                //设置音量
-                m_playerVideo.Volume = Volume;
-                //设置速率
-                m_playerVideo.PlaybackSession.PlaybackRate = Rate;
-                //绑定MediaPlayer
-                mediaPlayerVideo.SetMediaPlayer(m_playerVideo);
-                return new PlayerOpenResult()
-                {
-                    result = true
-                };
-            }
-            catch (Exception ex)
-            {
-                //PlayMediaError?.Invoke(this, "视频加载时出错:" + ex.Message);
-                return new PlayerOpenResult()
-                {
-                    result = false,
-                    message = ex.Message,
-                    detail_message = ex.StackTrace
-                };
-            }
+            //    PlayState = PlayState.Pause;
+            //    PlayStateChanged?.Invoke(this, PlayState);
+            //    //设置音量
+            //    m_playerVideo.Volume = Volume;
+            //    //设置速率
+            //    m_playerVideo.PlaybackSession.PlaybackRate = Rate;
+            //    //绑定MediaPlayer
+            //    mediaPlayerVideo.SetMediaPlayer(m_playerVideo);
+            //    return new PlayerOpenResult()
+            //    {
+            //        result = true
+            //    };
+            //}
+            //catch (Exception ex)
+            //{
+            //    //PlayMediaError?.Invoke(this, "视频加载时出错:" + ex.Message);
+            //    return new PlayerOpenResult()
+            //    {
+            //        result = false,
+            //        message = ex.Message,
+            //        detail_message = ex.StackTrace
+            //    };
+            //}
         }
 
         /// <summary>
@@ -1144,65 +1144,65 @@ namespace BiliLite.Controls
         /// <returns></returns>
         public async Task<PlayerOpenResult> PlaySingleFlvUseSYEngine(string url, string userAgent, string referer, double positon = 0, bool needConfig = true, string epId = "")
         {
+            throw new NotImplementedException();
+            //try
+            //{
+            //    mediaPlayerVideo.Visibility = Visibility.Visible;
+            //    //vlcVideoView.Visibility = Visibility.Collapsed;
+            //    Opening = true;
+            //    m_currentEngine = PlayEngine.SYEngine;
+            //    PlayMediaType = PlayMediaType.Single;
+            //    //加载中
+            //    PlayState = PlayState.Loading;
+            //    PlayStateChanged?.Invoke(this, PlayState);
+            //    //关闭正在播放的视频
+            //    ClosePlay();
+            //    var playList = new SYEngine.Playlist(SYEngine.PlaylistTypes.NetworkHttp);
+            //    if (needConfig)
+            //    {
+            //        playList.NetworkConfigs = CreatePlaylistNetworkConfigs(userAgent, referer, epId);
+            //    }
+            //    playList.Append(url, 0, 0);
+            //    //设置播放器
+            //    m_playerVideo = new MediaPlayer();
+            //    m_playerVideo.Source = null;
+            //    var mediaSource = await playList.SaveAndGetFileUriAsync();
+            //    m_playerVideo.Source = MediaSource.CreateFromUri(mediaSource);
 
-            try
-            {
-                mediaPlayerVideo.Visibility = Visibility.Visible;
-                //vlcVideoView.Visibility = Visibility.Collapsed;
-                Opening = true;
-                m_currentEngine = PlayEngine.SYEngine;
-                PlayMediaType = PlayMediaType.Single;
-                //加载中
-                PlayState = PlayState.Loading;
-                PlayStateChanged?.Invoke(this, PlayState);
-                //关闭正在播放的视频
-                ClosePlay();
-                var playList = new SYEngine.Playlist(SYEngine.PlaylistTypes.NetworkHttp);
-                if (needConfig)
-                {
-                    playList.NetworkConfigs = CreatePlaylistNetworkConfigs(userAgent, referer, epId);
-                }
-                playList.Append(url, 0, 0);
-                //设置播放器
-                m_playerVideo = new MediaPlayer();
-                m_playerVideo.Source = null;
-                var mediaSource = await playList.SaveAndGetFileUriAsync();
-                m_playerVideo.Source = MediaSource.CreateFromUri(mediaSource);
+            //    var playFailedChangeEngineArgs = new ChangePlayerEngine()
+            //    {
+            //        need_change = false,
+            //        play_type = PlayMediaType.Single,
+            //    };
 
-                var playFailedChangeEngineArgs = new ChangePlayerEngine()
-                {
-                    need_change = false,
-                    play_type = PlayMediaType.Single,
-                };
+            //    HookVideoPlayerEvent(playFailedChangeEngineArgs, specificPlayerMediaOpenAction: () =>
+            //    {
+            //        Duration = m_playerVideo.PlaybackSession.NaturalDuration.TotalSeconds;
+            //    });
 
-                HookVideoPlayerEvent(playFailedChangeEngineArgs, specificPlayerMediaOpenAction: () =>
-                {
-                    Duration = m_playerVideo.PlaybackSession.NaturalDuration.TotalSeconds;
-                });
-
-                PlayState = PlayState.Pause;
-                PlayStateChanged?.Invoke(this, PlayState);
-                //设置音量
-                m_playerVideo.Volume = Volume;
-                //设置速率
-                m_playerVideo.PlaybackSession.PlaybackRate = Rate;
-                //绑定MediaPlayer
-                mediaPlayerVideo.SetMediaPlayer(m_playerVideo);
-                return new PlayerOpenResult()
-                {
-                    result = true
-                };
-            }
-            catch (Exception ex)
-            {
-                //PlayMediaError?.Invoke(this, "视频加载时出错:" + ex.Message);
-                return new PlayerOpenResult()
-                {
-                    result = false,
-                    message = ex.Message,
-                    detail_message = ex.StackTrace
-                };
-            }
+            //    PlayState = PlayState.Pause;
+            //    PlayStateChanged?.Invoke(this, PlayState);
+            //    //设置音量
+            //    m_playerVideo.Volume = Volume;
+            //    //设置速率
+            //    m_playerVideo.PlaybackSession.PlaybackRate = Rate;
+            //    //绑定MediaPlayer
+            //    mediaPlayerVideo.SetMediaPlayer(m_playerVideo);
+            //    return new PlayerOpenResult()
+            //    {
+            //        result = true
+            //    };
+            //}
+            //catch (Exception ex)
+            //{
+            //    //PlayMediaError?.Invoke(this, "视频加载时出错:" + ex.Message);
+            //    return new PlayerOpenResult()
+            //    {
+            //        result = false,
+            //        message = ex.Message,
+            //        detail_message = ex.StackTrace
+            //    };
+            //}
         }
 
         /// <summary>
@@ -1215,82 +1215,83 @@ namespace BiliLite.Controls
         /// <returns></returns>
         public async Task<PlayerOpenResult> PlayVideoUseSYEngine(List<BiliFlvPlayUrlInfo> urls, string userAgent, string referer, double positon = 0, bool needConfig = true, string epId = "", bool isLocal = false)
         {
-            m_currentEngine = PlayEngine.SYEngine;
-            PlayMediaType = PlayMediaType.MultiFlv;
-            try
-            {
-                mediaPlayerVideo.Visibility = Visibility.Visible;
-                //vlcVideoView.Visibility = Visibility.Collapsed;
-                Opening = false;
-                //加载中
-                PlayState = PlayState.Loading;
-                PlayStateChanged?.Invoke(this, PlayState);
-                ClosePlay();
-                var playList = new SYEngine.Playlist(SYEngine.PlaylistTypes.NetworkHttp);
-                if (needConfig)
-                {
-                    playList.NetworkConfigs = CreatePlaylistNetworkConfigs(userAgent, referer, epId);
-                }
-                foreach (var item in urls)
-                {
-                    playList.Append(item.Url, 0, item.Length / 1000);
-                }
-                //设置时长
-                Duration = urls.Sum(x => x.Length / 1000);
-                //设置播放器
-                m_playerVideo = new MediaPlayer();
-                m_playerVideo.Source = null;
+            throw new NotImplementedException();
+            //m_currentEngine = PlayEngine.SYEngine;
+            //PlayMediaType = PlayMediaType.MultiFlv;
+            //try
+            //{
+            //    mediaPlayerVideo.Visibility = Visibility.Visible;
+            //    //vlcVideoView.Visibility = Visibility.Collapsed;
+            //    Opening = false;
+            //    //加载中
+            //    PlayState = PlayState.Loading;
+            //    PlayStateChanged?.Invoke(this, PlayState);
+            //    ClosePlay();
+            //    var playList = new SYEngine.Playlist(SYEngine.PlaylistTypes.NetworkHttp);
+            //    if (needConfig)
+            //    {
+            //        playList.NetworkConfigs = CreatePlaylistNetworkConfigs(userAgent, referer, epId);
+            //    }
+            //    foreach (var item in urls)
+            //    {
+            //        playList.Append(item.Url, 0, item.Length / 1000);
+            //    }
+            //    //设置时长
+            //    Duration = urls.Sum(x => x.Length / 1000);
+            //    //设置播放器
+            //    m_playerVideo = new MediaPlayer();
+            //    m_playerVideo.Source = null;
 
-                if (isLocal)
-                {
-                    MediaComposition composition = new MediaComposition();
-                    foreach (var item in urls)
-                    {
-                        var file = await StorageFile.GetFileFromPathAsync(item.Url);
-                        var clip = await MediaClip.CreateFromFileAsync(file);
-                        composition.Clips.Add(clip);
-                    }
-                    m_playerVideo.Source = MediaSource.CreateFromMediaStreamSource(composition.GenerateMediaStreamSource());
-                }
-                else
-                {
-                    var mediaSource = await playList.SaveAndGetFileUriAsync();
+            //    if (isLocal)
+            //    {
+            //        MediaComposition composition = new MediaComposition();
+            //        foreach (var item in urls)
+            //        {
+            //            var file = await StorageFile.GetFileFromPathAsync(item.Url);
+            //            var clip = await MediaClip.CreateFromFileAsync(file);
+            //            composition.Clips.Add(clip);
+            //        }
+            //        m_playerVideo.Source = MediaSource.CreateFromMediaStreamSource(composition.GenerateMediaStreamSource());
+            //    }
+            //    else
+            //    {
+            //        var mediaSource = await playList.SaveAndGetFileUriAsync();
 
-                    m_playerVideo.Source = MediaSource.CreateFromUri(mediaSource);
+            //        m_playerVideo.Source = MediaSource.CreateFromUri(mediaSource);
 
-                }
+            //    }
 
-                var playFailedChangeEngineArgs = new ChangePlayerEngine()
-                {
-                    need_change = false,
-                    play_type = PlayMediaType.MultiFlv,
-                };
+            //    var playFailedChangeEngineArgs = new ChangePlayerEngine()
+            //    {
+            //        need_change = false,
+            //        play_type = PlayMediaType.MultiFlv,
+            //    };
 
-                HookVideoPlayerEvent(playFailedChangeEngineArgs);
+            //    HookVideoPlayerEvent(playFailedChangeEngineArgs);
 
-                PlayState = PlayState.Pause;
-                PlayStateChanged?.Invoke(this, PlayState);
-                //设置音量
-                m_playerVideo.Volume = Volume;
-                //设置速率
-                m_playerVideo.PlaybackSession.PlaybackRate = Rate;
-                //绑定MediaPlayer
-                mediaPlayerVideo.SetMediaPlayer(m_playerVideo);
+            //    PlayState = PlayState.Pause;
+            //    PlayStateChanged?.Invoke(this, PlayState);
+            //    //设置音量
+            //    m_playerVideo.Volume = Volume;
+            //    //设置速率
+            //    m_playerVideo.PlaybackSession.PlaybackRate = Rate;
+            //    //绑定MediaPlayer
+            //    mediaPlayerVideo.SetMediaPlayer(m_playerVideo);
 
-                return new PlayerOpenResult()
-                {
-                    result = true
-                };
-            }
-            catch (Exception ex)
-            {
-                return new PlayerOpenResult()
-                {
-                    result = false,
-                    message = ex.Message,
-                    detail_message = ex.StackTrace
-                };
-            }
+            //    return new PlayerOpenResult()
+            //    {
+            //        result = true
+            //    };
+            //}
+            //catch (Exception ex)
+            //{
+            //    return new PlayerOpenResult()
+            //    {
+            //        result = false,
+            //        message = ex.Message,
+            //        detail_message = ex.StackTrace
+            //    };
+            //}
         }
 
         public void SetRatioMode(int mode)
@@ -1328,14 +1329,16 @@ namespace BiliLite.Controls
                             mediaPlayerVideo.Width = ActualWidth;
                             mediaPlayerVideo.Height = ActualWidth * (double)m_dashInfo.Video.Height / (double)m_dashInfo.Video.Width;
                         }
-                        else {
+                        else
+                        {
                             /// 原视频长宽比小于窗口长宽比
                             mediaPlayerVideo.Stretch = Stretch.Fill;
                             mediaPlayerVideo.Width = ActualHeight * (double)m_dashInfo.Video.Width / (double)m_dashInfo.Video.Height;
                             mediaPlayerVideo.Height = ActualHeight;
                         }
                     }
-                    else {
+                    else
+                    {
                         /// 未获取到DASH视频信息则不缩放
                         mediaPlayerVideo.Stretch = Stretch.None;
                         mediaPlayerVideo.Width = double.NaN;
@@ -1491,16 +1494,16 @@ namespace BiliLite.Controls
             {
                 mediaPlayerVideo.SetMediaPlayer(null);
             }
-            if (m_ffmpegMssVideo != null)
-            {
-                m_ffmpegMssVideo.Dispose();
-                m_ffmpegMssVideo = null;
-            }
-            if (m_ffmpegMssAudio != null)
-            {
-                m_ffmpegMssAudio.Dispose();
-                m_ffmpegMssAudio = null;
-            }
+            //if (m_ffmpegMssVideo != null)
+            //{
+            //    m_ffmpegMssVideo.Dispose();
+            //    m_ffmpegMssVideo = null;
+            //}
+            //if (m_ffmpegMssAudio != null)
+            //{
+            //    m_ffmpegMssAudio.Dispose();
+            //    m_ffmpegMssAudio = null;
+            //}
             if (m_playerVideo != null)
             {
                 m_playerVideo.Source = null;
@@ -1522,11 +1525,11 @@ namespace BiliLite.Controls
             {
                 m_mediaTimelineController = null;
             }
-            if (m_ffmpegMssItems != null)
-            {
-                m_ffmpegMssItems.Clear();
-                m_ffmpegMssItems = null;
-            }
+            //if (m_ffmpegMssItems != null)
+            //{
+            //    m_ffmpegMssItems.Clear();
+            //    m_ffmpegMssItems = null;
+            //}
 
 
             PlayState = PlayState.End;
@@ -1572,24 +1575,7 @@ namespace BiliLite.Controls
                         break;
                 }
                 info += $"Engine: {m_currentEngine.ToString()}\r\n";
-                if (m_ffmpegMssVideo != null)
-                {
-                    info += $"Resolution: {m_ffmpegMssVideo.CurrentVideoStream.PixelHeight} x {m_ffmpegMssVideo.CurrentVideoStream.PixelWidth}\r\n";
-                    info += $"Video Codec: {m_ffmpegMssVideo.CurrentVideoStream.CodecName}\r\n";
-                    info += $"Video Bitrate: {m_ffmpegMssVideo.CurrentVideoStream.Bitrate}\r\n";
-                    info += $"Average Frame: {((double)m_ffmpegMssVideo.CurrentVideoStream.FramesPerSecond).ToString("0.0")}\r\n";
-                    if (PlayMediaType == PlayMediaType.Dash)
-                    {
-                        info += $"Audio Codec: {m_ffmpegMssAudio.AudioStreams[0].CodecName}\r\n";
-                        info += $"Audio Bitrate: {m_ffmpegMssAudio.AudioStreams[0].Bitrate}";
-                    }
-                    else
-                    {
-                        info += $"Audio Codec: {m_ffmpegMssVideo.AudioStreams[0].CodecName}\r\n";
-                        info += $"Audio Bitrate: {m_ffmpegMssVideo.AudioStreams[0].Bitrate}";
-                    }
-                }
-                else
+
                 {
                     //info += $"Resolution: {_playerVideo.PlaybackSession.NaturalVideoHeight} x {_playerVideo.PlaybackSession.NaturalVideoWidth}\r\n";
                     if (m_dashInfo != null && m_dashInfo.Audio != null)
@@ -1638,24 +1624,6 @@ namespace BiliLite.Controls
         {
             try
             {
-                if(SettingService.GetValue(SettingConstants.Player.RETRY_CLOSE_PLAYER, SettingConstants.Player.DEFAULT_RETRY_CLOSE_PLAYER))
-                {
-                    // 打开新线程延迟重试
-                    Task.Run(async () =>
-                    {
-                        await Task.Delay(SettingService.GetValue(
-                            SettingConstants.Player.RETRY_CLOSE_PLAYER_DELAY,
-                            SettingConstants.Player.DEFAULT_RETRY_CLOSE_PLAYER_DELAY));
-                        await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => {
-                            try
-                            {
-                                ClosePlay();
-                            }
-                            catch { }
-                            m_webPlayer?.Dispose();
-                        });
-                    });
-                }
                 ClosePlay();
                 m_webPlayer?.Dispose();
             }

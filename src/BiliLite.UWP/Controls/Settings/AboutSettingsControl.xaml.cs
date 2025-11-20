@@ -1,10 +1,9 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Services;
-using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using System;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -23,7 +22,7 @@ namespace BiliLite.Controls.Settings
             switch (button.Tag as string)
             {
                 case "btnCheckUpdate":
-                    await BiliExtensions.CheckVersion();
+                    await BiliExtensions.CheckVersion(this);
                     break;
                 case "btnCleanUpdateIgnore":
                     SettingService.SetValue(SettingConstants.Other.IGNORE_VERSION, "");

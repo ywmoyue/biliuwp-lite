@@ -1,7 +1,8 @@
 ﻿using Windows.UI;
 using BiliLite.Models.Common.User.UserDetails;
 using Newtonsoft.Json;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI;
 
 namespace BiliLite.Models.Common.User
 {

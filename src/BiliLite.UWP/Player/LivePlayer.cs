@@ -10,7 +10,7 @@ using BiliLite.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 
 namespace BiliLite.Player
 {
@@ -31,7 +31,7 @@ namespace BiliLite.Player
             m_playerController = playerController;
             if (playerConfig.PlayerType == RealPlayerType.FFmpegInterop)
             {
-                m_subPlayer = new LiveHlsPlayer(playerConfig, playerElement);
+                //m_subPlayer = new LiveHlsPlayer(playerConfig, playerElement);
             }
             else if (playerConfig.PlayerType == RealPlayerType.ShakaPlayer)
             {

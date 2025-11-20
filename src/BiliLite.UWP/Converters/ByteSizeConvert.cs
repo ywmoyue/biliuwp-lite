@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Data;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Data;
 
 namespace BiliLite.Converters
 {
@@ -27,18 +27,18 @@ namespace BiliLite.Converters
             }
             if (unit == "GB")
             {
-                return (size / 1024d / 1024d / 1024d).ToString("0.00")+ unit;
+                return (size / 1024d / 1024d / 1024d).ToString("0.00") + unit;
             }
             else
             if (unit == "MB")
             {
-                return (size / 1024d / 1024d ).ToString("0.00") + unit;
+                return (size / 1024d / 1024d).ToString("0.00") + unit;
             }
             else
             {
                 return (size / 1024d).ToString("0.00") + unit;
             }
-           
+
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
