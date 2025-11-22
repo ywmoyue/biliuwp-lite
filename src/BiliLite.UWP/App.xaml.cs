@@ -135,6 +135,10 @@ namespace BiliLite
             _window.Activate();
 
             await LogService.DeleteExpiredLogFile();
+
+#if !DEBUG
+            await BiliExtensions.CheckVersion(null, isSilentUpdateCheck: true);
+#endif
         }
 
         private async Task Navigation(object arguments, bool prelaunch = false)
@@ -188,10 +192,6 @@ namespace BiliLite
                 // WinUI 3 中 Mica 的处理方式不同，可能需要调整
                 // themeService.InitMicaBrushBackgroundSource();
                 //themeService.InitStyle();
-
-#if !DEBUG
-                await BiliExtensions.CheckVersion(null, isSilentUpdateCheck:true);
-#endif
 
                 var tempFileService = ServiceProvider.GetRequiredService<TempFileService>();
                 tempFileService.ClearTempFiles();
