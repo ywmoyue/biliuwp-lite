@@ -39,15 +39,12 @@ namespace BiliLite.Controls.Dialogs
 
             _commands = commands;
 
-            // ���ô�������
-            this.Title = string.IsNullOrEmpty(title) ? "��ʾ" : title;
+            this.Title = string.IsNullOrEmpty(title) ? "提示" : title;
             
             MessageTextBlock.Text = content;
 
-            // ������ť
             CreateButtons();
 
-            // ������ʾ
             CenterToScreen();
             this.AppWindow.Resize(new Windows.Graphics.SizeInt32 { Width = 400, Height = 250 });
         }
@@ -64,7 +61,7 @@ namespace BiliLite.Controls.Dialogs
                     Width = 80,
                     Height = 32,
                     Margin = new Thickness(10, 0, 10, 0),
-                    Tag = command // �洢�������
+                    Tag = command
                 };
 
                 button.Click += (sender, e) =>
@@ -72,10 +69,8 @@ namespace BiliLite.Controls.Dialogs
                     var cmd = (sender as Button)?.Tag as UICommand;
                     if (cmd != null)
                     {
-                        // ��������� Invoked ����
                         cmd.Invoked?.Invoke(new UICommand { Label = cmd.Label, Id = cmd.Id });
 
-                        // ����ѡ���¼�
                         OnCommandSelected?.Invoke(new UICommand { Label = cmd.Label, Id = cmd.Id });
 
                         this.Close();
@@ -111,7 +106,7 @@ namespace BiliLite.Controls.Dialogs
             }
             catch (System.Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"���д���ʧ��: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"居中窗口失败: {ex.Message}");
             }
         }
     }
@@ -143,7 +138,6 @@ namespace BiliLite.Controls.Dialogs
             {
                 try
                 {
-                    // �����Զ���Ի��򴰿�
                     var dialogWindow = new MessageDialogWindow(_title, _content, _commands);
 
                     dialogWindow.OnCommandSelected += (command) =>
@@ -155,9 +149,8 @@ namespace BiliLite.Controls.Dialogs
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine($"��ʾ�Ի���ʧ��: {ex.Message}");
-                    // ����Ĭ�ϵ�ȡ������
-                    tcs.TrySetResult(new UICommand { Label = "ȡ��", Id = false });
+                    System.Diagnostics.Debug.WriteLine($"显示对话框失败: {ex.Message}");
+                    tcs.TrySetResult(new UICommand { Label = "取消", Id = false });
                 }
             });
 
