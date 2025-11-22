@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Atelier39;
-using AutoMapper;
 using Bilibili.App.Dynamic.V2;
 using Bilibili.App.Interface.V1;
 using Bilibili.Tv.Interfaces.Dm.V1;
@@ -36,6 +35,8 @@ using BiliLite.ViewModels.Settings;
 using BiliLite.ViewModels.User;
 using BiliLite.ViewModels.UserDynamic;
 using BiliLite.ViewModels.Video;
+using Mapster;
+using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
 using NSDanmaku.Model;
 using DanmakuMode = Atelier39.DanmakuMode;
@@ -45,255 +46,187 @@ namespace BiliLite.Extensions
 {
     public static class MapperExtensions
     {
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+
         public static IServiceCollection AddMapper(this IServiceCollection services)
         {
-            var mapper = new Mapper(new MapperConfiguration(expression =>
-            {
-                expression.CreateMap<WebSocketPlugin, WebSocketPluginViewModel>()
-                    .ReverseMap();
-                expression.CreateMap<DownloadedItemDTO, DownloadedItem>()
-                    .ReverseMap();
-                expression.CreateMap<DownloadedSubItemDTO, DownloadedSubItem>()
-                    .ReverseMap();
+            // 配置类型映射
+            TypeAdapterConfig.GlobalSettings.Default.PreserveReference(true);
 
-                expression.CreateMap<DownloadItem, DownloadItemViewModel>();
-                expression.CreateMap<DownloadEpisodeItem, DownloadEpisodeItemViewModel>();
-                expression.CreateMap<CommentItem, HotReply>()
-                    .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Member.Uname))
-                    .ForMember(dest => dest.Message, opt => opt.MapFrom(src => src.Content.Message))
-                    .ForMember(dest => dest.Emote, opt => opt.MapFrom(src => src.Content.Emote));
-                expression.CreateMap<CommentItem, CommentViewModel>()
-                    .ForMember(dest => dest.HotReplies, opt => opt.MapFrom(src => src.Replies));
-                expression.CreateMap<DataCommentModel, DataCommentViewModel>();
-                expression.CreateMap<CommentContentModel, CommentContentViewModel>();
-                expression.CreateMap<VideoDetailModel, VideoDetailViewModel>();
-                expression.CreateMap<VideoDetailStaffModel, VideoDetailStaffViewModel>();
-                expression.CreateMap<VideoDetailStatModel, VideoDetailStatViewModel>();
-                expression.CreateMap<VideoDetailRelatesModel, VideoDetailRelatesViewModel>();
-                expression.CreateMap<VideoDetailReqUserModel, VideoDetailReqUserViewModel>();
-                expression.CreateMap<SeasonDetailUserStatusModel, SeasonDetailUserStatusViewModel>();
-                expression.CreateMap<SeasonDetailModel, SeasonDetailViewModel>();
-                expression.CreateMap<AnimeFallModel, AnimeFallViewModel>();
-                expression.CreateMap<HomeNavItem, HomeNavItemViewModel>();
-                expression.CreateMap<FollowTlistItemModel, UserRelationFollowingTagViewModel>();
-                expression.CreateMap<VideoListSection, VideoListSectionViewModel>();
-                expression.CreateMap<VideoPlaylistItem, VideoListItem>();
-                expression.CreateMap<FavoriteItemModel, FavoriteItemViewModel>();
-                expression.CreateMap<CinemaHomeModel, CinemaHomeViewModel>();
-                expression.CreateMap<CinemaHomeFallModel, CinemaHomeFallViewModel>();
-                expression.CreateMap<SeasonShortReviewItemModel, SeasonShortReviewItemViewModel>();
-                expression.CreateMap<SeasonShortReviewItemStatModel, SeasonShortReviewItemStatViewModel>();
-                expression.CreateMap<MediaListItem, VideoListItem>()
-                    .ForMember(dest => dest.Author,
-                        opt => opt.MapFrom(src =>
-                            src.Upper.Name))
-                    .ForMember(dest => dest.Duration,
-                        opt => opt.MapFrom(src =>
-                            TimeSpan.FromSeconds(src.Duration)));
-                expression.CreateMap<FilterRule, FilterRuleViewModel>().ReverseMap();
+            // 双向映射
+            TypeAdapterConfig<WebSocketPlugin, WebSocketPluginViewModel>.NewConfig()
+                .TwoWays();
+            TypeAdapterConfig<DownloadedItemDTO, DownloadedItem>.NewConfig()
+                .TwoWays();
+            TypeAdapterConfig<DownloadedSubItemDTO, DownloadedSubItem>.NewConfig()
+                .TwoWays();
+            TypeAdapterConfig<FilterRule, FilterRuleViewModel>.NewConfig()
+                .TwoWays();
 
-                var danmakuModeConvertDic = new Dictionary<DanmakuLocation, DanmakuMode>()
+            // 单向映射
+            TypeAdapterConfig<DownloadItem, DownloadItemViewModel>.NewConfig();
+            TypeAdapterConfig<DownloadEpisodeItem, DownloadEpisodeItemViewModel>.NewConfig();
+            TypeAdapterConfig<DataCommentModel, DataCommentViewModel>.NewConfig();
+            TypeAdapterConfig<CommentContentModel, CommentContentViewModel>.NewConfig();
+            TypeAdapterConfig<VideoDetailModel, VideoDetailViewModel>.NewConfig();
+            TypeAdapterConfig<VideoDetailStaffModel, VideoDetailStaffViewModel>.NewConfig();
+            TypeAdapterConfig<VideoDetailStatModel, VideoDetailStatViewModel>.NewConfig();
+            TypeAdapterConfig<VideoDetailRelatesModel, VideoDetailRelatesViewModel>.NewConfig();
+            TypeAdapterConfig<VideoDetailReqUserModel, VideoDetailReqUserViewModel>.NewConfig();
+            TypeAdapterConfig<SeasonDetailUserStatusModel, SeasonDetailUserStatusViewModel>.NewConfig();
+            TypeAdapterConfig<SeasonDetailModel, SeasonDetailViewModel>.NewConfig();
+            TypeAdapterConfig<AnimeFallModel, AnimeFallViewModel>.NewConfig();
+            TypeAdapterConfig<HomeNavItem, HomeNavItemViewModel>.NewConfig();
+            TypeAdapterConfig<FollowTlistItemModel, UserRelationFollowingTagViewModel>.NewConfig();
+            TypeAdapterConfig<VideoListSection, VideoListSectionViewModel>.NewConfig();
+            TypeAdapterConfig<VideoPlaylistItem, VideoListItem>.NewConfig();
+            TypeAdapterConfig<FavoriteItemModel, FavoriteItemViewModel>.NewConfig();
+            TypeAdapterConfig<CinemaHomeModel, CinemaHomeViewModel>.NewConfig();
+            TypeAdapterConfig<CinemaHomeFallModel, CinemaHomeFallViewModel>.NewConfig();
+            TypeAdapterConfig<SeasonShortReviewItemModel, SeasonShortReviewItemViewModel>.NewConfig();
+            TypeAdapterConfig<SeasonShortReviewItemStatModel, SeasonShortReviewItemStatViewModel>.NewConfig();
+            TypeAdapterConfig<BiliDanmakuItem, DanmakuModel>.NewConfig();
+            TypeAdapterConfig<NewEP, UserDynamicSeasonNewEpInfo>.NewConfig();
+            TypeAdapterConfig<FollowListItem, UserDynamicSeasonInfo>.NewConfig();
+            TypeAdapterConfig<BaseShortcutFunction, ShortcutFunctionModel>.NewConfig();
+            TypeAdapterConfig<ShortcutFunctionViewModel, ShortcutFunctionModel>.NewConfig();
+            TypeAdapterConfig<DanmakuItem, DanmakuSimpleItem>.NewConfig();
+            TypeAdapterConfig<DanmakuModel, DanmakuSimpleItem>.NewConfig();
+
+            // 复杂映射配置
+            TypeAdapterConfig<CommentItem, HotReply>.NewConfig()
+                .Map(dest => dest.UserName, src => src.Member.Uname)
+                .Map(dest => dest.Message, src => src.Content.Message)
+                .Map(dest => dest.Emote, src => src.Content.Emote);
+
+            TypeAdapterConfig<CommentItem, CommentViewModel>.NewConfig()
+                .Map(dest => dest.HotReplies, src => src.Replies);
+
+            TypeAdapterConfig<MediaListItem, VideoListItem>.NewConfig()
+                .Map(dest => dest.Author, src => src.Upper.Name)
+                .Map(dest => dest.Duration, src => TimeSpan.FromSeconds(src.Duration));
+
+            var danmakuModeConvertDic = new Dictionary<DanmakuLocation, DanmakuMode>()
+    {
+        { DanmakuLocation.Scroll, DanmakuMode.Rolling },
+        { DanmakuLocation.Top, DanmakuMode.Top },
+        { DanmakuLocation.Bottom, DanmakuMode.Bottom },
+        { DanmakuLocation.Position, DanmakuMode.Unknown },
+        { DanmakuLocation.Other, DanmakuMode.Unknown },
+    };
+
+            TypeAdapterConfig<BiliDanmakuItem, DanmakuItem>.NewConfig()
+                .Map(dest => dest.BaseFontSize, src => src.Size)
+                .Map(dest => dest.TextColor, src => src.Color)
+                .Map(dest => dest.StartMs, src => src.Time)
+                .Map(dest => dest.Mode, src => danmakuModeConvertDic.GetValueOrDefault(src.Location));
+
+            TypeAdapterConfig<DownloadSaveEpisodeInfo, DownloadedSubItem>.NewConfig()
+                .Map(dest => dest.Paths, src => new List<string>())
+                .Map(dest => dest.Title, src => src.EpisodeTitle)
+                .Map(dest => dest.SubtitlePath, src => new List<DownloadSubtitleInfo>());
+
+            TypeAdapterConfig<Arc, SubmitVideoItemModel>.NewConfig()
+                .Map(dest => dest.Play, src => src.Archive.Stat.View)
+                .Map(dest => dest.Pic, src => src.Archive.Pic)
+                .Map(dest => dest.Title, src => src.Archive.Title.Replace("<em class=\"keyword\">", "").Replace("</em>", ""))
+                .Map(dest => dest.Length, src => src.Archive.Duration.ProgressToTime())
+                .Map(dest => dest.Aid, src => src.Archive.Aid)
+                .Map(dest => dest.Created, src => src.Archive.Ctime)
+                .Map(dest => dest.VideoReview, src => src.Archive.Stat.Danmaku)
+                .Map(dest => dest.RedirectUrl, src => src.Archive.RedirectUrl);
+
+            TypeAdapterConfig<SubmitVideoCursorItem, SubmitVideoItemModel>.NewConfig()
+                .Map(dest => dest.Pic, src => src.Cover)
+                .Map(dest => dest.Length, src => src.Duration.ProgressToTime())
+                .Map(dest => dest.Aid, src => src.Aid)
+                .Map(dest => dest.Created, src => src.CTime)
+                .Map(dest => dest.VideoReview, src => src.Danmaku);
+
+            TypeAdapterConfig<DynamicCardDescModel, UserDynamicItemDisplayViewModel>.NewConfig()
+                .Map(dest => dest.CommentCount, src => src.comment)
+                .Map(dest => dest.Datetime, src => TimeExtensions.TimestampToDatetime(src.timestamp).ToString())
+                .Map(dest => dest.DynamicID, src => src.dynamic_id)
+                .Map(dest => dest.LikeCount, src => src.like)
+                .Map(dest => dest.Mid, src => src.uid)
+                .Map(dest => dest.ShareCount, src => src.repost)
+                .Map(dest => dest.Time, src => src.timestamp.HandelTimestamp())
+                .Map(dest => dest.IntType, src => src.type)
+                .Map(dest => dest.ReplyID, src => src.rid_str)
+                .Map(dest => dest.ReplyType, src => src.r_type)
+                .Map(dest => dest.Type, src => DynamicParseExtensions.ParseType(src.type))
+                .Map(dest => dest.IsSelf, src => src.uid == SettingService.Account.UserID)
+                .Map(dest => dest.Liked, src => src.is_liked == 1);
+
+            TypeAdapterConfig<FollowListItem, UserDynamicItemDisplayViewModel>.NewConfig()
+                .Map(dest => dest.Type, src => UserDynamicDisplayType.SeasonV2)
+                .Map(dest => dest.ContentDisplayInfo, src => new UserDynamicSeasonDisplayInfo()
                 {
-                    { DanmakuLocation.Scroll, DanmakuMode.Rolling },
-                    { DanmakuLocation.Top, DanmakuMode.Top },
-                    { DanmakuLocation.Bottom, DanmakuMode.Bottom },
-                    { DanmakuLocation.Position, DanmakuMode.Unknown },
-                    { DanmakuLocation.Other, DanmakuMode.Unknown },
-                };
-                expression.CreateMap<BiliDanmakuItem, DanmakuModel>();
-                expression.CreateMap<BiliDanmakuItem, DanmakuItem>()
-                    .ForMember(dest => dest.BaseFontSize, opt => opt.MapFrom(src => src.Size))
-                    .ForMember(dest => dest.TextColor, opt => opt.MapFrom(src => src.Color))
-                    .ForMember(dest => dest.StartMs, opt => opt.MapFrom(src => src.Time))
-                    .ForMember(dest => dest.Mode, opt => opt.MapFrom(src => danmakuModeConvertDic.GetValueOrDefault(src.Location)));
+                    Url = src.Url,
+                    Cover = src.Cover,
+                    SubTitle = src.SubTitle,
+                    Title = src.Title,
+                });
 
-                expression.CreateMap<DownloadSaveEpisodeInfo, DownloadedSubItem>()
-                    .ForMember(dest => dest.Paths, opt => opt.MapFrom(src => new List<string>()))
-                    .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.EpisodeTitle))
-                    .ForMember(dest => dest.SubtitlePath, opt => opt.MapFrom(src => new List<DownloadSubtitleInfo>()));
+            TypeAdapterConfig<DynamicItem, DynamicV2ItemViewModel>.NewConfig()
+                .Map(dest => dest.Author, src => src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleAuthor).ModuleAuthor)
+                .Map(dest => dest.AuthorForward, src => src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleAuthorForward).ModuleAuthorForward)
+                .Map(dest => dest.Dynamic, src => src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleDynamic).ModuleDynamic)
+                .Map(dest => dest.Desc, src => src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleDesc).ModuleDesc)
+                .Map(dest => dest.OpusSummary, src => src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleOpusSummary).ModuleOpusSummary)
+                .Map(dest => dest.Stat, src => src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleStat).ModuleStat)
+                .Map(dest => dest.BottomStat, src => src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleBottom).ModuleButtom.ModuleStat)
+                .Map(dest => dest.Fold, src => src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleFold).ModuleFold)
+                .Map(dest => dest.SourceJson, src => src.ToString());
 
-                expression.CreateMap<Arc, SubmitVideoItemModel>()
-                    .ForMember(dest => dest.Play, opt => opt.MapFrom(src => src.Archive.Stat.View))
-                    .ForMember(dest => dest.Pic, opt => opt.MapFrom(src => src.Archive.Pic))
-                    .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Archive.Title.Replace("<em class=\"keyword\">", "").Replace("</em>", "")))
-                    .ForMember(dest => dest.Length, opt => opt.MapFrom(src => src.Archive.Duration.ProgressToTime()))
-                    .ForMember(dest => dest.Aid, opt => opt.MapFrom(src => src.Archive.Aid))
-                    .ForMember(dest => dest.Created, opt => opt.MapFrom(src => src.Archive.Ctime))
-                    .ForMember(dest => dest.VideoReview, opt => opt.MapFrom(src => src.Archive.Stat.Danmaku))
-                    .ForMember(dest => dest.RedirectUrl, opt => opt.MapFrom(src => src.Archive.RedirectUrl));
+            TypeAdapterConfig<BaseShortcutFunction, ShortcutFunctionViewModel>.NewConfig()
+                .Map(dest => dest.IsPressAction, src => src.ReleaseFunction != null);
 
-                expression.CreateMap<SubmitVideoCursorItem, SubmitVideoItemModel>()
-                    .ForMember(dest => dest.Pic, opt => opt.MapFrom(src => src.Cover))
-                    .ForMember(dest => dest.Length, opt => opt.MapFrom(src => src.Duration.ProgressToTime()))
-                    .ForMember(dest => dest.Aid, opt => opt.MapFrom(src => src.Aid))
-                    .ForMember(dest => dest.Created, opt => opt.MapFrom(src => src.CTime))
-                    .ForMember(dest => dest.VideoReview, opt => opt.MapFrom(src => src.Danmaku));
+            TypeAdapterConfig<BiliMessageSession, ChatContextViewModel>.NewConfig()
+                .Map(dest => dest.Title, src => src.AccountInfo == null ? src.GroupName : src.AccountInfo.Name)
+                .Map(dest => dest.Cover, src => src.AccountInfo == null ? src.GroupCover : src.AccountInfo.PicUrl)
+                .Map(dest => dest.ChatContextId, src => src.TalkerId)
+                .Map(dest => dest.HasNotify, src => src.BizMsgUnreadCount > 0)
+                .Map(dest => dest.UnreadMsgCount, src => src.UnreadCount)
+                .Map(dest => dest.LastMsg, src => src.LastMsg)
+                .Map(dest => dest.Type, src => src.SessionType)
+                .Map(dest => dest.Time, src => src.SessionTs)
+                .Map(dest => dest.FromUserId, src => src.LastMsg.SenderUid);
 
-                expression.CreateMap<DynamicCardDescModel, UserDynamicItemDisplayViewModel>()
-                    .ForMember(dest => dest.CommentCount, opt => opt.MapFrom(src => src.comment))
-                    .ForMember(dest => dest.Datetime, opt => opt.MapFrom(src => TimeExtensions.TimestampToDatetime(src.timestamp).ToString()))
-                    .ForMember(dest => dest.DynamicID, opt => opt.MapFrom(src => src.dynamic_id))
-                    .ForMember(dest => dest.LikeCount, opt => opt.MapFrom(src => src.like))
-                    .ForMember(dest => dest.Mid, opt => opt.MapFrom(src => src.uid))
-                    .ForMember(dest => dest.ShareCount, opt => opt.MapFrom(src => src.repost))
-                    .ForMember(dest => dest.Time, opt => opt.MapFrom(src => src.timestamp.HandelTimestamp()))
-                    .ForMember(dest => dest.IntType, opt => opt.MapFrom(src => src.type))
-                    .ForMember(dest => dest.ReplyID, opt => opt.MapFrom(src => src.rid_str))
-                    .ForMember(dest => dest.ReplyType, opt => opt.MapFrom(src => src.r_type))
-                    .ForMember(dest => dest.Type, opt => opt.MapFrom(src => DynamicParseExtensions.ParseType(src.type)))
-                    .ForMember(dest => dest.IsSelf, opt => opt.MapFrom(src => src.uid == SettingService.Account.UserID))
-                    .ForMember(dest => dest.Liked, opt => opt.MapFrom(src => src.is_liked == 1));
+            TypeAdapterConfig<BiliSessionPrivateMessage, ChatMessage>.NewConfig()
+                .Map(dest => dest.UserId, src => src.SenderUid)
+                .Map(dest => dest.ChatMessageId, src => src.MsgSeqno)
+                .Map(dest => dest.Time, src => DateTimeOffset.FromUnixTimeSeconds(src.Timestamp))
+                .Map(dest => dest.ContentStr, src => src.Content);
 
-                expression.CreateMap<FollowListItem, UserDynamicItemDisplayViewModel>()
-                    .ForMember(dest => dest.Type, opt => opt.MapFrom(src => UserDynamicDisplayType.SeasonV2))
-                    .ForMember(dest => dest.ContentDisplayInfo, opt => opt.MapFrom(src =>
-                        new UserDynamicSeasonDisplayInfo()
-                        {
-                            Url = src.Url,
-                            Cover = src.Cover,
-                            SubTitle = src.SubTitle,
-                            Title = src.Title,
-                        }));
+            TypeAdapterConfig<BiliReplyMeData, ReplyMeMessageViewModel>.NewConfig()
+                .Map(dest => dest.UserId, src => src.User.Mid)
+                .Map(dest => dest.UserFace, src => src.User.Avatar)
+                .Map(dest => dest.UserName, src => src.User.Nickname)
+                .Map(dest => dest.Title, src => src.Item.Title)
+                .Map(dest => dest.Content, src => src.Item.SourceContent)
+                .Map(dest => dest.ReferenceContent, src => src.Item.TargetReplyContent)
+                .Map(dest => dest.HasLike, src => src.Item.LikeState != 0)
+                .Map(dest => dest.Time, src => DateTimeOffset.FromUnixTimeSeconds(src.ReplyTime))
+                .Map(dest => dest.Url, src => src.Item.NativeUri);
 
-                expression.CreateMap<DynamicItem, DynamicV2ItemViewModel>()
-                    .ForMember(dest => dest.Author,
-                        opt => opt.MapFrom(src =>
-                            src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleAuthor).ModuleAuthor))
-                    .ForMember(dest => dest.AuthorForward,
-                        opt => opt.MapFrom(src =>
-                            src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleAuthorForward).ModuleAuthorForward))
-                    .ForMember(dest => dest.Dynamic,
-                        opt => opt.MapFrom(src =>
-                            src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleDynamic).ModuleDynamic))
-                    .ForMember(dest => dest.Desc,
-                        opt => opt.MapFrom(src =>
-                            src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleDesc).ModuleDesc))
-                    .ForMember(dest => dest.OpusSummary,
-                        opt => opt.MapFrom(src =>
-                            src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleOpusSummary).ModuleOpusSummary))
-                    .ForMember(dest => dest.Stat,
-                        opt => opt.MapFrom(src =>
-                            src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleStat).ModuleStat))
-                    .ForMember(dest => dest.BottomStat,
-                        opt => opt.MapFrom(src =>
-                            src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleBottom).ModuleButtom.ModuleStat))
-                    .ForMember(dest => dest.Fold,
-                        opt => opt.MapFrom(src =>
-                            src.Modules.FirstOrDefault(x => x.ModuleType == DynModuleType.ModuleFold).ModuleFold))
-                    .ForMember(dest => dest.SourceJson,
-                        opt => opt.MapFrom(src =>
-                            src.ToString()));
+            TypeAdapterConfig<DanmakuItem, DanmakuSimpleItem>.NewConfig()
+                .Map(dest => dest.ProgressMs, src => src.StartMs)
+                .Map(dest => dest.Id, src => src.Id.ToString())
+                .Map(dest => dest.Content, src => src.Text);
 
-                expression.CreateMap<NewEP, UserDynamicSeasonNewEpInfo>();
-                expression.CreateMap<FollowListItem, UserDynamicSeasonInfo>();
-                expression.CreateMap<BaseShortcutFunction, ShortcutFunctionViewModel>()
-                    .ForMember(dest => dest.IsPressAction,
-                        opt => opt.MapFrom(src =>
-                            src.ReleaseFunction != null));
-                expression.CreateMap<BaseShortcutFunction, ShortcutFunctionModel>();
-                expression.CreateMap<ShortcutFunctionViewModel, ShortcutFunctionModel>();
+            TypeAdapterConfig<DanmakuModel, DanmakuSimpleItem>.NewConfig()
+                .Map(dest => dest.ProgressMs, src => src.time * 1000)
+                .Map(dest => dest.Id, src => src.rowID)
+                .Map(dest => dest.MidHash, src => src.sendID)
+                .Map(dest => dest.Content, src => src.text);
 
-                expression.CreateMap<BiliMessageSession, ChatContextViewModel>()
-                    .ForMember(dest => dest.Title,
-                        opt => opt.MapFrom(src =>
-                            src.AccountInfo == null ? src.GroupName : src.AccountInfo.Name))
-                    .ForMember(dest => dest.Cover,
-                        opt => opt.MapFrom(src =>
-                            src.AccountInfo == null ? src.GroupCover : src.AccountInfo.PicUrl))
-                    .ForMember(dest => dest.ChatContextId,
-                        opt => opt.MapFrom(src =>
-                            src.TalkerId))
-                    .ForMember(dest => dest.HasNotify,
-                        opt => opt.MapFrom(src =>
-                            src.BizMsgUnreadCount > 0))
-                    .ForMember(dest => dest.UnreadMsgCount,
-                        opt => opt.MapFrom(src =>
-                            src.UnreadCount))
-                    .ForMember(dest => dest.LastMsg,
-                        opt => opt.MapFrom(src =>
-                            src.LastMsg))
-                    .ForMember(dest => dest.Type,
-                        opt => opt.MapFrom(src =>
-                            src.SessionType))
-                    .ForMember(dest => dest.Time,
-                        opt => opt.MapFrom(src =>
-                            src.SessionTs))
-                    .ForMember(dest => dest.FromUserId,
-                        opt => opt.MapFrom(src =>
-                            src.LastMsg.SenderUid));
+            // 验证配置
+            TypeAdapterConfig.GlobalSettings.Compile();
 
+            // 注册 Mapster 的 IMapper 服务
+            services.AddSingleton<IMapper>(new MapsterMapper.Mapper());
 
-                expression.CreateMap<BiliSessionPrivateMessage, ChatMessage>()
-                    .ForMember(dest => dest.UserId,
-                        opt => opt.MapFrom(src =>
-                            src.SenderUid))
-                    .ForMember(dest => dest.ChatMessageId,
-                        opt => opt.MapFrom(src =>
-                            src.MsgSeqno))
-                    .ForMember(dest => dest.Time,
-                        opt => opt.MapFrom(src =>
-                            DateTimeOffset.FromUnixTimeSeconds(src.Timestamp)))
-                    .ForMember(dest => dest.ContentStr,
-                        opt => opt.MapFrom(src =>
-                            src.Content));
-
-
-                expression.CreateMap<BiliReplyMeData, ReplyMeMessageViewModel>()
-                    .ForMember(dest => dest.UserId,
-                        opt => opt.MapFrom(src =>
-                            src.User.Mid))
-                    .ForMember(dest => dest.UserFace,
-                        opt => opt.MapFrom(src =>
-                            src.User.Avatar))
-                    .ForMember(dest => dest.UserName,
-                        opt => opt.MapFrom(src =>
-                            src.User.Nickname))
-                    .ForMember(dest => dest.Title,
-                        opt => opt.MapFrom(src =>
-                            src.Item.Title))
-                    .ForMember(dest => dest.Content,
-                        opt => opt.MapFrom(src =>
-                            src.Item.SourceContent))
-                    .ForMember(dest => dest.ReferenceContent,
-                        opt => opt.MapFrom(src =>
-                            src.Item.TargetReplyContent))
-                    .ForMember(dest => dest.HasLike,
-                        opt => opt.MapFrom(src =>
-                            src.Item.LikeState != 0))
-                    .ForMember(dest => dest.Time,
-                        opt => opt.MapFrom(src =>
-                            DateTimeOffset.FromUnixTimeSeconds(src.ReplyTime)))
-                    .ForMember(dest => dest.Url,
-                        opt => opt.MapFrom(src =>
-                            src.Item.NativeUri));
-
-                expression.CreateMap<DanmakuItem, DanmakuSimpleItem>()
-                    .ForMember(dest => dest.ProgressMs,
-                        opt => opt.MapFrom(src =>
-                            src.StartMs))
-                    .ForMember(dest => dest.Id,
-                        opt => opt.MapFrom(src =>
-                            src.Id.ToString()))
-                    .ForMember(dest => dest.Content,
-                        opt => opt.MapFrom(src =>
-                            src.Text));
-
-                expression.CreateMap<DanmakuModel, DanmakuSimpleItem>()
-                    .ForMember(dest => dest.ProgressMs,
-                        opt => opt.MapFrom(src =>
-                            src.time*1000))
-                    .ForMember(dest => dest.Id,
-                        opt => opt.MapFrom(src =>
-                            src.rowID))
-                    .ForMember(dest => dest.MidHash,
-                        opt => opt.MapFrom(src =>
-                            src.sendID))
-                    .ForMember(dest => dest.Content,
-                        opt => opt.MapFrom(src =>
-                            src.text));
-            }));
-
-            services.AddSingleton<IMapper>(mapper);
             return services;
         }
 

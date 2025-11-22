@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using MapsterMapper;
 using Bilibili.App.Dynamic.V2;
 using BiliLite.Controls.Dialogs;
 using BiliLite.Extensions;
@@ -21,16 +21,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using AutoMapper;
-using Bilibili.App.Dynamic.V2;
-using BiliLite.Extensions;
-using BiliLite.Models.Common;
-using BiliLite.Models.Exceptions;
-using BiliLite.Modules;
-using BiliLite.Services;
-using BiliLite.ViewModels.Common;
-using BiliLite.Models.Common.UserDynamic;
-using BiliLite.Modules.User;
 
 namespace BiliLite.ViewModels.UserDynamic
 {

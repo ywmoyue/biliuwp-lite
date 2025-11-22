@@ -13,7 +13,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using IMapper = AutoMapper.IMapper;
+using IMapper = MapsterMapper.IMapper;
 using Microsoft.Windows.AppLifecycle;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using AutoMapper;
+using MapsterMapper;
 using BiliLite.Controls.Dynamic;
 using BiliLite.Extensions;
 using BiliLite.Models.Common;

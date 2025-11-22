@@ -1,5 +1,5 @@
 
-using AutoMapper;
+using MapsterMapper;
 using Bilibili.App.Dynamic.V2;
 using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;

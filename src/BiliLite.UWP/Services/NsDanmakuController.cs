@@ -6,7 +6,7 @@ using Windows.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using AutoMapper;
+using MapsterMapper;
 using BiliLite.Models.Common.Danmaku;
 using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels.Video;
@@ -147,7 +147,7 @@ namespace BiliLite.Services
             }
         }
 
-        public override void Add(BiliDanmakuItem danmakuItem,bool owner)
+        public override void Add(BiliDanmakuItem danmakuItem, bool owner)
         {
             var realDanmakuItem = m_mapper.Map<DanmakuModel>(danmakuItem);
             m_danmakuControl.AddDanmu(realDanmakuItem, owner);

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.UI.Xaml.Controls;
-using AutoMapper;
+using MapsterMapper;
 using Bilibili.App.Dynamic.V2;
 using BiliLite.Extensions;
 using BiliLite.Models.Common;

@@ -1,7 +1,10 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
+using BiliLite.Services;
+using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Config;
+using NLog.Extensions.Logging;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -9,8 +12,6 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
 using LogLevel = NLog.LogLevel;
 
 namespace BiliLite.Services
@@ -30,10 +31,7 @@ namespace BiliLite.Services
         {
             get
             {
-                return LoggerFactory.Create(logging =>
-                {
-                    logging.AddNLog(config);
-                });
+                return new CustomLoggerFactory();
             }
         }
 
@@ -139,6 +137,88 @@ namespace BiliLite.Services
             logEvent.Properties["type"] = typeName;
             logEvent.Properties["method"] = methodName;
             logger.Log(logEvent);
+        }
+    }
+}
+
+
+public class CustomLoggerFactory : ILoggerFactory
+{
+    public void AddProvider(ILoggerProvider provider)
+    {
+    }
+
+    public Microsoft.Extensions.Logging.ILogger CreateLogger(string categoryName)
+    {
+        return new CustomLogger();
+    }
+
+    public void Dispose()
+    {
+    }
+}
+
+public class CustomLogger : Microsoft.Extensions.Logging.ILogger
+{
+    private static readonly BiliLite.Services.ILogger _logger = GlobalLogger.FromCurrentType();
+
+    public IDisposable? BeginScope<TState>(TState state) where TState : notnull
+    {
+        return NullScope.Instance;
+    }
+
+    public bool IsEnabled(Microsoft.Extensions.Logging.LogLevel logLevel)
+    {
+        return true;
+    }
+
+    public void Log<TState>(Microsoft.Extensions.Logging.LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+    {
+        if (formatter == null)
+            throw new ArgumentNullException(nameof(formatter));
+
+        var message = formatter(state, exception);
+        if (string.IsNullOrEmpty(message) && exception == null)
+            return;
+
+        // 映射到自定义日志级别
+        switch (logLevel)
+        {
+            case Microsoft.Extensions.Logging.LogLevel.Trace:
+                _logger.Trace(message, exception);
+                break;
+            case Microsoft.Extensions.Logging.LogLevel.Debug:
+                _logger.Debug(message, exception);
+                break;
+            case Microsoft.Extensions.Logging.LogLevel.Information:
+                _logger.Info(message, exception);
+                break;
+            case Microsoft.Extensions.Logging.LogLevel.Warning:
+                _logger.Warn(message, exception);
+                break;
+            case Microsoft.Extensions.Logging.LogLevel.Error:
+                _logger.Error(message, exception);
+                break;
+            case Microsoft.Extensions.Logging.LogLevel.Critical:
+                _logger.Fatal(message, exception);
+                break;
+            case Microsoft.Extensions.Logging.LogLevel.None:
+                // 不记录
+                break;
+            default:
+                _logger.Log(message, LogType.Info, exception);
+                break;
+
+        }
+    }
+
+    private class NullScope : IDisposable
+    {
+        public static NullScope Instance { get; } = new NullScope();
+
+        public void Dispose()
+        {
+            // 空实现
         }
     }
 }
