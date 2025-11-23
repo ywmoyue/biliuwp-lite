@@ -12,11 +12,6 @@ on:
         required: true
         default: true
         type: boolean
-      enableX64Native:
-        description: "启用x64Native"
-        required: true
-        default: true
-        type: boolean
       enableX86:
         description: "启用x86"
         required: true
@@ -44,8 +39,8 @@ jobs:
       SigningCertificate: BiliLite.UWP_TemporaryKey.pfx
       SigningCertificatePasswd: ${{ secrets.SIGNING_CERTIFICATE_PASSWD }}
       Solution_Path: .\BiliLite.sln
-      AppName: BiliLite.Packages
-      UWP_Project_Directory: src\BiliLite.Packages
+      AppName: BiliLite.UWP
+      UWP_Project_Directory: src\BiliLite.UWP
       UWP_Project_Path: src\BiliLite.UWP\BiliLite.UWP.csproj
       UWP_X64_Native_Project_Path: src\BiliLite.UWP\BiliLite.UWP.csproj.native
       Win32_Project_Path: src\BiliLite.Win32Tools\BiliLite.Win32Tools.csproj
@@ -128,7 +123,7 @@ jobs:
 
       - name: Build x64
         run: |
-          msbuild $env:UWP_Project_Directory /p:Platform=x64 /p:Configuration=Release /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=$env:SigningCertificatePasswd  /restore
+          msbuild $env:UWP_Project_Directory /p:Platform=x64 /p:Configuration=Release /p:GenerateAppxPackageOnBuild=true /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=$env:SigningCertificatePasswd  /restore
         env:
           BuildMode: SideloadOnly
           Configuration: Release
@@ -162,61 +157,6 @@ jobs:
           asset_name: ${{env.AppName}}_${{github.event.inputs.version}}_x64.zip
           asset_content_type: application/zip
 
-      - name: Check if x64 native asset exists
-        id: check-x64-native-asset
-        run: |
-          $assetName = "${{env.AppName}}_${{github.event.inputs.version}}_x64_native.zip"
-          $releaseAssets = gh api repos/${{ github.repository }}/releases/${{ steps.release-drafter.outputs.id }}  | jq --arg name "$assetName" '.assets[] | select(.name == $name)'
-          if ($releaseAssets) {
-            echo "x64 native asset already exists, skipping build"
-            echo "SKIP_BUILD_NATIVE=true" >> $env:GITHUB_ENV
-          } else {
-            echo "x64 native asset not found, proceeding with build"
-            echo "SKIP_BUILD_NATIVE=false" >> $env:GITHUB_ENV
-          }
-        if: github.event.inputs.enableX64Native == 'true'
-
-      - name: Set x64 native
-        run: |
-          ./scripts/setNative.ps1 -csprojPath $env:UWP_Project_Path
-        if: github.event.inputs.enableX64Native == 'true' && env.SKIP_BUILD_NATIVE == 'false'
-
-      - name: Build x64 native
-        run: |
-          msbuild $env:UWP_Project_Directory /p:Platform=x64 /p:Configuration=Release /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=$env:SigningCertificatePasswd  /restore /p:Use64BitCompiler=true
-        env:
-          BuildMode: SideloadOnly
-          Configuration: Release
-        if: github.event.inputs.enableX64Native == 'true' && env.SKIP_BUILD_NATIVE == 'false'
-
-      - name: copy x64 native document
-        run: cp C:\Package\安装教程.pdf ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x64_Test\安装教程.pdf
-        if: github.event.inputs.enableX64Native == 'true' && env.SKIP_BUILD_NATIVE == 'false'
-
-      - name: Remove x64 native useless files
-        run: |
-          cd ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x64_Test
-          rm -r -fo *.appxsym
-          cd Dependencies
-          rm -r -fo arm,arm64,x86
-        if: github.event.inputs.enableX64Native == 'true' && env.SKIP_BUILD_NATIVE == 'false'
-
-      - name: Create x64 native archive
-        run: Compress-Archive -Path ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x64_Test -DestinationPath C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x64_native.zip
-        if: github.event.inputs.enableX64Native == 'true' && env.SKIP_BUILD_NATIVE == 'false'
-
-      - name: Update x64 native release asset
-        id: upload-release-asset-x64-native
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: github.event.inputs.enableX64Native == 'true' && env.SKIP_BUILD_NATIVE == 'false'
-        with:
-          upload_url: ${{ steps.release-drafter.outputs.upload_url }}
-          asset_path: C:\Package\${{env.AppName}}_${{github.event.inputs.version}}_x64_native.zip
-          asset_name: ${{env.AppName}}_${{github.event.inputs.version}}_x64_native.zip
-          asset_content_type: application/zip
-
       - name: Check if x86 asset exists
         id: check-x86-asset
         run: |
@@ -232,7 +172,7 @@ jobs:
         if: github.event.inputs.enableX86 == 'true'
 
       - name: Build x86
-        run: msbuild $env:UWP_Project_Directory /p:Platform=x86 /p:Configuration=Release /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=$env:SigningCertificatePasswd  /restore
+        run: msbuild $env:UWP_Project_Directory /p:Platform=x86 /p:Configuration=Release /p:GenerateAppxPackageOnBuild=true /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=$env:SigningCertificatePasswd  /restore
         if: github.event.inputs.enableX86 == 'true' && env.SKIP_BUILD_X86 == 'false'
         env:
           BuildMode: SideloadOnly
@@ -281,7 +221,7 @@ jobs:
         if: github.event.inputs.enableArm64 == 'true'
 
       - name: Build ARM64
-        run: msbuild $env:UWP_Project_Directory /p:Platform=ARM64 /p:Configuration=Release /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=$env:SigningCertificatePasswd  /restore
+        run: msbuild $env:UWP_Project_Directory /p:Platform=ARM64 /p:Configuration=Release /p:GenerateAppxPackageOnBuild=true /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=$env:SigningCertificatePasswd  /restore
         if: github.event.inputs.enableArm64 == 'true' && env.SKIP_BUILD_ARM64 == 'false'
         env:
           BuildMode: SideloadOnly
@@ -329,7 +269,7 @@ jobs:
         if: github.event.inputs.enableArm32 == 'true'
 
       - name: Build ARM32
-        run: msbuild $env:UWP_Project_Directory /p:Platform=ARM /p:Configuration=Release /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=$env:SigningCertificatePasswd  /restore
+        run: msbuild $env:UWP_Project_Directory /p:Platform=ARM /p:Configuration=Release /p:GenerateAppxPackageOnBuild=true /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=$env:SigningCertificatePasswd  /restore
         if: github.event.inputs.enableArm32 == 'true' && env.SKIP_BUILD_ARM32 == 'false'
         env:
           BuildMode: SideloadOnly
