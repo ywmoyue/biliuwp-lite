@@ -85,6 +85,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BiliLite.gRPC\BiliLite.gRPC.csproj" />
     <ProjectReference Include="..\BiliLite.JSBridge.WinUI\BiliLite.JSBridge.WinUI.csproj" />
+    <ProjectReference Include="..\BiliLite.VideoExporter\BiliLite.VideoExporter.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\MessageDialogWindow.xaml">

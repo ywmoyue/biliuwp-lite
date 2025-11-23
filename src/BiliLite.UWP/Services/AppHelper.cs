@@ -2,6 +2,7 @@
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Home;
 using BiliLite.Models.Requests.Api;
+using BiliLite.VideoExporter;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -89,16 +90,9 @@ namespace BiliLite.Services
             });
             logger.Debug("videoConverterInfo: " + videoConverterInfo);
             ApplicationData.Current.LocalSettings.Values["VideoConverterInfo"] = videoConverterInfo;
-
-            var path = Path.Combine(AppContext.BaseDirectory, "../BiliLite.Win32Tools/BiliLite.Win32Tools.exe");
-
-            var processStartInfo = new ProcessStartInfo
-            {
-                FileName = path,
-                UseShellExecute = true
-            };
-
-            Process.Start(processStartInfo);
+            var exporterWindow = new VideoExporterWindow();
+            exporterWindow.Activate();
+            exporterWindow.Start();
         }
     }
 }

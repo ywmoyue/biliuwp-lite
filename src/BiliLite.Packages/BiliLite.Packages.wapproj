@@ -164,6 +164,5 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BiliLite.UWP\BiliLite.UWP.csproj" />
-    <ProjectReference Include="..\BiliLite.Win32Tools\BiliLite.Win32Tools.csproj" />
   </ItemGroup>
 </Project>
