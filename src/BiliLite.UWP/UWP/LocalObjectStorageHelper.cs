@@ -15,7 +15,7 @@ public class LocalObjectStorageHelper
         var filePath = Path.Combine(AppContext.BaseDirectory, fileName);
         var extension = Path.GetExtension(fileName).ToLowerInvariant();
 
-        m_storage = new TomlObjectStorageHelper();
+        m_storage = new ApplicationDataObjectStorageHelper();
         //m_storage = new DbContextObjectStorageHelper();
     }
 
