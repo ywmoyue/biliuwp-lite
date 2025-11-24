@@ -1,4 +1,4 @@
-﻿using MapsterMapper;
+﻿using AutoMapper;
 using Bilibili.App.Dynamic.V2;
 using BiliLite.Controls.Dialogs;
 using BiliLite.Extensions;

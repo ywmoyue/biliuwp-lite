@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using MapsterMapper;
+using AutoMapper;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Settings;
 using BiliLite.Services;

@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using MapsterMapper;
+using AutoMapper;
 using BiliLite.Models.Common.Home;
 using BiliLite.Modules;
 using BiliLite.Services;

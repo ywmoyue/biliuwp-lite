@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MapsterMapper;
+using AutoMapper;
 using BiliLite.Extensions;
 using BiliLite.Models.Common.Video;
 using BiliLite.Models.Requests.Api;

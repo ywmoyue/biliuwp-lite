@@ -1,4 +1,4 @@
-﻿using MapsterMapper;
+﻿using AutoMapper;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Functions;
@@ -140,8 +140,8 @@ namespace BiliLite.Services
                                 {
                                     var page = m_mainPage.CurrentPage;
                                     _logger.Trace("keyPressAction: " + shortcutKeyFunction.GetType().ToString());
-                                    window.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal,
-                                        () => { shortcutKeyFunction.Action(page); });
+                                    window.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, 
+                                        () => { shortcutKeyFunction.Action(page); }); 
                                 }
                             }
                             catch (Exception ex)

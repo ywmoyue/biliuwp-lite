@@ -8,7 +8,7 @@ using BiliLite.ViewModels.Common;
 using PropertyChanged;
 using System.Threading;
 using Windows.Networking.BackgroundTransfer;
-using MapsterMapper;
+using AutoMapper;
 using BiliLite.Models.Common;
 using BiliLite.Models.Attributes;
 

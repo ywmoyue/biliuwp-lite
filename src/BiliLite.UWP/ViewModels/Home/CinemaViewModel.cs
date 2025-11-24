@@ -1,4 +1,4 @@
-﻿using MapsterMapper;
+﻿using AutoMapper;
 using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
@@ -142,7 +142,7 @@ namespace BiliLite.ViewModels.Home
 
         #region Private Methods
 
-        private async Task SeasonItemOpen(object sender, object seasonId, string title, string link, bool dontGoTo = false)
+        private async Task SeasonItemOpen(object sender, object seasonId, string title,string link, bool dontGoTo = false)
         {
             if (seasonId == null) return;
             if (seasonId != null && seasonId.ToInt32() != 0)
