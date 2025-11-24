@@ -130,9 +130,13 @@ namespace BiliLite
         /// <param name="args">有关启动请求和过程的详细信息。</param>
         protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
+            var splashWindow = new SplashWindow();
+            splashWindow.Activate();
+
             _window = new MainWindow();
             await Navigation(args.Arguments, false);
             _window.Activate();
+            splashWindow.Close();
 
             await LogService.DeleteExpiredLogFile();
 

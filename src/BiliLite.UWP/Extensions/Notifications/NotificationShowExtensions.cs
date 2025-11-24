@@ -16,6 +16,7 @@ using Windows.System;
 using Windows.UI.Notifications;
 using Windows.UI.Popups;
 using MessageDialog = BiliLite.Controls.Dialogs.MessageDialog;
+using BiliLite.Models.Common;
 // using Windows.UI.Popups;
 
 namespace BiliLite.Extensions.Notifications
@@ -99,6 +100,12 @@ namespace BiliLite.Extensions.Notifications
 
         public static void ShowMessageToast(string message, int seconds = 2)
         {
+            var displayMode = SettingService.GetValue<int>(SettingConstants.UI.DISPLAY_MODE, 0);
+            if (displayMode == 0)
+            {
+                ShowMessageToastV2(App.MainWindow.Content as WindowFrame, message, seconds);
+                return;
+            }
             AppNotification notification = new AppNotificationBuilder()
                 .AddText(message)
                 .BuildNotification();

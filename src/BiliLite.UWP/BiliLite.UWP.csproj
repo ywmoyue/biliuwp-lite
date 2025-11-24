@@ -18,6 +18,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Controls\MessageDialogWindow.xaml" />
+    <None Remove="SplashWindow.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,6 +44,7 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="CommunityToolkit.Labs.WinUI.Controls.MarkdownTextBlock" Version="0.1.251030-build.2370" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.ColorPicker" Version="8.1.240916" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.250402" />
@@ -86,6 +88,11 @@
     <ProjectReference Include="..\BiliLite.gRPC\BiliLite.gRPC.csproj" />
     <ProjectReference Include="..\BiliLite.JSBridge.WinUI\BiliLite.JSBridge.WinUI.csproj" />
     <ProjectReference Include="..\BiliLite.VideoExporter\BiliLite.VideoExporter.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="SplashWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\MessageDialogWindow.xaml">
