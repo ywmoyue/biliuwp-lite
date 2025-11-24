@@ -82,6 +82,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set up .NET
+        uses: xt0rted/setup-dotnet@v1.0.0
+        with:
+          dotnet-version: |
+            8.0.416
+            9.0.306
+
       - name: Setup MSBuild.exe
         uses: microsoft/setup-msbuild@v1.0.3
 
@@ -138,7 +145,7 @@ jobs:
           cd ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x64_Test
           rm -r -fo *.appxsym
           cd Dependencies
-          rm -r -fo arm,arm64,x86
+          rm -r -fo arm64,x86
         if: github.event.inputs.enableX64 == 'true' && env.SKIP_BUILD == 'false'
 
       - name: Create x64 archive
@@ -187,7 +194,7 @@ jobs:
           cd ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_x86_Test
           rm -r -fo *.appxsym
           cd Dependencies
-          rm -r -fo arm,arm64,x64
+          rm -r -fo arm64,x64
         if: github.event.inputs.enableX86 == 'true' && env.SKIP_BUILD_X86 == 'false'
 
       - name: Create x86 archive
@@ -236,7 +243,7 @@ jobs:
           cd ${{env.UWP_Project_Directory}}\AppPackages\${{env.AppName}}_${{github.event.inputs.version}}_ARM64_Test
           rm -r -fo *.appxsym
           cd Dependencies
-          rm -r -fo arm,x64,x86
+          rm -r -fo x64,x86
         if: github.event.inputs.enableArm64 == 'true' && env.SKIP_BUILD_ARM64 == 'false'
 
       - name: Create ARM64 archive
