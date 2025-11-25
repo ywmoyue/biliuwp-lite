@@ -260,12 +260,15 @@ namespace BiliLite.Modules
             }
         }
 
-        public async Task LoadSponsorBlock(string bvid)
+        public void LoadSponsorBlock(string bvid)
         {
             if (m_sponsorBlockService == null) return;
             if (SettingService.GetValue(SettingConstants.Player.SPONSOR_BLOCK, SettingConstants.Player.DEFAULT_SPONSOR_BLOCK))
             {
-                await m_sponsorBlockService?.LoadSponsorBlock(bvid);
+                Task.Run(async () =>
+                {
+                    await m_sponsorBlockService?.LoadSponsorBlock(bvid);
+                });
             }
         }
 
@@ -362,7 +365,7 @@ namespace BiliLite.Modules
 
                 await LoadVideoTags(data.data.Aid);
 
-                await LoadSponsorBlock(data.data.Bvid);
+                LoadSponsorBlock(data.data.Bvid);
             }
             catch (Exception ex)
             {
