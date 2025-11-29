@@ -271,8 +271,15 @@ namespace BiliLite.Services
             if (video != "")
             {
                 var mediaListService = App.ServiceProvider.GetRequiredService<MediaListService>();
+                int pageType = 2;
+                try
+                {
+                    var pageTypeStr = StringExtensions.RegexMatch(url, @"bilibili://music/playlist/playpage/.*page_type=(\d+)"); 
+                    pageType = int.Parse(pageTypeStr);
+                }
+                catch { }
 
-                var mediaList = await mediaListService.GetMediaList(video);
+                var mediaList = await mediaListService.GetMediaList(video, pageType);
 
                 if (mediaList == null)
                 {
@@ -304,6 +311,7 @@ namespace BiliLite.Services
                         Playlist = items,
                         Title = $"合集视频",
                         MediaListId = video,
+                        MediaListType = pageType,
                         IsOnlineMediaList = true,
                         Info = $"共{mediaList.TotalCount}集"
                     },

@@ -30,6 +30,8 @@ public abstract class BaseWebPlayer : Grid, IDisposable
     private string m_localVideoLibsPath;
     private string m_localOldVideoLibsPath;
 
+    private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
+
     public BaseWebPlayer()
     {
         m_gridElement = this;
@@ -74,12 +76,21 @@ public abstract class BaseWebPlayer : Grid, IDisposable
         // 挂载下载目录
         if (m_localVideoLibsPath != null)
         {
-            WebViewElement.CoreWebView2.SetVirtualHostNameToFolderMapping("videolibs.bililte.service",
-                m_localVideoLibsPath,
-                CoreWebView2HostResourceAccessKind.Allow);
-            WebViewElement.CoreWebView2.SetVirtualHostNameToFolderMapping("oldvideolibs.bililte.service",
-                m_localOldVideoLibsPath,
-                CoreWebView2HostResourceAccessKind.Allow);
+            _logger.Info($"挂载下载目录：{m_localVideoLibsPath},{m_localOldVideoLibsPath}");
+            try
+            {
+                WebViewElement.CoreWebView2.SetVirtualHostNameToFolderMapping("videolibs.bililte.service",
+                    m_localVideoLibsPath,
+                    CoreWebView2HostResourceAccessKind.Allow);
+                WebViewElement.CoreWebView2.SetVirtualHostNameToFolderMapping("oldvideolibs.bililte.service",
+                    m_localOldVideoLibsPath,
+                    CoreWebView2HostResourceAccessKind.Allow);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"挂载下载目录失败", ex);
+                throw new Exception("挂载下载目录失败");
+            }
         }
 
         // 挂载临时目录

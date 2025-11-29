@@ -148,16 +148,28 @@ namespace BiliLite.Models.Requests.Api
             return api;
         }
 
-        public ApiModel GetMediaList(string medisListId, string lastAid, int pagesize = 20)
+        public ApiModel GetMediaList(string medisListId, string lastAid, int typeId = 1, int pagesize = 20)
         {
             var api = new ApiModel()
             {
                 method = HttpMethods.Get,
                 baseUrl = $"https://api.bilibili.com/x/v2/medialist/resource/list",
                 parameter =
-                    $"{ApiHelper.MustParameter(AppKey, true)}&type=1&biz_id={medisListId}&oid={lastAid}&otype=2&ps={pagesize}&direction=false&desc=true&sort_field=1&tid=0&with_current=false",
+                    $"{ApiHelper.MustParameter(AppKey, true)}&type={typeId}&biz_id={medisListId}&oid={lastAid}&otype=2&ps={pagesize}&direction=false&desc=true&sort_field=1&tid=0&with_current=false",
             };
             api.parameter += ApiHelper.GetSign(api.parameter, AppKey);
+            return api;
+        }
+
+        public ApiModel GetMediaListNotLogin(string medisListId, string lastAid, int typeId = 1, int pagesize = 20)
+        {
+            var api = new ApiModel()
+            {
+                method = HttpMethods.Get,
+                baseUrl = $"https://api.bilibili.com/x/v2/medialist/resource/list",
+                parameter =
+                    $"type={typeId}&biz_id={medisListId}&oid={lastAid}&otype=2&ps={pagesize}&direction=false&desc=true&sort_field=1&tid=0&with_current=false",
+            };
             return api;
         }
     }

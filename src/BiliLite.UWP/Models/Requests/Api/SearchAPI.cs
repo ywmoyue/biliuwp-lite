@@ -3,6 +3,7 @@ using BiliLite.Services;
 using System;
 using System.Collections.Generic;
 using BiliLite.Models.Common;
+using System.Threading.Tasks;
 
 namespace BiliLite.Models.Requests.Api
 {
@@ -43,7 +44,7 @@ namespace BiliLite.Models.Requests.Api
             return api;
         }
 
-        public ApiModel WebSearchVideo(string keyword, int pn = 1, string order = "", string duration = "", string region = "0", string area = "")
+        public async Task<ApiModel> WebSearchVideo(string keyword, int pn = 1, string order = "", string duration = "", string region = "0", string area = "")
         {
             var baseUrl = ApiHelper.API_BASE_URL;
             if (!string.IsNullOrEmpty(area))
@@ -54,7 +55,7 @@ namespace BiliLite.Models.Requests.Api
             {
                 method = HttpMethods.Get,
                 need_cookie = true,
-                baseUrl = $"{baseUrl}/x/web-interface/search/type",
+                baseUrl = $"{baseUrl}/x/web-interface/wbi/search/type",
                 parameter = $"context=&search_type=video&page={pn}&order={order}&keyword={Uri.EscapeDataString(keyword)}&duration={duration}&category_id=&tids_2=&__refresh__=true&tids={region}&highlight=1&single_column=0"
             };
             if (!string.IsNullOrEmpty(area))
@@ -62,6 +63,8 @@ namespace BiliLite.Models.Requests.Api
                 api.parameter += $"&area={area}";
                 api.ExtraCookies = new Dictionary<string, string>() { { "buvid3", "temp" } };
             }
+
+            api.parameter = await ApiHelper.GetWbiSign(api.parameter);
             return api;
         }
         public ApiModel WebSearchAnime(string keyword, int pn = 1, string area = "")
