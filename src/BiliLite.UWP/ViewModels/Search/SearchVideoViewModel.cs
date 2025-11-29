@@ -96,7 +96,8 @@ namespace BiliLite.ViewModels.Search
                 ShowLoadMore = false;
                 Loading = true;
                 Nothing = false;
-                var results = await SearchApi.WebSearchVideo(Keyword, Page, SelectOrder.value, SelectDuration.value, SelectRegion.value, Area).Request();
+                var api = await SearchApi.WebSearchVideo(Keyword, Page, SelectOrder.value, SelectDuration.value, SelectRegion.value, Area);
+                var results = await api.Request();
                 if (!results.status)
                 {
                     throw new CustomizedErrorException(results.message);

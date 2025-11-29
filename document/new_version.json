@@ -1,7 +1,7 @@
 {
-  "version": "4.8.8",
-  "version_num": 40808,
-  "version_desc": "更新内容:\r\n\r\n- 播放器中添加查看弹幕列表功能，支持复制、点赞、屏蔽用户操作  \r\n\r\n- 支持设置播放器部分控件使用滑块或组合框，部分控件默认变更为组合框 \r\n\r\n- 发评反诈弹窗添加打开浏览器手动申诉按钮 \r\n\r\n- 修复 Win10 列表选中项高亮样式 \r\n\r\n- 修复连续自动播放分p视频失效 \r\n\r\n- 播放器控件部分初始化代码顺序调整 \r\n\r\n- 文章阅读器样式错误 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.8.9",
+  "version_num": 40809,
+  "version_desc": "更新内容:\r\n\r\n- 支持播放中调整弹幕偏移 \r\n\r\n- 支持将直播中心添加到首页 \r\n\r\n- 支持打开直播回放合集的url  \r\n\r\n- 历史记录、直播、直播中心、放映厅里的视频或直播支持点击鼠标中键打开视频但不进入 \r\n\r\n- 支持使用WebPlayer播放已下载视频 \r\n\r\n- 播放页标签添加播放暂停控制按钮 \r\n\r\n- 新开标签页改为在当前标签页的后面 \r\n\r\n- 搜索页和视频详情页更新保存的标签页 \r\n\r\n- 修复查看弹幕列表与播放器中其他扩展按钮冲突 \r\n\r\n- 优化关闭标签页交互业务 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
