@@ -259,9 +259,9 @@ namespace BiliLite.Modules.User
             }
         }
 
-        private async void SmsTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void SmsTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            App.MainWindow.DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
             {
                 if (SMSCountDown <= 1)
                 {
@@ -666,9 +666,9 @@ namespace BiliLite.Modules.User
         }
 
 
-        private async void QrTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void QrTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            App.MainWindow.DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
             {
                 var result = await account.PollQRAuthInfoTV(qrAuthInfo.auth_code, ApiHelper.IPadOsKey);
                 if (result.status == LoginStatus.Success)
