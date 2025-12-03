@@ -84,6 +84,16 @@ namespace BiliLite.Controls.Settings
                 };
             };
 
+            //单窗口模式保持页面数量
+            NumberSingleWindowKeepPageCount.Value = SettingService.GetValue(SettingConstants.UI.SINGLE_WINDOW_KEEP_PAGE_COUNT, SettingConstants.UI.DEFAULT_SINGLE_WINDOW_KEEP_PAGE_COUNT);
+            NumberSingleWindowKeepPageCount.Loaded += (_, _) =>
+            {
+                NumberSingleWindowKeepPageCount.ValueChanged += (_, _) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.SINGLE_WINDOW_KEEP_PAGE_COUNT, (int)NumberSingleWindowKeepPageCount.Value);
+                };
+            };
+
             //浏览器打开无法处理的链接
             swOpenUrlWithBrowser.IsOn = SettingService.GetValue<bool>(SettingConstants.UI.OPEN_INTEGRAL_BROWSER, true);
             swOpenUrlWithBrowser.Loaded += new RoutedEventHandler((sender, e) =>
