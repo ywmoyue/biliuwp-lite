@@ -147,6 +147,7 @@
     <Compile Include="Controls\Common\DanmakuListControl.xaml.cs">
       <DependentUpon>DanmakuListControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\FakeFrame.cs" />
     <Compile Include="ViewModels\Common\DanmakuListViewModel.cs" />
     <Compile Include="Models\Common\Danmaku\DanmakuSimpleItem.cs" />
     <Compile Include="Controls\Common\PieControl.xaml.cs">
