@@ -39,6 +39,7 @@
             Background="Transparent">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Button
@@ -55,9 +56,24 @@
                     FontSize="14"
                     Glyph="&#xE0A6;" />
             </Button>
+            <Button
+        x:Name="btnHome"
+        Grid.Column="1"
+        Width="48"
+        Height="40"
+        Margin="0,-4"
+        Background="Transparent"
+        BorderThickness="0"
+        Click="btnHome_Click"
+        Visibility="Collapsed">
+                <FontIcon
+            FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+            FontSize="14"
+            Glyph="&#xE10F;" />
+            </Button>
             <Border
                 x:Name="TitleBar"
-                Grid.Column="1"
+                Grid.Column="2"
                 Background="Transparent">
                 <TextBlock
                     x:Name="txtTitle"
