@@ -118,7 +118,15 @@ namespace BiliLite
             if (e.Content is Pages.HomePage)
             {
                 txtTitle.Text = "哔哩哔哩 UWP";
+                // 在主页时隐藏返回主页按钮
+                btnHome.Visibility = Visibility.Collapsed;
             }
+            else
+            {
+                // 不在主页时显示返回主页按钮（仅在单窗口模式）
+                btnHome.Visibility = mode == 1 ? Visibility.Visible : Visibility.Collapsed;
+            }
+
             if (e.Content is Pages.BasePage && e.NavigationMode != NavigationMode.Back)
             {
                 var title = (e.Content as BasePage).Title;
@@ -133,7 +141,6 @@ namespace BiliLite
             {
                 btnBack.Visibility = Visibility.Collapsed;
             }
-
         }
         private int mode = 1;
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -189,6 +196,26 @@ namespace BiliLite
                     page.ScrollRecover();
                 }
             }
+        }
+
+        private async void btnHome_Click(object sender, RoutedEventArgs e)
+        {
+            // 如果打开了图片浏览，则关闭图片浏览
+            if (gridViewer.Visibility == Visibility.Visible)
+            {
+                imgViewer_CloseEvent(this, null);
+                return;
+            }
+
+            // 回到主页
+            while (frame.CanGoBack || (frame as NewInstanceFrame).Children.Count > 1)
+            {
+                await (frame as NewInstanceFrame).GoBack();
+            }
+
+            // 清空标题堆栈
+            m_titleStack.Clear();
+            txtTitle.Text = "哔哩哔哩 UWP";
         }
 
         private async void OpenNewWindow(NavigationInfo e)
@@ -253,6 +280,7 @@ namespace BiliLite
         private void NoTabMainPage_OnLoaded(object sender, RoutedEventArgs e)
         {
             frame.Navigate(typeof(Pages.HomePage));
+            btnHome.Visibility = Visibility.Collapsed;
             MainPageLoaded?.Invoke(this, EventArgs.Empty);
         }
     }
@@ -373,7 +401,7 @@ namespace BiliLite
             }
         }
 
-        public async void GoBack()
+        public async Task GoBack()
         {
             var frame = this.Children.Last() as MyFrame;
 
