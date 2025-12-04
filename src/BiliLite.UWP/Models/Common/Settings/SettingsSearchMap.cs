@@ -87,6 +87,7 @@ namespace BiliLite.Models.Common.Settings
             { "使用内置浏览器", "PerformanceSettings:swOpenUrlWithBrowser" },
             { "恢复未关闭的页面", "PerformanceSettings:SwitchOpenLastPage" },
             { "需要恢复的数量", "PerformanceSettings:NumberOpenLastPageCount" },
+            { "单窗口模式保持页面数量", "PerformanceSettings:NumberSingleWindowKeepPageCount" },
             { "每次滚动加载更多数据", "PerformanceSettings:NumberScrollViewLoadMoreBottomOffset" },
 
             // Proxy Settings
