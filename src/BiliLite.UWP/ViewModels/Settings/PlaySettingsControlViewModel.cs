@@ -6,6 +6,7 @@ using BiliLite.Models.Common;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using Flurl.Http;
+using PropertyChanged;
 
 namespace BiliLite.ViewModels.Settings
 {
@@ -24,6 +25,7 @@ namespace BiliLite.ViewModels.Settings
                 new CDNServerItemViewModel("cn-hk-eq-bcache-01.bilivideo.com","香港"),
                 new CDNServerItemViewModel("cn-hk-eq-bcache-16.bilivideo.com","香港"),
                 new CDNServerItemViewModel("upos-hz-mirrorakam.akamaized.net","Akamaized"),
+                new CDNServerItemViewModel("","自定义服务器"),
             };
             FFmpegInteropXOptions = SettingService
                 .GetValue(SettingConstants.Player.FFMPEG_INTEROP_X_OPTIONS, "");
@@ -33,6 +35,13 @@ namespace BiliLite.ViewModels.Settings
 
         public string FFmpegInteropXOptions { get; set; }
 
+        public bool ShowCustomCDNTimeOut => CustomCDNDelay < 0;
+
+        public bool ShowCustomCDNDelay => CustomCDNDelay > 0;
+
+        [AlsoNotifyFor(nameof(ShowCustomCDNDelay),nameof(ShowCustomCDNTimeOut))]
+        public long CustomCDNDelay { get; set; }
+
         /// <summary>
         /// CDN延迟测试
         /// </summary>
@@ -40,9 +49,19 @@ namespace BiliLite.ViewModels.Settings
         {
             foreach (var item in CDNServers)
             {
+                if (item.Server == "") continue;
                 var time = await GetDelay(item.Server);
                 item.Delay = time;
             }
+        }
+
+        /// <summary>
+        /// CDN延迟测试
+        /// </summary>
+        public async void CustomCDNServerDelayTest(string url)
+        {
+            var time = await GetDelay(url);
+            CustomCDNDelay = time;
         }
 
         private async Task<long> GetDelay(string server)

@@ -1380,6 +1380,12 @@ namespace BiliLite.Models.Common
             [SettingKey]
             public const string CDN_SERVER = "PlayerCDNServer";
 
+            /// <summary>
+            /// 使用自定义 CDN 服务器
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string USE_CUSTOM_CDN_SERVER = "UseCustomPlayerCDNServer";
+
             ///// <summary>
             ///// 只使用AkamaiCDN链接
             ///// </summary>
