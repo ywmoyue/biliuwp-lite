@@ -125,16 +125,45 @@ namespace BiliLite.Controls.Settings
             //CDN服务器
             var cdnServer = SettingService.GetValue<string>(SettingConstants.Roaming.CDN_SERVER,
                 "upos-sz-mirrorhwo1.bilivideo.com");
-            RoamingSettingCDNServer.SelectedIndex = m_viewModel.CDNServers.FindIndex(x => x.Server == cdnServer);
+            var useCustomCdnServer = SettingService.GetValue(SettingConstants.Roaming.USE_CUSTOM_CDN_SERVER, false);
+            if (!useCustomCdnServer)
+            {
+                RoamingSettingCDNServer.SelectedIndex = m_viewModel.CDNServers.FindIndex(x => x.Server == cdnServer);
+                RoamingSettingCustomCDNServerCard.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                RoamingSettingCDNServer.SelectedIndex = m_viewModel.CDNServers.FindIndex(x => x.Server == "");
+                RoamingSettingCustomCDNServerCard.Visibility = Visibility.Visible;
+            }
             RoamingSettingCDNServer.Loaded += new RoutedEventHandler((sender, e) =>
             {
                 RoamingSettingCDNServer.SelectionChanged += new SelectionChangedEventHandler((obj, args) =>
                 {
                     var server = m_viewModel.CDNServers[RoamingSettingCDNServer.SelectedIndex];
-                    SettingService.SetValue(SettingConstants.Roaming.CDN_SERVER, server.Server);
-
+                    if (server.Server == "")
+                    {
+                        RoamingSettingCustomCDNServerCard.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        RoamingSettingCustomCDNServerCard.Visibility = Visibility.Collapsed;
+                        SettingService.SetValue(SettingConstants.Roaming.USE_CUSTOM_CDN_SERVER, false);
+                        SettingService.SetValue(SettingConstants.Roaming.CDN_SERVER, server.Server);
+                    }
                 });
             });
+
+            RoamingSettingCustomCDNServer.Loaded += (_, _) =>
+            {
+                RoamingSettingCustomCDNServer.Text = cdnServer;
+                RoamingSettingCustomCDNServer.QuerySubmitted += (_, _) =>
+                {
+                    SettingService.SetValue(SettingConstants.Roaming.USE_CUSTOM_CDN_SERVER, true);
+                    SettingService.SetValue(SettingConstants.Roaming.CDN_SERVER, RoamingSettingCustomCDNServer.Text);
+                    NotificationShowExtensions.ShowMessageToast("已自定义CDN服务器");
+                };
+            };
         }
 
         private void RoamingSettingTestCDN_Click(object sender, RoutedEventArgs e)
@@ -165,6 +194,11 @@ namespace BiliLite.Controls.Settings
             SettingService.SetValue<string>(SettingConstants.Roaming.CUSTOM_SERVER_URL, text);
             sender.Text = text;
             NotificationShowExtensions.ShowMessageToast("保存成功");
+        }
+
+        private void RoamingSettingCustomCDNTest_Click(object sender, RoutedEventArgs e)
+        {
+            m_viewModel.CustomCDNServerDelayTest(RoamingSettingCustomCDNServer.Text);
         }
     }
 }
