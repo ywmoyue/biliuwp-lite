@@ -995,7 +995,7 @@ namespace BiliLite.ViewModels.Live
             catch (Exception ex)
             {
                 var result = HandelError<object>(ex);
-                NotificationShowExtensions.ShowMessageToast(ex.Message);
+                //NotificationShowExtensions.ShowMessageToast(ex.Message);
             }
         }
 

@@ -86,5 +86,14 @@
                 Maximum="1080"
                 Minimum="0" />
         </controls:SettingsCard>
+
+        <controls:SettingsCard Description="重启生效, 打开超过这个数量的页面后之前的页面将被销毁，返回被销毁的页面时将重新加载" Header="单窗口模式保持页面数量"
+            HeaderIcon="Page2">
+            <controls1:NumberBox
+                x:Name="NumberSingleWindowKeepPageCount"
+                MinWidth="200"
+                Maximum="999"
+                Minimum="1" />
+        </controls:SettingsCard>
     </StackPanel>
 </UserControl>

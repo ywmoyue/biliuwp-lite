@@ -398,6 +398,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const bool DEFAULT_DISPLAY_LINK_SOURCE = false;
+
+            /// <summary>
+            /// 单窗口模式保持页面数量，超出释放
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const string SINGLE_WINDOW_KEEP_PAGE_COUNT = "SingleWindowKeepPageCount";
+
+            /// <summary>
+            /// 单窗口模式保持页面数量默认10
+            /// </summary>
+            [SettingDefaultValue]
+            public const int DEFAULT_SINGLE_WINDOW_KEEP_PAGE_COUNT = 10;
         }
 
         public class Account
@@ -1361,6 +1373,12 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey]
             public const string CDN_SERVER = "PlayerCDNServer";
+
+            /// <summary>
+            /// 使用自定义 CDN 服务器
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string USE_CUSTOM_CDN_SERVER = "UseCustomPlayerCDNServer";
 
             ///// <summary>
             ///// 只使用AkamaiCDN链接
