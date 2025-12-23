@@ -31,10 +31,10 @@ namespace BiliLite.ViewModels.Search
                 ShowLoadMore = false;
                 Loading = true;
                 Nothing = false;
-                var api = SearchApi.WebSearchAnime(Keyword, Page, Area);
+                var api = await SearchApi.WebSearchAnime(Keyword, Page, Area);
                 if (this.SearchType == Models.Common.SearchType.Movie)
                 {
-                    api = SearchApi.WebSearchMovie(Keyword, Page, Area);
+                    api = await SearchApi.WebSearchMovie(Keyword, Page, Area);
                 }
                 var results = await api.Request();
                 if (results.status)
