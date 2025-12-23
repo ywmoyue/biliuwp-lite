@@ -142,6 +142,39 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                 </controls:SettingsCard>
+
+                <controls:SettingsCard x:Name="RoamingSettingCustomCDNServerCard" Header="自定义CDN服务器" Visibility="Collapsed">
+                    <StackPanel Orientation="Horizontal">
+                        <AutoSuggestBox
+                            x:Name="RoamingSettingCustomCDNServer"
+                            Width="260"
+                            HorizontalAlignment="Left"
+                            PlaceholderText="输入自定义CDN服务器地址"
+                            QueryIcon="Accept" />
+                        <Button x:Name="RoamingSettingCustomCDNTest" 
+                                Click="RoamingSettingCustomCDNTest_Click"
+                                Margin="10,0,0,0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock>测试延迟</TextBlock>
+
+                                <TextBlock Width="10" />
+                                <TextBlock
+            Margin="0,2,0,0"
+            FontSize="12"
+            Foreground="Red"
+            Visibility="{x:Bind m_viewModel.ShowCustomCDNTimeOut, Mode=OneWay}">
+            超时
+                                </TextBlock>
+                                <TextBlock
+            Margin="0,2,0,0"
+            FontSize="12"
+            Foreground="Green"
+            Visibility="{x:Bind m_viewModel.ShowCustomCDNDelay, Mode=OneWay}"><Run Text="{x:Bind m_viewModel.CustomCDNDelay, Mode=OneWay}" />
+            ms</TextBlock>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 

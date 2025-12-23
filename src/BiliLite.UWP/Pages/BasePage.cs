@@ -13,6 +13,7 @@ namespace BiliLite.Pages
     public class BasePage : Page
     {
         public string Title { get; set; }
+        public object NavigationParameter { get; set; }
         public BasePage()
         {
             this.NavigationCacheMode = (SettingService.GetValue<int>(SettingConstants.UI.DISPLAY_MODE, 0) == 1) ? Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled : Windows.UI.Xaml.Navigation.NavigationCacheMode.Disabled;
@@ -34,6 +35,7 @@ namespace BiliLite.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            NavigationParameter = e.Parameter;
             this.Visibility = Visibility.Visible;
         }
     }
