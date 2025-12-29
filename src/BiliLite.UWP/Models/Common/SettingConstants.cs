@@ -406,6 +406,18 @@ namespace BiliLite.Models.Common
             public const bool DEFAULT_DISPLAY_LINK_SOURCE = false;
 
             /// <summary>
+            /// 评论区字体大小
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const string COMMENT_FONT_SIZE = "CommentFontSize";
+
+            /// <summary>
+            /// 评论区默认字体大小
+            /// </summary>
+            [SettingDefaultValue]
+            public const int DEFAULT_COMMENT_FONT_SIZE = 14;
+
+            /// <summary>
             /// 单窗口模式保持页面数量，超出释放
             /// </summary>
             [SettingKey(typeof(int))]

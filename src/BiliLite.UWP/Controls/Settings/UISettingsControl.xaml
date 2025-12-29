@@ -479,6 +479,17 @@
                 <font:FontAwesome Icon="Solid_Comments" />
             </controls:SettingsExpander.HeaderIcon>
             <controls:SettingsExpander.Items>
+
+                <controls:SettingsCard Description="暂时无法处理评论中表情,重启应用生效" Header="评论区字体大小">
+                    <muxc:NumberBox
+                        x:Name="NumBoxCommentFontSize"
+                        Width="200"
+                        HorizontalAlignment="Left"
+                        Minimum="5"
+                        SmallChange="1"
+                        SpinButtonPlacementMode="Compact" />
+                </controls:SettingsCard>
+
                 <controls:SettingsCard Description="重新进入动态页面生效" Header="总宽度">
                     <muxc:NumberBox
                         x:Name="NumBoxDynamicCommentWidth"

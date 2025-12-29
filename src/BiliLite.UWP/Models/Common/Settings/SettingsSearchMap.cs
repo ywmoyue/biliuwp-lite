@@ -28,6 +28,7 @@ namespace BiliLite.Models.Common.Settings
             { "使用新窗口预览图片", "UISettings:swPreviewImageNavigateToPage:SEImagePre" },
             { "全屏化图片新窗口", "UISettings:swPreviewImageNavigateToPageFully:SEImagePre" },
             { "评论页", "UISettings:SEComment" },
+            { "评论区字体大小", "UISettings:NumBoxCommentFontSize:SEComment" },
             { "评论页总宽度", "UISettings:NumBoxDynamicCommentWidth:SEComment" },
             { "评论页文字折叠长度", "UISettings:swEnableCommentShrink:SEComment" },
             { "展示评论热门回复", "UISettings:swShowHotReplies:SEComment" },

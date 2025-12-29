@@ -13,6 +13,7 @@ using Windows.ApplicationModel.Background;
 using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using BiliLite.Extensions;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -186,6 +187,16 @@ namespace BiliLite.Controls.Settings
                 NumBoxDynamicCommentWidth.ValueChanged += (obj, args) =>
                 {
                     SettingService.SetValue(SettingConstants.UI.DYNAMIC_COMMENT_WIDTH, args.NewValue);
+                };
+            };
+
+            //评论区字体大小
+            NumBoxCommentFontSize.Value = SettingService.GetValue<int>(SettingConstants.UI.COMMENT_FONT_SIZE, SettingConstants.UI.DEFAULT_COMMENT_FONT_SIZE);
+            NumBoxCommentFontSize.Loaded += (sender, e) =>
+            {
+                NumBoxCommentFontSize.ValueChanged += (obj, args) =>
+                {
+                    SettingService.SetValue<int>(SettingConstants.UI.COMMENT_FONT_SIZE, args.NewValue.ToInt32());
                 };
             };
 
