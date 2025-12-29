@@ -189,6 +189,16 @@ namespace BiliLite.Controls.Settings
                 };
             };
 
+            //评论区字体大小
+            NumBoxCommentFontSize.Value = SettingService.GetValue<int>(SettingConstants.UI.COMMENT_FONT_SIZE, SettingConstants.UI.DEFAULT_COMMENT_FONT_SIZE);
+            NumBoxCommentFontSize.Loaded += (sender, e) =>
+            {
+                NumBoxCommentFontSize.ValueChanged += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.COMMENT_FONT_SIZE, args.NewValue);
+                };
+            };
+
             //动态磁贴
             SwitchTile.IsOn = SettingService.GetValue(SettingConstants.UI.ENABLE_NOTIFICATION_TILES, false);
             SwitchTile.Loaded += (sender, e) =>

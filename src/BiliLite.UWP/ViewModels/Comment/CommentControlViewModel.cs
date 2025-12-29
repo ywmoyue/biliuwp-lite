@@ -1,4 +1,6 @@
-﻿using BiliLite.ViewModels.Common;
+﻿using BiliLite.Models.Common;
+using BiliLite.Services;
+using BiliLite.ViewModels.Common;
 using PropertyChanged;
 using System.Collections.ObjectModel;
 using Windows.UI.Xaml;
@@ -40,5 +42,8 @@ namespace BiliLite.ViewModels.Comment
 
         [DependsOn(nameof(IsWideMode))]
         public Thickness ListViewCommentsPadding => IsWideMode ? new Thickness(0, 0, 12, 0) : new Thickness(0);
+
+        [DoNotNotify]
+        public static int CommentFontSize => SettingService.GetValue(SettingConstants.UI.COMMENT_FONT_SIZE, SettingConstants.UI.DEFAULT_COMMENT_FONT_SIZE);
     }
 }
