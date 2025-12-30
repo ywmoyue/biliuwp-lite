@@ -179,6 +179,26 @@ namespace BiliLite.Controls.Settings
                 };
             };
 
+            //推荐页列表视图单元宽度
+            NumBoxRecommentPageListItemWidth.Value = SettingService.GetValue<double>(SettingConstants.UI.RECOMMEND_PAGE_LIST_DESIRED_WIDTH, SettingConstants.UI.DEFAULT_RECOMMEND_PAGE_LIST_DESIRED_WIDTH);
+            NumBoxRecommentPageListItemWidth.Loaded += (sender, e) =>
+            {
+                NumBoxRecommentPageListItemWidth.ValueChanged += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.RECOMMEND_PAGE_LIST_DESIRED_WIDTH, args.NewValue);
+                };
+            };
+
+            //推荐页网格视图单元宽度
+            NumBoxRecommentPageGridItemWidth.Value = SettingService.GetValue<double>(SettingConstants.UI.RECOMMEND_PAGE_GRID_DESIRED_WIDTH, SettingConstants.UI.DEFAULT_RECOMMEND_PAGE_GRID_DESIRED_WIDTH);
+            NumBoxRecommentPageGridItemWidth.Loaded += (sender, e) =>
+            {
+                NumBoxRecommentPageGridItemWidth.ValueChanged += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.RECOMMEND_PAGE_GRID_DESIRED_WIDTH, args.NewValue);
+                };
+            };
+
             //动态评论宽度
             NumBoxDynamicCommentWidth.Value = SettingService.GetValue<double>(SettingConstants.UI.DYNAMIC_COMMENT_WIDTH, SettingConstants.UI.DEFAULT_DYNAMIC_COMMENT_WIDTH);
             NumBoxDynamicCommentWidth.Loaded += (sender, e) =>

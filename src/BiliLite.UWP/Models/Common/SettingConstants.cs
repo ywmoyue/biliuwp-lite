@@ -252,6 +252,30 @@ namespace BiliLite.Models.Common
             public const double DEFAULT_VIDEO_DETAIL_LIST_EPISODE_DESIRED_WIDTH = 180;
 
             /// <summary>
+            /// 推荐页列表视图设计宽度
+            /// </summary>
+            [SettingKey(typeof(double))]
+            public const string RECOMMEND_PAGE_LIST_DESIRED_WIDTH = "RecommendPageListDesiredWidth";
+
+            /// <summary>
+            /// 推荐页列表视图设计宽度默认值
+            /// </summary>
+            [SettingDefaultValue]
+            public const double DEFAULT_RECOMMEND_PAGE_LIST_DESIRED_WIDTH = 550;
+
+            /// <summary>
+            /// 推荐页网格视图设计宽度
+            /// </summary>
+            [SettingKey(typeof(double))]
+            public const string RECOMMEND_PAGE_GRID_DESIRED_WIDTH = "RecommendPageGridDesiredWidth";
+
+            /// <summary>
+            /// 推荐页网格视图设计宽度默认值
+            /// </summary>
+            [SettingDefaultValue]
+            public const double DEFAULT_RECOMMEND_PAGE_GRID_DESIRED_WIDTH = 260;
+
+            /// <summary>
             /// 启用固定标签栏宽度
             /// </summary>
             [SettingKey(typeof(bool))]

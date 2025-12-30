@@ -471,6 +471,31 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
+        <controls:SettingsExpander Description="样式自定义" Header="推荐页" x:Name="SERecommend">
+            <controls:SettingsExpander.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Comments" />
+            </controls:SettingsExpander.HeaderIcon>
+            <controls:SettingsExpander.Items>
+                <controls:SettingsCard Description="默认550，宽度越小列数越多" Header="推荐页列表视图单元宽度">
+                    <muxc:NumberBox
+                        x:Name="NumBoxRecommentPageListItemWidth"
+                        Width="200"
+                        HorizontalAlignment="Left"
+                        Minimum="50"
+                        SpinButtonPlacementMode="Compact" />
+                </controls:SettingsCard>
+                
+                <controls:SettingsCard Description="默认260，宽度越小列数越多" Header="推荐页网格视图单元宽度">
+                    <muxc:NumberBox
+                        x:Name="NumBoxRecommentPageGridItemWidth"
+                        Width="200"
+                        HorizontalAlignment="Left"
+                        Minimum="50"
+                        SpinButtonPlacementMode="Compact" />
+                </controls:SettingsCard>
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>
+
         <controls:SettingsExpander Description="样式自定义" Header="评论页" x:Name="SEComment">
             <controls:SettingsExpander.HeaderIcon>
                 <font:FontAwesome Icon="Solid_Comments" />
