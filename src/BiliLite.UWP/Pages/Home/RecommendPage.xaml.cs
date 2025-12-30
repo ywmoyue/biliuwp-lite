@@ -189,7 +189,7 @@ namespace BiliLite.Pages.Home
             //设置
             SettingService.SetValue<int>(SettingConstants.UI.RECMEND_DISPLAY_MODE, 1);
             RecommendGridView.ItemHeight = 120;
-            RecommendGridView.DesiredWidth = 550;
+            RecommendGridView.DesiredWidth = SettingService.GetValue<double>(SettingConstants.UI.RECOMMEND_PAGE_LIST_DESIRED_WIDTH, SettingConstants.UI.DEFAULT_RECOMMEND_PAGE_LIST_DESIRED_WIDTH);
             RecommendGridView.ItemTemplate = (DataTemplate)this.Resources["List"];
         }
 
@@ -201,7 +201,7 @@ namespace BiliLite.Pages.Home
             //设置
             SettingService.SetValue<int>(SettingConstants.UI.RECMEND_DISPLAY_MODE, 0);
             RecommendGridView.ItemHeight = 240;
-            RecommendGridView.DesiredWidth = 260;
+            RecommendGridView.DesiredWidth = SettingService.GetValue<double>(SettingConstants.UI.RECOMMEND_PAGE_GRID_DESIRED_WIDTH, SettingConstants.UI.DEFAULT_RECOMMEND_PAGE_GRID_DESIRED_WIDTH);
             RecommendGridView.ItemTemplate = (DataTemplate)this.Resources["Grid"];
         }
 
