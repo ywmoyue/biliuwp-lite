@@ -86,7 +86,7 @@ namespace BiliLite.ViewModels.UserDynamic
 
         public UserDynamicSeasonInfo Season { get; set; }
 
-        public NavDynArticle CustomArticle { get; set; }
+        public ICustomArticle CustomArticle { get; set; }
 
         public string SourceJson { get; set; }
 
