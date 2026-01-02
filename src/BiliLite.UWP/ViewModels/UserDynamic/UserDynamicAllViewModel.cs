@@ -283,20 +283,20 @@ namespace BiliLite.ViewModels.UserDynamic
             }
         }
 
-        private async Task<NavDynArticles> GetDynArticle()
+        private async Task<ModuleDynArticles> GetDynArticle()
         {
             if (m_offset == null)
             {
                 m_baseline = "0";
             }
-            var api = m_dynamicApi.Article(m_baseline);
+            var api = m_dynamicApi.ArticleV2(m_page);
             var results = await api.Request();
             if (!results.status)
             {
                 throw new CustomizedErrorException(results.message);
             }
 
-            var data = await results.GetData<NavDynArticles>();
+            var data = await results.GetData<ModuleDynArticles>();
 
             if (!data.success)
             {
@@ -306,7 +306,7 @@ namespace BiliLite.ViewModels.UserDynamic
             return data.data;
         }
 
-        private void HandleDynamicArticleResults(NavDynArticles results)
+        private void HandleDynamicArticleResults(ModuleDynArticles results)
         {
             CanLoadMore = results.HasMore;
             m_offset = results.Offset;
