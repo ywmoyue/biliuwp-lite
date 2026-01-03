@@ -69,7 +69,8 @@ namespace BiliLite.ViewModels.Search
                 ShowLoadMore = false;
                 Loading = true;
                 Nothing = false;
-                var results = await SearchApi.WebSearchUser(Keyword, Page, SelectOrder.value, SelectType.value, Area).Request();
+                var api = await SearchApi.WebSearchUser(Keyword, Page, SelectOrder.value, SelectType.value, Area);
+                var results = await api.Request();
                 if (results.status)
                 {
                     var data = await results.GetJson<ApiDataModel<JObject>>();

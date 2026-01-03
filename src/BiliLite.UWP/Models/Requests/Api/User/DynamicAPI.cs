@@ -155,7 +155,7 @@ namespace BiliLite.Models.Requests.Api.User
             return api;
         }
 
-        public ApiModel Article(string updateBaseline,string type="article")
+        public ApiModel Article(string updateBaseline, string type = "article")
         {
             var api = new ApiModel()
             {
@@ -164,6 +164,24 @@ namespace BiliLite.Models.Requests.Api.User
                 parameter = $"type={type}&update_baseline={updateBaseline}",
                 need_cookie = true,
             };
+
+            return api;
+        }
+
+        public ApiModel ArticleV2(int page = 1, string offset = null, string type = "article")
+        {
+            var api = new ApiModel()
+            {
+                method = HttpMethods.Get,
+                baseUrl = $"https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/all",
+                parameter = $"type={type}&page={page}" +
+                $"&features=itemOpusStyle,listOnlyfans,opusBigCover,onlyfansVote,decorationCard,onlyfansAssetsV2,forwardListHidden,ugcDelete,onlyfansQaCard,commentsNewVersion,avatarAutoTheme,sunflowerStyle,cardsEnhance,eva3CardOpus,eva3CardVideo,eva3CardComment",
+                need_cookie = true,
+            };
+            if(offset != null)
+            {
+                api.parameter += $"&offset={offset}";
+            }
 
             return api;
         }
