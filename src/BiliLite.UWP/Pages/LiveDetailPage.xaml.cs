@@ -351,7 +351,7 @@ namespace BiliLite.Pages
 
         private async void PlayerController_MediaInfosUpdated(object sender, Player.MediaInfos.MediaInfo e)
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal,
                 () => { txtInfo.Text = e.ToString(); });
         }
 

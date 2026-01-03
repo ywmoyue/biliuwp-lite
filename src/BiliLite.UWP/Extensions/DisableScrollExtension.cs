@@ -30,7 +30,7 @@ namespace BiliLite.Extensions
 
             if ((bool)e.NewValue)
             {
-                element.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+                element.DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
                 {
                     var scrollViewer = FindScrollViewer(element);
                     if (scrollViewer != null)

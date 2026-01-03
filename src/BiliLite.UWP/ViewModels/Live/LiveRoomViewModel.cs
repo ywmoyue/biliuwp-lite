@@ -312,7 +312,7 @@ namespace BiliLite.ViewModels.Live
 
         private async void Timer_auto_hide_gift_Elapsed(object sender, ElapsedEventArgs e)
         {
-            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            App.MainWindow.DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
             {
                 if (GiftMessage == null || GiftMessage.Count == 0) return;
                 if (HideGiftFlag >= 5)
