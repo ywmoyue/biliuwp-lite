@@ -289,7 +289,7 @@ namespace BiliLite.ViewModels.UserDynamic
             {
                 m_baseline = "0";
             }
-            var api = m_dynamicApi.ArticleV2(m_page);
+            var api = m_dynamicApi.ArticleV2(m_page, m_offset);
             var results = await api.Request();
             if (!results.status)
             {
