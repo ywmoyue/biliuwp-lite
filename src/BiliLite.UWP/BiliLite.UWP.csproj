@@ -148,6 +148,12 @@
       <DependentUpon>DanmakuListControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\FakeFrame.cs" />
+    <Compile Include="Services\BackgroundDownloadOperation.cs" />
+    <Compile Include="Services\BackgroundDownloadService.cs" />
+    <Compile Include="Services\BackgroundDownloadTask.cs" />
+    <Compile Include="Services\Interfaces\IDownloadOperation.cs" />
+    <Compile Include="Services\Interfaces\IDownloadService.cs" />
+    <Compile Include="Services\Interfaces\IDownloadTask.cs" />
     <Compile Include="ViewModels\Common\DanmakuListViewModel.cs" />
     <Compile Include="Models\Common\Danmaku\DanmakuSimpleItem.cs" />
     <Compile Include="Controls\Common\PieControl.xaml.cs">

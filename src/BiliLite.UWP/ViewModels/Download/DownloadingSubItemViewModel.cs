@@ -2,6 +2,7 @@
 using Windows.Networking.BackgroundTransfer;
 using BiliLite.ViewModels.Common;
 using PropertyChanged;
+using BiliLite.Services;
 
 namespace BiliLite.ViewModels.Download
 {
@@ -13,7 +14,7 @@ namespace BiliLite.ViewModels.Download
         /// <summary>
         /// 下载状态
         /// </summary>
-        public BackgroundTransferStatus Status { get; set; }
+        public DownloadStatus Status { get; set; }
 
         /// <summary>
         /// 文件总大小
@@ -43,9 +44,9 @@ namespace BiliLite.ViewModels.Download
         public string Path { get; set; }
 
         [DependsOn(nameof(TotalBytes))]
-        public bool ShowPause { get { return Status == BackgroundTransferStatus.Running; } }
+        public bool ShowPause { get { return Status == DownloadStatus.Running; } }
 
         [DependsOn(nameof(TotalBytes))]
-        public bool ShowStart { get { return Status != BackgroundTransferStatus.Running; } }
+        public bool ShowStart { get { return Status != DownloadStatus.Running; } }
     }
 }
