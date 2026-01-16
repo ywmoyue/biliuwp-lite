@@ -536,6 +536,13 @@
                         PlayStateChanged="Player_PlayStateChanged"
                         StatsUpdated="Player_OnStatsUpdated" />
 
+                    <!--  弹幕  -->
+                    <Grid>
+                        <canvas:CanvasAnimatedControl x:Name="DanmakuCanvas" Background="Transparent"/>
+                    </Grid>
+                    <Grid>
+                        <danmaku:Danmaku x:Name="DanmuControl" />
+                    </Grid>
                     <!--  字幕  -->
                     <Border
                         x:Name="BorderSubtitle"
@@ -545,13 +552,6 @@
                         VerticalAlignment="Bottom"
                         Opacity="{Binding ElementName=SubtitleSettingOpacity, Path=Value, Mode=OneWay}"
                         Visibility="Collapsed" />
-                    <!--  弹幕  -->
-                    <Grid>
-                        <danmaku:Danmaku x:Name="DanmuControl" />
-                    </Grid>
-                    <Grid>
-                        <canvas:CanvasAnimatedControl x:Name="DanmakuCanvas" />
-                    </Grid>
                     <!--  亮度  -->
                     <Grid
                         x:Name="BrightnessShield"
