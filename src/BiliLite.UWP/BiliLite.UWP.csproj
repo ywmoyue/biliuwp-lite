@@ -55,6 +55,7 @@
     <PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.250402" />
     <PackageReference Include="DanmakuFrostMaster.Fork.WinUI" Version="1.0.2" />
+    <PackageReference Include="Downloader" Version="4.0.3" />
     <PackageReference Include="Flurl.Http" Version="3.2.4" />
     <PackageReference Include="Grpc.Net.Client.Web" Version="2.55.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.71" />

@@ -33,7 +33,7 @@ namespace BiliLite
             services.AddControls();
             services.AddDanmakuController();
 
-            services.AddSingleton<IDownloadService, BackgroundDownloadService>();
+            services.AddSingleton<IDownloadService, BezzadDownloadService>();
             services.AddSingleton<DownloadService>();
             services.AddSingleton<CookieService>();
             services.AddSingleton<ShortcutKeyService>();
