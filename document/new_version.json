@@ -1,7 +1,7 @@
 {
-  "version": "4.8.10",
-  "version_num": 40810,
-  "version_desc": "更新内容:\r\n\r\n- 修复直播回放链接打开错误 \r\n\r\n- 修复播放器标签页导致单窗口模式报错 \r\n\r\n- 打开视频时不等待空降助手加载 \r\n\r\n- 更新搜索视频接,修复搜索出现412风控口 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.8.11",
+  "version_num": 40811,
+  "version_desc": "更新内容:\r\n\r\n- 支持设置自定义CDN服务器 \r\n\r\n- 单窗口模式可设置释放页面资源 \r\n\r\n- 单窗口模式添加一键返回主页按钮 \r\n\r\n- 直播间礼物信息获取错误时不提示 \r\n\r\n- 除视频外的搜索触发412风控 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }

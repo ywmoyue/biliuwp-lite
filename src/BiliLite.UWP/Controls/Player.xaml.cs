@@ -643,15 +643,16 @@ namespace BiliLite.Controls
         /// 使用AdaptiveMediaSource播放视频
         /// </summary>
         /// <returns></returns>
-        public async Task<PlayerOpenResult> PlayerDashUseNative(BiliDashPlayUrlInfo dashInfo, string userAgent, string referer, double positon = 0)
+        public async Task<PlayerOpenResult> PlayerDashUseNative(PlayerOpenParam playerOpenParam)
         {
             try
             {
+                RealPlayerType = RealPlayerType.Native;
                 mediaPlayerVideo.Visibility = Visibility.Visible;
                 //vlcVideoView.Visibility = Visibility.Collapsed;
-                m_dashInfo = dashInfo;
-                m_referer = referer;
-                m_userAgent = userAgent;
+                m_dashInfo = playerOpenParam.DashInfo;
+                m_referer = playerOpenParam.Referer;
+                m_userAgent = playerOpenParam.UserAgent;
 
                 Opening = true;
                 m_currentEngine = PlayEngine.Native;
@@ -665,7 +666,7 @@ namespace BiliLite.Controls
                 //设置播放器
                 m_playerVideo = new MediaPlayer();
                 //_playerVideo.Source = MediaSource.CreateFromUri(new Uri(videoUrl.baseUrl));
-                var mediaSource = await CreateAdaptiveMediaSource(dashInfo, userAgent, referer);
+                var mediaSource = await CreateAdaptiveMediaSource(playerOpenParam.DashInfo, playerOpenParam.UserAgent, playerOpenParam.Referer);
                 if (mediaSource == null)
                 {
                     return new PlayerOpenResult()
@@ -786,11 +787,14 @@ namespace BiliLite.Controls
             }
         }
 
-        public async Task<PlayerOpenResult> PlayerDashUseShaka(BiliDashPlayUrlInfo dashInfo, string userAgent,
-            string referer, double positon = 0, bool isLocal = false)
+        public async Task<PlayerOpenResult> PlayerDashUseShaka(PlayerOpenParam playerOpenParam)
         {
             RealPlayerType = RealPlayerType.ShakaPlayer;
-            return await PlayDashUseWebPlayer(ShakaPlayer, dashInfo, userAgent, referer, positon, isLocal);
+            return await PlayDashUseWebPlayer(ShakaPlayer, playerOpenParam.DashInfo, 
+                playerOpenParam.UserAgent, 
+                playerOpenParam.Referer, 
+                playerOpenParam.Positon,
+                playerOpenParam.IsLocal);
         }
 
         /// <summary>
@@ -875,16 +879,17 @@ namespace BiliLite.Controls
         /// <param name="positon"></param>
         /// <param name="needConfig"></param>
         /// <returns></returns>
-        public async Task<PlayerOpenResult> PlayDashUseFFmpegInterop(BiliDashPlayUrlInfo dashPlayUrlInfo, string userAgent, string referer, double positon = 0, bool needConfig = true, bool isLocal = false)
+        public async Task<PlayerOpenResult> PlayDashUseFFmpegInterop(PlayerOpenParam playerOpenParam)
         {
             try
             {
+                RealPlayerType = RealPlayerType.FFmpegInterop;
                 mediaPlayerVideo.Visibility = Visibility.Visible;
                 //vlcVideoView.Visibility = Visibility.Collapsed;
                 Opening = true;
-                m_dashInfo = dashPlayUrlInfo;
-                m_referer = referer;
-                m_userAgent = userAgent;
+                m_dashInfo = playerOpenParam.DashInfo;
+                m_referer = playerOpenParam.Referer;
+                m_userAgent = playerOpenParam.UserAgent;
 
                 m_currentEngine = PlayEngine.FFmpegInteropMSS;
 
@@ -894,25 +899,25 @@ namespace BiliLite.Controls
                 PlayStateChanged?.Invoke(this, PlayState);
                 //关闭正在播放的视频
                 ClosePlay();
-                var _ffmpegConfig = CreateFFmpegInteropConfig(userAgent, referer);
+                var _ffmpegConfig = CreateFFmpegInteropConfig(playerOpenParam.UserAgent, playerOpenParam.Referer);
                 
-                if (isLocal)
+                if (playerOpenParam.IsLocal)
                 {
 
-                    var videoFile = await StorageFile.GetFileFromPathAsync(dashPlayUrlInfo.Video.Url);
+                    var videoFile = await StorageFile.GetFileFromPathAsync(playerOpenParam.DashInfo.Video.Url);
                     m_ffmpegMssVideo = await FFmpegMediaSource.CreateFromStreamAsync(await videoFile.OpenAsync(FileAccessMode.Read), _ffmpegConfig);
-                    if (dashPlayUrlInfo.Audio != null)
+                    if (playerOpenParam.DashInfo.Audio != null)
                     {
-                        var audioFile = await StorageFile.GetFileFromPathAsync(dashPlayUrlInfo.Audio.Url);
+                        var audioFile = await StorageFile.GetFileFromPathAsync(playerOpenParam.DashInfo.Audio.Url);
                         m_ffmpegMssAudio = await FFmpegMediaSource.CreateFromStreamAsync(await audioFile.OpenAsync(FileAccessMode.Read), _ffmpegConfig);
                     }
                 }
                 else
                 {
-                    m_ffmpegMssVideo = await FFmpegMediaSource.CreateFromUriAsync(dashPlayUrlInfo.Video.Url, _ffmpegConfig);
-                    if (dashPlayUrlInfo.Audio != null)
+                    m_ffmpegMssVideo = await FFmpegMediaSource.CreateFromUriAsync(playerOpenParam.DashInfo.Video.Url, _ffmpegConfig);
+                    if (playerOpenParam.DashInfo.Audio != null)
                     {
-                        m_ffmpegMssAudio = await FFmpegMediaSource.CreateFromUriAsync(dashPlayUrlInfo.Audio.Url, _ffmpegConfig);
+                        m_ffmpegMssAudio = await FFmpegMediaSource.CreateFromUriAsync(playerOpenParam.DashInfo.Audio.Url, _ffmpegConfig);
                     }
 
                 }
@@ -924,7 +929,7 @@ namespace BiliLite.Controls
                 m_playerVideo = new MediaPlayer();
                 m_playerVideo.Source = m_ffmpegMssVideo.CreateMediaPlaybackItem();
                 //设置音频
-                if (dashPlayUrlInfo.Audio != null)
+                if (playerOpenParam.DashInfo.Audio != null)
                 {
                     m_playerAudio = new MediaPlayer();
                     m_playerAudio.Source = m_ffmpegMssAudio.CreateMediaPlaybackItem();
@@ -934,7 +939,7 @@ namespace BiliLite.Controls
                 m_mediaTimelineController = new MediaTimelineController();
                 m_playerVideo.CommandManager.IsEnabled = false;
                 m_playerVideo.TimelineController = m_mediaTimelineController;
-                if (dashPlayUrlInfo.Audio != null)
+                if (playerOpenParam.DashInfo.Audio != null)
                 {
                     m_playerAudio.CommandManager.IsEnabled = true;
                     m_playerAudio.TimelineController = m_mediaTimelineController;
@@ -947,7 +952,7 @@ namespace BiliLite.Controls
 
                 HookVideoPlayerEvent(playFailedChangeEngineArgs);
 
-                if (dashPlayUrlInfo.Audio != null)
+                if (playerOpenParam.DashInfo.Audio != null)
                 {
                     m_playerAudio.PlaybackSession.BufferingStarted += async (e, arg) =>
                     {
@@ -1007,6 +1012,7 @@ namespace BiliLite.Controls
 
             try
             {
+                RealPlayerType = RealPlayerType.FFmpegInterop;
                 mediaPlayerVideo.Visibility = Visibility.Visible;
                 Opening = true;
                 m_currentEngine = PlayEngine.FFmpegInteropMSS;

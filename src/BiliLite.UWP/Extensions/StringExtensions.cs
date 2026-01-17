@@ -1,25 +1,26 @@
-﻿using Newtonsoft.Json;
-using System.Text;
-using System;
-using BiliLite.Models.Common;
+﻿using BiliLite.Models.Common;
+using BiliLite.Models.Exceptions;
+using BiliLite.Services;
+using BiliLite.ViewModels.Comment;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using OpenCCNET;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Xml;
+using Windows.Security.Cryptography;
+using Windows.Security.Cryptography.Core;
+using Windows.Storage.Streams;
+using Windows.UI;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Markup;
-using OpenCCNET;
-using BiliLite.Services;
-using Windows.UI;
-using Windows.Security.Cryptography.Core;
-using Windows.Security.Cryptography;
-using Windows.Storage.Streams;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Xml;
-using BiliLite.Models.Exceptions;
 
 namespace BiliLite.Extensions
 {
@@ -123,17 +124,20 @@ namespace BiliLite.Extensions
                         lowProfilePrefix = $"<Run Foreground=\"{{ThemeResource LowProfileTextColor}}\" Text=\"{lowProfilePrefix}\"></Run>";
                     }
 
+                    var fontSize = CommentControlViewModel.CommentFontSize;
+
                     //生成xaml
                     var xaml = string.Format(@"<RichTextBlock HorizontalAlignment=""Stretch"" xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
                                             xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"" xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
-                                            xmlns:mc = ""http://schemas.openxmlformats.org/markup-compatibility/2006"" LineHeight=""{1}"" {2} {3}>
+                                            xmlns:mc = ""http://schemas.openxmlformats.org/markup-compatibility/2006"" LineHeight=""{1}"" {2} {3} {6}>
                                             <Paragraph {5}>{4}{0}</Paragraph>
                                             </RichTextBlock>",  input, 
                                                                 isLive ? 22 : 20,
                                                                 fontColor == null ? "" : $"Foreground=\"{fontColor}\"",
                                                                 $"FontWeight=\"{fontWeight}\"",
                                                                 lowProfilePrefix,
-                                                                $"TextAlignment=\"{textAlignment}\"");
+                                                                $"TextAlignment=\"{textAlignment}\"",
+                                                                $"FontSize=\"{fontSize}\"");
                     if (!xaml.IsXmlString())
                     {
                         throw new CustomizedErrorException("不是有效的xml字符串");

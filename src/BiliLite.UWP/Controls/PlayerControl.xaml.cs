@@ -1681,13 +1681,31 @@ namespace BiliLite.Controls
                 playInfo.DashInfo.Video = CurrentPlayItem.LocalPlayInfo.CurrentVideoTrack?.DashInfo.Video;
 
                 var realPlayerType = (RealPlayerType)SettingService.GetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE, (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
+
+                var playerOpenParam = new PlayerOpenParam
+                {
+                    DashInfo = playInfo.DashInfo,
+                    UserAgent = "",
+                    Referer = "",
+                    Positon = _postion,
+                    IsLocal = true,
+                };
+
                 if (realPlayerType == RealPlayerType.Native || realPlayerType == RealPlayerType.FFmpegInterop)
                 {
-                    result = await Player.PlayDashUseFFmpegInterop(playInfo.DashInfo, "", "", positon: _postion, isLocal: true);
+                    result = await Player.PlayDashUseFFmpegInterop(playerOpenParam);
+                    if (!result.result)
+                    {
+                        result = await Player.PlayerDashUseShaka(playerOpenParam);
+                    }
                 }
                 else
                 {
-                    result = await Player.PlayerDashUseShaka(playInfo.DashInfo, "", "", positon: _postion, isLocal: true);
+                    result = await Player.PlayerDashUseShaka(playerOpenParam);
+                    if (!result.result)
+                    {
+                        result = await Player.PlayDashUseFFmpegInterop(playerOpenParam);
+                    }
                 }
             }
             else if (CurrentPlayItem.LocalPlayInfo.Info.PlayUrlType == BiliPlayUrlType.SingleFLV)
@@ -1872,14 +1890,22 @@ namespace BiliLite.Controls
             {
                 result = false
             };
-            var realPlayerType = (RealPlayerType)SettingService.GetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE, (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
+            var realPlayerType = Player.RealPlayerType;
+            var playerOpenParam = new PlayerOpenParam
+            {
+                DashInfo = dashInfo,
+                UserAgent = "",
+                Referer = "",
+                Positon = _postion,
+                IsLocal = true,
+            };
             if (realPlayerType == RealPlayerType.Native || realPlayerType == RealPlayerType.FFmpegInterop)
             {
-                result = await Player.PlayDashUseFFmpegInterop(dashInfo, "", "", positon: _postion, isLocal: true);
+                result = await Player.PlayDashUseFFmpegInterop(playerOpenParam);
             }
             else
             {
-                result = await Player.PlayerDashUseShaka(dashInfo, "", "", positon: _postion, isLocal: true);
+                result = await Player.PlayerDashUseShaka(playerOpenParam);
             }
 
             if (result.result)
@@ -1898,51 +1924,79 @@ namespace BiliLite.Controls
             {
                 result = false
             };
-            if (quality.PlayUrlType == BiliPlayUrlType.DASH)
-            {
-                var realPlayerType = (RealPlayerType)SettingService.GetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE, (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
-                if (realPlayerType == RealPlayerType.Native)
-                {
-                    result = await Player.PlayerDashUseNative(quality.DashInfo, quality.UserAgent, quality.Referer, positon: _postion);
 
-                    if (!result.result)
-                    {
-                        result = await Player.PlayDashUseFFmpegInterop(quality.DashInfo, quality.UserAgent, quality.Referer,
-                            positon: _postion);
-                    }
-                }
-                else if (realPlayerType == RealPlayerType.FFmpegInterop)
-                {
-                    result = await Player.PlayDashUseFFmpegInterop(quality.DashInfo, quality.UserAgent, quality.Referer,
-                        positon: _postion);
-
-                    if (!result.result)
-                    {
-                        result = await Player.PlayerDashUseNative(quality.DashInfo, quality.UserAgent, quality.Referer, positon: _postion);
-                    }
-                }
-                else if (realPlayerType == RealPlayerType.ShakaPlayer)
-                {
-                    result = await Player.PlayerDashUseShaka(quality.DashInfo, quality.UserAgent, quality.Referer, positon: _postion);
-                }
-            }
-            else if (quality.PlayUrlType == BiliPlayUrlType.SingleFLV)
+            switch (quality.PlayUrlType)
             {
-                result = await Player.PlaySingleFlvUseFFmpegInterop(quality.FlvInfo.First().Url, quality.UserAgent, quality.Referer, positon: _postion);
-            }
-            else if (quality.PlayUrlType == BiliPlayUrlType.MultiFLV)
-            {
-                result = await Player.PlayVideoUseSYEngine(quality.FlvInfo, quality.UserAgent, quality.Referer, positon: _postion, epId: CurrentPlayItem.ep_id);
+                case BiliPlayUrlType.DASH:
+                    result = await PlayDashWithFallback(quality);
+                    break;
+                case BiliPlayUrlType.SingleFLV:
+                    result = await Player.PlaySingleFlvUseFFmpegInterop(quality.FlvInfo.First().Url, quality.UserAgent, quality.Referer, positon: _postion);
+                    break;
+                case BiliPlayUrlType.MultiFLV:
+                    result = await Player.PlayVideoUseSYEngine(quality.FlvInfo, quality.UserAgent, quality.Referer, positon: _postion, epId: CurrentPlayItem.ep_id);
+                    break;
             }
 
+            await CheckPlayUrlValidity();
+            return result;
+        }
+
+        private async Task<PlayerOpenResult> PlayDashWithFallback(BiliPlayUrlInfo quality)
+        {
+            var realPlayerType = (RealPlayerType)SettingService.GetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE, (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
+            
+            var playerStrategies = GetPlayerStrategies(realPlayerType);
+            
+            foreach (var strategy in playerStrategies)
+            {
+                var result = await strategy(new PlayerOpenParam { 
+                    DashInfo = quality.DashInfo,
+                    UserAgent = quality.UserAgent,
+                    Referer = quality.Referer,
+                    Positon = _postion,
+                });
+                if (result.result)
+                {
+                    return result;
+                }
+            }
+
+            return new PlayerOpenResult() { result = false };
+        }
+
+        private List<Func<PlayerOpenParam, Task<PlayerOpenResult>>> GetPlayerStrategies(RealPlayerType preferredType)
+        {
+            var strategies = new List<Func<PlayerOpenParam, Task<PlayerOpenResult>>>();
+
+            switch (preferredType)
+            {
+                case RealPlayerType.Native:
+                    strategies.Add(Player.PlayerDashUseNative);
+                    strategies.Add(Player.PlayDashUseFFmpegInterop);
+                    strategies.Add(Player.PlayerDashUseShaka);
+                    break;
+                case RealPlayerType.FFmpegInterop:
+                    strategies.Add(Player.PlayDashUseFFmpegInterop);
+                    strategies.Add(Player.PlayerDashUseNative);
+                    strategies.Add(Player.PlayerDashUseShaka);
+                    break;
+                case RealPlayerType.ShakaPlayer:
+                    strategies.Add(Player.PlayerDashUseShaka);
+                    strategies.Add(Player.PlayerDashUseNative);
+                    break;
+            }
+
+            return strategies;
+        }
+
+        private async Task CheckPlayUrlValidity()
+        {
             var checkResult = await Player.CheckPlayUrl();
-
             if (!checkResult)
             {
                 NotificationShowExtensions.ShowMessageDialog("播放地址检测", "检测到播放地址无效，建议在代理设置中设置CDN地址替换。");
             }
-
-            return result;
         }
 
         private async Task ChangeQuality(BiliPlayUrlInfo quality, BiliDashAudioPlayUrlInfo soundQuality = null)
@@ -2797,7 +2851,14 @@ namespace BiliLite.Controls
             };
             if (e.play_type == PlayMediaType.Dash && e.change_engine == PlayEngine.FFmpegInteropMSS)
             {
-                result = await Player.PlayDashUseFFmpegInterop(current_quality_info.DashInfo, current_quality_info.UserAgent, current_quality_info.Referer, positon: _postion);
+                var playerOpenParam = new PlayerOpenParam
+                {
+                    DashInfo = current_quality_info.DashInfo,
+                    UserAgent = current_quality_info.UserAgent,
+                    Referer = current_quality_info.Referer,
+                    Positon = _postion,
+                };
+                result = await Player.PlayDashUseFFmpegInterop(playerOpenParam);
             }
             if (e.play_type == PlayMediaType.Single && e.change_engine == PlayEngine.SYEngine)
             {
