@@ -45,6 +45,13 @@ try {
 }
 catch {
     Write-Error "获取GitHub release信息失败: $_"
+    # 检查是否是API限制且本地版本文件存在
+    if ($_.Exception.Response -and $_.Exception.Response.StatusCode -eq 403 -and 
+        $_.Exception.Message -like "*API rate limit*" -and 
+        (Test-Path -Path $versionFile)) {
+        Write-Warning "GitHub API限制，但本地版本文件存在，跳过更新"
+        exit 0
+    }
     exit 1
 }
 

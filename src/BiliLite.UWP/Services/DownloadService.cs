@@ -31,24 +31,26 @@ namespace BiliLite.Services
 
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly DownloadPageViewModel m_downloadPageViewModel;
-        private List<DownloadOperation> m_downloadOperations;
+        private List<IDownloadOperation> m_downloadOperations;
         private SettingSqlService m_settingSqlService;
         private IDictionary<string, CancellationTokenSource> m_loadDownloadingCts;
         private List<Task> m_handelList;
         private readonly IMapper m_mapper;
         private readonly BiliLiteDbContext m_biliLiteDbContext;
         private bool m_useDownloadIndex = false;
+        private readonly IDownloadService m_downloadService;
 
         #endregion
 
         #region Constructors
 
-        public DownloadService(DownloadPageViewModel downloadPageViewModel, IMapper mapper, SettingSqlService settingSqlService, BiliLiteDbContext biliLiteDbContext)
+        public DownloadService(DownloadPageViewModel downloadPageViewModel, IMapper mapper, SettingSqlService settingSqlService, BiliLiteDbContext biliLiteDbContext, IDownloadService downloadService)
         {
             m_downloadPageViewModel = downloadPageViewModel;
             m_mapper = mapper;
             m_settingSqlService = settingSqlService;
             m_biliLiteDbContext = biliLiteDbContext;
+            m_downloadService = downloadService;
 
             m_downloadPageViewModel.RefreshDownloadedCommand = new RelayCommand(RefreshDownloaded);
             m_downloadPageViewModel.DeleteItemCommand = new RelayCommand<DownloadingItemViewModel>(DeleteItem);
@@ -64,20 +66,20 @@ namespace BiliLite.Services
 
         #region Private Methods
 
-        private async Task Handel(DownloadOperation downloadOperation, CancellationTokenSource cancellationTokenSource)
+        private async Task Handel(IDownloadOperation downloadOperation, CancellationTokenSource cancellationTokenSource)
         {
             var success = true;
             try
             {
 
-                var progressCallback = new Progress<DownloadOperation>(DownloadProgress);
+                var progressCallback = new Progress<IDownloadOperation>(DownloadProgress);
                 if (cancellationTokenSource != null)
                 {
-                    await downloadOperation.AttachAsync().AsTask(cancellationTokenSource.Token, progressCallback);
+                    await downloadOperation.AttachAsync(cancellationTokenSource.Token, progressCallback);
                 }
                 else
                 {
-                    await downloadOperation.AttachAsync().AsTask(progressCallback);
+                    await downloadOperation.AttachAsync(default, progressCallback);
                 }
 
                 //var ls = list_Downing.ItemsSource as ObservableCollection<DisplayModel>;
@@ -106,7 +108,7 @@ namespace BiliLite.Services
             }
         }
 
-        private void DownloadProgress(DownloadOperation op)
+        private void DownloadProgress(IDownloadOperation op)
         {
             try
             {
@@ -251,7 +253,7 @@ namespace BiliLite.Services
             }
         }
 
-        private void LoadDownloadingAddSubItemFromDownloadOperation(IList<DownloadingSubItemViewModel> subItems, DownloadOperation downloadOperation)
+        private void LoadDownloadingAddSubItemFromDownloadOperation(IList<DownloadingSubItemViewModel> subItems, IDownloadOperation downloadOperation)
         {
             CancellationTokenSource cancellationTokenSource = null;
 
@@ -757,14 +759,19 @@ namespace BiliLite.Services
         {
             m_loadDownloadingCts = new Dictionary<string, CancellationTokenSource>();
             m_handelList ??= new List<Task>();
-            m_downloadOperations ??= new List<DownloadOperation>();
+            m_downloadOperations ??= new List<IDownloadOperation>();
             var subItems = new ObservableCollection<DownloadingSubItemViewModel>();
             m_downloadPageViewModel.Downloadings.Clear();
-            var downloadOperations = await BackgroundDownloader.GetCurrentDownloadsForTransferGroupAsync(DownloadHelper.group);
+
+            // 使用下载服务获取当前下载任务
+            var downloadOperations = await m_downloadService.GetCurrentDownloads();
+
+            // 将 IDownloadOperation 转换为 BackgroundDownloadOperation，然后获取原始的 DownloadOperation
             foreach (var downloadOperation in downloadOperations)
             {
                 LoadDownloadingAddSubItemFromDownloadOperation(subItems, downloadOperation);
             }
+
             foreach (var subItemGroup in subItems.GroupBy(x => x.CID))
             {
                 LoadDownloadingAddDownloadingItem(subItemGroup);
@@ -774,14 +781,20 @@ namespace BiliLite.Services
 
         public async void UpdateSetting()
         {
-            var downList = await BackgroundDownloader.GetCurrentDownloadsForTransferGroupAsync(DownloadHelper.group);
+            // 使用下载服务获取当前下载任务
+            var downloadOperations = await m_downloadService.GetCurrentDownloads();
             var parallelDownload = SettingService.GetValue<bool>(SettingConstants.Download.PARALLEL_DOWNLOAD, true);
             var allowCostNetwork = SettingService.GetValue<bool>(SettingConstants.Download.ALLOW_COST_NETWORK, false);
-            //设置下载模式
-            foreach (var item in downList)
+
+            // 将 IDownloadOperation 转换为 BackgroundDownloadOperation，然后获取原始的 DownloadOperation 并更新设置
+            foreach (var downloadOperation in downloadOperations)
             {
-                item.TransferGroup.TransferBehavior = parallelDownload ? BackgroundTransferBehavior.Parallel : BackgroundTransferBehavior.Serialized;
-                item.CostPolicy = allowCostNetwork ? BackgroundTransferCostPolicy.Always : BackgroundTransferCostPolicy.UnrestrictedOnly;
+                if (downloadOperation is BackgroundDownloadOperation backgroundDownloadOperation)
+                {
+                    var item = backgroundDownloadOperation.GetRawOperation();
+                    item.TransferGroup.TransferBehavior = parallelDownload ? BackgroundTransferBehavior.Parallel : BackgroundTransferBehavior.Serialized;
+                    item.CostPolicy = allowCostNetwork ? BackgroundTransferCostPolicy.Always : BackgroundTransferCostPolicy.UnrestrictedOnly;
+                }
             }
         }
 
