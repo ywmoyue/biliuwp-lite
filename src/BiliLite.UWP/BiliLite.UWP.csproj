@@ -148,6 +148,7 @@
       <DependentUpon>DanmakuListControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\FakeFrame.cs" />
+    <Compile Include="Models\Common\Player\PlayerOpenParam.cs" />
     <Compile Include="Services\BackgroundDownloadOperation.cs" />
     <Compile Include="Services\BackgroundDownloadService.cs" />
     <Compile Include="Services\BackgroundDownloadTask.cs" />
