@@ -1,7 +1,7 @@
 {
-  "version": "4.8.9",
-  "version_num": 40809,
-  "version_desc": "更新内容:\r\n\r\n- 支持播放中调整弹幕偏移 \r\n\r\n- 支持将直播中心添加到首页 \r\n\r\n- 支持打开直播回放合集的url  \r\n\r\n- 历史记录、直播、直播中心、放映厅里的视频或直播支持点击鼠标中键打开视频但不进入 \r\n\r\n- 支持使用WebPlayer播放已下载视频 \r\n\r\n- 播放页标签添加播放暂停控制按钮 \r\n\r\n- 新开标签页改为在当前标签页的后面 \r\n\r\n- 搜索页和视频详情页更新保存的标签页 \r\n\r\n- 修复查看弹幕列表与播放器中其他扩展按钮冲突 \r\n\r\n- 优化关闭标签页交互业务 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.8.11",
+  "version_num": 40811,
+  "version_desc": "更新内容:\r\n\r\n- 支持设置自定义CDN服务器 \r\n\r\n- 单窗口模式可设置释放页面资源 \r\n\r\n- 单窗口模式添加一键返回主页按钮 \r\n\r\n- 直播间礼物信息获取错误时不提示 \r\n\r\n- 除视频外的搜索触发412风控 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }

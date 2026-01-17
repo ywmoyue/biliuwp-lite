@@ -214,9 +214,15 @@ namespace BiliLite.ViewModels.Season
                     _logger.Warn("解析番剧相关数据失败", ex);
                 }
 
+                var seasonsData = data.data.Modules.FirstOrDefault(x => x.Value<string>("style") == "season");
+                if (seasonsData != null) seasonsData = seasonsData?["data"]?["seasons"];
+
                 var seasonDetail = m_mapper.Map<SeasonDetailViewModel>(data.data);
                 Detail = seasonDetail;
                 Detail.Episodes = epListData.result.Episodes;
+
+                if(seasonsData != null)
+                    Detail.Seasons = JsonConvert.DeserializeObject<List<SeasonDetailSeasonItemModel>>(JsonConvert.SerializeObject(seasonsData));
 
                 Episodes = epListData.result.Episodes.Where(x => !x.IsPreview).ToList();
                 ShowEpisodes = Episodes.Count > 0;

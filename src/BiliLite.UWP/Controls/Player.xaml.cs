@@ -641,15 +641,16 @@ namespace BiliLite.Controls
         /// 使用AdaptiveMediaSource播放视频
         /// </summary>
         /// <returns></returns>
-        public async Task<PlayerOpenResult> PlayerDashUseNative(BiliDashPlayUrlInfo dashInfo, string userAgent, string referer, double positon = 0)
+        public async Task<PlayerOpenResult> PlayerDashUseNative(PlayerOpenParam playerOpenParam)
         {
             try
             {
+                RealPlayerType = RealPlayerType.Native;
                 mediaPlayerVideo.Visibility = Visibility.Visible;
                 //vlcVideoView.Visibility = Visibility.Collapsed;
-                m_dashInfo = dashInfo;
-                m_referer = referer;
-                m_userAgent = userAgent;
+                m_dashInfo = playerOpenParam.DashInfo;
+                m_referer = playerOpenParam.Referer;
+                m_userAgent = playerOpenParam.UserAgent;
 
                 Opening = true;
                 m_currentEngine = PlayEngine.Native;
@@ -663,7 +664,7 @@ namespace BiliLite.Controls
                 //设置播放器
                 m_playerVideo = new MediaPlayer();
                 //_playerVideo.Source = MediaSource.CreateFromUri(new Uri(videoUrl.baseUrl));
-                var mediaSource = await CreateAdaptiveMediaSource(dashInfo, userAgent, referer);
+                var mediaSource = await CreateAdaptiveMediaSource(playerOpenParam.DashInfo, playerOpenParam.UserAgent, playerOpenParam.Referer);
                 if (mediaSource == null)
                 {
                     return new PlayerOpenResult()
@@ -784,11 +785,14 @@ namespace BiliLite.Controls
             }
         }
 
-        public async Task<PlayerOpenResult> PlayerDashUseShaka(BiliDashPlayUrlInfo dashInfo, string userAgent,
-            string referer, double positon = 0, bool isLocal = false)
+        public async Task<PlayerOpenResult> PlayerDashUseShaka(PlayerOpenParam playerOpenParam)
         {
             RealPlayerType = RealPlayerType.ShakaPlayer;
-            return await PlayDashUseWebPlayer(ShakaPlayer, dashInfo, userAgent, referer, positon, isLocal);
+            return await PlayDashUseWebPlayer(ShakaPlayer, playerOpenParam.DashInfo, 
+                playerOpenParam.UserAgent, 
+                playerOpenParam.Referer, 
+                playerOpenParam.Positon,
+                playerOpenParam.IsLocal);
         }
 
         /// <summary>
@@ -873,7 +877,7 @@ namespace BiliLite.Controls
         /// <param name="positon"></param>
         /// <param name="needConfig"></param>
         /// <returns></returns>
-        public async Task<PlayerOpenResult> PlayDashUseFFmpegInterop(BiliDashPlayUrlInfo dashPlayUrlInfo, string userAgent, string referer, double positon = 0, bool needConfig = true, bool isLocal = false)
+        public async Task<PlayerOpenResult> PlayDashUseFFmpegInterop(PlayerOpenParam playerOpenParam)
         {
             throw new NotImplementedException();
             //try
