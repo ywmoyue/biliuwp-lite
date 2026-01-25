@@ -22,7 +22,7 @@ namespace BiliLite.Models.Common.Search
             }
         }
         public string tag { get; set; }
-        public int play { get; set; }
+        public int? play { get; set; }
         public int video_review { get; set; }
         public int review { get; set; }
         public int favorites { get; set; }
