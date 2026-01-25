@@ -2,12 +2,14 @@
 using System.Linq;
 using BiliLite.Models.Common.Season;
 using BiliLite.Modules;
+using BiliLite.ViewModels.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using PropertyChanged;
 
 namespace BiliLite.ViewModels.Season
 {
-    public class SeasonDetailViewModel
+    public class SeasonDetailViewModel : BaseViewModel
     {
         [JsonProperty("season_id")]
         public int SeasonId { get; set; }
@@ -86,6 +88,7 @@ namespace BiliLite.ViewModels.Season
         public List<SeasonDetailSeasonItemModel> Seasons { get; set; }
 
         [JsonProperty("show_seasons")]
+        [DependsOn(nameof(Seasons))]
         public bool ShowSeasons => Seasons != null && Seasons.Count > 1;
 
         [JsonProperty("current_season")]
