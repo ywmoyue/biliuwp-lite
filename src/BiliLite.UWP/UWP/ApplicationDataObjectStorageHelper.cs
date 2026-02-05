@@ -25,10 +25,18 @@ namespace BiliLite.UWP
                 var value = Windows.Storage.ApplicationData.Current.LocalSettings.Values[key] as string;
                 return JsonConvert.DeserializeObject<T>(value);
             }
-            catch (Exception ex)
+            catch
             {
-                _logger.Error(key + ":" + ex.Message, ex);
-                throw;
+                try
+                {
+                    var value = Windows.Storage.ApplicationData.Current.LocalSettings.Values[key] as string;
+                    return JsonConvert.DeserializeObject<T>(JsonConvert.DeserializeObject<string>(value));
+                }
+                catch(Exception ex)
+                {
+                    _logger.Error(key + ":" + ex.Message, ex);
+                    throw;
+                }
             }
         }
 
