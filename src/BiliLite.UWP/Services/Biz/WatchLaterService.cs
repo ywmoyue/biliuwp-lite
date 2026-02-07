@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BiliLite.Services.Biz;
@@ -179,5 +180,39 @@ public class WatchLaterService : BaseBizService
            HandleError(ex);
         }
         return false;
+    }
+
+    public List<WatchlaterItemModel> FindFinishedVideos(List<WatchlaterItemModel> videos)
+    {
+        if (videos == null || videos.Count == 0)
+        {
+            return new List<WatchlaterItemModel>();
+        }
+
+        // 找到观看进度大于5且观看进度与视频长度相差1的视频或进度为-1（已观看）的视频
+        return videos.Where(v =>
+            v.progress > 5 &&
+            Math.Abs(v.progress - v.duration) < 1
+        || v.progress == -1).ToList();
+    }
+
+    public async Task<int> RemoveFinishedVideos(List<WatchlaterItemModel> finishedVideos)
+    {
+        if (finishedVideos == null || finishedVideos.Count == 0)
+        {
+            return 0;
+        }
+
+        int successCount = 0;
+        foreach (var video in finishedVideos)
+        {
+            if (await Remove(video.aid))
+            {
+                successCount++;
+                await Task.Delay(500);
+            }
+        }
+
+        return successCount;
     }
 }
