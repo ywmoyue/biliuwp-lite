@@ -188,6 +188,13 @@ namespace BiliLite.Services
             m_danmakuMaster.UpdateTime((uint)position * 1000);
         }
 
+        public override void UpdateSize(double width, double height)
+        {
+            base.UpdateSize(width, height);
+            m_danmakuCanvas.Height = height - 1;
+            m_danmakuCanvas.Width = width;
+        }
+
         public override List<DanmakuSimpleItem> FindDanmakus(int? progress = null)
         {
             var query = m_danmakuItems.AsEnumerable();

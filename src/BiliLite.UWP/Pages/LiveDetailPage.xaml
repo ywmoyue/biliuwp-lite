@@ -301,7 +301,7 @@
                     <Grid Tapped="Grid_Tapped">
                         <danmaku:Danmaku x:Name="DanmuControl" />
                     </Grid>
-                    <Grid>
+                    <Grid Visibility="{x:Bind m_viewModel.ShowCanvas2D}" >
                         <canvas:CanvasAnimatedControl x:Name="DanmakuCanvas" />
                     </Grid>
                     <!--  亮度  -->
