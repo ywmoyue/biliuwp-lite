@@ -12,6 +12,7 @@ using BiliLite.Models.Common.Video;
 using BiliLite.Models.Common.User.WatchLater;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
+using Microsoft.UI.Xaml;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -78,7 +79,7 @@ namespace BiliLite.Pages.User
             watchLaterVM.Refresh();
         }
 
-        private async void CleanFinishedButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void CleanFinishedButton_Click(object sender, RoutedEventArgs e)
         {
             if (watchLaterVM.Videos == null || watchLaterVM.Videos.Count == 0)
             {
