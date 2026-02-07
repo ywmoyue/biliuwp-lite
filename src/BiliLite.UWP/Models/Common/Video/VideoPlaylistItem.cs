@@ -12,6 +12,8 @@ namespace BiliLite.Models.Common.Video
 
         public string Title { get; set; }
 
+        public bool IsWatchlaterItem { get; set; }
+
         public TimeSpan? Duration { get; set; }
     }
 }

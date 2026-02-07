@@ -20,7 +20,7 @@
                 <MenuFlyoutItem Click="CloseList_OnClick">关闭列表</MenuFlyoutItem>
             </MenuFlyout>
             <MenuFlyout x:Key="VideoItemFlyout">
-                <!--<MenuFlyoutItem>移出稍后再看</MenuFlyoutItem>-->
+                <MenuFlyoutItem Visibility="{Binding IsWatchlaterItem}" Click="BtnRemoveWatchlater_Click">移出稍后再看</MenuFlyoutItem>
             </MenuFlyout>
         </ResourceDictionary>
     </UserControl.Resources>

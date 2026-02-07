@@ -1,6 +1,7 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Rank;
+using BiliLite.Modules.User;
 using BiliLite.Services;
 using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels.Rank;
@@ -85,7 +86,8 @@ namespace BiliLite.Pages
         private void AddToWatchLater_Click(object sender, RoutedEventArgs e)
         {
             var data = (sender as MenuFlyoutItem).DataContext as RankItemModel;
-            Modules.User.WatchLaterVM.Instance.AddToWatchlater(data.Aid);
+            var watchLaterViewModel = App.ServiceProvider.GetRequiredService<WatchLaterViewModel>();
+            watchLaterViewModel.AddToWatchlater(data.Aid);
         }
 
         public void UpdatePivotLayout()

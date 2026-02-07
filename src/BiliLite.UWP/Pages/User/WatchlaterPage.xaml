@@ -10,10 +10,11 @@
     xmlns:pages="using:BiliLite.Pages"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:user="using:BiliLite.Modules.User"
+    xmlns:watchLater="using:BiliLite.Models.Common.User.WatchLater"
     Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
-        <DataTemplate x:Key="VideoDataTemplate" x:DataType="user:WatchlaterItemModel">
+        <DataTemplate x:Key="VideoDataTemplate" x:DataType="watchLater:WatchlaterItemModel">
             <Grid Background="#00FFFFFF">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200" />
