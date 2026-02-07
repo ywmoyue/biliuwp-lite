@@ -1,4 +1,4 @@
-﻿<pages:BasePage
+<pages:BasePage
     x:Class="BiliLite.Pages.User.WatchlaterPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,10 +10,11 @@
     xmlns:pages="using:BiliLite.Pages"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:user="using:BiliLite.Modules.User"
+    xmlns:watchLater="using:BiliLite.Models.Common.User.WatchLater"
     Background="{ThemeResource PageBackgroundMicaBrush}"
     mc:Ignorable="d">
     <Page.Resources>
-        <DataTemplate x:Key="VideoDataTemplate" x:DataType="user:WatchlaterItemModel">
+        <DataTemplate x:Key="VideoDataTemplate" x:DataType="watchLater:WatchlaterItemModel">
             <Grid Background="#00FFFFFF">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200" />
@@ -73,6 +74,7 @@
                 Orientation="Horizontal">
                 <Button Margin="8,0" Command="{x:Bind Path=watchLaterVM.CleanCommand}">一键清空</Button>
                 <Button Command="{x:Bind Path=watchLaterVM.CleanViewedCommand}">移除已观看</Button>
+                <Button Margin="8,0" Click="CleanFinishedButton_Click">移除已看完</Button>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">
