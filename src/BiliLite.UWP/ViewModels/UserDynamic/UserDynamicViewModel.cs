@@ -38,7 +38,7 @@ namespace BiliLite.ViewModels.UserDynamic
     {
         #region Fields
 
-        private readonly WatchLaterVM m_watchLaterVm;
+        private readonly WatchLaterViewModel m_watchLaterVm;
         private readonly DynamicAPI m_dynamicApi;
         private DynamicItemDataTemplateSelector m_dynamicItemDataTemplateSelector;
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
@@ -56,7 +56,7 @@ namespace BiliLite.ViewModels.UserDynamic
             m_grpcService = App.ServiceProvider.GetService<GrpcService>();
             m_cookieService = App.ServiceProvider.GetRequiredService<CookieService>();
             m_dynamicApi = new DynamicAPI();
-            m_watchLaterVm = new WatchLaterVM();
+            m_watchLaterVm = App.ServiceProvider.GetRequiredService<WatchLaterViewModel>();
             m_dynamicItemDataTemplateSelector = new DynamicItemDataTemplateSelector();
             RefreshCommand = new RelayCommand(Refresh);
             LoadMoreCommand = new RelayCommand(LoadMore);

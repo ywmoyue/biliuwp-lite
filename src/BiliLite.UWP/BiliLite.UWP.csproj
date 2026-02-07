@@ -149,9 +149,13 @@
     </Compile>
     <Compile Include="Controls\FakeFrame.cs" />
     <Compile Include="Models\Common\Player\PlayerOpenParam.cs" />
+    <Compile Include="Models\Common\User\WatchLater\WatchlaterItemModel.cs" />
+    <Compile Include="Models\Common\User\WatchLater\WatchlaterOwnerModel.cs" />
+    <Compile Include="Models\Common\User\WatchLater\WatchlaterPagesModel.cs" />
     <Compile Include="Services\BackgroundDownloadOperation.cs" />
     <Compile Include="Services\BackgroundDownloadService.cs" />
     <Compile Include="Services\BackgroundDownloadTask.cs" />
+    <Compile Include="Services\Biz\WatchLaterService.cs" />
     <Compile Include="Services\Interfaces\IDownloadOperation.cs" />
     <Compile Include="Services\Interfaces\IDownloadService.cs" />
     <Compile Include="Services\Interfaces\IDownloadTask.cs" />
@@ -1031,7 +1035,7 @@
     <Compile Include="Modules\User\UserDetail\UserFollowVM.cs" />
     <Compile Include="Modules\User\UserDetail\UserSubmitArticleVM.cs" />
     <Compile Include="ViewModels\User\UserSubmitVideoViewModel.cs" />
-    <Compile Include="Modules\User\WatchLaterVM.cs" />
+    <Compile Include="Modules\User\WatchLaterViewModel.cs" />
     <Compile Include="NoTabMainPage.xaml.cs">
       <DependentUpon>NoTabMainPage.xaml</DependentUpon>
     </Compile>

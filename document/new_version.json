@@ -1,7 +1,7 @@
 {
-  "version": "4.8.11",
-  "version_num": 40811,
-  "version_desc": "更新内容:\r\n\r\n- 支持设置自定义CDN服务器 \r\n\r\n- 单窗口模式可设置释放页面资源 \r\n\r\n- 单窗口模式添加一键返回主页按钮 \r\n\r\n- 直播间礼物信息获取错误时不提示 \r\n\r\n- 除视频外的搜索触发412风控 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.8.12",
+  "version_num": 40812,
+  "version_desc": "更新内容:\r\n\r\n- 抽象下载器实现代码，以便于后续或其他版本更换不同下载器实现 \r\n\r\n- 评论区字体大小可设置 \r\n\r\n- 首页推荐页支持自定义元素宽度 \r\n\r\n- 优化播放器回落机制  \r\n\r\n- 更新动态专栏接口，修复首页动态页专栏tab内容不正常问题 \r\n\r\n- 修复番剧详情页选季问题 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }

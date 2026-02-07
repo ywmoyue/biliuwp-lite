@@ -34,7 +34,7 @@ namespace BiliLite.ViewModels.UserDynamic
         private readonly GrpcService m_grpcService;
         private readonly IMapper m_mapper;
         private readonly DynamicAPI m_dynamicApi;
-        private readonly WatchLaterVM m_watchLaterVm;
+        private readonly WatchLaterViewModel m_watchLaterVm;
         private readonly ContentFilterService m_contentFilterService;
         private int m_page = 1;
         private string m_offset = null;
@@ -45,13 +45,13 @@ namespace BiliLite.ViewModels.UserDynamic
 
         #region Constructors
 
-        public UserDynamicAllViewModel(GrpcService grpcService, IMapper mapper, ContentFilterService contentFilterService)
+        public UserDynamicAllViewModel(GrpcService grpcService, IMapper mapper, ContentFilterService contentFilterService, WatchLaterViewModel watchLaterVm)
         {
             m_grpcService = grpcService;
             m_mapper = mapper;
             m_contentFilterService = contentFilterService;
             m_dynamicApi = new DynamicAPI();
-            m_watchLaterVm = new WatchLaterVM();
+            m_watchLaterVm = watchLaterVm;
             LoadMoreCommand = new RelayCommand(LoadMore);
             UserCommand = new RelayCommand<object>(OpenUser);
             DetailCommand = new RelayCommand<string>(OpenDetail);

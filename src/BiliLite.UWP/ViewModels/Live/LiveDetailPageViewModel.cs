@@ -93,5 +93,8 @@ namespace BiliLite.ViewModels.Live
         public string LivePlayUrlSource { get; set; }
 
         public bool ShowBottomGiftBar { get; set; } = true;
+
+        [DoNotNotify]
+        public bool ShowCanvas2D { get; } = SettingService.GetValue(SettingConstants.Live.DANMAKU_ENGINE, (int)SettingConstants.Live.DEFAULT_DANMAKU_ENGINE) == (int)DanmakuEngineType.FrostDanmakuMaster;
     }
 }

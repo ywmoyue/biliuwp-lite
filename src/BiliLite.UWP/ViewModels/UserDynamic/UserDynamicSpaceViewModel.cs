@@ -1,36 +1,20 @@
 ﻿using AutoMapper;
 using Bilibili.App.Dynamic.V2;
-using BiliLite.Controls.Dialogs;
 using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
-using BiliLite.Models;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.UserDynamic;
 using BiliLite.Models.Exceptions;
-using BiliLite.Models.Requests.Api.User;
 using BiliLite.Modules;
 using BiliLite.Modules.User;
-using BiliLite.Pages;
-using BiliLite.Pages.User;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using AutoMapper;
-using Bilibili.App.Dynamic.V2;
-using BiliLite.Extensions;
-using BiliLite.Models.Common;
-using BiliLite.Models.Exceptions;
-using BiliLite.Modules;
-using BiliLite.Services;
-using BiliLite.ViewModels.Common;
-using BiliLite.Models.Common.UserDynamic;
-using BiliLite.Modules.User;
 
 namespace BiliLite.ViewModels.UserDynamic
 {
@@ -41,7 +25,7 @@ namespace BiliLite.ViewModels.UserDynamic
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly GrpcService m_grpcService;
         private readonly IMapper m_mapper;
-        private readonly WatchLaterVM m_watchLaterVm;
+        private readonly WatchLaterViewModel m_watchLaterVm;
         private int m_page = 1;
         private string m_offset = null;
 
@@ -49,11 +33,11 @@ namespace BiliLite.ViewModels.UserDynamic
 
         #region Constructors
 
-        public UserDynamicSpaceViewModel(GrpcService grpcService, IMapper mapper)
+        public UserDynamicSpaceViewModel(GrpcService grpcService, IMapper mapper, WatchLaterViewModel watchLaterVm)
         {
             m_grpcService = grpcService;
             m_mapper = mapper;
-            m_watchLaterVm = new WatchLaterVM();
+            m_watchLaterVm = watchLaterVm;
             LoadMoreCommand = new RelayCommand(LoadMore);
             UserCommand = new RelayCommand<object>(OpenUser);
             DetailCommand = new RelayCommand<string>(DynamicExtensions.OpenDetail);

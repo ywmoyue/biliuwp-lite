@@ -4,6 +4,7 @@ using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Favorites;
 using BiliLite.Models.Common.Video;
+using BiliLite.Modules.User;
 using BiliLite.Services;
 using BiliLite.ViewModels.Favourites;
 using Microsoft.Extensions.DependencyInjection;
@@ -165,7 +166,8 @@ namespace BiliLite.Pages.User
         private void AddToWatchLater_Click(object sender, RoutedEventArgs e)
         {
             var data = (sender as MenuFlyoutItem).DataContext as FavoriteInfoVideoItemModel;
-            Modules.User.WatchLaterVM.Instance.AddToWatchlater(data.Id);
+            var watchLaterViewModel = App.ServiceProvider.GetRequiredService<WatchLaterViewModel>();
+            watchLaterViewModel.AddToWatchlater(data.Id);
         }
 
         private async void PlayAll_Click(object sender, RoutedEventArgs e)
