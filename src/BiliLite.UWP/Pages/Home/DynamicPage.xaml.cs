@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Navigation;
 using BiliLite.Models.Common.Dynamic;
 using BiliLite.ViewModels.Home;
 using Microsoft.Extensions.DependencyInjection;
+using BiliLite.Modules.User;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -116,7 +117,8 @@ namespace BiliLite.Pages.Home
         private void AddToWatchLater_Click(object sender, RoutedEventArgs e)
         {
             var data = (sender as MenuFlyoutItem).DataContext as DynamicItemModel;
-            Modules.User.WatchLaterVM.Instance.AddToWatchlater(data.Video.Aid);
+            var watchLaterViewModel = App.ServiceProvider.GetRequiredService<WatchLaterViewModel>();
+            watchLaterViewModel.AddToWatchlater(data.Video.Aid);
         }
 
         public async void ScrollRecover()

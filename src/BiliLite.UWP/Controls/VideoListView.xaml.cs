@@ -2,6 +2,7 @@
 using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common.Video;
+using BiliLite.Modules.User;
 using BiliLite.Services.Biz;
 using BiliLite.ViewModels.Video;
 using System;
@@ -23,12 +24,14 @@ namespace BiliLite.Controls
         private readonly IMapper m_mapper;
         private readonly MediaListService m_mediaListService;
         private object m_flyoutContextElement;
+        private readonly WatchLaterViewModel m_watchLaterViewModel;
 
-        public VideoListView(VideoListViewModel viewModel, IMapper mapper, MediaListService mediaListService)
+        public VideoListView(VideoListViewModel viewModel, IMapper mapper, MediaListService mediaListService, WatchLaterViewModel watchLaterViewModel)
         {
             m_viewModel = viewModel;
             m_mapper = mapper;
             m_mediaListService = mediaListService;
+            m_watchLaterViewModel = watchLaterViewModel;
             InitializeComponent();
         }
 
@@ -178,5 +181,23 @@ namespace BiliLite.Controls
         private void OnUpToTopBtnTapped(object sender, TappedRoutedEventArgs e) => VideoListScrollViewer.ChangeView(null, 0, null);
 
         private void OnDownToBottomBtnTapped(object sender, TappedRoutedEventArgs e) => VideoListScrollViewer.ChangeView(null, SectionListView.ActualHeight, null);
+
+        private async void BtnRemoveWatchlater_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not FrameworkElement ele)
+            {
+                return;
+            }
+            var context = ele.DataContext;
+            if (ele.DataContext is not VideoListItem videoListItem)
+            {
+                return;
+            }
+            if (await m_watchLaterViewModel.Del(videoListItem.Id))
+            {
+                // 只做提示，不从列表中删除视频
+                NotificationShowExtensions.ShowMessageToast($"已移除稍后再看:{videoListItem.Title}");
+            }
+        }
     }
 }

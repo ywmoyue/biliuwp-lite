@@ -9,6 +9,7 @@ using BiliLite.Models.Common.Video;
 using BiliLite.Models.Download;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Modules;
+using BiliLite.Modules.User;
 using BiliLite.Services;
 using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels.Video;
@@ -44,6 +45,7 @@ namespace BiliLite.Pages
         bool is_bvid = false;
         private bool isFirstUgcSeasonVideo = false;
         private VideoListView m_videoListView;
+        private readonly WatchLaterViewModel m_watchLaterViewModel;
         private bool m_loadUgcSeasonData = false;
 
         public VideoDetailPage()
@@ -54,6 +56,7 @@ namespace BiliLite.Pages
             this.Player = this.player;
             NavigationCacheMode = NavigationCacheMode.Enabled;
             m_viewModel = new VideoDetailPageViewModel();
+            m_watchLaterViewModel = App.ServiceProvider.GetRequiredService<WatchLaterViewModel>();
             this.DataContext = m_viewModel;
             //DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
             //dataTransferManager.DataRequested += DataTransferManager_DataRequested;
@@ -160,6 +163,7 @@ namespace BiliLite.Pages
                             Title = videoPlaylistItem.Title,
                             Author = videoPlaylistItem.Author,
                             Cover = videoPlaylistItem.Cover,
+                            IsWatchlaterItem = videoPlaylistItem.IsWatchlaterItem,
                             Duration = videoPlaylistItem.Duration,
                         });
                     }
@@ -609,13 +613,13 @@ namespace BiliLite.Pages
         private void AddToWatchLater_Click(object sender, RoutedEventArgs e)
         {
             var data = (sender as MenuFlyoutItem).DataContext as VideoDetailRelatesViewModel;
-            Modules.User.WatchLaterVM.Instance.AddToWatchlater(data.Aid);
+            m_watchLaterViewModel.AddToWatchlater(data.Aid);
         }
 
         private void BtnWatchLater_Click(object sender, RoutedEventArgs e)
         {
             if (m_viewModel == null || m_viewModel.VideoInfo == null) return;
-            Modules.User.WatchLaterVM.Instance.AddToWatchlater(avid);
+            m_watchLaterViewModel.AddToWatchlater(avid);
         }
 
         private async void VideoListView_SelectionChanged(object sender, VideoListItem item)

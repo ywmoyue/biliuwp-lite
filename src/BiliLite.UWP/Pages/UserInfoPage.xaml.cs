@@ -1,8 +1,10 @@
 ﻿using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Article;
 using BiliLite.Models.Common.User;
 using BiliLite.Models.Common.Video;
 using BiliLite.Models.Requests.Api;
+using BiliLite.Modules.User;
 using BiliLite.Modules.User.UserDetail;
 using BiliLite.Pages.User;
 using BiliLite.Services;
@@ -402,7 +404,8 @@ namespace BiliLite.Pages
         private void AddToWatchLater_Click(object sender, RoutedEventArgs e)
         {
             var data = (sender as MenuFlyoutItem).DataContext as SubmitVideoItemModel;
-            Modules.User.WatchLaterVM.Instance.AddToWatchlater(data.Aid);
+            var watchLaterViewModel = App.ServiceProvider.GetRequiredService<WatchLaterViewModel>();
+            watchLaterViewModel.AddToWatchlater(data.Aid);
         }
 
         private void comFollowOrder_SelectionChanged(object sender, SelectionChangedEventArgs e)

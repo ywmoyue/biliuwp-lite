@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using BiliLite.Models.Common.Video;
+using BiliLite.Models.Common.User.WatchLater;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -17,12 +18,12 @@ namespace BiliLite.Pages.User
     /// </summary>
     public sealed partial class WatchlaterPage : BasePage, IRefreshablePage
     {
-        WatchLaterVM watchLaterVM;
+        WatchLaterViewModel watchLaterVM;
         public WatchlaterPage()
         {
             this.InitializeComponent();
             Title = "稍后再看";
-            watchLaterVM = new WatchLaterVM();
+            watchLaterVM = new WatchLaterViewModel();
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -48,6 +49,7 @@ namespace BiliLite.Pages.User
                         Author = item.owner.name,
                         Id = item.aid,
                         Title = item.title,
+                        IsWatchlaterItem = true,
                         Duration = TimeSpan.FromSeconds(item.duration),
                     });
                 }

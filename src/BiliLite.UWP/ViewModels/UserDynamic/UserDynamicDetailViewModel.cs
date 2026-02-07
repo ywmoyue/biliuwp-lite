@@ -22,13 +22,13 @@ public class UserDynamicDetailViewModel : BaseViewModel, IUserDynamicCommands
     private readonly GrpcService m_grpcService;
     private readonly IMapper m_mapper;
     private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
-    private readonly WatchLaterVM m_watchLaterVm;
+    private readonly WatchLaterViewModel m_watchLaterVm;
 
-    public UserDynamicDetailViewModel(GrpcService grpcService, IMapper mapper)
+    public UserDynamicDetailViewModel(GrpcService grpcService, IMapper mapper, WatchLaterViewModel watchLaterVm)
     {
         m_grpcService = grpcService;
         m_mapper = mapper;
-        m_watchLaterVm = new WatchLaterVM();
+        m_watchLaterVm = watchLaterVm;
         UserCommand = new RelayCommand<object>(OpenUser);
         DetailCommand = new RelayCommand<string>(DynamicExtensions.OpenDetail);
         ImageCommand = new RelayCommand<object>(DynamicExtensions.OpenImage);

@@ -101,7 +101,8 @@ namespace BiliLite.Pages.Home
         private void AddToWatchLater_Click(object sender, RoutedEventArgs e)
         {
             var data = (sender as MenuFlyoutItem).DataContext as HotDataItemModel;
-            WatchLaterVM.Instance.AddToWatchlater(data.Param);
+            var watchLaterViewModel = App.ServiceProvider.GetRequiredService<WatchLaterViewModel>();
+            watchLaterViewModel.AddToWatchlater(data.Param);
         }
 
         public async Task Refresh()

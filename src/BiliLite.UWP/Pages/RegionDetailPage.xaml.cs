@@ -1,9 +1,11 @@
 ﻿using BiliLite.Models.Common;
 using BiliLite.Models.Common.Region;
+using BiliLite.Modules.User;
 using BiliLite.Pages.Bangumi;
 using BiliLite.Services;
 using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels.Region;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
@@ -165,7 +167,8 @@ namespace BiliLite.Pages
         {
             var data = (sender as MenuFlyoutItem).DataContext as RegionVideoItemModel;
 
-            Modules.User.WatchLaterVM.Instance.AddToWatchlater(data.Param);
+            var watchLaterViewModel = App.ServiceProvider.GetRequiredService<WatchLaterViewModel>();
+            watchLaterViewModel.AddToWatchlater(data.Param);
         }
 
         public async Task Refresh()

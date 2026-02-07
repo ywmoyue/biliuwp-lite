@@ -109,7 +109,8 @@ namespace BiliLite.Pages.Home
                 case "watch_later":
                     {
                         var item = (sender as ListView).DataContext as RecommendItemModel;
-                        WatchLaterVM.Instance.AddToWatchlater(item.Param);
+                        var watchLaterViewModel = App.ServiceProvider.GetRequiredService<WatchLaterViewModel>();
+                        watchLaterViewModel.AddToWatchlater(item.Param);
                         return;
                     }
                 case "dislike":
