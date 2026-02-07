@@ -205,7 +205,7 @@ namespace BiliLite.Services
             return value;
         }
 
-        private void ImportSettingsCore(TomlTable model, Type settingsType)
+        private async Task ImportSettingsCore(TomlTable model, Type settingsType)
         {
             var fields = settingsType.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
             foreach (var field in fields)
@@ -215,15 +215,24 @@ namespace BiliLite.Services
                 if (!(keyAttribute is SettingKeyAttribute settingKeyAttribute)) continue;
                 var key = field.GetRawConstantValue().ToString();
 
-                if (!model.ContainsKey(key)) continue;
+                try
+                {
+                    if (!model.ContainsKey(key)) continue;
 
-                if (settingKeyAttribute.UseSqlDb)
-                {
-                    SetSettingValueSqlCore(settingKeyAttribute, key, model);
+                    if (settingKeyAttribute.UseSqlDb)
+                    {
+                        SetSettingValueSqlCore(settingKeyAttribute, key, model);
+                    }
+                    else
+                    {
+                        SetSettingValueCore(settingKeyAttribute, key, model);
+                    }
                 }
-                else
+                catch(Exception ex)
                 {
-                    SetSettingValueCore(settingKeyAttribute, key, model);
+                    NotificationShowExtensions.ShowMessageToast($"设置项 {key} 导入失败");
+                    _logger.Error($"设置项 {key} 导入失败", ex);
+                    await Task.Delay(1000);
                 }
             }
         }
@@ -345,14 +354,14 @@ namespace BiliLite.Services
                 var text = Decode(bin);
                 var model = Toml.ToModel(text);
 
-                ImportSettingsCore(model, typeof(SettingConstants.UI));
-                ImportSettingsCore(model, typeof(SettingConstants.Account));
-                ImportSettingsCore(model, typeof(SettingConstants.VideoDanmaku));
-                ImportSettingsCore(model, typeof(SettingConstants.Live));
-                ImportSettingsCore(model, typeof(SettingConstants.Player));
-                ImportSettingsCore(model, typeof(SettingConstants.Roaming));
-                ImportSettingsCore(model, typeof(SettingConstants.Download));
-                ImportSettingsCore(model, typeof(SettingConstants.Other));
+                await ImportSettingsCore(model, typeof(SettingConstants.UI));
+                await ImportSettingsCore(model, typeof(SettingConstants.Account));
+                await ImportSettingsCore(model, typeof(SettingConstants.VideoDanmaku));
+                await ImportSettingsCore(model, typeof(SettingConstants.Live));
+                await ImportSettingsCore(model, typeof(SettingConstants.Player));
+                await ImportSettingsCore(model, typeof(SettingConstants.Roaming));
+                await ImportSettingsCore(model, typeof(SettingConstants.Download));
+                await ImportSettingsCore(model, typeof(SettingConstants.Other));
             }
             catch (Exception ex)
             {
