@@ -20,6 +20,7 @@ using BiliLite.ViewModels.Live;
 using BiliLite.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Input;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls;
@@ -360,10 +361,10 @@ namespace BiliLite.Pages
             DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
             {
                 m_viewModel.ScreenState = e.NewState;
-                var view = ApplicationView.GetForCurrentView();
-                if (e.NewState.IsFullscreen && !view.IsFullScreenMode)
+                var window = this.GetCurrentWindow();
+                if (e.NewState.IsFullscreen && window.Presenter.Kind != AppWindowPresenterKind.FullScreen)
                 {
-                    view.TryEnterFullScreenMode();
+                    window.AppWindow.SetPresenter(AppWindowPresenterKind.FullScreen);
 
                     if (SettingService.GetValue(SettingConstants.UI.DISPLAY_MODE, 0) <= 0)
                     {
@@ -376,9 +377,9 @@ namespace BiliLite.Pages
                         this.Margin = new Thickness(0, -40, 0, 0);
                     }
                 }
-                else if (view.IsFullScreenMode)
+                else if (window.Presenter.Kind == AppWindowPresenterKind.FullScreen)
                 {
-                    view.ExitFullScreenMode();
+                    window.AppWindow.SetPresenter(AppWindowPresenterKind.Overlapped);
 
                     this.Margin = new Thickness(0);
                 }
