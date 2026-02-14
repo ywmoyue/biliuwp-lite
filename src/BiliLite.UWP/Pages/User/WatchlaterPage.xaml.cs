@@ -1,12 +1,17 @@
-﻿using System;
+using System;
 using BiliLite.Models.Common;
 using BiliLite.Modules.User;
 using BiliLite.Services;
+using BiliLite.Services.Biz;
+using BiliLite.Extensions.Notifications;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using BiliLite.Models.Common.Video;
+using BiliLite.Models.Common.User.WatchLater;
+using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -17,12 +22,12 @@ namespace BiliLite.Pages.User
     /// </summary>
     public sealed partial class WatchlaterPage : BasePage, IRefreshablePage
     {
-        WatchLaterVM watchLaterVM;
+        WatchLaterViewModel watchLaterVM;
         public WatchlaterPage()
         {
             this.InitializeComponent();
             Title = "稍后再看";
-            watchLaterVM = new WatchLaterVM();
+            watchLaterVM = new WatchLaterViewModel();
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -48,6 +53,7 @@ namespace BiliLite.Pages.User
                         Author = item.owner.name,
                         Id = item.aid,
                         Title = item.title,
+                        IsWatchlaterItem = true,
                         Duration = TimeSpan.FromSeconds(item.duration),
                     });
                 }
@@ -70,6 +76,42 @@ namespace BiliLite.Pages.User
         public async Task Refresh()
         {
             watchLaterVM.Refresh();
+        }
+
+        private async void CleanFinishedButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            if (watchLaterVM.Videos == null || watchLaterVM.Videos.Count == 0)
+            {
+                NotificationShowExtensions.ShowMessageToast("稍后再看列表为空");
+                return;
+            }
+
+            var watchLaterService = App.ServiceProvider.GetRequiredService<WatchLaterService>();
+            var finishedVideos = watchLaterService.FindFinishedVideos(watchLaterVM.Videos.ToList());
+
+            if (finishedVideos.Count == 0)
+            {
+                NotificationShowExtensions.ShowMessageToast("未找到已看完的视频");
+                return;
+            }
+
+            var result = await NotificationShowExtensions.ShowMessageDialog(
+                "移除已看完视频", 
+                $"已找到{finishedVideos.Count}个已看完视频，是否全部移除？"
+            );
+
+            if (!result) return;
+
+            NotificationShowExtensions.ShowMessageToast("批量操作中...");
+
+            var successCount = await watchLaterService.RemoveFinishedVideos(finishedVideos);
+
+            foreach (var video in finishedVideos)
+            {
+                watchLaterVM.Videos.Remove(video);
+            }
+
+            NotificationShowExtensions.ShowMessageToast($"已成功移除{successCount}个已看完视频");
         }
     }
 }

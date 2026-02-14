@@ -15,6 +15,8 @@ namespace BiliLite.Models.Common.Video
 
         public TimeSpan? Duration { get; set; }
 
+        public bool IsWatchlaterItem { get; set; }
+
         public string DurationStr => !Duration.HasValue ? "" : TimeSpanStrFormatConverter.Convert(Duration.Value);
     }
 }
