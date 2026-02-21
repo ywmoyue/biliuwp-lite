@@ -21,9 +21,12 @@ namespace BiliLite.Modules.SpBlock.Controls
     [RegisterTransientService(typeof(IPlayerSponsorBlockControl))]
     public sealed partial class PlayerSponsorBlockControl : UserControl, IPlayerSponsorBlockControl
     {
-        private readonly PlayerSponsorBlockControlViewModel m_viewModel; 
+        private readonly PlayerSponsorBlockControlViewModel m_viewModel;
         private readonly bool m_sponsorBlockFlag;
         private readonly ISponsorBlockService m_sponsorBlockService;
+        private string m_currentBvid;
+        private string m_currentCid;
+        private double m_currentDuration;
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
 
         public PlayerSponsorBlockControl()
@@ -33,17 +36,46 @@ namespace BiliLite.Modules.SpBlock.Controls
             m_sponsorBlockFlag = SettingService.GetValue(SettingConstants.Player.SPONSOR_BLOCK,
                 SettingConstants.Player.DEFAULT_SPONSOR_BLOCK);
             this.InitializeComponent();
+            Loaded += PlayerSponsorBlockControl_Loaded;
+            Unloaded += PlayerSponsorBlockControl_Unloaded;
         }
 
         public List<PlayerSkipItem> SegmentSkipItems => m_viewModel.SponsorBlockSegmentList;
 
         public event EventHandler<double> UpdatePosition;
 
+        private void PlayerSponsorBlockControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            m_sponsorBlockService.SponsorBlockLoaded += OnSponsorBlockLoaded;
+        }
+
+        private void PlayerSponsorBlockControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            m_sponsorBlockService.SponsorBlockLoaded -= OnSponsorBlockLoaded;
+        }
+
+        private async void OnSponsorBlockLoaded(object sender, string loadedBvid)
+        {
+            if (string.IsNullOrEmpty(m_currentBvid) || loadedBvid != m_currentBvid) return;
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                RefreshSponsorBlockUi(m_currentBvid, m_currentCid, m_currentDuration);
+            });
+        }
+
         public void LoadSponsorBlock(string bvid, string cid, double duration)
         {
             if (!m_sponsorBlockFlag) return;
             m_viewModel.ShowSponsorBlockBtn = true;
+            m_currentBvid = bvid;
+            m_currentCid = cid;
+            m_currentDuration = duration;
 
+            RefreshSponsorBlockUi(bvid, cid, duration);
+        }
+
+        private void RefreshSponsorBlockUi(string bvid, string cid, double duration)
+        {
             var vaildSeg = m_sponsorBlockService.GetVideoSponsorBlocks(bvid, cid, duration);
             m_viewModel.SponsorBlockSegmentList = vaildSeg;
 
@@ -55,9 +87,15 @@ namespace BiliLite.Modules.SpBlock.Controls
             SponsorBlockStackPanel.Visibility =
                 SponsorBlockStackPanel.Children.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
 
-            SponsorBlockMsg.Text = m_viewModel.SponsorBlockSegmentList.Count > 0 ?
-                $"🎉此视频在数据库中有 {m_viewModel.SponsorBlockSegmentList.Count} 个可跳过片段！" :
-                "😢在数据库中未找到此视频的可跳过片段";
+            if (m_viewModel.SponsorBlockSegmentList.Count > 0)
+            {
+                SponsorBlockMsg.Text = $"🎉此视频在数据库中有 {m_viewModel.SponsorBlockSegmentList.Count} 个可跳过片段！";
+                return;
+            }
+
+            SponsorBlockMsg.Text = m_sponsorBlockService.HasSponsorBlockCache(bvid)
+                ? "😢在数据库中未找到此视频的可跳过片段"
+                : "🔄空降片段加载中，若稍后仍未出现则表示数据库暂无数据";
         }
 
         public void AddSegmentToStackPanel(List<PlayerSkipItem> list)
