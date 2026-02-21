@@ -19,6 +19,7 @@ namespace BiliLite.Modules.SpBlock.Services
     public class SponsorBlockService : ISponsorBlockService
     {
         private readonly SponsorBlockApi m_sponsorBlockApi;
+        private readonly object m_sponsorBlocksLock = new();
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
 
         public SponsorBlockService(SponsorBlockApi sponsorBlockApi)
@@ -31,14 +32,19 @@ namespace BiliLite.Modules.SpBlock.Services
 
         public Dictionary<string, List<PlayerSkipItem>> SponsorBlocks { get; set; } = [];
 
+        public event EventHandler<string> SponsorBlockLoaded;
+
         // SponsorBlock API, 由B站空降助手提供
         public string DefaultApiUrl { get; } = "https://bsbsb.top/api";
 
         public async Task LoadSponsorBlock(string bvid)
         {
-            if (SponsorBlocks.ContainsKey(bvid))
+            lock (m_sponsorBlocksLock)
             {
-                SponsorBlocks.Remove(bvid);
+                if (SponsorBlocks.ContainsKey(bvid))
+                {
+                    SponsorBlocks.Remove(bvid);
+                }
             }
 
             var sponsorBlocks = new List<PlayerSkipItem>();
@@ -49,6 +55,7 @@ namespace BiliLite.Modules.SpBlock.Services
                 if (results.code is 400 or 404)
                     NotificationShowExtensions.ShowMessageToast($"视频{bvid} SponsorBlock API请求错误: {results.code}");
                 _logger.Warn(results.message);
+                SponsorBlockLoaded?.Invoke(this, bvid);
                 return;
             }
 
@@ -56,36 +63,48 @@ namespace BiliLite.Modules.SpBlock.Services
             if (data is null)
             {
                 _logger.Warn("SponsorBlock转换错误");
+                SponsorBlockLoaded?.Invoke(this, bvid);
                 return;
             }
 
             var video = data.FirstOrDefault(video => video.VideoId == bvid);
-            if (video is null) return;
-            foreach (var seg in video.Segments)
+            if (video is not null)
             {
-                var item = new PlayerSkipItem
+                foreach (var seg in video.Segments)
                 {
-                    Start = seg.Segment[0] != 0 ? seg.Segment[0] : seg.Segment[0] + 0.75, //完全贴合视频开头的片段会报错. 加偏移量
-                    End = Math.Abs(seg.Segment[1] - seg.VideoDuration) > 0.5
-                        ? seg.Segment[1]
-                        : seg.Segment[1] - 1.5, //完全贴合视频结尾的片段会卡死播放器，加偏移量
-                    Category = seg.Category,
-                    VideoDuration = seg.VideoDuration,
-                    Cid = seg.Cid,
-                };
-                if (!item.IsSectionValid ||
-                    item.CategoryEnum == SponsorBlockType.PoiHighlight ||
-                    item.CategoryEnum == SponsorBlockType.None) continue; //暂不支持精彩时刻
-                sponsorBlocks.Add(item);
+                    var item = new PlayerSkipItem
+                    {
+                        Start = seg.Segment[0] != 0 ? seg.Segment[0] : seg.Segment[0] + 0.75, //完全贴合视频开头的片段会报错. 加偏移量
+                        End = Math.Abs(seg.Segment[1] - seg.VideoDuration) > 0.5
+                            ? seg.Segment[1]
+                            : seg.Segment[1] - 1.5, //完全贴合视频结尾的片段会卡死播放器，加偏移量
+                        Category = seg.Category,
+                        VideoDuration = seg.VideoDuration,
+                        Cid = seg.Cid,
+                    };
+                    if (!item.IsSectionValid ||
+                        item.CategoryEnum == SponsorBlockType.PoiHighlight ||
+                        item.CategoryEnum == SponsorBlockType.None) continue; //暂不支持精彩时刻
+                    sponsorBlocks.Add(item);
+                }
             }
 
-            SponsorBlocks.TryAdd(bvid, sponsorBlocks);
+            lock (m_sponsorBlocksLock)
+            {
+                SponsorBlocks.TryAdd(bvid, sponsorBlocks);
+            }
+
+            SponsorBlockLoaded?.Invoke(this, bvid);
         }
 
         public List<PlayerSkipItem> GetVideoSponsorBlocks(string bvid, string cid, double duration)
         {
-            if (!SponsorBlocks.ContainsKey(bvid)) return new List<PlayerSkipItem>();
-            var bvSponsorBlocks = SponsorBlocks[bvid];
+            List<PlayerSkipItem> bvSponsorBlocks;
+            lock (m_sponsorBlocksLock)
+            {
+                if (!SponsorBlocks.ContainsKey(bvid)) return new List<PlayerSkipItem>();
+                bvSponsorBlocks = SponsorBlocks[bvid];
+            }
             var result = bvSponsorBlocks
                 .Where(x => x.Cid == cid) // 区分cid用于多P视频
                 .Where(x => Math.Abs(x.VideoDuration - duration) <= 2.0) // 剔除视频长度不等，可能换源的视频
@@ -94,10 +113,21 @@ namespace BiliLite.Modules.SpBlock.Services
             return result;
         }
 
+        public bool HasSponsorBlockCache(string bvid)
+        {
+            lock (m_sponsorBlocksLock)
+            {
+                return SponsorBlocks.ContainsKey(bvid);
+            }
+        }
+
         public void RemoveSponsorBlockCache(string bvid)
         {
-            if (!SponsorBlocks.ContainsKey(bvid)) return;
-            SponsorBlocks.Remove(bvid);
+            lock (m_sponsorBlocksLock)
+            {
+                if (!SponsorBlocks.ContainsKey(bvid)) return;
+                SponsorBlocks.Remove(bvid);
+            }
         }
     }
 }
