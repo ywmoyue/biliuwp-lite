@@ -11,6 +11,7 @@ using BiliLite.Modules.ExtraInterface;
 using BiliLite.Modules.SpBlock.Api;
 using BiliLite.Modules.SpBlock.Models;
 using BiliLite.Services;
+using Flurl.Http;
 
 namespace BiliLite.Modules.SpBlock.Services
 {
@@ -28,6 +29,15 @@ namespace BiliLite.Modules.SpBlock.Services
             m_sponsorBlockApi.BaseUrl =
                     SettingService.GetValue(
                         SettingConstants.Player.SPONSOR_BLOCK_API, DefaultApiUrl);
+
+            try
+            {
+                FlurlHttp.ConfigureClient(m_sponsorBlockApi.BaseUrl, cli =>
+                {
+                    cli.Settings.HttpClientFactory = new SponsorBlockHttpClientFactory();
+                });
+            }
+            catch { }
         }
 
         public Dictionary<string, List<PlayerSkipItem>> SponsorBlocks { get; set; } = [];

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build"
-  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"
-    Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -154,6 +152,7 @@
     <Compile Include="Models\Common\User\WatchLater\WatchlaterItemModel.cs" />
     <Compile Include="Models\Common\User\WatchLater\WatchlaterOwnerModel.cs" />
     <Compile Include="Models\Common\User\WatchLater\WatchlaterPagesModel.cs" />
+    <Compile Include="Modules\SpBlock\Services\SponsorBlockHttpClientFactory.cs" />
     <Compile Include="Services\BackgroundDownloadOperation.cs" />
     <Compile Include="Services\BackgroundDownloadService.cs" />
     <Compile Include="Services\BackgroundDownloadTask.cs" />
@@ -1841,8 +1840,7 @@
     <Content Include="Assets\Fonts\SourceHanSansCN-Regular.otf" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BiliLite.Analyzer\BiliLite.Analyzer.csproj"
-      OutputItemType="Analyzer" ReferenceOutputAssembly="false">
+    <ProjectReference Include="..\BiliLite.Analyzer\BiliLite.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false">
       <Project>{d1802c8a-7b73-4ff4-9f86-735ed12dd775}</Project>
       <Name>BiliLite.Analyzer</Name>
     </ProjectReference>
@@ -1871,12 +1869,10 @@
       <Name>Windows Desktop Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
-  <PropertyGroup
-    Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
-  <Import
-    Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
