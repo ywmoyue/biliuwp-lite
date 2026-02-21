@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project ToolsVersion="15.0" DefaultTargets="Build"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"
+    Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -13,7 +15,7 @@
     <LangVersion>latest</LangVersion>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22621.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -29,7 +31,8 @@
     <PackageCertificateThumbprint>C4FA34A878A0528F84922932FEC6746BCBCA5CEA</PackageCertificateThumbprint>
     <PackageCertificateKeyFile />
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
-    <PreBuildEvent>powershell.exe -ExecutionPolicy RemoteSigned -File "$(MSBuildThisFileDirectory)PreBuildScript.ps1"</PreBuildEvent>
+    <PreBuildEvent>powershell.exe -ExecutionPolicy RemoteSigned -File
+      "$(MSBuildThisFileDirectory)PreBuildScript.ps1"</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -1839,7 +1842,8 @@
     <Content Include="Assets\Fonts\SourceHanSansCN-Regular.otf" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BiliLite.Analyzer\BiliLite.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false">
+    <ProjectReference Include="..\BiliLite.Analyzer\BiliLite.Analyzer.csproj"
+      OutputItemType="Analyzer" ReferenceOutputAssembly="false">
       <Project>{d1802c8a-7b73-4ff4-9f86-735ed12dd775}</Project>
       <Name>BiliLite.Analyzer</Name>
     </ProjectReference>
@@ -1868,10 +1872,12 @@
       <Name>Windows Desktop Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
-  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
+  <PropertyGroup
+    Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <Import
+    Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
