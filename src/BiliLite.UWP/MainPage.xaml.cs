@@ -60,6 +60,7 @@ namespace BiliLite
             // Window.Current.Content.PointerPressed += Content_PointerPressed;
 
             Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
+            SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
         }
 
         public event EventHandler MainPageLoaded;
@@ -386,6 +387,21 @@ namespace BiliLite
             }
         }
 
+        private void System_BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            if (tabView.SelectedItem == tabView.TabItems[0]) return;
+            e.Handled = true;
+            GoBack();
+        }
+
+        private void UpdateSystemBackButtonVisibility()
+        {
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
+                tabView.SelectedItem != tabView.TabItems[0]
+                    ? AppViewBackButtonVisibility.Visible
+                    : AppViewBackButtonVisibility.Collapsed;
+        }
+
         private void MainPage_OnLoaded(object sender, RoutedEventArgs e)
         {
             MainPageLoaded?.Invoke(this, EventArgs.Empty);
@@ -408,6 +424,7 @@ namespace BiliLite
             {
                 imgViewer_CloseEvent(this, null);
             }
+            UpdateSystemBackButtonVisibility();
         }
     }
 }
