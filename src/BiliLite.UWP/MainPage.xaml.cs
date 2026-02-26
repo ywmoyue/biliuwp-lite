@@ -394,14 +394,6 @@ namespace BiliLite
             GoBack();
         }
 
-        private void UpdateSystemBackButtonVisibility()
-        {
-            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
-                tabView.SelectedItem != tabView.TabItems[0]
-                    ? AppViewBackButtonVisibility.Visible
-                    : AppViewBackButtonVisibility.Collapsed;
-        }
-
         private void MainPage_OnLoaded(object sender, RoutedEventArgs e)
         {
             MainPageLoaded?.Invoke(this, EventArgs.Empty);
@@ -424,7 +416,6 @@ namespace BiliLite
             {
                 imgViewer_CloseEvent(this, null);
             }
-            UpdateSystemBackButtonVisibility();
         }
     }
 }

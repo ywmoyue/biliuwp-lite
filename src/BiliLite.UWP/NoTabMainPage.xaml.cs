@@ -142,9 +142,6 @@ namespace BiliLite
             {
                 btnBack.Visibility = Visibility.Collapsed;
             }
-
-            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
-                frame.CanGoBack ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
         }
         private int mode = 1;
         protected async override void OnNavigatedTo(NavigationEventArgs e)
