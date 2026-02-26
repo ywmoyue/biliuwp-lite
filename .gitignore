@@ -339,3 +339,4 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 /src/BiliLite.UWP/Assets/ShakaPlayer
+.nuget/nuget.exe
