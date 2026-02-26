@@ -10,9 +10,11 @@ using BiliLite.ViewModels.Common;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.UI.Xaml.Controls;
 
 namespace BiliLite.ViewModels.User
 {
@@ -36,6 +38,7 @@ namespace BiliLite.ViewModels.User
             m_accountApi = new AccountApi();
             RefreshCommand = new RelayCommand(Refresh);
             LoadMoreCommand = new RelayCommand(LoadMore);
+            SelectCommand = new RelayCommand<object>(SetSelectMode);
         }
 
         #endregion
@@ -48,17 +51,38 @@ namespace BiliLite.ViewModels.User
         [DoNotNotify]
         public ICommand RefreshCommand { get; private set; }
 
+        [DoNotNotify]
+        public ICommand SelectCommand { get; private set; }
+
         public bool Loading { get; set; }
 
         public bool Nothing { get; set; }
 
         public bool ShowLoadMore { get; set; }
 
+        public ListViewSelectionMode SelectionMode { get; set; } = ListViewSelectionMode.None;
+
+        public bool IsItemClickEnabled { get; set; } = true;
+
         public ObservableCollection<UserHistoryItem> Videos { get; set; }
 
         #endregion
 
         #region Private Methods
+
+        private void SetSelectMode(object data)
+        {
+            if (data == null)
+            {
+                IsItemClickEnabled = true;
+                SelectionMode = ListViewSelectionMode.None;
+            }
+            else
+            {
+                IsItemClickEnabled = false;
+                SelectionMode = ListViewSelectionMode.Multiple;
+            }
+        }
 
         private async Task LoadHistoryCore()
         {
@@ -253,6 +277,35 @@ namespace BiliLite.ViewModels.User
                 var handel = HandelError<HistoryViewModel>(ex);
                 NotificationShowExtensions.ShowMessageToast(handel.message);
             }
+        }
+
+        public async Task DelBatch(IList<UserHistoryItem> items)
+        {
+            int successCount = 0;
+            foreach (var item in items)
+            {
+                try
+                {
+                    var results = await m_accountApi.DelHistory(item.History.Business + "_" + item.Kid).Request();
+                    if (results.status)
+                    {
+                        var data = await results.GetJson<ApiDataModel<JObject>>();
+                        if (data.success)
+                        {
+                            successCount++;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error("批量删除历史记录失败", ex);
+                }
+            }
+            foreach (var item in items)
+            {
+                Videos.Remove(item);
+            }
+            NotificationShowExtensions.ShowMessageToast($"已成功移除{successCount}条记录");
         }
 
         #endregion

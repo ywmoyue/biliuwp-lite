@@ -456,5 +456,46 @@ namespace BiliLite.Pages
             if(await DownloadHelper.UpdateDanmaku(item.CID, item.EpisodeID, data.ID, data.ID, data.IsSeason))
                 NotificationShowExtensions.ShowMessageToast($"{item.Title}弹幕更新完成");
         }
+
+        private void DownloadedCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            listDowned.SelectAll();
+        }
+
+        private void DownloadedCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            listDowned.SelectedItems.Clear();
+        }
+
+        private async void btnDeleteDownloadedSelected_Click(object sender, RoutedEventArgs e)
+        {
+            if (listDowned.SelectedItems.Count > 0)
+            {
+                if (!await NotificationShowExtensions.ShowMessageDialog("批量删除", $"确定要删除选中的{listDowned.SelectedItems.Count}个下载视频吗?\r\n文件将会被永久删除!"))
+                {
+                    return;
+                }
+                var items = new List<DownloadedItem>();
+                foreach (DownloadedItem item in listDowned.SelectedItems)
+                {
+                    items.Add(item);
+                }
+                foreach (var item in items)
+                {
+                    try
+                    {
+                        var folder = await StorageFolder.GetFolderFromPathAsync(item.Path);
+                        await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                        m_viewModel.DownloadedViewModels.Remove(item);
+                        m_downloadService.RemoveDbItem(item.ID);
+                    }
+                    catch (Exception ex)
+                    {
+                        NotificationShowExtensions.ShowMessageToast($"删除《{item.Title}》失败，请检查文件是否被占用");
+                        logger.Log("批量删除下载视频失败", LogType.Fatal, ex);
+                    }
+                }
+            }
+        }
     }
 }
