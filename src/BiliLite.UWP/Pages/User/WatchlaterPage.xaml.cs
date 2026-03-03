@@ -113,5 +113,32 @@ namespace BiliLite.Pages.User
 
             NotificationShowExtensions.ShowMessageToast($"已成功移除{successCount}个已看完视频");
         }
+
+        private void CheckBox_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            listView.SelectAll();
+        }
+
+        private void CheckBox_Unchecked(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            listView.SelectedItems.Clear();
+        }
+
+        private async void BtnDeleteSelected_OnClick(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            if (listView.SelectedItems.Count > 0)
+            {
+                if (!await NotificationShowExtensions.ShowMessageDialog("批量删除", $"是否确定要删除选中的{listView.SelectedItems.Count}个视频?"))
+                {
+                    return;
+                }
+                var items = new List<WatchlaterItemModel>();
+                foreach (WatchlaterItemModel item in listView.SelectedItems)
+                {
+                    items.Add(item);
+                }
+                await watchLaterVM.DelBatch(items);
+            }
+        }
     }
 }

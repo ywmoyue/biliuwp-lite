@@ -1,4 +1,5 @@
 ﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Article;
 using BiliLite.Models.Common.User;
@@ -6,6 +7,7 @@ using BiliLite.Services;
 using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels.User;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -47,6 +49,33 @@ namespace BiliLite.Pages.User
         {
             var item = (sender as MenuFlyoutItem).DataContext as UserHistoryItem;
             m_viewModel.Del(item);
+        }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            listView.SelectAll();
+        }
+
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            listView.SelectedItems.Clear();
+        }
+
+        private async void BtnDeleteSelected_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (listView.SelectedItems.Count > 0)
+            {
+                if (!await NotificationShowExtensions.ShowMessageDialog("批量删除", $"是否确定要删除选中的{listView.SelectedItems.Count}条历史记录?"))
+                {
+                    return;
+                }
+                var items = new List<UserHistoryItem>();
+                foreach (UserHistoryItem item in listView.SelectedItems)
+                {
+                    items.Add(item);
+                }
+                await m_viewModel.DelBatch(items);
+            }
         }
 
         private async void SearchBox_OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
