@@ -316,7 +316,11 @@ namespace BiliLite.Pages
         protected override async void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             if (e.NavigationMode == NavigationMode.Back)
+            {
                 await StopPlay();
+                ShakaPlayer.Dispose();
+                MpegtsPlayer.Dispose();
+            }
             base.OnNavigatingFrom(e);
         }
 
