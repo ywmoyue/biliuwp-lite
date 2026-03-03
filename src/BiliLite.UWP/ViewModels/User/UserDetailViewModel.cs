@@ -39,6 +39,7 @@ namespace BiliLite.ViewModels.User
             m_userDetailApi = new UserDetailAPI();
             m_followApi = new FollowAPI();
             AttentionCommand = new RelayCommand(DoAttentionUP);
+            BlockUserCommand = new RelayCommand(DoBlockUser);
         }
 
         #endregion
@@ -46,6 +47,8 @@ namespace BiliLite.ViewModels.User
         #region Properties
 
         public ICommand AttentionCommand { get; private set; }
+
+        public ICommand BlockUserCommand { get; private set; }
 
         [DoNotNotify]
         public string Mid { get; set; }
@@ -233,6 +236,45 @@ namespace BiliLite.ViewModels.User
             try
             {
                 await AttentionUPCore(mid, mode);
+                return true;
+            }
+            catch (CustomizedErrorException ex)
+            {
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                var handel = HandelError<object>(ex);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
+                return false;
+            }
+        }
+
+        public async void DoBlockUser()
+        {
+            await BlockUser(Mid);
+        }
+
+        public async Task<bool> BlockUser(string mid)
+        {
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
+            {
+                NotificationShowExtensions.ShowMessageToast("请先登录后再操作");
+                return false;
+            }
+
+            try
+            {
+                var results = await m_followApi.BlockUser(mid).Request();
+                if (!results.status)
+                    throw new CustomizedErrorException(results.message);
+
+                var data = await results.GetJson<ApiDataModel<object>>();
+                if (!data.success)
+                    throw new CustomizedErrorException(data.message);
+
+                NotificationShowExtensions.ShowMessageToast("已拉黑该用户");
                 return true;
             }
             catch (CustomizedErrorException ex)
