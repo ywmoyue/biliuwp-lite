@@ -160,12 +160,14 @@ public class WatchLaterViewModel : BaseViewModel
     public async Task DelBatch(IList<WatchlaterItemModel> items)
     {
         int successCount = 0;
+        NotificationShowExtensions.ShowMessageToast("批量操作中...");
         foreach (var item in items)
         {
             if (await m_watchLaterService.Remove(item.aid))
             {
                 successCount++;
             }
+            await Task.Delay(500);
         }
         foreach (var item in items)
         {

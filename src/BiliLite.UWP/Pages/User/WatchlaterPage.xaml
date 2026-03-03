@@ -96,7 +96,7 @@
                 <Button
                     x:Name="btnDeleteSelected"
                     Margin="0,0,4,0"
-                    Click="btnDeleteSelected_Click">
+                    Click="BtnDeleteSelected_OnClick">
                     删除选中
                 </Button>
                 <AppBarButton

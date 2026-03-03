@@ -467,7 +467,7 @@ namespace BiliLite.Pages
             listDowned.SelectedItems.Clear();
         }
 
-        private async void btnDeleteDownloadedSelected_Click(object sender, RoutedEventArgs e)
+        private async void BtnDeleteDownloadedSelected_OnClick(object sender, RoutedEventArgs e)
         {
             if (listDowned.SelectedItems.Count > 0)
             {

@@ -282,6 +282,7 @@ namespace BiliLite.ViewModels.User
         public async Task DelBatch(IList<UserHistoryItem> items)
         {
             int successCount = 0;
+            NotificationShowExtensions.ShowMessageToast("批量操作中...");
             foreach (var item in items)
             {
                 try
@@ -300,6 +301,7 @@ namespace BiliLite.ViewModels.User
                 {
                     _logger.Error("批量删除历史记录失败", ex);
                 }
+                await Task.Delay(500);
             }
             foreach (var item in items)
             {

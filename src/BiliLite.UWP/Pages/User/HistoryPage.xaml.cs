@@ -61,7 +61,7 @@ namespace BiliLite.Pages.User
             listView.SelectedItems.Clear();
         }
 
-        private async void btnDeleteSelected_Click(object sender, RoutedEventArgs e)
+        private async void BtnDeleteSelected_OnClick(object sender, RoutedEventArgs e)
         {
             if (listView.SelectedItems.Count > 0)
             {
