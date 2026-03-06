@@ -10,6 +10,7 @@ using BiliLite.Models.Requests.Api.User;
 using BiliLite.Modules;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
+using BiliLite.Models.Responses;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
 using System;
@@ -161,7 +162,30 @@ namespace BiliLite.ViewModels.User
             };
 
             IsFollowed = (data.data["card"]?["relation"]?["is_follow"] ?? 0).ToInt32() == 1;
-            IsBlocked = (data.data["card"]?["relation"]?["is_black"] ?? 0).ToInt32() == 1;
+            IsBlocked = false;
+
+            if (SettingService.Account.Logined)
+            {
+                await GetRelationCore();
+            }
+        }
+
+        private async Task GetRelationCore()
+        {
+            var result = await m_followApi.GetAttention(Mid).Request();
+            if (!result.status)
+            {
+                _logger.Log("查询用户关系失败", LogType.Warn);
+                return;
+            }
+            var data = await result.GetJson<ApiDataModel<UserAttentionResponse>>();
+            if (data?.data == null)
+            {
+                _logger.Log("查询用户关系返回数据为空", LogType.Warn);
+                return;
+            }
+            // attribute=128 表示已拉黑
+            IsBlocked = data.data.Attribute == 128;
         }
 
         private async Task AttentionUPCore(string mid, int mode)

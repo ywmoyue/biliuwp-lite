@@ -143,7 +143,7 @@ namespace BiliLite.Models.Requests.Api.User
         }
 
         /// <summary>
-        /// 查询用户与自己关系_仅查关注
+        /// 查询用户与自己关系（attribute: 0=未关注, 2=已关注, 6=已互关, 128=已拉黑）
         /// </summary>
         /// <param name="mid"></param>
         /// <returns></returns>
