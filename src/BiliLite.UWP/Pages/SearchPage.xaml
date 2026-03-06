@@ -20,6 +20,10 @@
     <Page.Resources>
         <SolidColorBrush x:Key="PivotHeaderBackground" Color="Transparent" />
         <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White" />
+        <MenuFlyout x:Name="VideoContextMenu" Opening="VideoContextMenu_Opening">
+            <MenuFlyoutItem Text="稍后再看" Click="VideoMenuWatchLater_Click" />
+            <MenuFlyoutItem Text="拉黑用户" Click="VideoMenuBlockUser_Click" />
+        </MenuFlyout>
         <DataTemplate x:Key="VideoTpl" x:DataType="viewModel:SearchVideoViewModel">
             <Grid>
                 <Grid.RowDefinitions>
@@ -73,7 +77,7 @@
                     StretchContentForSingleRow="False">
                     <control:MyAdaptiveGridView.ItemTemplate>
                         <DataTemplate x:DataType="model:SearchVideoItem">
-                            <Grid>
+                            <Grid ContextFlyout="{StaticResource VideoContextMenu}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition />
