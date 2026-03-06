@@ -46,6 +46,7 @@ namespace BiliLite
             Window.Current.Content.PointerPressed += Content_PointerPressed;
 
             Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
+            SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
         }
 
         public event EventHandler MainPageLoaded;
@@ -275,6 +276,13 @@ namespace BiliLite
         private void ChangeTitle(string title)
         {
             txtTitle.Text = title;
+        }
+
+        private void System_BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            if (!frame.CanGoBack) return;
+            e.Handled = true;
+            btnBack_Click(this, null);
         }
 
         private void NoTabMainPage_OnLoaded(object sender, RoutedEventArgs e)

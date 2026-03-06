@@ -1,8 +1,10 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
+using BiliLite.Models.Common;
 using BiliLite.Models.Common.Search;
 using BiliLite.Models.Exceptions;
+using BiliLite.Models.Requests.Api.User;
 using BiliLite.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -22,6 +24,7 @@ namespace BiliLite.ViewModels.Search
 
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly ContentFilterService m_contentFilterService;
+        private readonly FollowAPI m_followApi;
 
         #endregion
 
@@ -30,6 +33,7 @@ namespace BiliLite.ViewModels.Search
         public SearchVideoViewModel()
         {
             m_contentFilterService = App.ServiceProvider.GetRequiredService<ContentFilterService>();
+            m_followApi = new FollowAPI();
             OrderFilters = new List<SearchFilterItem>() {
                 new SearchFilterItem("综合排序",""),
                 new SearchFilterItem("最多点击","click"),
@@ -150,6 +154,45 @@ namespace BiliLite.ViewModels.Search
             finally
             {
                 Loading = false;
+            }
+        }
+
+        public async Task BlockUser(string mid, string upName)
+        {
+            try
+            {
+                if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
+                {
+                    NotificationShowExtensions.ShowMessageToast("请先登录");
+                    return;
+                }
+                var results = await m_followApi.BlockUser(mid).Request();
+                if (!results.status)
+                {
+                    throw new CustomizedErrorException(results.message);
+                }
+                var data = await results.GetJson<ApiDataModel<object>>();
+                if (!data.success)
+                {
+                    throw new CustomizedErrorException(data.message);
+                }
+                NotificationShowExtensions.ShowMessageToast($"已拉黑 {upName}");
+                var blockItems = Videos.Where(x => x.mid == mid).ToList();
+                foreach (var blockItem in blockItems)
+                {
+                    Videos.Remove(blockItem);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex is CustomizedErrorException)
+                {
+                    _logger.Error(ex.Message, ex);
+                    NotificationShowExtensions.ShowMessageToast(ex.Message);
+                    return;
+                }
+                var handel = HandelError<SearchVideoViewModel>(ex);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
         }
 

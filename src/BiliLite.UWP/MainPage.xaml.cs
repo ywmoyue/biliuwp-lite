@@ -60,6 +60,7 @@ namespace BiliLite
             // Window.Current.Content.PointerPressed += Content_PointerPressed;
 
             Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
+            SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
         }
 
         public event EventHandler MainPageLoaded;
@@ -384,6 +385,13 @@ namespace BiliLite
             {
                 tabStyle.Setters.Add(new Setter(heightProperty, m_viewModel.TabHeight));
             }
+        }
+
+        private void System_BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            if (tabView.SelectedItem == tabView.TabItems[0]) return;
+            e.Handled = true;
+            GoBack();
         }
 
         private void MainPage_OnLoaded(object sender, RoutedEventArgs e)
