@@ -560,19 +560,29 @@ namespace BiliLite.Modules.Live
             var buffer = new byte[length];
             using var ms = new MemoryStream(buffer);
             //数据包长度
-            var b = BitConverter.GetBytes(buffer.Length).ToArray().Reverse().ToArray();
+            var b = BitConverter.GetBytes(buffer.Length);
+            b.Reverse();
+            b.ToArray();
             ms.Write(b, 0, 4);
             //数据包头部长度,固定16
-            b = BitConverter.GetBytes(16).Reverse().ToArray();
+            b = BitConverter.GetBytes(16);
+            b.Reverse();
+            b.ToArray();
             ms.Write(b, 2, 2);
             //协议版本，0=JSON,1=Int32,2=Buffer
-            b = BitConverter.GetBytes(0).Reverse().ToArray(); ;
+            b = BitConverter.GetBytes(0);
+            b.Reverse();
+            b.ToArray();
             ms.Write(b, 0, 2);
             //操作类型
-            b = BitConverter.GetBytes(action).Reverse().ToArray(); ;
+            b = BitConverter.GetBytes(action);
+            b.Reverse();
+            b.ToArray();
             ms.Write(b, 0, 4);
             //数据包头部长度,固定1
-            b = BitConverter.GetBytes(1).Reverse().ToArray(); ;
+            b = BitConverter.GetBytes(1);
+            b.Reverse();
+            b.ToArray();
             ms.Write(b, 0, 4);
             //数据
             ms.Write(data, 0, data.Length);
