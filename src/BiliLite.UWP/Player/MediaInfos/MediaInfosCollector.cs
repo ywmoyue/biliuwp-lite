@@ -17,7 +17,11 @@ namespace BiliLite.Player.MediaInfos
             m_collectInfoHandlerMap = new Dictionary<string, BaseCollectInfoHandler>()
             {
                 { "LiveHls", new FFMpegInteropMssCollectInfoHandler(this) },
-                { "ShakaPlayer", new ShakaPlayerCollectInfoHandler(this) }
+                { "ShakaPlayer", new ShakaPlayerCollectInfoHandler(this) },
+                { "DashNative", new MediaPlayerCollectInfoHandler(this) },
+                { "Mp4Native", new MediaPlayerCollectInfoHandler(this) },
+                { "FlvSyEngine", new MediaPlayerCollectInfoHandler(this) },
+                { "MultiFlvSyEngine", new MediaPlayerCollectInfoHandler(this) }
             };
         }
 
@@ -40,6 +44,11 @@ namespace BiliLite.Player.MediaInfos
         private CollectInfo GetCollectInfo()
         {
             var collectInfo = m_playerController.Player.GetCollectInfo();
+            if (collectInfo == null)
+            {
+                return null;
+            }
+
             MediaInfo.PlayerType = collectInfo.Type;
             MediaInfo.Url = collectInfo.Url;
             return collectInfo;
@@ -48,6 +57,10 @@ namespace BiliLite.Player.MediaInfos
         private void StartCollect()
         {
             var collectInfo = GetCollectInfo();
+            if (collectInfo == null)
+            {
+                return;
+            }
 
             var success = m_collectInfoHandlerMap.TryGetValue(collectInfo.Type, out var handler);
             if (!success)

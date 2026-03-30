@@ -59,7 +59,7 @@ namespace BiliLite.Pages
             {
                 m_customTabViewItem.IsPlayButtonVisible = true;
                 m_customTabViewItem.PlayButtonClick += CustomTabViewItem_PlayButtonClick;
-                Player.PlayerInstance.PlayStateChanged += PlayerInstance_PlayStateChanged;
+                Player.PlayStateChanged += PlayerInstance_PlayStateChanged;
             }
         }
 
@@ -226,6 +226,12 @@ namespace BiliLite.Pages
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
+            if (m_customTabViewItem != null && Player != null)
+            {
+                m_customTabViewItem.PlayButtonClick -= CustomTabViewItem_PlayButtonClick;
+                Player.PlayStateChanged -= PlayerInstance_PlayStateChanged;
+            }
+
             if (e.NavigationMode == NavigationMode.Back || e.SourcePageType == typeof(BlankPage))
             {
                 // (this.Content as Grid).Children.Clear();

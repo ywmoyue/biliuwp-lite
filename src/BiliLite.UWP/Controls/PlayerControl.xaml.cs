@@ -9,9 +9,14 @@ using BiliLite.Models.Common.Danmaku;
 using BiliLite.Models.Common.Player;
 using BiliLite.Models.Common.Video;
 using BiliLite.Models.Common.Video.PlayUrlInfos;
+using BiliLite.Models.Exceptions;
 using BiliLite.Modules;
 using BiliLite.Modules.ExtraInterface;
 using BiliLite.Modules.Player;
+using BiliLite.Player;
+using BiliLite.Player.Controllers;
+using BiliLite.Player.MediaInfos;
+using BiliLite.Player.States.PlayStates;
 using BiliLite.Services;
 using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels;
@@ -30,7 +35,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Graphics.Display;
-using Windows.Graphics.Imaging;
 using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -63,16 +67,38 @@ namespace BiliLite.Controls
         private readonly SoundQualitySliderTooltipConverter m_soundQualitySliderTooltipConverter;
         private readonly QualitySliderTooltipConverter m_qualitySliderTooltipConverter;
         private readonly PlaySpeedSliderTooltipConverter m_playSpeedSliderTooltipConverter;
-        private DateTime m_startTime = DateTime.Now;
         public event PropertyChangedEventHandler PropertyChanged;
         private GestureRecognizer gestureRecognizer;
-        private bool m_firstMediaOpened;
         private bool m_firstMediaPlayed;
         private bool m_mediaIsLoading = true;
         private ThemeService m_themeService;
         private bool m_isLocalFileMode;
         private readonly IPlayerSponsorBlockControl m_playerSponsorBlockControl;
         private readonly IPlayerControlToolBar m_playerControlToolBar;
+        private readonly BasePlayerController m_playerController;
+        private readonly PlayerConfig m_videoPlayerConfig;
+        private RealPlayInfo m_realPlayInfo;
+        private VideoPlayer m_videoPlayer;
+        private bool m_ignoreNextStoppedState;
+        private bool m_newPlayerBuffering;
+        private double m_newPlayerBufferCache;
+        private double m_pendingSeekPosition = -1;
+        private DateTime m_lastBufferingUiUpdateAt = DateTime.MinValue;
+        private static readonly TimeSpan BufferingUiUpdateInterval = TimeSpan.FromMilliseconds(120);
+
+        private void UpdatePlayerHostVisibility(RealPlayerType playerType)
+        {
+            ShakaPlayer.Visibility = playerType == RealPlayerType.ShakaPlayer
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+
+            var showWebPlayerToolbarButton = playerType == RealPlayerType.ShakaPlayer || playerType == RealPlayerType.Mpegts;
+            m_viewModel.ShowWebPlayerToolbarButton = showWebPlayerToolbarButton;
+            if (!showWebPlayerToolbarButton)
+            {
+                m_viewModel.ShowWebPlayerToolbar = false;
+            }
+        }
 
         private void DoPropertyChanged(string name)
         {
@@ -100,6 +126,7 @@ namespace BiliLite.Controls
         /// </summary>
 
         public event EventHandler<int> ChangeEpisodeEvent;
+        public event EventHandler<PlayState> PlayStateChanged;
         /// <summary>
         /// 播放列表
         /// </summary>
@@ -109,7 +136,9 @@ namespace BiliLite.Controls
         /// </summary>
         public int CurrentPlayIndex { get; set; }
 
-        public bool IsPlaying => Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.End;
+        private PlayState m_newPlayerPlayState = PlayState.End;
+
+        public bool IsPlaying => GetCurrentPlayState() == PlayState.Playing || GetCurrentPlayState() == PlayState.End;
 
         /// <summary>
         /// 当前播放
@@ -141,7 +170,13 @@ namespace BiliLite.Controls
         SystemMediaTransportControls _systemMediaTransportControls;
         DispatcherTimer timer_focus;
         private readonly DanmakuListControl m_danmakuListControl;
-        public Player PlayerInstance { get { return Player; } }
+        public double CurrentPosition => GetCurrentPosition();
+
+        private PlayState GetCurrentPlayState() => m_newPlayerPlayState;
+
+        private double GetCurrentPosition() => m_videoPlayer?.Position ?? 0;
+
+        private double GetCurrentDuration() => CurrentPlayItem?.duration ?? 0;
         /// <summary>
         /// 当前选中的字幕名称
         /// </summary>
@@ -157,6 +192,16 @@ namespace BiliLite.Controls
             m_themeService = App.ServiceProvider.GetRequiredService<ThemeService>();
             m_playerToastService.Init(this);
             InitializeComponent();
+
+            m_videoPlayerConfig = new PlayerConfig();
+            m_realPlayInfo = new RealPlayInfo();
+            m_playerController = PlayerControllerFactory.Create(PlayerType.Video);
+            UpdatePlayerHostVisibility(m_videoPlayerConfig.PlayerType);
+            m_videoPlayer = new VideoPlayer(m_videoPlayerConfig, mediaPlayerVideo, m_playerController, ShakaPlayer);
+            m_videoPlayer.SetRealPlayInfo(m_realPlayInfo);
+            m_playerController.SetPlayer(m_videoPlayer);
+            HookVideoPlayerEvents();
+
             dispRequest = new DisplayRequest();
             playerHelper = new PlayerVM();
             m_danmakuSettingsControlViewModel = App.ServiceProvider.GetRequiredService<VideoDanmakuSettingsControlViewModel>();
@@ -257,7 +302,7 @@ namespace BiliLite.Controls
         private async void AutoRefreshTimer_Tick(object sender, object e)
         {
             m_autoRefreshTimer.Stop();
-            _postion = Player.Position;
+            _postion = GetCurrentPosition();
             var info = await GetPlayUrlQualitesInfo();
             if (!info.Success)
             {
@@ -270,7 +315,6 @@ namespace BiliLite.Controls
                 InitQuality();
             }
             NotificationShowExtensions.ShowMessageToast("已根据设置自动刷新播放地址");
-            m_startTime = DateTime.Now;
         }
         private void Timer_focus_Tick(object sender, object e)
         {
@@ -321,6 +365,14 @@ namespace BiliLite.Controls
             danmuTimer?.Stop();
             timer_focus?.Stop();
             m_positionTimer?.Stop();
+
+            try
+            {
+                _ = m_videoPlayer.UnLoad();
+            }
+            catch
+            {
+            }
         }
 
         private async void PlayerControl_Loaded(object sender, RoutedEventArgs e)
@@ -371,15 +423,16 @@ namespace BiliLite.Controls
         private void CheckVolumeAndBrightnessLower()
         {
             // 检查音量是否偏低
-            if (Player.Volume > 0.95) return;
+            var volume = m_videoPlayer.Volume;
+            if (volume > 0.95) return;
             var toolTipText = "";
-            if (Player.Volume == 0)
+            if (volume == 0)
             {
                 toolTipText = "静音";
             }
             else
             {
-                toolTipText = "音量:" + Player.Volume.ToString("P");
+                toolTipText = "音量:" + volume.ToString("P");
             }
 
             m_playerToastService.Show(PlayerToastService.VOLUME_KEY, toolTipText);
@@ -497,7 +550,7 @@ namespace BiliLite.Controls
                     m_danmakuController.SetDensity((int)DanmuSettingMaxNum.Value);
                     if (!m_useNsDanmaku)
                     {
-                        var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                        var segIndex = System.Convert.ToInt32(Math.Ceiling(GetCurrentPosition() / (60 * 6d)));
                         if (segIndex <= 0) segIndex = 1;
                         await LoadDanmaku(segIndex);
                     }
@@ -510,7 +563,7 @@ namespace BiliLite.Controls
                     SettingService.SetValue<int>(SettingConstants.VideoDanmaku.SHIELD_LEVEL, System.Convert.ToInt32(DanmuSettingShieldLevel.Value));
                     if (!m_useNsDanmaku)
                     {
-                        var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                        var segIndex = System.Convert.ToInt32(Math.Ceiling(GetCurrentPosition() / (60 * 6d)));
                         if (segIndex <= 0) segIndex = 1;
                         await LoadDanmaku(segIndex);
                     }
@@ -550,7 +603,7 @@ namespace BiliLite.Controls
                     SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.MERGE, DanmuSettingMerge.IsOn);
                     if (!m_useNsDanmaku)
                     {
-                        var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                        var segIndex = System.Convert.ToInt32(Math.Ceiling(GetCurrentPosition() / (60 * 6d)));
                         if (segIndex <= 0) segIndex = 1;
                         await LoadDanmaku(segIndex);
                     }
@@ -562,7 +615,7 @@ namespace BiliLite.Controls
                     SettingService.SetValue<bool>(SettingConstants.VideoDanmaku.DISABLE_COLORFUL, DanmuSettingDisableColorful.IsOn);
                     if (!m_useNsDanmaku)
                     {
-                        var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                        var segIndex = System.Convert.ToInt32(Math.Ceiling(GetCurrentPosition() / (60 * 6d)));
                         if (segIndex <= 0) segIndex = 1;
                         await LoadDanmaku(segIndex);
                     }
@@ -593,7 +646,9 @@ namespace BiliLite.Controls
         private void LoadPlayerSetting()
         {
             //音量
-            Player.Volume = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_VOLUME, SettingConstants.Player.DEFAULT_PLAYER_VOLUME);
+            var defaultVolume = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_VOLUME, SettingConstants.Player.DEFAULT_PLAYER_VOLUME);
+            m_videoPlayer.Volume = defaultVolume;
+            SliderVolume.Value = defaultVolume;
 
             var lockPlayerVolume = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_VOLUME, SettingConstants.Player.DEFAULT_LOCK_PLAYER_VOLUME);
             if (!lockPlayerVolume)
@@ -641,11 +696,11 @@ namespace BiliLite.Controls
             });
             //播放比例
             PlayerSettingRatio.SelectedIndex = SettingService.GetValue<int>(SettingConstants.Player.RATIO, 0);
-            Player.SetRatioMode(PlayerSettingRatio.SelectedIndex);
+            _ = m_videoPlayer.SetRatioMode(PlayerSettingRatio.SelectedIndex);
             PlayerSettingRatio.SelectionChanged += new SelectionChangedEventHandler((e, args) =>
             {
                 SettingService.SetValue<int>(SettingConstants.Player.RATIO, PlayerSettingRatio.SelectedIndex);
-                Player.SetRatioMode(PlayerSettingRatio.SelectedIndex);
+                _ = m_videoPlayer.SetRatioMode(PlayerSettingRatio.SelectedIndex);
             });
             // 播放倍数
             InitPlaySpeed();
@@ -660,7 +715,8 @@ namespace BiliLite.Controls
                 }
                 else
                 {
-                    Player.ABPlay = null;
+                    m_videoPlayer.ABPlay = null;
+
                     VideoPlayHistoryHelper.SetABPlayHistory(CurrentPlayItem, null);
                     PlayerSettingABPlaySetPointA.Visibility = Visibility.Collapsed;
                     PlayerSettingABPlaySetPointB.Visibility = Visibility.Collapsed;
@@ -671,7 +727,7 @@ namespace BiliLite.Controls
             //仅播放音频
             SwitchVideoEnable.Toggled += (e, args) =>
             {
-                Player.SetVideoEnable(!SwitchVideoEnable.IsOn);
+                _ = m_videoPlayer.SetVideoEnable(!SwitchVideoEnable.IsOn);
             };
         }
         private void LoadSutitleSetting()
@@ -831,7 +887,7 @@ namespace BiliLite.Controls
                 }
 
                 // 移除当前播放时间之前的弹幕，避免弹幕堆叠
-                danmakus = danmakus.Where(x => x.StartMs > Player.Position * 1000);
+                danmakus = danmakus.Where(x => x.StartMs > GetCurrentPosition() * 1000);
 
                 return danmakus.ToList();
             }
@@ -928,14 +984,14 @@ namespace BiliLite.Controls
                 }
             }
 
-            var position = Convert.ToInt32(Player.Position);
-            var segIndex = Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+            var position = Convert.ToInt32(GetCurrentPosition());
+            var segIndex = Convert.ToInt32(Math.Ceiling(GetCurrentPosition() / (60 * 6d)));
             if (segIndex <= 0) segIndex = 1;
             if (danmakuLoadedSegment != null && !danmakuLoadedSegment.Contains(segIndex))
             {
                 await LoadDanmaku(segIndex);
             }
-            else if (position < m_danmakuController.Position && !m_useNsDanmaku && Player.PlayState == PlayState.Playing)
+            else if (position < m_danmakuController.Position && !m_useNsDanmaku && GetCurrentPlayState() == PlayState.Playing)
             {
                 await LoadDanmaku(segIndex);
             }
@@ -944,7 +1000,7 @@ namespace BiliLite.Controls
             {
                 return;
             }
-            if (Player.PlayState != PlayState.Playing || GridBuffering.Visibility == Visibility.Visible)
+            if (GetCurrentPlayState() != PlayState.Playing || GridBuffering.Visibility == Visibility.Visible)
             {
                 return;
             }
@@ -964,7 +1020,7 @@ namespace BiliLite.Controls
                 await SelectNsDanmakuAndLoad(position, level, needDistinct, max);
             }
 
-            if (Player.PlayState == PlayState.Pause)
+            if (GetCurrentPlayState() == PlayState.Pause)
             {
                 m_danmakuController.Pause();
             }
@@ -973,8 +1029,9 @@ namespace BiliLite.Controls
         private void PositionTimer_Tick(object sender, object e)
         {
             if (!IsPlaying) return;
-            m_viewModel.Position = Player.Position;
-            //PluginCenter.BroadcastPosition(this, Player.Position);
+            m_viewModel.Position = GetCurrentPosition();
+            m_viewModel.Duration = GetCurrentDuration();
+            //PluginCenter.BroadcastPosition(this, GetCurrentPosition());
             if (CurrentPlayItem == null) return;
             if (CurrentPlayItem.EpisodeSkip != null)
             {
@@ -997,7 +1054,7 @@ namespace BiliLite.Controls
         {
             if (section == null) return;
 
-            var gap = Math.Abs(Player.Position - section.Start);
+            var gap = Math.Abs(GetCurrentPosition() - section.Start);
             if (!section.IsSectionValid || gap > 0.5) return; //更大的宽容范围检测
 
             Task.Delay(TimeSpan.FromSeconds(gap));
@@ -1025,7 +1082,7 @@ namespace BiliLite.Controls
             subtitleTimer = null;
             Pause();
             m_mediaIsLoading = true;
-            Player.ClosePlay();
+            await m_playerController.PlayState.Stop();
 
             m_autoRefreshTimer?.Stop();
 
@@ -1036,6 +1093,7 @@ namespace BiliLite.Controls
 
             CurrentPlayIndex = index;
             CurrentPlayItem = PlayInfos[index];
+            m_viewModel.Duration = GetCurrentDuration();
             if (CurrentPlayItem.is_interaction)
             {
                 ShowPlaylistButton = false;
@@ -1063,10 +1121,6 @@ namespace BiliLite.Controls
             ChangeEpisodeEvent?.Invoke(this, index);
 
             playUrlInfo = null;
-            //if (CurrentPlayItem.play_mode == VideoPlayType.Season)
-            //{
-            //   // Player._ffmpegConfig.FFmpegOptions["referer"] = "https://www.bilibili.com/bangumi/play/ep" + CurrentPlayItem.ep_id;
-            //}
             if (SettingService.GetValue<bool>(SettingConstants.Player.AUTO_TO_POSITION, true))
             {
                 _postion = SettingService.GetValue<double>(CurrentPlayItem.season_id != 0 ? "ep" + CurrentPlayItem.ep_id : CurrentPlayItem.cid, 0);
@@ -1113,8 +1167,10 @@ namespace BiliLite.Controls
 
             CheckVolumeAndBrightnessLower();
 
-            Player.ABPlay = VideoPlayHistoryHelper.FindABPlayHistory(CurrentPlayItem);
-            if (Player.ABPlay == null)
+            m_videoPlayer.ABPlay = VideoPlayHistoryHelper.FindABPlayHistory(CurrentPlayItem);
+
+            var currentAbPlay = m_videoPlayer.ABPlay;
+            if (currentAbPlay == null)
             {
                 PlayerSettingABPlayMode.IsOn = false;
             }
@@ -1123,9 +1179,9 @@ namespace BiliLite.Controls
                 PlayerSettingABPlayMode.IsOn = true;
                 PlayerSettingABPlaySetPointA.Visibility = Visibility.Visible;
                 PlayerSettingABPlaySetPointB.Visibility = Visibility.Visible;
-                PlayerSettingABPlaySetPointA.Content = "A: " + TimeSpan.FromSeconds(Player.ABPlay.PointA).ToString(@"hh\:mm\:ss\.fff");
-                if (Player.ABPlay.PointB != double.MaxValue)
-                    PlayerSettingABPlaySetPointB.Content = "B: " + TimeSpan.FromSeconds(Player.ABPlay.PointB).ToString(@"hh\:mm\:ss\.fff");
+                PlayerSettingABPlaySetPointA.Content = "A: " + TimeSpan.FromSeconds(currentAbPlay.PointA).ToString(@"hh\:mm\:ss\.fff");
+                if (currentAbPlay.PointB != double.MaxValue)
+                    PlayerSettingABPlaySetPointB.Content = "B: " + TimeSpan.FromSeconds(currentAbPlay.PointB).ToString(@"hh\:mm\:ss\.fff");
             }
 
             LoadSponsorBlock();
@@ -1203,13 +1259,13 @@ namespace BiliLite.Controls
 
         private async void SubtitleTimer_Tick(object sender, object e)
         {
-            if (Player.PlayState != PlayState.Playing) return;
+            if (GetCurrentPlayState() != PlayState.Playing) return;
 
             if (subtitles == null)
             {
                 return;
             }
-            var time = Player.Position;
+            var time = GetCurrentPosition();
             if (subtitles.body == null) return;
             var first = subtitles.body.FirstOrDefault(x => x.from <= time && x.to >= time);
             if (first != null)
@@ -1424,7 +1480,7 @@ namespace BiliLite.Controls
                 {
                     if (update)
                     {
-                        var segIndex = Math.Ceiling(Player.Position / (60 * 6d));
+                        var segIndex = Math.Ceiling(GetCurrentPosition() / (60 * 6d));
                         await LoadDanmaku(segIndex.ToInt32());
                         NotificationShowExtensions.ShowMessageToast($"已更新弹幕");
                     }
@@ -1602,8 +1658,8 @@ namespace BiliLite.Controls
         private async void PlayerControlToolBar_OnSoundQualityChanged(object sender, BiliDashAudioPlayUrlInfo e)
         {
             if (m_mediaIsLoading) return;
-            _postion = Player.Position;
-            _autoPlay = Player.PlayState == PlayState.Playing;
+            _postion = GetCurrentPosition();
+            _autoPlay = GetCurrentPlayState() == PlayState.Playing;
             if (m_isLocalFileMode)
             {
                 CurrentPlayItem.LocalPlayInfo.Info.DashInfo.Audio = e.Audio;
@@ -1619,8 +1675,8 @@ namespace BiliLite.Controls
         private async void PlayerToolBar_OnQualityChanged(object sender, BiliPlayUrlInfo e)
         {
             if (m_mediaIsLoading) return;
-            _postion = Player.Position;
-            _autoPlay = Player.PlayState == PlayState.Playing;
+            _postion = GetCurrentPosition();
+            _autoPlay = GetCurrentPlayState() == PlayState.Playing;
 
             if (m_isLocalFileMode)
             {
@@ -1636,7 +1692,7 @@ namespace BiliLite.Controls
 
         private void PlayerToolBar_OnPlaySpeedChanged(object sender, double e)
         {
-            Player.SetRate(e);
+            _ = m_playerController.SetRate(e);
             SettingService.SetValue(SettingConstants.Player.DEFAULT_VIDEO_SPEED, e);
         }
 
@@ -1680,41 +1736,15 @@ namespace BiliLite.Controls
                 playInfo.DashInfo.Audio = CurrentPlayItem.LocalPlayInfo.CurrentAudioTrack?.Audio;
                 playInfo.DashInfo.Video = CurrentPlayItem.LocalPlayInfo.CurrentVideoTrack?.DashInfo.Video;
 
-                var realPlayerType = (RealPlayerType)SettingService.GetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE, (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
-
-                var playerOpenParam = new PlayerOpenParam
-                {
-                    DashInfo = playInfo.DashInfo,
-                    UserAgent = "",
-                    Referer = "",
-                    Positon = _postion,
-                    IsLocal = true,
-                };
-
-                if (realPlayerType == RealPlayerType.Native || realPlayerType == RealPlayerType.FFmpegInterop)
-                {
-                    result = await Player.PlayDashUseFFmpegInterop(playerOpenParam);
-                    if (!result.result)
-                    {
-                        result = await Player.PlayerDashUseShaka(playerOpenParam);
-                    }
-                }
-                else
-                {
-                    result = await Player.PlayerDashUseShaka(playerOpenParam);
-                    if (!result.result)
-                    {
-                        result = await Player.PlayDashUseFFmpegInterop(playerOpenParam);
-                    }
-                }
+                result = await StartPlayByQualityWithNewArchitectureAsync(playInfo, _postion, true);
             }
             else if (CurrentPlayItem.LocalPlayInfo.Info.PlayUrlType == BiliPlayUrlType.SingleFLV)
             {
-                result = await Player.PlayerSingleMp4UseNativeAsync(info.FlvInfo.First().Url, positon: _postion, isLocal: true);
+                result = await StartPlayByQualityWithNewArchitectureAsync(info, _postion, true);
             }
             else if (CurrentPlayItem.LocalPlayInfo.Info.PlayUrlType == BiliPlayUrlType.MultiFLV)
             {
-                //TODO 本地播放
+                result = await StartPlayByQualityWithNewArchitectureAsync(info, _postion, true);
             }
             if (result.result)
             {
@@ -1844,7 +1874,7 @@ namespace BiliLite.Controls
                 return;
             if (double.IsNaN(progress))
             {
-                progress = Player.Position;
+                progress = GetCurrentPosition();
             }
 
             if (!m_firstMediaPlayed) return;
@@ -1890,23 +1920,14 @@ namespace BiliLite.Controls
             {
                 result = false
             };
-            var realPlayerType = Player.RealPlayerType;
-            var playerOpenParam = new PlayerOpenParam
+            var quality = new BiliPlayUrlInfo
             {
+                PlayUrlType = BiliPlayUrlType.DASH,
                 DashInfo = dashInfo,
                 UserAgent = "",
                 Referer = "",
-                Positon = _postion,
-                IsLocal = true,
             };
-            if (realPlayerType == RealPlayerType.Native || realPlayerType == RealPlayerType.FFmpegInterop)
-            {
-                result = await Player.PlayDashUseFFmpegInterop(playerOpenParam);
-            }
-            else
-            {
-                result = await Player.PlayerDashUseShaka(playerOpenParam);
-            }
+            result = await StartPlayByQualityWithNewArchitectureAsync(quality, _postion, true);
 
             if (result.result)
             {
@@ -1920,82 +1941,53 @@ namespace BiliLite.Controls
 
         private async Task<PlayerOpenResult> ChangeQualityPlayVideo(BiliPlayUrlInfo quality, BiliDashAudioPlayUrlInfo audioQuality)
         {
-            var result = new PlayerOpenResult()
-            {
-                result = false
-            };
-
-            switch (quality.PlayUrlType)
-            {
-                case BiliPlayUrlType.DASH:
-                    result = await PlayDashWithFallback(quality);
-                    break;
-                case BiliPlayUrlType.SingleFLV:
-                    result = await Player.PlaySingleFlvUseFFmpegInterop(quality.FlvInfo.First().Url, quality.UserAgent, quality.Referer, positon: _postion);
-                    break;
-                case BiliPlayUrlType.MultiFLV:
-                    result = await Player.PlayVideoUseSYEngine(quality.FlvInfo, quality.UserAgent, quality.Referer, positon: _postion, epId: CurrentPlayItem.ep_id);
-                    break;
-            }
+            PlayerOpenResult result;
+            result = await StartPlayByQualityWithNewArchitectureAsync(quality, _postion, false);
 
             await CheckPlayUrlValidity();
             return result;
         }
 
-        private async Task<PlayerOpenResult> PlayDashWithFallback(BiliPlayUrlInfo quality)
-        {
-            var realPlayerType = (RealPlayerType)SettingService.GetValue(SettingConstants.Player.USE_REAL_PLAYER_TYPE, (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
-            
-            var playerStrategies = GetPlayerStrategies(realPlayerType);
-            
-            foreach (var strategy in playerStrategies)
-            {
-                var result = await strategy(new PlayerOpenParam { 
-                    DashInfo = quality.DashInfo,
-                    UserAgent = quality.UserAgent,
-                    Referer = quality.Referer,
-                    Positon = _postion,
-                });
-                if (result.result)
-                {
-                    return result;
-                }
-            }
-
-            return new PlayerOpenResult() { result = false };
-        }
-
-        private List<Func<PlayerOpenParam, Task<PlayerOpenResult>>> GetPlayerStrategies(RealPlayerType preferredType)
-        {
-            var strategies = new List<Func<PlayerOpenParam, Task<PlayerOpenResult>>>();
-
-            switch (preferredType)
-            {
-                case RealPlayerType.Native:
-                    strategies.Add(Player.PlayerDashUseNative);
-                    strategies.Add(Player.PlayDashUseFFmpegInterop);
-                    strategies.Add(Player.PlayerDashUseShaka);
-                    break;
-                case RealPlayerType.FFmpegInterop:
-                    strategies.Add(Player.PlayDashUseFFmpegInterop);
-                    strategies.Add(Player.PlayerDashUseNative);
-                    strategies.Add(Player.PlayerDashUseShaka);
-                    break;
-                case RealPlayerType.ShakaPlayer:
-                    strategies.Add(Player.PlayerDashUseShaka);
-                    strategies.Add(Player.PlayerDashUseNative);
-                    break;
-            }
-
-            return strategies;
-        }
-
         private async Task CheckPlayUrlValidity()
         {
-            var checkResult = await Player.CheckPlayUrl();
-            if (!checkResult)
+            await Task.CompletedTask;
+        }
+
+        private async Task<PlayerOpenResult> StartPlayByQualityWithNewArchitectureAsync(BiliPlayUrlInfo quality, double position, bool isLocal)
+        {
+            try
             {
-                NotificationShowExtensions.ShowMessageDialog("播放地址检测", "检测到播放地址无效，建议在代理设置中设置CDN地址替换。");
+                m_mediaIsLoading = true;
+                VideoLoading.Visibility = Visibility.Visible;
+                m_realPlayInfo = RealPlayInfoFactory.CreateFromPlayUrlInfo(
+                    quality,
+                    playInfo: CurrentPlayItem,
+                    isLocal: isLocal,
+                    isAutoPlay: _autoPlay,
+                    preferredPlayerType: m_videoPlayerConfig.PlayerType);
+
+                m_videoPlayer.SetRealPlayInfo(m_realPlayInfo);
+                m_newPlayerBuffering = false;
+                m_newPlayerBufferCache = 0;
+                m_pendingSeekPosition = position;
+                m_ignoreNextStoppedState = true;
+                await m_playerController.PlayState.Stop();
+                m_ignoreNextStoppedState = false;
+                await m_playerController.PlayState.Load();
+
+                return new PlayerOpenResult
+                {
+                    result = true,
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("新架构播放失败", ex);
+                return new PlayerOpenResult
+                {
+                    result = false,
+                    message = ex.Message,
+                };
             }
         }
 
@@ -2219,7 +2211,7 @@ namespace BiliLite.Controls
 
         private void OnHolding(GestureRecognizer sender, HoldingEventArgs args)
         {
-            if (Player.PlayState != PlayState.Playing || m_playerHoldingAction == PlayerHoldingAction.None)
+            if (GetCurrentPlayState() != PlayState.Playing || m_playerHoldingAction == PlayerHoldingAction.None)
                 return;
 
             switch (args.HoldingState)
@@ -2260,13 +2252,14 @@ namespace BiliLite.Controls
         {
             m_playerToastService.KeepStart(PlayerToastService.ACCELERATING_KEY, "倍速播放中");
             var highRatePlaySpeed = SettingService.GetValue(SettingConstants.Player.HIGH_RATE_PLAY_SPEED, 2.0d);
-            Player.SetRate(highRatePlaySpeed);
+            _ = m_playerController.SetRate(highRatePlaySpeed);
         }
 
         public void StopHighRateSpeedPlay()
         {
             m_playerToastService.KeepClose(PlayerToastService.ACCELERATING_KEY);
-            Player.SetRate(SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d));
+            var defaultSpeed = SettingService.GetValue<double>(SettingConstants.Player.DEFAULT_VIDEO_SPEED, 1.0d);
+            _ = m_playerController.SetRate(defaultSpeed);
         }
 
         private void OnManipulationStarted(object sender, ManipulationStartedEventArgs e)
@@ -2335,7 +2328,7 @@ namespace BiliLite.Controls
             DirectionY = false;
             if (ssValue != 0)
             {
-                SetPosition(Player.Position + ssValue);
+                SetPosition(GetCurrentPosition() + ssValue);
             }
         }
 
@@ -2407,21 +2400,6 @@ namespace BiliLite.Controls
         {
             tapFlag = true;
             await Task.Delay(200);
-            //if (control.Visibility == Visibility.Visible)
-            //{
-            //    if (e.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse&& !Player.Opening)
-            //    {
-            //        if (Player.PlayState == PlayState.Pause || Player.PlayState == PlayState.End)
-            //        {
-            //            Player.Play();
-            //        }
-            //        else if (Player.PlayState == PlayState.Playing)
-            //        {
-            //            Pause();
-            //        }
-            //    }
-
-            //}
             if (!tapFlag) return;
             ShowControl(control.Visibility == Visibility.Collapsed);
         }
@@ -2431,11 +2409,12 @@ namespace BiliLite.Controls
             var fullScreen = SettingService.GetValue<bool>(SettingConstants.Player.DOUBLE_CLICK_FULL_SCREEN, false);
             if (!fullScreen)
             {
-                if (Player.PlayState == PlayState.Pause || Player.PlayState == PlayState.End)
+                var state = GetCurrentPlayState();
+                if (state == PlayState.Pause || state == PlayState.End)
                 {
                     await Play();
                 }
-                else if (Player.PlayState == PlayState.Playing)
+                else if (state == PlayState.Playing)
                 {
                     Pause();
                 }
@@ -2447,7 +2426,8 @@ namespace BiliLite.Controls
         }
         private void HandleSlideProgressDelta(double delta)
         {
-            if (Player.PlayState != PlayState.Playing && Player.PlayState != PlayState.Pause)
+            var state = GetCurrentPlayState();
+            if (state != PlayState.Playing && state != PlayState.Pause)
                 return;
 
             if (delta > 0)
@@ -2464,13 +2444,13 @@ namespace BiliLite.Controls
                 ssValue -= d;
                 //slider.Value -= d;
             }
-            var pos = Player.Position;
+            var pos = GetCurrentPosition();
             pos += ssValue;
 
             if (pos < 0)
                 pos = 0;
-            else if (pos > Player.Duration)
-                pos = Player.Duration;
+            else if (pos > GetCurrentDuration())
+                pos = GetCurrentDuration();
             //txt_Post.Text = ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00") + ":" + ts.Seconds.ToString("00") + "/" + mediaElement.MediaPlayer.PlaybackSession.NaturalDuration.TimeSpan.Hours.ToString("00") + ":" + mediaElement.MediaPlayer.PlaybackSession.NaturalDuration.TimeSpan.Minutes.ToString("00") + ":" + mediaElement.MediaPlayer.PlaybackSession.NaturalDuration.TimeSpan.Seconds.ToString("00");
 
             m_playerToastService.Show(PlayerToastService.PROGRESS_KEY, TimeSpan.FromSeconds(pos).ToString(@"hh\:mm\:ss"));
@@ -2483,18 +2463,17 @@ namespace BiliLite.Controls
                 double dd = delta / (ActualHeight * 0.8);
 
                 //slider_V.Value -= d;
-                var volume = Player.Volume - dd;
-                Player.Volume = volume;
+                m_videoPlayer.Volume -= dd;
 
             }
             else
             {
                 double dd = Math.Abs(delta) / (ActualHeight * 0.8);
-                var volume = Player.Volume + dd;
-                Player.Volume = volume;
+                m_videoPlayer.Volume += dd;
                 //slider_V.Value += d;
             }
-            m_playerToastService.Show(PlayerToastService.VOLUME_KEY, "音量:" + Player.Volume.ToString("P"));
+            var volumeText = m_videoPlayer.Volume.ToString("P");
+            m_playerToastService.Show(PlayerToastService.VOLUME_KEY, "音量:" + volumeText);
         }
         private void HandleSlideBrightnessDelta(double delta)
         {
@@ -2542,20 +2521,13 @@ namespace BiliLite.Controls
 
         private void BottomBtnPause_Click(object sender, RoutedEventArgs e)
         {
-            if (Player.Opening)
-            {
-                return;
-            }
             Pause();
         }
 
         private async void BottomBtnPlay_Click(object sender, RoutedEventArgs e)
         {
-            if (Player.Opening)
-            {
-                return;
-            }
-            if (Player.PlayState == PlayState.Pause || Player.PlayState == PlayState.End)
+            var state = GetCurrentPlayState();
+            if (state == PlayState.Pause || state == PlayState.End)
             {
                 await Play();
                 m_danmakuController.Resume();
@@ -2595,10 +2567,15 @@ namespace BiliLite.Controls
 
         private void Player_PlayStateChanged(object sender, PlayState e)
         {
+            m_newPlayerPlayState = e;
+            PlayStateChanged?.Invoke(this, e);
+
             BottomImageBtnPlay.Visibility = Visibility.Collapsed;
             switch (e)
             {
                 case PlayState.Loading:
+                    m_mediaIsLoading = true;
+                    VideoLoading.Visibility = Visibility.Visible;
                     KeepScreenOn(false);
                     if (_systemMediaTransportControls != null)
                     {
@@ -2608,9 +2585,13 @@ namespace BiliLite.Controls
                     BottomBtnPlay.Visibility = Visibility.Collapsed;
                     BottomBtnPause.Visibility = Visibility.Collapsed;
                     // 更新画面比例
-                    Player.SetRatioMode(PlayerSettingRatio.SelectedIndex);
+                    _ = m_videoPlayer.SetRatioMode(PlayerSettingRatio.SelectedIndex);
                     break;
                 case PlayState.Playing:
+                    m_mediaIsLoading = false;
+                    VideoLoading.Visibility = Visibility.Collapsed;
+                    m_playerControlToolBar.FirstMediaOpened = true;
+                    m_autoRefreshTimer?.Start();
                     KeepScreenOn(true);
                     if (_systemMediaTransportControls != null)
                     {
@@ -2658,31 +2639,201 @@ namespace BiliLite.Controls
             }
         }
 
-        private void Player_PlayBufferStart(object sender, EventArgs e)
+        private void RefreshBufferingUi(bool force = false)
         {
-            Buffering = true;
-            GridBuffering.Visibility = Visibility.Visible;
-            TxtBuffering.Text = "正在缓冲...";
-            BufferingProgress = 0;
-            m_danmakuController.Pause();
+            var now = DateTime.UtcNow;
+            if (!force && (now - m_lastBufferingUiUpdateAt) < BufferingUiUpdateInterval)
+            {
+                return;
+            }
+
+            m_lastBufferingUiUpdateAt = now;
+
+            var isBuffering = m_newPlayerBuffering;
+            var bufferCache = m_newPlayerBufferCache;
+
+            if (isBuffering)
+            {
+                Buffering = true;
+                GridBuffering.Visibility = Visibility.Visible;
+                BufferingProgress = bufferCache;
+                TxtBuffering.Text = $"正在缓冲{bufferCache:p}";
+                m_danmakuController.Pause();
+            }
+            else
+            {
+                GridBuffering.Visibility = Visibility.Collapsed;
+                Buffering = false;
+                BufferingProgress = 0;
+                m_danmakuController.Resume();
+            }
         }
 
-        private void Player_PlayBuffering(object sender, double e)
+        private void HookVideoPlayerEvents()
         {
-            Buffering = true;
-            GridBuffering.Visibility = Visibility.Visible;
-            TxtBuffering.Text = "正在缓冲" + e.ToString("p");
-            BufferingProgress = e;
+            if (m_playerController == null || m_videoPlayer == null)
+            {
+                return;
+            }
+
+            m_playerController.PlayStateChanged += PlayerController_PlayStateChanged;
+            m_playerController.PauseStateChanged += PlayerController_PauseStateChanged;
+            m_playerController.MediaInfosUpdated += PlayerController_MediaInfosUpdated;
+            m_videoPlayer.ErrorOccurred += VideoPlayer_ErrorOccurred;
+            m_videoPlayer.NeedReplacePlayer += VideoPlayer_NeedReplacePlayer;
+            m_videoPlayer.BufferingChanged += VideoPlayer_BufferingChanged;
+            m_videoPlayer.BufferCacheChanged += VideoPlayer_BufferCacheChanged;
         }
 
-        private void Player_PlayBufferEnd(object sender, EventArgs e)
+        private void UnHookVideoPlayerEvents()
         {
-            GridBuffering.Visibility = Visibility.Collapsed;
-            Buffering = false;
-            m_danmakuController.Resume();
+            if (m_playerController != null)
+            {
+                m_playerController.PlayStateChanged -= PlayerController_PlayStateChanged;
+                m_playerController.PauseStateChanged -= PlayerController_PauseStateChanged;
+                m_playerController.MediaInfosUpdated -= PlayerController_MediaInfosUpdated;
+            }
+
+            if (m_videoPlayer != null)
+            {
+                m_videoPlayer.ErrorOccurred -= VideoPlayer_ErrorOccurred;
+                m_videoPlayer.NeedReplacePlayer -= VideoPlayer_NeedReplacePlayer;
+                m_videoPlayer.BufferingChanged -= VideoPlayer_BufferingChanged;
+                m_videoPlayer.BufferCacheChanged -= VideoPlayer_BufferCacheChanged;
+            }
         }
 
-        private async void Player_PlayMediaEnded(object sender, EventArgs e)
+        private void PlayerController_PlayStateChanged(object sender, PlayStateChangedEventArgs e)
+        {
+            if (e.NewState.IsStopped && m_ignoreNextStoppedState)
+            {
+                m_ignoreNextStoppedState = false;
+                return;
+            }
+
+            if (e.NewState.IsLoading || e.NewState.IsBuffering)
+            {
+                Player_PlayStateChanged(this, PlayState.Loading);
+                return;
+            }
+
+            if (e.NewState.IsPlaying)
+            {
+                if (m_pendingSeekPosition >= 0)
+                {
+                    var seek = m_pendingSeekPosition;
+                    m_pendingSeekPosition = -1;
+                    _ = m_videoPlayer.SetPosition(seek);
+                }
+
+                Player_PlayStateChanged(this, m_playerController.PauseState.IsPaused ? PlayState.Pause : PlayState.Playing);
+                return;
+            }
+
+            if (e.NewState.IsStopped)
+            {
+                Player_PlayStateChanged(this, PlayState.End);
+
+                if (e.OldState?.IsPlaying == true)
+                {
+                    _ = HandlePlaybackEndedAsync();
+                }
+                return;
+            }
+
+            if (e.NewState.IsFault)
+            {
+                Player_PlayStateChanged(this, PlayState.Error);
+            }
+        }
+
+        private void PlayerController_PauseStateChanged(object sender, BiliLite.Player.States.PauseStates.PauseStateChangedEventArgs e)
+        {
+            if (m_playerController.PlayState.IsPlaying)
+            {
+                Player_PlayStateChanged(this, e.NewState.IsPaused ? PlayState.Pause : PlayState.Playing);
+            }
+        }
+
+        private void VideoPlayer_BufferingChanged(object sender, bool e)
+        {
+            m_newPlayerBuffering = e;
+            RefreshBufferingUi();
+        }
+
+        private void VideoPlayer_BufferCacheChanged(object sender, double e)
+        {
+            m_newPlayerBufferCache = e;
+            RefreshBufferingUi();
+        }
+
+        private Task RunOnUiThreadAsync(Func<Task> action)
+        {
+            if (Dispatcher.HasThreadAccess)
+            {
+                return action();
+            }
+
+            var tcs = new TaskCompletionSource<bool>();
+            _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            {
+                try
+                {
+                    await action();
+                    tcs.SetResult(true);
+                }
+                catch (Exception ex)
+                {
+                    tcs.SetException(ex);
+                }
+            });
+
+            return tcs.Task;
+        }
+
+        private async void VideoPlayer_NeedReplacePlayer(object sender, RealPlayerType e)
+        {
+            try
+            {
+                await RunOnUiThreadAsync(async () =>
+                {
+                    if (m_videoPlayer != null)
+                    {
+                        UnHookVideoPlayerEvents();
+                        await m_videoPlayer.UnLoad();
+                    }
+
+                    m_videoPlayerConfig.PlayerType = e;
+                    UpdatePlayerHostVisibility(m_videoPlayerConfig.PlayerType);
+                    m_videoPlayer = new VideoPlayer(m_videoPlayerConfig, mediaPlayerVideo, m_playerController, ShakaPlayer);
+                    m_videoPlayer.SetRealPlayInfo(m_realPlayInfo);
+                    m_playerController.SetPlayer(m_videoPlayer);
+                    HookVideoPlayerEvents();
+
+                    m_ignoreNextStoppedState = true;
+                    await m_playerController.PlayState.Stop();
+                    m_ignoreNextStoppedState = false;
+                    await m_playerController.PlayState.Load();
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"替换播放器失败: {ex.Message}", ex);
+            }
+        }
+
+        private async void VideoPlayer_ErrorOccurred(object sender, PlayerException e)
+        {
+            _logger.Error($"播放失败:{e.Description}");
+            await NotificationShowExtensions.ShowMessageDialog(e.Description, "播放失败");
+        }
+
+        private void PlayerController_MediaInfosUpdated(object sender, MediaInfo e)
+        {
+            txtInfo.Text = e?.ToString() ?? string.Empty;
+        }
+
+        private async Task HandlePlaybackEndedAsync()
         {
             if (CurrentPlayItem.is_interaction)
             {
@@ -2698,7 +2849,7 @@ namespace BiliLite.Controls
             _logger.Debug("视频结束，上报进度");
             Pause();
 
-            await ReportHistory(Player.Duration);
+            await ReportHistory(GetCurrentDuration());
 
             if (SettingService.GetValue(SettingConstants.Player.REPORT_HISTORY_ZERO_WHEN_VIDEO_END,
                     SettingConstants.Player.DEFAULT_REPORT_HISTORY_ZERO_WHEN_VIDEO_END))
@@ -2779,12 +2930,6 @@ namespace BiliLite.Controls
 
 
         }
-        private async void Player_PlayMediaError(object sender, string e)
-        {
-            _logger.Error($"播放失败:{e}");
-            await NotificationShowExtensions.ShowMessageDialog(e, "播放失败");
-        }
-
         private async void DanmuSettingUpdateDanmaku_Click(object sender, RoutedEventArgs e)
         {
             await SetDanmaku(true);
@@ -2804,29 +2949,13 @@ namespace BiliLite.Controls
                 StorageFolder folder = await applicationFolder.CreateFolderAsync("哔哩哔哩截图", CreationCollisionOption.OpenIfExists);
                 StorageFile saveFile = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
 
-                if (Player.ShowShakaPlayer)
+                var imageBytes = await m_videoPlayer.CaptureAsync();
+                if (imageBytes == null || imageBytes.Length == 0)
                 {
-                    var imageData = await Player.WebPlayer.CaptureVideo();
-                    await FileIO.WriteBytesAsync(saveFile, imageData);
-                    NotificationShowExtensions.ShowMessageToast("截图已经保存至图片库");
-                    return;
+                    throw new Exception("截图数据为空");
                 }
 
-                RenderTargetBitmap bitmap = new RenderTargetBitmap();
-                await bitmap.RenderAsync(Player);
-                var pixelBuffer = await bitmap.GetPixelsAsync();
-                using (var fileStream = await saveFile.OpenAsync(FileAccessMode.ReadWrite))
-                {
-                    var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
-                    encoder.SetPixelData(BitmapPixelFormat.Bgra8,
-                        BitmapAlphaMode.Ignore,
-                         (uint)bitmap.PixelWidth,
-                         (uint)bitmap.PixelHeight,
-                         displayInformation.LogicalDpi,
-                         displayInformation.LogicalDpi,
-                         pixelBuffer.ToArray());
-                    await encoder.FlushAsync();
-                }
+                await FileIO.WriteBytesAsync(saveFile, imageBytes);
                 NotificationShowExtensions.ShowMessageToast("截图已经保存至图片库");
             }
             catch (Exception ex)
@@ -2836,66 +2965,10 @@ namespace BiliLite.Controls
             }
         }
 
-        private async void Player_ChangeEngine(object sender, ChangePlayerEngine e)
-        {
-            if (!e.need_change)
-            {
-                _logger.Warn($"[ChangeEngine] {e.message}");
-                return;
-            }
-            VideoLoading.Visibility = Visibility.Visible;
-            PlayerOpenResult result = new PlayerOpenResult()
-            {
-                result = false,
-                message = ""
-            };
-            if (e.play_type == PlayMediaType.Dash && e.change_engine == PlayEngine.FFmpegInteropMSS)
-            {
-                var playerOpenParam = new PlayerOpenParam
-                {
-                    DashInfo = current_quality_info.DashInfo,
-                    UserAgent = current_quality_info.UserAgent,
-                    Referer = current_quality_info.Referer,
-                    Positon = _postion,
-                };
-                result = await Player.PlayDashUseFFmpegInterop(playerOpenParam);
-            }
-            if (e.play_type == PlayMediaType.Single && e.change_engine == PlayEngine.SYEngine)
-            {
-                result = await Player.PlaySingleFlvUseSYEngine(current_quality_info.FlvInfo.First().Url, current_quality_info.UserAgent, current_quality_info.Referer, positon: _postion);
-            }
-            if (!result.result)
-            {
-                _logger.Error($"播放失败:{result.message}");
-                await NotificationShowExtensions.ShowMessageDialog(result.message, "播放失败");
-                return;
-            }
-
-        }
-
-        private async void Player_PlayMediaOpened(object sender, EventArgs e)
-        {
-            m_mediaIsLoading = false;
-            txtInfo.Text = Player.GetMediaInfo();
-            VideoLoading.Visibility = Visibility.Collapsed;
-            if (_postion != 0 && _postion < Player.Duration)
-            {
-                Player.SetPosition(_postion);
-            }
-
-            if (_autoPlay)
-            {
-                await Play();
-            }
-
-            m_playerControlToolBar.FirstMediaOpened = true;
-            m_autoRefreshTimer?.Start();
-        }
-
         private async void BottomBtnSendDanmakuWide_Click(object sender, RoutedEventArgs e)
         {
             Pause();
-            SendDanmakuDialog sendDanmakuDialog = new SendDanmakuDialog(CurrentPlayItem.avid, CurrentPlayItem.cid, Player.Position);
+            SendDanmakuDialog sendDanmakuDialog = new SendDanmakuDialog(CurrentPlayItem.avid, CurrentPlayItem.cid, GetCurrentPosition());
             sendDanmakuDialog.DanmakuSended += new EventHandler<SendDanmakuModel>((obj, arg) =>
             {
                 m_danmakuController.Add(new BiliDanmakuItem()
@@ -2904,7 +2977,7 @@ namespace BiliLite.Controls
                     Text = arg.text,
                     Location = (DanmakuLocation)arg.location,
                     Size = 25,
-                    Time = Player.Position
+                    Time = GetCurrentPosition()
                 }, true);
             });
             await NotificationShowExtensions.ShowContentDialog(sendDanmakuDialog);
@@ -2946,7 +3019,7 @@ namespace BiliLite.Controls
 
         public void SetPosition(double position)
         {
-            Player.SetPosition(position);
+            _ = m_videoPlayer.SetPosition(position);
         }
 
         public void ToggleSubtitle()
@@ -2972,20 +3045,20 @@ namespace BiliLite.Controls
             _logger.Trace("Dispose PlayerControl");
             if (CurrentPlayItem != null)
             {
-                SettingService.SetValue<double>(CurrentPlayItem.season_id != 0 ? "ep" + CurrentPlayItem.ep_id : CurrentPlayItem.cid, Player.Position);
+                var currentPosition = GetCurrentPosition();
+                SettingService.SetValue<double>(CurrentPlayItem.season_id != 0 ? "ep" + CurrentPlayItem.ep_id : CurrentPlayItem.cid, currentPosition);
                 //当视频播放结束的话，Position为0
-                if (Player.PlayState != PlayState.End)
-                    await ReportHistory(Player.Position);
+                if (GetCurrentPlayState() != PlayState.End)
+                    await ReportHistory(currentPosition);
             }
 
-            Player.PlayStateChanged -= Player_PlayStateChanged;
-            Player.PlayMediaEnded -= Player_PlayMediaEnded;
-            Player.PlayMediaError -= Player_PlayMediaError;
-            Player.ChangeEngine -= Player_ChangeEngine;
-            //Player.PlayBufferEnd -= Player_PlayBufferEnd;
-            //Player.PlayBufferStart -= Player_PlayBufferStart;
-            //Player.PlayBuffering -= Player_PlayBuffering;
-            Player.Dispose();
+            UnHookVideoPlayerEvents();
+            if (m_videoPlayer != null)
+            {
+                await m_videoPlayer.UnLoad();
+                m_videoPlayer = null;
+            }
+
             if (danmuTimer != null)
             {
                 danmuTimer.Stop();
@@ -3047,7 +3120,7 @@ namespace BiliLite.Controls
                 color = System.Convert.ToInt32((SendDanmakuColorBorder.Background as SolidColorBrush).Color.ToString().Replace("#FF", ""), 16).ToString();
             }
 
-            var result = await playerHelper.SendDanmaku(CurrentPlayItem.avid, CurrentPlayItem.cid, SendDanmakuTextBox.Text, System.Convert.ToInt32(Player.Position), modeInt, color);
+            var result = await playerHelper.SendDanmaku(CurrentPlayItem.avid, CurrentPlayItem.cid, SendDanmakuTextBox.Text, System.Convert.ToInt32(GetCurrentPosition()), modeInt, color);
             if (result)
             {
                 m_danmakuController.Add(new BiliDanmakuItem()
@@ -3056,7 +3129,7 @@ namespace BiliLite.Controls
                     Text = SendDanmakuTextBox.Text,
                     Location = location,
                     Size = 25,
-                    Time = Player.Position
+                    Time = GetCurrentPosition()
                 }, true);
                 SendDanmakuTextBox.Text = "";
             }
@@ -3168,19 +3241,14 @@ namespace BiliLite.Controls
 
         public void ToggleMute()
         {
-            if (Player.Volume >= 0)
-            {
-                Player.Volume = 0;
-            }
-            else
-            {
-                Player.Volume = 1;
-            }
+            m_videoPlayer.IsMuted = !m_videoPlayer.IsMuted;
+            var muteText = m_videoPlayer.IsMuted ? "静音" : "音量:" + m_videoPlayer.Volume.ToString("P");
+            m_playerToastService.Show(PlayerToastService.VOLUME_KEY, muteText);
         }
 
         public void OpenDevMode()
         {
-            Player.OpenDevMode();
+            // 新架构下暂无额外 dev 模式入口
         }
 
         public void ToggleDanmakuDisplay()
@@ -3197,31 +3265,8 @@ namespace BiliLite.Controls
 
         public async Task Play()
         {
-            // 超过一定时间后继续播放，检查播放地址是否仍然有效
-            if (DateTime.Now - m_startTime > TimeSpan.FromMinutes(30))
-            {
-                if (!await Player.CheckPlayUrl())
-                {
-                    _postion = Player.Position;
-                    var info = await GetPlayUrlQualitesInfo();
-                    if (!info.Success)
-                    {
-                        await NotificationShowExtensions.ShowMessageDialog($"请求信息:\r\n{info.Message}", "读取视频播放地址失败");
-                    }
-                    else
-                    {
-                        playUrlInfo = info;
-                        InitSoundQuality();
-                        InitQuality();
-                    }
-                    NotificationShowExtensions.ShowMessageToast("检测到视频地址失效，已自动刷新");
-                    m_startTime = DateTime.Now;
-                    return;
-                }
-            }
-
             // 播放结束后再次播放应从进度0开始
-            if (Player.PlayState == PlayState.End)
+            if (GetCurrentPlayState() == PlayState.End)
             {
                 SetPosition(0);
             }
@@ -3231,20 +3276,21 @@ namespace BiliLite.Controls
                 m_firstMediaPlayed = true;
             }
 
-            Player.Play();
+            await m_playerController.PauseState.Resume();
         }
 
         public void Pause()
         {
             m_danmakuController.Pause();
-            Player.Pause();
+            _ = m_playerController.PauseState.Pause();
         }
 
         public void PositionBack(double progress = 3)
         {
-            if (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.Pause)
+            var playState = GetCurrentPlayState();
+            if (playState == PlayState.Playing || playState == PlayState.Pause)
             {
-                var _position = Player.Position - progress;
+                var _position = GetCurrentPosition() - progress;
                 if (_position < 0)
                 {
                     _position = 0;
@@ -3254,39 +3300,43 @@ namespace BiliLite.Controls
 
                 m_playerToastService.Show(
                     PlayerToastService.PROGRESS_KEY,
-                    "进度:" + TimeSpan.FromSeconds(Player.Position).ToString(@"hh\:mm\:ss"));
+                    "进度:" + TimeSpan.FromSeconds(GetCurrentPosition()).ToString(@"hh\:mm\:ss"));
             }
         }
 
         public void PositionForward(double progress = 3)
         {
-            if (Player.PlayState == PlayState.Playing || Player.PlayState == PlayState.Pause)
+            var playState = GetCurrentPlayState();
+            if (playState == PlayState.Playing || playState == PlayState.Pause)
             {
-                var _position = Player.Position + progress;
-                if (_position > Player.Duration)
+                var _position = GetCurrentPosition() + progress;
+                var duration = GetCurrentDuration();
+                if (_position > duration)
                 {
-                    _position = Player.Duration;
+                    _position = duration;
                 }
                 SetPosition(_position);
 
                 m_playerToastService.Show(
-                    PlayerToastService.PROGRESS_KEY, "进度:" + TimeSpan.FromSeconds(Player.Position).ToString(@"hh\:mm\:ss"));
+                    PlayerToastService.PROGRESS_KEY, "进度:" + TimeSpan.FromSeconds(GetCurrentPosition()).ToString(@"hh\:mm\:ss"));
             }
         }
 
         public void AddVolume()
         {
-            Player.Volume += 0.1;
-            m_playerToastService.Show(PlayerToastService.VOLUME_KEY, "音量:" + Player.Volume.ToString("P"));
+            m_videoPlayer.Volume += 0.1;
+            m_playerToastService.Show(PlayerToastService.VOLUME_KEY, "音量:" + m_videoPlayer.Volume.ToString("P"));
         }
 
         public void MinusVolume()
         {
-            Player.Volume -= 0.1;
+            m_videoPlayer.Volume -= 0.1;
+            var volume = m_videoPlayer.Volume;
+
             var txtToolTipText = "静音";
-            if (Player.Volume > 0)
+            if (volume > 0)
             {
-                txtToolTipText = "音量:" + Player.Volume.ToString("P");
+                txtToolTipText = "音量:" + volume.ToString("P");
             }
             m_playerToastService.Show(PlayerToastService.VOLUME_KEY, txtToolTipText);
         }
@@ -3305,23 +3355,22 @@ namespace BiliLite.Controls
 
         public void PlayerSettingABPlaySetPointA_Click(object sender, RoutedEventArgs e)
         {
-            if (Player.ABPlay != null)
+            if (m_videoPlayer.ABPlay != null)
             {
-                Player.ABPlay = null;
+                m_videoPlayer.ABPlay = null;
                 VideoPlayHistoryHelper.SetABPlayHistory(CurrentPlayItem, null);
                 PlayerSettingABPlaySetPointA.Content = "设置A点";
                 PlayerSettingABPlaySetPointB.Content = "设置B点";
                 PlayerSettingABPlaySetPointB.Visibility = Visibility.Collapsed;
-
                 NotificationShowExtensions.ShowMessageToast("已取消设置A点");
             }
             else
             {
-                Player.ABPlay = new VideoPlayHistoryHelper.ABPlayHistoryEntry()
+                m_videoPlayer.ABPlay = new VideoPlayHistoryHelper.ABPlayHistoryEntry()
                 {
-                    PointA = Player.Position
+                    PointA = GetCurrentPosition()
                 };
-                PlayerSettingABPlaySetPointA.Content = "A: " + TimeSpan.FromSeconds(Player.ABPlay.PointA).ToString(@"hh\:mm\:ss\.fff");
+                PlayerSettingABPlaySetPointA.Content = "A: " + TimeSpan.FromSeconds(m_videoPlayer.ABPlay.PointA).ToString(@"hh\:mm\:ss\.fff");
                 PlayerSettingABPlaySetPointB.Visibility = Visibility.Visible;
 
                 NotificationShowExtensions.ShowMessageToast("已设置A点, 再次点击可取消设置");
@@ -3330,24 +3379,23 @@ namespace BiliLite.Controls
 
         public void PlayerSettingABPlaySetPointB_Click(object sender, RoutedEventArgs e)
         {
-            if (Player.ABPlay.PointB > 0 && Player.ABPlay.PointB != Double.MaxValue)
+            if (m_videoPlayer.ABPlay?.PointB > 0 && m_videoPlayer.ABPlay.PointB != Double.MaxValue)
             {
-                Player.ABPlay.PointB = double.MaxValue;
+                m_videoPlayer.ABPlay.PointB = double.MaxValue;
                 PlayerSettingABPlaySetPointB.Content = "设置B点";
-
                 NotificationShowExtensions.ShowMessageToast("已取消设置B点");
             }
             else
             {
-                if (Player.Position <= Player.ABPlay.PointA)
+                if (m_videoPlayer.ABPlay == null || GetCurrentPosition() <= m_videoPlayer.ABPlay.PointA)
                 {
                     NotificationShowExtensions.ShowMessageToast("B点必须在A点之后");
                 }
                 else
                 {
-                    Player.ABPlay.PointB = Player.Position;
-                    VideoPlayHistoryHelper.SetABPlayHistory(CurrentPlayItem, Player.ABPlay);
-                    PlayerSettingABPlaySetPointB.Content = "B: " + TimeSpan.FromSeconds(Player.ABPlay.PointB).ToString(@"hh\:mm\:ss\.fff");
+                    m_videoPlayer.ABPlay.PointB = GetCurrentPosition();
+                    VideoPlayHistoryHelper.SetABPlayHistory(CurrentPlayItem, m_videoPlayer.ABPlay);
+                    PlayerSettingABPlaySetPointB.Content = "B: " + TimeSpan.FromSeconds(m_videoPlayer.ABPlay.PointB).ToString(@"hh\:mm\:ss\.fff");
 
                     NotificationShowExtensions.ShowMessageToast("已设置B点, 再次点击可取消设置");
                 }
@@ -3359,7 +3407,7 @@ namespace BiliLite.Controls
             // 更新弹幕
             m_danmakuController.UpdateSize(SplitView.ActualWidth, SplitView.ActualHeight);
             // 更新画面比例
-            Player.SetRatioMode(PlayerSettingRatio.SelectedIndex);
+            _ = m_videoPlayer.SetRatioMode(PlayerSettingRatio.SelectedIndex);
 
             UpdateViewPointPosition();
         }
@@ -3420,7 +3468,8 @@ namespace BiliLite.Controls
 
         private void BtnOpenWebPlayerToolbar_OnClick(object sender, RoutedEventArgs e)
         {
-            WebPlayerToolbarControl.SetPlayer(Player.WebPlayer);
+            var webPlayer = m_videoPlayer.WebPlayer;
+            WebPlayerToolbarControl.SetPlayer(webPlayer);
             m_viewModel.ShowWebPlayerToolbar = true;
         }
 
@@ -3429,18 +3478,13 @@ namespace BiliLite.Controls
             m_viewModel.ShowWebPlayerToolbar = false;
         }
 
-        private void Player_OnStatsUpdated(object sender, EventArgs e)
-        {
-            txtInfo.Text = Player.GetMediaInfo();
-        }
-
         private async void BtnDanmakuAddOffset1S_OnClick(object sender, RoutedEventArgs e)
         {
             m_danmakuController.SetPositionOffset(m_danmakuController.DanmakuViewModel.PositionOffset + 1);
 
             if (!m_useNsDanmaku)
             {
-                var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                var segIndex = System.Convert.ToInt32(Math.Ceiling(GetCurrentPosition() / (60 * 6d)));
                 if (segIndex <= 0) segIndex = 1;
                 await LoadDanmaku(segIndex);
             }
@@ -3452,7 +3496,7 @@ namespace BiliLite.Controls
 
             if (!m_useNsDanmaku)
             {
-                var segIndex = System.Convert.ToInt32(Math.Ceiling(Player.Position / (60 * 6d)));
+                var segIndex = System.Convert.ToInt32(Math.Ceiling(GetCurrentPosition() / (60 * 6d)));
                 if (segIndex <= 0) segIndex = 1;
                 await LoadDanmaku(segIndex);
             }

@@ -21,6 +21,7 @@ namespace BiliLite.Player
         private PlayerConfig m_playerConfig;
         private MediaPlayerElement m_playerElement;
         private string m_url;
+        private double m_bufferCache;
 
         public LiveHlsPlayer(PlayerConfig playerConfig, MediaPlayerElement playerElement)
         {
@@ -65,10 +66,17 @@ namespace BiliLite.Player
             set => m_mediaPlayer.Volume = value;
         }
 
+        public override double Position => m_mediaPlayer?.PlaybackSession?.Position.TotalSeconds ?? 0;
+
+        public override bool IsBuffering => m_mediaPlayer?.PlaybackSession?.PlaybackState == MediaPlaybackState.Buffering;
+
+        public override double BufferCache => m_bufferCache;
+
         public override event EventHandler MediaOpened;
         public override event EventHandler MediaEnded;
         public override event EventHandler BufferingStarted;
         public override event EventHandler BufferingEnded;
+        public override event EventHandler<double> PositionChanged;
 
         private void InitPlayerEvent()
         {
@@ -76,6 +84,7 @@ namespace BiliLite.Player
             m_mediaPlayer.PlaybackSession.BufferingStarted += PlaybackSession_BufferingStarted;
             m_mediaPlayer.PlaybackSession.BufferingProgressChanged += PlaybackSession_BufferingProgressChanged;
             m_mediaPlayer.PlaybackSession.BufferingEnded += PlaybackSession_BufferingEnded;
+            m_mediaPlayer.PlaybackSession.PositionChanged += PlaybackSession_PositionChanged;
             m_mediaPlayer.MediaOpened += MediaPlayer_MediaOpened;
             m_mediaPlayer.MediaEnded += MediaPlayer_MediaEnded; ;
             m_mediaPlayer.MediaFailed += MediaPlayer_MediaFailed;
@@ -122,10 +131,10 @@ namespace BiliLite.Player
             BufferingEnded?.Invoke(this, EventArgs.Empty);
         }
 
-        // TODO: 显示缓冲进度
         private void PlaybackSession_BufferingProgressChanged(MediaPlaybackSession sender, object args)
         {
-            //PlayerLoadText.Text = sender.BufferingProgress.ToString("p");
+            m_bufferCache = Math.Min(1, Math.Max(0, sender?.BufferingProgress ?? 0));
+            EmitBufferCacheChanged(m_bufferCache);
         }
 
         private void PlaybackSession_BufferingStarted(MediaPlaybackSession sender, object args)
@@ -135,6 +144,11 @@ namespace BiliLite.Player
 
         private void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
         {
+        }
+
+        private void PlaybackSession_PositionChanged(MediaPlaybackSession sender, object args)
+        {
+            PositionChanged?.Invoke(this, sender?.Position.TotalSeconds ?? 0);
         }
 
         private async Task StopCore()
@@ -206,6 +220,7 @@ namespace BiliLite.Player
             m_fFmpegMediaSource = await FFmpegMediaSource.CreateFromUriAsync(url, m_config);
             m_mediaPlayer.AutoPlay = true;
             m_mediaPlayer.Source = m_fFmpegMediaSource.CreateMediaPlaybackItem();
+            await SetRate(m_rate);
         }
 
         public override async Task Buff()
@@ -238,6 +253,23 @@ namespace BiliLite.Player
         public override async Task Resume()
         {
             m_mediaPlayer.Play();
+        }
+
+        public override async Task SetRate(double value)
+        {
+            m_rate = value;
+            if (m_mediaPlayer?.PlaybackSession != null)
+            {
+                m_mediaPlayer.PlaybackSession.PlaybackRate = value;
+            }
+        }
+
+        public override async Task SetPosition(double value)
+        {
+            if (m_mediaPlayer?.PlaybackSession != null)
+            {
+                m_mediaPlayer.PlaybackSession.Position = TimeSpan.FromSeconds(value);
+            }
         }
     }
 }
