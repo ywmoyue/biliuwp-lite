@@ -79,13 +79,11 @@ namespace BiliLite.Pages
             this.InitializeComponent();
 
             m_playerConfig = new PlayerConfig();
+            m_realPlayInfo = new RealPlayInfo();
+            m_realPlayInfo.IsAutoPlay = true;
             PreLoadSetting();
             m_playerController = PlayerControllerFactory.Create(PlayerType.Live);
             m_player = new LivePlayer(m_playerConfig, playerElement, m_playerController, ShakaPlayer, MpegtsPlayer);
-            m_realPlayInfo = new RealPlayInfo();
-            m_realPlayInfo.IsAutoPlay = true;
-            m_realPlayInfo.PreferredPlayerType = m_playerConfig.PlayerType;
-            m_realPlayInfo.FallbackPlayerTypes = BuildLiveFallbackChain(m_playerConfig.PlayerType);
             m_playerController.SetPlayer(m_player);
             m_player.SetRealPlayInfo(m_realPlayInfo);
             InitPlayerEvent();
