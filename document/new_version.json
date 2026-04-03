@@ -1,7 +1,7 @@
 {
-  "version": "4.8.11",
-  "version_num": 40811,
-  "version_desc": "更新内容:\r\n\r\n- 支持设置自定义CDN服务器 \r\n\r\n- 单窗口模式可设置释放页面资源 \r\n\r\n- 单窗口模式添加一键返回主页按钮 \r\n\r\n- 直播间礼物信息获取错误时不提示 \r\n\r\n- 除视频外的搜索触发412风控 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.8.14",
+  "version_num": 40814,
+  "version_desc": "更新内容:\r\n\r\n- 为历史记录、稍后再看、下载完成页面添加多选删除功能  \r\n\r\n- 推荐页、搜索页、用户页添加拉黑用户功能 \r\n\r\n- 适配win10平板模式返回键  \r\n\r\n- 降低最低支持Windows版本 18362\r\n\r\n- 实现动态磁贴更新：启动时展示UP主头像及视频封面 \r\n\r\n- 空降助手数据加载流程修复，且忽略请求证书错误 \r\n\r\n- 修复繁体字幕转简体开关失灵  \r\n\r\n- 修复单窗口模式下直播 WebView 播放器资源未释放导致的持续 CPU/GPU/网络占用  \r\n\r\n \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }

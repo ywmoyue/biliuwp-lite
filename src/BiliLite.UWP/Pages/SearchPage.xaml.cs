@@ -2,6 +2,7 @@
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Search;
+using BiliLite.Modules.User;
 using BiliLite.Services;
 using BiliLite.Services.Biz;
 using BiliLite.Services.Interfaces;
@@ -30,6 +31,7 @@ namespace BiliLite.Pages
     {
         private readonly SearchService m_searchService;
         private readonly SearchPageViewModel m_viewModel;
+        private SearchVideoItem m_currentVideoItem;
 
         public SearchPage()
         {
@@ -231,6 +233,27 @@ namespace BiliLite.Pages
             var element = e.OriginalSource as FrameworkElement;
             var item = element.DataContext;
             SearchItemModelOpen(item, true);
+        }
+
+        private void VideoContextMenu_Opening(object sender, object e)
+        {
+            var flyout = sender as MenuFlyout;
+            m_currentVideoItem = (flyout?.Target as FrameworkElement)?.DataContext as SearchVideoItem;
+        }
+
+        private void VideoMenuWatchLater_Click(object sender, RoutedEventArgs e)
+        {
+            if (m_currentVideoItem == null) return;
+            var watchLaterViewModel = App.ServiceProvider.GetRequiredService<WatchLaterViewModel>();
+            watchLaterViewModel.AddToWatchlater(m_currentVideoItem.aid);
+        }
+
+        private async void VideoMenuBlockUser_Click(object sender, RoutedEventArgs e)
+        {
+            if (m_currentVideoItem == null || string.IsNullOrEmpty(m_currentVideoItem.mid)) return;
+            var searchVideoViewModel = m_viewModel.SelectItem as SearchVideoViewModel;
+            if (searchVideoViewModel == null) return;
+            await searchVideoViewModel.BlockUser(m_currentVideoItem.mid, m_currentVideoItem.author);
         }
 
         private void cbArea_SelectionChanged(object sender, SelectionChangedEventArgs e)

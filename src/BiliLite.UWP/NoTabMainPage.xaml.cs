@@ -44,6 +44,7 @@ namespace BiliLite
             MessageCenter.FullscreenEvent += MessageCenter_FullscreenEvent;
             MessageCenter.SeekEvent += MessageCenter_SeekEvent;
 
+            // TODO: WinUI3 处理返回键
             PreviewKeyUp += MainPage_KeyUp;
             PreviewKeyDown += MainPage_KeyDown;
         }
@@ -280,6 +281,13 @@ namespace BiliLite
         private void ChangeTitle(string title)
         {
             txtTitle.Text = title;
+        }
+
+        private void System_BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            if (!frame.CanGoBack) return;
+            e.Handled = true;
+            btnBack_Click(this, null);
         }
 
         private void NoTabMainPage_OnLoaded(object sender, RoutedEventArgs e)

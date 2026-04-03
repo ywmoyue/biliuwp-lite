@@ -24,40 +24,70 @@
         </Grid.RowDefinitions>
         <Pivot x:Name="pivot">
             <Pivot.RightHeader>
-                <StackPanel Background="{StaticResource PivotHeaderBackground}" Orientation="Horizontal">
-                    <TextBlock Margin="8,16" Visibility="{x:Bind m_viewModel.LoadingDownloaded, Mode=OneWay}">
-                        加载中<Run Text="{x:Bind m_viewModel.LoadingDownloadedPercent, Mode=OneWay}" />
-                        %</TextBlock>
+                <Grid Background="{StaticResource PivotHeaderBackground}">
+                    <StackPanel
+                        Orientation="Horizontal"
+                        Visibility="{x:Bind m_viewModel.IsDownloadedItemClickEnabled, Mode=OneWay}">
+                        <TextBlock Margin="8,16" Visibility="{x:Bind m_viewModel.LoadingDownloaded, Mode=OneWay}">
+                            加载中<Run Text="{x:Bind m_viewModel.LoadingDownloadedPercent, Mode=OneWay}" />
+                            %</TextBlock>
 
-                    <ComboBox
-                        x:Name="CbSortMode"
-                        MinWidth="100"
-                        Margin="8,12"
-                        DisplayMemberPath="Text"
-                        ItemsSource="{x:Bind m_sortOptions}"
-                        SelectedIndex="0"
-                        SelectedValuePath="Value"
-                        SelectionChanged="SortOptions_OnSelectionChanged"
-                        Visibility="{x:Bind m_viewModel.LoadingDownloaded, Mode=OneWay, Converter={StaticResource DisplayConvert}}" />
+                        <ComboBox
+                            x:Name="CbSortMode"
+                            MinWidth="100"
+                            Margin="8,12"
+                            DisplayMemberPath="Text"
+                            ItemsSource="{x:Bind m_sortOptions}"
+                            SelectedIndex="0"
+                            SelectedValuePath="Value"
+                            SelectionChanged="SortOptions_OnSelectionChanged"
+                            Visibility="{x:Bind m_viewModel.LoadingDownloaded, Mode=OneWay, Converter={StaticResource DisplayConvert}}" />
 
-                    <Button Click="BtnClearSearch_OnClick" Visibility="{x:Bind m_viewModel.IsSearching, Mode=OneWay}">清除搜索</Button>
-                    <AutoSuggestBox
-                        x:Name="SearchBox"
-                        MinWidth="200"
-                        Margin="8,12"
-                        FontSize="12"
-                        PlaceholderText="你想找什么呢？"
-                        QueryIcon="Find"
-                        QuerySubmitted="SearchBox_OnQuerySubmitted" />
-                    <Button
-                        x:Name="btnMerge"
-                        Margin="8,12"
-                        VerticalAlignment="Stretch"
-                        Click="btnMerge_Click"
-                        FontSize="12">
-                        合并视频
-                    </Button>
-                </StackPanel>
+                        <Button Click="BtnClearSearch_OnClick" Visibility="{x:Bind m_viewModel.IsSearching, Mode=OneWay}">清除搜索</Button>
+                        <AutoSuggestBox
+                            x:Name="SearchBox"
+                            MinWidth="200"
+                            Margin="8,12"
+                            FontSize="12"
+                            PlaceholderText="你想找什么呢？"
+                            QueryIcon="Find"
+                            QuerySubmitted="SearchBox_OnQuerySubmitted" />
+                        <Button
+                            x:Name="btnMerge"
+                            Margin="8,12"
+                            VerticalAlignment="Stretch"
+                            Click="btnMerge_Click"
+                            FontSize="12">
+                            合并视频
+                        </Button>
+                        <AppBarButton
+                            Height="48"
+                            Command="{x:Bind Path=m_viewModel.SelectDownloadedCommand}"
+                            CommandParameter="1"
+                            Icon="List"
+                            ToolTipService.ToolTip="批量操作" />
+                    </StackPanel>
+                    <StackPanel
+                        Orientation="Horizontal"
+                        Visibility="{x:Bind m_viewModel.IsDownloadedItemClickEnabled, Converter={StaticResource DisplayConvert}, Mode=OneWay}">
+                        <CheckBox
+                            Checked="DownloadedCheckBox_Checked"
+                            Unchecked="DownloadedCheckBox_Unchecked">
+                            全选/反选
+                        </CheckBox>
+                        <Button
+                            x:Name="btnDeleteDownloadedSelected"
+                            Margin="0,0,4,0"
+                            Click="BtnDeleteDownloadedSelected_OnClick">
+                            删除选中
+                        </Button>
+                        <AppBarButton
+                            Height="48"
+                            Command="{x:Bind Path=m_viewModel.SelectDownloadedCommand}"
+                            Icon="Cancel"
+                            ToolTipService.ToolTip="退出批量操作" />
+                    </StackPanel>
+                </Grid>
             </Pivot.RightHeader>
             <PivotItem Margin="0">
                 <PivotItem.Header>
@@ -363,11 +393,11 @@
                                 x:Name="listDowned"
                                 Padding="8"
                                 DesiredWidth="550"
-                                IsItemClickEnabled="True"
+                                IsItemClickEnabled="{x:Bind Path=m_viewModel.IsDownloadedItemClickEnabled, Mode=OneWay}"
                                 ItemClick="listDowned_ItemClick"
                                 ItemHeight="120"
                                 ItemsSource="{x:Bind Path=m_viewModel.DownloadedViewModels, Mode=OneWay}"
-                                SelectionMode="None"
+                                SelectionMode="{x:Bind Path=m_viewModel.DownloadedSelectionMode, Mode=OneWay}"
                                 StretchContentForSingleRow="false">
                                 <controls:MyAdaptiveGridView.ItemTemplate>
                                     <DataTemplate x:DataType="download:DownloadedItem">

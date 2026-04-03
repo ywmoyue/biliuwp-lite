@@ -199,6 +199,9 @@ namespace BiliLite
 
                 var tempFileService = ServiceProvider.GetRequiredService<TempFileService>();
                 tempFileService.ClearTempFiles();
+
+                // 启动时刷新动态磁贴
+                _ = NotificationShowExtensions.ShowTile();
             }
         }
 

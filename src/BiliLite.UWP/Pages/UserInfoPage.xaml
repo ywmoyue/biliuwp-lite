@@ -945,6 +945,24 @@
                                             Glyph="&#xE960;" />
                                     </AppBarButton.Icon>
                                 </AppBarButton>
+
+                                <AppBarButton
+                                    Command="{x:Bind Path=m_viewModel.BlockUserCommand, Mode=OneWay}"
+                                    Label="拉黑"
+                                    Visibility="{x:Bind Path=m_viewModel.IsBlocked, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
+                                    <AppBarButton.Icon>
+                                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE8F8;" />
+                                    </AppBarButton.Icon>
+                                </AppBarButton>
+
+                                <AppBarButton
+                                    Command="{x:Bind Path=m_viewModel.BlockUserCommand, Mode=OneWay}"
+                                    Label="取消拉黑"
+                                    Visibility="{x:Bind Path=m_viewModel.IsBlocked, Mode=OneWay}">
+                                    <AppBarButton.Icon>
+                                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE8F8;" />
+                                    </AppBarButton.Icon>
+                                </AppBarButton>
                             </StackPanel>
                             <control:UserFollowingTagsFlyout x:Name="UserFollowingTagsFlyout" />
                         </StackPanel>

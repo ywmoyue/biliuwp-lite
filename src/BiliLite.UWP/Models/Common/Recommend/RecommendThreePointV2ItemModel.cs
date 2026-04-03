@@ -15,6 +15,8 @@ namespace BiliLite.Models.Common.Recommend
 
         public string Url { get; set; }
 
+        public string UpId { get; set; }
+
         public List<RecommendThreePointV2ItemReasonsModel> Reasons { get; set; }
     }
 }

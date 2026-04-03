@@ -8,6 +8,7 @@ namespace BiliLite.Models.Common.Search
         public string type { get; set; }
         public string typename { get; set; }
         public string author { get; set; }
+        public string mid { get; set; }
         public string id { get; set; }
         public string aid { get; set; }
         private string _title;

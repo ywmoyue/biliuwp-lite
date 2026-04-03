@@ -55,6 +55,7 @@ namespace BiliLite
             // App.Current.Suspending += Current_Suspending;
             // Window.Current.Content.PointerPressed += Content_PointerPressed;
 
+            // TODO: WinUI3 处理返回键
             //Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
             PreviewKeyDown += MainPage_KeyDown;
             PreviewKeyUp += MainPage_KeyUp;
@@ -394,6 +395,13 @@ namespace BiliLite
             {
                 tabStyle.Setters.Add(new Setter(heightProperty, m_viewModel.TabHeight));
             }
+        }
+
+        private void System_BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            if (tabView.SelectedItem == tabView.TabItems[0]) return;
+            e.Handled = true;
+            GoBack();
         }
 
         private void MainPage_OnLoaded(object sender, RoutedEventArgs e)

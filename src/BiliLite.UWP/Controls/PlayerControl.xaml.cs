@@ -1194,7 +1194,7 @@ namespace BiliLite.Controls
                 if (subtitles != null)
                 {
                     //转为简体
-                    if (SettingService.GetValue<bool>(SettingConstants.Player.TO_SIMPLIFIED, true) && CurrentSubtitleName == "中文（繁体）")
+                    if (SettingService.GetValue<bool>(SettingConstants.Player.TO_SIMPLIFIED, true) && (CurrentSubtitleName.Contains("繁体") || CurrentSubtitleName.Contains("繁體")))
                     {
                         foreach (var item in subtitles.body)
                         {

@@ -122,6 +122,9 @@ namespace BiliLite.Pages.Home
                 case "fastFilter":
                     m_viewModel.AddFilterUser(threePoint.Subtitle);
                     return;
+                case "blockUser":
+                    await m_viewModel.BlockUser(threePoint.UpId, threePoint.Subtitle);
+                    return;
             }
         }
 
