@@ -38,6 +38,15 @@ namespace BiliLite.Player.SubPlayers
 
         public override double Position => m_mediaPlayer?.PlaybackSession?.Position.TotalSeconds ?? 0;
 
+        public override double Duration
+        {
+            get
+            {
+                var duration = m_mediaPlayer?.PlaybackSession?.NaturalDuration.TotalSeconds ?? 0;
+                return duration > 0 ? duration : base.Duration;
+            }
+        }
+
         public override bool IsMuted
         {
             get => m_mediaPlayer?.IsMuted == true;

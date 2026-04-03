@@ -16,6 +16,7 @@ namespace BiliLite.Player.SubPlayers
         private bool m_isBuffering;
         private double m_bufferCache = 1;
         private bool m_isMuted;
+        private double m_duration;
 
         public DashShakaSubPlayer(ShakaPlayerControl playerControl)
         {
@@ -34,6 +35,10 @@ namespace BiliLite.Player.SubPlayers
         }
 
         public override double Position => m_position;
+
+        public override double Duration => m_duration > 0
+            ? m_duration
+            : base.Duration;
 
         public override bool IsMuted
         {
@@ -167,6 +172,7 @@ namespace BiliLite.Player.SubPlayers
 
         private async void PlayerControlOnPlayerLoaded(object sender, ShakaPlayerLoadedData e)
         {
+            m_duration = e?.Duration ?? 0;
             MediaOpened?.Invoke(this, EventArgs.Empty);
             await Task.Delay(50);
             m_isBuffering = true;

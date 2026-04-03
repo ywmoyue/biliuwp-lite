@@ -24,6 +24,8 @@ namespace BiliLite.Player.SubPlayers
 
         public abstract double Position { get; }
 
+        public virtual double Duration => m_realPlayInfo?.TotalDuration ?? 0;
+
         protected double m_rate = 1.0;
 
         public event EventHandler<PlayerException> PlayerErrorOccurred;

@@ -50,7 +50,10 @@
                 SelectedValuePath="Value" />
         </controls:SettingsCard>
 
-        <controls:SettingsExpander x:Name="SEPlayerType" Description="如果遇到加载卡顿、磁盘占用高等问题，请尝试修改优先播放器类型" Header="优先播放器类型">
+        <controls:SettingsExpander
+            x:Name="SEPlayerType"
+            Description="如果遇到加载卡顿、磁盘占用高等问题，请尝试修改优先播放器类型"
+            Header="优先播放器类型">
             <controls:SettingsExpander.HeaderIcon>
                 <font:FontAwesome Icon="Solid_PhotoVideo" />
             </controls:SettingsExpander.HeaderIcon>
@@ -75,6 +78,16 @@
             </StackPanel>
 
             <controls:SettingsExpander.Items>
+                <controls:SettingsCard Description="播放失败或当前播放器要求切换时，自动尝试回落链中的下一种播放器" Header="播放器自动回落">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE8D7;" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <ToggleSwitch
+                        x:Name="swPlayerAutoFallback"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
+                </controls:SettingsCard>
+
                 <controls:SettingsCard>
                     <controls:SettingsCard.Description>
                         <TextBlock HorizontalAlignment="Center">FFMpegInteropX 播放器设置</TextBlock>
@@ -156,7 +169,7 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsExpander Header="自动化" x:Name="SEPlayerAuto">
+        <controls:SettingsExpander x:Name="SEPlayerAuto" Header="自动化">
             <controls:SettingsExpander.HeaderIcon>
                 <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE811;" />
             </controls:SettingsExpander.HeaderIcon>
@@ -260,9 +273,9 @@
         </controls:SettingsExpander>
 
         <controls:SettingsExpander
+            x:Name="SEVolume"
             Description="默认视频音量"
             Header="音量"
-            x:Name="SEVolume"
             HeaderIcon="Volume">
             <StackPanel Orientation="Vertical">
                 <TextBlock HorizontalAlignment="Center" Text="{Binding Value, ElementName=SliderVolume}" />
@@ -279,7 +292,10 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsExpander Description="默认视频亮度" Header="亮度" x:Name="SEBrightness">
+        <controls:SettingsExpander
+            x:Name="SEBrightness"
+            Description="默认视频亮度"
+            Header="亮度">
             <controls:SettingsExpander.HeaderIcon>
                 <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE793;" />
             </controls:SettingsExpander.HeaderIcon>
@@ -297,7 +313,7 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsExpander Header="历史记录" x:Name="SEPlayHistory">
+        <controls:SettingsExpander x:Name="SEPlayHistory" Header="历史记录">
             <controls:SettingsExpander.HeaderIcon>
                 <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE81C;" />
             </controls:SettingsExpander.HeaderIcon>
@@ -327,19 +343,20 @@
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
-                <controls:SettingsCard
-                    Header="从头播放完播视频"
-                    Description="单位秒，默认-3，当未播放长度小于设定值时，从头播放视频而不是从历史记录位置播放，负数为关闭该功能">
+                <controls:SettingsCard Description="单位秒，默认-3，当未播放长度小于设定值时，从头播放视频而不是从历史记录位置播放，负数为关闭该功能" Header="从头播放完播视频">
                     <controls1:NumberBox
-                                x:Name="NumReplayVideoFromEndLastTime"
-                                MinWidth="200"
-                                Maximum="29"
-                                Minimum="-3" />
+                        x:Name="NumReplayVideoFromEndLastTime"
+                        MinWidth="200"
+                        Maximum="29"
+                        Minimum="-3" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsExpander Header="播放源" HeaderIcon="Sync" x:Name="SEPlaySource">
+        <controls:SettingsExpander
+            x:Name="SEPlaySource"
+            Header="播放源"
+            HeaderIcon="Sync">
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard Description="持续播放长视频时自动刷新播放地址并提示，下次打开视频生效" Header="自动刷新">
                     <ToggleSwitch
@@ -362,7 +379,7 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsExpander Header="进度条" x:Name="SEProgress">
+        <controls:SettingsExpander x:Name="SEProgress" Header="进度条">
             <controls:SettingsExpander.HeaderIcon>
                 <font:FontAwesome Icon="Solid_Spinner" />
             </controls:SettingsExpander.HeaderIcon>
@@ -383,7 +400,10 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
-        <controls:SettingsExpander Header="字幕" HeaderIcon="ClosedCaption" x:Name="SESub">
+        <controls:SettingsExpander
+            x:Name="SESub"
+            Header="字幕"
+            HeaderIcon="ClosedCaption">
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard Header="自动打开 AI 字幕">
                     <controls:SettingsCard.HeaderIcon>

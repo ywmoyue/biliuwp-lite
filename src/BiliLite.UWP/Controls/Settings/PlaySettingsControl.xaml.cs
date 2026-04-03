@@ -174,6 +174,18 @@ namespace BiliLite.Controls.Settings
                     SettingService.SetValue(SettingConstants.Player.AUTO_PLAY, swAutoPlay.IsOn);
                 });
             });
+            //播放器自动回落
+            swPlayerAutoFallback.IsOn = SettingService.GetValue(
+                SettingConstants.Player.AUTO_FALLBACK,
+                SettingConstants.Player.DEFAULT_AUTO_FALLBACK);
+            swPlayerAutoFallback.Loaded += new RoutedEventHandler((sender, e) =>
+            {
+                swPlayerAutoFallback.Toggled += new RoutedEventHandler((obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.AUTO_FALLBACK,
+                        swPlayerAutoFallback.IsOn);
+                });
+            });
             //自动跳过OP/ED
             SwSkipOpEd.IsOn = SettingService.GetValue(SettingConstants.Player.AUTO_SKIP_OP_ED,
                 SettingConstants.Player.DEFAULT_AUTO_SKIP_OP_ED);

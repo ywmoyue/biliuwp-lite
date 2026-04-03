@@ -942,6 +942,18 @@ namespace BiliLite.Models.Common
             public const string AUTO_PLAY = "PlayerAutoPlay";
 
             /// <summary>
+            /// 播放器自动回落
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string AUTO_FALLBACK = "PlayerAutoFallback";
+
+            /// <summary>
+            /// 默认启用播放器自动回落
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_AUTO_FALLBACK = true;
+
+            /// <summary>
             /// 自动切换下一个视频
             /// </summary>
             [SettingKey(typeof(bool))]

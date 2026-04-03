@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using BiliLite.Models.Common.Player;
 using BiliLite.Player.MediaInfos;
 using FFmpegInteropX;
+using Windows.ApplicationModel.Core;
 using Windows.Media.Playback;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -38,6 +40,15 @@ namespace BiliLite.Player.SubPlayers
         }
 
         public override double Position => m_mediaPlayer?.PlaybackSession?.Position.TotalSeconds ?? 0;
+
+        public override double Duration
+        {
+            get
+            {
+                var duration = m_mediaPlayer?.PlaybackSession?.NaturalDuration.TotalSeconds ?? 0;
+                return duration > 0 ? duration : base.Duration;
+            }
+        }
 
         public override bool IsMuted
         {
@@ -119,12 +130,15 @@ namespace BiliLite.Player.SubPlayers
 
         public override async Task Play()
         {
-            if (m_playerElement.MediaPlayer != m_mediaPlayer)
+            await RunOnUiThreadAsync(() =>
             {
-                m_playerElement.SetMediaPlayer(m_mediaPlayer);
-            }
+                if (m_playerElement.MediaPlayer != m_mediaPlayer)
+                {
+                    m_playerElement.SetMediaPlayer(m_mediaPlayer);
+                }
 
-            m_mediaPlayer?.Play();
+                m_mediaPlayer?.Play();
+            });
         }
 
         public override async Task Stop()
@@ -187,7 +201,7 @@ namespace BiliLite.Player.SubPlayers
                 m_mediaSource = null;
             }
 
-            m_playerElement.SetMediaPlayer(null);
+            await RunOnUiThreadAsync(() => m_playerElement.SetMediaPlayer(null));
         }
 
         private void PlaybackSessionOnBufferingStarted(MediaPlaybackSession sender, object args)
@@ -212,16 +226,36 @@ namespace BiliLite.Player.SubPlayers
 
         public override async Task SetRatioMode(int mode)
         {
-            VideoPlayer.ApplyStretch(m_playerElement, m_realPlayInfo, mode);
+            await RunOnUiThreadAsync(() => VideoPlayer.ApplyStretch(m_playerElement, m_realPlayInfo, mode));
         }
 
         public override async Task SetVideoEnable(bool enable)
         {
-            m_playerElement.Visibility = enable ? Visibility.Visible : Visibility.Collapsed;
-            if (!enable)
+            await RunOnUiThreadAsync(() =>
             {
-                m_mediaPlayer?.Pause();
+                m_playerElement.Visibility = enable ? Visibility.Visible : Visibility.Collapsed;
+                if (!enable)
+                {
+                    m_mediaPlayer?.Pause();
+                }
+            });
+        }
+
+        private static async Task RunOnUiThreadAsync(Action action)
+        {
+            if (action == null)
+            {
+                return;
             }
+
+            var dispatcher = CoreApplication.MainView?.CoreWindow?.Dispatcher;
+            if (dispatcher == null || dispatcher.HasThreadAccess)
+            {
+                action();
+                return;
+            }
+
+            await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
         }
 
         public override async Task<byte[]> CaptureAsync()

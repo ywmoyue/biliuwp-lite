@@ -176,7 +176,16 @@ namespace BiliLite.Controls
 
         private double GetCurrentPosition() => m_videoPlayer?.Position ?? 0;
 
-        private double GetCurrentDuration() => CurrentPlayItem?.duration ?? 0;
+        private double GetCurrentDuration()
+        {
+            var playerDuration = m_videoPlayer?.Duration ?? 0;
+            if (playerDuration > 0)
+            {
+                return playerDuration;
+            }
+
+            return CurrentPlayItem?.duration ?? 0;
+        }
         /// <summary>
         /// 当前选中的字幕名称
         /// </summary>
@@ -194,6 +203,9 @@ namespace BiliLite.Controls
             InitializeComponent();
 
             m_videoPlayerConfig = new PlayerConfig();
+            m_videoPlayerConfig.PlayerType = (RealPlayerType)SettingService.GetValue(
+                SettingConstants.Player.USE_REAL_PLAYER_TYPE,
+                (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
             m_realPlayInfo = new RealPlayInfo();
             m_playerController = PlayerControllerFactory.Create(PlayerType.Video);
             UpdatePlayerHostVisibility(m_videoPlayerConfig.PlayerType);
@@ -1140,6 +1152,10 @@ namespace BiliLite.Controls
             {
                 _postion = 0;
             }
+
+            // 重构后进度展示绑定到 ViewModel，
+            // 这里提前同步历史进度，避免等待播放状态切换后 UI 仍停留在 0。
+            m_viewModel.Position = _postion;
             _logger.Trace("SetPlayItem,上报进度");
             await ReportHistory(0);
             await SetDanmaku();
@@ -1959,13 +1975,19 @@ namespace BiliLite.Controls
             {
                 m_mediaIsLoading = true;
                 VideoLoading.Visibility = Visibility.Visible;
+                var preferredPlayerType = (RealPlayerType)SettingService.GetValue(
+                    SettingConstants.Player.USE_REAL_PLAYER_TYPE,
+                    (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
+                m_videoPlayerConfig.PlayerType = preferredPlayerType;
+
                 m_realPlayInfo = RealPlayInfoFactory.CreateFromPlayUrlInfo(
                     quality,
                     playInfo: CurrentPlayItem,
                     isLocal: isLocal,
                     isAutoPlay: _autoPlay,
-                    preferredPlayerType: m_videoPlayerConfig.PlayerType);
+                    preferredPlayerType: preferredPlayerType);
 
+                UpdatePlayerHostVisibility(m_videoPlayerConfig.PlayerType);
                 m_videoPlayer.SetRealPlayInfo(m_realPlayInfo);
                 m_newPlayerBuffering = false;
                 m_newPlayerBufferCache = 0;
@@ -2567,6 +2589,12 @@ namespace BiliLite.Controls
 
         private void Player_PlayStateChanged(object sender, PlayState e)
         {
+            if (!Dispatcher.HasThreadAccess)
+            {
+                _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => Player_PlayStateChanged(sender, e));
+                return;
+            }
+
             m_newPlayerPlayState = e;
             PlayStateChanged?.Invoke(this, e);
 
@@ -2641,6 +2669,12 @@ namespace BiliLite.Controls
 
         private void RefreshBufferingUi(bool force = false)
         {
+            if (!Dispatcher.HasThreadAccess)
+            {
+                _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => RefreshBufferingUi(force));
+                return;
+            }
+
             var now = DateTime.UtcNow;
             if (!force && (now - m_lastBufferingUiUpdateAt) < BufferingUiUpdateInterval)
             {
@@ -2711,9 +2745,17 @@ namespace BiliLite.Controls
                 return;
             }
 
-            if (e.NewState.IsLoading || e.NewState.IsBuffering)
+            if (e.NewState.IsLoading)
             {
                 Player_PlayStateChanged(this, PlayState.Loading);
+                return;
+            }
+
+            if (e.NewState.IsBuffering)
+            {
+                // 缓冲状态使用独立的 Buffering UI（GridBuffering）展示，
+                // 不应回退到 Loading 状态，否则会把“视频加载中”常驻显示出来。
+                Player_PlayStateChanged(this, m_playerController.PauseState.IsPaused ? PlayState.Pause : PlayState.Playing);
                 return;
             }
 
@@ -2723,6 +2765,20 @@ namespace BiliLite.Controls
                 {
                     var seek = m_pendingSeekPosition;
                     m_pendingSeekPosition = -1;
+
+                    // 自动续播时同样需要同步 ViewModel。
+                    // 这里可能在后台线程回调，必须切回 UI 线程再更新绑定源。
+                    if (Dispatcher.HasThreadAccess)
+                    {
+                        m_viewModel.Position = seek;
+                    }
+                    else
+                    {
+                        _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                        {
+                            m_viewModel.Position = seek;
+                        });
+                    }
                     _ = m_videoPlayer.SetPosition(seek);
                 }
 
@@ -2758,7 +2814,10 @@ namespace BiliLite.Controls
         private void VideoPlayer_BufferingChanged(object sender, bool e)
         {
             m_newPlayerBuffering = e;
-            RefreshBufferingUi();
+            // Buffering 状态切换（true/false）必须即时更新：
+            // Shaka 在 loaded 后会很快发出 started->ended（约 50ms），
+            // 若受 UI 节流影响可能丢掉 ended，导致“正在缓冲”常驻。
+            RefreshBufferingUi(force: true);
         }
 
         private void VideoPlayer_BufferCacheChanged(object sender, double e)
@@ -3019,6 +3078,9 @@ namespace BiliLite.Controls
 
         public void SetPosition(double position)
         {
+            // 重构后进度条绑定到 m_viewModel.Position，暂停状态下 PositionTimer 不会刷新，
+            // 因此手动拖动进度后需要立即同步 ViewModel，避免 UI 停留在旧位置。
+            m_viewModel.Position = position;
             _ = m_videoPlayer.SetPosition(position);
         }
 

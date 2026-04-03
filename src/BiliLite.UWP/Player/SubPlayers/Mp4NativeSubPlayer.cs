@@ -2,8 +2,10 @@ using System;
 using System.Threading.Tasks;
 using BiliLite.Models.Common.Player;
 using BiliLite.Player.MediaInfos;
+using BiliLite.Services;
 using Windows.Media.Core;
 using Windows.Media.Playback;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -11,6 +13,7 @@ namespace BiliLite.Player.SubPlayers
 {
     public class Mp4NativeSubPlayer : ISubPlayer
     {
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly MediaPlayerElement m_playerElement;
         private MediaPlayer m_mediaPlayer;
         private string m_url;
@@ -37,6 +40,15 @@ namespace BiliLite.Player.SubPlayers
         }
 
         public override double Position => m_mediaPlayer?.PlaybackSession?.Position.TotalSeconds ?? 0;
+
+        public override double Duration
+        {
+            get
+            {
+                var duration = m_mediaPlayer?.PlaybackSession?.NaturalDuration.TotalSeconds ?? 0;
+                return duration > 0 ? duration : base.Duration;
+            }
+        }
 
         public override bool IsMuted
         {
@@ -83,6 +95,7 @@ namespace BiliLite.Player.SubPlayers
             }
 
             m_url = m_realPlayInfo.SingleUrl;
+            _logger.Info($"Mp4Native.Load start: isLocal={m_realPlayInfo?.IsLocal}, url={SanitizeUrl(m_url)}");
             await StopCore();
 
             m_mediaPlayer = new MediaPlayer();
@@ -90,6 +103,7 @@ namespace BiliLite.Player.SubPlayers
             m_mediaPlayer.MediaOpened += MediaPlayerOnMediaOpened;
             m_mediaPlayer.MediaEnded += MediaPlayerOnMediaEnded;
             m_mediaPlayer.MediaFailed += MediaPlayerOnMediaFailed;
+            m_mediaPlayer.PlaybackSession.PlaybackStateChanged += PlaybackSessionOnPlaybackStateChanged;
             m_mediaPlayer.PlaybackSession.BufferingStarted += PlaybackSessionOnBufferingStarted;
             m_mediaPlayer.PlaybackSession.BufferingProgressChanged += PlaybackSessionOnBufferingProgressChanged;
             m_mediaPlayer.PlaybackSession.BufferingEnded += PlaybackSessionOnBufferingEnded;
@@ -97,13 +111,17 @@ namespace BiliLite.Player.SubPlayers
 
             if (m_realPlayInfo.IsLocal)
             {
-                var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(m_url);
+                var file = await StorageFile.GetFileFromPathAsync(m_url);
+                var basicProperties = await file.GetBasicPropertiesAsync();
+                _logger.Info($"Mp4Native.Load local source: path={file.Path}, type={file.FileType}, size={basicProperties.Size}");
                 m_mediaPlayer.Source = MediaSource.CreateFromStorageFile(file);
             }
             else
             {
                 m_mediaPlayer.Source = MediaSource.CreateFromUri(new Uri(m_url));
             }
+
+            _logger.Info($"Mp4Native.Load source assigned: isLocal={m_realPlayInfo?.IsLocal}, sourceNull={m_mediaPlayer.Source == null}");
 
             await SetRate(m_rate);
         }
@@ -114,12 +132,16 @@ namespace BiliLite.Player.SubPlayers
 
         public override async Task Play()
         {
+            _logger.Info(
+                $"Mp4Native.Play: elementHasPlayer={m_playerElement.MediaPlayer != null}, samePlayer={ReferenceEquals(m_playerElement.MediaPlayer, m_mediaPlayer)}, visibility={m_playerElement.Visibility}, width={m_playerElement.ActualWidth}, height={m_playerElement.ActualHeight}");
             if (m_playerElement.MediaPlayer != m_mediaPlayer)
             {
                 m_playerElement.SetMediaPlayer(m_mediaPlayer);
+                _logger.Info("Mp4Native.Play: MediaPlayerElement.SetMediaPlayer completed");
             }
 
             m_mediaPlayer?.Play();
+            _logger.Info($"Mp4Native.Play: playbackState={m_mediaPlayer?.PlaybackSession?.PlaybackState}, autoPlay={m_mediaPlayer?.AutoPlay}");
         }
 
         public override async Task Stop()
@@ -171,6 +193,7 @@ namespace BiliLite.Player.SubPlayers
             m_mediaPlayer.MediaOpened -= MediaPlayerOnMediaOpened;
             m_mediaPlayer.MediaEnded -= MediaPlayerOnMediaEnded;
             m_mediaPlayer.MediaFailed -= MediaPlayerOnMediaFailed;
+            m_mediaPlayer.PlaybackSession.PlaybackStateChanged -= PlaybackSessionOnPlaybackStateChanged;
             m_mediaPlayer.PlaybackSession.BufferingStarted -= PlaybackSessionOnBufferingStarted;
             m_mediaPlayer.PlaybackSession.BufferingProgressChanged -= PlaybackSessionOnBufferingProgressChanged;
             m_mediaPlayer.PlaybackSession.BufferingEnded -= PlaybackSessionOnBufferingEnded;
@@ -183,6 +206,12 @@ namespace BiliLite.Player.SubPlayers
         private void PlaybackSessionOnPositionChanged(MediaPlaybackSession sender, object args)
         {
             PositionChanged?.Invoke(this, sender?.Position.TotalSeconds ?? 0);
+        }
+
+        private void PlaybackSessionOnPlaybackStateChanged(MediaPlaybackSession sender, object args)
+        {
+            _logger.Info(
+                $"Mp4Native.PlaybackStateChanged: state={sender?.PlaybackState}, position={sender?.Position.TotalSeconds}, naturalDuration={sender?.NaturalDuration.TotalSeconds}, buffer={sender?.BufferingProgress}");
         }
 
         private void PlaybackSessionOnBufferingStarted(MediaPlaybackSession sender, object args)
@@ -226,6 +255,8 @@ namespace BiliLite.Player.SubPlayers
 
         private void MediaPlayerOnMediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
         {
+            _logger.Error(
+                $"Mp4Native.MediaFailed: error={args?.Error}, errorMessage={args?.ErrorMessage}, extendedErrorCode={args?.ExtendedErrorCode}, url={SanitizeUrl(m_url)}");
             EmitError(PlayerError.PlayerErrorCode.UnknownError, args.ErrorMessage, PlayerError.RetryStrategy.NoRetry);
         }
 
@@ -236,7 +267,24 @@ namespace BiliLite.Player.SubPlayers
 
         private void MediaPlayerOnMediaOpened(MediaPlayer sender, object args)
         {
+            _logger.Info(
+                $"Mp4Native.MediaOpened: video={sender?.PlaybackSession?.NaturalVideoWidth}x{sender?.PlaybackSession?.NaturalVideoHeight}, duration={sender?.PlaybackSession?.NaturalDuration.TotalSeconds}, position={sender?.PlaybackSession?.Position.TotalSeconds}, elementVisibility={m_playerElement.Visibility}, elementSize={m_playerElement.ActualWidth}x{m_playerElement.ActualHeight}");
             MediaOpened?.Invoke(this, EventArgs.Empty);
+        }
+
+        private static string SanitizeUrl(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                return "null";
+            }
+
+            if (Uri.TryCreate(url, UriKind.Absolute, out var uri))
+            {
+                return uri.IsFile ? uri.LocalPath : $"{uri.Scheme}://{uri.Host}{uri.AbsolutePath}";
+            }
+
+            return url;
         }
     }
 }

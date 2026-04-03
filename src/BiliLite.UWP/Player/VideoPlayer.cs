@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
 using System.Threading.Tasks;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
@@ -40,7 +41,9 @@ namespace BiliLite.Player
         private bool m_isMuted;
         private double m_lastVolume = 1.0;
         private bool m_isBuffering;
+        private bool m_keepPausedAfterSeek;
         private double m_bufferCache;
+        private int m_handlingPlayerError;
         private DateTime m_lastBufferingUiNotifyAt = DateTime.MinValue;
         private DateTime m_lastBufferCacheNotifyAt = DateTime.MinValue;
         private static readonly TimeSpan BufferingNotifyMinInterval = TimeSpan.FromMilliseconds(120);
@@ -104,6 +107,8 @@ namespace BiliLite.Player
 
         public double Position => m_subPlayer?.Position ?? 0;
 
+        public double Duration => m_subPlayer?.Duration ?? m_realPlayInfo?.TotalDuration ?? 0;
+
         public VideoPlayHistoryHelper.ABPlayHistoryEntry ABPlay { get; set; }
 
         public event EventHandler<PlayerException> ErrorOccurred;
@@ -115,6 +120,8 @@ namespace BiliLite.Player
         public void SetRealPlayInfo(RealPlayInfo realPlayInfo)
         {
             m_realPlayInfo = realPlayInfo;
+            _logger.Info(
+                $"VideoPlayer.SetRealPlayInfo: mediaType={realPlayInfo?.PlayMediaType}, preferred={realPlayInfo?.PreferredPlayerType}, isLocal={realPlayInfo?.IsLocal}, singleUrl={SanitizeUrl(realPlayInfo?.SingleUrl)}, dashVideoUrl={SanitizeUrl(realPlayInfo?.DashInfo?.Video?.Url)}");
             m_subPlayer.SetRealPlayInfo(realPlayInfo);
         }
 
@@ -126,6 +133,8 @@ namespace BiliLite.Player
         public async Task Load()
         {
             PrepareSubPlayerForLoad();
+            _logger.Info(
+                $"VideoPlayer.Load: subPlayer={m_subPlayer?.GetType().Name}, type={m_subPlayer?.Type}, mediaType={m_realPlayInfo?.PlayMediaType}, isLocal={m_realPlayInfo?.IsLocal}, singleUrl={SanitizeUrl(m_realPlayInfo?.SingleUrl)}, dashVideoUrl={SanitizeUrl(m_realPlayInfo?.DashInfo?.Video?.Url)}");
             await m_subPlayer.SetRate(m_rate);
             await m_subPlayer.Load();
         }
@@ -137,6 +146,8 @@ namespace BiliLite.Player
 
         public async Task Play()
         {
+            m_keepPausedAfterSeek = false;
+            _logger.Info($"VideoPlayer.Play: subPlayer={m_subPlayer?.GetType().Name}, type={m_subPlayer?.Type}, isLocal={m_realPlayInfo?.IsLocal}");
             await m_subPlayer.Play();
         }
 
@@ -157,6 +168,7 @@ namespace BiliLite.Player
 
         public async Task Resume()
         {
+            m_keepPausedAfterSeek = false;
             await m_subPlayer.Resume();
         }
 
@@ -200,6 +212,12 @@ namespace BiliLite.Player
             if (m_subPlayer == null)
             {
                 return;
+            }
+
+            // 若用户在暂停态拖动进度，Seek 后应保持暂停，不自动播放。
+            if (m_playerController?.PauseState?.IsPaused == true)
+            {
+                m_keepPausedAfterSeek = true;
             }
 
             await m_subPlayer.SetPosition(value);
@@ -352,12 +370,11 @@ namespace BiliLite.Player
         private void PrepareSubPlayerForLoad()
         {
             var targetType = m_playerConfig.PlayerType;
-            if (m_realPlayInfo?.FallbackPlayerTypes?.Count > 0)
-            {
-                targetType = m_realPlayInfo.FallbackPlayerTypes.First();
-            }
 
             var expectedSubPlayerType = GetSubPlayerRuntimeType(targetType, m_realPlayInfo);
+
+            _logger.Info(
+                $"VideoPlayer.PrepareSubPlayerForLoad: targetType={targetType}, expected={expectedSubPlayerType?.Name}, current={m_subPlayer?.GetType().Name}, mediaType={m_realPlayInfo?.PlayMediaType}, isLocal={m_realPlayInfo?.IsLocal}");
 
             if (m_subPlayer != null && m_subPlayer.GetType() == expectedSubPlayerType)
             {
@@ -372,6 +389,7 @@ namespace BiliLite.Player
 
             m_subPlayer = CreateSubPlayer(targetType, m_realPlayInfo);
             m_subPlayer.SetRealPlayInfo(m_realPlayInfo);
+            _logger.Info($"VideoPlayer.PrepareSubPlayerForLoad: created subPlayer={m_subPlayer?.GetType().Name}, type={m_subPlayer?.Type}");
             InitPlayerEvents(m_subPlayer);
         }
 
@@ -417,6 +435,14 @@ namespace BiliLite.Player
 
         private List<RealPlayerType> BuildFallbackChain()
         {
+            if (!SettingService.GetValue(
+                    SettingConstants.Player.AUTO_FALLBACK,
+                    SettingConstants.Player.DEFAULT_AUTO_FALLBACK))
+            {
+                var currentType = m_subPlayer?.Type ?? m_realPlayInfo?.PreferredPlayerType ?? m_playerConfig.PlayerType;
+                return new List<RealPlayerType> { currentType };
+            }
+
             if (m_realPlayInfo?.FallbackPlayerTypes != null && m_realPlayInfo.FallbackPlayerTypes.Count > 0)
             {
                 return m_realPlayInfo.FallbackPlayerTypes;
@@ -458,107 +484,217 @@ namespace BiliLite.Player
 
         private async void SubPlayer_BufferingStarted(object sender, EventArgs e)
         {
-            EmitBufferingChanged(true);
-            await m_playerController.PlayState.Buff();
+            await RunOnUiThreadAsync(async () =>
+            {
+                EmitBufferingChanged(true);
+                await m_playerController.PlayState.Buff();
+            });
         }
 
         private async void SubPlayer_BufferingEnded(object sender, EventArgs e)
         {
-            EmitBufferingChanged(false);
-            if (m_realPlayInfo?.IsAutoPlay == true)
+            await RunOnUiThreadAsync(async () =>
             {
-                if (m_playerController.PauseState.IsPaused)
+                EmitBufferingChanged(false);
+
+                // 与旧播放器行为保持一致：暂停状态下 Seek 后不应自动续播。
+                if (m_keepPausedAfterSeek)
                 {
-                    await m_playerController.PauseState.Resume();
+                    await m_playerController.PlayState.Play();
+                    if (m_playerController.PauseState.IsPaused)
+                    {
+                        // PauseState 已是暂停态时，PauseState.Pause() 会被视为错误调用，
+                        // 这里直接对底层播放器补一次 Pause，确保不会因为 Play() 继续播放。
+                        await m_playerController.Player.Pause();
+                    }
+                    else
+                    {
+                        await m_playerController.PauseState.Pause();
+                    }
+
+                    m_keepPausedAfterSeek = false;
+                    return;
+                }
+
+                if (m_realPlayInfo?.IsAutoPlay == true)
+                {
+                    if (m_playerController.PauseState.IsPaused)
+                    {
+                        await m_playerController.PauseState.Resume();
+                    }
+
+                    await m_playerController.PlayState.Play();
+                    return;
                 }
 
                 await m_playerController.PlayState.Play();
-                return;
-            }
 
-            await m_playerController.PlayState.Play();
-
-            if (!m_playerController.PauseState.IsPaused)
-            {
-                await m_playerController.PauseState.Pause();
-            }
+                // 非自动播放场景：无论 PauseState 当前是否已是暂停态，都要确保底层真正暂停。
+                if (m_playerController.PauseState.IsPaused)
+                {
+                    await m_playerController.Player.Pause();
+                }
+                else
+                {
+                    await m_playerController.PauseState.Pause();
+                }
+            });
         }
 
         private async void SubPlayerOnPlayerErrorOccurred(object sender, PlayerException e)
         {
-            m_playerController.PushError(e);
-
-            if (e.RetryStrategy == PlayerError.RetryStrategy.NoError)
+            if (Interlocked.Exchange(ref m_handlingPlayerError, 1) == 1)
             {
-                await m_playerController.PlayState.Stop();
+                _logger.Warn($"忽略重复播放器错误事件: code={e?.Code}, desc={e?.Description}");
                 return;
             }
 
-            if (e.Code == PlayerError.PlayerErrorCode.NeedUseOtherPlayerError)
+            await RunOnUiThreadAsync(async () =>
             {
-                m_triedPlayers.Add(m_subPlayer.Type);
-                var fallbackChain = BuildFallbackChain();
-                var nextType = fallbackChain.FirstOrDefault(x => !m_triedPlayers.Contains(x));
-                if (fallbackChain.Contains(nextType) && !m_triedPlayers.Contains(nextType))
+                try
                 {
-                    NeedReplacePlayer?.Invoke(this, nextType);
-                    return;
+                    _logger.Error($"播放器错误详情: {BuildPlayerErrorContext(e)}");
+                    m_playerController.PushError(e);
+
+                    if (e.RetryStrategy == PlayerError.RetryStrategy.NoError)
+                    {
+                        await m_playerController.PlayState.Stop();
+                        return;
+                    }
+
+                    var shouldReloadCurrentPlayer = e.RetryStrategy == PlayerError.RetryStrategy.Normal;
+
+                    if (e.Code == PlayerError.PlayerErrorCode.NeedUseOtherPlayerError)
+                    {
+                        m_triedPlayers.Add(m_subPlayer.Type);
+                        var fallbackChain = BuildFallbackChain();
+                        var nextType = fallbackChain.FirstOrDefault(x => !m_triedPlayers.Contains(x));
+                        if (fallbackChain.Contains(nextType) && !m_triedPlayers.Contains(nextType))
+                        {
+                            NeedReplacePlayer?.Invoke(this, nextType);
+                            return;
+                        }
+
+                        shouldReloadCurrentPlayer = false;
+                        _logger.Warn($"播放器回落链已耗尽，不再重载当前播放器: current={m_subPlayer?.Type}, chain={string.Join(",", fallbackChain)}");
+                    }
+
+                    await m_playerController.PlayState.Fault();
+                    NotificationShowExtensions.ShowMessageToast($"播放失败: {e.Description}");
+                    _logger.Error($"播放失败: {e.Description}");
+
+                    if (shouldReloadCurrentPlayer)
+                    {
+                        await m_playerController.PlayState.Stop();
+                        await m_playerController.PlayState.Load();
+                    }
+
+                    ErrorOccurred?.Invoke(this, e);
                 }
-            }
+                finally
+                {
+                    Interlocked.Exchange(ref m_handlingPlayerError, 0);
+                }
+            });
+        }
 
-            await m_playerController.PlayState.Fault();
-            NotificationShowExtensions.ShowMessageToast($"播放失败: {e.Description}");
-            _logger.Error($"播放失败: {e.Description}");
+        private string BuildPlayerErrorContext(PlayerException e)
+        {
+            var playState = m_playerController?.PlayState?.GetType().Name ?? "Unknown";
+            var pauseState = m_playerController?.PauseState?.GetType().Name ?? "Unknown";
+            var subPlayerType = m_subPlayer?.Type.ToString() ?? "Unknown";
+            var retryCount = m_playerController?.RetryCount ?? 0;
+            var triedPlayers = m_triedPlayers.Count > 0 ? string.Join(",", m_triedPlayers) : "none";
+            var fallbackChain = string.Join(",", BuildFallbackChain());
+            var mediaType = m_realPlayInfo?.PlayMediaType.ToString() ?? "Unknown";
+            var preferredPlayer = m_realPlayInfo?.PreferredPlayerType.ToString() ?? "Unknown";
+            var autoPlay = m_realPlayInfo?.IsAutoPlay.ToString() ?? "Unknown";
+            var singleUrl = SanitizeUrl(m_realPlayInfo?.SingleUrl);
+            var manualUrl = SanitizeUrl(m_realPlayInfo?.ManualPlayUrl);
+            var dashVideoUrl = SanitizeUrl(m_realPlayInfo?.DashInfo?.Video?.Url);
+            var collectUrl = SanitizeUrl(m_subPlayer?.GetCollectInfo()?.Url);
 
-            if (e.RetryStrategy == PlayerError.RetryStrategy.Normal)
+            return $"code={e.Code}, retryStrategy={e.RetryStrategy}, desc={e.Description}, " +
+                   $"playState={playState}, pauseState={pauseState}, subPlayerType={subPlayerType}, " +
+                   $"retryCount={retryCount}, triedPlayers={triedPlayers}, fallbackChain={fallbackChain}, " +
+                   $"mediaType={mediaType}, preferredPlayer={preferredPlayer}, autoPlay={autoPlay}, " +
+                   $"singleUrl={singleUrl}, manualUrl={manualUrl}, dashVideoUrl={dashVideoUrl}, collectUrl={collectUrl}";
+        }
+
+        private static string SanitizeUrl(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
             {
-                await m_playerController.PlayState.Stop();
-                await m_playerController.PlayState.Load();
+                return "null";
             }
 
-            ErrorOccurred?.Invoke(this, e);
+            if (Uri.TryCreate(url, UriKind.Absolute, out var uri))
+            {
+                return $"{uri.Scheme}://{uri.Host}{uri.AbsolutePath}";
+            }
+
+            return "invalid_url";
         }
 
         private async void SubPlayer_MediaOpened(object sender, EventArgs e)
         {
-            await m_playerController.PlayState.Buff();
-            if (m_realPlayInfo?.IsAutoPlay == true && m_playerController.PauseState.IsPaused)
+            await RunOnUiThreadAsync(async () =>
             {
-                await m_playerController.PauseState.Resume();
-            }
+                _logger.Info(
+                    $"VideoPlayer.SubPlayer_MediaOpened: subPlayer={m_subPlayer?.GetType().Name}, type={m_subPlayer?.Type}, duration={m_subPlayer?.Duration}, position={m_subPlayer?.Position}, isLocal={m_realPlayInfo?.IsLocal}");
+
+                if (m_subPlayer is not ISubWebPlayer && m_playerElement?.MediaPlayer == null)
+                {
+                    _logger.Info(
+                        $"VideoPlayer.SubPlayer_MediaOpened: attach media player early, subPlayer={m_subPlayer?.GetType().Name}, type={m_subPlayer?.Type}");
+                    await m_subPlayer.Play();
+                }
+
+                await m_playerController.PlayState.Buff();
+                if (m_realPlayInfo?.IsAutoPlay == true && m_playerController.PauseState.IsPaused)
+                {
+                    await m_playerController.PauseState.Resume();
+                }
+            });
         }
 
         private async void SubPlayer_MediaEnded(object sender, EventArgs e)
         {
-            await m_playerController.PlayState.Stop();
+            await RunOnUiThreadAsync(async () => { await m_playerController.PlayState.Stop(); });
         }
 
         private async void SubPlayer_PositionChanged(object sender, double position)
         {
-            PositionChanged?.Invoke(this, position);
-
-            if (m_abSeeking || ABPlay == null)
+            await RunOnUiThreadAsync(async () =>
             {
-                return;
-            }
+                PositionChanged?.Invoke(this, position);
 
-            if (ABPlay.PointB != 0 && ABPlay.PointB != double.MaxValue && position > ABPlay.PointB)
-            {
-                m_abSeeking = true;
-                try
+                if (m_abSeeking || ABPlay == null)
                 {
-                    await m_subPlayer.SetPosition(ABPlay.PointA);
+                    return;
                 }
-                finally
+
+                if (ABPlay.PointB != 0 && ABPlay.PointB != double.MaxValue && position > ABPlay.PointB)
                 {
-                    m_abSeeking = false;
+                    m_abSeeking = true;
+                    try
+                    {
+                        await m_subPlayer.SetPosition(ABPlay.PointA);
+                    }
+                    finally
+                    {
+                        m_abSeeking = false;
+                    }
                 }
-            }
+            });
         }
 
         private void SubPlayer_BufferCacheChanged(object sender, double cache)
         {
-            EmitBufferCacheChanged(cache);
+            _ = RunOnUiThreadAsync(() =>
+            {
+                EmitBufferCacheChanged(cache);
+            });
         }
 
         private void EmitBufferingChanged(bool isBuffering, bool force = false)
@@ -649,6 +785,43 @@ namespace BiliLite.Player
             }
 
             await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
+        }
+
+        private static async Task RunOnUiThreadAsync(Func<Task> action)
+        {
+            if (action == null)
+            {
+                return;
+            }
+
+            var dispatcher = CoreApplication.MainView?.CoreWindow?.Dispatcher;
+            if (dispatcher == null)
+            {
+                await action();
+                return;
+            }
+
+            if (dispatcher.HasThreadAccess)
+            {
+                await action();
+                return;
+            }
+
+            var completionSource = new TaskCompletionSource<bool>();
+            await dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                try
+                {
+                    await action();
+                    completionSource.TrySetResult(true);
+                }
+                catch (Exception ex)
+                {
+                    completionSource.TrySetException(ex);
+                }
+            });
+
+            await completionSource.Task;
         }
 
         internal static async Task<byte[]> RenderElementToPngBytesAsync(UIElement element, double dpi)

@@ -7,66 +7,26 @@ using BiliLite.Modules;
 
 namespace BiliLite.ViewModels
 {
-    public class PlayControlViewModel: BaseViewModel
+    public class PlayControlViewModel : BaseViewModel
     {
-        private List<InteractionEdgeInfoQuestionModel> _questions;
-        public List<InteractionEdgeInfoQuestionModel> Questions
-        {
-            get => _questions;
-            set => Set(ref _questions, value);
-        }
+        public List<InteractionEdgeInfoQuestionModel> Questions { get; set; }
 
         public bool ShowVideoBottomVirtualProgressBar =>
             SettingService.GetValue(SettingConstants.Player.SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR,
                 SettingConstants.Player.DEFAULT_SHOW_VIDEO_BOTTOM_VIRTUAL_PROGRESS_BAR);
 
-        private bool _showViewPointsView;
-        public bool ShowViewPointsView
-        {
-            get => _showViewPointsView;
-            set => Set(ref _showViewPointsView, value);
-        }
+        public bool ShowViewPointsView { get; set; }
 
-        private bool _showViewPointsBtn;
-        public bool ShowViewPointsBtn
-        {
-            get => _showViewPointsBtn;
-            set => Set(ref _showViewPointsBtn, value);
-        }
+        public bool ShowViewPointsBtn { get; set; }
 
-        private bool _showWebPlayerToolbarButton;
-        public bool ShowWebPlayerToolbarButton
-        {
-            get => _showWebPlayerToolbarButton;
-            set => Set(ref _showWebPlayerToolbarButton, value);
-        }
+        public bool ShowWebPlayerToolbarButton { get; set; }
 
-        private bool _showWebPlayerToolbar;
-        public bool ShowWebPlayerToolbar
-        {
-            get => _showWebPlayerToolbar;
-            set => Set(ref _showWebPlayerToolbar, value);
-        }
+        public bool ShowWebPlayerToolbar { get; set; }
 
-        private List<PlayerInfoViewPoint> _viewPoints;
-        public List<PlayerInfoViewPoint> ViewPoints
-        {
-            get => _viewPoints;
-            set => Set(ref _viewPoints, value);
-        }
+        public List<PlayerInfoViewPoint> ViewPoints { get; set; }
 
-        private double _position;
-        public double Position
-        {
-            get => _position;
-            set => Set(ref _position, value);
-        }
+        public double Position { get; set; }
 
-        private double _duration;
-        public double Duration
-        {
-            get => _duration;
-            set => Set(ref _duration, value);
-        }
+        public double Duration { get; set; }
     }
 }
