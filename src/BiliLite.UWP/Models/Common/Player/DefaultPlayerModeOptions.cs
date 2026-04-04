@@ -27,6 +27,6 @@
             new RealPlayerTypeOption() { Value = RealPlayerType.Mpegts },
         };
 
-        public const RealPlayerType DEFAULT_LIVE_PLAYER_MODE = RealPlayerType.FFmpegInterop;
+        public const RealPlayerType DEFAULT_LIVE_PLAYER_MODE = RealPlayerType.ShakaPlayer;
     }
 }
