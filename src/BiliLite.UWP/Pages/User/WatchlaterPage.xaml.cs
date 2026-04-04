@@ -120,12 +120,12 @@ namespace BiliLite.Pages.User
             listView.SelectAll();
         }
 
-        private void CheckBox_Unchecked(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
             listView.SelectedItems.Clear();
         }
 
-        private async void BtnDeleteSelected_OnClick(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void BtnDeleteSelected_OnClick(object sender, RoutedEventArgs e)
         {
             if (listView.SelectedItems.Count > 0)
             {

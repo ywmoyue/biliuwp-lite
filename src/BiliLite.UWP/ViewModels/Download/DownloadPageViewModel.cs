@@ -12,7 +12,7 @@ using Windows.Networking.BackgroundTransfer;
 using AutoMapper;
 using BiliLite.Models.Common;
 using BiliLite.Models.Attributes;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 
 namespace BiliLite.ViewModels.Download
 {
