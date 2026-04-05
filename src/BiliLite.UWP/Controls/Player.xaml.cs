@@ -266,7 +266,7 @@ namespace BiliLite.Controls
             else sender.m_webPlayer.SetVolume(value);
         }
 
-        private async Task<AdaptiveMediaSource> CreateAdaptiveMediaSource(BiliDashPlayUrlInfo dashInfo, string userAgent, string referer)
+        private async Task<AdaptiveMediaSource> CreateAdaptiveMediaSource(BiliDashPlayUrlInfo dashInfo, string userAgent, string referer, bool isLocal = false)
         {
             try
             {
@@ -324,18 +324,56 @@ namespace BiliLite.Controls
 
 
 
-                var stream = new MemoryStream(Encoding.UTF8.GetBytes(mpdStr)).AsInputStream();
-                var soure = await AdaptiveMediaSource.CreateFromStreamAsync(stream, new Uri(dashInfo.Video.Url), "application/dash+xml", httpClient);
+                var mpdStream = new MemoryStream(Encoding.UTF8.GetBytes(mpdStr)).AsInputStream();
+                // 本地播放时使用占位URI，实际文件通过DownloadRequested事件提供
+                var baseUri = isLocal ? new Uri("http://localhost/localvideo.mp4") : new Uri(dashInfo.Video.Url);
+                var soure = await AdaptiveMediaSource.CreateFromStreamAsync(mpdStream, baseUri, "application/dash+xml", httpClient);
                 soure.MediaSource.AdvancedSettings.AllSegmentsIndependent = true;
 
                 var s = soure.Status;
-                soure.MediaSource.DownloadRequested += (sender, args) =>
+                if (isLocal)
                 {
-                    if (args.ResourceContentType == "audio/mp4")
+                    // 本地文件播放：拦截所有下载请求，直接从本地文件读取数据，支持字节范围请求
+                    soure.MediaSource.DownloadRequested += async (sender, args) =>
                     {
-                        args.Result.ResourceUri = new Uri(dashInfo.Audio.Url);
-                    }
-                };
+                        var deferral = args.GetDeferral();
+                        try
+                        {
+                            string localPath;
+                            if (args.ResourceContentType != null && args.ResourceContentType.StartsWith("audio"))
+                            {
+                                localPath = dashInfo.Audio?.Url;
+                            }
+                            else
+                            {
+                                localPath = dashInfo.Video.Url;
+                            }
+
+                            if (!string.IsNullOrEmpty(localPath))
+                            {
+                                var file = await StorageFile.GetFileFromPathAsync(localPath);
+                                var fileStream = await file.OpenAsync(FileAccessMode.Read);
+                                var startPosition = (ulong)(args.RequestedByteRange?.FirstBytePosition ?? 0);
+                                args.Result.InputStream = fileStream.GetInputStreamAt(startPosition);
+                                args.Result.ContentType = args.ResourceContentType;
+                            }
+                        }
+                        finally
+                        {
+                            deferral.Complete();
+                        }
+                    };
+                }
+                else
+                {
+                    soure.MediaSource.DownloadRequested += (sender, args) =>
+                    {
+                        if (args.ResourceContentType == "audio/mp4")
+                        {
+                            args.Result.ResourceUri = new Uri(dashInfo.Audio.Url);
+                        }
+                    };
+                }
                 return soure.MediaSource;
             }
             catch (Exception)
@@ -666,7 +704,7 @@ namespace BiliLite.Controls
                 //设置播放器
                 m_playerVideo = new MediaPlayer();
                 //_playerVideo.Source = MediaSource.CreateFromUri(new Uri(videoUrl.baseUrl));
-                var mediaSource = await CreateAdaptiveMediaSource(playerOpenParam.DashInfo, playerOpenParam.UserAgent, playerOpenParam.Referer);
+                var mediaSource = await CreateAdaptiveMediaSource(playerOpenParam.DashInfo, playerOpenParam.UserAgent, playerOpenParam.Referer, playerOpenParam.IsLocal);
                 if (mediaSource == null)
                 {
                     return new PlayerOpenResult()
