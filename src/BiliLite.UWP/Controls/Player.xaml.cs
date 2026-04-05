@@ -340,7 +340,7 @@ namespace BiliLite.Controls
                         try
                         {
                             string localPath;
-                            if (args.ResourceContentType != null && args.ResourceContentType.StartsWith("audio"))
+                            if (args.ResourceContentType?.StartsWith("audio") == true)
                             {
                                 localPath = dashInfo.Audio?.Url;
                             }
@@ -352,9 +352,12 @@ namespace BiliLite.Controls
                             if (!string.IsNullOrEmpty(localPath))
                             {
                                 var file = await StorageFile.GetFileFromPathAsync(localPath);
+                                // 打开文件流并定位到请求的字节起始位置，由框架负责流的生命周期管理
                                 var fileStream = await file.OpenAsync(FileAccessMode.Read);
-                                var startPosition = (ulong)(args.RequestedByteRange?.FirstBytePosition ?? 0);
-                                args.Result.InputStream = fileStream.GetInputStreamAt(startPosition);
+                                var rawStart = args.RequestedByteRange?.FirstBytePosition;
+                                var startPosition = (rawStart.HasValue && rawStart.Value >= 0) ? (ulong)rawStart.Value : 0UL;
+                                fileStream.Seek(startPosition);
+                                args.Result.InputStream = fileStream;
                                 args.Result.ContentType = args.ResourceContentType;
                             }
                         }
