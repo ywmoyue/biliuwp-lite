@@ -206,6 +206,7 @@ namespace BiliLite.Controls
             m_videoPlayerConfig.PlayerType = (RealPlayerType)SettingService.GetValue(
                 SettingConstants.Player.USE_REAL_PLAYER_TYPE,
                 (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
+            m_videoPlayerConfig.PreloadFullAudioBeforePlay = SettingService.GetValue<bool>(SettingConstants.Player.PRELOAD_FULL_AUDIO_BEFORE_PLAY, SettingConstants.Player.DEFAULT_PRELOAD_FULL_AUDIO_BEFORE_PLAY);
             m_realPlayInfo = new RealPlayInfo();
             m_playerController = PlayerControllerFactory.Create(PlayerType.Video);
             UpdatePlayerHostVisibility(m_videoPlayerConfig.PlayerType);
@@ -270,7 +271,7 @@ namespace BiliLite.Controls
             if ((PlayerToolBarStyleTypes)SettingService.GetValue(SettingConstants.Player.PLAYER_TOOL_BAR_STYLE_TYPE,
                     SettingConstants.Player.DEFAULT_PLAYER_TOOL_BAR_STYLE_TYPE) == PlayerToolBarStyleTypes.ComboBox)
             {
-                m_playerControlToolBar = App.ServiceProvider.GetRequiredService<PlayerControlToolBarWithComboBox>(); 
+                m_playerControlToolBar = App.ServiceProvider.GetRequiredService<PlayerControlToolBarWithComboBox>();
             }
             else
             {
@@ -942,7 +943,7 @@ namespace BiliLite.Controls
                     }
 
                     // 偏移
-                    if(m_danmakuController.DanmakuViewModel.PositionOffset!=0)
+                    if (m_danmakuController.DanmakuViewModel.PositionOffset != 0)
                     {
                         data = data.Select(x =>
                         {
@@ -1139,7 +1140,7 @@ namespace BiliLite.Controls
 
                 //从头播放完播视频
                 long totalSecend = CurrentPlayItem.duration;
-                int lastTimeOffset = SettingService.GetValue(SettingConstants.Player.REPLAY_VIEDO_FROM_END_LAST_TIME, 
+                int lastTimeOffset = SettingService.GetValue(SettingConstants.Player.REPLAY_VIEDO_FROM_END_LAST_TIME,
                     SettingConstants.Player.DEFAULT_REPLAY_VIEDO_FROM_END_LAST_TIME);
                 if (totalSecend - _postion < lastTimeOffset && totalSecend > 30)
                 {
@@ -2549,7 +2550,7 @@ namespace BiliLite.Controls
         private async void BottomBtnPlay_Click(object sender, RoutedEventArgs e)
         {
             var state = GetCurrentPlayState();
-            if (state == PlayState.Pause || state == PlayState.End)
+            if (!IsPlaying || state == PlayState.Loading)
             {
                 await Play();
                 m_danmakuController.Resume();
@@ -2805,7 +2806,7 @@ namespace BiliLite.Controls
 
         private void PlayerController_PauseStateChanged(object sender, BiliLite.Player.States.PauseStates.PauseStateChangedEventArgs e)
         {
-            if (m_playerController.PlayState.IsPlaying)
+            if (!m_playerController.PlayState.IsStopped && !m_playerController.PlayState.IsFault)
             {
                 Player_PlayStateChanged(this, e.NewState.IsPaused ? PlayState.Pause : PlayState.Playing);
             }

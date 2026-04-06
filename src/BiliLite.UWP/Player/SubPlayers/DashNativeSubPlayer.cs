@@ -6,6 +6,7 @@ using BiliLite.Models.Common.Player;
 using BiliLite.Models.Common.Video.PlayUrlInfos;
 using BiliLite.Player.MediaInfos;
 using BiliLite.Services;
+using Windows.Media;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Media.Streaming.Adaptive;
@@ -14,6 +15,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.Web.Http;
+using Windows.Storage;
 
 namespace BiliLite.Player.SubPlayers
 {
@@ -22,9 +24,13 @@ namespace BiliLite.Player.SubPlayers
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly MediaPlayerElement m_playerElement;
         private MediaPlayer m_mediaPlayer;
+        private MediaPlayer m_audioPlayer;
+        private MediaTimelineController m_timelineController;
         private string m_url;
         private bool m_isBuffering;
         private double m_bufferCache;
+        private double m_volume = 1;
+        private bool m_isMuted;
 
         public DashNativeSubPlayer(MediaPlayerElement playerElement)
         {
@@ -35,35 +41,52 @@ namespace BiliLite.Player.SubPlayers
 
         public override double Volume
         {
-            get => m_mediaPlayer?.Volume ?? 1;
+            get => m_mediaPlayer?.Volume ?? m_audioPlayer?.Volume ?? m_volume;
             set
             {
+                m_volume = value;
                 if (m_mediaPlayer != null)
                 {
                     m_mediaPlayer.Volume = value;
                 }
+
+                if (m_audioPlayer != null)
+                {
+                    m_audioPlayer.Volume = value;
+                }
             }
         }
 
-        public override double Position => m_mediaPlayer?.PlaybackSession?.Position.TotalSeconds ?? 0;
+        public override double Position => m_timelineController?.Position.TotalSeconds
+            ?? m_mediaPlayer?.PlaybackSession?.Position.TotalSeconds
+            ?? m_audioPlayer?.PlaybackSession?.Position.TotalSeconds
+            ?? 0;
 
         public override double Duration
         {
             get
             {
-                var duration = m_mediaPlayer?.PlaybackSession?.NaturalDuration.TotalSeconds ?? 0;
+                var duration = m_mediaPlayer?.PlaybackSession?.NaturalDuration.TotalSeconds
+                               ?? m_audioPlayer?.PlaybackSession?.NaturalDuration.TotalSeconds
+                               ?? 0;
                 return duration > 0 ? duration : base.Duration;
             }
         }
 
         public override bool IsMuted
         {
-            get => m_mediaPlayer?.IsMuted == true;
+            get => m_isMuted;
             set
             {
+                m_isMuted = value;
                 if (m_mediaPlayer != null)
                 {
                     m_mediaPlayer.IsMuted = value;
+                }
+
+                if (m_audioPlayer != null)
+                {
+                    m_audioPlayer.IsMuted = value;
                 }
             }
         }
@@ -105,46 +128,44 @@ namespace BiliLite.Player.SubPlayers
                 $"DashNative.Load start: isLocal={m_realPlayInfo?.IsLocal}, videoUrl={SanitizeUrl(m_realPlayInfo?.DashInfo?.Video?.Url)}, audioUrl={SanitizeUrl(m_realPlayInfo?.DashInfo?.Audio?.Url)}");
             await StopCore();
 
-            m_mediaPlayer = new MediaPlayer();
-            m_mediaPlayer.AutoPlay = true;
-            m_mediaPlayer.MediaOpened += MediaPlayerOnMediaOpened;
-            m_mediaPlayer.MediaEnded += MediaPlayerOnMediaEnded;
-            m_mediaPlayer.MediaFailed += MediaPlayerOnMediaFailed;
-            m_mediaPlayer.PlaybackSession.PlaybackStateChanged += PlaybackSessionOnPlaybackStateChanged;
-            m_mediaPlayer.PlaybackSession.BufferingStarted += PlaybackSessionOnBufferingStarted;
-            m_mediaPlayer.PlaybackSession.BufferingProgressChanged += PlaybackSessionOnBufferingProgressChanged;
-            m_mediaPlayer.PlaybackSession.BufferingEnded += PlaybackSessionOnBufferingEnded;
-            m_mediaPlayer.PlaybackSession.PositionChanged += PlaybackSessionOnPositionChanged;
-
-            var adaptiveMediaSource = await CreateAdaptiveMediaSource(m_realPlayInfo.DashInfo, m_realPlayInfo.UserAgent, m_realPlayInfo.Referer);
-            if (adaptiveMediaSource != null)
+            var audioUrl = m_realPlayInfo.DashInfo.Audio?.Url;
+            var shouldUseDualPlayers = !string.IsNullOrWhiteSpace(audioUrl)
+                && (m_realPlayInfo.IsLocal || IsLocalPathOrFileUri(audioUrl));
+            if (shouldUseDualPlayers)
             {
-                if (m_realPlayInfo.IsLocal)
-                {
-                    var videoFile = await Windows.Storage.StorageFile.GetFileFromPathAsync(m_url);
-                    var videoBasicProperties = await videoFile.GetBasicPropertiesAsync();
-                    var audioPath = m_realPlayInfo.DashInfo.Audio?.Url;
-                    _logger.Info(
-                        $"DashNative.Load local dash source: videoPath={videoFile.Path}, videoType={videoFile.FileType}, videoSize={videoBasicProperties.Size}, audioUrl={SanitizeUrl(audioPath)}");
-                }
-
-                m_mediaPlayer.Source = MediaSource.CreateFromAdaptiveMediaSource(adaptiveMediaSource);
-            }
-            else if (m_realPlayInfo.IsLocal)
-            {
-                _logger.Error($"DashNative 本地 DASH 创建 AdaptiveMediaSource 失败，无法继续 Native 播放: videoUrl={SanitizeUrl(m_url)}, audioUrl={SanitizeUrl(m_realPlayInfo.DashInfo.Audio?.Url)}");
-                EmitError(PlayerError.PlayerErrorCode.NeedUseOtherPlayerError, "本地 DASH Native 初始化失败", PlayerError.RetryStrategy.Normal);
+                await LoadDashWithDualPlayersAsync();
+                await SetRate(m_rate);
                 return;
+            }
+
+            m_mediaPlayer = CreateVideoPlayer(autoPlay: true, trackBuffering: true);
+
+            if (m_realPlayInfo.IsLocal)
+            {
+                var videoFile = await LoadLocalFileAsync(m_url);
+                var videoBasicProperties = await videoFile.GetBasicPropertiesAsync();
+                _logger.Info(
+                    $"DashNative.Load local single source: videoPath={videoFile.Path}, videoType={videoFile.FileType}, videoSize={videoBasicProperties.Size}, audioUrl={SanitizeUrl(m_realPlayInfo.DashInfo.Audio?.Url)}");
+                m_mediaPlayer.Source = MediaSource.CreateFromStorageFile(videoFile);
             }
             else
             {
-                // 兼容兜底：远程 MPD 组装失败时回退到直连视频流。
-                _logger.Warn($"DashNative 自建 MPD 失败，回退直连视频流: url={SanitizeUrl(m_url)}");
-                m_mediaPlayer.Source = MediaSource.CreateFromUri(new Uri(m_url));
+                var adaptiveMediaSource = await CreateAdaptiveMediaSource(m_realPlayInfo.DashInfo, m_realPlayInfo.UserAgent, m_realPlayInfo.Referer);
+                if (adaptiveMediaSource != null)
+                {
+                    m_mediaPlayer.Source = MediaSource.CreateFromAdaptiveMediaSource(adaptiveMediaSource);
+                }
+                else
+                {
+                    _logger.Warn($"DashNative 自建 MPD 失败，回退直连视频流: url={SanitizeUrl(m_url)}");
+                    m_mediaPlayer.Source = MediaSource.CreateFromUri(new Uri(m_url));
+                }
             }
 
             _logger.Info($"DashNative.Load source assigned: isLocal={m_realPlayInfo?.IsLocal}, sourceNull={m_mediaPlayer.Source == null}");
 
+            Volume = m_volume;
+            IsMuted = m_isMuted;
             await SetRate(m_rate);
         }
 
@@ -265,14 +286,29 @@ namespace BiliLite.Player.SubPlayers
             await RunOnUiThreadAsync(() =>
             {
                 _logger.Info(
-                    $"DashNative.Play: elementHasPlayer={m_playerElement.MediaPlayer != null}, samePlayer={ReferenceEquals(m_playerElement.MediaPlayer, m_mediaPlayer)}, visibility={m_playerElement.Visibility}, width={m_playerElement.ActualWidth}, height={m_playerElement.ActualHeight}");
+                    $"DashNative.Play: elementHasPlayer={m_playerElement.MediaPlayer != null}, samePlayer={ReferenceEquals(m_playerElement.MediaPlayer, m_mediaPlayer)}, hasAudioPlayer={m_audioPlayer != null}, visibility={m_playerElement.Visibility}, width={m_playerElement.ActualWidth}, height={m_playerElement.ActualHeight}");
                 if (m_playerElement.MediaPlayer != m_mediaPlayer)
                 {
                     m_playerElement.SetMediaPlayer(m_mediaPlayer);
                     _logger.Info("DashNative.Play: MediaPlayerElement.SetMediaPlayer completed");
                 }
 
-                m_mediaPlayer?.Play();
+                if (m_timelineController != null)
+                {
+                    if (m_timelineController.State == MediaTimelineControllerState.Paused)
+                    {
+                        m_timelineController.Resume();
+                    }
+                    else
+                    {
+                        m_timelineController.Start();
+                    }
+                }
+                else
+                {
+                    m_mediaPlayer?.Play();
+                }
+
                 _logger.Info($"DashNative.Play: playbackState={m_mediaPlayer?.PlaybackSession?.PlaybackState}, autoPlay={m_mediaPlayer?.AutoPlay}");
             });
         }
@@ -289,17 +325,51 @@ namespace BiliLite.Player.SubPlayers
 
         public override async Task Pause()
         {
+            if (m_timelineController != null)
+            {
+                m_timelineController.Pause();
+                return;
+            }
+
             m_mediaPlayer?.Pause();
         }
 
         public override async Task Resume()
         {
+            await RunOnUiThreadAsync(() =>
+            {
+                if (m_playerElement.MediaPlayer != m_mediaPlayer)
+                {
+                    m_playerElement.SetMediaPlayer(m_mediaPlayer);
+                }
+            });
+
+            if (m_timelineController != null)
+            {
+                if (m_timelineController.State == MediaTimelineControllerState.Paused)
+                {
+                    m_timelineController.Resume();
+                }
+                else
+                {
+                    m_timelineController.Start();
+                }
+
+                return;
+            }
+
             m_mediaPlayer?.Play();
         }
 
         public override async Task SetRate(double value)
         {
             m_rate = value;
+            if (m_timelineController != null)
+            {
+                m_timelineController.ClockRate = value;
+                return;
+            }
+
             if (m_mediaPlayer?.PlaybackSession != null)
             {
                 m_mediaPlayer.PlaybackSession.PlaybackRate = value;
@@ -308,6 +378,12 @@ namespace BiliLite.Player.SubPlayers
 
         public override async Task SetPosition(double value)
         {
+            if (m_timelineController != null)
+            {
+                m_timelineController.Position = TimeSpan.FromSeconds(value);
+                return;
+            }
+
             if (m_mediaPlayer?.PlaybackSession != null)
             {
                 m_mediaPlayer.PlaybackSession.Position = TimeSpan.FromSeconds(value);
@@ -316,24 +392,60 @@ namespace BiliLite.Player.SubPlayers
 
         private async Task StopCore()
         {
-            if (m_mediaPlayer == null)
+            var hasTimelineController = m_timelineController != null;
+            if (m_timelineController != null)
             {
-                return;
+                m_timelineController.Pause();
             }
 
-            m_mediaPlayer.Pause();
-            m_mediaPlayer.Source = null;
-            m_mediaPlayer.MediaOpened -= MediaPlayerOnMediaOpened;
-            m_mediaPlayer.MediaEnded -= MediaPlayerOnMediaEnded;
-            m_mediaPlayer.MediaFailed -= MediaPlayerOnMediaFailed;
-            m_mediaPlayer.PlaybackSession.PlaybackStateChanged -= PlaybackSessionOnPlaybackStateChanged;
-            m_mediaPlayer.PlaybackSession.BufferingStarted -= PlaybackSessionOnBufferingStarted;
-            m_mediaPlayer.PlaybackSession.BufferingProgressChanged -= PlaybackSessionOnBufferingProgressChanged;
-            m_mediaPlayer.PlaybackSession.BufferingEnded -= PlaybackSessionOnBufferingEnded;
-            m_mediaPlayer.PlaybackSession.PositionChanged -= PlaybackSessionOnPositionChanged;
+            if (m_audioPlayer != null)
+            {
+                if (hasTimelineController)
+                {
+                    m_audioPlayer.TimelineController = null;
+                }
+                else
+                {
+                    m_audioPlayer.Pause();
+                }
+
+                m_audioPlayer.Source = null;
+                m_audioPlayer.MediaFailed -= AudioPlayerOnMediaFailed;
+                m_audioPlayer.PlaybackSession.BufferingStarted -= PlaybackSessionOnBufferingStarted;
+                m_audioPlayer.PlaybackSession.BufferingProgressChanged -= PlaybackSessionOnBufferingProgressChanged;
+                m_audioPlayer.PlaybackSession.BufferingEnded -= PlaybackSessionOnBufferingEnded;
+                m_audioPlayer.Dispose();
+                m_audioPlayer = null;
+            }
+
+            if (m_mediaPlayer != null)
+            {
+                if (hasTimelineController)
+                {
+                    m_mediaPlayer.TimelineController = null;
+                }
+                else
+                {
+                    m_mediaPlayer.Pause();
+                }
+
+                m_mediaPlayer.Source = null;
+                m_mediaPlayer.MediaOpened -= MediaPlayerOnMediaOpened;
+                m_mediaPlayer.MediaEnded -= MediaPlayerOnMediaEnded;
+                m_mediaPlayer.MediaFailed -= MediaPlayerOnMediaFailed;
+                m_mediaPlayer.PlaybackSession.PlaybackStateChanged -= PlaybackSessionOnPlaybackStateChanged;
+                m_mediaPlayer.PlaybackSession.BufferingStarted -= PlaybackSessionOnBufferingStarted;
+                m_mediaPlayer.PlaybackSession.BufferingProgressChanged -= PlaybackSessionOnBufferingProgressChanged;
+                m_mediaPlayer.PlaybackSession.BufferingEnded -= PlaybackSessionOnBufferingEnded;
+                m_mediaPlayer.PlaybackSession.PositionChanged -= PlaybackSessionOnPositionChanged;
+                m_mediaPlayer.Dispose();
+                m_mediaPlayer = null;
+            }
+
+            m_timelineController = null;
+            m_isBuffering = false;
+            m_bufferCache = 0;
             await RunOnUiThreadAsync(() => m_playerElement.SetMediaPlayer(null));
-            m_mediaPlayer.Dispose();
-            m_mediaPlayer = null;
         }
 
         private void PlaybackSessionOnPositionChanged(MediaPlaybackSession sender, object args)
@@ -380,9 +492,114 @@ namespace BiliLite.Player.SubPlayers
                 m_playerElement.Visibility = enable ? Visibility.Visible : Visibility.Collapsed;
                 if (!enable)
                 {
-                    m_mediaPlayer?.Pause();
+                    if (m_timelineController != null)
+                    {
+                        m_timelineController.Pause();
+                    }
+                    else
+                    {
+                        m_mediaPlayer?.Pause();
+                    }
                 }
             });
+        }
+
+        private MediaPlayer CreateVideoPlayer(bool autoPlay, bool trackBuffering)
+        {
+            var mediaPlayer = new MediaPlayer();
+            mediaPlayer.AutoPlay = autoPlay;
+            mediaPlayer.MediaOpened += MediaPlayerOnMediaOpened;
+            mediaPlayer.MediaEnded += MediaPlayerOnMediaEnded;
+            mediaPlayer.MediaFailed += MediaPlayerOnMediaFailed;
+            mediaPlayer.PlaybackSession.PlaybackStateChanged += PlaybackSessionOnPlaybackStateChanged;
+            if (trackBuffering)
+            {
+                mediaPlayer.PlaybackSession.BufferingStarted += PlaybackSessionOnBufferingStarted;
+                mediaPlayer.PlaybackSession.BufferingProgressChanged += PlaybackSessionOnBufferingProgressChanged;
+                mediaPlayer.PlaybackSession.BufferingEnded += PlaybackSessionOnBufferingEnded;
+            }
+
+            mediaPlayer.PlaybackSession.PositionChanged += PlaybackSessionOnPositionChanged;
+            return mediaPlayer;
+        }
+
+        private async Task LoadDashWithDualPlayersAsync()
+        {
+            var videoUrl = m_realPlayInfo.DashInfo.Video.Url;
+            var audioUrl = m_realPlayInfo.DashInfo.Audio.Url;
+            var isVideoLocal = IsLocalPathOrFileUri(videoUrl);
+            var isAudioLocal = IsLocalPathOrFileUri(audioUrl);
+            StorageFile videoFile = null;
+            StorageFile audioFile = null;
+
+            if (isVideoLocal)
+            {
+                videoFile = await LoadLocalFileAsync(videoUrl);
+            }
+
+            if (isAudioLocal)
+            {
+                audioFile = await LoadLocalFileAsync(audioUrl);
+            }
+
+            var videoBasicProperties = videoFile == null ? null : await videoFile.GetBasicPropertiesAsync();
+            var audioBasicProperties = await audioFile.GetBasicPropertiesAsync();
+
+            _logger.Info(
+                $"DashNative.Load dual source: videoUrl={SanitizeUrl(videoUrl)}, videoPath={(videoFile?.Path ?? "remote")}, videoType={(videoFile?.FileType ?? "remote")}, videoSize={(videoBasicProperties?.Size ?? 0)}, audioPath={audioFile.Path}, audioType={audioFile.FileType}, audioSize={audioBasicProperties.Size}");
+
+            m_mediaPlayer = CreateVideoPlayer(autoPlay: false, trackBuffering: !isVideoLocal);
+            m_audioPlayer = new MediaPlayer();
+            m_audioPlayer.AutoPlay = false;
+            m_audioPlayer.MediaFailed += AudioPlayerOnMediaFailed;
+            if (isVideoLocal)
+            {
+                m_audioPlayer.PlaybackSession.BufferingStarted += PlaybackSessionOnBufferingStarted;
+                m_audioPlayer.PlaybackSession.BufferingProgressChanged += PlaybackSessionOnBufferingProgressChanged;
+                m_audioPlayer.PlaybackSession.BufferingEnded += PlaybackSessionOnBufferingEnded;
+            }
+
+            m_timelineController = new MediaTimelineController();
+            m_mediaPlayer.TimelineController = m_timelineController;
+            m_audioPlayer.TimelineController = m_timelineController;
+            m_mediaPlayer.Source = isVideoLocal
+                ? MediaSource.CreateFromStorageFile(videoFile)
+                : MediaSource.CreateFromUri(new Uri(videoUrl));
+            m_audioPlayer.Source = MediaSource.CreateFromStorageFile(audioFile);
+
+            Volume = m_volume;
+            IsMuted = m_isMuted;
+        }
+
+        private static async Task<StorageFile> LoadLocalFileAsync(string url)
+        {
+            var localPath = NormalizeLocalPath(url);
+            return await StorageFile.GetFileFromPathAsync(localPath);
+        }
+
+        private static bool IsLocalPathOrFileUri(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                return false;
+            }
+
+            if (Path.IsPathRooted(url))
+            {
+                return true;
+            }
+
+            return Uri.TryCreate(url, UriKind.Absolute, out var uri) && uri.IsFile;
+        }
+
+        private static string NormalizeLocalPath(string url)
+        {
+            if (Uri.TryCreate(url, UriKind.Absolute, out var uri) && uri.IsFile)
+            {
+                return uri.LocalPath;
+            }
+
+            return url;
         }
 
         public override async Task<byte[]> CaptureAsync()
@@ -437,6 +654,13 @@ namespace BiliLite.Player.SubPlayers
             }
         }
 
+        private void AudioPlayerOnMediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
+        {
+            _logger.Error(
+                $"DashNative Audio MediaFailed: error={args?.Error}, errorMessage={args?.ErrorMessage}, extendedErrorCode={args?.ExtendedErrorCode}, url={SanitizeUrl(m_realPlayInfo?.DashInfo?.Audio?.Url)}");
+            EmitError(PlayerError.PlayerErrorCode.NeedUseOtherPlayerError, args.ErrorMessage, PlayerError.RetryStrategy.Normal);
+        }
+
         private void MediaPlayerOnMediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
         {
             _logger.Error(
@@ -451,9 +675,12 @@ namespace BiliLite.Player.SubPlayers
 
         private void MediaPlayerOnMediaOpened(MediaPlayer sender, object args)
         {
-            _logger.Info(
-                $"DashNative.MediaOpened: video={sender?.PlaybackSession?.NaturalVideoWidth}x{sender?.PlaybackSession?.NaturalVideoHeight}, duration={sender?.PlaybackSession?.NaturalDuration.TotalSeconds}, position={sender?.PlaybackSession?.Position.TotalSeconds}, elementVisibility={m_playerElement.Visibility}, elementSize={m_playerElement.ActualWidth}x{m_playerElement.ActualHeight}");
-            MediaOpened?.Invoke(this, EventArgs.Empty);
+            _ = RunOnUiThreadAsync(() =>
+            {
+                _logger.Info(
+                    $"DashNative.MediaOpened: video={sender?.PlaybackSession?.NaturalVideoWidth}x{sender?.PlaybackSession?.NaturalVideoHeight}, duration={sender?.PlaybackSession?.NaturalDuration.TotalSeconds}, position={sender?.PlaybackSession?.Position.TotalSeconds}, elementVisibility={m_playerElement.Visibility}, elementSize={m_playerElement.ActualWidth}x{m_playerElement.ActualHeight}");
+                MediaOpened?.Invoke(this, EventArgs.Empty);
+            });
         }
     }
 }

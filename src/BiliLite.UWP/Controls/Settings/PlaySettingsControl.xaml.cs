@@ -174,6 +174,15 @@ namespace BiliLite.Controls.Settings
                     SettingService.SetValue(SettingConstants.Player.AUTO_PLAY, swAutoPlay.IsOn);
                 });
             });
+            // 播放前临时下载完整音频
+            swPreloadFullAudio.IsOn = SettingService.GetValue<bool>(SettingConstants.Player.PRELOAD_FULL_AUDIO_BEFORE_PLAY, SettingConstants.Player.DEFAULT_PRELOAD_FULL_AUDIO_BEFORE_PLAY);
+            swPreloadFullAudio.Loaded += new RoutedEventHandler((sender, e) =>
+            {
+                swPreloadFullAudio.Toggled += new RoutedEventHandler((obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.PRELOAD_FULL_AUDIO_BEFORE_PLAY, swPreloadFullAudio.IsOn);
+                });
+            });
             //播放器自动回落
             swPlayerAutoFallback.IsOn = SettingService.GetValue(
                 SettingConstants.Player.AUTO_FALLBACK,

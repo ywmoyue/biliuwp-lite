@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using BiliLite.Models.Common.Player;
 using BiliLite.Player.MediaInfos;
@@ -135,8 +136,7 @@ namespace BiliLite.Player.SubPlayers
             }
 
             m_videoPlayer = new MediaPlayer();
-            m_videoPlayer.AutoPlay = true;
-            m_videoPlayer.Source = m_videoMediaSource.CreateMediaPlaybackItem();
+            m_videoPlayer.AutoPlay = false;
             m_videoPlayer.MediaOpened += MediaPlayerOnMediaOpened;
             m_videoPlayer.MediaEnded += MediaPlayerOnMediaEnded;
             m_videoPlayer.MediaFailed += MediaPlayerOnMediaFailed;
@@ -145,13 +145,14 @@ namespace BiliLite.Player.SubPlayers
             if (m_audioMediaSource != null)
             {
                 m_audioPlayer = new MediaPlayer();
-                m_audioPlayer.AutoPlay = true;
-                m_audioPlayer.Source = m_audioMediaSource.CreateMediaPlaybackItem();
+                m_audioPlayer.AutoPlay = false;
                 m_audioPlayer.MediaFailed += AudioPlayerOnMediaFailed;
 
                 m_timelineController = new MediaTimelineController();
                 m_videoPlayer.TimelineController = m_timelineController;
                 m_audioPlayer.TimelineController = m_timelineController;
+
+                m_audioPlayer.Source = m_audioMediaSource.CreateMediaPlaybackItem();
 
                 m_audioPlayer.PlaybackSession.BufferingStarted += PlaybackSessionOnBufferingStarted;
                 m_audioPlayer.PlaybackSession.BufferingProgressChanged += PlaybackSessionOnBufferingProgressChanged;
@@ -163,6 +164,8 @@ namespace BiliLite.Player.SubPlayers
                 m_videoPlayer.PlaybackSession.BufferingProgressChanged += PlaybackSessionOnBufferingProgressChanged;
                 m_videoPlayer.PlaybackSession.BufferingEnded += PlaybackSessionOnBufferingEnded;
             }
+
+            m_videoPlayer.Source = m_videoMediaSource.CreateMediaPlaybackItem();
 
             Volume = m_volume;
             IsMuted = m_isMuted;
@@ -223,6 +226,14 @@ namespace BiliLite.Player.SubPlayers
 
         public override async Task Resume()
         {
+            await RunOnUiThreadAsync(() =>
+            {
+                if (m_playerElement.MediaPlayer != m_videoPlayer)
+                {
+                    m_playerElement.SetMediaPlayer(m_videoPlayer);
+                }
+            });
+
             if (m_timelineController != null)
             {
                 if (m_timelineController.State == MediaTimelineControllerState.Paused)
@@ -271,6 +282,11 @@ namespace BiliLite.Player.SubPlayers
 
         private async Task StopCore()
         {
+            if (m_timelineController != null)
+            {
+                m_timelineController.Pause();
+            }
+
             if (m_audioPlayer != null)
             {
                 m_audioPlayer.Pause();
@@ -386,7 +402,15 @@ namespace BiliLite.Player.SubPlayers
                 return null;
             }
 
-            if (m_realPlayInfo.IsLocal)
+            // Treat as local if RealPlayInfo marked local OR the url is a local file path/file URI
+            var isLocalUrl = m_realPlayInfo.IsLocal;
+            if (!isLocalUrl)
+            {
+                if (Path.IsPathRooted(url)) isLocalUrl = true;
+                else if (Uri.TryCreate(url, UriKind.Absolute, out var _u) && _u.IsFile) isLocalUrl = true;
+            }
+
+            if (isLocalUrl)
             {
                 var localPath = NormalizeLocalPath(url);
                 var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(localPath);

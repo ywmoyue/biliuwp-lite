@@ -612,6 +612,9 @@ namespace BiliLite.Pages
                         (int)DefaultPlayerModeOptions.DEFAULT_LIVE_PLAYER_MODE);
             m_playerConfig.PlayMode = m_viewModel.LivePlayerMode;
 
+            // 播放前是否预拉取完整音频（会增加加载时间）
+            m_playerConfig.PreloadFullAudioBeforePlay = SettingService.GetValue<bool>(SettingConstants.Player.PRELOAD_FULL_AUDIO_BEFORE_PLAY, SettingConstants.Player.DEFAULT_PRELOAD_FULL_AUDIO_BEFORE_PLAY);
+
             // 播放器类型
             m_playerConfig.PlayerType = (RealPlayerType)SettingService.GetValue(
                 SettingConstants.Player.LIVE_PLAYER_TYPE,

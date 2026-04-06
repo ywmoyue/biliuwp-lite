@@ -4,6 +4,9 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.Streams;
+using Microsoft.Extensions.DependencyInjection;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Player;
@@ -18,6 +21,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using BiliLite.Extensions;
 
 namespace BiliLite.Player
 {
@@ -44,6 +48,7 @@ namespace BiliLite.Player
         private bool m_keepPausedAfterSeek;
         private double m_bufferCache;
         private int m_handlingPlayerError;
+        private int m_loadVersion;
         private DateTime m_lastBufferingUiNotifyAt = DateTime.MinValue;
         private DateTime m_lastBufferCacheNotifyAt = DateTime.MinValue;
         private static readonly TimeSpan BufferingNotifyMinInterval = TimeSpan.FromMilliseconds(120);
@@ -132,11 +137,46 @@ namespace BiliLite.Player
 
         public async Task Load()
         {
+            var loadVersion = Interlocked.Increment(ref m_loadVersion);
             PrepareSubPlayerForLoad();
             _logger.Info(
                 $"VideoPlayer.Load: subPlayer={m_subPlayer?.GetType().Name}, type={m_subPlayer?.Type}, mediaType={m_realPlayInfo?.PlayMediaType}, isLocal={m_realPlayInfo?.IsLocal}, singleUrl={SanitizeUrl(m_realPlayInfo?.SingleUrl)}, dashVideoUrl={SanitizeUrl(m_realPlayInfo?.DashInfo?.Video?.Url)}");
+            // 如果启用播放前临时下载完整音频，则在加载播放器前预拉取音频数据并写入临时文件（会增加加载时间）
+            if (m_playerConfig?.PreloadFullAudioBeforePlay == true && m_realPlayInfo?.DashInfo?.Audio != null && !string.IsNullOrEmpty(m_realPlayInfo.DashInfo.Audio.Url) && !m_realPlayInfo.IsLocal)
+            {
+                try
+                {
+                    var tempFileService = App.ServiceProvider.GetRequiredService<TempFileService>();
+                    var tempFile = await tempFileService.CreateTempFile();
+                    // 使用已有的扩展方法获取 buffer（可带 headers）
+                    var buffer = await m_realPlayInfo.DashInfo.Audio.Url.GetBuffer(m_realPlayInfo.Headers);
+                    if (buffer != null)
+                    {
+                        await FileIO.WriteBufferAsync(tempFile, buffer);
+                        // 将音频链接替换为临时文件路径，子播放器会以此路径创建本地源
+                        m_realPlayInfo.DashInfo.Audio.Url = tempFile.Path;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn("Preload full audio failed", ex);
+                }
+            }
+
+            if (loadVersion != Volatile.Read(ref m_loadVersion))
+            {
+                _logger.Info($"VideoPlayer.Load: stale before subplayer load, subPlayer={m_subPlayer?.GetType().Name}, type={m_subPlayer?.Type}");
+                return;
+            }
+
             await m_subPlayer.SetRate(m_rate);
             await m_subPlayer.Load();
+
+            if (loadVersion != Volatile.Read(ref m_loadVersion))
+            {
+                _logger.Info($"VideoPlayer.Load: stale after subplayer load, stop created player, subPlayer={m_subPlayer?.GetType().Name}, type={m_subPlayer?.Type}");
+                await m_subPlayer.Stop();
+            }
         }
 
         public async Task Buff()
@@ -153,11 +193,13 @@ namespace BiliLite.Player
 
         public async Task Stop()
         {
+            Interlocked.Increment(ref m_loadVersion);
             await m_subPlayer.Stop();
         }
 
         public async Task Fault()
         {
+            Interlocked.Increment(ref m_loadVersion);
             await m_subPlayer.Fault();
         }
 
@@ -327,6 +369,7 @@ namespace BiliLite.Player
                 return;
             }
 
+            Interlocked.Increment(ref m_loadVersion);
             UnLoadPlayerEvents(m_subPlayer);
             await m_subPlayer.Stop();
             EmitBufferingChanged(false, force: true);
@@ -643,7 +686,7 @@ namespace BiliLite.Player
                 _logger.Info(
                     $"VideoPlayer.SubPlayer_MediaOpened: subPlayer={m_subPlayer?.GetType().Name}, type={m_subPlayer?.Type}, duration={m_subPlayer?.Duration}, position={m_subPlayer?.Position}, isLocal={m_realPlayInfo?.IsLocal}");
 
-                if (m_subPlayer is not ISubWebPlayer && m_playerElement?.MediaPlayer == null)
+                if (m_subPlayer is not ISubWebPlayer && m_playerElement?.MediaPlayer == null && m_realPlayInfo?.IsAutoPlay == true)
                 {
                     _logger.Info(
                         $"VideoPlayer.SubPlayer_MediaOpened: attach media player early, subPlayer={m_subPlayer?.GetType().Name}, type={m_subPlayer?.Type}");

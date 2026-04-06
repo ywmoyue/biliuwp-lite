@@ -230,6 +230,16 @@
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
+                <controls:SettingsCard Description="启用后播放前将拉取并临时下载完整音频，可能会增加播放加载时间" Header="播放前临时下载完整音频">
+                    <controls:SettingsCard.HeaderIcon>
+                        <font:FontAwesome Icon="Solid_Download" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <ToggleSwitch
+                        x:Name="swPreloadFullAudio"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
+                </controls:SettingsCard>
+
                 <controls:SettingsCard Description="默认自动跳过片头/片尾" Header="自动跳过番剧 OP/ED">
                     <controls:SettingsCard.HeaderIcon>
                         <font:FontAwesome Icon="Solid_Music" />

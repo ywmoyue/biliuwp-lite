@@ -942,6 +942,18 @@ namespace BiliLite.Models.Common
             public const string AUTO_PLAY = "PlayerAutoPlay";
 
             /// <summary>
+            /// 播放前临时下载完整音频（可能增加加载时间） bool
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string PRELOAD_FULL_AUDIO_BEFORE_PLAY = "PlayerPreloadFullAudioBeforePlay";
+
+            /// <summary>
+            /// 播放前临时下载完整音频默认值
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_PRELOAD_FULL_AUDIO_BEFORE_PLAY = false;
+
+            /// <summary>
             /// 播放器自动回落
             /// </summary>
             [SettingKey(typeof(bool))]

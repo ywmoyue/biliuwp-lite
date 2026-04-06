@@ -225,6 +225,8 @@ public abstract class BaseWebPlayer : Grid, IDisposable
             await Task.Delay(100);
         }
 
+        var tempFolder = ApplicationData.Current.TemporaryFolder;
+
         if (isLocal)
         {
             var folder = await DownloadHelper.GetDownloadFolder();
@@ -235,12 +237,20 @@ public abstract class BaseWebPlayer : Grid, IDisposable
             videoUrl = videoUrl
                 .Replace(folder.Path, "https://videolibs.bililte.service")
                 .Replace(oldFolder.Path, "https://oldvideolibs.bililte.service")
+                .Replace(tempFolder.Path, "https://temp.bililte.service")
                 .Replace("\\", "/");
 
             audioUrl = audioUrl
                 .Replace(folder.Path, "https://videolibs.bililte.service")
                 .Replace(oldFolder.Path, "https://oldvideolibs.bililte.service")
+                .Replace(tempFolder.Path, "https://temp.bililte.service")
                 .Replace("\\", "/");
+        }
+
+        // 如果没有设置 isLocal，但 audioUrl 指向临时目录，也需要做映射，保证 WebView 能访问临时音频文件
+        if (!string.IsNullOrWhiteSpace(audioUrl) && audioUrl.Contains(tempFolder.Path))
+        {
+            audioUrl = audioUrl.Replace(tempFolder.Path, "https://temp.bililte.service").Replace("\\", "/");
         }
 
         var playData = new

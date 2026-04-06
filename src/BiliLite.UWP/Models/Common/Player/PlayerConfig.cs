@@ -9,5 +9,8 @@
         public RealPlayerType PlayerType { get; set; }
 
         public int SelectedRouteLine { get; set; } = 0;
+
+        // 是否在播放前临时下载完整音频
+        public bool PreloadFullAudioBeforePlay { get; set; } = false;
     }
 }
