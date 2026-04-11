@@ -140,7 +140,6 @@ namespace BiliLite.Player.SubPlayers
             m_videoPlayer.MediaOpened += MediaPlayerOnMediaOpened;
             m_videoPlayer.MediaEnded += MediaPlayerOnMediaEnded;
             m_videoPlayer.MediaFailed += MediaPlayerOnMediaFailed;
-            m_videoPlayer.PlaybackSession.PositionChanged += PlaybackSessionOnPositionChanged;
 
             if (m_audioMediaSource != null)
             {
@@ -149,6 +148,7 @@ namespace BiliLite.Player.SubPlayers
                 m_audioPlayer.MediaFailed += AudioPlayerOnMediaFailed;
 
                 m_timelineController = new MediaTimelineController();
+                m_timelineController.PositionChanged += TimelineControllerOnPositionChanged;
                 m_videoPlayer.TimelineController = m_timelineController;
                 m_audioPlayer.TimelineController = m_timelineController;
 
@@ -160,6 +160,7 @@ namespace BiliLite.Player.SubPlayers
             }
             else
             {
+                m_videoPlayer.PlaybackSession.PositionChanged += PlaybackSessionOnPositionChanged;
                 m_videoPlayer.PlaybackSession.BufferingStarted += PlaybackSessionOnBufferingStarted;
                 m_videoPlayer.PlaybackSession.BufferingProgressChanged += PlaybackSessionOnBufferingProgressChanged;
                 m_videoPlayer.PlaybackSession.BufferingEnded += PlaybackSessionOnBufferingEnded;
@@ -187,6 +188,11 @@ namespace BiliLite.Player.SubPlayers
 
                 if (m_timelineController != null)
                 {
+                    if (m_timelineController.State == MediaTimelineControllerState.Running)
+                    {
+                        return;
+                    }
+
                     if (m_timelineController.State == MediaTimelineControllerState.Paused)
                     {
                         m_timelineController.Resume();
@@ -236,6 +242,11 @@ namespace BiliLite.Player.SubPlayers
 
             if (m_timelineController != null)
             {
+                if (m_timelineController.State == MediaTimelineControllerState.Running)
+                {
+                    return;
+                }
+
                 if (m_timelineController.State == MediaTimelineControllerState.Paused)
                 {
                     m_timelineController.Resume();
@@ -282,6 +293,7 @@ namespace BiliLite.Player.SubPlayers
 
         private async Task StopCore()
         {
+            var hasTimelineController = m_timelineController != null;
             if (m_timelineController != null)
             {
                 m_timelineController.Pause();
@@ -289,7 +301,15 @@ namespace BiliLite.Player.SubPlayers
 
             if (m_audioPlayer != null)
             {
-                m_audioPlayer.Pause();
+                if (hasTimelineController)
+                {
+                    m_audioPlayer.TimelineController = null;
+                }
+                else
+                {
+                    m_audioPlayer.Pause();
+                }
+
                 m_audioPlayer.Source = null;
                 m_audioPlayer.MediaFailed -= AudioPlayerOnMediaFailed;
                 m_audioPlayer.PlaybackSession.BufferingStarted -= PlaybackSessionOnBufferingStarted;
@@ -301,7 +321,15 @@ namespace BiliLite.Player.SubPlayers
 
             if (m_videoPlayer != null)
             {
-                m_videoPlayer.Pause();
+                if (hasTimelineController)
+                {
+                    m_videoPlayer.TimelineController = null;
+                }
+                else
+                {
+                    m_videoPlayer.Pause();
+                }
+
                 m_videoPlayer.Source = null;
                 m_videoPlayer.MediaOpened -= MediaPlayerOnMediaOpened;
                 m_videoPlayer.MediaEnded -= MediaPlayerOnMediaEnded;
@@ -316,6 +344,7 @@ namespace BiliLite.Player.SubPlayers
 
             if (m_timelineController != null)
             {
+                m_timelineController.PositionChanged -= TimelineControllerOnPositionChanged;
                 m_timelineController = null;
             }
 
@@ -454,6 +483,11 @@ namespace BiliLite.Player.SubPlayers
         }
 
         private void PlaybackSessionOnPositionChanged(MediaPlaybackSession sender, object args)
+        {
+            PositionChanged?.Invoke(this, sender?.Position.TotalSeconds ?? 0);
+        }
+
+        private void TimelineControllerOnPositionChanged(MediaTimelineController sender, object args)
         {
             PositionChanged?.Invoke(this, sender?.Position.TotalSeconds ?? 0);
         }

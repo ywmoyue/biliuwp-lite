@@ -85,6 +85,8 @@ namespace BiliLite.Controls
         private double m_pendingSeekPosition = -1;
         private DateTime m_lastBufferingUiUpdateAt = DateTime.MinValue;
         private static readonly TimeSpan BufferingUiUpdateInterval = TimeSpan.FromMilliseconds(120);
+        private bool m_lockPlayerVolume;
+        private bool m_updatingVolumeSlider;
 
         private void UpdatePlayerHostVisibility(RealPlayerType playerType)
         {
@@ -378,14 +380,6 @@ namespace BiliLite.Controls
             danmuTimer?.Stop();
             timer_focus?.Stop();
             m_positionTimer?.Stop();
-
-            try
-            {
-                _ = m_videoPlayer.UnLoad();
-            }
-            catch
-            {
-            }
         }
 
         private async void PlayerControl_Loaded(object sender, RoutedEventArgs e)
@@ -663,14 +657,17 @@ namespace BiliLite.Controls
             m_videoPlayer.Volume = defaultVolume;
             SliderVolume.Value = defaultVolume;
 
-            var lockPlayerVolume = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_VOLUME, SettingConstants.Player.DEFAULT_LOCK_PLAYER_VOLUME);
-            if (!lockPlayerVolume)
+            m_lockPlayerVolume = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_VOLUME, SettingConstants.Player.DEFAULT_LOCK_PLAYER_VOLUME);
+            SliderVolume.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
             {
-                SliderVolume.ValueChanged += new RangeBaseValueChangedEventHandler((e, args) =>
+                if (m_updatingVolumeSlider)
                 {
-                    SettingService.SetValue<double>(SettingConstants.Player.PLAYER_VOLUME, SliderVolume.Value);
-                });
-            }
+                    return;
+                }
+
+                m_videoPlayer.Volume = SliderVolume.Value;
+                PersistCurrentVolume();
+            });
             //亮度
             lockBrightness = SettingService.GetValue(SettingConstants.Player.LOCK_PLAYER_BRIGHTNESS, SettingConstants.Player.DEFAULT_LOCK_PLAYER_BRIGHTNESS);
             _brightness = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_BRIGHTNESS, SettingConstants.Player.DEFAULT_PLAYER_BRIGHTNESS);
@@ -2486,17 +2483,44 @@ namespace BiliLite.Controls
                 double dd = delta / (ActualHeight * 0.8);
 
                 //slider_V.Value -= d;
-                m_videoPlayer.Volume -= dd;
+                UpdatePlayerVolume(m_videoPlayer.Volume - dd);
 
             }
             else
             {
                 double dd = Math.Abs(delta) / (ActualHeight * 0.8);
-                m_videoPlayer.Volume += dd;
+                UpdatePlayerVolume(m_videoPlayer.Volume + dd);
                 //slider_V.Value += d;
             }
             var volumeText = m_videoPlayer.Volume.ToString("P");
             m_playerToastService.Show(PlayerToastService.VOLUME_KEY, "音量:" + volumeText);
+        }
+
+        private void UpdatePlayerVolume(double volume)
+        {
+            m_videoPlayer.Volume = volume;
+
+            try
+            {
+                m_updatingVolumeSlider = true;
+                SliderVolume.Value = m_videoPlayer.Volume;
+            }
+            finally
+            {
+                m_updatingVolumeSlider = false;
+            }
+
+            PersistCurrentVolume();
+        }
+
+        private void PersistCurrentVolume()
+        {
+            if (m_lockPlayerVolume)
+            {
+                return;
+            }
+
+            SettingService.SetValue<double>(SettingConstants.Player.PLAYER_VOLUME, m_videoPlayer.Volume);
         }
         private void HandleSlideBrightnessDelta(double delta)
         {
@@ -3387,13 +3411,13 @@ namespace BiliLite.Controls
 
         public void AddVolume()
         {
-            m_videoPlayer.Volume += 0.1;
+            UpdatePlayerVolume(m_videoPlayer.Volume + 0.1);
             m_playerToastService.Show(PlayerToastService.VOLUME_KEY, "音量:" + m_videoPlayer.Volume.ToString("P"));
         }
 
         public void MinusVolume()
         {
-            m_videoPlayer.Volume -= 0.1;
+            UpdatePlayerVolume(m_videoPlayer.Volume - 0.1);
             var volume = m_videoPlayer.Volume;
 
             var txtToolTipText = "静音";

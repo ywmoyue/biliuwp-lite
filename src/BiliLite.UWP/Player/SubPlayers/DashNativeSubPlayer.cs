@@ -138,7 +138,7 @@ namespace BiliLite.Player.SubPlayers
                 return;
             }
 
-            m_mediaPlayer = CreateVideoPlayer(autoPlay: true, trackBuffering: true);
+            m_mediaPlayer = CreateVideoPlayer(autoPlay: m_realPlayInfo?.IsAutoPlay == true, trackBuffering: true);
 
             if (m_realPlayInfo.IsLocal)
             {
@@ -456,8 +456,9 @@ namespace BiliLite.Player.SubPlayers
 
         private void PlaybackSessionOnPlaybackStateChanged(MediaPlaybackSession sender, object args)
         {
+            var buffer = TryGetBufferingProgress(sender);
             _logger.Info(
-                $"DashNative.PlaybackStateChanged: state={sender?.PlaybackState}, position={sender?.Position.TotalSeconds}, naturalDuration={sender?.NaturalDuration.TotalSeconds}, buffer={sender?.BufferingProgress}");
+                $"DashNative.PlaybackStateChanged: state={sender?.PlaybackState}, position={sender?.Position.TotalSeconds}, naturalDuration={sender?.NaturalDuration.TotalSeconds}, buffer={buffer}");
         }
 
         private void PlaybackSessionOnBufferingStarted(MediaPlaybackSession sender, object args)
@@ -468,8 +469,25 @@ namespace BiliLite.Player.SubPlayers
 
         private void PlaybackSessionOnBufferingProgressChanged(MediaPlaybackSession sender, object args)
         {
-            m_bufferCache = sender?.BufferingProgress ?? 0;
+            m_bufferCache = TryGetBufferingProgress(sender);
             EmitBufferCacheChanged(m_bufferCache);
+        }
+
+        private static double TryGetBufferingProgress(MediaPlaybackSession session)
+        {
+            if (session == null)
+            {
+                return 0;
+            }
+
+            try
+            {
+                return session.BufferingProgress;
+            }
+            catch
+            {
+                return 0;
+            }
         }
 
         private void PlaybackSessionOnBufferingEnded(MediaPlaybackSession sender, object args)
@@ -562,13 +580,51 @@ namespace BiliLite.Player.SubPlayers
             m_timelineController = new MediaTimelineController();
             m_mediaPlayer.TimelineController = m_timelineController;
             m_audioPlayer.TimelineController = m_timelineController;
-            m_mediaPlayer.Source = isVideoLocal
-                ? MediaSource.CreateFromStorageFile(videoFile)
-                : MediaSource.CreateFromUri(new Uri(videoUrl));
+
+            if (isVideoLocal)
+            {
+                m_mediaPlayer.Source = MediaSource.CreateFromStorageFile(videoFile);
+                _logger.Info($"DashNative.Load dual video source: local file path={videoFile.Path}, type={videoFile.FileType}");
+            }
+            else
+            {
+                // In dual-player mode (remote video + local audio), keep header-aware loading path for remote video.
+                var videoOnlyDashInfo = CloneDashInfoWithoutAudio(m_realPlayInfo.DashInfo);
+                var adaptiveMediaSource = await CreateAdaptiveMediaSource(videoOnlyDashInfo, m_realPlayInfo.UserAgent, m_realPlayInfo.Referer);
+                if (adaptiveMediaSource != null)
+                {
+                    m_mediaPlayer.Source = MediaSource.CreateFromAdaptiveMediaSource(adaptiveMediaSource);
+                    _logger.Info(
+                        $"DashNative.Load dual video source: adaptive source created, videoUrl={SanitizeUrl(videoUrl)}, hasUserAgent={!string.IsNullOrWhiteSpace(m_realPlayInfo?.UserAgent)}, hasReferer={!string.IsNullOrWhiteSpace(m_realPlayInfo?.Referer)}");
+                }
+                else
+                {
+                    _logger.Warn(
+                        $"DashNative.Load dual video source: adaptive source failed, fallback CreateFromUri, videoUrl={SanitizeUrl(videoUrl)}");
+                    m_mediaPlayer.Source = MediaSource.CreateFromUri(new Uri(videoUrl));
+                }
+            }
+
             m_audioPlayer.Source = MediaSource.CreateFromStorageFile(audioFile);
 
             Volume = m_volume;
             IsMuted = m_isMuted;
+        }
+
+        private static BiliDashPlayUrlInfo CloneDashInfoWithoutAudio(BiliDashPlayUrlInfo source)
+        {
+            if (source == null)
+            {
+                return null;
+            }
+
+            return new BiliDashPlayUrlInfo
+            {
+                Duration = source.Duration,
+                MinBufferTime = source.MinBufferTime,
+                Video = source.Video,
+                Audio = null,
+            };
         }
 
         private static async Task<StorageFile> LoadLocalFileAsync(string url)

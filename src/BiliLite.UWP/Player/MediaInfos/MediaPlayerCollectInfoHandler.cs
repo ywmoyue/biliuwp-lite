@@ -33,16 +33,45 @@ namespace BiliLite.Player.MediaInfos
 
         private void Collect()
         {
-            if (!(m_collectInfo?.Data is MediaPlayerCollectInfoData data) || data.MediaPlayer?.PlaybackSession == null)
+            if (!(m_collectInfo?.Data is MediaPlayerCollectInfoData data) || data.MediaPlayer == null)
             {
                 return;
             }
 
-            var session = data.MediaPlayer.PlaybackSession;
-            m_mediaInfosCollector.MediaInfo.BufferingProgress = session.BufferingProgress;
-            m_mediaInfosCollector.MediaInfo.VideoWidth = session.NaturalVideoWidth;
-            m_mediaInfosCollector.MediaInfo.VideoHeight = session.NaturalVideoHeight;
-            m_mediaInfosCollector.EmitUpdateMediaInfos();
+            try
+            {
+                var session = data.MediaPlayer.PlaybackSession;
+                if (session == null)
+                {
+                    return;
+                }
+
+                m_mediaInfosCollector.MediaInfo.BufferingProgress = GetSafeBufferingProgress(session);
+                m_mediaInfosCollector.MediaInfo.VideoWidth = session.NaturalVideoWidth;
+                m_mediaInfosCollector.MediaInfo.VideoHeight = session.NaturalVideoHeight;
+                m_mediaInfosCollector.EmitUpdateMediaInfos();
+            }
+            catch
+            {
+                // Player may be disposed during timer tick; ignore this cycle.
+            }
+        }
+
+        private static double GetSafeBufferingProgress(Windows.Media.Playback.MediaPlaybackSession session)
+        {
+            if (session == null)
+            {
+                return 0;
+            }
+
+            try
+            {
+                return session.BufferingProgress;
+            }
+            catch
+            {
+                return 0;
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
@@ -142,25 +143,41 @@ namespace BiliLite.Player
             _logger.Info(
                 $"VideoPlayer.Load: subPlayer={m_subPlayer?.GetType().Name}, type={m_subPlayer?.Type}, mediaType={m_realPlayInfo?.PlayMediaType}, isLocal={m_realPlayInfo?.IsLocal}, singleUrl={SanitizeUrl(m_realPlayInfo?.SingleUrl)}, dashVideoUrl={SanitizeUrl(m_realPlayInfo?.DashInfo?.Video?.Url)}");
             // 如果启用播放前临时下载完整音频，则在加载播放器前预拉取音频数据并写入临时文件（会增加加载时间）
-            if (m_playerConfig?.PreloadFullAudioBeforePlay == true && m_realPlayInfo?.DashInfo?.Audio != null && !string.IsNullOrEmpty(m_realPlayInfo.DashInfo.Audio.Url) && !m_realPlayInfo.IsLocal)
+            var audioUrl = m_realPlayInfo?.DashInfo?.Audio?.Url;
+            var isAudioLocalPath = IsLocalPathOrFileUri(audioUrl);
+            if (m_playerConfig?.PreloadFullAudioBeforePlay == true
+                && m_realPlayInfo?.DashInfo?.Audio != null
+                && !string.IsNullOrEmpty(audioUrl)
+                && !m_realPlayInfo.IsLocal
+                && !isAudioLocalPath)
             {
                 try
                 {
                     var tempFileService = App.ServiceProvider.GetRequiredService<TempFileService>();
                     var tempFile = await tempFileService.CreateTempFile();
                     // 使用已有的扩展方法获取 buffer（可带 headers）
-                    var buffer = await m_realPlayInfo.DashInfo.Audio.Url.GetBuffer(m_realPlayInfo.Headers);
+                    _logger.Info($"VideoPlayer.Load: preload full audio start, audioUrl={SanitizeUrl(audioUrl)}");
+                    var buffer = await audioUrl.GetBuffer(m_realPlayInfo.Headers);
                     if (buffer != null)
                     {
                         await FileIO.WriteBufferAsync(tempFile, buffer);
                         // 将音频链接替换为临时文件路径，子播放器会以此路径创建本地源
                         m_realPlayInfo.DashInfo.Audio.Url = tempFile.Path;
+                        _logger.Info($"VideoPlayer.Load: preload full audio success, tempPath={tempFile.Path}, size={buffer.Length}");
+                    }
+                    else
+                    {
+                        _logger.Warn($"VideoPlayer.Load: preload full audio returned null buffer, audioUrl={SanitizeUrl(audioUrl)}");
                     }
                 }
                 catch (Exception ex)
                 {
                     _logger.Warn("Preload full audio failed", ex);
                 }
+            }
+            else if (m_playerConfig?.PreloadFullAudioBeforePlay == true && isAudioLocalPath)
+            {
+                _logger.Info($"VideoPlayer.Load: skip preload full audio because audio is local path, audioUrl={SanitizeUrl(audioUrl)}");
             }
 
             if (loadVersion != Volatile.Read(ref m_loadVersion))
@@ -540,10 +557,12 @@ namespace BiliLite.Player
             {
                 EmitBufferingChanged(false);
 
-                // 与旧播放器行为保持一致：暂停状态下 Seek 后不应自动续播。
-                if (m_keepPausedAfterSeek)
+                await m_playerController.PlayState.Play();
+
+                // 仅当缓冲前本来是暂停态（包括暂停态拖动进度）时保持暂停。
+                // 播放中 Seek 后进入缓冲，完成后应继续播放，不应再被错误暂停。
+                if (m_keepPausedAfterSeek || m_playerController.PauseState.IsPaused)
                 {
-                    await m_playerController.PlayState.Play();
                     if (m_playerController.PauseState.IsPaused)
                     {
                         // PauseState 已是暂停态时，PauseState.Pause() 会被视为错误调用，
@@ -556,30 +575,6 @@ namespace BiliLite.Player
                     }
 
                     m_keepPausedAfterSeek = false;
-                    return;
-                }
-
-                if (m_realPlayInfo?.IsAutoPlay == true)
-                {
-                    if (m_playerController.PauseState.IsPaused)
-                    {
-                        await m_playerController.PauseState.Resume();
-                    }
-
-                    await m_playerController.PlayState.Play();
-                    return;
-                }
-
-                await m_playerController.PlayState.Play();
-
-                // 非自动播放场景：无论 PauseState 当前是否已是暂停态，都要确保底层真正暂停。
-                if (m_playerController.PauseState.IsPaused)
-                {
-                    await m_playerController.Player.Pause();
-                }
-                else
-                {
-                    await m_playerController.PauseState.Pause();
                 }
             });
         }
@@ -677,6 +672,21 @@ namespace BiliLite.Player
             }
 
             return "invalid_url";
+        }
+
+        private static bool IsLocalPathOrFileUri(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                return false;
+            }
+
+            if (Path.IsPathRooted(url))
+            {
+                return true;
+            }
+
+            return Uri.TryCreate(url, UriKind.Absolute, out var uri) && uri.IsFile;
         }
 
         private async void SubPlayer_MediaOpened(object sender, EventArgs e)

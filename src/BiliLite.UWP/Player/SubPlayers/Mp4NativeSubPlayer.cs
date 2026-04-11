@@ -99,7 +99,7 @@ namespace BiliLite.Player.SubPlayers
             await StopCore();
 
             m_mediaPlayer = new MediaPlayer();
-            m_mediaPlayer.AutoPlay = true;
+            m_mediaPlayer.AutoPlay = m_realPlayInfo?.IsAutoPlay == true;
             m_mediaPlayer.MediaOpened += MediaPlayerOnMediaOpened;
             m_mediaPlayer.MediaEnded += MediaPlayerOnMediaEnded;
             m_mediaPlayer.MediaFailed += MediaPlayerOnMediaFailed;
@@ -210,8 +210,9 @@ namespace BiliLite.Player.SubPlayers
 
         private void PlaybackSessionOnPlaybackStateChanged(MediaPlaybackSession sender, object args)
         {
+            var buffer = TryGetBufferingProgress(sender);
             _logger.Info(
-                $"Mp4Native.PlaybackStateChanged: state={sender?.PlaybackState}, position={sender?.Position.TotalSeconds}, naturalDuration={sender?.NaturalDuration.TotalSeconds}, buffer={sender?.BufferingProgress}");
+                $"Mp4Native.PlaybackStateChanged: state={sender?.PlaybackState}, position={sender?.Position.TotalSeconds}, naturalDuration={sender?.NaturalDuration.TotalSeconds}, buffer={buffer}");
         }
 
         private void PlaybackSessionOnBufferingStarted(MediaPlaybackSession sender, object args)
@@ -222,8 +223,25 @@ namespace BiliLite.Player.SubPlayers
 
         private void PlaybackSessionOnBufferingProgressChanged(MediaPlaybackSession sender, object args)
         {
-            m_bufferCache = sender?.BufferingProgress ?? 0;
+            m_bufferCache = TryGetBufferingProgress(sender);
             EmitBufferCacheChanged(m_bufferCache);
+        }
+
+        private static double TryGetBufferingProgress(MediaPlaybackSession session)
+        {
+            if (session == null)
+            {
+                return 0;
+            }
+
+            try
+            {
+                return session.BufferingProgress;
+            }
+            catch
+            {
+                return 0;
+            }
         }
 
         private void PlaybackSessionOnBufferingEnded(MediaPlaybackSession sender, object args)
