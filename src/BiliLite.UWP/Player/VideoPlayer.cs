@@ -512,9 +512,9 @@ namespace BiliLite.Player
             {
                 return new List<RealPlayerType>
                 {
+                    RealPlayerType.ShakaPlayer,
                     RealPlayerType.Native,
                     RealPlayerType.FFmpegInterop,
-                    RealPlayerType.ShakaPlayer,
                 };
             }
 

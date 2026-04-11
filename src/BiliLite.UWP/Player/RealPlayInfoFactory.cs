@@ -375,9 +375,9 @@ namespace BiliLite.Player
             {
                 defaultChain = new List<RealPlayerType>
                 {
+                    RealPlayerType.ShakaPlayer,
                     RealPlayerType.Native,
                     RealPlayerType.FFmpegInterop,
-                    RealPlayerType.ShakaPlayer,
                 };
             }
             else if (mediaType == PlayMediaType.Single && singleIsFlv)
