@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace BiliLite.Player.Controllers
 {
-    public class BasePlayerController
+    public class BasePlayerController : IDisposable
     {
         private const int DefaultMaxErrorRecordCount = 20;
         private readonly PlayStateHandler m_playStateHandler;
@@ -140,6 +140,12 @@ namespace BiliLite.Player.Controllers
             }
 
             ErrorPushed?.Invoke(this, record);
+        }
+
+        public void Dispose()
+        {
+            m_mediaInfosCollector.MediaInfosUpdated -= MediaInfosCollector_MediaInfosUpdated;
+            m_mediaInfosCollector.Dispose();
         }
     }
 }

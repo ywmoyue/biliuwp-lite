@@ -70,7 +70,6 @@ namespace BiliLite.Controls
         public event PropertyChangedEventHandler PropertyChanged;
         private GestureRecognizer gestureRecognizer;
         private bool m_firstMediaPlayed;
-        private bool m_mediaIsLoading = true;
         private ThemeService m_themeService;
         private bool m_isLocalFileMode;
         private readonly IPlayerSponsorBlockControl m_playerSponsorBlockControl;
@@ -138,8 +137,6 @@ namespace BiliLite.Controls
         /// </summary>
         public int CurrentPlayIndex { get; set; }
 
-        private PlayState m_newPlayerPlayState = PlayState.End;
-
         public bool IsPlaying => GetCurrentPlayState() == PlayState.Playing || GetCurrentPlayState() == PlayState.End;
 
         /// <summary>
@@ -174,7 +171,39 @@ namespace BiliLite.Controls
         private readonly DanmakuListControl m_danmakuListControl;
         public double CurrentPosition => GetCurrentPosition();
 
-        private PlayState GetCurrentPlayState() => m_newPlayerPlayState;
+        // TODO: 后续迁移新版状态模式，不再维护这个旧版枚举状态方法
+        private PlayState GetCurrentPlayState()
+        {
+            var playState = m_viewModel.CurrentPlayState ?? m_playerController?.PlayState;
+            if (playState == null)
+            {
+                return PlayState.End;
+            }
+
+            if (playState.IsFault)
+            {
+                return PlayState.Error;
+            }
+
+            if (playState.IsStopped || playState.IsIdle)
+            {
+                return PlayState.End;
+            }
+
+            if (playState.IsLoading)
+            {
+                return PlayState.Loading;
+            }
+
+            if (playState.IsBuffering || playState.IsPlaying)
+            {
+                return m_playerController?.PauseState?.IsPaused == true
+                    ? PlayState.Pause
+                    : PlayState.Playing;
+            }
+
+            return PlayState.End;
+        }
 
         private double GetCurrentPosition() => m_videoPlayer?.Position ?? 0;
 
@@ -215,6 +244,7 @@ namespace BiliLite.Controls
             m_videoPlayer = new VideoPlayer(m_videoPlayerConfig, mediaPlayerVideo, m_playerController, ShakaPlayer);
             m_videoPlayer.SetRealPlayInfo(m_realPlayInfo);
             m_playerController.SetPlayer(m_videoPlayer);
+            m_viewModel.CurrentPlayState = m_playerController.PlayState;
             HookVideoPlayerEvents();
 
             dispRequest = new DisplayRequest();
@@ -279,6 +309,7 @@ namespace BiliLite.Controls
             {
                 m_playerControlToolBar = App.ServiceProvider.GetRequiredService<PlayerControlToolBarWithSlider>();
             }
+            m_playerControlToolBar.ViewModel = m_viewModel;
             m_playerControlToolBar.PlayerToastService = m_playerToastService;
             m_playerControlToolBar.PlaySpeedChanged += PlayerToolBar_OnPlaySpeedChanged;
             m_playerControlToolBar.QualityChanged += PlayerToolBar_OnQualityChanged;
@@ -1091,7 +1122,6 @@ namespace BiliLite.Controls
             subtitleTimer?.Stop();
             subtitleTimer = null;
             Pause();
-            m_mediaIsLoading = true;
             await m_playerController.PlayState.Stop();
 
             m_autoRefreshTimer?.Stop();
@@ -1103,7 +1133,7 @@ namespace BiliLite.Controls
 
             CurrentPlayIndex = index;
             CurrentPlayItem = PlayInfos[index];
-            m_viewModel.Duration = GetCurrentDuration();
+            m_viewModel.Duration = CurrentPlayItem?.duration ?? 0;
             if (CurrentPlayItem.is_interaction)
             {
                 ShowPlaylistButton = false;
@@ -1671,7 +1701,7 @@ namespace BiliLite.Controls
 
         private async void PlayerControlToolBar_OnSoundQualityChanged(object sender, BiliDashAudioPlayUrlInfo e)
         {
-            if (m_mediaIsLoading) return;
+            if (m_viewModel.IsMediaLoading || VideoLoading.Visibility == Visibility.Visible) return;
             _postion = GetCurrentPosition();
             _autoPlay = GetCurrentPlayState() == PlayState.Playing;
             if (m_isLocalFileMode)
@@ -1688,7 +1718,7 @@ namespace BiliLite.Controls
 
         private async void PlayerToolBar_OnQualityChanged(object sender, BiliPlayUrlInfo e)
         {
-            if (m_mediaIsLoading) return;
+            if (m_viewModel.IsMediaLoading || VideoLoading.Visibility == Visibility.Visible) return;
             _postion = GetCurrentPosition();
             _autoPlay = GetCurrentPlayState() == PlayState.Playing;
 
@@ -1971,7 +2001,6 @@ namespace BiliLite.Controls
         {
             try
             {
-                m_mediaIsLoading = true;
                 VideoLoading.Visibility = Visibility.Visible;
                 var preferredPlayerType = (RealPlayerType)SettingService.GetValue(
                     SettingConstants.Player.USE_REAL_PLAYER_TYPE,
@@ -2620,14 +2649,12 @@ namespace BiliLite.Controls
                 return;
             }
 
-            m_newPlayerPlayState = e;
             PlayStateChanged?.Invoke(this, e);
 
             BottomImageBtnPlay.Visibility = Visibility.Collapsed;
             switch (e)
             {
                 case PlayState.Loading:
-                    m_mediaIsLoading = true;
                     VideoLoading.Visibility = Visibility.Visible;
                     KeepScreenOn(false);
                     if (_systemMediaTransportControls != null)
@@ -2641,9 +2668,7 @@ namespace BiliLite.Controls
                     _ = m_videoPlayer.SetRatioMode(PlayerSettingRatio.SelectedIndex);
                     break;
                 case PlayState.Playing:
-                    m_mediaIsLoading = false;
                     VideoLoading.Visibility = Visibility.Collapsed;
-                    m_playerControlToolBar.FirstMediaOpened = true;
                     m_autoRefreshTimer?.Start();
                     KeepScreenOn(true);
                     if (_systemMediaTransportControls != null)
@@ -2740,6 +2765,7 @@ namespace BiliLite.Controls
             m_playerController.MediaInfosUpdated += PlayerController_MediaInfosUpdated;
             m_videoPlayer.ErrorOccurred += VideoPlayer_ErrorOccurred;
             m_videoPlayer.NeedReplacePlayer += VideoPlayer_NeedReplacePlayer;
+            m_videoPlayer.PlayerToastRequested += VideoPlayer_PlayerToastRequested;
             m_videoPlayer.BufferingChanged += VideoPlayer_BufferingChanged;
             m_videoPlayer.BufferCacheChanged += VideoPlayer_BufferCacheChanged;
         }
@@ -2757,6 +2783,7 @@ namespace BiliLite.Controls
             {
                 m_videoPlayer.ErrorOccurred -= VideoPlayer_ErrorOccurred;
                 m_videoPlayer.NeedReplacePlayer -= VideoPlayer_NeedReplacePlayer;
+                m_videoPlayer.PlayerToastRequested -= VideoPlayer_PlayerToastRequested;
                 m_videoPlayer.BufferingChanged -= VideoPlayer_BufferingChanged;
                 m_videoPlayer.BufferCacheChanged -= VideoPlayer_BufferCacheChanged;
             }
@@ -2764,6 +2791,18 @@ namespace BiliLite.Controls
 
         private void PlayerController_PlayStateChanged(object sender, PlayStateChangedEventArgs e)
         {
+            if (Dispatcher.HasThreadAccess)
+            {
+                m_viewModel.CurrentPlayState = e.NewState;
+            }
+            else
+            {
+                _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    m_viewModel.CurrentPlayState = e.NewState;
+                });
+            }
+
             if (e.NewState.IsStopped && m_ignoreNextStoppedState)
             {
                 m_ignoreNextStoppedState = false;
@@ -2774,6 +2813,22 @@ namespace BiliLite.Controls
             {
                 Player_PlayStateChanged(this, PlayState.Loading);
                 return;
+            }
+
+            if (e.OldState?.IsLoading == true && !e.NewState.IsLoading)
+            {
+                var duration = GetCurrentDuration();
+                if (Dispatcher.HasThreadAccess)
+                {
+                    m_viewModel.Duration = duration;
+                }
+                else
+                {
+                    _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                    {
+                        m_viewModel.Duration = duration;
+                    });
+                }
             }
 
             if (e.NewState.IsBuffering)
@@ -2881,6 +2936,8 @@ namespace BiliLite.Controls
             {
                 await RunOnUiThreadAsync(async () =>
                 {
+                    _logger.Warn($"VideoPlayer请求切换播放方式: from={m_videoPlayerConfig?.PlayerType}, to={e}");
+
                     if (m_videoPlayer != null)
                     {
                         UnHookVideoPlayerEvents();
@@ -2898,12 +2955,31 @@ namespace BiliLite.Controls
                     await m_playerController.PlayState.Stop();
                     m_ignoreNextStoppedState = false;
                     await m_playerController.PlayState.Load();
+
+                    // 回落后重新加载播放器设置
+                    var defaultVolume = SettingService.GetValue<double>(SettingConstants.Player.PLAYER_VOLUME, SettingConstants.Player.DEFAULT_PLAYER_VOLUME);
+                    m_videoPlayer.Volume = defaultVolume;
                 });
             }
             catch (Exception ex)
             {
                 _logger.Error($"替换播放器失败: {ex.Message}", ex);
             }
+        }
+
+        private void VideoPlayer_PlayerToastRequested(object sender, string message)
+        {
+            if (string.IsNullOrWhiteSpace(message))
+            {
+                return;
+            }
+
+            _logger.Info($"播放器内部Toast: {message}");
+            _ = RunOnUiThreadAsync(() =>
+            {
+                m_playerToastService?.Show(PlayerToastService.MSG_KEY, message);
+                return Task.CompletedTask;
+            });
         }
 
         private async void VideoPlayer_ErrorOccurred(object sender, PlayerException e)
@@ -3139,12 +3215,20 @@ namespace BiliLite.Controls
                     await ReportHistory(currentPosition);
             }
 
+            if (m_playerController?.PlayState != null &&
+                (m_playerController.PlayState.IsPlaying || m_playerController.PlayState.IsBuffering || m_playerController.PlayState.IsLoading))
+            {
+                await m_playerController.PlayState.Stop();
+            }
+
             UnHookVideoPlayerEvents();
             if (m_videoPlayer != null)
             {
                 await m_videoPlayer.UnLoad();
                 m_videoPlayer = null;
             }
+
+            m_playerController?.Dispose();
 
             if (danmuTimer != null)
             {

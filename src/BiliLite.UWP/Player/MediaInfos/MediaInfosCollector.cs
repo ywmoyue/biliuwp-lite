@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using BiliLite.Player.Controllers;
 
 namespace BiliLite.Player.MediaInfos
 {
-    public class MediaInfosCollector
+    public class MediaInfosCollector : IDisposable
     {
         private readonly BasePlayerController m_playerController;
         private readonly Dictionary<string, BaseCollectInfoHandler> m_collectInfoHandlerMap;
@@ -80,6 +81,21 @@ namespace BiliLite.Player.MediaInfos
         public void EmitUpdateMediaInfos()
         {
             MediaInfosUpdated?.Invoke(this, MediaInfo);
+        }
+
+        public void Dispose()
+        {
+            m_playerController.PlayStateChanged -= PlayerController_PlayStateChanged;
+            StopCollect();
+            m_currentCollectInfoHandler = null;
+
+            foreach (var handler in m_collectInfoHandlerMap.Values.Distinct())
+            {
+                if (handler is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+            }
         }
     }
 }

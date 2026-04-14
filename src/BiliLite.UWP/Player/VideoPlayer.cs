@@ -119,6 +119,7 @@ namespace BiliLite.Player
 
         public event EventHandler<PlayerException> ErrorOccurred;
         public event EventHandler<RealPlayerType> NeedReplacePlayer;
+        public event EventHandler<string> PlayerToastRequested;
         public event EventHandler<double> PositionChanged;
         public event EventHandler<bool> BufferingChanged;
         public event EventHandler<double> BufferCacheChanged;
@@ -139,6 +140,12 @@ namespace BiliLite.Player
         public async Task Load()
         {
             var loadVersion = Interlocked.Increment(ref m_loadVersion);
+
+            if (await TryHandleNativeHighResolutionFallbackBeforeLoadAsync(loadVersion))
+            {
+                return;
+            }
+
             PrepareSubPlayerForLoad();
             _logger.Info(
                 $"VideoPlayer.Load: subPlayer={m_subPlayer?.GetType().Name}, type={m_subPlayer?.Type}, mediaType={m_realPlayInfo?.PlayMediaType}, isLocal={m_realPlayInfo?.IsLocal}, singleUrl={SanitizeUrl(m_realPlayInfo?.SingleUrl)}, dashVideoUrl={SanitizeUrl(m_realPlayInfo?.DashInfo?.Video?.Url)}");
@@ -604,16 +611,38 @@ namespace BiliLite.Player
 
                     if (e.Code == PlayerError.PlayerErrorCode.NeedUseOtherPlayerError)
                     {
+                        var currentQn = ResolveCurrentQn();
+                        var isNativeHighResolutionOnline = IsNativeHighResolutionOnlinePlay();
+                        var autoFallbackEnabled = SettingService.GetValue(
+                            SettingConstants.Player.AUTO_FALLBACK,
+                            SettingConstants.Player.DEFAULT_AUTO_FALLBACK);
+                        _logger.Info(
+                            $"VideoPlayer.NeedUseOtherPlayerError: current={m_subPlayer?.Type}, mediaType={m_realPlayInfo?.PlayMediaType}, isLocal={m_realPlayInfo?.IsLocal}, qn={currentQn}, isNativeHighResolutionOnline={isNativeHighResolutionOnline}, autoFallbackEnabled={autoFallbackEnabled}");
+
+                        if (isNativeHighResolutionOnline)
+                        {
+                            _logger.Warn($"Native播放器不支持高分辨率，准备回落: qn={currentQn}");
+                            PlayerToastRequested?.Invoke(this, "当前播放方式不支持当前分辨率，即将回落");
+                        }
+
                         m_triedPlayers.Add(m_subPlayer.Type);
                         var fallbackChain = BuildFallbackChain();
                         var nextType = fallbackChain.FirstOrDefault(x => !m_triedPlayers.Contains(x));
                         if (fallbackChain.Contains(nextType) && !m_triedPlayers.Contains(nextType))
                         {
+                            _logger.Warn($"播放器准备回落: from={m_subPlayer?.Type}, to={nextType}, qn={currentQn}, chain={string.Join(",", fallbackChain)}");
                             NeedReplacePlayer?.Invoke(this, nextType);
                             return;
                         }
 
                         shouldReloadCurrentPlayer = false;
+                        if (isNativeHighResolutionOnline && !autoFallbackEnabled)
+                        {
+                            _logger.Warn($"检测到自动回落关闭，强行继续当前播放方式: current={m_subPlayer?.Type}, qn={currentQn}");
+                            PlayerToastRequested?.Invoke(this, "自动回落已关闭，正在强行使用当前播放方式播放视频");
+                            shouldReloadCurrentPlayer = true;
+                        }
+
                         _logger.Warn($"播放器回落链已耗尽，不再重载当前播放器: current={m_subPlayer?.Type}, chain={string.Join(",", fallbackChain)}");
                     }
 
@@ -687,6 +716,79 @@ namespace BiliLite.Player
             }
 
             return Uri.TryCreate(url, UriKind.Absolute, out var uri) && uri.IsFile;
+        }
+
+        private bool IsNativeHighResolutionOnlinePlay()
+        {
+            if (m_subPlayer?.Type != RealPlayerType.Native || m_realPlayInfo?.IsLocal == true)
+            {
+                return false;
+            }
+
+            return ResolveCurrentQn() >= 120;
+        }
+
+        private async Task<bool> TryHandleNativeHighResolutionFallbackBeforeLoadAsync(int loadVersion)
+        {
+            var qn = ResolveCurrentQn();
+            var isDash = IsDash(m_realPlayInfo);
+            var isOnline = m_realPlayInfo?.IsLocal != true;
+            var targetPlayerType = m_playerConfig?.PlayerType ?? RealPlayerType.Native;
+            var isNativeTarget = targetPlayerType == RealPlayerType.Native;
+            var shouldGuard = isDash && isOnline && isNativeTarget && qn >= 120;
+
+            _logger.Info(
+                $"VideoPlayer.Load.NativeHighQnGuard: shouldGuard={shouldGuard}, target={targetPlayerType}, mediaType={m_realPlayInfo?.PlayMediaType}, isLocal={m_realPlayInfo?.IsLocal}, qn={qn}");
+
+            if (!shouldGuard)
+            {
+                return false;
+            }
+
+            var autoFallbackEnabled = SettingService.GetValue(
+                SettingConstants.Player.AUTO_FALLBACK,
+                SettingConstants.Player.DEFAULT_AUTO_FALLBACK);
+
+            PlayerToastRequested?.Invoke(this, "当前播放方式不支持当前分辨率，即将回落");
+
+            if (!autoFallbackEnabled)
+            {
+                _logger.Warn($"Native高分辨率前置检测命中，但自动回落已关闭，继续当前播放方式: qn={qn}");
+                PlayerToastRequested?.Invoke(this, "自动回落已关闭，正在强行使用当前播放方式播放视频");
+                return false;
+            }
+
+            if (loadVersion != Volatile.Read(ref m_loadVersion))
+            {
+                _logger.Info("Native高分辨率前置回落取消：loadVersion 已过期");
+                return true;
+            }
+
+            m_triedPlayers.Add(RealPlayerType.Native);
+            var fallbackChain = BuildFallbackChain();
+            var nextType = fallbackChain.FirstOrDefault(x => !m_triedPlayers.Contains(x));
+
+            if (fallbackChain.Contains(nextType) && !m_triedPlayers.Contains(nextType))
+            {
+                _logger.Warn(
+                    $"Native高分辨率前置回落触发: from=Native, to={nextType}, qn={qn}, chain={string.Join(",", fallbackChain)}");
+                NeedReplacePlayer?.Invoke(this, nextType);
+                return true;
+            }
+
+            _logger.Warn($"Native高分辨率前置回落未找到可用目标，继续当前播放方式: qn={qn}, chain={string.Join(",", fallbackChain)}");
+            return false;
+        }
+
+        private int ResolveCurrentQn()
+        {
+            var dashQn = m_realPlayInfo?.DashInfo?.Video?.ID;
+            if (dashQn.HasValue)
+            {
+                return dashQn.Value;
+            }
+
+            return 0;
         }
 
         private async void SubPlayer_MediaOpened(object sender, EventArgs e)

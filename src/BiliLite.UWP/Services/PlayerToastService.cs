@@ -42,8 +42,9 @@ namespace BiliLite.Services
             }
 
             var newToast = m_serviceProvider.GetRequiredService<PlayerToast>();
-            newToast.Height = 80;
-            newToast.Width = 200;
+            newToast.MinHeight = 80;
+            newToast.Height = double.NaN;
+            newToast.Width = IsLongMessageToast(key, msg) ? 360 : 200;
             newToast.Text = msg;
             Canvas.SetLeft(newToast, 0);
             double distanceFromBottom = m_bottomList[m_showPlayerToasts.Count];
@@ -85,8 +86,9 @@ namespace BiliLite.Services
             }
 
             var newToast = m_serviceProvider.GetRequiredService<PlayerToast>();
-            newToast.Height = 80;
-            newToast.Width = 200;
+            newToast.MinHeight = 80;
+            newToast.Height = double.NaN;
+            newToast.Width = IsLongMessageToast(key, msg) ? 360 : 200;
             newToast.Text = msg;
             if (seg != null)
             {
@@ -114,6 +116,16 @@ namespace BiliLite.Services
             newToast.HideToast += async (_, _) => await Hide(key, newToast, newTimer);
             m_showPlayerToastTimers.Add(key, newTimer);
             newTimer.Start();
+        }
+
+        private static bool IsLongMessageToast(string key, string msg)
+        {
+            if (key == MSG_KEY)
+            {
+                return true;
+            }
+
+            return !string.IsNullOrEmpty(msg) && msg.Length > 20;
         }
 
         public async Task Hide(string key, PlayerToast toast, Timer timer)
