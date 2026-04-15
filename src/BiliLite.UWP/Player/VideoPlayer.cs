@@ -171,6 +171,25 @@ namespace BiliLite.Player
                         // 将音频链接替换为临时文件路径，子播放器会以此路径创建本地源
                         m_realPlayInfo.DashInfo.Audio.Url = tempFile.Path;
                         _logger.Info($"VideoPlayer.Load: preload full audio success, tempPath={tempFile.Path}, size={buffer.Length}");
+
+                        if (m_playerConfig.EnableVolumeNormalization)
+                        {
+                            var loudness = ClampVolumeNormalizationLoudness(m_playerConfig.VolumeNormalizationLoudness);
+                            PlayerToastRequested?.Invoke(this, "正在进行音量均衡，请稍候");
+                            _logger.Info($"VideoPlayer.Load: start normalize preloaded audio, loudness={loudness:F1}LUFS, source={tempFile.Path}");
+                            var normalizedFile = await AppHelper.NormalizeAudioWithFfmpegAsync(tempFile.Path, loudness);
+                            if (!string.IsNullOrWhiteSpace(normalizedFile))
+                            {
+                                m_realPlayInfo.DashInfo.Audio.Url = normalizedFile;
+                                PlayerToastRequested?.Invoke(this, "音量均衡完成");
+                                _logger.Info($"VideoPlayer.Load: normalize preloaded audio success, normalizedPath={normalizedFile}");
+                            }
+                            else
+                            {
+                                PlayerToastRequested?.Invoke(this, "音量均衡失败，已回落到原音频");
+                                _logger.Warn("VideoPlayer.Load: normalize preloaded audio failed, fallback to original temp audio");
+                            }
+                        }
                     }
                     else
                     {
@@ -201,6 +220,11 @@ namespace BiliLite.Player
                 _logger.Info($"VideoPlayer.Load: stale after subplayer load, stop created player, subPlayer={m_subPlayer?.GetType().Name}, type={m_subPlayer?.Type}");
                 await m_subPlayer.Stop();
             }
+        }
+
+        private static double ClampVolumeNormalizationLoudness(double loudness)
+        {
+            return Math.Max(-20d, Math.Min(-5d, loudness));
         }
 
         public async Task Buff()

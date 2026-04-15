@@ -230,16 +230,6 @@
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
-                <controls:SettingsCard Description="启用后播放前将拉取并临时下载完整音频，可能会增加播放加载时间" Header="播放前临时下载完整音频">
-                    <controls:SettingsCard.HeaderIcon>
-                        <font:FontAwesome Icon="Solid_Download" />
-                    </controls:SettingsCard.HeaderIcon>
-                    <ToggleSwitch
-                        x:Name="swPreloadFullAudio"
-                        Margin="0,-5,-88,-5"
-                        Style="{StaticResource DefaultToggleSwitchStyle}" />
-                </controls:SettingsCard>
-
                 <controls:SettingsCard Description="默认自动跳过片头/片尾" Header="自动跳过番剧 OP/ED">
                     <controls:SettingsCard.HeaderIcon>
                         <font:FontAwesome Icon="Solid_Music" />
@@ -278,6 +268,47 @@
                         x:Name="SwitchEnableDefaultMaxSoundQuality"
                         Margin="0,-5,-88,-5"
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
+                </controls:SettingsCard>
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>
+
+        <controls:SettingsExpander x:Name="SEOther" Header="其他">
+            <controls:SettingsExpander.HeaderIcon>
+                <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE712;" />
+            </controls:SettingsExpander.HeaderIcon>
+            <controls:SettingsExpander.Items>
+                <controls:SettingsCard Description="启用后播放前将拉取并临时下载完整音频，可能会增加播放加载时间" Header="播放前临时下载完整音频">
+                    <controls:SettingsCard.HeaderIcon>
+                        <font:FontAwesome Icon="Solid_Download" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <ToggleSwitch
+                        x:Name="swPreloadFullAudio"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
+                </controls:SettingsCard>
+
+                <controls:SettingsCard Description="开发中，暂不开放" Header="音量均衡">
+                    <controls:SettingsCard.HeaderIcon>
+                        <font:FontAwesome Icon="Solid_WaveSquare" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <ToggleSwitch
+                        x:Name="swVolumeNormalization"
+                        IsEnabled="False"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
+                </controls:SettingsCard>
+
+                <controls:SettingsCard Description="开发中，暂不开放" Header="音量均衡响度">
+                    <StackPanel MinWidth="220" Orientation="Vertical">
+                        <TextBlock x:Name="txtVolumeNormalizationLoudness" HorizontalAlignment="Center" />
+                        <Slider
+                            x:Name="sliderVolumeNormalizationLoudness"
+                            IsEnabled="False"
+                            Maximum="-5"
+                            Minimum="-20"
+                            SmallChange="0.5"
+                            StepFrequency="0.5" />
+                    </StackPanel>
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>

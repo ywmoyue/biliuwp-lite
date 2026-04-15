@@ -238,6 +238,12 @@ namespace BiliLite.Controls
                 SettingConstants.Player.USE_REAL_PLAYER_TYPE,
                 (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
             m_videoPlayerConfig.PreloadFullAudioBeforePlay = SettingService.GetValue<bool>(SettingConstants.Player.PRELOAD_FULL_AUDIO_BEFORE_PLAY, SettingConstants.Player.DEFAULT_PRELOAD_FULL_AUDIO_BEFORE_PLAY);
+            m_videoPlayerConfig.EnableVolumeNormalization = SettingService.GetValue(
+                SettingConstants.Player.VOLUME_NORMALIZATION,
+                SettingConstants.Player.DEFAULT_VOLUME_NORMALIZATION);
+            m_videoPlayerConfig.VolumeNormalizationLoudness = SettingService.GetValue(
+                SettingConstants.Player.VOLUME_NORMALIZATION_LOUDNESS,
+                SettingConstants.Player.DEFAULT_VOLUME_NORMALIZATION_LOUDNESS);
             m_realPlayInfo = new RealPlayInfo();
             m_playerController = PlayerControllerFactory.Create(PlayerType.Video);
             UpdatePlayerHostVisibility(m_videoPlayerConfig.PlayerType);

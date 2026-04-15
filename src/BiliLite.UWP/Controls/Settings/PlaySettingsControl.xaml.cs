@@ -181,8 +181,36 @@ namespace BiliLite.Controls.Settings
                 swPreloadFullAudio.Toggled += new RoutedEventHandler((obj, args) =>
                 {
                     SettingService.SetValue(SettingConstants.Player.PRELOAD_FULL_AUDIO_BEFORE_PLAY, swPreloadFullAudio.IsOn);
+                    UpdateVolumeNormalizationControlsState();
                 });
             });
+            // 音量均衡（依赖播放前完整音频预下载）
+            swVolumeNormalization.IsOn = SettingService.GetValue(
+                SettingConstants.Player.VOLUME_NORMALIZATION,
+                SettingConstants.Player.DEFAULT_VOLUME_NORMALIZATION);
+            swVolumeNormalization.Loaded += new RoutedEventHandler((sender, e) =>
+            {
+                swVolumeNormalization.Toggled += new RoutedEventHandler((obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.VOLUME_NORMALIZATION, swVolumeNormalization.IsOn);
+                    UpdateVolumeNormalizationControlsState();
+                });
+            });
+
+            sliderVolumeNormalizationLoudness.Value = ClampVolumeNormalizationLoudness(SettingService.GetValue(
+                SettingConstants.Player.VOLUME_NORMALIZATION_LOUDNESS,
+                SettingConstants.Player.DEFAULT_VOLUME_NORMALIZATION_LOUDNESS));
+            sliderVolumeNormalizationLoudness.Loaded += (sender, e) =>
+            {
+                sliderVolumeNormalizationLoudness.ValueChanged += (obj, args) =>
+                {
+                    var loudness = ClampVolumeNormalizationLoudness(sliderVolumeNormalizationLoudness.Value);
+                    txtVolumeNormalizationLoudness.Text = $"{loudness:F1} LUFS";
+                    SettingService.SetValue(SettingConstants.Player.VOLUME_NORMALIZATION_LOUDNESS, loudness);
+                };
+            };
+            txtVolumeNormalizationLoudness.Text = $"{sliderVolumeNormalizationLoudness.Value:F1} LUFS";
+            UpdateVolumeNormalizationControlsState();
             //播放器自动回落
             swPlayerAutoFallback.IsOn = SettingService.GetValue(
                 SettingConstants.Player.AUTO_FALLBACK,
@@ -584,6 +612,17 @@ namespace BiliLite.Controls.Settings
             await Task.Delay(50);
             SettingService.SetValue(SettingConstants.Player.FFMPEG_INTEROP_X_OPTIONS,
                 m_viewModel.FFmpegInteropXOptions);
+        }
+
+        private void UpdateVolumeNormalizationControlsState()
+        {
+            sliderVolumeNormalizationLoudness.IsEnabled = swPreloadFullAudio.IsOn && swVolumeNormalization.IsOn;
+            txtVolumeNormalizationLoudness.Opacity = sliderVolumeNormalizationLoudness.IsEnabled ? 1.0 : 0.6;
+        }
+
+        private static double ClampVolumeNormalizationLoudness(double loudness)
+        {
+            return Math.Max(-20d, Math.Min(-5d, loudness));
         }
     }
 }

@@ -954,6 +954,30 @@ namespace BiliLite.Models.Common
             public const bool DEFAULT_PRELOAD_FULL_AUDIO_BEFORE_PLAY = false;
 
             /// <summary>
+            /// 音量均衡（依赖播放前临时下载完整音频） bool
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string VOLUME_NORMALIZATION = "PlayerVolumeNormalization";
+
+            /// <summary>
+            /// 音量均衡默认值
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_VOLUME_NORMALIZATION = false;
+
+            /// <summary>
+            /// 音量均衡目标响度（LUFS）
+            /// </summary>
+            [SettingKey(typeof(double))]
+            public const string VOLUME_NORMALIZATION_LOUDNESS = "PlayerVolumeNormalizationLoudness";
+
+            /// <summary>
+            /// 音量均衡目标响度默认值（LUFS）
+            /// </summary>
+            [SettingDefaultValue]
+            public const double DEFAULT_VOLUME_NORMALIZATION_LOUDNESS = -14d;
+
+            /// <summary>
             /// 播放器自动回落
             /// </summary>
             [SettingKey(typeof(bool))]
