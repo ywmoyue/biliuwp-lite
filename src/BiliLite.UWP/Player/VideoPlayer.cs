@@ -420,6 +420,7 @@ namespace BiliLite.Player
             Interlocked.Increment(ref m_loadVersion);
             UnLoadPlayerEvents(m_subPlayer);
             await m_subPlayer.Stop();
+            m_shakaPlayerControl.Dispose();
             EmitBufferingChanged(false, force: true);
             EmitBufferCacheChanged(0, force: true);
         }

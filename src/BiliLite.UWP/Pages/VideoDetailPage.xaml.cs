@@ -625,6 +625,7 @@ namespace BiliLite.Pages
 
         private void player_AllMediaEndEvent(object sender, EventArgs e)
         {
+            if (m_viewModel.VideoInfo == null) return;
             if (m_videoListView == null || m_videoListView.IsLast(m_viewModel.VideoInfo.Aid)) return;
 
             // 切换到播放列表Tab使播放列表控件被渲染事件能触发
