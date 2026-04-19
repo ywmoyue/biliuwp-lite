@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using BiliLite.Models.Common.Player;
 using BiliLite.Models.Exceptions;
 using BiliLite.Player.MediaInfos;
+using Windows.UI.Xaml;
 using static BiliLite.Models.Common.Player.PlayerError;
 
 namespace BiliLite.Player.SubPlayers
@@ -23,6 +24,8 @@ namespace BiliLite.Player.SubPlayers
         public virtual double BufferCache => 0;
 
         public abstract double Position { get; }
+
+        public abstract FrameworkElement PlayerView { get; }
 
         public virtual double Duration => m_realPlayInfo?.TotalDuration ?? 0;
 

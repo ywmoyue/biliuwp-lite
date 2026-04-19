@@ -15,7 +15,8 @@ namespace BiliLite.Player.SubPlayers
 {
     public class DashFFmpegInteropSubPlayer : ISubPlayer
     {
-        private readonly MediaPlayerElement m_playerElement;
+        private readonly Panel m_playerHost;
+        private MediaPlayerElement m_playerElement;
         private MediaPlayer m_videoPlayer;
         private MediaPlayer m_audioPlayer;
         private MediaTimelineController m_timelineController;
@@ -27,9 +28,9 @@ namespace BiliLite.Player.SubPlayers
         private double m_volume = 1;
         private bool m_isMuted;
 
-        public DashFFmpegInteropSubPlayer(MediaPlayerElement playerElement)
+        public DashFFmpegInteropSubPlayer(Panel playerHost)
         {
-            m_playerElement = playerElement;
+            m_playerHost = playerHost;
         }
 
         public override RealPlayerType Type { get; } = RealPlayerType.FFmpegInterop;
@@ -56,6 +57,8 @@ namespace BiliLite.Player.SubPlayers
             ?? m_videoPlayer?.PlaybackSession?.Position.TotalSeconds
             ?? m_audioPlayer?.PlaybackSession?.Position.TotalSeconds
             ?? 0;
+
+        public override FrameworkElement PlayerView => m_playerElement;
 
         public override double Duration
         {
@@ -121,6 +124,11 @@ namespace BiliLite.Player.SubPlayers
 
             m_url = m_realPlayInfo.DashInfo.Video.Url;
             await StopCore();
+            await RunOnUiThreadAsync(() =>
+            {
+                EnsurePlayerElement();
+                AttachPlayerElement();
+            });
 
             var config = CreateMediaSourceConfig();
             m_videoMediaSource = await CreateMediaSourceAsync(m_realPlayInfo.DashInfo.Video?.Url, config);
@@ -133,6 +141,11 @@ namespace BiliLite.Player.SubPlayers
             if (!string.IsNullOrWhiteSpace(m_realPlayInfo.DashInfo.Audio?.Url))
             {
                 m_audioMediaSource = await CreateMediaSourceAsync(m_realPlayInfo.DashInfo.Audio.Url, config);
+                if (m_audioMediaSource == null)
+                {
+                    EmitError(PlayerError.PlayerErrorCode.NeedUseOtherPlayerError, "创建 DASH 音频源失败", PlayerError.RetryStrategy.Normal);
+                    return;
+                }
             }
 
             m_videoPlayer = new MediaPlayer();
@@ -181,6 +194,8 @@ namespace BiliLite.Player.SubPlayers
         {
             await RunOnUiThreadAsync(() =>
             {
+                EnsurePlayerElement();
+                AttachPlayerElement();
                 if (m_playerElement.MediaPlayer != m_videoPlayer)
                 {
                     m_playerElement.SetMediaPlayer(m_videoPlayer);
@@ -234,6 +249,8 @@ namespace BiliLite.Player.SubPlayers
         {
             await RunOnUiThreadAsync(() =>
             {
+                EnsurePlayerElement();
+                AttachPlayerElement();
                 if (m_playerElement.MediaPlayer != m_videoPlayer)
                 {
                     m_playerElement.SetMediaPlayer(m_videoPlayer);
@@ -360,7 +377,16 @@ namespace BiliLite.Player.SubPlayers
                 m_videoMediaSource = null;
             }
 
-            await RunOnUiThreadAsync(() => m_playerElement.SetMediaPlayer(null));
+            await RunOnUiThreadAsync(() =>
+            {
+                if (m_playerElement == null)
+                {
+                    return;
+                }
+
+                m_playerElement.SetMediaPlayer(null);
+                m_playerHost?.Children.Remove(m_playerElement);
+            });
         }
 
         private void PlaybackSessionOnBufferingStarted(MediaPlaybackSession sender, object args)
@@ -385,13 +411,18 @@ namespace BiliLite.Player.SubPlayers
 
         public override async Task SetRatioMode(int mode)
         {
-            await RunOnUiThreadAsync(() => VideoPlayer.ApplyStretch(m_playerElement, m_realPlayInfo, mode));
+            await RunOnUiThreadAsync(() =>
+            {
+                EnsurePlayerElement();
+                VideoPlayer.ApplyStretch(m_playerElement, m_realPlayInfo, mode);
+            });
         }
 
         public override async Task SetVideoEnable(bool enable)
         {
             await RunOnUiThreadAsync(() =>
             {
+                EnsurePlayerElement();
                 m_playerElement.Visibility = enable ? Visibility.Visible : Visibility.Collapsed;
                 if (!enable)
                 {
@@ -439,15 +470,27 @@ namespace BiliLite.Player.SubPlayers
                 else if (Uri.TryCreate(url, UriKind.Absolute, out var _u) && _u.IsFile) isLocalUrl = true;
             }
 
-            if (isLocalUrl)
+            try
             {
-                var localPath = NormalizeLocalPath(url);
-                var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(localPath);
-                var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
-                return await FFmpegMediaSource.CreateFromStreamAsync(stream, config);
-            }
+                if (isLocalUrl)
+                {
+                    var localPath = NormalizeLocalPath(url);
+                    var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(localPath);
+                    var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
+                    return await FFmpegMediaSource.CreateFromStreamAsync(stream, config);
+                }
 
-            return await FFmpegMediaSource.CreateFromUriAsync(url, config);
+                return await FFmpegMediaSource.CreateFromUriAsync(url, config);
+            }
+            catch (Exception ex) when (IsComEFail(ex))
+            {
+                return null;
+            }
+        }
+
+        private static bool IsComEFail(Exception ex)
+        {
+            return ex != null && (uint)ex.HResult == 0x80004005;
         }
 
         private static string NormalizeLocalPath(string url)
@@ -475,6 +518,38 @@ namespace BiliLite.Player.SubPlayers
             }
 
             await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
+        }
+
+        private void EnsurePlayerElement()
+        {
+            if (m_playerElement != null)
+            {
+                return;
+            }
+
+            m_playerElement = new MediaPlayerElement
+            {
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch,
+                Width = double.NaN,
+                Height = double.NaN,
+            };
+        }
+
+        private void AttachPlayerElement()
+        {
+            EnsurePlayerElement();
+            if (m_playerElement.Parent == m_playerHost)
+            {
+                return;
+            }
+
+            if (m_playerElement.Parent is Panel oldParent)
+            {
+                oldParent.Children.Remove(m_playerElement);
+            }
+
+            m_playerHost?.Children.Insert(0, m_playerElement);
         }
 
         public override async Task<byte[]> CaptureAsync()

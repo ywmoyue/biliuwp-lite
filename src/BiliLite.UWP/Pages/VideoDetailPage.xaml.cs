@@ -90,7 +90,7 @@ namespace BiliLite.Pages
                     m_viewModel.Loaded = false;
                     m_viewModel.Loading = true;
                     m_viewModel.VideoInfo = null;
-                }
+                } 
 
                 changedFlag = true;
                 player?.FullScreen(false);

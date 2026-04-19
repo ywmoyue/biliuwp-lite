@@ -7,6 +7,7 @@ using BiliLite.Player.MediaInfos;
 using BiliLite.Player.WebPlayer;
 using BiliLite.Player.WebPlayer.Models;
 using BiliLite.Services;
+using Windows.UI.Xaml;
 
 namespace BiliLite.Player.SubPlayers
 {
@@ -35,6 +36,8 @@ namespace BiliLite.Player.SubPlayers
         }
 
         public override double Position => m_position;
+
+        public override FrameworkElement PlayerView => m_ShakaPlayerControl;
 
         public override event EventHandler MediaOpened;
         public override event EventHandler MediaEnded;

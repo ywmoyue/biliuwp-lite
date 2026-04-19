@@ -7,6 +7,7 @@ using BiliLite.Services;
 using System;
 using System.Threading.Tasks;
 using System.Linq;
+using Windows.UI.Xaml;
 
 namespace BiliLite.Player.SubPlayers;
 
@@ -35,6 +36,8 @@ public class LiveMpegtsPlayer : ISubPlayer, ISubWebPlayer
     }
 
     public override double Position => m_position;
+
+    public override FrameworkElement PlayerView => m_playerControl;
 
     public override event EventHandler MediaOpened;
     public override event EventHandler MediaEnded;

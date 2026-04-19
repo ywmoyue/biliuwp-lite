@@ -33,8 +33,7 @@ namespace BiliLite.Player
     {
         private readonly PlayerConfig m_playerConfig;
         private readonly BasePlayerController m_playerController;
-        private readonly MediaPlayerElement m_playerElement;
-        private readonly ShakaPlayerControl m_shakaPlayerControl;
+        private readonly Panel m_playerHost;
         private readonly List<RealPlayerType> m_triedPlayers = new();
         private readonly object m_bufferLock = new();
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
@@ -56,14 +55,12 @@ namespace BiliLite.Player
         private static readonly TimeSpan BufferCacheNotifyMinInterval = TimeSpan.FromMilliseconds(120);
 
         public VideoPlayer(PlayerConfig playerConfig,
-            MediaPlayerElement playerElement,
-            BasePlayerController playerController,
-            ShakaPlayerControl shakaPlayerControl)
+            Panel playerHost,
+            BasePlayerController playerController)
         {
             m_playerConfig = playerConfig;
-            m_playerElement = playerElement;
+            m_playerHost = playerHost;
             m_playerController = playerController;
-            m_shakaPlayerControl = shakaPlayerControl;
             m_subPlayer = CreateSubPlayer(m_playerConfig.PlayerType, null);
             InitPlayerEvents(m_subPlayer);
         }
@@ -347,20 +344,13 @@ namespace BiliLite.Player
         {
             await RunOnUiThreadAsync(() =>
             {
-                if (m_playerElement != null)
+                var playerView = m_subPlayer?.PlayerView;
+                if (playerView != null)
                 {
-                    m_playerElement.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    m_playerElement.VerticalAlignment = VerticalAlignment.Stretch;
-                    m_playerElement.Width = double.NaN;
-                    m_playerElement.Height = double.NaN;
-                }
-
-                if (m_shakaPlayerControl != null)
-                {
-                    m_shakaPlayerControl.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    m_shakaPlayerControl.VerticalAlignment = VerticalAlignment.Stretch;
-                    m_shakaPlayerControl.Width = double.NaN;
-                    m_shakaPlayerControl.Height = double.NaN;
+                    playerView.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    playerView.VerticalAlignment = VerticalAlignment.Stretch;
+                    playerView.Width = double.NaN;
+                    playerView.Height = double.NaN;
                 }
             });
         }
@@ -369,20 +359,13 @@ namespace BiliLite.Player
         {
             await RunOnUiThreadAsync(() =>
             {
-                if (m_playerElement != null)
+                var playerView = m_subPlayer?.PlayerView;
+                if (playerView != null)
                 {
-                    m_playerElement.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    m_playerElement.VerticalAlignment = VerticalAlignment.Center;
-                    m_playerElement.Width = double.NaN;
-                    m_playerElement.Height = double.NaN;
-                }
-
-                if (m_shakaPlayerControl != null)
-                {
-                    m_shakaPlayerControl.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    m_shakaPlayerControl.VerticalAlignment = VerticalAlignment.Center;
-                    m_shakaPlayerControl.Width = double.NaN;
-                    m_shakaPlayerControl.Height = double.NaN;
+                    playerView.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    playerView.VerticalAlignment = VerticalAlignment.Center;
+                    playerView.Width = double.NaN;
+                    playerView.Height = double.NaN;
                 }
             });
         }
@@ -391,16 +374,11 @@ namespace BiliLite.Player
         {
             await RunOnUiThreadAsync(() =>
             {
-                if (m_playerElement != null)
+                var playerView = m_subPlayer?.PlayerView;
+                if (playerView != null)
                 {
-                    m_playerElement.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    m_playerElement.VerticalAlignment = VerticalAlignment.Stretch;
-                }
-
-                if (m_shakaPlayerControl != null)
-                {
-                    m_shakaPlayerControl.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    m_shakaPlayerControl.VerticalAlignment = VerticalAlignment.Stretch;
+                    playerView.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    playerView.VerticalAlignment = VerticalAlignment.Stretch;
                 }
             });
         }
@@ -420,7 +398,6 @@ namespace BiliLite.Player
             Interlocked.Increment(ref m_loadVersion);
             UnLoadPlayerEvents(m_subPlayer);
             await m_subPlayer.Stop();
-            m_shakaPlayerControl.Dispose();
             EmitBufferingChanged(false, force: true);
             EmitBufferCacheChanged(0, force: true);
         }
@@ -429,33 +406,33 @@ namespace BiliLite.Player
         {
             if (playInfo?.PlayMediaType == PlayMediaType.MultiFlv)
             {
-                return new MultiFlvSYEngineSubPlayer(m_playerElement);
+                return new MultiFlvSYEngineSubPlayer(m_playerHost);
             }
 
             if (playInfo?.PlayMediaType == PlayMediaType.Single && playInfo.SingleIsFlv)
             {
                 return playerType == RealPlayerType.FFmpegInterop
-                    ? new FlvFFmpegInteropSubPlayer(m_playerElement)
-                    : new FlvSYEngineSubPlayer(m_playerElement);
+                    ? new FlvFFmpegInteropSubPlayer(m_playerHost)
+                    : new FlvSYEngineSubPlayer(m_playerHost);
             }
 
             if (playInfo?.PlayMediaType == PlayMediaType.Dash)
             {
                 return playerType switch
                 {
-                    RealPlayerType.ShakaPlayer => new DashShakaSubPlayer(m_shakaPlayerControl),
-                    RealPlayerType.Native => new DashNativeSubPlayer(m_playerElement),
-                    RealPlayerType.FFmpegInterop => new DashFFmpegInteropSubPlayer(m_playerElement),
-                    _ => new DashShakaSubPlayer(m_shakaPlayerControl),
+                    RealPlayerType.ShakaPlayer => new DashShakaSubPlayer(m_playerHost),
+                    RealPlayerType.Native => new DashNativeSubPlayer(m_playerHost),
+                    RealPlayerType.FFmpegInterop => new DashFFmpegInteropSubPlayer(m_playerHost),
+                    _ => new DashShakaSubPlayer(m_playerHost),
                 };
             }
 
             return playerType switch
             {
-                RealPlayerType.ShakaPlayer => new DashShakaSubPlayer(m_shakaPlayerControl),
-                RealPlayerType.Native => new Mp4NativeSubPlayer(m_playerElement),
-                RealPlayerType.FFmpegInterop => new FlvFFmpegInteropSubPlayer(m_playerElement),
-                _ => new FlvFFmpegInteropSubPlayer(m_playerElement),
+                RealPlayerType.ShakaPlayer => new DashShakaSubPlayer(m_playerHost),
+                RealPlayerType.Native => new Mp4NativeSubPlayer(m_playerHost),
+                RealPlayerType.FFmpegInterop => new FlvFFmpegInteropSubPlayer(m_playerHost),
+                _ => new FlvFFmpegInteropSubPlayer(m_playerHost),
             };
         }
 
@@ -644,19 +621,22 @@ namespace BiliLite.Player
                         _logger.Info(
                             $"VideoPlayer.NeedUseOtherPlayerError: current={m_subPlayer?.Type}, mediaType={m_realPlayInfo?.PlayMediaType}, isLocal={m_realPlayInfo?.IsLocal}, qn={currentQn}, isNativeHighResolutionOnline={isNativeHighResolutionOnline}, autoFallbackEnabled={autoFallbackEnabled}");
 
-                        if (isNativeHighResolutionOnline)
-                        {
-                            _logger.Warn($"Native播放器不支持高分辨率，准备回落: qn={currentQn}");
-                            PlayerToastRequested?.Invoke(this, "当前播放方式不支持当前分辨率，即将回落");
-                        }
-
                         m_triedPlayers.Add(m_subPlayer.Type);
                         var fallbackChain = BuildFallbackChain();
                         var nextType = fallbackChain.FirstOrDefault(x => !m_triedPlayers.Contains(x));
                         if (fallbackChain.Contains(nextType) && !m_triedPlayers.Contains(nextType))
                         {
                             _logger.Warn($"播放器准备回落: from={m_subPlayer?.Type}, to={nextType}, qn={currentQn}, chain={string.Join(",", fallbackChain)}");
-                            NeedReplacePlayer?.Invoke(this, nextType);
+                            if (isNativeHighResolutionOnline)
+                            {
+                                _logger.Warn($"Native播放器不支持高分辨率，准备回落: qn={currentQn}");
+                                RequestFallbackPlayer(m_subPlayer.Type, nextType, "当前播放方式不支持当前分辨率");
+                            }
+                            else
+                            {
+                                RequestFallbackPlayer(m_subPlayer.Type, nextType, "当前播放失败，正在尝试其他播放方式");
+                            }
+
                             return;
                         }
 
@@ -753,6 +733,16 @@ namespace BiliLite.Player
             return ResolveCurrentQn() >= 120;
         }
 
+        private void RequestFallbackPlayer(RealPlayerType currentType, RealPlayerType nextType, string reason)
+        {
+            var toastMessage = string.IsNullOrWhiteSpace(reason)
+                ? $"当前播放方式播放失败，正在从 {currentType} 切换到 {nextType}"
+                : $"{reason}，正在从 {currentType} 切换到 {nextType}";
+
+            PlayerToastRequested?.Invoke(this, toastMessage);
+            NeedReplacePlayer?.Invoke(this, nextType);
+        }
+
         private async Task<bool> TryHandleNativeHighResolutionFallbackBeforeLoadAsync(int loadVersion)
         {
             var qn = ResolveCurrentQn();
@@ -773,8 +763,6 @@ namespace BiliLite.Player
             var autoFallbackEnabled = SettingService.GetValue(
                 SettingConstants.Player.AUTO_FALLBACK,
                 SettingConstants.Player.DEFAULT_AUTO_FALLBACK);
-
-            PlayerToastRequested?.Invoke(this, "当前播放方式不支持当前分辨率，即将回落");
 
             if (!autoFallbackEnabled)
             {
@@ -797,7 +785,7 @@ namespace BiliLite.Player
             {
                 _logger.Warn(
                     $"Native高分辨率前置回落触发: from=Native, to={nextType}, qn={qn}, chain={string.Join(",", fallbackChain)}");
-                NeedReplacePlayer?.Invoke(this, nextType);
+                RequestFallbackPlayer(targetPlayerType, nextType, "当前播放方式不支持当前分辨率");
                 return true;
             }
 
@@ -823,7 +811,8 @@ namespace BiliLite.Player
                 _logger.Info(
                     $"VideoPlayer.SubPlayer_MediaOpened: subPlayer={m_subPlayer?.GetType().Name}, type={m_subPlayer?.Type}, duration={m_subPlayer?.Duration}, position={m_subPlayer?.Position}, isLocal={m_realPlayInfo?.IsLocal}");
 
-                if (m_subPlayer is not ISubWebPlayer && m_playerElement?.MediaPlayer == null && m_realPlayInfo?.IsAutoPlay == true)
+                var nativePlayerView = m_subPlayer?.PlayerView as MediaPlayerElement;
+                if (m_subPlayer is not ISubWebPlayer && nativePlayerView?.MediaPlayer == null && m_realPlayInfo?.IsAutoPlay == true)
                 {
                     _logger.Info(
                         $"VideoPlayer.SubPlayer_MediaOpened: attach media player early, subPlayer={m_subPlayer?.GetType().Name}, type={m_subPlayer?.Type}");

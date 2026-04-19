@@ -13,16 +13,17 @@ namespace BiliLite.Player.SubPlayers
 {
     public class FlvFFmpegInteropSubPlayer : ISubPlayer
     {
-        private readonly MediaPlayerElement m_playerElement;
+        private readonly Panel m_playerHost;
+        private MediaPlayerElement m_playerElement;
         private MediaPlayer m_mediaPlayer;
         private FFmpegMediaSource m_mediaSource;
         private string m_url;
         private bool m_isBuffering;
         private double m_bufferCache;
 
-        public FlvFFmpegInteropSubPlayer(MediaPlayerElement playerElement)
+        public FlvFFmpegInteropSubPlayer(Panel playerHost)
         {
-            m_playerElement = playerElement;
+            m_playerHost = playerHost;
         }
 
         public override RealPlayerType Type { get; } = RealPlayerType.FFmpegInterop;
@@ -40,6 +41,8 @@ namespace BiliLite.Player.SubPlayers
         }
 
         public override double Position => m_mediaPlayer?.PlaybackSession?.Position.TotalSeconds ?? 0;
+
+        public override FrameworkElement PlayerView => m_playerElement;
 
         public override double Duration
         {
@@ -97,6 +100,11 @@ namespace BiliLite.Player.SubPlayers
 
             m_url = m_realPlayInfo.SingleUrl;
             await StopCore();
+            await RunOnUiThreadAsync(() =>
+            {
+                EnsurePlayerElement();
+                AttachPlayerElement();
+            });
 
             var config = new MediaSourceConfig();
             if (!string.IsNullOrWhiteSpace(m_realPlayInfo.UserAgent))
@@ -132,6 +140,8 @@ namespace BiliLite.Player.SubPlayers
         {
             await RunOnUiThreadAsync(() =>
             {
+                EnsurePlayerElement();
+                AttachPlayerElement();
                 if (m_playerElement.MediaPlayer != m_mediaPlayer)
                 {
                     m_playerElement.SetMediaPlayer(m_mediaPlayer);
@@ -201,7 +211,16 @@ namespace BiliLite.Player.SubPlayers
                 m_mediaSource = null;
             }
 
-            await RunOnUiThreadAsync(() => m_playerElement.SetMediaPlayer(null));
+            await RunOnUiThreadAsync(() =>
+            {
+                if (m_playerElement == null)
+                {
+                    return;
+                }
+
+                m_playerElement.SetMediaPlayer(null);
+                m_playerHost?.Children.Remove(m_playerElement);
+            });
         }
 
         private void PlaybackSessionOnBufferingStarted(MediaPlaybackSession sender, object args)
@@ -226,13 +245,18 @@ namespace BiliLite.Player.SubPlayers
 
         public override async Task SetRatioMode(int mode)
         {
-            await RunOnUiThreadAsync(() => VideoPlayer.ApplyStretch(m_playerElement, m_realPlayInfo, mode));
+            await RunOnUiThreadAsync(() =>
+            {
+                EnsurePlayerElement();
+                VideoPlayer.ApplyStretch(m_playerElement, m_realPlayInfo, mode);
+            });
         }
 
         public override async Task SetVideoEnable(bool enable)
         {
             await RunOnUiThreadAsync(() =>
             {
+                EnsurePlayerElement();
                 m_playerElement.Visibility = enable ? Visibility.Visible : Visibility.Collapsed;
                 if (!enable)
                 {
@@ -260,7 +284,40 @@ namespace BiliLite.Player.SubPlayers
 
         public override async Task<byte[]> CaptureAsync()
         {
+            EnsurePlayerElement();
             return await VideoPlayer.RenderElementToPngBytesAsync(m_playerElement, 96);
+        }
+
+        private void EnsurePlayerElement()
+        {
+            if (m_playerElement != null)
+            {
+                return;
+            }
+
+            m_playerElement = new MediaPlayerElement
+            {
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Center,
+                Width = double.NaN,
+                Height = double.NaN,
+            };
+        }
+
+        private void AttachPlayerElement()
+        {
+            EnsurePlayerElement();
+            if (m_playerElement.Parent == m_playerHost)
+            {
+                return;
+            }
+
+            if (m_playerElement.Parent is Panel oldParent)
+            {
+                oldParent.Children.Remove(m_playerElement);
+            }
+
+            m_playerHost?.Children.Insert(0, m_playerElement);
         }
 
         private void PlaybackSessionOnPositionChanged(MediaPlaybackSession sender, object args)

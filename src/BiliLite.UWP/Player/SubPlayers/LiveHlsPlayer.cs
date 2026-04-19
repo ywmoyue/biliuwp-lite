@@ -3,6 +3,7 @@ using FFmpegInteropX;
 using System.Threading.Tasks;
 using Windows.Media.Playback;
 using Windows.UI.Core;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using BiliLite.Models.Common.Player;
 using BiliLite.Player.SubPlayers;
@@ -68,6 +69,8 @@ namespace BiliLite.Player
 
         public override double Position => m_mediaPlayer?.PlaybackSession?.Position.TotalSeconds ?? 0;
 
+        public override FrameworkElement PlayerView => m_playerElement;
+
         public override bool IsBuffering => m_mediaPlayer?.PlaybackSession?.PlaybackState == MediaPlaybackState.Buffering;
 
         public override double BufferCache => m_bufferCache;
@@ -108,7 +111,7 @@ namespace BiliLite.Player
             //    default:
             //        throw new ArgumentOutOfRangeException();
             //}
-            EmitError(PlayerError.PlayerErrorCode.UnknownError,"");
+            EmitError(PlayerError.PlayerErrorCode.UnknownError, "");
         }
 
         private void ReloadConfig()
@@ -190,7 +193,7 @@ namespace BiliLite.Player
             var urls = m_realPlayInfo.PlayUrls;
             if (urls.HlsUrls == null && urls.FlvUrls == null)
             {
-                EmitError(PlayerError.PlayerErrorCode.PlayUrlError,"获取播放地址失败", PlayerError.RetryStrategy.NoRetry);
+                EmitError(PlayerError.PlayerErrorCode.PlayUrlError, "获取播放地址失败", PlayerError.RetryStrategy.NoRetry);
             }
 
             var defaultPlayerMode = m_playerConfig.PlayMode;

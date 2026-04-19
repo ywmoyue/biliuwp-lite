@@ -11,15 +11,16 @@ namespace BiliLite.Player.SubPlayers
 {
     public class FlvSYEngineSubPlayer : ISubPlayer
     {
-        private readonly MediaPlayerElement m_playerElement;
+        private readonly Panel m_playerHost;
+        private MediaPlayerElement m_playerElement;
         private MediaPlayer m_mediaPlayer;
         private string m_url;
         private bool m_isBuffering;
         private double m_bufferCache;
 
-        public FlvSYEngineSubPlayer(MediaPlayerElement playerElement)
+        public FlvSYEngineSubPlayer(Panel playerHost)
         {
-            m_playerElement = playerElement;
+            m_playerHost = playerHost;
         }
 
         public override RealPlayerType Type { get; } = RealPlayerType.Native;
@@ -37,6 +38,8 @@ namespace BiliLite.Player.SubPlayers
         }
 
         public override double Position => m_mediaPlayer?.PlaybackSession?.Position.TotalSeconds ?? 0;
+
+        public override FrameworkElement PlayerView => m_playerElement;
 
         public override double Duration
         {
@@ -120,6 +123,8 @@ namespace BiliLite.Player.SubPlayers
 
         public override async Task Play()
         {
+            EnsurePlayerElement();
+            AttachPlayerElement();
             if (m_playerElement.MediaPlayer != m_mediaPlayer)
             {
                 m_playerElement.SetMediaPlayer(m_mediaPlayer);
@@ -181,7 +186,11 @@ namespace BiliLite.Player.SubPlayers
             m_mediaPlayer.PlaybackSession.BufferingProgressChanged -= PlaybackSessionOnBufferingProgressChanged;
             m_mediaPlayer.PlaybackSession.BufferingEnded -= PlaybackSessionOnBufferingEnded;
             m_mediaPlayer.PlaybackSession.PositionChanged -= PlaybackSessionOnPositionChanged;
-            m_playerElement.SetMediaPlayer(null);
+            if (m_playerElement != null)
+            {
+                m_playerElement.SetMediaPlayer(null);
+                m_playerHost?.Children.Remove(m_playerElement);
+            }
             m_mediaPlayer.Dispose();
             m_mediaPlayer = null;
         }
@@ -237,11 +246,13 @@ namespace BiliLite.Player.SubPlayers
 
         public override async Task SetRatioMode(int mode)
         {
+            EnsurePlayerElement();
             VideoPlayer.ApplyStretch(m_playerElement, m_realPlayInfo, mode);
         }
 
         public override async Task SetVideoEnable(bool enable)
         {
+            EnsurePlayerElement();
             m_playerElement.Visibility = enable ? Visibility.Visible : Visibility.Collapsed;
             if (!enable)
             {
@@ -251,7 +262,40 @@ namespace BiliLite.Player.SubPlayers
 
         public override async Task<byte[]> CaptureAsync()
         {
+            EnsurePlayerElement();
             return await VideoPlayer.RenderElementToPngBytesAsync(m_playerElement, 96);
+        }
+
+        private void EnsurePlayerElement()
+        {
+            if (m_playerElement != null)
+            {
+                return;
+            }
+
+            m_playerElement = new MediaPlayerElement
+            {
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Center,
+                Width = double.NaN,
+                Height = double.NaN,
+            };
+        }
+
+        private void AttachPlayerElement()
+        {
+            EnsurePlayerElement();
+            if (m_playerElement.Parent == m_playerHost)
+            {
+                return;
+            }
+
+            if (m_playerElement.Parent is Panel oldParent)
+            {
+                oldParent.Children.Remove(m_playerElement);
+            }
+
+            m_playerHost?.Children.Insert(0, m_playerElement);
         }
 
         private void MediaPlayerOnMediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)

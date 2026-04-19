@@ -5,12 +5,14 @@ using BiliLite.Player.MediaInfos;
 using BiliLite.Player.WebPlayer;
 using BiliLite.Player.WebPlayer.Models;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace BiliLite.Player.SubPlayers
 {
     public class DashShakaSubPlayer : ISubPlayer, ISubWebPlayer
     {
-        private readonly ShakaPlayerControl m_playerControl;
+        private readonly Panel m_playerHost;
+        private ShakaPlayerControl m_playerControl;
         private string m_url;
         private double m_position;
         private bool m_isBuffering;
@@ -18,10 +20,9 @@ namespace BiliLite.Player.SubPlayers
         private bool m_isMuted;
         private double m_duration;
 
-        public DashShakaSubPlayer(ShakaPlayerControl playerControl)
+        public DashShakaSubPlayer(Panel playerHost)
         {
-            m_playerControl = playerControl;
-            InitPlayerEvent();
+            m_playerHost = playerHost;
         }
 
         public override RealPlayerType Type { get; } = RealPlayerType.ShakaPlayer;
@@ -30,11 +31,13 @@ namespace BiliLite.Player.SubPlayers
 
         public override double Volume
         {
-            get => m_playerControl.Volume;
-            set => m_playerControl.SetVolume(value);
+            get => m_playerControl?.Volume ?? 1;
+            set => m_playerControl?.SetVolume(value);
         }
 
         public override double Position => m_position;
+
+        public override FrameworkElement PlayerView => m_playerControl;
 
         public override double Duration => m_duration > 0
             ? m_duration
@@ -78,6 +81,8 @@ namespace BiliLite.Player.SubPlayers
                 return;
             }
 
+            EnsurePlayerControl();
+            AttachPlayerControl();
             m_url = m_realPlayInfo.DashInfo.Video.Url;
             var audioUrl = m_realPlayInfo.DashInfo.Audio?.Url ?? string.Empty;
             await m_playerControl.LoadUrl(m_url, audioUrl, m_realPlayInfo.IsLocal);
@@ -90,38 +95,69 @@ namespace BiliLite.Player.SubPlayers
 
         public override async Task Play()
         {
+            EnsurePlayerControl();
+            AttachPlayerControl();
             await m_playerControl.Resume();
         }
 
         public override async Task Stop()
         {
+            if (m_playerControl == null)
+            {
+                return;
+            }
+
             await m_playerControl.Pause();
+            ReleasePlayerControl();
         }
 
         public override async Task Fault()
         {
+            if (m_playerControl == null)
+            {
+                return;
+            }
+
             await m_playerControl.Pause();
+            ReleasePlayerControl();
         }
 
         public override async Task Pause()
         {
+            if (m_playerControl == null)
+            {
+                return;
+            }
+
             await m_playerControl.Pause();
         }
 
         public override async Task Resume()
         {
+            EnsurePlayerControl();
+            AttachPlayerControl();
             await m_playerControl.Resume();
         }
 
         public override async Task SetRate(double value)
         {
             m_rate = value;
+            if (m_playerControl == null)
+            {
+                return;
+            }
+
             await m_playerControl.SetRate(value);
         }
 
         public override async Task SetPosition(double value)
         {
             m_position = value;
+            if (m_playerControl == null)
+            {
+                return;
+            }
+
             await m_playerControl.Seek(value);
         }
 
@@ -130,16 +166,29 @@ namespace BiliLite.Player.SubPlayers
             await base.SetMuted(muted);
             if (muted)
             {
+                if (m_playerControl == null)
+                {
+                    return;
+                }
+
                 await m_playerControl.SetVolume(0);
                 return;
             }
 
             var volume = m_lastVolumeBeforeMuted <= 0 ? 1 : m_lastVolumeBeforeMuted;
-            await m_playerControl.SetVolume(volume);
+            if (m_playerControl != null)
+            {
+                await m_playerControl.SetVolume(volume);
+            }
         }
 
         public override async Task SetVideoEnable(bool enable)
         {
+            if (m_playerControl == null)
+            {
+                return;
+            }
+
             m_playerControl.Visibility = enable ? Visibility.Visible : Visibility.Collapsed;
             if (!enable)
             {
@@ -149,6 +198,11 @@ namespace BiliLite.Player.SubPlayers
 
         public override async Task<byte[]> CaptureAsync()
         {
+            if (m_playerControl == null)
+            {
+                return null;
+            }
+
             return await m_playerControl.CaptureVideo();
         }
 
@@ -157,6 +211,68 @@ namespace BiliLite.Player.SubPlayers
             m_playerControl.PlayerLoaded += PlayerControlOnPlayerLoaded;
             m_playerControl.Ended += PlayerControlOnEnded;
             m_playerControl.PositionChanged += PlayerControlOnPositionChanged;
+        }
+
+        private void UnInitPlayerEvent()
+        {
+            if (m_playerControl == null)
+            {
+                return;
+            }
+
+            m_playerControl.PlayerLoaded -= PlayerControlOnPlayerLoaded;
+            m_playerControl.Ended -= PlayerControlOnEnded;
+            m_playerControl.PositionChanged -= PlayerControlOnPositionChanged;
+        }
+
+        private void EnsurePlayerControl()
+        {
+            if (m_playerControl != null)
+            {
+                return;
+            }
+
+            m_playerControl = new ShakaPlayerControl
+            {
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch,
+                Width = double.NaN,
+                Height = double.NaN,
+            };
+            InitPlayerEvent();
+        }
+
+        private void AttachPlayerControl()
+        {
+            if (m_playerControl == null)
+            {
+                return;
+            }
+
+            if (m_playerControl.Parent == m_playerHost)
+            {
+                return;
+            }
+
+            if (m_playerControl.Parent is Panel oldParent)
+            {
+                oldParent.Children.Remove(m_playerControl);
+            }
+
+            m_playerHost?.Children.Insert(0, m_playerControl);
+        }
+
+        private void ReleasePlayerControl()
+        {
+            if (m_playerControl == null)
+            {
+                return;
+            }
+
+            UnInitPlayerEvent();
+            m_playerHost?.Children.Remove(m_playerControl);
+            m_playerControl.Dispose();
+            m_playerControl = null;
         }
 
         private void PlayerControlOnPositionChanged(object sender, double e)
