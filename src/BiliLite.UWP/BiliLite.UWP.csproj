@@ -13,7 +13,7 @@
     <LangVersion>latest</LangVersion>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22621.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -162,6 +162,7 @@
     <Compile Include="Player\SubPlayers\Mp4NativeSubPlayer.cs" />
     <Compile Include="Player\SubPlayers\MultiFlvSYEngineSubPlayer.cs" />
     <Compile Include="Player\VideoPlayer.cs" />
+    <Compile Include="Modules\SpBlock\Services\SponsorBlockHttpClientFactory.cs" />
     <Compile Include="Services\BackgroundDownloadOperation.cs" />
     <Compile Include="Services\BackgroundDownloadService.cs" />
     <Compile Include="Services\BackgroundDownloadTask.cs" />
@@ -397,6 +398,14 @@
     <Compile Include="Models\Requests\Api\User\MessageApi.cs" />
     <Compile Include="Modules\ExtraInterface\IPlayerSponsorBlockControl.cs" />
     <Compile Include="Modules\ExtraInterface\ISponsorBlockService.cs" />
+    <Compile Include="Modules\SpBlock\Api\SponsorBlockApi.cs" />
+    <Compile Include="Modules\SpBlock\Controls\PlayerSponsorBlockControl.xaml.cs">
+      <DependentUpon>PlayerSponsorBlockControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\SpBlock\Models\SponsorBlockSegment.cs" />
+    <Compile Include="Modules\SpBlock\Models\SponsorBlockVideo.cs" />
+    <Compile Include="Modules\SpBlock\Services\SponsorBlockService.cs" />
+    <Compile Include="Modules\SpBlock\ViewModels\PlayerSponsorBlockControlViewModel.cs" />
     <Compile Include="Pages\ArticlePage.xaml.cs">
       <DependentUpon>ArticlePage.xaml</DependentUpon>
     </Compile>
@@ -1418,6 +1427,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dialogs\SendDynamicV2Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\SpBlock\Controls\PlayerSponsorBlockControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
