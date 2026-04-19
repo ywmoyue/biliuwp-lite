@@ -1109,7 +1109,8 @@ namespace BiliLite.Controls
             else
             {
                 var showTime = (long)((section.End - section.Start) * 1000);
-                m_playerToastService.Show(toastId, $"跳过{section.SegmentName}？", showTime > 10000 ? 10000 : showTime - 1500, section, true);
+                var toastShowTime = Math.Min(10000, Math.Max(500, showTime - 1500));
+                m_playerToastService.Show(toastId, $"跳过{section.SegmentName}？", toastShowTime, section, true);
             }
         }
 
@@ -1931,11 +1932,16 @@ namespace BiliLite.Controls
         BiliPlayUrlInfo current_quality_info = null;
         BiliDashAudioPlayUrlInfo current_audio_quality_info = null;
 
-        private async Task<bool> ChangeQualityGetPlayUrls(BiliPlayUrlInfo quality, BiliDashAudioPlayUrlInfo soundQuality = null)
+        private async Task<(bool Success, BiliPlayUrlInfo Quality, BiliDashAudioPlayUrlInfo AudioQuality)> ChangeQualityGetPlayUrls(BiliPlayUrlInfo quality, BiliDashAudioPlayUrlInfo soundQuality = null)
         {
+            if (quality == null)
+            {
+                return (false, null, null);
+            }
+
             if (quality.HasPlayUrl)
             {
-                return true;
+                return (true, quality, soundQuality);
             }
             var soundQualityId = soundQuality?.QualityID;
             if (soundQualityId == null)
@@ -1946,15 +1952,28 @@ namespace BiliLite.Controls
             if (!info.Success)
             {
                 await NotificationShowExtensions.ShowMessageDialog(info.Message, "切换清晰度失败");
-                return false;
+                return (false, quality, soundQuality);
             }
             if (!info.CurrentQuality.HasPlayUrl)
             {
                 await NotificationShowExtensions.ShowMessageDialog("无法读取到播放地址，试试换个清晰度?", "播放失败");
-                return false;
+                return (false, quality, soundQuality);
             }
-            quality = info.CurrentQuality;
-            return true;
+
+            var resolvedQuality = info.CurrentQuality;
+            var resolvedAudioQuality = soundQuality;
+            if (resolvedQuality?.DashInfo?.Audio != null && soundQuality != null)
+            {
+                // Keep the user's chosen audio track after refreshing play URLs.
+                var matchedAudio = info.AudioQualites?.Find(x => x?.QualityID == soundQuality.QualityID);
+                resolvedAudioQuality = matchedAudio ?? info.CurrentAudioQuality ?? soundQuality;
+                if (resolvedAudioQuality?.Audio != null)
+                {
+                    resolvedQuality.DashInfo.Audio = resolvedAudioQuality.Audio;
+                }
+            }
+
+            return (true, resolvedQuality, resolvedAudioQuality);
         }
 
         private async Task ChangeQualityPlayLocalVideo(BiliDashPlayUrlInfo dashInfo)
@@ -2054,12 +2073,18 @@ namespace BiliLite.Controls
             {
                 quality.DashInfo.Audio = soundQuality.Audio;
             }
-            current_quality_info = quality;
-            current_audio_quality_info = soundQuality;
-            if (!await ChangeQualityGetPlayUrls(quality, soundQuality))
+
+            var resolved = await ChangeQualityGetPlayUrls(quality, soundQuality);
+            if (!resolved.Success)
             {
                 return;
             }
+
+            quality = resolved.Quality;
+            soundQuality = resolved.AudioQuality;
+            current_quality_info = quality;
+            current_audio_quality_info = soundQuality;
+
             var result = await ChangeQualityPlayVideo(quality, soundQuality);
             if (result.result)
             {
@@ -2992,7 +3017,17 @@ namespace BiliLite.Controls
 
         private void PlayerController_MediaInfosUpdated(object sender, MediaInfo e)
         {
-            txtInfo.Text = e?.ToString() ?? string.Empty;
+            var text = e?.ToString() ?? string.Empty;
+            if (Dispatcher.HasThreadAccess)
+            {
+                txtInfo.Text = text;
+                return;
+            }
+
+            _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                txtInfo.Text = text;
+            });
         }
 
         private async Task HandlePlaybackEndedAsync()

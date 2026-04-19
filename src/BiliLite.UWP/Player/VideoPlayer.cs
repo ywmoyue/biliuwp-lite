@@ -34,6 +34,7 @@ namespace BiliLite.Player
         private readonly PlayerConfig m_playerConfig;
         private readonly BasePlayerController m_playerController;
         private readonly Panel m_playerHost;
+        private readonly MediaPlayerElement m_nativePlayerElement;
         private readonly List<RealPlayerType> m_triedPlayers = new();
         private readonly object m_bufferLock = new();
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
@@ -61,8 +62,48 @@ namespace BiliLite.Player
             m_playerConfig = playerConfig;
             m_playerHost = playerHost;
             m_playerController = playerController;
+            m_nativePlayerElement = EnsureNativePlayerElement(playerHost);
             m_subPlayer = CreateSubPlayer(m_playerConfig.PlayerType, null);
             InitPlayerEvents(m_subPlayer);
+        }
+
+        private static MediaPlayerElement EnsureNativePlayerElement(Panel playerHost)
+        {
+            if (playerHost == null)
+            {
+                return null;
+            }
+
+            foreach (var child in playerHost.Children)
+            {
+                if (child is MediaPlayerElement existed)
+                {
+                    existed.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    existed.VerticalAlignment = VerticalAlignment.Stretch;
+                    existed.Width = double.NaN;
+                    existed.Height = double.NaN;
+                    return existed;
+                }
+            }
+
+            var element = new MediaPlayerElement
+            {
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch,
+                Width = double.NaN,
+                Height = double.NaN,
+            };
+
+            try
+            {
+                playerHost.Children.Insert(0, element);
+            }
+            catch
+            {
+                playerHost.Children.Add(element);
+            }
+
+            return element;
         }
 
         public BaseWebPlayer WebPlayer
@@ -421,7 +462,7 @@ namespace BiliLite.Player
                 return playerType switch
                 {
                     RealPlayerType.ShakaPlayer => new DashShakaSubPlayer(m_playerHost),
-                    RealPlayerType.Native => new DashNativeSubPlayer(m_playerHost),
+                    RealPlayerType.Native => new DashNativeSubPlayer(m_playerHost, m_nativePlayerElement),
                     RealPlayerType.FFmpegInterop => new DashFFmpegInteropSubPlayer(m_playerHost),
                     _ => new DashShakaSubPlayer(m_playerHost),
                 };
@@ -430,7 +471,7 @@ namespace BiliLite.Player
             return playerType switch
             {
                 RealPlayerType.ShakaPlayer => new DashShakaSubPlayer(m_playerHost),
-                RealPlayerType.Native => new Mp4NativeSubPlayer(m_playerHost),
+                RealPlayerType.Native => new Mp4NativeSubPlayer(m_playerHost, m_nativePlayerElement),
                 RealPlayerType.FFmpegInterop => new FlvFFmpegInteropSubPlayer(m_playerHost),
                 _ => new FlvFFmpegInteropSubPlayer(m_playerHost),
             };
@@ -816,7 +857,14 @@ namespace BiliLite.Player
                 {
                     _logger.Info(
                         $"VideoPlayer.SubPlayer_MediaOpened: attach media player early, subPlayer={m_subPlayer?.GetType().Name}, type={m_subPlayer?.Type}");
-                    await m_subPlayer.Play();
+                    try
+                    {
+                        await m_subPlayer.Play();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Warn($"VideoPlayer.SubPlayer_MediaOpened early Play failed: {ex.Message}");
+                    }
                 }
 
                 await m_playerController.PlayState.Buff();
