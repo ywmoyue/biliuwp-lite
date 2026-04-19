@@ -10,7 +10,6 @@ using Windows.Media;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Media.Streaming.Adaptive;
-using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -23,6 +22,7 @@ namespace BiliLite.Player.SubPlayers
     {
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly Panel m_playerHost;
+        private readonly bool m_useSharedPlayerElement;
         private MediaPlayerElement m_playerElement;
         private MediaPlayer m_mediaPlayer;
         private MediaPlayer m_audioPlayer;
@@ -33,9 +33,14 @@ namespace BiliLite.Player.SubPlayers
         private double m_volume = 1;
         private bool m_isMuted;
 
-        public DashNativeSubPlayer(Panel playerHost)
+        public DashNativeSubPlayer(Panel playerHost, MediaPlayerElement sharedPlayerElement = null)
         {
             m_playerHost = playerHost;
+            if (sharedPlayerElement != null)
+            {
+                m_playerElement = sharedPlayerElement;
+                m_useSharedPlayerElement = true;
+            }
         }
 
         public override RealPlayerType Type { get; } = RealPlayerType.Native;
@@ -129,7 +134,7 @@ namespace BiliLite.Player.SubPlayers
             m_url = m_realPlayInfo.DashInfo.Video.Url;
             _logger.Info(
                 $"DashNative.Load start: isLocal={m_realPlayInfo?.IsLocal}, videoUrl={SanitizeUrl(m_realPlayInfo?.DashInfo?.Video?.Url)}, audioUrl={SanitizeUrl(m_realPlayInfo?.DashInfo?.Audio?.Url)}");
-            await StopCore();
+            await StopCore(detachElement: false);
 
             var audioUrl = m_realPlayInfo.DashInfo.Audio?.Url;
             var shouldUseDualPlayers = !string.IsNullOrWhiteSpace(audioUrl)
@@ -291,7 +296,12 @@ namespace BiliLite.Player.SubPlayers
                 EnsurePlayerElement();
                 _logger.Info(
                     $"DashNative.Play: elementHasPlayer={m_playerElement.MediaPlayer != null}, samePlayer={ReferenceEquals(m_playerElement.MediaPlayer, m_mediaPlayer)}, hasAudioPlayer={m_audioPlayer != null}, visibility={m_playerElement.Visibility}, width={m_playerElement.ActualWidth}, height={m_playerElement.ActualHeight}");
-                AttachPlayerElement();
+                if (!AttachPlayerElement())
+                {
+                    _logger.Warn("DashNative.Play: attach player element failed, skip this play cycle");
+                    return;
+                }
+
                 if (m_playerElement.MediaPlayer != m_mediaPlayer)
                 {
                     m_playerElement.SetMediaPlayer(m_mediaPlayer);
@@ -320,12 +330,12 @@ namespace BiliLite.Player.SubPlayers
 
         public override async Task Stop()
         {
-            await StopCore();
+            await StopCore(detachElement: !m_useSharedPlayerElement);
         }
 
         public override async Task Fault()
         {
-            await StopCore();
+            await StopCore(detachElement: !m_useSharedPlayerElement);
         }
 
         public override async Task Pause()
@@ -344,7 +354,12 @@ namespace BiliLite.Player.SubPlayers
             await RunOnUiThreadAsync(() =>
             {
                 EnsurePlayerElement();
-                AttachPlayerElement();
+                if (!AttachPlayerElement())
+                {
+                    _logger.Warn("DashNative.Resume: attach player element failed, skip resume bind");
+                    return;
+                }
+
                 if (m_playerElement.MediaPlayer != m_mediaPlayer)
                 {
                     m_playerElement.SetMediaPlayer(m_mediaPlayer);
@@ -397,7 +412,7 @@ namespace BiliLite.Player.SubPlayers
             }
         }
 
-        private async Task StopCore()
+        private async Task StopCore(bool detachElement = true)
         {
             var hasTimelineController = m_timelineController != null;
             if (m_timelineController != null)
@@ -460,7 +475,19 @@ namespace BiliLite.Player.SubPlayers
                 }
 
                 m_playerElement.SetMediaPlayer(null);
-                m_playerHost?.Children.Remove(m_playerElement);
+                if (!detachElement)
+                {
+                    return;
+                }
+
+                try
+                {
+                    m_playerHost?.Children.Remove(m_playerElement);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn($"DashNative.StopCore remove element failed: {ex.Message}");
+                }
             });
         }
 
@@ -578,20 +605,59 @@ namespace BiliLite.Player.SubPlayers
             };
         }
 
-        private void AttachPlayerElement()
+        private bool AttachPlayerElement()
         {
             EnsurePlayerElement();
-            if (m_playerElement.Parent == m_playerHost)
+            if (m_playerHost == null)
             {
-                return;
+                return false;
+            }
+
+            if (m_playerElement.Parent == m_playerHost || m_playerHost.Children.Contains(m_playerElement))
+            {
+                return true;
+            }
+
+            if (m_useSharedPlayerElement)
+            {
+                _logger.Warn("DashNative.AttachPlayerElement shared element missing from host; skip dynamic insert");
+                return false;
             }
 
             if (m_playerElement.Parent is Panel oldParent)
             {
-                oldParent.Children.Remove(m_playerElement);
+                try
+                {
+                    oldParent.Children.Remove(m_playerElement);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn($"DashNative.AttachPlayerElement remove old parent failed: {ex.Message}");
+                }
             }
 
-            m_playerHost?.Children.Insert(0, m_playerElement);
+            try
+            {
+                m_playerHost.Children.Insert(0, m_playerElement);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn($"DashNative.AttachPlayerElement Insert failed, fallback to Add: {ex.Message}");
+                try
+                {
+                    if (!m_playerHost.Children.Contains(m_playerElement))
+                    {
+                        m_playerHost.Children.Add(m_playerElement);
+                    }
+                    return m_playerElement.Parent == m_playerHost || m_playerHost.Children.Contains(m_playerElement);
+                }
+                catch (Exception addEx)
+                {
+                    _logger.Warn($"DashNative.AttachPlayerElement fallback Add failed: {addEx.Message}");
+                    return false;
+                }
+            }
         }
 
         private async Task LoadDashWithDualPlayersAsync()
@@ -721,14 +787,14 @@ namespace BiliLite.Player.SubPlayers
             return result;
         }
 
-        private static async Task RunOnUiThreadAsync(Action action)
+        private async Task RunOnUiThreadAsync(Action action)
         {
             if (action == null)
             {
                 return;
             }
 
-            var dispatcher = CoreApplication.MainView?.CoreWindow?.Dispatcher;
+            var dispatcher = m_playerHost?.Dispatcher ?? m_playerElement?.Dispatcher;
             if (dispatcher == null)
             {
                 action();
@@ -744,7 +810,7 @@ namespace BiliLite.Player.SubPlayers
             await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
         }
 
-        private static async Task RunOnUiThreadAsync(Func<Task> action)
+        private async Task RunOnUiThreadAsync(Func<Task> action)
         {
             if (action == null)
             {

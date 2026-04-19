@@ -15,15 +15,21 @@ namespace BiliLite.Player.SubPlayers
     {
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly Panel m_playerHost;
+        private readonly bool m_useSharedPlayerElement;
         private MediaPlayerElement m_playerElement;
         private MediaPlayer m_mediaPlayer;
         private string m_url;
         private bool m_isBuffering;
         private double m_bufferCache;
 
-        public Mp4NativeSubPlayer(Panel playerHost)
+        public Mp4NativeSubPlayer(Panel playerHost, MediaPlayerElement sharedPlayerElement = null)
         {
             m_playerHost = playerHost;
+            if (sharedPlayerElement != null)
+            {
+                m_playerElement = sharedPlayerElement;
+                m_useSharedPlayerElement = true;
+            }
         }
 
         public override RealPlayerType Type { get; } = RealPlayerType.Native;
@@ -99,7 +105,7 @@ namespace BiliLite.Player.SubPlayers
 
             m_url = m_realPlayInfo.SingleUrl;
             _logger.Info($"Mp4Native.Load start: isLocal={m_realPlayInfo?.IsLocal}, url={SanitizeUrl(m_url)}");
-            await StopCore();
+            await StopCore(detachElement: false);
 
             m_mediaPlayer = new MediaPlayer();
             m_mediaPlayer.AutoPlay = m_realPlayInfo?.IsAutoPlay == true;
@@ -138,7 +144,12 @@ namespace BiliLite.Player.SubPlayers
             EnsurePlayerElement();
             _logger.Info(
                 $"Mp4Native.Play: elementHasPlayer={m_playerElement.MediaPlayer != null}, samePlayer={ReferenceEquals(m_playerElement.MediaPlayer, m_mediaPlayer)}, visibility={m_playerElement.Visibility}, width={m_playerElement.ActualWidth}, height={m_playerElement.ActualHeight}");
-            AttachPlayerElement();
+            if (!AttachPlayerElement())
+            {
+                _logger.Warn("Mp4Native.Play: attach player element failed, skip this play cycle");
+                return;
+            }
+
             if (m_playerElement.MediaPlayer != m_mediaPlayer)
             {
                 m_playerElement.SetMediaPlayer(m_mediaPlayer);
@@ -151,12 +162,12 @@ namespace BiliLite.Player.SubPlayers
 
         public override async Task Stop()
         {
-            await StopCore();
+            await StopCore(detachElement: !m_useSharedPlayerElement);
         }
 
         public override async Task Fault()
         {
-            await StopCore();
+            await StopCore(detachElement: !m_useSharedPlayerElement);
         }
 
         public override async Task Pause()
@@ -186,7 +197,7 @@ namespace BiliLite.Player.SubPlayers
             }
         }
 
-        private async Task StopCore()
+        private async Task StopCore(bool detachElement = true)
         {
             if (m_mediaPlayer == null)
             {
@@ -206,7 +217,17 @@ namespace BiliLite.Player.SubPlayers
             if (m_playerElement != null)
             {
                 m_playerElement.SetMediaPlayer(null);
-                m_playerHost?.Children.Remove(m_playerElement);
+                if (detachElement)
+                {
+                    try
+                    {
+                        m_playerHost?.Children.Remove(m_playerElement);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Warn($"Mp4Native.StopCore remove element failed: {ex.Message}");
+                    }
+                }
             }
             m_mediaPlayer.Dispose();
             m_mediaPlayer = null;
@@ -321,20 +342,59 @@ namespace BiliLite.Player.SubPlayers
             };
         }
 
-        private void AttachPlayerElement()
+        private bool AttachPlayerElement()
         {
             EnsurePlayerElement();
-            if (m_playerElement.Parent == m_playerHost)
+            if (m_playerHost == null)
             {
-                return;
+                return false;
+            }
+
+            if (m_playerElement.Parent == m_playerHost || m_playerHost.Children.Contains(m_playerElement))
+            {
+                return true;
+            }
+
+            if (m_useSharedPlayerElement)
+            {
+                _logger.Warn("Mp4Native.AttachPlayerElement shared element missing from host; skip dynamic insert");
+                return false;
             }
 
             if (m_playerElement.Parent is Panel oldParent)
             {
-                oldParent.Children.Remove(m_playerElement);
+                try
+                {
+                    oldParent.Children.Remove(m_playerElement);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn($"Mp4Native.AttachPlayerElement remove old parent failed: {ex.Message}");
+                }
             }
 
-            m_playerHost?.Children.Insert(0, m_playerElement);
+            try
+            {
+                m_playerHost.Children.Insert(0, m_playerElement);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn($"Mp4Native.AttachPlayerElement Insert failed, fallback to Add: {ex.Message}");
+                try
+                {
+                    if (!m_playerHost.Children.Contains(m_playerElement))
+                    {
+                        m_playerHost.Children.Add(m_playerElement);
+                    }
+                    return m_playerElement.Parent == m_playerHost || m_playerHost.Children.Contains(m_playerElement);
+                }
+                catch (Exception addEx)
+                {
+                    _logger.Warn($"Mp4Native.AttachPlayerElement fallback Add failed: {addEx.Message}");
+                    return false;
+                }
+            }
         }
 
         private static string SanitizeUrl(string url)
