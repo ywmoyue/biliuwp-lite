@@ -1109,7 +1109,8 @@ namespace BiliLite.Controls
             else
             {
                 var showTime = (long)((section.End - section.Start) * 1000);
-                m_playerToastService.Show(toastId, $"跳过{section.SegmentName}？", showTime > 10000 ? 10000 : showTime - 1500, section, true);
+                var toastShowTime = Math.Min(10000, Math.Max(500, showTime - 1500));
+                m_playerToastService.Show(toastId, $"跳过{section.SegmentName}？", toastShowTime, section, true);
             }
         }
 
