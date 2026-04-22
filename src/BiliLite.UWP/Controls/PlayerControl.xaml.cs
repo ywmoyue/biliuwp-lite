@@ -133,7 +133,7 @@ namespace BiliLite.Controls
         /// </summary>
         public int CurrentPlayIndex { get; set; }
 
-        public bool IsPlaying => GetCurrentPlayState() == PlayState.Playing || GetCurrentPlayState() == PlayState.End;
+        public bool IsPlaying => GetCurrentPlayState() == PlayState.Playing;
 
         /// <summary>
         /// 当前播放
@@ -3473,10 +3473,13 @@ namespace BiliLite.Controls
 
         public async Task Play()
         {
-            // 播放结束后再次播放应从进度0开始
-            if (GetCurrentPlayState() == PlayState.End)
+            // Stop/Idle 时底层可能已释放媒体源，播放前需先重新 Load。
+            var playState = m_playerController?.PlayState;
+            var needReload = playState?.IsStopped == true || playState?.IsIdle == true;
+            if (needReload)
             {
                 SetPosition(0);
+                await m_playerController.PlayState.Load();
             }
 
             if (!m_firstMediaPlayed)
