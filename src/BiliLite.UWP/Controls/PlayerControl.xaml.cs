@@ -81,6 +81,7 @@ namespace BiliLite.Controls
         private bool m_ignoreNextStoppedState;
         private bool m_newPlayerBuffering;
         private double m_newPlayerBufferCache;
+        private bool m_isDisposing;
         private double m_pendingSeekPosition = -1;
         private DateTime m_lastBufferingUiUpdateAt = DateTime.MinValue;
         private static readonly TimeSpan BufferingUiUpdateInterval = TimeSpan.FromMilliseconds(120);
@@ -1125,7 +1126,9 @@ namespace BiliLite.Controls
             subtitleTimer?.Stop();
             subtitleTimer = null;
             Pause();
+            m_ignoreNextStoppedState = true;
             await m_playerController.PlayState.Stop();
+            m_ignoreNextStoppedState = false;
 
             m_autoRefreshTimer?.Stop();
 
@@ -2868,6 +2871,11 @@ namespace BiliLite.Controls
 
             if (e.NewState.IsPlaying)
             {
+                // Ensure stale buffering overlay is cleared when playback is confirmed.
+                m_newPlayerBuffering = false;
+                m_newPlayerBufferCache = 0;
+                RefreshBufferingUi(force: true);
+
                 if (m_pendingSeekPosition >= 0)
                 {
                     var seek = m_pendingSeekPosition;
@@ -2895,9 +2903,15 @@ namespace BiliLite.Controls
 
             if (e.NewState.IsStopped)
             {
+                m_newPlayerBuffering = false;
+                m_newPlayerBufferCache = 0;
+                RefreshBufferingUi(force: true);
                 Player_PlayStateChanged(this, PlayState.End);
 
-                if (e.OldState?.IsPlaying == true)
+                var shouldHandleEnded = !m_isDisposing &&
+                                        (e.OldState?.IsPlaying == true || e.OldState?.IsBuffering == true);
+                _logger.Debug($"Stopped事件: shouldHandleEnded={shouldHandleEnded}, disposing={m_isDisposing}, ignoreNextStop={m_ignoreNextStoppedState}, old={{loading:{e.OldState?.IsLoading},playing:{e.OldState?.IsPlaying},buffering:{e.OldState?.IsBuffering},stopped:{e.OldState?.IsStopped}}}");
+                if (shouldHandleEnded)
                 {
                     _ = HandlePlaybackEndedAsync();
                 }
@@ -2906,6 +2920,9 @@ namespace BiliLite.Controls
 
             if (e.NewState.IsFault)
             {
+                m_newPlayerBuffering = false;
+                m_newPlayerBufferCache = 0;
+                RefreshBufferingUi(force: true);
                 Player_PlayStateChanged(this, PlayState.Error);
             }
         }
@@ -3243,50 +3260,58 @@ namespace BiliLite.Controls
         public async void Dispose()
         {
             _logger.Trace("Dispose PlayerControl");
-            if (CurrentPlayItem != null)
+            m_isDisposing = true;
+            try
             {
-                var currentPosition = GetCurrentPosition();
-                SettingService.SetValue<double>(CurrentPlayItem.season_id != 0 ? "ep" + CurrentPlayItem.ep_id : CurrentPlayItem.cid, currentPosition);
-                //当视频播放结束的话，Position为0
-                if (GetCurrentPlayState() != PlayState.End)
-                    await ReportHistory(currentPosition);
-            }
+                if (CurrentPlayItem != null)
+                {
+                    var currentPosition = GetCurrentPosition();
+                    SettingService.SetValue<double>(CurrentPlayItem.season_id != 0 ? "ep" + CurrentPlayItem.ep_id : CurrentPlayItem.cid, currentPosition);
+                    //当视频播放结束的话，Position为0
+                    if (GetCurrentPlayState() != PlayState.End)
+                        await ReportHistory(currentPosition);
+                }
 
-            if (m_playerController?.PlayState != null &&
-                (m_playerController.PlayState.IsPlaying || m_playerController.PlayState.IsBuffering || m_playerController.PlayState.IsLoading))
-            {
-                await m_playerController.PlayState.Stop();
-            }
+                if (m_playerController?.PlayState != null &&
+                    (m_playerController.PlayState.IsPlaying || m_playerController.PlayState.IsBuffering || m_playerController.PlayState.IsLoading))
+                {
+                    await m_playerController.PlayState.Stop();
+                }
 
-            UnHookVideoPlayerEvents();
-            if (m_videoPlayer != null)
-            {
-                await m_videoPlayer.UnLoad();
-                m_videoPlayer = null;
-            }
+                UnHookVideoPlayerEvents();
+                if (m_videoPlayer != null)
+                {
+                    await m_videoPlayer.UnLoad();
+                    m_videoPlayer = null;
+                }
 
-            m_playerController?.Dispose();
+                m_playerController?.Dispose();
 
-            if (danmuTimer != null)
-            {
-                danmuTimer.Stop();
-                danmuTimer = null;
-            }
-            if (m_positionTimer != null)
-            {
-                m_positionTimer.Stop();
-                m_positionTimer = null;
-            }
+                if (danmuTimer != null)
+                {
+                    danmuTimer.Stop();
+                    danmuTimer = null;
+                }
+                if (m_positionTimer != null)
+                {
+                    m_positionTimer.Stop();
+                    m_positionTimer = null;
+                }
 
-            if (m_autoRefreshTimer != null)
-            {
-                m_autoRefreshTimer.Stop();
-                m_autoRefreshTimer = null;
+                if (m_autoRefreshTimer != null)
+                {
+                    m_autoRefreshTimer.Stop();
+                    m_autoRefreshTimer = null;
+                }
+                danmakuPool = null;
+                if (dispRequest != null)
+                {
+                    dispRequest = null;
+                }
             }
-            danmakuPool = null;
-            if (dispRequest != null)
+            finally
             {
-                dispRequest = null;
+                m_isDisposing = false;
             }
         }
 
