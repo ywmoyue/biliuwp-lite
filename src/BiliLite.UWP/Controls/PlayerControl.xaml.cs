@@ -2859,6 +2859,8 @@ namespace BiliLite.Controls
                         m_viewModel.Duration = duration;
                     });
                 }
+                // 在首次离开 Loading 时尽早恢复历史进度，避免 Native 开始播放后回到 0 秒。
+                ApplyPendingSeekIfNeeded();
             }
 
             if (e.NewState.IsBuffering)
@@ -2876,26 +2878,7 @@ namespace BiliLite.Controls
                 m_newPlayerBufferCache = 0;
                 RefreshBufferingUi(force: true);
 
-                if (m_pendingSeekPosition >= 0)
-                {
-                    var seek = m_pendingSeekPosition;
-                    m_pendingSeekPosition = -1;
-
-                    // 自动续播时同样需要同步 ViewModel。
-                    // 这里可能在后台线程回调，必须切回 UI 线程再更新绑定源。
-                    if (Dispatcher.HasThreadAccess)
-                    {
-                        m_viewModel.Position = seek;
-                    }
-                    else
-                    {
-                        _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-                        {
-                            m_viewModel.Position = seek;
-                        });
-                    }
-                    _ = m_videoPlayer.SetPosition(seek);
-                }
+                ApplyPendingSeekIfNeeded();
 
                 Player_PlayStateChanged(this, m_playerController.PauseState.IsPaused ? PlayState.Pause : PlayState.Playing);
                 return;
@@ -2925,6 +2908,31 @@ namespace BiliLite.Controls
                 RefreshBufferingUi(force: true);
                 Player_PlayStateChanged(this, PlayState.Error);
             }
+        }
+
+        private void ApplyPendingSeekIfNeeded()
+        {
+            if (m_pendingSeekPosition < 0)
+            {
+                return;
+            }
+
+            var seek = m_pendingSeekPosition;
+            m_pendingSeekPosition = -1;
+
+            if (Dispatcher.HasThreadAccess)
+            {
+                m_viewModel.Position = seek;
+            }
+            else
+            {
+                _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    m_viewModel.Position = seek;
+                });
+            }
+
+            _ = m_videoPlayer.SetPosition(seek);
         }
 
         private void PlayerController_PauseStateChanged(object sender, BiliLite.Player.States.PauseStates.PauseStateChangedEventArgs e)
@@ -3503,7 +3511,12 @@ namespace BiliLite.Controls
             var needReload = playState?.IsStopped == true || playState?.IsIdle == true;
             if (needReload)
             {
-                SetPosition(0);
+                // 仅在没有待恢复进度时才回到 0 秒，避免覆盖历史续播位置。
+                if (m_pendingSeekPosition < 0)
+                {
+                    SetPosition(0);
+                }
+
                 await m_playerController.PlayState.Load();
             }
 
