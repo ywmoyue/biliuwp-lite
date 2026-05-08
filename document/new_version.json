@@ -1,7 +1,7 @@
 {
-  "version": "4.8.12",
-  "version_num": 40812,
-  "version_desc": "更新内容:\r\n\r\n- 抽象下载器实现代码，以便于后续或其他版本更换不同下载器实现 \r\n\r\n- 评论区字体大小可设置 \r\n\r\n- 首页推荐页支持自定义元素宽度 \r\n\r\n- 优化播放器回落机制  \r\n\r\n- 更新动态专栏接口，修复首页动态页专栏tab内容不正常问题 \r\n\r\n- 修复番剧详情页选季问题 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.8.14",
+  "version_num": 40814,
+  "version_desc": "更新内容:\r\n\r\n- 为历史记录、稍后再看、下载完成页面添加多选删除功能  \r\n\r\n- 推荐页、搜索页、用户页添加拉黑用户功能 \r\n\r\n- 适配win10平板模式返回键  \r\n\r\n- 降低最低支持Windows版本 18362\r\n\r\n- 实现动态磁贴更新：启动时展示UP主头像及视频封面 \r\n\r\n- 空降助手数据加载流程修复，且忽略请求证书错误 \r\n\r\n- 修复繁体字幕转简体开关失灵  \r\n\r\n- 修复单窗口模式下直播 WebView 播放器资源未释放导致的持续 CPU/GPU/网络占用  \r\n\r\n \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }

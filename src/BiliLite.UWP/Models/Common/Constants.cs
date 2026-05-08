@@ -22,8 +22,8 @@
         /// </summary>
         public const string COMMENT_SPECIAL_TEXT_REGULAR = @"\[(.*?)\]|https?:\/\/\S+|http?:\/\/\S+|\p{Cs}";
 
-        public const string CHROME_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36";
-        
+        public const string CHROME_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36";
+
         public const string IOS_USER_AGENT = "bili-universal/75200100 CFNetwork/1.0 Darwin/23.0.0 os/ios model/iPad Air 3G mobi_app/iphone build/75200100 osVer/17.0.3 network/2 channel/AppStore";
 
         public const string ANDROID_USER_AGENT = CHROME_USER_AGENT;

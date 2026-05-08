@@ -39,7 +39,7 @@ namespace BiliLite.ViewModels.Settings
 
         public bool ShowCustomCDNDelay => CustomCDNDelay > 0;
 
-        [AlsoNotifyFor(nameof(ShowCustomCDNDelay),nameof(ShowCustomCDNTimeOut))]
+        [AlsoNotifyFor(nameof(ShowCustomCDNDelay), nameof(ShowCustomCDNTimeOut))]
         public long CustomCDNDelay { get; set; }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace BiliLite.ViewModels.Settings
             {
                 var res = await testUrl.WithHeader(
                         "user-agent",
-                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36")
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36")
                     .WithTimeout(2).GetAsync();
             }
             catch (FlurlHttpException ex)
