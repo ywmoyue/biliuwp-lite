@@ -125,6 +125,7 @@ namespace BiliLite.Controls
 
         public event EventHandler<int> ChangeEpisodeEvent;
         public event EventHandler<PlayState> PlayStateChanged;
+        public event EventHandler<PlayStateChangedEventArgs> PlayStateChangedV2;
         /// <summary>
         /// 播放列表
         /// </summary>
@@ -2822,6 +2823,8 @@ namespace BiliLite.Controls
 
         private void PlayerController_PlayStateChanged(object sender, PlayStateChangedEventArgs e)
         {
+            PlayStateChangedV2?.Invoke(this, e);
+
             if (Dispatcher.HasThreadAccess)
             {
                 m_viewModel.CurrentPlayState = e.NewState;

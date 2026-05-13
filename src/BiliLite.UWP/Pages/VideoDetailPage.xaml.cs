@@ -10,6 +10,7 @@ using BiliLite.Models.Download;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Modules;
 using BiliLite.Modules.User;
+using BiliLite.Player.States.PlayStates;
 using BiliLite.Services;
 using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels.Video;
@@ -18,6 +19,7 @@ using Microsoft.UI.Xaml.Controls;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -45,6 +47,8 @@ namespace BiliLite.Pages
         private VideoListView m_videoListView;
         private readonly WatchLaterViewModel m_watchLaterViewModel;
         private bool m_loadUgcSeasonData = false;
+        private readonly Stopwatch m_openToPlayingStopwatch = new Stopwatch();
+        private bool m_hasLoggedOpenToPlaying;
 
         public VideoDetailPage()
         {
@@ -52,6 +56,7 @@ namespace BiliLite.Pages
             Title = "视频详情";
             this.Loaded += VideoDetailPage_Loaded;
             this.Player = this.player;
+            this.player.PlayStateChangedV2 += PlayerControl_PlayStateChangedV2;
             NavigationCacheMode = NavigationCacheMode.Enabled;
             m_viewModel = new VideoDetailPageViewModel();
             m_watchLaterViewModel = App.ServiceProvider.GetRequiredService<WatchLaterViewModel>();
@@ -84,6 +89,7 @@ namespace BiliLite.Pages
         {
             Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
+                ResetOpenToPlayingWatch();
                 logger.Trace("VideoDetailPage: 释放并重置 ViewModel 状态");
                 if (m_viewModel != null)
                 {
@@ -117,6 +123,7 @@ namespace BiliLite.Pages
 
             if (e.NavigationMode == NavigationMode.New)
             {
+                StartOpenToPlayingWatch();
                 if (SettingService.GetValue<bool>(SettingConstants.Player.AUTO_FULL_SCREEN, false))
                 {
                     player.IsFullScreen = true;
@@ -221,6 +228,7 @@ namespace BiliLite.Pages
             }
             if (m_viewModel.VideoInfo == null)
             {
+                ResetOpenToPlayingWatch();
                 flag = false;
                 return;
             }
@@ -242,6 +250,7 @@ namespace BiliLite.Pages
                 var result = await MessageCenter.HandelSeasonID(m_viewModel.VideoInfo.RedirectUrl);
                 if (!string.IsNullOrEmpty(result))
                 {
+                    ResetOpenToPlayingWatch();
                     this.Frame.Navigate(typeof(SeasonDetailPage), result);
                     //从栈中移除当前页面的历史
                     this.Frame.BackStack.Remove(this.Frame.BackStack.FirstOrDefault(x => x.SourcePageType == this.GetType()));
@@ -518,6 +527,30 @@ namespace BiliLite.Pages
                     SettingService.GetValue<double>(SettingConstants.UI.RIGHT_DETAIL_WIDTH, 320), GridUnitType.Pixel);
                 BottomInfo.Height = GridLength.Auto;
             }
+        }
+
+        private void PlayerControl_PlayStateChangedV2(object sender, PlayStateChangedEventArgs e)
+        {
+            if (!e.NewState.IsPlaying || m_hasLoggedOpenToPlaying || !m_openToPlayingStopwatch.IsRunning)
+            {
+                return;
+            }
+
+            m_openToPlayingStopwatch.Stop();
+            m_hasLoggedOpenToPlaying = true;
+            logger.Info($"VideoDetailPage: 页面打开到进入播放中耗时 {m_openToPlayingStopwatch.ElapsedMilliseconds}ms, aid={avid}, bvid={bvid}, id={_id}");
+        }
+
+        private void StartOpenToPlayingWatch()
+        {
+            m_hasLoggedOpenToPlaying = false;
+            m_openToPlayingStopwatch.Restart();
+        }
+
+        private void ResetOpenToPlayingWatch()
+        {
+            m_openToPlayingStopwatch.Reset();
+            m_hasLoggedOpenToPlaying = false;
         }
 
         private void PlayerControl_FullWindowEvent(object sender, bool e)
