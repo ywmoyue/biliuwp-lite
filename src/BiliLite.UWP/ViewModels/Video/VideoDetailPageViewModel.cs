@@ -43,6 +43,10 @@ namespace BiliLite.Modules
         private readonly IMapper m_mapper;
         private readonly ThemeService m_themeService;
         private readonly ISponsorBlockService m_sponsorBlockService;
+        private string m_deferredDetailId;
+        private bool m_deferredDetailIsBvid;
+        private bool m_needDeferredAttentionUp;
+        private bool m_deferredDetailLoaded;
 
         #endregion
 
@@ -276,6 +280,10 @@ namespace BiliLite.Modules
             try
             {
                 if (id.Length == 0) { throw new ArgumentException(nameof(id)); }
+                m_deferredDetailId = id;
+                m_deferredDetailIsBvid = isbvid;
+                m_needDeferredAttentionUp = false;
+                m_deferredDetailLoaded = false;
                 Loaded = false;
                 Loading = true;
                 ShowError = false;
@@ -318,53 +326,10 @@ namespace BiliLite.Modules
                     throw new CustomizedErrorException(data.message);
                 }
 
-                var webResults = await videoAPI.DetailWebInterface(id, isbvid).Request();
-                if (!webResults.status)
-                {
-                    throw new CustomizedErrorException(webResults.message);
-                }
-                var webData = await webResults.GetJson<ApiDataModel<VideoDetailModel>>();
-                if (!webData.success)
-                {
-                    throw new CustomizedErrorException(webData.message);
-                }
-                if (data.data.UgcSeason == null && webData.data.UgcSeason != null)
-                {
-                    data.data.UgcSeason = webData.data.UgcSeason;
-                }
-
-                if (data.data.OwnerExt == null)
-                {
-                    data.data.OwnerExt = new VideoDetailOwnerExtModel();
-                    try
-                    {
-                        var request = new UserDetailAPI().UserCard(data.data.Owner.Mid);
-                        var userResults = await request.Request();
-                        if (userResults.status)
-                        {
-                            var userData = await userResults.GetData<UserCardInfo>();
-                            data.data.OwnerExt.Fans = userData.data.Follower;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Warn("get userCard error", ex);
-                    }
-                }
-
                 var videoInfoViewModel = m_mapper.Map<VideoDetailViewModel>(data.data);
                 VideoInfo = videoInfoViewModel;
-                if (needGetUserReq)
-                {
-                    await GetAttentionUp();
-                }
                 Loaded = true;
-
-                await LoadFavorite(data.data.Aid);
-
-                await LoadVideoTags(data.data.Aid);
-
-                LoadSponsorBlock(data.data.Bvid);
+                m_needDeferredAttentionUp = needGetUserReq;
             }
             catch (Exception ex)
             {
@@ -384,6 +349,76 @@ namespace BiliLite.Modules
             finally
             {
                 Loading = false;
+            }
+        }
+
+        public async Task LoadDeferredVideoDetailData()
+        {
+            if (m_deferredDetailLoaded || VideoInfo == null)
+            {
+                return;
+            }
+
+            m_deferredDetailLoaded = true;
+
+            try
+            {
+                if (!m_needDeferredAttentionUp)
+                {
+                    try
+                    {
+                        var webResults = await videoAPI.DetailWebInterface(m_deferredDetailId, m_deferredDetailIsBvid).Request();
+                        if (webResults.status)
+                        {
+                            var webData = await webResults.GetJson<ApiDataModel<VideoDetailModel>>();
+                            if (webData.success && VideoInfo.UgcSeason == null && webData.data.UgcSeason != null)
+                            {
+                                VideoInfo.UgcSeason = m_mapper.Map<VideoUgcSeason>(webData.data.UgcSeason);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Warn("load web detail error", ex);
+                    }
+                }
+
+                if (VideoInfo.OwnerExt == null)
+                {
+                    VideoInfo.OwnerExt = new VideoDetailOwnerExtModel();
+                }
+
+                if (VideoInfo.OwnerExt.Fans <= 0)
+                {
+                    try
+                    {
+                        var request = new UserDetailAPI().UserCard(VideoInfo.Owner.Mid);
+                        var userResults = await request.Request();
+                        if (userResults.status)
+                        {
+                            var userData = await userResults.GetData<UserCardInfo>();
+                            VideoInfo.OwnerExt.Fans = userData.data.Follower;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Warn("get userCard error", ex);
+                    }
+                }
+
+                if (m_needDeferredAttentionUp)
+                {
+                    await GetAttentionUp();
+                }
+
+                await LoadFavorite(VideoInfo.Aid);
+                await LoadVideoTags(VideoInfo.Aid);
+                LoadSponsorBlock(VideoInfo.Bvid);
+            }
+            catch (Exception ex)
+            {
+                m_deferredDetailLoaded = false;
+                _logger.Warn("load deferred video detail data error", ex);
             }
         }
 

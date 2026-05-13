@@ -49,6 +49,7 @@ namespace BiliLite.Pages
         private bool m_loadUgcSeasonData = false;
         private readonly Stopwatch m_openToPlayingStopwatch = new Stopwatch();
         private bool m_hasLoggedOpenToPlaying;
+        private bool m_hasStartedDeferredDetailLoad;
 
         public VideoDetailPage()
         {
@@ -70,6 +71,7 @@ namespace BiliLite.Pages
 
         private void VideoDetailPage_Unloaded(object sender, RoutedEventArgs e)
         {
+            ResetDeferredDetailLoad();
             Bindings.StopTracking();
         }
 
@@ -206,6 +208,7 @@ namespace BiliLite.Pages
             _id = id;
             if (flag) return;
             flag = true;
+            ResetDeferredDetailLoad();
             if (long.TryParse(id, out var aid))
             {
                 avid = id;
@@ -244,7 +247,6 @@ namespace BiliLite.Pages
 
             contentDesc.Content = desc;
             ChangeTitle(m_viewModel.VideoInfo.Title);
-            await CreateQR();
             if (!string.IsNullOrEmpty(m_viewModel.VideoInfo.RedirectUrl))
             {
                 var result = await MessageCenter.HandelSeasonID(m_viewModel.VideoInfo.RedirectUrl);
@@ -257,22 +259,8 @@ namespace BiliLite.Pages
                     return;
                 }
             }
+
             InitPlayInfo();
-
-            comment.LoadComment(new LoadCommentInfo()
-            {
-                CommentMode = (int)CommentApi.CommentType.Video,
-                CommentSort = CommentApi.CommentSort.Hot,
-                Oid = m_viewModel.VideoInfo.Aid
-            });
-
-            if (!m_viewModel.VideoInfo.ShowUgcSeason)
-            {
-                flag = false;
-                return;
-            }
-
-            InitUgcSeason(id);
 
             flag = false;
         }
@@ -533,12 +521,17 @@ namespace BiliLite.Pages
         {
             if (!e.NewState.IsPlaying || m_hasLoggedOpenToPlaying || !m_openToPlayingStopwatch.IsRunning)
             {
+                if (e.NewState.IsPlaying)
+                {
+                    StartDeferredDetailLoad();
+                }
                 return;
             }
 
             m_openToPlayingStopwatch.Stop();
             m_hasLoggedOpenToPlaying = true;
             logger.Info($"VideoDetailPage: 页面打开到进入播放中耗时 {m_openToPlayingStopwatch.ElapsedMilliseconds}ms, aid={avid}, bvid={bvid}, id={_id}");
+            StartDeferredDetailLoad();
         }
 
         private void StartOpenToPlayingWatch()
@@ -551,6 +544,47 @@ namespace BiliLite.Pages
         {
             m_openToPlayingStopwatch.Reset();
             m_hasLoggedOpenToPlaying = false;
+        }
+
+        private void StartDeferredDetailLoad()
+        {
+            if (m_hasStartedDeferredDetailLoad || m_viewModel?.VideoInfo == null)
+            {
+                return;
+            }
+
+            m_hasStartedDeferredDetailLoad = true;
+            LoadDeferredDetailDataAsync().RunWithoutAwait();
+        }
+
+        private async Task LoadDeferredDetailDataAsync()
+        {
+            try
+            {
+                await m_viewModel.LoadDeferredVideoDetailData();
+                await CreateQR();
+                comment.LoadComment(new LoadCommentInfo()
+                {
+                    CommentMode = (int)CommentApi.CommentType.Video,
+                    CommentSort = CommentApi.CommentSort.Hot,
+                    Oid = m_viewModel.VideoInfo.Aid
+                });
+
+                if (m_viewModel.VideoInfo.ShowUgcSeason)
+                {
+                    InitUgcSeason(_id);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Warn("VideoDetailPage: 延后加载详情附属数据失败", ex);
+                m_hasStartedDeferredDetailLoad = false;
+            }
+        }
+
+        private void ResetDeferredDetailLoad()
+        {
+            m_hasStartedDeferredDetailLoad = false;
         }
 
         private void PlayerControl_FullWindowEvent(object sender, bool e)
