@@ -1930,6 +1930,7 @@ namespace BiliLite.Controls
             if (!m_firstMediaPlayed) return;
 
             await playerHelper.ReportHistory(CurrentPlayItem, progress);
+            _logger.Trace($"ReportHistory: {CurrentPlayItem.avid}, {CurrentPlayItem.cid}, {progress}");
         }
 
         BiliPlayUrlInfo current_quality_info = null;

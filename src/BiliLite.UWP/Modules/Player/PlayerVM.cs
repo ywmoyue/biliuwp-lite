@@ -68,7 +68,7 @@ namespace BiliLite.Modules
             {
                 var api = PlayerAPI.SeasonHistoryReport(playInfo.avid, playInfo.cid, Math.Floor(progress).ToInt32(), playInfo.season_id, playInfo.ep_id, playInfo.play_mode == VideoPlayType.Video ? 3 : 4);
                 await api.Request();
-                Debug.WriteLine(progress);
+                logger.Trace($"SeasonHistoryReport 播放进度: {progress}");
             }
             catch (Exception ex)
             {

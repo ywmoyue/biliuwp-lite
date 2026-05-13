@@ -84,13 +84,14 @@ namespace BiliLite.Pages
         {
             Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
+                logger.Trace("VideoDetailPage: 释放并重置 ViewModel 状态");
                 if (m_viewModel != null)
                 {
                     m_viewModel.Dispose();
                     m_viewModel.Loaded = false;
                     m_viewModel.Loading = true;
                     m_viewModel.VideoInfo = null;
-                } 
+                }
 
                 changedFlag = true;
                 player?.FullScreen(false);
@@ -98,6 +99,7 @@ namespace BiliLite.Pages
                 player?.Dispose();
                 if (!(this.Parent is MyFrame frame)) return;
                 frame.ClosedPage -= VideoDetailPage_ClosedPage;
+                logger.Trace("VideoDetailPage: 页面已关闭，事件已注销");
             });
         }
         private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
