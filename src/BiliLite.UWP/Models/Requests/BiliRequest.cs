@@ -43,7 +43,7 @@ namespace BiliLite.Models.Requests
             if (headers == null || !headers.ContainsKey("user-agent"))
             {
                 m_request.WithHeader("user-agent",
-                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36");
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36");
             }
         }
 
