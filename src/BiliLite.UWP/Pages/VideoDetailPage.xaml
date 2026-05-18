@@ -440,7 +440,10 @@
                 Height="{x:Bind m_viewModel.RightInfoHeight, Mode=OneWay}"
                 VerticalAlignment="Top"
                 Background="{x:Bind m_viewModel.RightInfoBackground, Mode=OneWay}">
-                <Pivot x:Name="pivot" PreviewKeyDown="Pivot_OnPreviewKeyDown">
+                <Pivot
+                    x:Name="pivot"
+                    PreviewKeyDown="Pivot_OnPreviewKeyDown"
+                    SelectionChanged="Pivot_SelectionChanged">
                     <PivotItem Margin="0">
                         <PivotItem.Header>
                             <TextBlock FontSize="18" Text="详情" />
@@ -677,7 +680,7 @@
                             </StackPanel>
                         </ScrollViewer>
                     </PivotItem>
-                    <PivotItem Margin="0">
+                    <PivotItem x:Name="CommentPivotItem" Margin="0">
                         <PivotItem.Header>
                             <TextBlock FontSize="18" Text="评论">
                                 <Run FontSize="12" Text="{x:Bind m_viewModel.VideoInfo.Stat.Reply, Mode=OneWay, Converter={StaticResource CountOrTextConvert}}" />
