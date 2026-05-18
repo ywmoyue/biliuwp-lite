@@ -50,6 +50,10 @@ namespace BiliLite.Pages
         private readonly Stopwatch m_openToPlayingStopwatch = new Stopwatch();
         private bool m_hasLoggedOpenToPlaying;
         private bool m_hasStartedDeferredDetailLoad;
+        // 通过版本号让旧的延后任务在切页/切视频后自动失效，避免串到新视频。
+        private int m_deferredDetailLoadVersion;
+        // 每个视频仅自动触发一次评论加载，避免重复请求。
+        private bool m_hasLoadedCommentForCurrentVideo;
 
         public VideoDetailPage()
         {
@@ -209,6 +213,7 @@ namespace BiliLite.Pages
             if (flag) return;
             flag = true;
             ResetDeferredDetailLoad();
+            m_hasLoadedCommentForCurrentVideo = false;
             if (long.TryParse(id, out var aid))
             {
                 avid = id;
@@ -261,6 +266,7 @@ namespace BiliLite.Pages
             }
 
             InitPlayInfo();
+            TryLoadCommentForCurrentVideo();
 
             flag = false;
         }
@@ -554,21 +560,30 @@ namespace BiliLite.Pages
             }
 
             m_hasStartedDeferredDetailLoad = true;
-            LoadDeferredDetailDataAsync().RunWithoutAwait();
+            // 快照当前版本和视频 id，后续 await 返回时用于校验上下文是否仍然有效。
+            var deferredVersion = m_deferredDetailLoadVersion;
+            var aidSnapshot = m_viewModel.VideoInfo.Aid;
+            LoadDeferredDetailDataAsync(deferredVersion, aidSnapshot).RunWithoutAwait();
         }
 
-        private async Task LoadDeferredDetailDataAsync()
+        private async Task LoadDeferredDetailDataAsync(int deferredVersion, string aidSnapshot)
         {
             try
             {
                 await m_viewModel.LoadDeferredVideoDetailData();
-                await CreateQR();
-                comment.LoadComment(new LoadCommentInfo()
+                // 页面可能已切换到其他视频；上下文不一致时直接丢弃旧任务结果。
+                if (deferredVersion != m_deferredDetailLoadVersion || m_viewModel?.VideoInfo == null ||
+                    m_viewModel.VideoInfo.Aid != aidSnapshot)
                 {
-                    CommentMode = (int)CommentApi.CommentType.Video,
-                    CommentSort = CommentApi.CommentSort.Hot,
-                    Oid = m_viewModel.VideoInfo.Aid
-                });
+                    return;
+                }
+
+                await CreateQR();
+                if (deferredVersion != m_deferredDetailLoadVersion || m_viewModel?.VideoInfo == null ||
+                    m_viewModel.VideoInfo.Aid != aidSnapshot)
+                {
+                    return;
+                }
 
                 if (m_viewModel.VideoInfo.ShowUgcSeason)
                 {
@@ -584,7 +599,36 @@ namespace BiliLite.Pages
 
         private void ResetDeferredDetailLoad()
         {
+            // 每次重置都推进版本，保证此前启动的异步任务不会再回写当前页面。
+            m_deferredDetailLoadVersion++;
             m_hasStartedDeferredDetailLoad = false;
+        }
+
+        private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            TryLoadCommentForCurrentVideo();
+        }
+
+        private void TryLoadCommentForCurrentVideo()
+        {
+            if (m_hasLoadedCommentForCurrentVideo || m_viewModel?.VideoInfo == null)
+            {
+                return;
+            }
+
+            // 评论改为按需加载：只有真正切到评论页签才请求。
+            if (pivot?.SelectedItem != CommentPivotItem)
+            {
+                return;
+            }
+
+            m_hasLoadedCommentForCurrentVideo = true;
+            comment.LoadComment(new LoadCommentInfo()
+            {
+                CommentMode = (int)CommentApi.CommentType.Video,
+                CommentSort = CommentApi.CommentSort.Hot,
+                Oid = m_viewModel.VideoInfo.Aid
+            });
         }
 
         private void PlayerControl_FullWindowEvent(object sender, bool e)
