@@ -208,20 +208,28 @@ namespace BiliLite.Modules
 
         private async Task LoadVideoTags(string avid)
         {
-            var api = videoAPI.Tags(avid);
-            var results = await api.Request();
-            if (!results.status)
+            try
             {
-                _logger.Warn(results.message);
-            }
+                var api = videoAPI.Tags(avid);
+                var results = await api.Request();
+                if (!results.status)
+                {
+                    _logger.Warn(results.message);
+                }
 
-            var data = await results.GetJson<ApiDataModel<List<BiliVideoTag>>>();
-            if (!data.success)
+                var data = await results.GetJson<ApiDataModel<List<BiliVideoTag>>>();
+                if (!data.success)
+                {
+                    _logger.Warn(data.message);
+                }
+
+                Tags = data.data ?? new List<BiliVideoTag>();
+            }
+            catch (Exception ex)
             {
-                _logger.Warn(data.message);
+                _logger.Warn("load video tags error", ex);
+                Tags = new List<BiliVideoTag>();
             }
-
-            Tags = data.data;
         }
 
         #endregion
@@ -234,6 +242,9 @@ namespace BiliLite.Modules
             {
                 if (!SettingService.Account.Logined)
                 {
+                    // 未登录也保持为空集合，避免界面绑定和收藏更新逻辑访问 null。
+                    MyFavorite = new ObservableCollection<FavoriteItemViewModel>();
+                    ExistFavIdList = new List<string>();
                     return;
                 }
                 var results = await favoriteAPI.MyCreatedFavorite(avid).Request();
@@ -328,6 +339,9 @@ namespace BiliLite.Modules
 
                 var videoInfoViewModel = m_mapper.Map<VideoDetailViewModel>(data.data);
                 VideoInfo = videoInfoViewModel;
+                // 标签和收藏夹不参与首播链路，详情基础信息就绪后立刻后台预取，避免页面上仍然空白。
+                _ = LoadFavorite(data.data.Aid);
+                _ = LoadVideoTags(data.data.Aid);
                 Loaded = true;
                 m_needDeferredAttentionUp = needGetUserReq;
             }
@@ -411,8 +425,6 @@ namespace BiliLite.Modules
                     await GetAttentionUp();
                 }
 
-                await LoadFavorite(VideoInfo.Aid);
-                await LoadVideoTags(VideoInfo.Aid);
                 LoadSponsorBlock(VideoInfo.Bvid);
             }
             catch (Exception ex)
@@ -708,6 +720,17 @@ namespace BiliLite.Modules
 
             try
             {
+                if (MyFavorite == null || ExistFavIdList == null)
+                {
+                    // 收藏夹列表尚未准备好时，先补拉一次，避免空集合直接进入更新逻辑。
+                    await LoadFavorite(avid);
+                }
+
+                if (MyFavorite == null || ExistFavIdList == null)
+                {
+                    throw new CustomizedErrorException("收藏夹数据尚未加载完成，请稍后重试");
+                }
+
                 var newIdList = new List<string>();
 
                 var defaultUseFav = SettingService.GetValue(SettingConstants.UI.DEFAULT_USE_FAV,
