@@ -32,6 +32,8 @@ namespace BiliLite.Player.SubPlayers
         private double m_bufferCache;
         private double m_volume = 1;
         private bool m_isMuted;
+        private MediaPlaybackState m_lastPlaybackState = MediaPlaybackState.None;
+        private bool m_waitingForPlayableStatePromotion;
 
         public DashNativeSubPlayer(Panel playerHost, MediaPlayerElement sharedPlayerElement = null)
         {
@@ -467,6 +469,8 @@ namespace BiliLite.Player.SubPlayers
             m_timelineController = null;
             m_isBuffering = false;
             m_bufferCache = 0;
+            m_lastPlaybackState = MediaPlaybackState.None;
+            m_waitingForPlayableStatePromotion = false;
             await RunOnUiThreadAsync(() =>
             {
                 if (m_playerElement == null)
@@ -499,14 +503,18 @@ namespace BiliLite.Player.SubPlayers
 
         private void PlaybackSessionOnPlaybackStateChanged(MediaPlaybackSession sender, object args)
         {
+            m_lastPlaybackState = sender?.PlaybackState ?? MediaPlaybackState.None;
             var buffer = TryGetBufferingProgress(sender);
             _logger.Info(
                 $"DashNative.PlaybackStateChanged: state={sender?.PlaybackState}, position={sender?.Position.TotalSeconds}, naturalDuration={sender?.NaturalDuration.TotalSeconds}, buffer={buffer}");
+
+            TryPromotePlayableStateAfterBuffering(sender, "PlaybackStateChanged");
         }
 
         private void PlaybackSessionOnBufferingStarted(MediaPlaybackSession sender, object args)
         {
             m_isBuffering = true;
+            m_waitingForPlayableStatePromotion = true;
             BufferingStarted?.Invoke(this, EventArgs.Empty);
         }
 
@@ -537,8 +545,61 @@ namespace BiliLite.Player.SubPlayers
         {
             m_isBuffering = false;
             m_bufferCache = 1;
+            m_waitingForPlayableStatePromotion = false;
             EmitBufferCacheChanged(m_bufferCache);
             BufferingEnded?.Invoke(this, EventArgs.Empty);
+        }
+
+        // Native DASH 偶发会先收到 Paused/Playing，再收到 MediaOpened。
+        // 外层此时会在 MediaOpened 里把 PlayState 推到 Buffering，所以这里只在确认底层已可播后补一次 BufferingEnded。
+        private void TryPromotePlayableStateAfterBuffering(MediaPlaybackSession session, string source)
+        {
+            if (!m_waitingForPlayableStatePromotion || session == null)
+            {
+                return;
+            }
+
+            var playbackState = session.PlaybackState;
+            if (playbackState != MediaPlaybackState.Playing &&
+                playbackState != MediaPlaybackState.Paused &&
+                (m_lastPlaybackState == MediaPlaybackState.Playing || m_lastPlaybackState == MediaPlaybackState.Paused))
+            {
+                playbackState = m_lastPlaybackState;
+            }
+
+            var hasOpened = session.NaturalDuration > TimeSpan.Zero;
+            var isPlayableState = playbackState == MediaPlaybackState.Playing ||
+                                  playbackState == MediaPlaybackState.Paused;
+            if (!hasOpened || !isPlayableState)
+            {
+                return;
+            }
+
+            _logger.Info(
+                $"DashNative.{source} fallback BufferingEnded: state={playbackState}, position={session.Position.TotalSeconds}, duration={session.NaturalDuration.TotalSeconds}");
+            PlaybackSessionOnBufferingEnded(session, EventArgs.Empty);
+        }
+
+        private void SchedulePlayableStatePromotionAfterMediaOpened(MediaPlaybackSession session)
+        {
+            _ = RunOnUiThreadAsync(async () =>
+            {
+                await Task.Yield();
+
+                var playbackSession = m_mediaPlayer?.PlaybackSession ?? session;
+                if (playbackSession == null)
+                {
+                    return;
+                }
+
+                // MediaOpened 的订阅方会先把外层状态推进到 Buffering，下一拍再根据底层实际播放态决定是否补结束事件。
+                if (playbackSession.PlaybackState == MediaPlaybackState.None)
+                {
+                    playbackSession = session;
+                }
+
+                TryPromotePlayableStateAfterBuffering(playbackSession, "MediaOpened");
+            });
         }
 
         public override async Task SetRatioMode(int mode)
@@ -852,9 +913,11 @@ namespace BiliLite.Player.SubPlayers
         {
             _ = RunOnUiThreadAsync(() =>
             {
+                m_waitingForPlayableStatePromotion = true;
                 _logger.Info(
                 $"DashNative.MediaOpened: video={sender?.PlaybackSession?.NaturalVideoWidth}x{sender?.PlaybackSession?.NaturalVideoHeight}, duration={sender?.PlaybackSession?.NaturalDuration.TotalSeconds}, position={sender?.PlaybackSession?.Position.TotalSeconds}, elementVisibility={m_playerElement?.Visibility}, elementSize={m_playerElement?.ActualWidth}x{m_playerElement?.ActualHeight}");
                 MediaOpened?.Invoke(this, EventArgs.Empty);
+                SchedulePlayableStatePromotionAfterMediaOpened(sender?.PlaybackSession);
             });
         }
     }

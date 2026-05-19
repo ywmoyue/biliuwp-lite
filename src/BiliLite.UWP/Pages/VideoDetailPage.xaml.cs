@@ -912,6 +912,18 @@ namespace BiliLite.Pages
             if (SettingService.GetValue(SettingConstants.UI.QUICK_DO_FAV, SettingConstants.UI.DEFAULT_QUICK_DO_FAV) &&
                 m_viewModel.VideoInfo.ReqUser.Favorite != 1)
             {
+                // 快速收藏依赖收藏夹列表；列表未就绪时先补拉，再决定是否直接执行。
+                if (m_viewModel.MyFavorite == null || m_viewModel.ExistFavIdList == null)
+                {
+                    await m_viewModel.LoadFavorite(m_viewModel.VideoInfo.Aid);
+                }
+
+                if (m_viewModel.MyFavorite == null || m_viewModel.ExistFavIdList == null)
+                {
+                    NotificationShowExtensions.ShowMessageToast("收藏夹加载中，请稍后再试");
+                    return;
+                }
+
                 await m_viewModel.UpdateFav(m_viewModel.VideoInfo.Aid, true);
             }
         }

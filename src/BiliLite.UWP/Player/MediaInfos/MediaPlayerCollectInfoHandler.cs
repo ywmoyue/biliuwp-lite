@@ -7,6 +7,8 @@ namespace BiliLite.Player.MediaInfos
     {
         private CollectInfo m_collectInfo;
         private readonly Timer m_timer;
+        private bool m_canReadBufferingProgress = true;
+        private bool m_hasLoggedBufferingProgressUnsupported;
 
         public MediaPlayerCollectInfoHandler(MediaInfosCollector mediaInfosCollector) : base(mediaInfosCollector)
         {
@@ -23,6 +25,8 @@ namespace BiliLite.Player.MediaInfos
         public override void InternalStart(CollectInfo collectInfo)
         {
             m_collectInfo = collectInfo;
+            m_canReadBufferingProgress = true;
+            m_hasLoggedBufferingProgressUnsupported = false;
             m_timer.Start();
         }
 
@@ -46,7 +50,7 @@ namespace BiliLite.Player.MediaInfos
                     return;
                 }
 
-                m_mediaInfosCollector.MediaInfo.BufferingProgress = GetSafeBufferingProgress(session);
+                m_mediaInfosCollector.MediaInfo.BufferingProgress = TryGetBufferingProgress(session);
                 m_mediaInfosCollector.MediaInfo.VideoWidth = session.NaturalVideoWidth;
                 m_mediaInfosCollector.MediaInfo.VideoHeight = session.NaturalVideoHeight;
                 m_mediaInfosCollector.EmitUpdateMediaInfos();
@@ -57,11 +61,11 @@ namespace BiliLite.Player.MediaInfos
             }
         }
 
-        private static double GetSafeBufferingProgress(Windows.Media.Playback.MediaPlaybackSession session)
+        private double? TryGetBufferingProgress(Windows.Media.Playback.MediaPlaybackSession session)
         {
-            if (session == null)
+            if (session == null || !m_canReadBufferingProgress)
             {
-                return 0;
+                return null;
             }
 
             try
@@ -70,7 +74,14 @@ namespace BiliLite.Player.MediaInfos
             }
             catch
             {
-                return 0;
+                m_canReadBufferingProgress = false;
+                if (!m_hasLoggedBufferingProgressUnsupported)
+                {
+                    m_hasLoggedBufferingProgressUnsupported = true;
+                    _logger.Warn("MediaPlayerCollectInfoHandler: BufferingProgress 在当前播放器实例上不可读，后续采集将跳过该字段");
+                }
+
+                return null;
             }
         }
 
@@ -80,6 +91,8 @@ namespace BiliLite.Player.MediaInfos
             m_timer.Elapsed -= Timer_Elapsed;
             m_timer.Dispose();
             m_collectInfo = null;
+            m_canReadBufferingProgress = true;
+            m_hasLoggedBufferingProgressUnsupported = false;
         }
     }
 }
