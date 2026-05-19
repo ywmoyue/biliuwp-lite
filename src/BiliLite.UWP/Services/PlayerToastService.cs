@@ -42,8 +42,9 @@ namespace BiliLite.Services
             }
 
             var newToast = m_serviceProvider.GetRequiredService<PlayerToast>();
-            newToast.Height = 80;
-            newToast.Width = 200;
+            newToast.MinHeight = 80;
+            newToast.Height = double.NaN;
+            newToast.Width = IsLongMessageToast(key, msg) ? 360 : 200;
             newToast.Text = msg;
             Canvas.SetLeft(newToast, 0);
             double distanceFromBottom = m_bottomList[m_showPlayerToasts.Count];
@@ -75,18 +76,32 @@ namespace BiliLite.Services
         /// <param name="seg">用于SponsorBlock功能，可选</param>
         public async void Show(string key, string msg, long showTime = 2000, PlayerSkipItem seg = null, bool showSkipButton = false)
         {
+            var safeShowTime = NormalizeShowTime(showTime);
             if (m_showPlayerToasts.TryGetValue(key, out var toast))
             {
                 toast.Text = msg;
-                var timer = m_showPlayerToastTimers[key];
-                timer.Stop();
-                timer.Start();
+                if (m_showPlayerToastTimers.TryGetValue(key, out var timer))
+                {
+                    timer.Stop();
+                    timer.Interval = safeShowTime;
+                    timer.Start();
+                }
+                else
+                {
+                    var recoverTimer = new Timer();
+                    recoverTimer.Interval = safeShowTime;
+                    recoverTimer.Elapsed += async (_, _) => await Hide(key, toast, recoverTimer);
+                    toast.HideToast += async (_, _) => await Hide(key, toast, recoverTimer);
+                    m_showPlayerToastTimers[key] = recoverTimer;
+                    recoverTimer.Start();
+                }
                 return;
             }
 
             var newToast = m_serviceProvider.GetRequiredService<PlayerToast>();
-            newToast.Height = 80;
-            newToast.Width = 200;
+            newToast.MinHeight = 80;
+            newToast.Height = double.NaN;
+            newToast.Width = IsLongMessageToast(key, msg) ? 360 : 200;
             newToast.Text = msg;
             if (seg != null)
             {
@@ -109,11 +124,26 @@ namespace BiliLite.Services
             newToast.Show();
 
             var newTimer = new Timer();
-            newTimer.Interval = showTime;
+            newTimer.Interval = safeShowTime;
             newTimer.Elapsed += async (_, _) => await Hide(key, newToast, newTimer);
             newToast.HideToast += async (_, _) => await Hide(key, newToast, newTimer);
             m_showPlayerToastTimers.Add(key, newTimer);
             newTimer.Start();
+        }
+
+        private static bool IsLongMessageToast(string key, string msg)
+        {
+            if (key == MSG_KEY)
+            {
+                return true;
+            }
+
+            return !string.IsNullOrEmpty(msg) && msg.Length > 20;
+        }
+
+        private static double NormalizeShowTime(long showTime)
+        {
+            return showTime > 0 ? showTime : 200;
         }
 
         public async Task Hide(string key, PlayerToast toast, Timer timer)

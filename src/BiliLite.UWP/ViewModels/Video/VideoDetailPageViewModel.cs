@@ -43,6 +43,10 @@ namespace BiliLite.Modules
         private readonly IMapper m_mapper;
         private readonly ThemeService m_themeService;
         private readonly ISponsorBlockService m_sponsorBlockService;
+        private string m_deferredDetailId;
+        private bool m_deferredDetailIsBvid;
+        private bool m_needDeferredAttentionUp;
+        private bool m_deferredDetailLoaded;
 
         #endregion
 
@@ -204,20 +208,28 @@ namespace BiliLite.Modules
 
         private async Task LoadVideoTags(string avid)
         {
-            var api = videoAPI.Tags(avid);
-            var results = await api.Request();
-            if (!results.status)
+            try
             {
-                _logger.Warn(results.message);
-            }
+                var api = videoAPI.Tags(avid);
+                var results = await api.Request();
+                if (!results.status)
+                {
+                    _logger.Warn(results.message);
+                }
 
-            var data = await results.GetJson<ApiDataModel<List<BiliVideoTag>>>();
-            if (!data.success)
+                var data = await results.GetJson<ApiDataModel<List<BiliVideoTag>>>();
+                if (!data.success)
+                {
+                    _logger.Warn(data.message);
+                }
+
+                Tags = data.data ?? new List<BiliVideoTag>();
+            }
+            catch (Exception ex)
             {
-                _logger.Warn(data.message);
+                _logger.Warn("load video tags error", ex);
+                Tags = new List<BiliVideoTag>();
             }
-
-            Tags = data.data;
         }
 
         #endregion
@@ -230,6 +242,9 @@ namespace BiliLite.Modules
             {
                 if (!SettingService.Account.Logined)
                 {
+                    // 未登录也保持为空集合，避免界面绑定和收藏更新逻辑访问 null。
+                    MyFavorite = new ObservableCollection<FavoriteItemViewModel>();
+                    ExistFavIdList = new List<string>();
                     return;
                 }
                 var results = await favoriteAPI.MyCreatedFavorite(avid).Request();
@@ -276,6 +291,10 @@ namespace BiliLite.Modules
             try
             {
                 if (id.Length == 0) { throw new ArgumentException(nameof(id)); }
+                m_deferredDetailId = id;
+                m_deferredDetailIsBvid = isbvid;
+                m_needDeferredAttentionUp = false;
+                m_deferredDetailLoaded = false;
                 Loaded = false;
                 Loading = true;
                 ShowError = false;
@@ -318,53 +337,13 @@ namespace BiliLite.Modules
                     throw new CustomizedErrorException(data.message);
                 }
 
-                var webResults = await videoAPI.DetailWebInterface(id, isbvid).Request();
-                if (!webResults.status)
-                {
-                    throw new CustomizedErrorException(webResults.message);
-                }
-                var webData = await webResults.GetJson<ApiDataModel<VideoDetailModel>>();
-                if (!webData.success)
-                {
-                    throw new CustomizedErrorException(webData.message);
-                }
-                if (data.data.UgcSeason == null && webData.data.UgcSeason != null)
-                {
-                    data.data.UgcSeason = webData.data.UgcSeason;
-                }
-
-                if (data.data.OwnerExt == null)
-                {
-                    data.data.OwnerExt = new VideoDetailOwnerExtModel();
-                    try
-                    {
-                        var request = new UserDetailAPI().UserCard(data.data.Owner.Mid);
-                        var userResults = await request.Request();
-                        if (userResults.status)
-                        {
-                            var userData = await userResults.GetData<UserCardInfo>();
-                            data.data.OwnerExt.Fans = userData.data.Follower;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Warn("get userCard error", ex);
-                    }
-                }
-
                 var videoInfoViewModel = m_mapper.Map<VideoDetailViewModel>(data.data);
                 VideoInfo = videoInfoViewModel;
-                if (needGetUserReq)
-                {
-                    await GetAttentionUp();
-                }
+                // 标签和收藏夹不参与首播链路，详情基础信息就绪后立刻后台预取，避免页面上仍然空白。
+                _ = LoadFavorite(data.data.Aid);
+                _ = LoadVideoTags(data.data.Aid);
                 Loaded = true;
-
-                await LoadFavorite(data.data.Aid);
-
-                await LoadVideoTags(data.data.Aid);
-
-                LoadSponsorBlock(data.data.Bvid);
+                m_needDeferredAttentionUp = needGetUserReq;
             }
             catch (Exception ex)
             {
@@ -384,6 +363,74 @@ namespace BiliLite.Modules
             finally
             {
                 Loading = false;
+            }
+        }
+
+        public async Task LoadDeferredVideoDetailData()
+        {
+            if (m_deferredDetailLoaded || VideoInfo == null)
+            {
+                return;
+            }
+
+            m_deferredDetailLoaded = true;
+
+            try
+            {
+                if (!m_needDeferredAttentionUp)
+                {
+                    try
+                    {
+                        var webResults = await videoAPI.DetailWebInterface(m_deferredDetailId, m_deferredDetailIsBvid).Request();
+                        if (webResults.status)
+                        {
+                            var webData = await webResults.GetJson<ApiDataModel<VideoDetailModel>>();
+                            if (webData.success && VideoInfo.UgcSeason == null && webData.data.UgcSeason != null)
+                            {
+                                VideoInfo.UgcSeason = m_mapper.Map<VideoUgcSeason>(webData.data.UgcSeason);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Warn("load web detail error", ex);
+                    }
+                }
+
+                if (VideoInfo.OwnerExt == null)
+                {
+                    VideoInfo.OwnerExt = new VideoDetailOwnerExtModel();
+                }
+
+                if (VideoInfo.OwnerExt.Fans <= 0)
+                {
+                    try
+                    {
+                        var request = new UserDetailAPI().UserCard(VideoInfo.Owner.Mid);
+                        var userResults = await request.Request();
+                        if (userResults.status)
+                        {
+                            var userData = await userResults.GetData<UserCardInfo>();
+                            VideoInfo.OwnerExt.Fans = userData.data.Follower;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Warn("get userCard error", ex);
+                    }
+                }
+
+                if (m_needDeferredAttentionUp)
+                {
+                    await GetAttentionUp();
+                }
+
+                LoadSponsorBlock(VideoInfo.Bvid);
+            }
+            catch (Exception ex)
+            {
+                m_deferredDetailLoaded = false;
+                _logger.Warn("load deferred video detail data error", ex);
             }
         }
 
@@ -673,6 +720,17 @@ namespace BiliLite.Modules
 
             try
             {
+                if (MyFavorite == null || ExistFavIdList == null)
+                {
+                    // 收藏夹列表尚未准备好时，先补拉一次，避免空集合直接进入更新逻辑。
+                    await LoadFavorite(avid);
+                }
+
+                if (MyFavorite == null || ExistFavIdList == null)
+                {
+                    throw new CustomizedErrorException("收藏夹数据尚未加载完成，请稍后重试");
+                }
+
                 var newIdList = new List<string>();
 
                 var defaultUseFav = SettingService.GetValue(SettingConstants.UI.DEFAULT_USE_FAV,

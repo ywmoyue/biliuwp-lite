@@ -2,6 +2,8 @@
     x:Class="BiliLite.Controls.PlayerControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
+    xmlns:IsWin11="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     xmlns:common="using:BiliLite.Models.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -16,8 +18,6 @@
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:video="using:BiliLite.Models.Common.Video"
     xmlns:webPlayer="using:BiliLite.Player.WebPlayer"
-    xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
-    xmlns:IsWin11="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,14)"
     d:DesignHeight="800"
     d:DesignWidth="1000"
     mc:Ignorable="d">
@@ -227,7 +227,7 @@
                                         弹幕偏移
                                     </TextBlock>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBox Text="{x:Bind m_danmakuController.DanmakuViewModel.PositionOffset,Mode=OneWay}" IsEnabled="False"></TextBox>
+                                        <TextBox IsEnabled="False" Text="{x:Bind m_danmakuController.DanmakuViewModel.PositionOffset, Mode=OneWay}" />
                                         <Button Click="BtnDanmakuMinOffset1S_OnClick">-1s</Button>
                                         <Button Click="BtnDanmakuAddOffset1S_OnClick">+1s</Button>
                                     </StackPanel>
@@ -526,15 +526,8 @@
                     PointerMoved="Grid_PointerMoved"
                     PointerPressed="Grid_PointerPressed"
                     PointerReleased="Grid_PointerReleased">
-                    <!--  播放器  -->
-                    <local:Player
-                        x:Name="Player"
-                        ChangeEngine="Player_ChangeEngine"
-                        PlayMediaEnded="Player_PlayMediaEnded"
-                        PlayMediaError="Player_PlayMediaError"
-                        PlayMediaOpened="Player_PlayMediaOpened"
-                        PlayStateChanged="Player_PlayStateChanged"
-                        StatsUpdated="Player_OnStatsUpdated" />
+                    <!--  播放器宿主（新架构）  -->
+                    <Grid x:Name="PlayerHost" />
 
                     <!--  字幕  -->
                     <Border
@@ -564,7 +557,7 @@
                         <StackPanel
                             x:Name="GridBuffering"
                             VerticalAlignment="Center"
-                            Visibility="{Binding ElementName=Player, Path=Buffering, Mode=OneWay}">
+                            Visibility="Collapsed">
                             <muxc:ProgressRing
                                 Width="50"
                                 Height="50"
@@ -649,8 +642,8 @@
 
                         <muxc:ProgressBar
                             Grid.Row="1"
-                            Maximum="{Binding ElementName=Player, Path=Duration, Mode=OneWay}"
-                            Value="{Binding ElementName=Player, Path=Position, Mode=OneWay}" />
+                            Maximum="{x:Bind m_viewModel.Duration, Mode=OneWay}"
+                            Value="{x:Bind m_viewModel.Position, Mode=OneWay}" />
                     </Grid>
 
                     <Grid x:Name="control">
@@ -693,7 +686,7 @@
                                         FontSize="16"
                                         Foreground="White" />
 
-                                    <StackPanel x:Name="ExtraToolsPanel" Orientation="Horizontal"/>
+                                    <StackPanel x:Name="ExtraToolsPanel" Orientation="Horizontal" />
 
                                     <Button
                                         x:Name="BtnOpenWebPlayerToolbar"
@@ -703,7 +696,7 @@
                                         Background="Transparent"
                                         Click="BtnOpenWebPlayerToolbar_OnClick"
                                         ToolTipService.ToolTip="Web播放器工具箱"
-                                        Visibility="{x:Bind Player.ShowShakaPlayer, Mode=OneWay}">
+                                        Visibility="{x:Bind m_viewModel.ShowWebPlayerToolbarButton, Mode=OneWay}">
                                         <fa:FontAwesome
                                             Width="28"
                                             Height="28"
@@ -792,9 +785,9 @@
                                     Value="{Binding ElementName=Player, Path=Position, Mode=OneWay}" />-->
                                     <local:PlayerProgressBar
                                         x:Name="BottomProgress"
-                                        Position="{Binding ElementName=Player, Path=Position, Mode=OneWay}"
+                                        Position="{x:Bind m_viewModel.Position, Mode=OneWay}"
                                         PositionChanged="BottomProgress_OnPositionChanged"
-                                        Duration="{Binding ElementName=Player, Path=Duration, Mode=OneWay}" />
+                                        Duration="{x:Bind m_viewModel.Duration, Mode=OneWay}" />
                                     <Canvas x:Name="BottomProgressCanvas" />
                                 </Grid>
                                 <Grid Grid.Row="1" Padding="0,0,0,8">
@@ -847,9 +840,9 @@
                                             VerticalAlignment="Center"
                                             FontSize="18"
                                             Foreground="White">
-                                            <Run Text="{Binding ElementName=Player, Path=Position, Mode=OneWay, Converter={StaticResource ProgressToTimeConverter}}" />
+                                            <Run Text="{x:Bind m_viewModel.Position, Mode=OneWay, Converter={StaticResource ProgressToTimeConverter}}" />
                                             <Run>/</Run>
-                                            <Run Text="{Binding ElementName=Player, Path=Duration, Mode=OneWay, Converter={StaticResource ProgressToTimeConverter}}" /></TextBlock>
+                                            <Run Text="{x:Bind m_viewModel.Duration, Mode=OneWay, Converter={StaticResource ProgressToTimeConverter}}" /></TextBlock>
                                         <Button
                                             x:Name="BottomBtnSelctSubtitle"
                                             Width="48"
@@ -1027,8 +1020,7 @@
                                                                 Width="200"
                                                                 Maximum="1"
                                                                 Minimum="0"
-                                                                StepFrequency="0.1"
-                                                                Value="{x:Bind Path=Player.Volume, Mode=TwoWay}" />
+                                                                StepFrequency="0.1" />
                                                         </StackPanel>
                                                         <TextBlock Margin="10,0,0,8" VerticalAlignment="Bottom">1</TextBlock>
                                                     </StackPanel>

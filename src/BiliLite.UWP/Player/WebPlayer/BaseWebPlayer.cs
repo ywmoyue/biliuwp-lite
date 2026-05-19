@@ -8,6 +8,7 @@ using System;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Controls;
 using BiliLite.Models.Common.Player;
@@ -29,6 +30,7 @@ public abstract class BaseWebPlayer : Grid, IDisposable
     private readonly SemaphoreSlim m_captureLock = new SemaphoreSlim(1, 1);
     private string m_localVideoLibsPath;
     private string m_localOldVideoLibsPath;
+    private Border m_loadingMask;
 
     private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
 
@@ -36,6 +38,15 @@ public abstract class BaseWebPlayer : Grid, IDisposable
     {
         m_gridElement = this;
         m_gridElement.Background = new SolidColorBrush(Colors.Black);
+        m_loadingMask = new Border
+        {
+            Background = new SolidColorBrush(Colors.Black),
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            Visibility = Visibility.Collapsed,
+            IsHitTestVisible = false,
+        };
+        m_gridElement.Children.Add(m_loadingMask);
     }
 
     public abstract string PlayerView { get; }
@@ -63,8 +74,8 @@ public abstract class BaseWebPlayer : Grid, IDisposable
         WebViewElement = new WebView2();
         WebViewElement.Background = new SolidColorBrush(Colors.Black);
         // 由于加载白屏，需要设置WebViewElement高度为0，loaded事件后再恢复默认高度
-        // TODO： 这个做法效果不大，需要设置一个遮罩在loaded事件后隐藏该遮罩
         WebViewElement.Height = 0;
+        ShowLoadingMask();
         m_gridElement.Children.Add(WebViewElement);
 
         var tempFolder = ApplicationData.Current.TemporaryFolder;
@@ -133,6 +144,7 @@ public abstract class BaseWebPlayer : Grid, IDisposable
         else if (@event.Event == ShakaPlayerEventLists.LOADED)
         {
             WebViewElement.Height = double.NaN;
+            HideLoadingMask();
             var data = JsonConvert.DeserializeObject<ShakaPlayerLoadedData>(
                 JsonConvert.SerializeObject(@event.Data));
             PlayerLoaded?.Invoke(this, data);
@@ -213,6 +225,8 @@ public abstract class BaseWebPlayer : Grid, IDisposable
             await Task.Delay(100);
         }
 
+        var tempFolder = ApplicationData.Current.TemporaryFolder;
+
         if (isLocal)
         {
             var folder = await DownloadHelper.GetDownloadFolder();
@@ -223,12 +237,20 @@ public abstract class BaseWebPlayer : Grid, IDisposable
             videoUrl = videoUrl
                 .Replace(folder.Path, "https://videolibs.bililte.service")
                 .Replace(oldFolder.Path, "https://oldvideolibs.bililte.service")
+                .Replace(tempFolder.Path, "https://temp.bililte.service")
                 .Replace("\\", "/");
 
             audioUrl = audioUrl
                 .Replace(folder.Path, "https://videolibs.bililte.service")
                 .Replace(oldFolder.Path, "https://oldvideolibs.bililte.service")
+                .Replace(tempFolder.Path, "https://temp.bililte.service")
                 .Replace("\\", "/");
+        }
+
+        // 如果没有设置 isLocal，但 audioUrl 指向临时目录，也需要做映射，保证 WebView 能访问临时音频文件
+        if (!string.IsNullOrWhiteSpace(audioUrl) && audioUrl.Contains(tempFolder.Path))
+        {
+            audioUrl = audioUrl.Replace(tempFolder.Path, "https://temp.bililte.service").Replace("\\", "/");
         }
 
         var playData = new
@@ -250,7 +272,24 @@ public abstract class BaseWebPlayer : Grid, IDisposable
     {
         if (WebViewElement == null)
             await InitWebView2();
+        ShowLoadingMask();
         WebViewElement.Source = new Uri(GetPlayerUrl(playDataStr));
+    }
+
+    private void ShowLoadingMask()
+    {
+        if (m_loadingMask != null)
+        {
+            m_loadingMask.Visibility = Visibility.Visible;
+        }
+    }
+
+    private void HideLoadingMask()
+    {
+        if (m_loadingMask != null)
+        {
+            m_loadingMask.Visibility = Visibility.Collapsed;
+        }
     }
 
     public async Task SetVolume(double volume)

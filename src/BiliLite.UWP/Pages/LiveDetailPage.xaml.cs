@@ -71,7 +71,6 @@ namespace BiliLite.Pages
         private bool changePlayUrlFlag = false;
         private bool isPointerInChatList = false;
         private bool isPointerInThisPage = true;
-        private BaseWebPlayer m_webPlayer;
 
         public LiveDetailPage()
         {
@@ -80,11 +79,11 @@ namespace BiliLite.Pages
             this.InitializeComponent();
 
             m_playerConfig = new PlayerConfig();
+            m_realPlayInfo = new RealPlayInfo();
+            m_realPlayInfo.IsAutoPlay = true;
             PreLoadSetting();
             m_playerController = PlayerControllerFactory.Create(PlayerType.Live);
             m_player = new LivePlayer(m_playerConfig, playerElement, m_playerController, ShakaPlayer, MpegtsPlayer);
-            m_realPlayInfo = new RealPlayInfo();
-            m_realPlayInfo.IsAutoPlay = true;
             m_playerController.SetPlayer(m_player);
             m_player.SetRealPlayInfo(m_realPlayInfo);
             InitPlayerEvent();
@@ -273,6 +272,13 @@ namespace BiliLite.Pages
         {
             timer_focus.Stop();
             controlTimer.Stop();
+
+            if (this.Parent is MyFrame frame)
+            {
+                frame.ClosedPage -= LiveDetailPage_ClosedPage;
+            }
+
+            UnInitPlayerEvent();
         }
 
         private void LiveDetailPage_Loaded(object sender, RoutedEventArgs e)
@@ -335,21 +341,38 @@ namespace BiliLite.Pages
             m_playerController.ContentStateChanged += PlayerController_ContentStateChanged;
             m_playerController.ScreenStateChanged += PlayerController_ScreenStateChanged;
             m_player.ErrorOccurred += Player_ErrorOccurred;
-            m_player.NeedReplacePlayer += Player_NeedReplacePlayer; ;
-            m_playerController.MediaInfosUpdated += PlayerController_MediaInfosUpdated; ;
+            m_player.NeedReplacePlayer += Player_NeedReplacePlayer;
+            m_playerController.MediaInfosUpdated += PlayerController_MediaInfosUpdated;
+        }
+
+        private void UnInitPlayerEvent()
+        {
+            m_playerController.PlayStateChanged -= PlayerController_PlayStateChanged;
+            m_playerController.PauseStateChanged -= PlayerController_PauseStateChanged;
+            m_playerController.ContentStateChanged -= PlayerController_ContentStateChanged;
+            m_playerController.ScreenStateChanged -= PlayerController_ScreenStateChanged;
+            m_playerController.MediaInfosUpdated -= PlayerController_MediaInfosUpdated;
+
+            if (m_player != null)
+            {
+                m_player.ErrorOccurred -= Player_ErrorOccurred;
+                m_player.NeedReplacePlayer -= Player_NeedReplacePlayer;
+            }
         }
 
         private async void Player_NeedReplacePlayer(object sender, RealPlayerType e)
         {
             await m_player.UnLoad();
             m_player.ErrorOccurred -= Player_ErrorOccurred;
-            m_player.NeedReplacePlayer -= Player_NeedReplacePlayer; ;
+            m_player.NeedReplacePlayer -= Player_NeedReplacePlayer;
             m_playerConfig.PlayerType = e;
+            m_realPlayInfo.PreferredPlayerType = e;
+            m_realPlayInfo.FallbackPlayerTypes = BuildLiveFallbackChain(e);
             m_player = new LivePlayer(m_playerConfig, playerElement, m_playerController, ShakaPlayer, MpegtsPlayer);
             m_playerController.SetPlayer(m_player);
             m_player.SetRealPlayInfo(m_realPlayInfo);
             m_player.ErrorOccurred += Player_ErrorOccurred;
-            m_player.NeedReplacePlayer += Player_NeedReplacePlayer; ;
+            m_player.NeedReplacePlayer += Player_NeedReplacePlayer;
         }
 
         private async void PlayerController_MediaInfosUpdated(object sender, Player.MediaInfos.MediaInfo e)
@@ -589,11 +612,16 @@ namespace BiliLite.Pages
                         (int)DefaultPlayerModeOptions.DEFAULT_LIVE_PLAYER_MODE);
             m_playerConfig.PlayMode = m_viewModel.LivePlayerMode;
 
+            // 播放前是否预拉取完整音频（会增加加载时间）
+            m_playerConfig.PreloadFullAudioBeforePlay = SettingService.GetValue<bool>(SettingConstants.Player.PRELOAD_FULL_AUDIO_BEFORE_PLAY, SettingConstants.Player.DEFAULT_PRELOAD_FULL_AUDIO_BEFORE_PLAY);
+
             // 播放器类型
             m_playerConfig.PlayerType = (RealPlayerType)SettingService.GetValue(
                 SettingConstants.Player.LIVE_PLAYER_TYPE,
                 (int)LivePlayerTypeOptions.DEFAULT_LIVE_PLAYER_MODE);
             m_viewModel.RealPlayerType = m_playerConfig.PlayerType;
+            m_realPlayInfo.PreferredPlayerType = m_playerConfig.PlayerType;
+            m_realPlayInfo.FallbackPlayerTypes = BuildLiveFallbackChain(m_playerConfig.PlayerType);
 
             // 直播流默认源
             m_viewModel.LivePlayUrlSource = SettingService.GetValue(
@@ -602,6 +630,20 @@ namespace BiliLite.Pages
 
             // 低延迟模式
             LowDelayMode.IsOn = SettingService.GetValue<bool>(SettingConstants.Live.LOW_DELAY_MODE, SettingConstants.Live.DEFAULT_LOW_DELAY_MODE);
+        }
+
+        private static List<RealPlayerType> BuildLiveFallbackChain(RealPlayerType preferred)
+        {
+            var defaultChain = new List<RealPlayerType>
+            {
+                RealPlayerType.ShakaPlayer,
+                RealPlayerType.Mpegts,
+                RealPlayerType.FFmpegInterop,
+            };
+
+            var chain = new List<RealPlayerType> { preferred };
+            chain.AddRange(defaultChain.Where(x => x != preferred));
+            return chain.Distinct().ToList();
         }
 
         private void LoadSetting()
@@ -1509,10 +1551,16 @@ namespace BiliLite.Pages
         {
             if (IsPlayForward) { return; }
             IsPlayForward = true;
-            playerElement.MediaPlayer.PlaybackSession.PlaybackRate = 2.0;
-            await Task.Delay(1000);
-            playerElement.MediaPlayer.PlaybackSession.PlaybackRate = 1.0;
-            IsPlayForward = false;
+            try
+            {
+                await m_playerController.SetRate(2.0);
+                await Task.Delay(1000);
+            }
+            finally
+            {
+                await m_playerController.SetRate(1.0);
+                IsPlayForward = false;
+            }
         }
 
         private void BottomBtnSwitchGiftBar_Click(object sender, RoutedEventArgs e)

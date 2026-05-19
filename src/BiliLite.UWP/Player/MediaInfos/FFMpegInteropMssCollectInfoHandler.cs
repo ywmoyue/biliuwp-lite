@@ -51,8 +51,16 @@ namespace BiliLite.Player.MediaInfos
 
             m_mediaInfosCollector.MediaInfo.BufferingProgress = collectInfoData.MediaPlayer.PlaybackSession.DownloadProgress;
             m_mediaInfosCollector.MediaInfo.BufferTime = ffMpegInteropMss.BufferTime.ToString("g");
-            
+
             m_mediaInfosCollector.EmitUpdateMediaInfos();
+        }
+
+        public override void Dispose()
+        {
+            m_timer.Stop();
+            m_timer.Elapsed -= Timer_Elapsed;
+            m_timer.Dispose();
+            m_collectInfo = null;
         }
     }
 }

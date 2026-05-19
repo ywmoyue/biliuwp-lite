@@ -152,6 +152,16 @@
     <Compile Include="Models\Common\User\WatchLater\WatchlaterItemModel.cs" />
     <Compile Include="Models\Common\User\WatchLater\WatchlaterOwnerModel.cs" />
     <Compile Include="Models\Common\User\WatchLater\WatchlaterPagesModel.cs" />
+    <Compile Include="Player\Controllers\PlayerErrorRecord.cs" />
+    <Compile Include="Player\Controllers\VideoPlayerController.cs" />
+    <Compile Include="Player\SubPlayers\DashFFmpegInteropSubPlayer.cs" />
+    <Compile Include="Player\SubPlayers\DashNativeSubPlayer.cs" />
+    <Compile Include="Player\SubPlayers\DashShakaSubPlayer.cs" />
+    <Compile Include="Player\SubPlayers\FlvFFmpegInteropSubPlayer.cs" />
+    <Compile Include="Player\SubPlayers\FlvSYEngineSubPlayer.cs" />
+    <Compile Include="Player\SubPlayers\Mp4NativeSubPlayer.cs" />
+    <Compile Include="Player\SubPlayers\MultiFlvSYEngineSubPlayer.cs" />
+    <Compile Include="Player\VideoPlayer.cs" />
     <Compile Include="Services\BackgroundDownloadOperation.cs" />
     <Compile Include="Services\BackgroundDownloadService.cs" />
     <Compile Include="Services\BackgroundDownloadTask.cs" />
@@ -603,10 +613,14 @@
     <Compile Include="Player\Controllers\PlayerControllerFactory.cs" />
     <Compile Include="Player\Controllers\PlayerType.cs" />
     <Compile Include="Player\IBiliPlayer2.cs" />
+    <Compile Include="Player\RealPlayInfoFactory.cs" />
+    <Compile Include="Player\Adapters\LegacyPlayerAdapter.cs" />
     <Compile Include="Player\LivePlayer.cs" />
     <Compile Include="Player\MediaInfos\BaseCollectInfoHandler.cs" />
     <Compile Include="Player\MediaInfos\CollectInfo.cs" />
     <Compile Include="Player\MediaInfos\FFMpegInteropMssCollectInfoHandler.cs" />
+    <Compile Include="Player\MediaInfos\MediaPlayerCollectInfoData.cs" />
+    <Compile Include="Player\MediaInfos\MediaPlayerCollectInfoHandler.cs" />
     <Compile Include="Player\MediaInfos\MediaInfo.cs" />
     <Compile Include="Player\MediaInfos\MediaInfoDoNotToStringAttribute.cs" />
     <Compile Include="Player\MediaInfos\MediaInfosCollector.cs" />
@@ -627,6 +641,11 @@
     <Compile Include="Player\States\ScreenStates\FullscreenState.cs" />
     <Compile Include="Player\States\ScreenStates\IScreenState.cs" />
     <Compile Include="Player\States\ScreenStates\NormalScreenState.cs" />
+    <Compile Include="Player\States\MuteStates\IMuteState.cs" />
+    <Compile Include="Player\States\MuteStates\MuteStateChangedEventArgs.cs" />
+    <Compile Include="Player\States\MuteStates\MuteStateHandler.cs" />
+    <Compile Include="Player\States\MuteStates\MutedState.cs" />
+    <Compile Include="Player\States\MuteStates\UnMutedState.cs" />
     <Compile Include="Player\SubPlayers\ISubPlayer.cs" />
     <Compile Include="Player\SubPlayers\LiveHlsPlayer.cs" />
     <Compile Include="Player\States\PauseStates\IPauseState.cs" />
@@ -1134,8 +1153,6 @@
     <Compile Include="Pages\WebPage.xaml.cs">
       <DependentUpon>WebPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Player\BiliPlayer.cs" />
-    <Compile Include="Player\IBiliPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\Requests\ApiModel.cs" />
     <Compile Include="Models\Common\ApiKeyInfo.cs" />
