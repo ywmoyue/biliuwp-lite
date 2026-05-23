@@ -163,7 +163,7 @@ namespace BiliLite.Modules.Live
                 foreach (var item in textLines)
                 {
                     // 使用上波弹幕到这波的间隔确定延迟
-                    var danmuDelay = danmuCount > 0 ? (Stopwatch.Elapsed.TotalMilliseconds / danmuCount  * 1.2) : 0;
+                    var danmuDelay = danmuCount > 0 ? (Stopwatch.Elapsed.TotalMilliseconds / danmuCount * 1.2) : 0;
                     // 控制弹幕延迟最小和最大长度
                     danmuDelay = danmuDelay < 20 ? 20 : danmuDelay;
                     danmuDelay = danmuDelay > 1000 ? 1000 : danmuDelay;
@@ -222,7 +222,7 @@ namespace BiliLite.Modules.Live
 
                         // 弹幕内大表情详情
                         if (obj["info"][0][13] != null && obj["info"][0][13].ToArray().Length != 0)
-                        {                            
+                        {
                             msg.ShowBigSticker = Visibility.Visible;
                             msg.BigSticker = new DanmuMsgModel.BigStickerInfo
                             {
@@ -401,7 +401,7 @@ namespace BiliLite.Modules.Live
                     msgView.Username = obj["data"]["user_info"]["uname"].ToString();
                     msgView.GuardLevel = (UserCaptainType)obj["data"]["user_info"]["guard_level"].ToInt32();
                     msgView.Uid = obj["data"]["uid"].ToInt64();
-                    
+
                     if (obj["data"]["medal_info"] != null && obj["data"]["medal_info"].ToArray().Length != 0)
                     {
                         msgView.MedalLevel = obj["data"]["medal_info"]["medal_level"].ToInt32();
@@ -447,7 +447,7 @@ namespace BiliLite.Modules.Live
                 {
                     if (obj["data"] != null)
                     {
-                        NewMessage?.Invoke(MessageType.GuardBuyNew, new GuardBuyMsgModel() 
+                        NewMessage?.Invoke(MessageType.GuardBuyNew, new GuardBuyMsgModel()
                         {
                             GiftId = obj["data"]["gift_id"].ToInt32(),
                             GiftName = obj["data"]["role_name"].ToString(),
@@ -540,7 +540,7 @@ namespace BiliLite.Modules.Live
             {
                 if (ex is JsonReaderException)
                 {
-                    logger.Log("直播解析JSON包出错", LogType.Error ,ex);
+                    logger.Log("直播解析JSON包出错", LogType.Error, ex);
                 }
                 return MessageDelayType.SystemMessage;
             }
@@ -561,28 +561,23 @@ namespace BiliLite.Modules.Live
             using var ms = new MemoryStream(buffer);
             //数据包长度
             var b = BitConverter.GetBytes(buffer.Length);
-            b.Reverse();
-            b.ToArray();
+            MemoryExtensions.Reverse((Span<byte>)b);
             ms.Write(b, 0, 4);
             //数据包头部长度,固定16
             b = BitConverter.GetBytes(16);
-            b.Reverse();
-            b.ToArray();
+            MemoryExtensions.Reverse((Span<byte>)b);
             ms.Write(b, 2, 2);
             //协议版本，0=JSON,1=Int32,2=Buffer
             b = BitConverter.GetBytes(0);
-            b.Reverse();
-            b.ToArray();
+            MemoryExtensions.Reverse((Span<byte>)b);
             ms.Write(b, 0, 2);
             //操作类型
             b = BitConverter.GetBytes(action);
-            b.Reverse();
-            b.ToArray();
+            MemoryExtensions.Reverse((Span<byte>)b);
             ms.Write(b, 0, 4);
             //数据包头部长度,固定1
             b = BitConverter.GetBytes(1);
-            b.Reverse();
-            b.ToArray();
+            MemoryExtensions.Reverse((Span<byte>)b);
             ms.Write(b, 0, 4);
             //数据
             ms.Write(data, 0, data.Length);
