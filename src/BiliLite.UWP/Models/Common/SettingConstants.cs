@@ -97,6 +97,18 @@ namespace BiliLite.Models.Common
             public const string RIGHT_WIDTH_CHANGEABLE = "PlayerRightDetailWidthChangeable";
 
             /// <summary>
+            /// 视频详情页右侧栏启用响应式抽屉
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string DETAIL_RIGHT_INFO_RESPONSIVE = "DetailRightInfoResponsive";
+
+            /// <summary>
+            /// 默认启用视频详情页右侧栏响应式抽屉
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_DETAIL_RIGHT_INFO_RESPONSIVE = true;
+
+            /// <summary>
             /// 动态评论页总宽度
             /// </summary>
             [SettingKey(typeof(double))]
