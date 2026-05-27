@@ -170,6 +170,20 @@ namespace BiliLite.Controls.Settings
                 });
             });
 
+            //视频详情页右侧栏响应式收起
+            swDetailRightInfoResponsive.IsOn = SettingService.GetValue(
+                SettingConstants.UI.DETAIL_RIGHT_INFO_RESPONSIVE,
+                SettingConstants.UI.DEFAULT_DETAIL_RIGHT_INFO_RESPONSIVE);
+            swDetailRightInfoResponsive.Loaded += new RoutedEventHandler((sender, e) =>
+            {
+                swDetailRightInfoResponsive.Toggled += new RoutedEventHandler((obj, args) =>
+                {
+                    SettingService.SetValue(
+                        SettingConstants.UI.DETAIL_RIGHT_INFO_RESPONSIVE,
+                        swDetailRightInfoResponsive.IsOn);
+                });
+            });
+
             //视频详情页分集列表设计宽度
             NumListEpisodeDesiredWidth.Value = SettingService.GetValue<double>(SettingConstants.UI.VIDEO_DETAIL_LIST_EPISODE_DESIRED_WIDTH, SettingConstants.UI.DEFAULT_VIDEO_DETAIL_LIST_EPISODE_DESIRED_WIDTH);
             NumListEpisodeDesiredWidth.Loaded += (sender, e) =>

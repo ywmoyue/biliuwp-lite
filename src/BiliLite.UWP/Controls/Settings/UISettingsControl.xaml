@@ -613,6 +613,16 @@
                 </controls:SettingsCard>
 
                 <controls:SettingsCard
+                    Description="关闭后窄窗口下不再自动收起为抽屉"
+                    Header="右侧栏响应式收起"
+                    HeaderIcon="FullScreen">
+                    <ToggleSwitch
+                        x:Name="swDetailRightInfoResponsive"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
+                </controls:SettingsCard>
+
+                <controls:SettingsCard
                     Description="重新打开视频生效"
                     Header="分集列表宽度"
                     HeaderIcon="DockRight">
