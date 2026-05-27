@@ -127,22 +127,27 @@ namespace BiliLite.Modules
 
         public double PageWidth { get; set; }
 
+        [DoNotNotify]
+        public bool EnableResponsiveRightInfo => SettingService.GetValue(
+            SettingConstants.UI.DETAIL_RIGHT_INFO_RESPONSIVE,
+            SettingConstants.UI.DEFAULT_DETAIL_RIGHT_INFO_RESPONSIVE);
+
         [DependsOn(nameof(PageWidth))]
-        public int PlayerGridColumnSpan => PageWidth < 1000 ? 2 : 1;
+        public int PlayerGridColumnSpan => PageWidth < 1000 && EnableResponsiveRightInfo ? 2 : 1;
 
         public GridLength DefaultRightInfoWidth { get; set; } = new GridLength(320);
 
         public bool IsOpenRightInfo { get; set; }
 
         [DependsOn(nameof(PageWidth))]
-        public bool ShowOpenRightInfoBtn => (PageWidth < 1000);
+        public bool ShowOpenRightInfoBtn => (PageWidth < 1000 && EnableResponsiveRightInfo);
 
         [DependsOn(nameof(PageWidth), nameof(IsOpenRightInfo))]
         public GridLength RightInfoWidth
         {
             get
             {
-                if (PageWidth < 1000 && !IsOpenRightInfo)
+                if (PageWidth < 1000 && EnableResponsiveRightInfo && !IsOpenRightInfo)
                 {
                     return new GridLength(0);
                 }
@@ -156,7 +161,7 @@ namespace BiliLite.Modules
         {
             get
             {
-                if (PageWidth < 1000)
+                if (PageWidth < 1000 && EnableResponsiveRightInfo)
                 {
                     return (Brush)m_themeService.DefaultThemeResource["PlayerControlAcrylicBrush"];
                 }
@@ -170,7 +175,7 @@ namespace BiliLite.Modules
         {
             get
             {
-                if (PageWidth < 1000)
+                if (PageWidth < 1000 && EnableResponsiveRightInfo)
                 {
                     return PageHeight - BottomActionBarHeight;
                 }
