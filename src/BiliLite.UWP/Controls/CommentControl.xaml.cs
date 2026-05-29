@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -593,10 +594,42 @@ namespace BiliLite.Controls
             var notePicture = e.ClickedItem as NotePicture;
             var notePicturesView = sender as GridView;
             if (notePicture == null || notePicturesView == null) return;
-            var comment = notePicturesView.DataContext as CommentViewModel;
-            if (comment == null) return;
-            var notePictures = comment.Content.Pictures;
+            var notePictures = notePicturesView.Tag as IList<NotePicture>;
+            if (notePictures == null || notePictures.Count == 0)
+            {
+                notePictures = (notePicturesView.DataContext as CommentViewModel)?.Content?.Pictures;
+            }
+
+            OpenPictureViewer(notePictures, notePicture);
+        }
+
+        private void SinglePictureView_Click(object sender, RoutedEventArgs e)
+        {
+            if (m_disableShowPicture)
+            {
+                NotificationShowExtensions.ShowMessageToast("暂不支持查看图片");
+                return;
+            }
+
+            var comment = (sender as FrameworkElement)?.DataContext as CommentViewModel;
+            var notePictures = comment?.Content?.Pictures;
+            var notePicture = notePictures?.FirstOrDefault();
+            OpenPictureViewer(notePictures, notePicture);
+        }
+
+        private void OpenPictureViewer(IList<NotePicture> notePictures, NotePicture notePicture)
+        {
+            if (notePictures == null || notePictures.Count == 0 || notePicture == null)
+            {
+                return;
+            }
+
             var index = notePictures.IndexOf(notePicture);
+            if (index < 0)
+            {
+                return;
+            }
+
             var pictures = notePictures.Select(x => x.ImgSrc).ToList();
             MessageCenter.OpenImageViewer(pictures, index);
         }

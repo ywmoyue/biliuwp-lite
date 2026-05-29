@@ -74,7 +74,7 @@ namespace BiliLite.ViewModels.Settings
             {
                 var res = await testUrl.WithHeader(
                         "user-agent",
-                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36")
+                        WebView2UserAgentProvider.DesktopUserAgent)
                     .WithTimeout(2).GetAsync();
             }
             catch (FlurlHttpException ex)

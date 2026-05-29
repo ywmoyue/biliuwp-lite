@@ -140,6 +140,9 @@ namespace BiliLite
             {
                 SYEngine.Core.Initialize();
             }
+
+            await WebView2UserAgentProvider.InitializeAsync();
+
             try
             {
                 var systemId = Windows.System.Profile.SystemIdentification.GetSystemIdForPublisher();

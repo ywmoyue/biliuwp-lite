@@ -60,8 +60,10 @@ public abstract class BaseWebPlayer : Grid, IDisposable
 
     private async Task InitWebView2()
     {
+        // UWP WebView2 不暴露 DefaultBackgroundColor/CoreWebView2Controller，使用环境变量设置透明底色。
+        Environment.SetEnvironmentVariable("WEBVIEW2_DEFAULT_BACKGROUND_COLOR", "00FFFFFF");
         WebViewElement = new WebView2();
-        WebViewElement.Background = new SolidColorBrush(Colors.Black);
+        WebViewElement.Background = new SolidColorBrush(Colors.Transparent);
         // 由于加载白屏，需要设置WebViewElement高度为0，loaded事件后再恢复默认高度
         // TODO： 这个做法效果不大，需要设置一个遮罩在loaded事件后隐藏该遮罩
         WebViewElement.Height = 0;
