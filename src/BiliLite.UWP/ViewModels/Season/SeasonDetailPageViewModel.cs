@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
+using BiliLite.Models.Common;
 using BiliLite.Models;
 using BiliLite.Models.Attributes;
 using BiliLite.Models.Common.Season;
@@ -99,22 +100,27 @@ namespace BiliLite.ViewModels.Season
 
         public double PageWidth { get; set; }
 
+        [DoNotNotify]
+        public bool EnableResponsiveRightInfo => SettingService.GetValue(
+            SettingConstants.UI.DETAIL_RIGHT_INFO_RESPONSIVE,
+            SettingConstants.UI.DEFAULT_DETAIL_RIGHT_INFO_RESPONSIVE);
+
         [DependsOn(nameof(PageWidth))]
-        public int PlayerGridColumnSpan => PageWidth < 1000 ? 2 : 1;
+        public int PlayerGridColumnSpan => PageWidth < 1000 && EnableResponsiveRightInfo ? 2 : 1;
 
         public GridLength DefaultRightInfoWidth { get; set; } = new GridLength(320);
 
         public bool IsOpenRightInfo { get; set; }
 
         [DependsOn(nameof(PageWidth))]
-        public bool ShowOpenRightInfoBtn => (PageWidth < 1000);
+        public bool ShowOpenRightInfoBtn => (PageWidth < 1000 && EnableResponsiveRightInfo);
 
         [DependsOn(nameof(PageWidth), nameof(IsOpenRightInfo))]
         public GridLength RightInfoWidth
         {
             get
             {
-                if (PageWidth < 1000 && !IsOpenRightInfo)
+                if (PageWidth < 1000 && EnableResponsiveRightInfo && !IsOpenRightInfo)
                 {
                     return new GridLength(0);
                 }
@@ -128,7 +134,7 @@ namespace BiliLite.ViewModels.Season
         {
             get
             {
-                if (PageWidth < 1000)
+                if (PageWidth < 1000 && EnableResponsiveRightInfo)
                 {
                     return (Brush)m_themeService.DefaultThemeResource["PlayerControlAcrylicBrush"];
                 }
@@ -141,7 +147,7 @@ namespace BiliLite.ViewModels.Season
         {
             get
             {
-                if (PageWidth < 1000)
+                if (PageWidth < 1000 && EnableResponsiveRightInfo)
                 {
                     return Math.Max(0, PageHeight - BottomActionBarHeight);
                 }
@@ -220,7 +226,7 @@ namespace BiliLite.ViewModels.Season
                 Detail = seasonDetail;
                 Detail.Episodes = epListData.result.Episodes;
 
-                if(seasonsData != null)
+                if (seasonsData != null)
                     Detail.Seasons = JsonConvert.DeserializeObject<List<SeasonDetailSeasonItemModel>>(JsonConvert.SerializeObject(seasonsData));
 
                 Episodes = epListData.result.Episodes.Where(x => !x.IsPreview).ToList();
