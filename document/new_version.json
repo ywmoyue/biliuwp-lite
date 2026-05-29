@@ -1,7 +1,7 @@
 {
-  "version": "4.8.15",
-  "version_num": 40815,
-  "version_desc": "更新内容:\r\n\r\n- 更新user-agent,修复搜索功能  \r\n\r\n \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.8.16",
+  "version_num": 40816,
+  "version_desc": "更新内容:\r\n\r\n- 修复视频和直播加载完成时出现的闪白屏问题\r\n\r\n- 修复评论中多图显示异常，优化图片展示样式与加载逻辑\r\n\r\n- 在视频详情页增加右侧面板响应式收起设置，支持关闭该行为\r\n\r\n- 修复搜索功能不可用的问题  \r\n\r\n \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
