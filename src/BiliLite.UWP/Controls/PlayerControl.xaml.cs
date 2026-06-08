@@ -73,6 +73,7 @@ namespace BiliLite.Controls
         private bool m_isLocalFileMode;
         private readonly IPlayerSponsorBlockControl m_playerSponsorBlockControl;
         private readonly IPlayerControlToolBar m_playerControlToolBar;
+        private bool m_hasReportedHistory = false;
 
         private void DoPropertyChanged(string name)
         {
@@ -1067,6 +1068,7 @@ namespace BiliLite.Controls
             //{
             //   // Player._ffmpegConfig.FFmpegOptions["referer"] = "https://www.bilibili.com/bangumi/play/ep" + CurrentPlayItem.ep_id;
             //}
+            m_hasReportedHistory = false;   //重置记录上传状态
             if (SettingService.GetValue<bool>(SettingConstants.Player.AUTO_TO_POSITION, true))
             {
                 _postion = SettingService.GetValue<double>(CurrentPlayItem.season_id != 0 ? "ep" + CurrentPlayItem.ep_id : CurrentPlayItem.cid, 0);
@@ -1333,6 +1335,10 @@ namespace BiliLite.Controls
             if (EpisodeList.SelectedItem == null)
             {
                 return;
+            }
+            if (!m_hasReportedHistory)
+            {
+                await ReportHistory(Player.Position);
             }
             m_danmakuController.Clear();
             await SetPlayItem(EpisodeList.SelectedIndex);
@@ -2699,6 +2705,7 @@ namespace BiliLite.Controls
             Pause();
 
             await ReportHistory(Player.Duration);
+            m_hasReportedHistory = true;
 
             if (SettingService.GetValue(SettingConstants.Player.REPORT_HISTORY_ZERO_WHEN_VIDEO_END,
                     SettingConstants.Player.DEFAULT_REPORT_HISTORY_ZERO_WHEN_VIDEO_END))
@@ -2974,7 +2981,7 @@ namespace BiliLite.Controls
             {
                 SettingService.SetValue<double>(CurrentPlayItem.season_id != 0 ? "ep" + CurrentPlayItem.ep_id : CurrentPlayItem.cid, Player.Position);
                 //当视频播放结束的话，Position为0
-                if (Player.PlayState != PlayState.End)
+                if ((Player.PlayState != PlayState.End) && !m_hasReportedHistory)
                     await ReportHistory(Player.Position);
             }
 
