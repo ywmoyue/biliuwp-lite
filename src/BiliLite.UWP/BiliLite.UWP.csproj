@@ -26,7 +26,7 @@
     <AppxBundle>Never</AppxBundle>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <PackageCertificateThumbprint>C4FA34A878A0528F84922932FEC6746BCBCA5CEA</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>64FA681385825365AE0854A7EE8A6AE08A5A1C5C</PackageCertificateThumbprint>
     <PackageCertificateKeyFile />
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
     <PreBuildEvent>powershell.exe -ExecutionPolicy RemoteSigned -File "$(MSBuildThisFileDirectory)PreBuildScript.ps1"</PreBuildEvent>

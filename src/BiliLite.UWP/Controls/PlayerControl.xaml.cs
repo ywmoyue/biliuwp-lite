@@ -1856,6 +1856,7 @@ namespace BiliLite.Controls
             if (!m_firstMediaPlayed) return;
 
             await playerHelper.ReportHistory(CurrentPlayItem, progress);
+            NotificationShowExtensions.ShowMessageToast(CurrentPlayItem.bvid + " 已更新观看历史" + progress);
         }
 
         BiliPlayUrlInfo current_quality_info = null;

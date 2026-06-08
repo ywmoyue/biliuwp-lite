@@ -13,12 +13,12 @@
 
   <Identity
      Name="5422.502643927C6AD"
-    Publisher="CN=muyan"
-    Version="4.6.5.0" />
+    Publisher="CN=Administrator"
+    Version="4.8.17.0" />
   <mp:PhoneIdentity PhoneProductId="8bceed6a-7e89-4141-a693-923401d5b2ac" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
   
   <Properties>
-    <DisplayName>哔哩哔哩 UWP</DisplayName>
+    <DisplayName>哔哩哔哩 UWP Preview</DisplayName>
     <PublisherDisplayName>木言</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
