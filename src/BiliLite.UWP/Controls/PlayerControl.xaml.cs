@@ -87,6 +87,7 @@ namespace BiliLite.Controls
         private static readonly TimeSpan BufferingUiUpdateInterval = TimeSpan.FromMilliseconds(120);
         private bool m_lockPlayerVolume;
         private bool m_updatingVolumeSlider;
+        private bool m_hasReportedHistory = false;
 
         private void UpdatePlayerHostVisibility(RealPlayerType playerType)
         {
@@ -1168,6 +1169,11 @@ namespace BiliLite.Controls
             ChangeEpisodeEvent?.Invoke(this, index);
 
             playUrlInfo = null;
+            //if (CurrentPlayItem.play_mode == VideoPlayType.Season)
+            //{
+            //   // Player._ffmpegConfig.FFmpegOptions["referer"] = "https://www.bilibili.com/bangumi/play/ep" + CurrentPlayItem.ep_id;
+            //}
+            m_hasReportedHistory = false;   //重置记录上传状态
             if (SettingService.GetValue<bool>(SettingConstants.Player.AUTO_TO_POSITION, true))
             {
                 _postion = SettingService.GetValue<double>(CurrentPlayItem.season_id != 0 ? "ep" + CurrentPlayItem.ep_id : CurrentPlayItem.cid, 0);
@@ -1440,6 +1446,10 @@ namespace BiliLite.Controls
             if (EpisodeList.SelectedItem == null)
             {
                 return;
+            }
+            if (!m_hasReportedHistory)
+            {
+                await ReportHistory(Player.Position);
             }
             m_danmakuController.Clear();
             await SetPlayItem(EpisodeList.SelectedIndex);
@@ -3076,6 +3086,7 @@ namespace BiliLite.Controls
             Pause();
 
             await ReportHistory(GetCurrentDuration());
+            m_hasReportedHistory = true;
 
             if (SettingService.GetValue(SettingConstants.Player.REPORT_HISTORY_ZERO_WHEN_VIDEO_END,
                     SettingConstants.Player.DEFAULT_REPORT_HISTORY_ZERO_WHEN_VIDEO_END))
@@ -3280,7 +3291,7 @@ namespace BiliLite.Controls
                     var currentPosition = GetCurrentPosition();
                     SettingService.SetValue<double>(CurrentPlayItem.season_id != 0 ? "ep" + CurrentPlayItem.ep_id : CurrentPlayItem.cid, currentPosition);
                     //当视频播放结束的话，Position为0
-                    if (GetCurrentPlayState() != PlayState.End)
+                    if (GetCurrentPlayState() != PlayState.End && !m_hasReportedHistory)
                         await ReportHistory(currentPosition);
                 }
 

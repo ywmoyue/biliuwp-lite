@@ -165,6 +165,7 @@
     <Compile Include="Services\BackgroundDownloadOperation.cs" />
     <Compile Include="Services\BackgroundDownloadService.cs" />
     <Compile Include="Services\BackgroundDownloadTask.cs" />
+    <Compile Include="Services\WebView2UserAgentProvider.cs" />
     <Compile Include="Services\Biz\WatchLaterService.cs" />
     <Compile Include="Services\Interfaces\IDownloadOperation.cs" />
     <Compile Include="Services\Interfaces\IDownloadService.cs" />
