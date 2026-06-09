@@ -90,7 +90,7 @@ namespace BiliLite
             playPage.Seek(e);
         }
 
-        private void Content_PointerPressed(object sender, PointerRoutedEventArgs e)
+        private async void Content_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             var par = e.GetCurrentPoint(sender as Frame).Properties.PointerUpdateKind;
             if (SettingService.GetValue(SettingConstants.UI.MOUSE_MIDDLE_ACTION, (int)MouseMiddleActions.Back) == (int)MouseMiddleActions.Back
@@ -103,6 +103,15 @@ namespace BiliLite
                     e.Handled = true;
                     return;
                 }
+
+                // 优先回溯视频导航历史
+                if (frame.Content is VideoDetailPage videoPage && videoPage.CanGoBackInVideo)
+                {
+                    await videoPage.GoBackInVideo();
+                    e.Handled = true;
+                    return;
+                }
+
                 //处理多标签
                 if (this.frame.CanGoBack)
                 {
@@ -166,11 +175,16 @@ namespace BiliLite
             }
         }
 
-        private void NavigationHelper_NavigateToPageEvent(object sender, NavigationInfo e)
+        private async void NavigationHelper_NavigateToPageEvent(object sender, NavigationInfo e)
         {
             if (mode == 1)
             {
-                //PushTitle(e.title);
+                if (frame.Content is VideoDetailPage videoPage && e.page == typeof(VideoDetailPage)
+                    && e.parameters is string videoId)
+                {
+                    await videoPage.NavigateToVideo(videoId, e.title);
+                    return;
+                }
                 frame.Navigate(e.page, e.parameters);
                 (frame.Content as Page).NavigationCacheMode = NavigationCacheMode.Required;
             }
@@ -180,7 +194,7 @@ namespace BiliLite
             }
         }
 
-        private void btnBack_Click(object sender, RoutedEventArgs e)
+        private async void btnBack_Click(object sender, RoutedEventArgs e)
         {
             //如果打开了图片浏览，则关闭图片浏览
             if (gridViewer.Visibility == Visibility.Visible)
@@ -188,6 +202,14 @@ namespace BiliLite
                 imgViewer_CloseEvent(this, null);
                 return;
             }
+
+            // 优先回溯视频导航历史
+            if (frame.Content is VideoDetailPage videoPage && videoPage.CanGoBackInVideo)
+            {
+                await videoPage.GoBackInVideo();
+                return;
+            }
+
             if (frame.CanGoBack)
             {
                 frame.GoBack();
@@ -206,6 +228,12 @@ namespace BiliLite
             {
                 imgViewer_CloseEvent(this, null);
                 return;
+            }
+
+            // 清除视频导航历史并销毁播放器
+            if (frame.Content is VideoDetailPage videoPage)
+            {
+                videoPage.ClearVideoHistory();
             }
 
             // 回到主页
@@ -280,7 +308,8 @@ namespace BiliLite
 
         private void System_BackRequested(object sender, BackRequestedEventArgs e)
         {
-            if (!frame.CanGoBack) return;
+            var hasVideoHistory = frame.Content is VideoDetailPage vp && vp.CanGoBackInVideo;
+            if (!frame.CanGoBack && !hasVideoHistory) return;
             e.Handled = true;
             btnBack_Click(this, null);
         }
