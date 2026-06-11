@@ -447,17 +447,6 @@ namespace BiliLite.Models.Common
             [SettingDefaultValue]
             public const int DEFAULT_COMMENT_FONT_SIZE = 14;
 
-            /// <summary>
-            /// 单窗口模式保持页面数量，超出释放
-            /// </summary>
-            [SettingKey(typeof(int))]
-            public const string SINGLE_WINDOW_KEEP_PAGE_COUNT = "SingleWindowKeepPageCount";
-
-            /// <summary>
-            /// 单窗口模式保持页面数量默认10
-            /// </summary>
-            [SettingDefaultValue]
-            public const int DEFAULT_SINGLE_WINDOW_KEEP_PAGE_COUNT = 10;
         }
 
         public class Account
