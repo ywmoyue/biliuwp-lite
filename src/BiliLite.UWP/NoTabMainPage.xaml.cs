@@ -101,7 +101,7 @@ namespace BiliLite
             playPage.Seek(e);
         }
 
-        private void Content_PointerPressed(object sender, PointerRoutedEventArgs e)
+        private async void Content_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             var par = e.GetCurrentPoint(sender as Frame).Properties.PointerUpdateKind;
             if (SettingService.GetValue(SettingConstants.UI.MOUSE_MIDDLE_ACTION, (int)MouseMiddleActions.Back) == (int)MouseMiddleActions.Back
@@ -114,6 +114,15 @@ namespace BiliLite
                     e.Handled = true;
                     return;
                 }
+
+                // 优先回溯视频导航历史
+                if (frame.Content is VideoDetailPage videoPage && videoPage.CanGoBackInVideo)
+                {
+                    await videoPage.GoBackInVideo();
+                    e.Handled = true;
+                    return;
+                }
+
                 //处理多标签
                 if (this.frame.CanGoBack)
                 {
@@ -177,11 +186,16 @@ namespace BiliLite
             }
         }
 
-        private void NavigationHelper_NavigateToPageEvent(object sender, NavigationInfo e)
+        private async void NavigationHelper_NavigateToPageEvent(object sender, NavigationInfo e)
         {
             if (mode == 1)
             {
-                //PushTitle(e.title);
+                if (frame.Content is VideoDetailPage videoPage && e.page == typeof(VideoDetailPage)
+                    && e.parameters is string videoId)
+                {
+                    await videoPage.NavigateToVideo(videoId, e.title);
+                    return;
+                }
                 frame.Navigate(e.page, e.parameters);
                 (frame.Content as Page).NavigationCacheMode = NavigationCacheMode.Required;
             }
@@ -191,7 +205,7 @@ namespace BiliLite
             }
         }
 
-        private void btnBack_Click(object sender, RoutedEventArgs e)
+        private async void btnBack_Click(object sender, RoutedEventArgs e)
         {
             //如果打开了图片浏览，则关闭图片浏览
             if (gridViewer.Visibility == Visibility.Visible)
@@ -199,6 +213,14 @@ namespace BiliLite
                 imgViewer_CloseEvent(this, null);
                 return;
             }
+
+            // 优先回溯视频导航历史
+            if (frame.Content is VideoDetailPage videoPage && videoPage.CanGoBackInVideo)
+            {
+                await videoPage.GoBackInVideo();
+                return;
+            }
+
             if (frame.CanGoBack)
             {
                 frame.GoBack();
@@ -217,6 +239,12 @@ namespace BiliLite
             {
                 imgViewer_CloseEvent(this, null);
                 return;
+            }
+
+            // 清除视频导航历史并销毁播放器
+            if (frame.Content is VideoDetailPage videoPage)
+            {
+                videoPage.ClearVideoHistory();
             }
 
             // 回到主页
@@ -285,7 +313,8 @@ namespace BiliLite
 
         private void System_BackRequested(object sender, BackRequestedEventArgs e)
         {
-            if (!frame.CanGoBack) return;
+            var hasVideoHistory = frame.Content is VideoDetailPage vp && vp.CanGoBackInVideo;
+            if (!frame.CanGoBack && !hasVideoHistory) return;
             e.Handled = true;
             btnBack_Click(this, null);
         }
@@ -303,13 +332,10 @@ namespace BiliLite
 
     public class NewInstanceFrame : Grid
     {
-        private int m_limitPageCount = 10;
-
         public event NavigatedEventHandler Navigated;
 
         public NewInstanceFrame()
         {
-            m_limitPageCount = SettingService.GetValue(SettingConstants.UI.SINGLE_WINDOW_KEEP_PAGE_COUNT, SettingConstants.UI.DEFAULT_SINGLE_WINDOW_KEEP_PAGE_COUNT);
             AddFrame();
         }
         public object Content
@@ -327,57 +353,6 @@ namespace BiliLite
             frame.Navigated += Frame_Navigated;
 
             this.Children.Add(frame);
-            LimitResource();
-        }
-
-        private void LimitResource()
-        {
-            var frames = this.Children.Where(x => x.GetType() == typeof(MyFrame)).ToList();
-            if (frames.Count > m_limitPageCount + 1)
-            {
-                var needReleaseFrames = frames.Skip(1).Take(frames.Count - (m_limitPageCount + 1));
-                foreach (var frame in needReleaseFrames)
-                {
-                    var frameIndex = this.Children.IndexOf(frame);
-                    if (frameIndex == -1) continue;
-
-                    var myFrame = frame as MyFrame;
-                    var fakeFrame = new FakeFrame();
-
-                    // 保存当前页面信息
-                    if (myFrame.Content is BasePage currentPage)
-                    {
-                        fakeFrame.CurrentPageType = currentPage.GetType();
-                        fakeFrame.CurrentPageParameter = currentPage.NavigationParameter;
-                    }
-                    else
-                    {
-                        continue;
-                    }
-
-                    // 保存返回堆栈中的页面信息
-                    //var backStackInfo = new List<(Type PageType, object Parameter)>();
-                    //foreach (var entry in myFrame.BackStack)
-                    //{
-                    //    backStackInfo.Add((entry.SourcePageType, entry.Parameter));
-                    //}
-                    //fakeFrame.BackStackInfo = backStackInfo;
-
-                    // 清空内容和返回堆栈
-                    myFrame.Close();
-                    myFrame.Content = null;
-                    myFrame.BackStack.Clear();
-                    myFrame.ForwardStack.Clear();
-                    myFrame.Navigated -= Frame_Navigated;
-
-                    // 标记为已释放状态
-                    fakeFrame.IsReleased = true;
-
-                    // 从this.Children中对应顺序位置插入替换fakeFrame和myFrame，然后销毁myFrame
-                    this.Children.Remove(myFrame);
-                    this.Children.Insert(frameIndex, fakeFrame);
-                }
-            }
         }
 
         private void Frame_Navigated(object sender, NavigationEventArgs e)
@@ -439,20 +414,6 @@ namespace BiliLite
             {
                 if (this.Children.Count > 1)
                 {
-                    // 检查上一个Frame是否被释放
-                    var previousFrameIndex = this.Children.Count - 2;
-                    var previousFrame = this.Children[previousFrameIndex] as FakeFrame;
-                    if (previousFrame != null)
-                    {
-                        // 重建页面状态
-                        var realFrame = await ReconstructFrame(previousFrame);
-
-                        // 从this.Children中对应顺序位置插入替换fakeFrame和myFrame，然后销毁fakeFrame
-                        this.Children.Remove(previousFrame);
-                        this.Children.Insert(previousFrameIndex, realFrame);
-                        realFrame.Navigated += Frame_Navigated;
-                    }
-
                     await frame.AnimateYAsync(0, this.ActualHeight, 300);
                     frame.Navigated -= Frame_Navigated;
                     frame.Close();
@@ -465,41 +426,6 @@ namespace BiliLite
                     }
                 }
             }
-        }
-
-        private async Task<MyFrame> ReconstructFrame(FakeFrame fakeFrame)
-        {
-            var myFrame = new MyFrame();
-
-            // 重建返回堆栈
-            //if (fakeFrame.BackStackInfo != null && fakeFrame.BackStackInfo.Any())
-            //{
-            //    // 先导航到返回堆栈的第一个页面
-            //    if (fakeFrame.BackStackInfo.Count > 0)
-            //    {
-            //        var firstPage = fakeFrame.BackStackInfo.First();
-            //        myFrame.Navigate(firstPage.PageType, firstPage.Parameter);
-
-            //        // 等待导航完成
-            //        await Task.Delay(100);
-
-            //        // 重建剩余的返回堆栈
-            //        for (int i = 1; i < fakeFrame.BackStackInfo.Count; i++)
-            //        {
-            //            var pageInfo = fakeFrame.BackStackInfo[i];
-            //            myFrame.Navigate(pageInfo.PageType, pageInfo.Parameter);
-            //            await Task.Delay(50);
-            //        }
-            //    }
-            //}
-
-            // 重建当前页面
-            if (fakeFrame.CurrentPageType != null)
-            {
-                myFrame.Navigate(fakeFrame.CurrentPageType, fakeFrame.CurrentPageParameter);
-            }
-
-            return myFrame;
         }
 
         private bool ContainsPageType(Type sourcePageType)

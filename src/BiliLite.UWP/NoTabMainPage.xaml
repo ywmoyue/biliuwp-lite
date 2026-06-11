@@ -45,7 +45,7 @@
             <Button
                 x:Name="btnBack"
                 Width="48"
-                Height="40"
+                Height="32"
                 Margin="0,-4"
                 Background="Transparent"
                 BorderThickness="0"
@@ -60,7 +60,7 @@
         x:Name="btnHome"
         Grid.Column="1"
         Width="48"
-        Height="40"
+        Height="32"
         Margin="0,-4"
         Background="Transparent"
         BorderThickness="0"

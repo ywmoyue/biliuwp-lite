@@ -47,6 +47,15 @@ namespace BiliLite.Pages
         private VideoListView m_videoListView;
         private readonly WatchLaterViewModel m_watchLaterViewModel;
         private bool m_loadUgcSeasonData = false;
+        private readonly Stack<VideoHistoryEntry> m_videoHistory = new Stack<VideoHistoryEntry>();
+
+        public bool CanGoBackInVideo => m_videoHistory.Count > 0;
+
+        private struct VideoHistoryEntry
+        {
+            public string VideoId;
+            public string Title;
+        }
 
         public VideoDetailPage()
         {
@@ -102,6 +111,34 @@ namespace BiliLite.Pages
                 frame.ClosedPage -= VideoDetailPage_ClosedPage;
             });
         }
+        public async Task NavigateToVideo(string videoId, string title)
+        {
+            if (flag) return;
+            if (m_viewModel?.VideoInfo != null && !string.IsNullOrEmpty(_id))
+            {
+                m_videoHistory.Push(new VideoHistoryEntry
+                {
+                    VideoId = _id,
+                    Title = m_viewModel.VideoInfo.Title,
+                });
+            }
+            await InitializeVideo(videoId);
+            MessageCenter.ChangeTitle(this, title);
+        }
+
+        public async Task GoBackInVideo()
+        {
+            if (m_videoHistory.Count == 0) return;
+            var entry = m_videoHistory.Pop();
+            await InitializeVideo(entry.VideoId);
+            MessageCenter.ChangeTitle(this, entry.Title);
+        }
+
+        public void ClearVideoHistory()
+        {
+            m_videoHistory.Clear();
+        }
+
         private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
         {
             DataRequest request = args.Request;
