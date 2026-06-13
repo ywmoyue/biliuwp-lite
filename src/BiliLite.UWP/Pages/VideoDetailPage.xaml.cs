@@ -54,6 +54,15 @@ namespace BiliLite.Pages
         private int m_deferredDetailLoadVersion;
         // 每个视频仅自动触发一次评论加载，避免重复请求。
         private bool m_hasLoadedCommentForCurrentVideo;
+        private readonly Stack<VideoHistoryEntry> m_videoHistory = new Stack<VideoHistoryEntry>();
+
+        public bool CanGoBackInVideo => m_videoHistory.Count > 0;
+
+        private struct VideoHistoryEntry
+        {
+            public string VideoId;
+            public string Title;
+        }
 
         public VideoDetailPage()
         {
@@ -114,6 +123,34 @@ namespace BiliLite.Pages
                 logger.Trace("VideoDetailPage: 页面已关闭，事件已注销");
             });
         }
+        public async Task NavigateToVideo(string videoId, string title)
+        {
+            if (flag) return;
+            if (m_viewModel?.VideoInfo != null && !string.IsNullOrEmpty(_id))
+            {
+                m_videoHistory.Push(new VideoHistoryEntry
+                {
+                    VideoId = _id,
+                    Title = m_viewModel.VideoInfo.Title,
+                });
+            }
+            await InitializeVideo(videoId);
+            MessageCenter.ChangeTitle(this, title);
+        }
+
+        public async Task GoBackInVideo()
+        {
+            if (m_videoHistory.Count == 0) return;
+            var entry = m_videoHistory.Pop();
+            await InitializeVideo(entry.VideoId);
+            MessageCenter.ChangeTitle(this, entry.Title);
+        }
+
+        public void ClearVideoHistory()
+        {
+            m_videoHistory.Clear();
+        }
+
         private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
         {
             DataRequest request = args.Request;
