@@ -147,12 +147,6 @@ namespace BiliLite
 
         private async Task Navigation(object arguments, bool prelaunch = false)
         {
-            // We don't have ARM64 support of SYEngine.
-            if (RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
-            {
-                SYEngine.Core.Initialize();
-            }
-
             await WebView2UserAgentProvider.InitializeAsync();
 
             try
