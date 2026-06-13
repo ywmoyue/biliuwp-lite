@@ -1449,7 +1449,7 @@ namespace BiliLite.Controls
             }
             if (!m_hasReportedHistory)
             {
-                await ReportHistory(Player.Position);
+                await ReportHistory(CurrentPosition);
             }
             m_danmakuController.Clear();
             await SetPlayItem(EpisodeList.SelectedIndex);
