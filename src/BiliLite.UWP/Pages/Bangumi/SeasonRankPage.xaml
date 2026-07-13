@@ -78,13 +78,18 @@
                                     </Grid>
 
                                     <Grid Grid.Column="1" Margin="10,5">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
                                         <TextBlock
-                                            MaxLines="1"
+                                            Grid.Row="0"
+                                            MaxLines="2"
                                             Text="{x:Bind Path=Title}"
                                             TextAlignment="Justify"
                                             TextTrimming="CharacterEllipsis"
                                             TextWrapping="Wrap" />
-                                        <StackPanel VerticalAlignment="Bottom">
+                                        <StackPanel Grid.Row="1" VerticalAlignment="Bottom">
                                             <Border
                                                 Padding="8,4"
                                                 HorizontalAlignment="Left"
