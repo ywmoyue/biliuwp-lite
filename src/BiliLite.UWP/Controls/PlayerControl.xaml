@@ -70,6 +70,7 @@
                             <Grid>
                                 <ListView
                                     x:Name="EpisodeList"
+                                    AutomationProperties.AutomationId="Player.EpisodeList"
                                     Loaded="EpisodeList_Loaded"
                                     SelectionChanged="EpisodeList_SelectionChanged">
                                     <ListView.ItemTemplate>
@@ -527,7 +528,7 @@
                     PointerPressed="Grid_PointerPressed"
                     PointerReleased="Grid_PointerReleased">
                     <!--  播放器宿主（新架构）  -->
-                    <Grid x:Name="PlayerHost" />
+                    <Grid x:Name="PlayerHost" AutomationProperties.AutomationId="Player.Surface" />
 
                     <!--  字幕  -->
                     <Border
@@ -566,11 +567,12 @@
                             <TextBlock
                                 x:Name="TxtBuffering"
                                 Margin="0,8"
+                                AutomationProperties.AutomationId="Player.BufferingIndicator"
                                 Foreground="White"
                                 Text="缓冲中..."
                                 TextAlignment="Center" />
                         </StackPanel>
-                        <StackPanel x:Name="VideoLoading" VerticalAlignment="Center">
+                        <StackPanel x:Name="VideoLoading" AutomationProperties.AutomationId="Player.VideoLoading" VerticalAlignment="Center">
                             <muxc:ProgressRing
                                 Width="50"
                                 Height="50"
@@ -673,6 +675,7 @@
                                     x:Name="TopTitle"
                                     Margin="12,0"
                                     VerticalAlignment="Center"
+                                    AutomationProperties.AutomationId="Player.Title"
                                     FontSize="18"
                                     Foreground="White"
                                     TextTrimming="CharacterEllipsis">
@@ -725,6 +728,8 @@
                                         Height="48"
                                         Padding="0"
                                         Background="Transparent"
+                                        AutomationProperties.AutomationId="Player.DanmakuSettingsButton"
+                                        AutomationProperties.Name="弹幕设置"
                                         Click="TopBtnSettingDanmaku_Click"
                                         ToolTipService.ToolTip="弹幕设置">
                                         <Image
@@ -802,6 +807,8 @@
                                             Width="48"
                                             Height="48"
                                             Padding="8"
+                                            AutomationProperties.AutomationId="Player.PauseButton"
+                                            AutomationProperties.Name="暂停"
                                             Click="BottomBtnPause_Click"
                                             Foreground="White"
                                             Visibility="Collapsed">
@@ -812,6 +819,8 @@
                                             Width="48"
                                             Height="48"
                                             Padding="8"
+                                            AutomationProperties.AutomationId="Player.PlayButton"
+                                            AutomationProperties.Name="播放"
                                             Click="BottomBtnPlay_Click"
                                             Foreground="White">
                                             <fa:FontAwesome FontSize="20" Icon="Solid_Play" />
@@ -829,6 +838,8 @@
                                             Width="48"
                                             Height="48"
                                             Padding="8"
+                                            AutomationProperties.AutomationId="Player.NextButton"
+                                            AutomationProperties.Name="下一集"
                                             Click="BottomBtnNext_Click"
                                             Foreground="White"
                                             Visibility="Collapsed">
@@ -838,6 +849,8 @@
                                             x:Name="BottomTextPostion"
                                             Margin="0,0,0,3"
                                             VerticalAlignment="Center"
+                                            AutomationProperties.AutomationId="Player.PositionText"
+                                            AutomationProperties.Name="播放位置"
                                             FontSize="18"
                                             Foreground="White">
                                             <Run Text="{x:Bind m_viewModel.Position, Mode=OneWay, Converter={StaticResource ProgressToTimeConverter}}" />
@@ -859,6 +872,8 @@
                                             Height="48"
                                             Padding="0"
                                             Background="Transparent"
+                                            AutomationProperties.AutomationId="Player.DanmakuToggle"
+                                            AutomationProperties.Name="打开弹幕"
                                             Click="TopBtnOpenDanmaku_Click"
                                             Visibility="{x:Bind Path=m_danmakuController.DanmakuViewModel.IsHide, Mode=OneWay}">
                                             <Image
@@ -1004,6 +1019,8 @@
                                             Height="48"
                                             Padding="0,3,0,0"
                                             Background="Transparent"
+                                            AutomationProperties.AutomationId="Player.VolumeMuteButton"
+                                            AutomationProperties.Name="音量"
                                             BorderThickness="0"
                                             Foreground="White"
                                             Style="{StaticResource DefaultButtonStyle}"
@@ -1017,6 +1034,7 @@
                                                             <TextBlock HorizontalAlignment="Center">音量</TextBlock>
                                                             <Slider
                                                                 x:Name="SliderVolume"
+                                                                AutomationProperties.AutomationId="Player.VolumeSlider"
                                                                 Width="200"
                                                                 Maximum="1"
                                                                 Minimum="0"
@@ -1035,6 +1053,8 @@
                                             Height="48"
                                             Padding="12"
                                             Background="Transparent"
+                                            AutomationProperties.AutomationId="Player.PlaylistButton"
+                                            AutomationProperties.Name="选集"
                                             Click="BottomBtnList_Click"
                                             Foreground="White"
                                             ToolTipService.ToolTip="选集"
@@ -1067,6 +1087,8 @@
                                             Width="48"
                                             Height="48"
                                             Padding="8"
+                                            AutomationProperties.AutomationId="Player.FullWindowButton"
+                                            AutomationProperties.Name="铺满窗口"
                                             Click="BottomBtnFullWindows_Click"
                                             Foreground="White"
                                             ToolTipService.ToolTip="铺满窗口">
@@ -1077,6 +1099,8 @@
                                             Width="48"
                                             Height="48"
                                             Padding="8"
+                                            AutomationProperties.AutomationId="Player.ExitFullWindowButton"
+                                            AutomationProperties.Name="取消铺满窗口"
                                             Click="BottomBtnExitFullWindows_Click"
                                             Foreground="White"
                                             ToolTipService.ToolTip="取消铺满窗口"
@@ -1088,6 +1112,8 @@
                                             Width="48"
                                             Height="48"
                                             Padding="8"
+                                            AutomationProperties.AutomationId="Player.FullScreenButton"
+                                            AutomationProperties.Name="全屏"
                                             Click="BottomBtnFull_Click"
                                             Foreground="White"
                                             ToolTipService.ToolTip="全屏">
@@ -1098,6 +1124,8 @@
                                             Width="48"
                                             Height="48"
                                             Padding="8"
+                                            AutomationProperties.AutomationId="Player.ExitFullScreenButton"
+                                            AutomationProperties.Name="退出全屏"
                                             Click="BottomBtnExitFull_Click"
                                             Foreground="White"
                                             ToolTipService.ToolTip="退出全屏"
@@ -1191,6 +1219,8 @@
                         Margin="24,100"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Bottom"
+                        AutomationProperties.AutomationId="Player.CoverPlayButton"
+                        AutomationProperties.Name="播放"
                         Click="BottomBtnPlay_Click"
                         Visibility="Collapsed">
                         <Image Source="ms-appx:///Assets/Icon/ic_play.png" />
