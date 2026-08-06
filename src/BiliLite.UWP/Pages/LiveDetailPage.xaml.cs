@@ -997,15 +997,14 @@ namespace BiliLite.Pages
             try
             {
                 string fileName = DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
-                StorageFolder applicationFolder = KnownFolders.PicturesLibrary;
-                StorageFolder folder = await applicationFolder.CreateFolderAsync("哔哩哔哩截图", CreationCollisionOption.OpenIfExists);
+                StorageFolder folder = await ScreenshotHelper.GetScreenshotFolder();
                 StorageFile saveFile = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
 
                 if (m_viewModel.ShowWebPlayer)
                 {
                     var imageData = await m_player.WebPlayer.CaptureVideo();
                     await FileIO.WriteBytesAsync(saveFile, imageData);
-                    NotificationShowExtensions.ShowMessageToast("截图已经保存至图片库");
+                    NotificationShowExtensions.ShowMessageToast("截图已保存");
                     return;
                 }
 
@@ -1024,7 +1023,7 @@ namespace BiliLite.Pages
                          pixelBuffer.ToArray());
                     await encoder.FlushAsync();
                 }
-                NotificationShowExtensions.ShowMessageToast("截图已经保存至图片库");
+                NotificationShowExtensions.ShowMessageToast("截图已保存");
             }
             catch (Exception ex)
             {

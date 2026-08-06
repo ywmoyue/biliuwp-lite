@@ -960,6 +960,7 @@
     <Compile Include="Services\MessageCenter.cs" />
     <Compile Include="Services\SettingService.cs" />
     <Compile Include="Services\SqlHelper.cs" />
+    <Compile Include="Services\ScreenshotHelper.cs" />
     <Compile Include="Services\VideoPlayHistoryHelper.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

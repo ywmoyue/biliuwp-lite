@@ -1348,6 +1348,24 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const int DEFAULT_PLAYER_TOOL_BAR_STYLE_TYPE = (int)PlayerToolBarStyleTypes.ComboBox;
+
+            /// <summary>
+            /// 截图保存目录
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string SCREENSHOT_PATH = "PlayerScreenshotPath";
+
+            /// <summary>
+            /// 默认截图保存目录
+            /// </summary>
+            [SettingDefaultValue]
+            public const string DEFAULT_SCREENSHOT_PATH = "图片库/哔哩哔哩截图";
+
+            /// <summary>
+            /// 截图保存目录的 FutureAccessList 令牌
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string SCREENSHOT_PATH_TOKEN = "PlayerScreenshotPathToken";
         }
 
         public class Filter
