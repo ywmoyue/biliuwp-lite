@@ -2827,35 +2827,34 @@ namespace BiliLite.Controls
             try
             {
                 string fileName = DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
-                StorageFolder applicationFolder = KnownFolders.PicturesLibrary;
-                StorageFolder folder = await applicationFolder.CreateFolderAsync("哔哩哔哩截图", CreationCollisionOption.OpenIfExists);
+                StorageFolder folder = await ScreenshotHelper.GetScreenshotFolder();
                 StorageFile saveFile = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
 
                 if (Player.ShowShakaPlayer)
                 {
                     var imageData = await Player.WebPlayer.CaptureVideo();
                     await FileIO.WriteBytesAsync(saveFile, imageData);
-                    this.ShowMessageToastV2("截图已经保存至图片库");
+                    this.ShowMessageToastV2("截图已保存");
                     return;
                 }
                 throw new NotImplementedException();
 
-                //RenderTargetBitmap bitmap = new RenderTargetBitmap();
-                //await bitmap.RenderAsync(Player);
-                //var pixelBuffer = await bitmap.GetPixelsAsync();
-                //using (var fileStream = await saveFile.OpenAsync(FileAccessMode.ReadWrite))
-                //{
-                //    var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
-                //    encoder.SetPixelData(BitmapPixelFormat.Bgra8,
-                //        BitmapAlphaMode.Ignore,
-                //         (uint)bitmap.PixelWidth,
-                //         (uint)bitmap.PixelHeight,
-                //         displayInformation.LogicalDpi,
-                //         displayInformation.LogicalDpi,
-                //         pixelBuffer.ToArray());
-                //    await encoder.FlushAsync();
-                //}
-                //NotificationShowExtensions.ShowMessageToast("截图已经保存至图片库");
+                // RenderTargetBitmap bitmap = new RenderTargetBitmap();
+                // await bitmap.RenderAsync(Player);
+                // var pixelBuffer = await bitmap.GetPixelsAsync();
+                // using (var fileStream = await saveFile.OpenAsync(FileAccessMode.ReadWrite))
+                // {
+                //     var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
+                //     encoder.SetPixelData(BitmapPixelFormat.Bgra8,
+                //         BitmapAlphaMode.Ignore,
+                //          (uint)bitmap.PixelWidth,
+                //          (uint)bitmap.PixelHeight,
+                //          displayInformation.LogicalDpi,
+                //          displayInformation.LogicalDpi,
+                //          pixelBuffer.ToArray());
+                //     await encoder.FlushAsync();
+                // }
+                // NotificationShowExtensions.ShowMessageToast("截图已保存");
             }
             catch (Exception ex)
             {

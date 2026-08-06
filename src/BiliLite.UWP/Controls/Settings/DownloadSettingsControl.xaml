@@ -71,6 +71,32 @@
             <Button x:Name="DownloadChangeOldPath" Margin="0,8">导入旧版目录</Button>
         </controls:SettingsCard>
 
+        <controls:SettingsCard Header="截图保存目录">
+            <controls:SettingsCard.Description>
+                <Button
+                    x:Name="ScreenshotOpenPath"
+                    Margin="0,5,0,0"
+                    Padding="4"
+                    Style="{StaticResource TransparentButtonStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <SymbolIcon
+                            Margin="0,0,8,0"
+                            Foreground="Orange"
+                            Symbol="Folder" />
+                        <TextBlock x:Name="txtScreenshotPath" Grid.Column="1" />
+                    </Grid>
+                </Button>
+            </controls:SettingsCard.Description>
+            <controls:SettingsCard.HeaderIcon>
+                <SymbolIcon Symbol="Camera" />
+            </controls:SettingsCard.HeaderIcon>
+            <Button x:Name="ScreenshotChangePath" Margin="0,8">修改保存目录</Button>
+        </controls:SettingsCard>
+
         <controls:SettingsCard Header="加载旧版下载的视频">
             <controls:SettingsCard.HeaderIcon>
                 <SymbolIcon Symbol="SyncFolder" />

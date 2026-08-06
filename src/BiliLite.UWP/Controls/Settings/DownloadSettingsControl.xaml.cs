@@ -84,6 +84,38 @@ namespace BiliLite.Controls.Settings
                     Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(folder);
                 }
             });
+            //截图保存目录
+            txtScreenshotPath.Text = SettingService.GetValue(SettingConstants.Player.SCREENSHOT_PATH,
+                SettingConstants.Player.DEFAULT_SCREENSHOT_PATH);
+            ScreenshotOpenPath.Click += new RoutedEventHandler(async (e, args) =>
+            {
+                if (txtScreenshotPath.Text == SettingConstants.Player.DEFAULT_SCREENSHOT_PATH)
+                {
+                    var picturesLibrary = Windows.Storage.KnownFolders.PicturesLibrary;
+                    picturesLibrary = await picturesLibrary.CreateFolderAsync("哔哩哔哩截图",
+                        CreationCollisionOption.OpenIfExists);
+
+                    await Windows.System.Launcher.LaunchFolderAsync(picturesLibrary);
+                }
+                else
+                {
+                    await Windows.System.Launcher.LaunchFolderPathAsync(txtScreenshotPath.Text);
+                }
+            });
+            ScreenshotChangePath.Click += new RoutedEventHandler(async (e, args) =>
+            {
+                FolderPicker folderPicker = new FolderPicker();
+                folderPicker.FileTypeFilter.Add("*");
+                folderPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+                var folder = await folderPicker.PickSingleFolderAsync();
+                if (folder != null)
+                {
+                    var token = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(folder);
+                    SettingService.SetValue(SettingConstants.Player.SCREENSHOT_PATH, folder.Path);
+                    SettingService.SetValue(SettingConstants.Player.SCREENSHOT_PATH_TOKEN, token);
+                    txtScreenshotPath.Text = folder.Path;
+                }
+            });
 
             //并行下载
             swDownloadParallelDownload.IsOn = SettingService.GetValue<bool>(SettingConstants.Download.PARALLEL_DOWNLOAD, true);
