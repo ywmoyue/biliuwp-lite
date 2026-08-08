@@ -2910,7 +2910,18 @@ namespace BiliLite.Controls
                 _logger.Debug($"Stopped事件: shouldHandleEnded={shouldHandleEnded}, disposing={m_isDisposing}, ignoreNextStop={m_ignoreNextStoppedState}, old={{loading:{e.OldState?.IsLoading},playing:{e.OldState?.IsPlaying},buffering:{e.OldState?.IsBuffering},stopped:{e.OldState?.IsStopped}}}");
                 if (shouldHandleEnded)
                 {
-                    _ = HandlePlaybackEndedAsync();
+                    // 播完处理必须等当前 Stop 销毁流程(Player.Stop → StopCore)执行完后再触发：
+                    // 若同步内联执行，重载(Load)会与 Stop 竞态——Load 刚创建的新播放器可能被
+                    // 尚未完成的 Stop 销毁，导致重载卡在 Loading 状态(黑屏)。
+                    // 这里延迟到下一拍派发，保证顺序，不再依赖 ReportHistory 的异步性。
+                    _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                    {
+                        if (m_isDisposing)
+                        {
+                            return;
+                        }
+                        _ = HandlePlaybackEndedAsync();
+                    });
                 }
                 return;
             }
