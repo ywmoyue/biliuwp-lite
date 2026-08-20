@@ -527,8 +527,17 @@
                     PointerMoved="Grid_PointerMoved"
                     PointerPressed="Grid_PointerPressed"
                     PointerReleased="Grid_PointerReleased">
-                    <!--  播放器宿主（新架构）  -->
-                    <Grid x:Name="PlayerHost" AutomationProperties.AutomationId="Player.Surface" />
+                    <!--  真实播放器控件（XAML 声明，替代代码实例化，按 RealPlayerType 切换可见性）  -->
+                    <Grid x:Name="PlayerHost" AutomationProperties.AutomationId="Player.Surface">
+                        <MediaPlayerElement
+                            x:Name="PlayerHostMediaPlayerElement"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Visibility="{x:Bind m_viewModel.ShowMediaPlayer, Mode=OneWay}" />
+                        <webPlayer:ShakaPlayerControl
+                            x:Name="PlayerHostShakaPlayer"
+                            Visibility="{x:Bind m_viewModel.ShowWebPlayer, Mode=OneWay}" />
+                    </Grid>
 
                     <!--  字幕  -->
                     <Border

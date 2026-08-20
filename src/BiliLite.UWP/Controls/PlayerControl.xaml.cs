@@ -91,6 +91,7 @@ namespace BiliLite.Controls
 
         private void UpdatePlayerHostVisibility(RealPlayerType playerType)
         {
+            m_viewModel.RealPlayerType = playerType;
             var showWebPlayerToolbarButton = playerType == RealPlayerType.ShakaPlayer || playerType == RealPlayerType.Mpegts;
             m_viewModel.ShowWebPlayerToolbarButton = showWebPlayerToolbarButton;
             if (!showWebPlayerToolbarButton)
@@ -246,7 +247,7 @@ namespace BiliLite.Controls
             m_realPlayInfo = new RealPlayInfo();
             m_playerController = PlayerControllerFactory.Create(PlayerType.Video);
             UpdatePlayerHostVisibility(m_videoPlayerConfig.PlayerType);
-            m_videoPlayer = new VideoPlayer(m_videoPlayerConfig, PlayerHost, m_playerController);
+            m_videoPlayer = new VideoPlayer(m_videoPlayerConfig, PlayerHost, PlayerHostMediaPlayerElement, PlayerHostShakaPlayer, m_playerController);
             m_videoPlayer.SetRealPlayInfo(m_realPlayInfo);
             m_playerController.SetPlayer(m_videoPlayer);
             m_viewModel.CurrentPlayState = m_playerController.PlayState;
@@ -3023,7 +3024,7 @@ namespace BiliLite.Controls
 
                     m_videoPlayerConfig.PlayerType = e;
                     UpdatePlayerHostVisibility(m_videoPlayerConfig.PlayerType);
-                    m_videoPlayer = new VideoPlayer(m_videoPlayerConfig, PlayerHost, m_playerController);
+                    m_videoPlayer = new VideoPlayer(m_videoPlayerConfig, PlayerHost, PlayerHostMediaPlayerElement, PlayerHostShakaPlayer, m_playerController);
                     m_videoPlayer.SetRealPlayInfo(m_realPlayInfo);
                     m_playerController.SetPlayer(m_videoPlayer);
                     HookVideoPlayerEvents();

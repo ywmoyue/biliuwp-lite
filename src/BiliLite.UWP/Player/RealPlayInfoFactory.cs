@@ -34,7 +34,7 @@ namespace BiliLite.Player
             referer ??= playUrlInfo.Referer;
 
             var mediaType = ConvertMediaType(playUrlInfo.PlayUrlType);
-            var singleIsFlv = ResolveSingleIsFlv(playUrlInfo, isLocal);
+            var singleIsFlv = ResolveSingleIsFlv(playUrlInfo);
             var realPlayInfo = CreateBaseInfo(
                 mediaType,
                 userAgent,
@@ -214,22 +214,26 @@ namespace BiliLite.Player
             };
         }
 
-        private static bool ResolveSingleIsFlv(BiliPlayUrlInfo playUrlInfo, bool isLocal)
+        private static bool ResolveSingleIsFlv(BiliPlayUrlInfo playUrlInfo)
         {
             if (playUrlInfo?.PlayUrlType != BiliPlayUrlType.SingleFLV)
             {
                 return false;
             }
 
+            // 在线接口返回的 durl 既可能是 flv 也可能是 mp4（旧库/非 DASH 视频），
+            // 需要根据实际扩展名判断，否则 mp4 会被误路由到 FLV 播放器导致播放失败。
             var url = playUrlInfo.FlvInfo?.FirstOrDefault()?.Url;
-            if (!string.IsNullOrWhiteSpace(url) && isLocal)
+            if (string.IsNullOrWhiteSpace(url))
             {
-                if (url.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase)
-                    || url.EndsWith(".m4v", StringComparison.OrdinalIgnoreCase)
-                    || url.EndsWith(".mov", StringComparison.OrdinalIgnoreCase))
-                {
-                    return false;
-                }
+                return true;
+            }
+
+            if (url.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase)
+                || url.EndsWith(".m4v", StringComparison.OrdinalIgnoreCase)
+                || url.EndsWith(".mov", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
             }
 
             return true;

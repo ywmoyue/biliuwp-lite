@@ -16,6 +16,7 @@ namespace BiliLite.Player.SubPlayers
     public class DashFFmpegInteropSubPlayer : ISubPlayer
     {
         private readonly Panel m_playerHost;
+        private readonly bool m_useSharedPlayerElement;
         private MediaPlayerElement m_playerElement;
         private MediaPlayer m_videoPlayer;
         private MediaPlayer m_audioPlayer;
@@ -28,9 +29,14 @@ namespace BiliLite.Player.SubPlayers
         private double m_volume = 1;
         private bool m_isMuted;
 
-        public DashFFmpegInteropSubPlayer(Panel playerHost)
+        public DashFFmpegInteropSubPlayer(Panel playerHost, MediaPlayerElement sharedPlayerElement = null)
         {
             m_playerHost = playerHost;
+            if (sharedPlayerElement != null)
+            {
+                m_playerElement = sharedPlayerElement;
+                m_useSharedPlayerElement = true;
+            }
         }
 
         public override RealPlayerType Type { get; } = RealPlayerType.FFmpegInterop;
@@ -385,7 +391,10 @@ namespace BiliLite.Player.SubPlayers
                 }
 
                 m_playerElement.SetMediaPlayer(null);
-                m_playerHost?.Children.Remove(m_playerElement);
+                if (!m_useSharedPlayerElement)
+                {
+                    m_playerHost?.Children.Remove(m_playerElement);
+                }
             });
         }
 

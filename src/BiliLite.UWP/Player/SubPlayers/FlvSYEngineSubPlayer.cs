@@ -12,15 +12,21 @@ namespace BiliLite.Player.SubPlayers
     public class FlvSYEngineSubPlayer : ISubPlayer
     {
         private readonly Panel m_playerHost;
+        private readonly bool m_useSharedPlayerElement;
         private MediaPlayerElement m_playerElement;
         private MediaPlayer m_mediaPlayer;
         private string m_url;
         private bool m_isBuffering;
         private double m_bufferCache;
 
-        public FlvSYEngineSubPlayer(Panel playerHost)
+        public FlvSYEngineSubPlayer(Panel playerHost, MediaPlayerElement sharedPlayerElement = null)
         {
             m_playerHost = playerHost;
+            if (sharedPlayerElement != null)
+            {
+                m_playerElement = sharedPlayerElement;
+                m_useSharedPlayerElement = true;
+            }
         }
 
         public override RealPlayerType Type { get; } = RealPlayerType.Native;
@@ -189,7 +195,10 @@ namespace BiliLite.Player.SubPlayers
             if (m_playerElement != null)
             {
                 m_playerElement.SetMediaPlayer(null);
-                m_playerHost?.Children.Remove(m_playerElement);
+                if (!m_useSharedPlayerElement)
+                {
+                    m_playerHost?.Children.Remove(m_playerElement);
+                }
             }
             m_mediaPlayer.Dispose();
             m_mediaPlayer = null;

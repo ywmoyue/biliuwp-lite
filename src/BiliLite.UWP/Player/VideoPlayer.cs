@@ -35,6 +35,7 @@ namespace BiliLite.Player
         private readonly BasePlayerController m_playerController;
         private readonly Panel m_playerHost;
         private readonly MediaPlayerElement m_nativePlayerElement;
+        private readonly ShakaPlayerControl m_shakaPlayerControl;
         private readonly List<RealPlayerType> m_triedPlayers = new();
         private readonly object m_bufferLock = new();
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
@@ -57,53 +58,17 @@ namespace BiliLite.Player
 
         public VideoPlayer(PlayerConfig playerConfig,
             Panel playerHost,
+            MediaPlayerElement nativePlayerElement,
+            ShakaPlayerControl shakaPlayerControl,
             BasePlayerController playerController)
         {
             m_playerConfig = playerConfig;
             m_playerHost = playerHost;
             m_playerController = playerController;
-            m_nativePlayerElement = EnsureNativePlayerElement(playerHost);
+            m_nativePlayerElement = nativePlayerElement;
+            m_shakaPlayerControl = shakaPlayerControl;
             m_subPlayer = CreateSubPlayer(m_playerConfig.PlayerType, null);
             InitPlayerEvents(m_subPlayer);
-        }
-
-        private static MediaPlayerElement EnsureNativePlayerElement(Panel playerHost)
-        {
-            if (playerHost == null)
-            {
-                return null;
-            }
-
-            foreach (var child in playerHost.Children)
-            {
-                if (child is MediaPlayerElement existed)
-                {
-                    existed.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    existed.VerticalAlignment = VerticalAlignment.Stretch;
-                    existed.Width = double.NaN;
-                    existed.Height = double.NaN;
-                    return existed;
-                }
-            }
-
-            var element = new MediaPlayerElement
-            {
-                HorizontalAlignment = HorizontalAlignment.Stretch,
-                VerticalAlignment = VerticalAlignment.Stretch,
-                Width = double.NaN,
-                Height = double.NaN,
-            };
-
-            try
-            {
-                playerHost.Children.Insert(0, element);
-            }
-            catch
-            {
-                playerHost.Children.Add(element);
-            }
-
-            return element;
         }
 
         public BaseWebPlayer WebPlayer
@@ -447,33 +412,33 @@ namespace BiliLite.Player
         {
             if (playInfo?.PlayMediaType == PlayMediaType.MultiFlv)
             {
-                return new MultiFlvSYEngineSubPlayer(m_playerHost);
+                return new MultiFlvSYEngineSubPlayer(m_playerHost, m_nativePlayerElement);
             }
 
             if (playInfo?.PlayMediaType == PlayMediaType.Single && playInfo.SingleIsFlv)
             {
                 return playerType == RealPlayerType.FFmpegInterop
-                    ? new FlvFFmpegInteropSubPlayer(m_playerHost)
-                    : new FlvSYEngineSubPlayer(m_playerHost);
+                    ? new FlvFFmpegInteropSubPlayer(m_playerHost, m_nativePlayerElement)
+                    : new FlvSYEngineSubPlayer(m_playerHost, m_nativePlayerElement);
             }
 
             if (playInfo?.PlayMediaType == PlayMediaType.Dash)
             {
                 return playerType switch
                 {
-                    RealPlayerType.ShakaPlayer => new DashShakaSubPlayer(m_playerHost),
+                    RealPlayerType.ShakaPlayer => new DashShakaSubPlayer(m_playerHost, m_shakaPlayerControl),
                     RealPlayerType.Native => new DashNativeSubPlayer(m_playerHost, m_nativePlayerElement),
-                    RealPlayerType.FFmpegInterop => new DashFFmpegInteropSubPlayer(m_playerHost),
-                    _ => new DashShakaSubPlayer(m_playerHost),
+                    RealPlayerType.FFmpegInterop => new DashFFmpegInteropSubPlayer(m_playerHost, m_nativePlayerElement),
+                    _ => new DashShakaSubPlayer(m_playerHost, m_shakaPlayerControl),
                 };
             }
 
             return playerType switch
             {
-                RealPlayerType.ShakaPlayer => new DashShakaSubPlayer(m_playerHost),
+                RealPlayerType.ShakaPlayer => new DashShakaSubPlayer(m_playerHost, m_shakaPlayerControl),
                 RealPlayerType.Native => new Mp4NativeSubPlayer(m_playerHost, m_nativePlayerElement),
-                RealPlayerType.FFmpegInterop => new FlvFFmpegInteropSubPlayer(m_playerHost),
-                _ => new FlvFFmpegInteropSubPlayer(m_playerHost),
+                RealPlayerType.FFmpegInterop => new FlvFFmpegInteropSubPlayer(m_playerHost, m_nativePlayerElement),
+                _ => new FlvFFmpegInteropSubPlayer(m_playerHost, m_nativePlayerElement),
             };
         }
 
