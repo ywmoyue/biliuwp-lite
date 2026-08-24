@@ -596,6 +596,15 @@ namespace BiliLite.Player
                     return;
                 }
 
+                // 自动播放门控：只有允许自动播放或用户已点击播放时才真正启动播放，
+                // 否则停留在"已加载完成的等待态"（PauseState 保持暂停），避免打开视频页自动出声。
+                var canStartPlayback = m_realPlayInfo?.IsAutoPlay == true || !m_playerController.PauseState.IsPaused;
+                if (!canStartPlayback)
+                {
+                    m_keepPausedAfterSeek = false;
+                    return;
+                }
+
                 EmitBufferingChanged(false);
 
                 await m_playerController.PlayState.Play();

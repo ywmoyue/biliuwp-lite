@@ -17,6 +17,7 @@ namespace BiliLite.Player.SubPlayers
         private MediaPlayer m_mediaPlayer;
         private string m_url;
         private bool m_isBuffering;
+        private bool m_userRequestedPlay;
         private double m_bufferCache;
 
         public FlvSYEngineSubPlayer(Panel playerHost, MediaPlayerElement sharedPlayerElement = null)
@@ -113,6 +114,7 @@ namespace BiliLite.Player.SubPlayers
             m_mediaPlayer.MediaOpened += MediaPlayerOnMediaOpened;
             m_mediaPlayer.MediaEnded += MediaPlayerOnMediaEnded;
             m_mediaPlayer.MediaFailed += MediaPlayerOnMediaFailed;
+            m_mediaPlayer.PlaybackSession.PlaybackStateChanged += PlaybackSessionOnPlaybackStateChanged;
             m_mediaPlayer.PlaybackSession.BufferingStarted += PlaybackSessionOnBufferingStarted;
             m_mediaPlayer.PlaybackSession.BufferingProgressChanged += PlaybackSessionOnBufferingProgressChanged;
             m_mediaPlayer.PlaybackSession.BufferingEnded += PlaybackSessionOnBufferingEnded;
@@ -136,6 +138,8 @@ namespace BiliLite.Player.SubPlayers
                 m_playerElement.SetMediaPlayer(m_mediaPlayer);
             }
 
+            // 用户显式请求播放后，不再拦截初次自动播放
+            m_userRequestedPlay = true;
             m_mediaPlayer?.Play();
         }
 
@@ -156,6 +160,8 @@ namespace BiliLite.Player.SubPlayers
 
         public override async Task Resume()
         {
+            // 用户显式恢复播放后，不再拦截初次自动播放
+            m_userRequestedPlay = true;
             m_mediaPlayer?.Play();
         }
 
@@ -192,6 +198,7 @@ namespace BiliLite.Player.SubPlayers
             m_mediaPlayer.PlaybackSession.BufferingProgressChanged -= PlaybackSessionOnBufferingProgressChanged;
             m_mediaPlayer.PlaybackSession.BufferingEnded -= PlaybackSessionOnBufferingEnded;
             m_mediaPlayer.PlaybackSession.PositionChanged -= PlaybackSessionOnPositionChanged;
+            m_mediaPlayer.PlaybackSession.PlaybackStateChanged -= PlaybackSessionOnPlaybackStateChanged;
             if (m_playerElement != null)
             {
                 m_playerElement.SetMediaPlayer(null);
@@ -202,6 +209,7 @@ namespace BiliLite.Player.SubPlayers
             }
             m_mediaPlayer.Dispose();
             m_mediaPlayer = null;
+            m_userRequestedPlay = false;
         }
 
         private void PlaybackSessionOnPositionChanged(MediaPlaybackSession sender, object args)
@@ -237,6 +245,25 @@ namespace BiliLite.Player.SubPlayers
         {
             m_isBuffering = true;
             BufferingStarted?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void PlaybackSessionOnPlaybackStateChanged(MediaPlaybackSession sender, object args)
+        {
+            if (sender?.PlaybackState != MediaPlaybackState.Playing)
+            {
+                return;
+            }
+
+            // 初次自动播放拦截：不改变 AutoPlay 属性，媒体保持自动预加载并渲染首帧，
+            // 但在用户未请求播放（未点击播放、未开启自动播放）时，进入播放态后立即暂停，
+            // 避免打开视频页时自动出声。
+            if (m_realPlayInfo?.IsAutoPlay == true || m_userRequestedPlay)
+            {
+                return;
+            }
+
+            m_userRequestedPlay = true;
+            m_mediaPlayer?.Pause();
         }
 
         private void PlaybackSessionOnBufferingProgressChanged(MediaPlaybackSession sender, object args)
