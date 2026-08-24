@@ -120,17 +120,27 @@ namespace BiliLite.Player.SubPlayers
 
             if (m_realPlayInfo.IsLocal)
             {
-                var composition = new MediaComposition();
-                foreach (var item in urls)
+                try
                 {
-                    var file = await StorageFile.GetFileFromPathAsync(item.Url);
-                    var clip = await MediaClip.CreateFromFileAsync(file);
-                    composition.Clips.Add(clip);
-                }
+                    // 本地分片目前只能用 MediaComposition 拼接，但系统解码器不支持 FLV 容器，
+                    // 失败时给出可读错误而不是抛出未处理异常
+                    var composition = new MediaComposition();
+                    foreach (var item in urls)
+                    {
+                        var file = await StorageFile.GetFileFromPathAsync(item.Url);
+                        var clip = await MediaClip.CreateFromFileAsync(file);
+                        composition.Clips.Add(clip);
+                    }
 
-                m_mediaPlayer.Source = MediaSource.CreateFromMediaStreamSource(composition.GenerateMediaStreamSource());
-                await SetRate(m_rate);
-                return;
+                    m_mediaPlayer.Source = MediaSource.CreateFromMediaStreamSource(composition.GenerateMediaStreamSource());
+                    await SetRate(m_rate);
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    EmitError(PlayerError.PlayerErrorCode.UnknownError, $"本地多段FLV暂不支持播放: {ex.Message}", PlayerError.RetryStrategy.NoRetry);
+                    return;
+                }
             }
 
             var playList = new SYEngine.Playlist(SYEngine.PlaylistTypes.NetworkHttp)

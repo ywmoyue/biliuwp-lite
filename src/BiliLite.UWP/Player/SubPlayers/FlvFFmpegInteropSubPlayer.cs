@@ -1,10 +1,12 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using BiliLite.Models.Common.Player;
 using BiliLite.Player.MediaInfos;
 using FFmpegInteropX;
 using Windows.ApplicationModel.Core;
 using Windows.Media.Playback;
+using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -21,6 +23,7 @@ namespace BiliLite.Player.SubPlayers
         private string m_url;
         private bool m_isBuffering;
         private bool m_userRequestedPlay;
+        private bool m_waitingForPlayableStatePromotion;
         private double m_bufferCache;
 
         public FlvFFmpegInteropSubPlayer(Panel playerHost, MediaPlayerElement sharedPlayerElement = null)
@@ -125,9 +128,40 @@ namespace BiliLite.Player.SubPlayers
                 config.FFmpegOptions.Add("headers", $"Referer: {m_realPlayInfo.Referer}");
             }
 
-            m_mediaSource = await FFmpegMediaSource.CreateFromUriAsync(m_url, config);
+            try
+            {
+                // 本地文件不能走 CreateFromUriAsync（file:// URI 打开会抛 E_FAIL），
+                // 与旧播放器一致，本地改为文件流方式创建播放源
+                if (m_realPlayInfo.IsLocal || IsLocalPathOrFileUri(m_url))
+                {
+                    var videoFile = await StorageFile.GetFileFromPathAsync(NormalizeLocalPath(m_url));
+                    m_mediaSource = await FFmpegMediaSource.CreateFromStreamAsync(await videoFile.OpenAsync(FileAccessMode.Read), config);
+                }
+                else
+                {
+                    m_mediaSource = await FFmpegMediaSource.CreateFromUriAsync(m_url, config);
+                }
+            }
+            catch (Exception ex)
+            {
+                EmitError(PlayerError.PlayerErrorCode.NeedUseOtherPlayerError, $"FLV 播放源创建失败: {ex.Message}", PlayerError.RetryStrategy.Normal);
+                return;
+            }
+
             m_mediaPlayer = new MediaPlayer();
             m_mediaPlayer.AutoPlay = true;
+            // 必须在赋值 Source 前把画面元素绑定到 MediaPlayer：
+            // AutoPlay=true 会在 Source 赋值后立即开始播放，若播放时才绑定元素（Play() 内），
+            // 未绑定时视频帧会被丢弃，表现为只有声音没有画面（黑屏）
+            await RunOnUiThreadAsync(() =>
+            {
+                EnsurePlayerElement();
+                AttachPlayerElement();
+                if (m_playerElement.MediaPlayer != m_mediaPlayer)
+                {
+                    m_playerElement.SetMediaPlayer(m_mediaPlayer);
+                }
+            });
             m_mediaPlayer.Source = m_mediaSource.CreateMediaPlaybackItem();
             m_mediaPlayer.MediaOpened += MediaPlayerOnMediaOpened;
             m_mediaPlayer.MediaEnded += MediaPlayerOnMediaEnded;
@@ -250,26 +284,28 @@ namespace BiliLite.Player.SubPlayers
         private void PlaybackSessionOnBufferingStarted(MediaPlaybackSession sender, object args)
         {
             m_isBuffering = true;
+            m_waitingForPlayableStatePromotion = true;
             BufferingStarted?.Invoke(this, EventArgs.Empty);
         }
 
         private void PlaybackSessionOnPlaybackStateChanged(MediaPlaybackSession sender, object args)
         {
-            if (sender?.PlaybackState != MediaPlaybackState.Playing)
-            {
-                return;
-            }
-
             // 初次自动播放拦截：不改变 AutoPlay 属性，媒体保持自动预加载并渲染首帧，
             // 但在用户未请求播放（未点击播放、未开启自动播放）时，进入播放态后立即暂停，
             // 避免打开视频页时自动出声。
-            if (m_realPlayInfo?.IsAutoPlay == true || m_userRequestedPlay)
+            if (sender?.PlaybackState == MediaPlaybackState.Playing)
             {
-                return;
+                if (m_realPlayInfo?.IsAutoPlay != true && !m_userRequestedPlay)
+                {
+                    m_userRequestedPlay = true;
+                    m_mediaPlayer?.Pause();
+                }
             }
 
-            m_userRequestedPlay = true;
-            m_mediaPlayer?.Pause();
+            // 本地文件流等场景下 MediaPlaybackSession 可能不触发 BufferingEnded，
+            // 外层状态会一直停留在缓冲态、无法调用 Play() 绑定画面；
+            // 底层已可播（Playing/Paused 且已打开）时补发一次 BufferingEnded
+            TryPromotePlayableStateAfterBuffering(sender, "PlaybackStateChanged");
         }
 
         private void PlaybackSessionOnBufferingProgressChanged(MediaPlaybackSession sender, object args)
@@ -282,6 +318,7 @@ namespace BiliLite.Player.SubPlayers
         {
             m_isBuffering = false;
             m_bufferCache = 1;
+            m_waitingForPlayableStatePromotion = false;
             EmitBufferCacheChanged(m_bufferCache);
             BufferingEnded?.Invoke(this, EventArgs.Empty);
         }
@@ -323,6 +360,25 @@ namespace BiliLite.Player.SubPlayers
             }
 
             await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
+        }
+
+        private static async Task RunOnUiThreadAsync(Func<Task> action)
+        {
+            if (action == null)
+            {
+                return;
+            }
+
+            Task innerTask = null;
+            await RunOnUiThreadAsync(() =>
+            {
+                innerTask = action();
+            });
+
+            if (innerTask != null)
+            {
+                await innerTask;
+            }
         }
 
         public override async Task<byte[]> CaptureAsync()
@@ -370,7 +426,8 @@ namespace BiliLite.Player.SubPlayers
 
         private void MediaPlayerOnMediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
         {
-            EmitError(PlayerError.PlayerErrorCode.NeedUseOtherPlayerError, args.ErrorMessage, PlayerError.RetryStrategy.Normal);
+            var desc = string.IsNullOrEmpty(args.ErrorMessage) ? "FFmpegInterop 播放器播放失败" : args.ErrorMessage;
+            EmitError(PlayerError.PlayerErrorCode.NeedUseOtherPlayerError, desc, PlayerError.RetryStrategy.Normal);
         }
 
         private void MediaPlayerOnMediaEnded(MediaPlayer sender, object args)
@@ -381,6 +438,75 @@ namespace BiliLite.Player.SubPlayers
         private void MediaPlayerOnMediaOpened(MediaPlayer sender, object args)
         {
             MediaOpened?.Invoke(this, EventArgs.Empty);
+            SchedulePlayableStatePromotionAfterMediaOpened(sender?.PlaybackSession);
+        }
+
+        // 与 DashNativeSubPlayer 相同的兜底：部分场景（如本地文件流）下
+        // MediaPlaybackSession 不触发 BufferingEnded，外层会一直停留在缓冲态，
+        // 在底层已可播（Playing/Paused 且已打开）后补发一次 BufferingEnded 推进状态机
+        private void TryPromotePlayableStateAfterBuffering(MediaPlaybackSession session, string source)
+        {
+            if (!m_waitingForPlayableStatePromotion || session == null)
+            {
+                return;
+            }
+
+            var hasOpened = session.NaturalDuration > TimeSpan.Zero;
+            var playbackState = session.PlaybackState;
+            var isPlayableState = playbackState == MediaPlaybackState.Playing ||
+                                  playbackState == MediaPlaybackState.Paused;
+            if (!hasOpened || !isPlayableState)
+            {
+                return;
+            }
+
+            PlaybackSessionOnBufferingEnded(session, EventArgs.Empty);
+        }
+
+        private void SchedulePlayableStatePromotionAfterMediaOpened(MediaPlaybackSession session)
+        {
+            _ = RunOnUiThreadAsync(async () =>
+            {
+                await Task.Yield();
+
+                var playbackSession = m_mediaPlayer?.PlaybackSession ?? session;
+                if (playbackSession == null)
+                {
+                    return;
+                }
+
+                if (playbackSession.PlaybackState == MediaPlaybackState.None)
+                {
+                    playbackSession = session;
+                }
+
+                TryPromotePlayableStateAfterBuffering(playbackSession, "MediaOpened");
+            });
+        }
+
+        private static bool IsLocalPathOrFileUri(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                return false;
+            }
+
+            if (Path.IsPathRooted(url))
+            {
+                return true;
+            }
+
+            return Uri.TryCreate(url, UriKind.Absolute, out var uri) && uri.IsFile;
+        }
+
+        private static string NormalizeLocalPath(string url)
+        {
+            if (Uri.TryCreate(url, UriKind.Absolute, out var uri) && uri.IsFile)
+            {
+                return uri.LocalPath;
+            }
+
+            return url;
         }
     }
 }
