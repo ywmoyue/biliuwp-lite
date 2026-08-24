@@ -49,12 +49,14 @@ namespace BiliLite.Player
         private bool m_isBuffering;
         private bool m_keepPausedAfterSeek;
         private double m_bufferCache;
+        private DateTime m_bufferingSuspectStartUtc = DateTime.MinValue;
         private int m_handlingPlayerError;
         private int m_loadVersion;
         private DateTime m_lastBufferingUiNotifyAt = DateTime.MinValue;
         private DateTime m_lastBufferCacheNotifyAt = DateTime.MinValue;
         private static readonly TimeSpan BufferingNotifyMinInterval = TimeSpan.FromMilliseconds(120);
         private static readonly TimeSpan BufferCacheNotifyMinInterval = TimeSpan.FromMilliseconds(120);
+        private static readonly TimeSpan BufferingConfirmDelay = TimeSpan.FromMilliseconds(300);
 
         public VideoPlayer(PlayerConfig playerConfig,
             Panel playerHost,
@@ -510,6 +512,16 @@ namespace BiliLite.Player
 
         private List<RealPlayerType> BuildFallbackChain()
         {
+            // 单段 FLV 为旧版格式，固定回落链 FFmpegInterop -> SYEngine（Native 槽位），不随自动回落开关变化
+            if (IsSingleFlv(m_realPlayInfo))
+            {
+                return new List<RealPlayerType>
+                {
+                    RealPlayerType.FFmpegInterop,
+                    RealPlayerType.Native,
+                };
+            }
+
             if (!SettingService.GetValue(
                     SettingConstants.Player.AUTO_FALLBACK,
                     SettingConstants.Player.DEFAULT_AUTO_FALLBACK))
@@ -533,15 +545,6 @@ namespace BiliLite.Player
                 };
             }
 
-            if (IsSingleFlv(m_realPlayInfo))
-            {
-                return new List<RealPlayerType>
-                {
-                    RealPlayerType.FFmpegInterop,
-                    RealPlayerType.Native,
-                };
-            }
-
             if (IsMultiFlv(m_realPlayInfo))
             {
                 return new List<RealPlayerType>
@@ -561,6 +564,21 @@ namespace BiliLite.Player
         {
             await RunOnUiThreadAsync(async () =>
             {
+                if (m_playerController.PlayState.IsBuffering)
+                {
+                    return;
+                }
+
+                // 缓冲去抖：FFmpegInteropX 等音源会高频轮发 BufferingStarted/Ended，
+                // 若在确认窗口内来了 BufferingEnded 则视为瞬态抖动，不进入缓冲态，也不触发重复 Play()
+                var suspectStart = DateTime.UtcNow;
+                m_bufferingSuspectStartUtc = suspectStart;
+                await Task.Delay(BufferingConfirmDelay);
+                if (m_playerController.PlayState.IsBuffering || m_bufferingSuspectStartUtc != suspectStart)
+                {
+                    return;
+                }
+
                 EmitBufferingChanged(true);
                 await m_playerController.PlayState.Buff();
             });
@@ -570,6 +588,14 @@ namespace BiliLite.Player
         {
             await RunOnUiThreadAsync(async () =>
             {
+                m_bufferingSuspectStartUtc = DateTime.MinValue;
+
+                if (!m_playerController.PlayState.IsBuffering)
+                {
+                    // 未进入缓冲态（瞬态抖动已被过滤），忽略，避免对已播放的流重复调用 Play() 造成重新缓冲
+                    return;
+                }
+
                 EmitBufferingChanged(false);
 
                 await m_playerController.PlayState.Play();

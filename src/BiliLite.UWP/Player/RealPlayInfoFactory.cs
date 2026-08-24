@@ -186,7 +186,7 @@ namespace BiliLite.Player
         {
             var resolvedUserAgent = string.IsNullOrWhiteSpace(userAgent) ? Constants.CHROME_USER_AGENT : userAgent;
             var resolvedReferer = string.IsNullOrWhiteSpace(referer) ? "https://www.bilibili.com/" : referer;
-            var preferred = ResolvePreferredPlayerType(mediaType, singleIsFlv, preferredPlayerType);
+            var preferred = ResolvePreferredPlayerType(mediaType, singleIsFlv, isLocal, preferredPlayerType);
             var fallback = BuildFallbackPlayerTypes(mediaType, singleIsFlv, preferred, fallbackPlayerTypes);
 
             return new RealPlayInfo
@@ -320,7 +320,7 @@ namespace BiliLite.Player
             return headers;
         }
 
-        private static RealPlayerType ResolvePreferredPlayerType(PlayMediaType mediaType, bool singleIsFlv, RealPlayerType? preferredPlayerType)
+        private static RealPlayerType ResolvePreferredPlayerType(PlayMediaType mediaType, bool singleIsFlv, bool isLocal, RealPlayerType? preferredPlayerType)
         {
             var settingPreferred = (RealPlayerType)SettingService.GetValue(
                 SettingConstants.Player.USE_REAL_PLAYER_TYPE,
@@ -341,7 +341,14 @@ namespace BiliLite.Player
 
             if (mediaType == PlayMediaType.Single && singleIsFlv)
             {
-                // 单段 FLV 不走 Shaka，默认 FFmpeg，必要时降级到 SYEngine 路径（用 Native 槽位表示）
+                // 在线单段 FLV 为旧版格式，不随用户播放器设置，固定使用 FFmpegInterop，
+                // 失败后回落到 SYEngine 路径（用 Native 槽位表示），避免设置 Native 时直接走 SYEngine。
+                if (!isLocal)
+                {
+                    return RealPlayerType.FFmpegInterop;
+                }
+
+                // 本地单段 FLV 维持原逻辑：默认 FFmpeg，必要时降级到 SYEngine 路径（用 Native 槽位表示）
                 return candidate == RealPlayerType.Native ? RealPlayerType.Native : RealPlayerType.FFmpegInterop;
             }
 

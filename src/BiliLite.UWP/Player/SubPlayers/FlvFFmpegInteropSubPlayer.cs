@@ -153,6 +153,12 @@ namespace BiliLite.Player.SubPlayers
                     m_playerElement.SetMediaPlayer(m_mediaPlayer);
                 }
 
+                // 已在播放时不再重复调用 Play()，避免 FFmpegInteropX 重新进入缓冲导致状态抖动
+                if (m_mediaPlayer?.PlaybackSession?.PlaybackState == MediaPlaybackState.Playing)
+                {
+                    return;
+                }
+
                 m_mediaPlayer?.Play();
             });
         }
