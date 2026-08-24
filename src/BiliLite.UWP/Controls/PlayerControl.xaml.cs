@@ -3209,8 +3209,7 @@ namespace BiliLite.Controls
             try
             {
                 string fileName = DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
-                StorageFolder applicationFolder = KnownFolders.PicturesLibrary;
-                StorageFolder folder = await applicationFolder.CreateFolderAsync("哔哩哔哩截图", CreationCollisionOption.OpenIfExists);
+                StorageFolder folder = await ScreenshotHelper.GetScreenshotFolder();
                 StorageFile saveFile = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
 
                 var imageBytes = await m_videoPlayer.CaptureAsync();
