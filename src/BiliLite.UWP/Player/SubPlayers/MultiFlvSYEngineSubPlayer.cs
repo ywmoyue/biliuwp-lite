@@ -15,15 +15,22 @@ namespace BiliLite.Player.SubPlayers
     public class MultiFlvSYEngineSubPlayer : ISubPlayer
     {
         private readonly Panel m_playerHost;
+        private readonly bool m_useSharedPlayerElement;
         private MediaPlayerElement m_playerElement;
         private MediaPlayer m_mediaPlayer;
         private string m_url;
         private bool m_isBuffering;
+        private bool m_userRequestedPlay;
         private double m_bufferCache;
 
-        public MultiFlvSYEngineSubPlayer(Panel playerHost)
+        public MultiFlvSYEngineSubPlayer(Panel playerHost, MediaPlayerElement sharedPlayerElement = null)
         {
             m_playerHost = playerHost;
+            if (sharedPlayerElement != null)
+            {
+                m_playerElement = sharedPlayerElement;
+                m_useSharedPlayerElement = true;
+            }
         }
 
         public override RealPlayerType Type { get; } = RealPlayerType.FFmpegInterop;
@@ -105,6 +112,7 @@ namespace BiliLite.Player.SubPlayers
             m_mediaPlayer.MediaOpened += MediaPlayerOnMediaOpened;
             m_mediaPlayer.MediaEnded += MediaPlayerOnMediaEnded;
             m_mediaPlayer.MediaFailed += MediaPlayerOnMediaFailed;
+            m_mediaPlayer.PlaybackSession.PlaybackStateChanged += PlaybackSessionOnPlaybackStateChanged;
             m_mediaPlayer.PlaybackSession.BufferingStarted += PlaybackSessionOnBufferingStarted;
             m_mediaPlayer.PlaybackSession.BufferingProgressChanged += PlaybackSessionOnBufferingProgressChanged;
             m_mediaPlayer.PlaybackSession.BufferingEnded += PlaybackSessionOnBufferingEnded;
@@ -112,17 +120,27 @@ namespace BiliLite.Player.SubPlayers
 
             if (m_realPlayInfo.IsLocal)
             {
-                var composition = new MediaComposition();
-                foreach (var item in urls)
+                try
                 {
-                    var file = await StorageFile.GetFileFromPathAsync(item.Url);
-                    var clip = await MediaClip.CreateFromFileAsync(file);
-                    composition.Clips.Add(clip);
-                }
+                    // 本地分片目前只能用 MediaComposition 拼接，但系统解码器不支持 FLV 容器，
+                    // 失败时给出可读错误而不是抛出未处理异常
+                    var composition = new MediaComposition();
+                    foreach (var item in urls)
+                    {
+                        var file = await StorageFile.GetFileFromPathAsync(item.Url);
+                        var clip = await MediaClip.CreateFromFileAsync(file);
+                        composition.Clips.Add(clip);
+                    }
 
-                m_mediaPlayer.Source = MediaSource.CreateFromMediaStreamSource(composition.GenerateMediaStreamSource());
-                await SetRate(m_rate);
-                return;
+                    m_mediaPlayer.Source = MediaSource.CreateFromMediaStreamSource(composition.GenerateMediaStreamSource());
+                    await SetRate(m_rate);
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    EmitError(PlayerError.PlayerErrorCode.UnknownError, $"本地多段FLV暂不支持播放: {ex.Message}", PlayerError.RetryStrategy.NoRetry);
+                    return;
+                }
             }
 
             var playList = new SYEngine.Playlist(SYEngine.PlaylistTypes.NetworkHttp)
@@ -153,6 +171,8 @@ namespace BiliLite.Player.SubPlayers
                 m_playerElement.SetMediaPlayer(m_mediaPlayer);
             }
 
+            // 用户显式请求播放后，不再拦截初次自动播放
+            m_userRequestedPlay = true;
             m_mediaPlayer?.Play();
         }
 
@@ -173,6 +193,8 @@ namespace BiliLite.Player.SubPlayers
 
         public override async Task Resume()
         {
+            // 用户显式恢复播放后，不再拦截初次自动播放
+            m_userRequestedPlay = true;
             m_mediaPlayer?.Play();
         }
 
@@ -209,13 +231,18 @@ namespace BiliLite.Player.SubPlayers
             m_mediaPlayer.PlaybackSession.BufferingProgressChanged -= PlaybackSessionOnBufferingProgressChanged;
             m_mediaPlayer.PlaybackSession.BufferingEnded -= PlaybackSessionOnBufferingEnded;
             m_mediaPlayer.PlaybackSession.PositionChanged -= PlaybackSessionOnPositionChanged;
+            m_mediaPlayer.PlaybackSession.PlaybackStateChanged -= PlaybackSessionOnPlaybackStateChanged;
             if (m_playerElement != null)
             {
                 m_playerElement.SetMediaPlayer(null);
-                m_playerHost?.Children.Remove(m_playerElement);
+                if (!m_useSharedPlayerElement)
+                {
+                    m_playerHost?.Children.Remove(m_playerElement);
+                }
             }
             m_mediaPlayer.Dispose();
             m_mediaPlayer = null;
+            m_userRequestedPlay = false;
         }
 
         private void PlaybackSessionOnPositionChanged(MediaPlaybackSession sender, object args)
@@ -251,6 +278,25 @@ namespace BiliLite.Player.SubPlayers
         {
             m_isBuffering = true;
             BufferingStarted?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void PlaybackSessionOnPlaybackStateChanged(MediaPlaybackSession sender, object args)
+        {
+            if (sender?.PlaybackState != MediaPlaybackState.Playing)
+            {
+                return;
+            }
+
+            // 初次自动播放拦截：不改变 AutoPlay 属性，媒体保持自动预加载并渲染首帧，
+            // 但在用户未请求播放（未点击播放、未开启自动播放）时，进入播放态后立即暂停，
+            // 避免打开视频页时自动出声。
+            if (m_realPlayInfo?.IsAutoPlay == true || m_userRequestedPlay)
+            {
+                return;
+            }
+
+            m_userRequestedPlay = true;
+            m_mediaPlayer?.Pause();
         }
 
         private void PlaybackSessionOnBufferingProgressChanged(MediaPlaybackSession sender, object args)

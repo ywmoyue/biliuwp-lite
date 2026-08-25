@@ -122,6 +122,7 @@ namespace BiliLite.Models.Common.Settings
             // Download Settings
             { "下载存放目录", "DownloadSettings:txtDownloadPath" },
             { "旧版下载目录", "DownloadSettings:txtDownloadOldPath" },
+            { "截图保存目录", "DownloadSettings:txtScreenshotPath" },
             { "加载旧版下载的视频", "DownloadSettings:swDownloadLoadOld" },
             { "优先下载视频类型", "DownloadSettings:cbDownloadVideoType" },
             { "同时下载多个任务", "DownloadSettings:swDownloadParallelDownload" },

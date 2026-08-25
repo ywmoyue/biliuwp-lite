@@ -91,6 +91,7 @@ namespace BiliLite.Controls
 
         private void UpdatePlayerHostVisibility(RealPlayerType playerType)
         {
+            m_viewModel.RealPlayerType = playerType;
             var showWebPlayerToolbarButton = playerType == RealPlayerType.ShakaPlayer || playerType == RealPlayerType.Mpegts;
             m_viewModel.ShowWebPlayerToolbarButton = showWebPlayerToolbarButton;
             if (!showWebPlayerToolbarButton)
@@ -246,7 +247,7 @@ namespace BiliLite.Controls
             m_realPlayInfo = new RealPlayInfo();
             m_playerController = PlayerControllerFactory.Create(PlayerType.Video);
             UpdatePlayerHostVisibility(m_videoPlayerConfig.PlayerType);
-            m_videoPlayer = new VideoPlayer(m_videoPlayerConfig, PlayerHost, m_playerController);
+            m_videoPlayer = new VideoPlayer(m_videoPlayerConfig, PlayerHost, PlayerHostMediaPlayerElement, PlayerHostShakaPlayer, m_playerController);
             m_videoPlayer.SetRealPlayInfo(m_realPlayInfo);
             m_playerController.SetPlayer(m_videoPlayer);
             m_viewModel.CurrentPlayState = m_playerController.PlayState;
@@ -2041,7 +2042,6 @@ namespace BiliLite.Controls
                 var preferredPlayerType = (RealPlayerType)SettingService.GetValue(
                     SettingConstants.Player.USE_REAL_PLAYER_TYPE,
                     (int)SettingConstants.Player.DEFAULT_USE_REAL_PLAYER_TYPE);
-                m_videoPlayerConfig.PlayerType = preferredPlayerType;
 
                 m_realPlayInfo = RealPlayInfoFactory.CreateFromPlayUrlInfo(
                     quality,
@@ -2049,6 +2049,22 @@ namespace BiliLite.Controls
                     isLocal: isLocal,
                     isAutoPlay: _autoPlay,
                     preferredPlayerType: preferredPlayerType);
+
+                // 旧版格式（在线单段 FLV）不随用户播放器设置，强制固定使用解析后的优先播放器（FFmpegInteropX），失败后再回落 SYEngine
+                if (!isLocal
+                    && m_realPlayInfo?.PlayMediaType == PlayMediaType.Single
+                    && m_realPlayInfo.SingleIsFlv)
+                {
+                    m_videoPlayerConfig.PlayerType = m_realPlayInfo.PreferredPlayerType;
+                    if (m_videoPlayerConfig.PlayerType != preferredPlayerType)
+                    {
+                        m_playerToastService?.Show(PlayerToastService.MSG_KEY, "当前视频为旧版格式，已自动切换到FFmpegInteropX播放器");
+                    }
+                }
+                else
+                {
+                    m_videoPlayerConfig.PlayerType = preferredPlayerType;
+                }
 
                 UpdatePlayerHostVisibility(m_videoPlayerConfig.PlayerType);
                 m_videoPlayer.SetRealPlayInfo(m_realPlayInfo);
@@ -2910,7 +2926,18 @@ namespace BiliLite.Controls
                 _logger.Debug($"Stopped事件: shouldHandleEnded={shouldHandleEnded}, disposing={m_isDisposing}, ignoreNextStop={m_ignoreNextStoppedState}, old={{loading:{e.OldState?.IsLoading},playing:{e.OldState?.IsPlaying},buffering:{e.OldState?.IsBuffering},stopped:{e.OldState?.IsStopped}}}");
                 if (shouldHandleEnded)
                 {
-                    _ = HandlePlaybackEndedAsync();
+                    // 播完处理必须等当前 Stop 销毁流程(Player.Stop → StopCore)执行完后再触发：
+                    // 若同步内联执行，重载(Load)会与 Stop 竞态——Load 刚创建的新播放器可能被
+                    // 尚未完成的 Stop 销毁，导致重载卡在 Loading 状态(黑屏)。
+                    // 这里延迟到下一拍派发，保证顺序，不再依赖 ReportHistory 的异步性。
+                    _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                    {
+                        if (m_isDisposing)
+                        {
+                            return;
+                        }
+                        _ = HandlePlaybackEndedAsync();
+                    });
                 }
                 return;
             }
@@ -3012,7 +3039,7 @@ namespace BiliLite.Controls
 
                     m_videoPlayerConfig.PlayerType = e;
                     UpdatePlayerHostVisibility(m_videoPlayerConfig.PlayerType);
-                    m_videoPlayer = new VideoPlayer(m_videoPlayerConfig, PlayerHost, m_playerController);
+                    m_videoPlayer = new VideoPlayer(m_videoPlayerConfig, PlayerHost, PlayerHostMediaPlayerElement, PlayerHostShakaPlayer, m_playerController);
                     m_videoPlayer.SetRealPlayInfo(m_realPlayInfo);
                     m_playerController.SetPlayer(m_videoPlayer);
                     HookVideoPlayerEvents();
@@ -3182,8 +3209,7 @@ namespace BiliLite.Controls
             try
             {
                 string fileName = DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
-                StorageFolder applicationFolder = KnownFolders.PicturesLibrary;
-                StorageFolder folder = await applicationFolder.CreateFolderAsync("哔哩哔哩截图", CreationCollisionOption.OpenIfExists);
+                StorageFolder folder = await ScreenshotHelper.GetScreenshotFolder();
                 StorageFile saveFile = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
 
                 var imageBytes = await m_videoPlayer.CaptureAsync();

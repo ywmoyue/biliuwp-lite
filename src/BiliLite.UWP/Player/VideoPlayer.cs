@@ -35,6 +35,7 @@ namespace BiliLite.Player
         private readonly BasePlayerController m_playerController;
         private readonly Panel m_playerHost;
         private readonly MediaPlayerElement m_nativePlayerElement;
+        private readonly ShakaPlayerControl m_shakaPlayerControl;
         private readonly List<RealPlayerType> m_triedPlayers = new();
         private readonly object m_bufferLock = new();
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
@@ -48,62 +49,28 @@ namespace BiliLite.Player
         private bool m_isBuffering;
         private bool m_keepPausedAfterSeek;
         private double m_bufferCache;
+        private DateTime m_bufferingSuspectStartUtc = DateTime.MinValue;
         private int m_handlingPlayerError;
         private int m_loadVersion;
         private DateTime m_lastBufferingUiNotifyAt = DateTime.MinValue;
         private DateTime m_lastBufferCacheNotifyAt = DateTime.MinValue;
         private static readonly TimeSpan BufferingNotifyMinInterval = TimeSpan.FromMilliseconds(120);
         private static readonly TimeSpan BufferCacheNotifyMinInterval = TimeSpan.FromMilliseconds(120);
+        private static readonly TimeSpan BufferingConfirmDelay = TimeSpan.FromMilliseconds(300);
 
         public VideoPlayer(PlayerConfig playerConfig,
             Panel playerHost,
+            MediaPlayerElement nativePlayerElement,
+            ShakaPlayerControl shakaPlayerControl,
             BasePlayerController playerController)
         {
             m_playerConfig = playerConfig;
             m_playerHost = playerHost;
             m_playerController = playerController;
-            m_nativePlayerElement = EnsureNativePlayerElement(playerHost);
+            m_nativePlayerElement = nativePlayerElement;
+            m_shakaPlayerControl = shakaPlayerControl;
             m_subPlayer = CreateSubPlayer(m_playerConfig.PlayerType, null);
             InitPlayerEvents(m_subPlayer);
-        }
-
-        private static MediaPlayerElement EnsureNativePlayerElement(Panel playerHost)
-        {
-            if (playerHost == null)
-            {
-                return null;
-            }
-
-            foreach (var child in playerHost.Children)
-            {
-                if (child is MediaPlayerElement existed)
-                {
-                    existed.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    existed.VerticalAlignment = VerticalAlignment.Stretch;
-                    existed.Width = double.NaN;
-                    existed.Height = double.NaN;
-                    return existed;
-                }
-            }
-
-            var element = new MediaPlayerElement
-            {
-                HorizontalAlignment = HorizontalAlignment.Stretch,
-                VerticalAlignment = VerticalAlignment.Stretch,
-                Width = double.NaN,
-                Height = double.NaN,
-            };
-
-            try
-            {
-                playerHost.Children.Insert(0, element);
-            }
-            catch
-            {
-                playerHost.Children.Add(element);
-            }
-
-            return element;
         }
 
         public BaseWebPlayer WebPlayer
@@ -447,33 +414,33 @@ namespace BiliLite.Player
         {
             if (playInfo?.PlayMediaType == PlayMediaType.MultiFlv)
             {
-                return new MultiFlvSYEngineSubPlayer(m_playerHost);
+                return new MultiFlvSYEngineSubPlayer(m_playerHost, m_nativePlayerElement);
             }
 
             if (playInfo?.PlayMediaType == PlayMediaType.Single && playInfo.SingleIsFlv)
             {
                 return playerType == RealPlayerType.FFmpegInterop
-                    ? new FlvFFmpegInteropSubPlayer(m_playerHost)
-                    : new FlvSYEngineSubPlayer(m_playerHost);
+                    ? new FlvFFmpegInteropSubPlayer(m_playerHost, m_nativePlayerElement)
+                    : new FlvSYEngineSubPlayer(m_playerHost, m_nativePlayerElement);
             }
 
             if (playInfo?.PlayMediaType == PlayMediaType.Dash)
             {
                 return playerType switch
                 {
-                    RealPlayerType.ShakaPlayer => new DashShakaSubPlayer(m_playerHost),
+                    RealPlayerType.ShakaPlayer => new DashShakaSubPlayer(m_playerHost, m_shakaPlayerControl),
                     RealPlayerType.Native => new DashNativeSubPlayer(m_playerHost, m_nativePlayerElement),
-                    RealPlayerType.FFmpegInterop => new DashFFmpegInteropSubPlayer(m_playerHost),
-                    _ => new DashShakaSubPlayer(m_playerHost),
+                    RealPlayerType.FFmpegInterop => new DashFFmpegInteropSubPlayer(m_playerHost, m_nativePlayerElement),
+                    _ => new DashShakaSubPlayer(m_playerHost, m_shakaPlayerControl),
                 };
             }
 
             return playerType switch
             {
-                RealPlayerType.ShakaPlayer => new DashShakaSubPlayer(m_playerHost),
+                RealPlayerType.ShakaPlayer => new DashShakaSubPlayer(m_playerHost, m_shakaPlayerControl),
                 RealPlayerType.Native => new Mp4NativeSubPlayer(m_playerHost, m_nativePlayerElement),
-                RealPlayerType.FFmpegInterop => new FlvFFmpegInteropSubPlayer(m_playerHost),
-                _ => new FlvFFmpegInteropSubPlayer(m_playerHost),
+                RealPlayerType.FFmpegInterop => new FlvFFmpegInteropSubPlayer(m_playerHost, m_nativePlayerElement),
+                _ => new FlvFFmpegInteropSubPlayer(m_playerHost, m_nativePlayerElement),
             };
         }
 
@@ -545,6 +512,16 @@ namespace BiliLite.Player
 
         private List<RealPlayerType> BuildFallbackChain()
         {
+            // 单段 FLV 为旧版格式，固定回落链 FFmpegInterop -> SYEngine（Native 槽位），不随自动回落开关变化
+            if (IsSingleFlv(m_realPlayInfo))
+            {
+                return new List<RealPlayerType>
+                {
+                    RealPlayerType.FFmpegInterop,
+                    RealPlayerType.Native,
+                };
+            }
+
             if (!SettingService.GetValue(
                     SettingConstants.Player.AUTO_FALLBACK,
                     SettingConstants.Player.DEFAULT_AUTO_FALLBACK))
@@ -568,15 +545,6 @@ namespace BiliLite.Player
                 };
             }
 
-            if (IsSingleFlv(m_realPlayInfo))
-            {
-                return new List<RealPlayerType>
-                {
-                    RealPlayerType.FFmpegInterop,
-                    RealPlayerType.Native,
-                };
-            }
-
             if (IsMultiFlv(m_realPlayInfo))
             {
                 return new List<RealPlayerType>
@@ -596,6 +564,21 @@ namespace BiliLite.Player
         {
             await RunOnUiThreadAsync(async () =>
             {
+                if (m_playerController.PlayState.IsBuffering)
+                {
+                    return;
+                }
+
+                // 缓冲去抖：FFmpegInteropX 等音源会高频轮发 BufferingStarted/Ended，
+                // 若在确认窗口内来了 BufferingEnded 则视为瞬态抖动，不进入缓冲态，也不触发重复 Play()
+                var suspectStart = DateTime.UtcNow;
+                m_bufferingSuspectStartUtc = suspectStart;
+                await Task.Delay(BufferingConfirmDelay);
+                if (m_playerController.PlayState.IsBuffering || m_bufferingSuspectStartUtc != suspectStart)
+                {
+                    return;
+                }
+
                 EmitBufferingChanged(true);
                 await m_playerController.PlayState.Buff();
             });
@@ -605,6 +588,23 @@ namespace BiliLite.Player
         {
             await RunOnUiThreadAsync(async () =>
             {
+                m_bufferingSuspectStartUtc = DateTime.MinValue;
+
+                if (!m_playerController.PlayState.IsBuffering)
+                {
+                    // 未进入缓冲态（瞬态抖动已被过滤），忽略，避免对已播放的流重复调用 Play() 造成重新缓冲
+                    return;
+                }
+
+                // 自动播放门控：只有允许自动播放或用户已点击播放时才真正启动播放，
+                // 否则停留在"已加载完成的等待态"（PauseState 保持暂停），避免打开视频页自动出声。
+                var canStartPlayback = m_realPlayInfo?.IsAutoPlay == true || !m_playerController.PauseState.IsPaused;
+                if (!canStartPlayback)
+                {
+                    m_keepPausedAfterSeek = false;
+                    return;
+                }
+
                 EmitBufferingChanged(false);
 
                 await m_playerController.PlayState.Play();

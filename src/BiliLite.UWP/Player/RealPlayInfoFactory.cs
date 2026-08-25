@@ -34,7 +34,7 @@ namespace BiliLite.Player
             referer ??= playUrlInfo.Referer;
 
             var mediaType = ConvertMediaType(playUrlInfo.PlayUrlType);
-            var singleIsFlv = ResolveSingleIsFlv(playUrlInfo, isLocal);
+            var singleIsFlv = ResolveSingleIsFlv(playUrlInfo);
             var realPlayInfo = CreateBaseInfo(
                 mediaType,
                 userAgent,
@@ -186,7 +186,7 @@ namespace BiliLite.Player
         {
             var resolvedUserAgent = string.IsNullOrWhiteSpace(userAgent) ? Constants.CHROME_USER_AGENT : userAgent;
             var resolvedReferer = string.IsNullOrWhiteSpace(referer) ? "https://www.bilibili.com/" : referer;
-            var preferred = ResolvePreferredPlayerType(mediaType, singleIsFlv, preferredPlayerType);
+            var preferred = ResolvePreferredPlayerType(mediaType, singleIsFlv, isLocal, preferredPlayerType);
             var fallback = BuildFallbackPlayerTypes(mediaType, singleIsFlv, preferred, fallbackPlayerTypes);
 
             return new RealPlayInfo
@@ -214,22 +214,26 @@ namespace BiliLite.Player
             };
         }
 
-        private static bool ResolveSingleIsFlv(BiliPlayUrlInfo playUrlInfo, bool isLocal)
+        private static bool ResolveSingleIsFlv(BiliPlayUrlInfo playUrlInfo)
         {
             if (playUrlInfo?.PlayUrlType != BiliPlayUrlType.SingleFLV)
             {
                 return false;
             }
 
+            // 在线接口返回的 durl 既可能是 flv 也可能是 mp4（旧库/非 DASH 视频），
+            // 需要根据实际扩展名判断，否则 mp4 会被误路由到 FLV 播放器导致播放失败。
             var url = playUrlInfo.FlvInfo?.FirstOrDefault()?.Url;
-            if (!string.IsNullOrWhiteSpace(url) && isLocal)
+            if (string.IsNullOrWhiteSpace(url))
             {
-                if (url.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase)
-                    || url.EndsWith(".m4v", StringComparison.OrdinalIgnoreCase)
-                    || url.EndsWith(".mov", StringComparison.OrdinalIgnoreCase))
-                {
-                    return false;
-                }
+                return true;
+            }
+
+            if (url.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase)
+                || url.EndsWith(".m4v", StringComparison.OrdinalIgnoreCase)
+                || url.EndsWith(".mov", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
             }
 
             return true;
@@ -316,7 +320,7 @@ namespace BiliLite.Player
             return headers;
         }
 
-        private static RealPlayerType ResolvePreferredPlayerType(PlayMediaType mediaType, bool singleIsFlv, RealPlayerType? preferredPlayerType)
+        private static RealPlayerType ResolvePreferredPlayerType(PlayMediaType mediaType, bool singleIsFlv, bool isLocal, RealPlayerType? preferredPlayerType)
         {
             var settingPreferred = (RealPlayerType)SettingService.GetValue(
                 SettingConstants.Player.USE_REAL_PLAYER_TYPE,
@@ -337,7 +341,14 @@ namespace BiliLite.Player
 
             if (mediaType == PlayMediaType.Single && singleIsFlv)
             {
-                // 单段 FLV 不走 Shaka，默认 FFmpeg，必要时降级到 SYEngine 路径（用 Native 槽位表示）
+                // 在线单段 FLV 为旧版格式，不随用户播放器设置，固定使用 FFmpegInterop，
+                // 失败后回落到 SYEngine 路径（用 Native 槽位表示），避免设置 Native 时直接走 SYEngine。
+                if (!isLocal)
+                {
+                    return RealPlayerType.FFmpegInterop;
+                }
+
+                // 本地单段 FLV 维持原逻辑：默认 FFmpeg，必要时降级到 SYEngine 路径（用 Native 槽位表示）
                 return candidate == RealPlayerType.Native ? RealPlayerType.Native : RealPlayerType.FFmpegInterop;
             }
 

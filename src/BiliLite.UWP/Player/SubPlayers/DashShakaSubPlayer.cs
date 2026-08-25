@@ -4,6 +4,7 @@ using BiliLite.Models.Common.Player;
 using BiliLite.Player.MediaInfos;
 using BiliLite.Player.WebPlayer;
 using BiliLite.Player.WebPlayer.Models;
+using BiliLite.Services;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -11,7 +12,10 @@ namespace BiliLite.Player.SubPlayers
 {
     public class DashShakaSubPlayer : ISubPlayer, ISubWebPlayer
     {
+        private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly Panel m_playerHost;
+        private readonly bool m_useSharedPlayerControl;
+        private bool m_playerControlEventsBound;
         private ShakaPlayerControl m_playerControl;
         private string m_url;
         private double m_position;
@@ -20,9 +24,14 @@ namespace BiliLite.Player.SubPlayers
         private bool m_isMuted;
         private double m_duration;
 
-        public DashShakaSubPlayer(Panel playerHost)
+        public DashShakaSubPlayer(Panel playerHost, ShakaPlayerControl sharedPlayerControl = null)
         {
             m_playerHost = playerHost;
+            if (sharedPlayerControl != null)
+            {
+                m_playerControl = sharedPlayerControl;
+                m_useSharedPlayerControl = true;
+            }
         }
 
         public override RealPlayerType Type { get; } = RealPlayerType.ShakaPlayer;
@@ -227,19 +236,26 @@ namespace BiliLite.Player.SubPlayers
 
         private void EnsurePlayerControl()
         {
-            if (m_playerControl != null)
+            if (m_playerControl == null)
             {
+                m_playerControl = new ShakaPlayerControl
+                {
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Stretch,
+                    Width = double.NaN,
+                    Height = double.NaN,
+                };
+                InitPlayerEvent();
+                m_playerControlEventsBound = true;
                 return;
             }
 
-            m_playerControl = new ShakaPlayerControl
+            // 共享控件在 Release 时不会置空，复用前需重新绑定事件。
+            if (m_useSharedPlayerControl && !m_playerControlEventsBound)
             {
-                HorizontalAlignment = HorizontalAlignment.Stretch,
-                VerticalAlignment = VerticalAlignment.Stretch,
-                Width = double.NaN,
-                Height = double.NaN,
-            };
-            InitPlayerEvent();
+                InitPlayerEvent();
+                m_playerControlEventsBound = true;
+            }
         }
 
         private void AttachPlayerControl()
@@ -251,6 +267,12 @@ namespace BiliLite.Player.SubPlayers
 
             if (m_playerControl.Parent == m_playerHost)
             {
+                return;
+            }
+
+            if (m_useSharedPlayerControl)
+            {
+                _logger.Warn("Shaka.AttachPlayerControl shared control missing from host; skip dynamic insert");
                 return;
             }
 
@@ -270,6 +292,13 @@ namespace BiliLite.Player.SubPlayers
             }
 
             UnInitPlayerEvent();
+            m_playerControlEventsBound = false;
+            if (m_useSharedPlayerControl)
+            {
+                // 共享控件由 XAML 声明承载并复用，不销毁、不从宿主移除。
+                return;
+            }
+
             m_playerHost?.Children.Remove(m_playerControl);
             m_playerControl.Dispose();
             m_playerControl = null;
