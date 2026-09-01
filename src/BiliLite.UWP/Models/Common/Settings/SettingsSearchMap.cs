@@ -91,7 +91,7 @@ namespace BiliLite.Models.Common.Settings
             { "使用内置浏览器", "PerformanceSettings:swOpenUrlWithBrowser" },
             { "恢复未关闭的页面", "PerformanceSettings:SwitchOpenLastPage" },
             { "需要恢复的数量", "PerformanceSettings:NumberOpenLastPageCount" },
-            { "单窗口模式保持页面数量", "PerformanceSettings:NumberSingleWindowKeepPageCount" },
+
             { "每次滚动加载更多数据", "PerformanceSettings:NumberScrollViewLoadMoreBottomOffset" },
 
             // Proxy Settings
@@ -121,6 +121,7 @@ namespace BiliLite.Models.Common.Settings
             // Download Settings
             { "下载存放目录", "DownloadSettings:txtDownloadPath" },
             { "旧版下载目录", "DownloadSettings:txtDownloadOldPath" },
+            { "截图保存目录", "DownloadSettings:txtScreenshotPath" },
             { "加载旧版下载的视频", "DownloadSettings:swDownloadLoadOld" },
             { "优先下载视频类型", "DownloadSettings:cbDownloadVideoType" },
             { "同时下载多个任务", "DownloadSettings:swDownloadParallelDownload" },
