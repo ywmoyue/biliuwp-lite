@@ -286,25 +286,16 @@ namespace BiliLite.Modules
                 Loading = true;
                 ShowError = false;
                 var needGetUserReq = false;
-                // 正常app获取视频详情
-                var results = await videoAPI.Detail(id, isbvid).Request();
-                if (!results.status)
+                // 正常web获取视频详情
+                var webResult = await videoAPI.DetailWebInterface(id, isbvid).Request();
+                // 通过web获取推荐视频
+                var webRelatesResult = await videoAPI.RelatesWebInterface(id, isbvid).Request();
+                ApiDataModel<VideoDetailModel> data = null;
+                if (webResult.status && webRelatesResult.status)
                 {
-                    throw new CustomizedErrorException(results.message);
-                }
-
-                var data = await results.GetJson<ApiDataModel<VideoDetailModel>>();
-
-                // 通过web获取, 作为后备使用
-                if (!data.success)
-                {
-                    // 通过web获取视频详情
-                    var webResult = await videoAPI.DetailWebInterface(id, isbvid).Request();
-                    // 通过web获取推荐视频
-                    var webRelatesResult = await videoAPI.RelatesWebInterface(id, isbvid).Request();
-                    if (webResult.status && webRelatesResult.status)
+                    data = await webResult.GetJson<ApiDataModel<VideoDetailModel>>();
+                    if (data.success)
                     {
-                        data = await webResult.GetJson<ApiDataModel<VideoDetailModel>>();
                         data.data.ShortLink = "https://b23.tv/" + data.data.Bvid;
 
                         // 解析推荐视频
@@ -319,24 +310,21 @@ namespace BiliLite.Modules
                     }
                 }
 
+                // 通过app获取, 作为后备使用
+                if (data == null || !data.success)
+                {
+                    var results = await videoAPI.Detail(id, isbvid).Request();
+                    if (!results.status)
+                    {
+                        throw new CustomizedErrorException(results.message);
+                    }
+
+                    data = await results.GetJson<ApiDataModel<VideoDetailModel>>();
+                }
+
                 if (!data.success)
                 {
                     throw new CustomizedErrorException(data.message);
-                }
-
-                var webResults = await videoAPI.DetailWebInterface(id, isbvid).Request();
-                if (!webResults.status)
-                {
-                    throw new CustomizedErrorException(webResults.message);
-                }
-                var webData = await webResults.GetJson<ApiDataModel<VideoDetailModel>>();
-                if (!webData.success)
-                {
-                    throw new CustomizedErrorException(webData.message);
-                }
-                if (data.data.UgcSeason == null && webData.data.UgcSeason != null)
-                {
-                    data.data.UgcSeason = webData.data.UgcSeason;
                 }
 
                 if (data.data.OwnerExt == null)
