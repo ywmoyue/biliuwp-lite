@@ -147,7 +147,6 @@
     <Compile Include="Controls\Common\DanmakuListControl.xaml.cs">
       <DependentUpon>DanmakuListControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\FakeFrame.cs" />
     <Compile Include="Models\Common\Player\PlayerOpenParam.cs" />
     <Compile Include="Models\Common\User\WatchLater\WatchlaterItemModel.cs" />
     <Compile Include="Models\Common\User\WatchLater\WatchlaterOwnerModel.cs" />
@@ -961,6 +960,7 @@
     <Compile Include="Services\MessageCenter.cs" />
     <Compile Include="Services\SettingService.cs" />
     <Compile Include="Services\SqlHelper.cs" />
+    <Compile Include="Services\ScreenshotHelper.cs" />
     <Compile Include="Services\VideoPlayHistoryHelper.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
