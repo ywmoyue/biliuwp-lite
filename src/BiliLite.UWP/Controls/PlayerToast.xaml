@@ -47,6 +47,8 @@
                     FontSize="14"
                     Foreground="Black"
                     VerticalAlignment="Center"
+                    TextWrapping="WrapWholeWords"
+                    MaxWidth="300"
                     Text="{x:Bind m_viewModel.Text, Mode=OneWay}" />
                 <Button Margin="6 0 0 0" 
                         VerticalAlignment="Center"
