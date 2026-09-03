@@ -347,9 +347,14 @@ namespace BiliLite.Modules
 
                 var videoInfoViewModel = m_mapper.Map<VideoDetailViewModel>(data.data);
                 VideoInfo = videoInfoViewModel;
-                // 标签和收藏夹不参与首播链路，详情基础信息就绪后立刻后台预取，避免页面上仍然空白。
+                // 标签/收藏夹/用户点赞投币收藏状态不参与首播链路，详情基础信息就绪后立刻后台预取，避免页面上仍然空白。
                 _ = LoadFavorite(data.data.Aid);
                 _ = LoadVideoTags(data.data.Aid);
+                if (needGetUserReq)
+                {
+                    // Web端详情接口不返回用户的点赞/投币/收藏状态, 需要单独查询
+                    _ = GetUserVideoStates();
+                }
                 Loaded = true;
                 m_needDeferredAttentionUp = needGetUserReq;
             }
@@ -431,8 +436,6 @@ namespace BiliLite.Modules
                 if (m_needDeferredAttentionUp)
                 {
                     await GetAttentionUp();
-                    // Web端详情接口不返回用户的点赞/投币/收藏状态, 需要单独查询
-                    await GetUserVideoStates();
                 }
 
                 LoadSponsorBlock(VideoInfo.Bvid);
