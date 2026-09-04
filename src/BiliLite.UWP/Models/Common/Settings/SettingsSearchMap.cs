@@ -135,6 +135,7 @@ namespace BiliLite.Models.Common.Settings
             { "自动清理日志文件", "DevSettings:swAutoClearLogFile" },
             { "自动清理几天前的日志", "DevSettings:numAutoClearLogDay" },
             { "优先使用 Grpc 请求动态", "DevSettings:swFirstGrpcRequestDynamic" },
+            { "全屏播放保留1px边缘", "DevSettings:swFullscreenKeep1pxEdge" },
             { "发起请求时使用的 Build 值", "DevSettings:RequestBuildTextBox" },
             { "BiliLite-WebApi", "DevSettings:BiliLiteWebApiTextBox" },
             { "更新 JSON 请求地址", "DevSettings:updateJsonAddress" },

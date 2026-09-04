@@ -34,7 +34,10 @@ namespace BiliLite.Pages
                 // TODO: WinUI3渲染bug,隐藏全部3个部分导致播放器画面消失，暂时保留1像素
                 var marginOffset = SettingService.GetValue(SettingConstants.UI.TAB_HEIGHT,
                     SettingConstants.UI.DEFAULT_TAB_HEIGHT);
-                marginOffset -= 1;
+                if (SettingService.GetValue(SettingConstants.Other.FULLSCREEN_KEEP_1PX_EDGE, true))
+                {
+                    marginOffset -= 1;
+                }
                 this.Margin = new Thickness(0, -1 * marginOffset, 0, 0);
             }
             else

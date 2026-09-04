@@ -1594,6 +1594,11 @@ namespace BiliLite.Models.Common
             public const string FIRST_GRPC_REQUEST_DYNAMIC = "FirstGrpcRequestDynamic";
 
             /// <summary>
+            /// 全屏播放时保留1px边缘，规避WinUI3渲染bug导致播放画面消失（白屏）
+            /// </summary>
+            public const string FULLSCREEN_KEEP_1PX_EDGE = "FullscreenKeep1pxEdge";
+
+            /// <summary>
             /// 更新 Json 请求地址
             /// </summary>
             public const string UPDATE_JSON_ADDRESS = "RawRepositoryAddress";

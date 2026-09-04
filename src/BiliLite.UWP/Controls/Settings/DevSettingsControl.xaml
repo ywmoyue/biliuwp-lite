@@ -140,6 +140,16 @@
                 Style="{StaticResource DefaultToggleSwitchStyle}" />
         </controls:SettingsCard>
 
+        <controls:SettingsCard Description="全屏播放隐藏信息栏时保留1px边缘，规避WinUI3渲染bug导致画面消失（白屏），重新进入全屏后生效" Header="全屏播放保留1px边缘">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Expand" />
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch
+                x:Name="swFullscreenKeep1pxEdge"
+                Margin="0,-5,-88,-5"
+                Style="{StaticResource DefaultToggleSwitchStyle}" />
+        </controls:SettingsCard>
+
         <controls:SettingsCard Description="B站 App 版本号标识" Header="发起请求时使用的 Build 值">
             <controls:SettingsCard.HeaderIcon>
                 <font:FontAwesome Margin="3,0" Icon="Solid_CodeBranch" />

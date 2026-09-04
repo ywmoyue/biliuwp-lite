@@ -285,7 +285,9 @@ namespace BiliLite.Pages
 
                 m_viewModel.DefaultRightInfoWidth = new GridLength(0, GridUnitType.Pixel);
                 // TODO: WinUI3渲染bug,隐藏全部3个部分导致播放器画面消失，暂时保留1像素
-                BottomInfo.Height = new GridLength(1, GridUnitType.Pixel);
+                BottomInfo.Height = SettingService.GetValue(SettingConstants.Other.FULLSCREEN_KEEP_1PX_EDGE, true)
+                    ? new GridLength(1, GridUnitType.Pixel)
+                    : new GridLength(0, GridUnitType.Pixel);
             }
             else
             {

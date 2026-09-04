@@ -547,7 +547,10 @@ namespace BiliLite.Pages
                 }
 
                 m_viewModel.DefaultRightInfoWidth = new GridLength(0, GridUnitType.Pixel);
-                BottomInfo.Height = new GridLength(0, GridUnitType.Pixel);
+                // WinUI3渲染bug规避:保留1px边缘避免播放画面消失(白屏),可在开发者选项中关闭
+                BottomInfo.Height = SettingService.GetValue(SettingConstants.Other.FULLSCREEN_KEEP_1PX_EDGE, true)
+                    ? new GridLength(1, GridUnitType.Pixel)
+                    : new GridLength(0, GridUnitType.Pixel);
             }
             else
             {

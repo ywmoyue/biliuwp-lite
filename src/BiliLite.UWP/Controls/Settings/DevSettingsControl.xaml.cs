@@ -77,6 +77,15 @@ namespace BiliLite.Controls.Settings
                     swFirstGrpcRequestDynamic.IsOn);
             });
 
+            // 全屏播放保留1px边缘(规避WinUI3渲染bug)
+            swFullscreenKeep1pxEdge.IsOn =
+                SettingService.GetValue<bool>(SettingConstants.Other.FULLSCREEN_KEEP_1PX_EDGE, true);
+            swFullscreenKeep1pxEdge.Toggled += ((e, args) =>
+            {
+                SettingService.SetValue(SettingConstants.Other.FULLSCREEN_KEEP_1PX_EDGE,
+                    swFullscreenKeep1pxEdge.IsOn);
+            });
+
             RequestBuildTextBox.Text = SettingService.GetValue(SettingConstants.Other.REQUEST_BUILD,
                 SettingConstants.Other.DEFAULT_REQUEST_BUILD);
 
