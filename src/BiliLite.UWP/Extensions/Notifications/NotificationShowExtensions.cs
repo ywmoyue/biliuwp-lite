@@ -166,19 +166,5 @@ namespace BiliLite.Extensions.Notifications
                 return false;
             }
         }
-
-        /// <summary>
-        /// Comment 专用
-        /// </summary>
-        /// <param name="oid"></param>
-        /// <param name="commentMode"></param>
-        /// <param name="commentSort"></param>
-        public static void ShowCommentDialog(string oid, int commentMode, CommentApi.CommentSort commentSort)
-        {
-            CommentDialog ms = new CommentDialog();
-            // TODO: 设置当前活动窗口
-            ms.XamlRoot = (App.MainWindow.Content as Frame).XamlRoot;
-            ms.Show(oid, commentMode, commentSort);
-        }
     }
 }
