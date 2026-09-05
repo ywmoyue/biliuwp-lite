@@ -1,4 +1,5 @@
-﻿using BiliLite.Extensions.Notifications;
+﻿using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -153,7 +154,7 @@ namespace BiliLite.Controls
             if (imgs[index].ImageBytes == null) return;
             var bytes = imgs[index].ImageBytes;
 
-            FileSavePicker save = new FileSavePicker();
+            var save = FileExtensions.GetFileSavePicker();
             save.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
 
 
