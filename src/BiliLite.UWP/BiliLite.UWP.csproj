@@ -880,9 +880,6 @@
     <Compile Include="Converters\CountDisplayConvert.cs" />
     <Compile Include="Converters\DanmakuStyleConvert.cs" />
     <Compile Include="Converters\DownloadStatusConvert.cs" />
-    <Compile Include="Controls\Dialogs\CommentDialog.xaml.cs">
-      <DependentUpon>CommentDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Dialogs\CopyOrMoveFavVideoDialog.xaml.cs">
       <DependentUpon>CopyOrMoveFavVideoDialog.xaml</DependentUpon>
     </Compile>
@@ -895,10 +892,6 @@
     <Compile Include="Controls\Dynamic\DynamicControl.xaml.cs">
       <DependentUpon>DynamicControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Dynamic\DynamicItemControl.xaml.cs">
-      <DependentUpon>DynamicItemControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\DataTemplateSelectors\UserDynamicItemDataTemplateSelector.cs" />
     <Compile Include="Extensions\DynamicParseExtensions.cs" />
     <Compile Include="Controls\ImageViewerControl.xaml.cs">
       <DependentUpon>ImageViewerControl.xaml</DependentUpon>
@@ -1008,7 +1001,6 @@
     <Compile Include="ViewModels\Live\LiveRoomViewModel.cs" />
     <Compile Include="ViewModels\Home\LiveViewModel.cs" />
     <Compile Include="ViewModels\UserDynamic\UserDynamicRepostViewModel.cs" />
-    <Compile Include="ViewModels\UserDynamic\UserDynamicViewModel.cs" />
     <Compile Include="Modules\User\LoginVM.cs" />
     <Compile Include="ViewModels\User\SendDynamic\AtViewModel.cs" />
     <Compile Include="ViewModels\User\HistoryViewModel.cs" />
@@ -1092,9 +1084,6 @@
     </Compile>
     <Compile Include="Pages\Other\ImageViewerPage.xaml.cs">
       <DependentUpon>ImageViewerPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\Other\TopicPage.xaml.cs">
-      <DependentUpon>TopicPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\RankPage.xaml.cs">
       <DependentUpon>RankPage.xaml</DependentUpon>
@@ -1445,10 +1434,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Dialogs\CommentDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Dialogs\CopyOrMoveFavVideoDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1462,14 +1447,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dynamic\DynamicControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Dynamic\DynamicItemControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Dynamic\DynamicTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1606,10 +1583,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\Other\ImageViewerPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\Other\TopicPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

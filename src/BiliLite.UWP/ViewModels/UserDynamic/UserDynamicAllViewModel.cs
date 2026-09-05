@@ -382,7 +382,7 @@ namespace BiliLite.ViewModels.UserDynamic
             }
             catch (Exception ex)
             {
-                var handel = HandelError<UserDynamicViewModel>(ex);
+                var handel = HandelError<UserDynamicAllViewModel>(ex);
                 NotificationShowExtensions.ShowMessageToast(handel.message);
             }
             finally

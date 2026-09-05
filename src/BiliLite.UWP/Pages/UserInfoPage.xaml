@@ -22,10 +22,6 @@
 
     <Page.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Dynamic/DynamicTemplate.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White" />
             <ItemsPanelTemplate x:Key="GridPanel">
                 <toolkit:StaggeredPanel
