@@ -1160,6 +1160,7 @@ namespace BiliLite.Controls
             }
             var menuitem = (sender as ToggleMenuFlyoutItem);
             CurrentSubtitleName = menuitem.Text;
+            SettingService.SetValue(SettingConstants.Player.SELECTED_SUBTITLE, $"{CurrentPlayItem.avid}|{menuitem.Text}");
             if (menuitem.Text == "无")
             {
                 ClearSubTitle();
@@ -1733,6 +1734,26 @@ namespace BiliLite.Controls
             }
         }
 
+        /// <summary>
+        /// 尝试应用本视频上次选择的字幕语言（仅用于切换分P时恢复），命中返回true
+        /// </summary>
+        private bool ApplySavedSubtitle(MenuFlyout menu)
+        {
+            var savedSubtitle = SettingService.GetValue<string>(SettingConstants.Player.SELECTED_SUBTITLE, "");
+            if (string.IsNullOrEmpty(savedSubtitle)) return false;
+            var separatorIndex = savedSubtitle.IndexOf('|');
+            if (separatorIndex < 0 || CurrentPlayItem.avid != savedSubtitle.Substring(0, separatorIndex)) return false;
+            var savedItem = menu.Items.OfType<ToggleMenuFlyoutItem>().FirstOrDefault(x => x.Text == savedSubtitle.Substring(separatorIndex + 1));
+            if (savedItem == null) return false;
+            savedItem.IsChecked = true;
+            CurrentSubtitleName = savedItem.Text;
+            if (savedItem.Text != "无")
+            {
+                SetSubTitle(savedItem.Tag.ToString());
+            }
+            return true;
+        }
+
         private async Task GetPlayerInfo()
         {
             TopOnline.Text = "";
@@ -1753,16 +1774,19 @@ namespace BiliLite.Controls
                     noneItem.Click += Menuitem_Click;
                     menu.Items.Add(noneItem);
                     var firstMenuItem = (menu.Items[0] as ToggleMenuFlyoutItem);
-                    if ((firstMenuItem.Text.Contains("自动") || firstMenuItem.Text.Contains("AI") || firstMenuItem.Text.Contains("ai")) && !autoAISubtitle)
+                    if (!ApplySavedSubtitle(menu))
                     {
-                        noneItem.IsChecked = true;
-                        CurrentSubtitleName = noneItem.Text;
-                    }
-                    else
-                    {
-                        firstMenuItem.IsChecked = true;
-                        CurrentSubtitleName = firstMenuItem.Text;
-                        SetSubTitle(firstMenuItem.Tag.ToString());
+                        if ((firstMenuItem.Text.Contains("自动") || firstMenuItem.Text.Contains("AI") || firstMenuItem.Text.Contains("ai")) && !autoAISubtitle)
+                        {
+                            noneItem.IsChecked = true;
+                            CurrentSubtitleName = noneItem.Text;
+                        }
+                        else
+                        {
+                            firstMenuItem.IsChecked = true;
+                            CurrentSubtitleName = firstMenuItem.Text;
+                            SetSubTitle(firstMenuItem.Tag.ToString());
+                        }
                     }
                     BottomBtnSelctSubtitle.Flyout = menu;
                     BottomBtnSelctSubtitle.Visibility = Visibility.Visible;
@@ -1793,16 +1817,19 @@ namespace BiliLite.Controls
                 noneItem.Click += Menuitem_Click;
                 menu.Items.Add(noneItem);
                 var firstMenuItem = (menu.Items[0] as ToggleMenuFlyoutItem);
-                if ((firstMenuItem.Text.Contains("自动") || firstMenuItem.Text.Contains("AI") || firstMenuItem.Text.Contains("ai")) && !autoAISubtitle)
+                if (!ApplySavedSubtitle(menu))
                 {
-                    noneItem.IsChecked = true;
-                    CurrentSubtitleName = noneItem.Text;
-                }
-                else
-                {
-                    firstMenuItem.IsChecked = true;
-                    CurrentSubtitleName = firstMenuItem.Text;
-                    SetSubTitle(firstMenuItem.Tag.ToString());
+                    if ((firstMenuItem.Text.Contains("自动") || firstMenuItem.Text.Contains("AI") || firstMenuItem.Text.Contains("ai")) && !autoAISubtitle)
+                    {
+                        noneItem.IsChecked = true;
+                        CurrentSubtitleName = noneItem.Text;
+                    }
+                    else
+                    {
+                        firstMenuItem.IsChecked = true;
+                        CurrentSubtitleName = firstMenuItem.Text;
+                        SetSubTitle(firstMenuItem.Tag.ToString());
+                    }
                 }
 
                 BottomBtnSelctSubtitle.Flyout = menu;

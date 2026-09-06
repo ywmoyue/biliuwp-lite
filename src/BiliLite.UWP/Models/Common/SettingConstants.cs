@@ -1200,6 +1200,12 @@ namespace BiliLite.Models.Common
             public const string AUTO_OPEN_AI_SUBTITLE = "PlayerAutoOpenAISubtitle";
 
             /// <summary>
+            /// 上次选择的字幕语言（avid|语言，仅用于同一视频切换分P时恢复）
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string SELECTED_SUBTITLE = "PlayerSelectedSubtitle";
+
+            /// <summary>
             /// 直播播放器默认模式
             /// </summary>
             [SettingKey(typeof(int))]
