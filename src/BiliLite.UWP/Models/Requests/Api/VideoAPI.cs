@@ -41,6 +41,51 @@ namespace BiliLite.Models.Requests.Api
             return api;
         }
 
+        /// <summary>
+        /// 查询视频是否被点赞(Web端详情接口不含此状态, 需登录Cookie)
+        /// </summary>
+        public ApiModel HasLike(string aid, string bvid)
+        {
+            var api = new ApiModel()
+            {
+                method = HttpMethods.Get,
+                baseUrl = $"https://api.bilibili.com/x/web-interface/archive/has/like",
+                parameter = $"&aid={aid}&bvid={bvid}",
+                need_cookie = true,
+            };
+            return api;
+        }
+
+        /// <summary>
+        /// 查询视频是否被投币(Web端详情接口不含此状态, 需登录Cookie)
+        /// </summary>
+        public ApiModel HasCoin(string aid, string bvid)
+        {
+            var api = new ApiModel()
+            {
+                method = HttpMethods.Get,
+                baseUrl = $"https://api.bilibili.com/x/web-interface/archive/coins",
+                parameter = $"&aid={aid}&bvid={bvid}",
+                need_cookie = true,
+            };
+            return api;
+        }
+
+        /// <summary>
+        /// 查询视频是否被收藏(Web端详情接口不含此状态, 需登录Cookie)
+        /// </summary>
+        public ApiModel HasFav(string aid, string bvid)
+        {
+            var api = new ApiModel()
+            {
+                method = HttpMethods.Get,
+                baseUrl = $"https://api.bilibili.com/x/v2/fav/video/favoured",
+                parameter = $"&aid={aid}&bvid={bvid}",
+                need_cookie = true,
+            };
+            return api;
+        }
+
         public ApiModel DetailProxy(string id, bool isbvid)
         {
             var api = new ApiModel()

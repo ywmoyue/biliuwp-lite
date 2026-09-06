@@ -1,7 +1,6 @@
 ﻿using BiliLite.Controls;
 using BiliLite.Controls.Dialogs;
 using BiliLite.Models.Common.Notifications.Template;
-using BiliLite.Models.Requests.Api;
 using BiliLite.Services;
 using BiliLite.Services.Notification;
 using Microsoft.Extensions.DependencyInjection;
@@ -130,18 +129,6 @@ namespace BiliLite.Extensions.Notifications
             {
                 return false;
             }
-        }
-
-        /// <summary>
-        /// Comment 专用
-        /// </summary>
-        /// <param name="oid"></param>
-        /// <param name="commentMode"></param>
-        /// <param name="commentSort"></param>
-        public static void ShowCommentDialog(string oid, int commentMode, CommentApi.CommentSort commentSort)
-        {
-            CommentDialog ms = new CommentDialog();
-            ms.Show(oid, commentMode, commentSort);
         }
     }
 }
