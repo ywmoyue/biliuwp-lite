@@ -1698,7 +1698,19 @@ namespace BiliLite.Controls
                     IsLocal = true,
                 };
 
-                if (realPlayerType == RealPlayerType.Native || realPlayerType == RealPlayerType.FFmpegInterop)
+                if (realPlayerType == RealPlayerType.Native)
+                {
+                    result = await Player.PlayerDashUseNative(playerOpenParam);
+                    if (!result.result)
+                    {
+                        result = await Player.PlayDashUseFFmpegInterop(playerOpenParam);
+                        if (!result.result)
+                        {
+                            result = await Player.PlayerDashUseShaka(playerOpenParam);
+                        }
+                    }
+                }
+                else if (realPlayerType == RealPlayerType.FFmpegInterop)
                 {
                     result = await Player.PlayDashUseFFmpegInterop(playerOpenParam);
                     if (!result.result)
@@ -1932,7 +1944,15 @@ namespace BiliLite.Controls
                 Positon = _postion,
                 IsLocal = true,
             };
-            if (realPlayerType == RealPlayerType.Native || realPlayerType == RealPlayerType.FFmpegInterop)
+            if (realPlayerType == RealPlayerType.Native)
+            {
+                result = await Player.PlayerDashUseNative(playerOpenParam);
+                if (!result.result)
+                {
+                    result = await Player.PlayDashUseFFmpegInterop(playerOpenParam);
+                }
+            }
+            else if (realPlayerType == RealPlayerType.FFmpegInterop)
             {
                 result = await Player.PlayDashUseFFmpegInterop(playerOpenParam);
             }
