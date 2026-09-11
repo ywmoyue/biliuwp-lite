@@ -9,6 +9,7 @@ using BiliLite.Models.Common;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Attributes;
 using BiliLite.Models.Common.Player;
+using BiliLite.ViewModels;
 
 namespace BiliLite.Controls
 {
@@ -33,7 +34,7 @@ namespace BiliLite.Controls
             set => m_playerToastService = value;
         }
 
-        public bool FirstMediaOpened { get; set; }
+        public PlayControlViewModel ViewModel { get; set; }
 
         public void InitSoundQuality(List<BiliDashAudioPlayUrlInfo> audioQualites, BiliDashAudioPlayUrlInfo currentAudioQuality)
         {
@@ -113,13 +114,13 @@ namespace BiliLite.Controls
 
         private void SoundQualityComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (!FirstMediaOpened || SoundQualityComboBox.SelectedItem == null) return;
+            if (ViewModel.CurrentPlayState.IsIdle || SoundQualityComboBox.SelectedItem == null) return;
             SoundQualityChanged?.Invoke(this, (BiliDashAudioPlayUrlInfo)SoundQualityComboBox.SelectedItem);
         }
 
         private void QualityComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (!FirstMediaOpened || QualityComboBox.SelectedItem == null) return;
+            if (ViewModel.CurrentPlayState.IsIdle || QualityComboBox.SelectedItem == null) return;
             QualityChanged?.Invoke(this, (BiliPlayUrlInfo)QualityComboBox.SelectedItem);
         }
 

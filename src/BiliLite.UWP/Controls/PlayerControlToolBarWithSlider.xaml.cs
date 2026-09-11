@@ -10,6 +10,7 @@ using BiliLite.Models.Common.Video.PlayUrlInfos;
 using BiliLite.Models.Common;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Attributes;
+using BiliLite.ViewModels;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -43,7 +44,7 @@ namespace BiliLite.Controls
             set => m_playerToastService = value;
         }
 
-        public bool FirstMediaOpened { get; set; }
+        public PlayControlViewModel ViewModel { get; set; }
 
         public void InitSoundQuality(List<BiliDashAudioPlayUrlInfo> audioQualites, BiliDashAudioPlayUrlInfo currentAudioQuality)
         {
@@ -155,7 +156,7 @@ namespace BiliLite.Controls
 
         private void SliderSoundQuality_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            if (!FirstMediaOpened) return;
+            if (ViewModel.CurrentPlayState.IsIdle) return;
             var audioQualites = m_soundQualitySliderTooltipConverter.AudioQualites;
             var latestChoice = audioQualites[(int)SliderSoundQuality.Value];
             BottomBtnSoundQuality.Content = latestChoice.QualityName;
@@ -165,7 +166,7 @@ namespace BiliLite.Controls
 
         private void SliderQuality_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            if (!FirstMediaOpened) return;
+            if (ViewModel.CurrentPlayState.IsIdle) return;
             var videoQualites = m_qualitySliderTooltipConverter.Qualites;
             var latestChoice = videoQualites[(int)SliderQuality.Value];
             BottomBtnQuality.Content = latestChoice.QualityName;

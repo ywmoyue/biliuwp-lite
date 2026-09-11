@@ -282,6 +282,7 @@
 
                 <Grid
                     x:Name="PlayerView"
+                    AutomationProperties.AutomationId="Live.PlayerArea"
                     Background="Black"
                     ManipulationCompleted="Grid_ManipulationCompleted"
                     ManipulationDelta="Grid_ManipulationDelta"

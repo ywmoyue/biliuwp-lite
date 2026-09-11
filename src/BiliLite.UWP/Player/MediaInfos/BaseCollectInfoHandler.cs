@@ -2,7 +2,7 @@
 
 namespace BiliLite.Player.MediaInfos
 {
-    public abstract class BaseCollectInfoHandler
+    public abstract class BaseCollectInfoHandler : System.IDisposable
     {
         protected readonly MediaInfosCollector m_mediaInfosCollector;
         protected static readonly ILogger _logger = GlobalLogger.FromCurrentType();
@@ -27,5 +27,9 @@ namespace BiliLite.Player.MediaInfos
         public abstract void InternalStart(CollectInfo collectInfo);
 
         public abstract void InternalStop();
+
+        public virtual void Dispose()
+        {
+        }
     }
 }

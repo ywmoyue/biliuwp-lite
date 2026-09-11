@@ -2,6 +2,8 @@
     x:Class="BiliLite.Controls.PlayerControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
+    xmlns:IsWin11="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     xmlns:common="using:BiliLite.Models.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -16,8 +18,6 @@
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:video="using:BiliLite.Models.Common.Video"
     xmlns:webPlayer="using:BiliLite.Player.WebPlayer"
-    xmlns:IsWin10="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,14)"
-    xmlns:IsWin11="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,14)"
     d:DesignHeight="800"
     d:DesignWidth="1000"
     mc:Ignorable="d">
@@ -70,6 +70,7 @@
                             <Grid>
                                 <ListView
                                     x:Name="EpisodeList"
+                                    AutomationProperties.AutomationId="Player.EpisodeList"
                                     Loaded="EpisodeList_Loaded"
                                     SelectionChanged="EpisodeList_SelectionChanged">
                                     <ListView.ItemTemplate>
@@ -227,7 +228,7 @@
                                         弹幕偏移
                                     </TextBlock>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBox Text="{x:Bind m_danmakuController.DanmakuViewModel.PositionOffset,Mode=OneWay}" IsEnabled="False"></TextBox>
+                                        <TextBox IsEnabled="False" Text="{x:Bind m_danmakuController.DanmakuViewModel.PositionOffset, Mode=OneWay}" />
                                         <Button Click="BtnDanmakuMinOffset1S_OnClick">-1s</Button>
                                         <Button Click="BtnDanmakuAddOffset1S_OnClick">+1s</Button>
                                     </StackPanel>
@@ -526,15 +527,17 @@
                     PointerMoved="Grid_PointerMoved"
                     PointerPressed="Grid_PointerPressed"
                     PointerReleased="Grid_PointerReleased">
-                    <!--  播放器  -->
-                    <local:Player
-                        x:Name="Player"
-                        ChangeEngine="Player_ChangeEngine"
-                        PlayMediaEnded="Player_PlayMediaEnded"
-                        PlayMediaError="Player_PlayMediaError"
-                        PlayMediaOpened="Player_PlayMediaOpened"
-                        PlayStateChanged="Player_PlayStateChanged"
-                        StatsUpdated="Player_OnStatsUpdated" />
+                    <!--  真实播放器控件（XAML 声明，替代代码实例化，按 RealPlayerType 切换可见性）  -->
+                    <Grid x:Name="PlayerHost" AutomationProperties.AutomationId="Player.Surface">
+                        <MediaPlayerElement
+                            x:Name="PlayerHostMediaPlayerElement"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Visibility="{x:Bind m_viewModel.ShowMediaPlayer, Mode=OneWay}" />
+                        <webPlayer:ShakaPlayerControl
+                            x:Name="PlayerHostShakaPlayer"
+                            Visibility="{x:Bind m_viewModel.ShowWebPlayer, Mode=OneWay}" />
+                    </Grid>
 
                     <!--  字幕  -->
                     <Border
@@ -564,7 +567,7 @@
                         <StackPanel
                             x:Name="GridBuffering"
                             VerticalAlignment="Center"
-                            Visibility="{Binding ElementName=Player, Path=Buffering, Mode=OneWay}">
+                            Visibility="Collapsed">
                             <muxc:ProgressRing
                                 Width="50"
                                 Height="50"
@@ -573,11 +576,12 @@
                             <TextBlock
                                 x:Name="TxtBuffering"
                                 Margin="0,8"
+                                AutomationProperties.AutomationId="Player.BufferingIndicator"
                                 Foreground="White"
                                 Text="缓冲中..."
                                 TextAlignment="Center" />
                         </StackPanel>
-                        <StackPanel x:Name="VideoLoading" VerticalAlignment="Center">
+                        <StackPanel x:Name="VideoLoading" AutomationProperties.AutomationId="Player.VideoLoading" VerticalAlignment="Center">
                             <muxc:ProgressRing
                                 Width="50"
                                 Height="50"
@@ -649,8 +653,8 @@
 
                         <muxc:ProgressBar
                             Grid.Row="1"
-                            Maximum="{Binding ElementName=Player, Path=Duration, Mode=OneWay}"
-                            Value="{Binding ElementName=Player, Path=Position, Mode=OneWay}" />
+                            Maximum="{x:Bind m_viewModel.Duration, Mode=OneWay}"
+                            Value="{x:Bind m_viewModel.Position, Mode=OneWay}" />
                     </Grid>
 
                     <Grid x:Name="control">
@@ -680,6 +684,7 @@
                                     x:Name="TopTitle"
                                     Margin="12,0"
                                     VerticalAlignment="Center"
+                                    AutomationProperties.AutomationId="Player.Title"
                                     FontSize="18"
                                     Foreground="White"
                                     TextTrimming="CharacterEllipsis">
@@ -693,7 +698,7 @@
                                         FontSize="16"
                                         Foreground="White" />
 
-                                    <StackPanel x:Name="ExtraToolsPanel" Orientation="Horizontal"/>
+                                    <StackPanel x:Name="ExtraToolsPanel" Orientation="Horizontal" />
 
                                     <Button
                                         x:Name="BtnOpenWebPlayerToolbar"
@@ -703,7 +708,7 @@
                                         Background="Transparent"
                                         Click="BtnOpenWebPlayerToolbar_OnClick"
                                         ToolTipService.ToolTip="Web播放器工具箱"
-                                        Visibility="{x:Bind Player.ShowShakaPlayer, Mode=OneWay}">
+                                        Visibility="{x:Bind m_viewModel.ShowWebPlayerToolbarButton, Mode=OneWay}">
                                         <fa:FontAwesome
                                             Width="28"
                                             Height="28"
@@ -732,6 +737,8 @@
                                         Height="48"
                                         Padding="0"
                                         Background="Transparent"
+                                        AutomationProperties.AutomationId="Player.DanmakuSettingsButton"
+                                        AutomationProperties.Name="弹幕设置"
                                         Click="TopBtnSettingDanmaku_Click"
                                         ToolTipService.ToolTip="弹幕设置">
                                         <Image
@@ -792,9 +799,9 @@
                                     Value="{Binding ElementName=Player, Path=Position, Mode=OneWay}" />-->
                                     <local:PlayerProgressBar
                                         x:Name="BottomProgress"
-                                        Position="{Binding ElementName=Player, Path=Position, Mode=OneWay}"
+                                        Position="{x:Bind m_viewModel.Position, Mode=OneWay}"
                                         PositionChanged="BottomProgress_OnPositionChanged"
-                                        Duration="{Binding ElementName=Player, Path=Duration, Mode=OneWay}" />
+                                        Duration="{x:Bind m_viewModel.Duration, Mode=OneWay}" />
                                     <Canvas x:Name="BottomProgressCanvas" />
                                 </Grid>
                                 <Grid Grid.Row="1" Padding="0,0,0,8">
@@ -809,6 +816,8 @@
                                             Width="48"
                                             Height="48"
                                             Padding="8"
+                                            AutomationProperties.AutomationId="Player.PauseButton"
+                                            AutomationProperties.Name="暂停"
                                             Click="BottomBtnPause_Click"
                                             Foreground="White"
                                             Visibility="Collapsed">
@@ -819,6 +828,8 @@
                                             Width="48"
                                             Height="48"
                                             Padding="8"
+                                            AutomationProperties.AutomationId="Player.PlayButton"
+                                            AutomationProperties.Name="播放"
                                             Click="BottomBtnPlay_Click"
                                             Foreground="White">
                                             <fa:FontAwesome FontSize="20" Icon="Solid_Play" />
@@ -836,6 +847,8 @@
                                             Width="48"
                                             Height="48"
                                             Padding="8"
+                                            AutomationProperties.AutomationId="Player.NextButton"
+                                            AutomationProperties.Name="下一集"
                                             Click="BottomBtnNext_Click"
                                             Foreground="White"
                                             Visibility="Collapsed">
@@ -845,11 +858,13 @@
                                             x:Name="BottomTextPostion"
                                             Margin="0,0,0,3"
                                             VerticalAlignment="Center"
+                                            AutomationProperties.AutomationId="Player.PositionText"
+                                            AutomationProperties.Name="播放位置"
                                             FontSize="18"
                                             Foreground="White">
-                                            <Run Text="{Binding ElementName=Player, Path=Position, Mode=OneWay, Converter={StaticResource ProgressToTimeConverter}}" />
+                                            <Run Text="{x:Bind m_viewModel.Position, Mode=OneWay, Converter={StaticResource ProgressToTimeConverter}}" />
                                             <Run>/</Run>
-                                            <Run Text="{Binding ElementName=Player, Path=Duration, Mode=OneWay, Converter={StaticResource ProgressToTimeConverter}}" /></TextBlock>
+                                            <Run Text="{x:Bind m_viewModel.Duration, Mode=OneWay, Converter={StaticResource ProgressToTimeConverter}}" /></TextBlock>
                                         <Button
                                             x:Name="BottomBtnSelctSubtitle"
                                             Width="48"
@@ -866,6 +881,8 @@
                                             Height="48"
                                             Padding="0"
                                             Background="Transparent"
+                                            AutomationProperties.AutomationId="Player.DanmakuToggle"
+                                            AutomationProperties.Name="打开弹幕"
                                             Click="TopBtnOpenDanmaku_Click"
                                             Visibility="{x:Bind Path=m_danmakuController.DanmakuViewModel.IsHide, Mode=OneWay}">
                                             <Image
@@ -1011,6 +1028,8 @@
                                             Height="48"
                                             Padding="0,3,0,0"
                                             Background="Transparent"
+                                            AutomationProperties.AutomationId="Player.VolumeMuteButton"
+                                            AutomationProperties.Name="音量"
                                             BorderThickness="0"
                                             Foreground="White"
                                             Style="{StaticResource DefaultButtonStyle}"
@@ -1024,11 +1043,11 @@
                                                             <TextBlock HorizontalAlignment="Center">音量</TextBlock>
                                                             <Slider
                                                                 x:Name="SliderVolume"
+                                                                AutomationProperties.AutomationId="Player.VolumeSlider"
                                                                 Width="200"
                                                                 Maximum="1"
                                                                 Minimum="0"
-                                                                StepFrequency="0.1"
-                                                                Value="{x:Bind Path=Player.Volume, Mode=TwoWay}" />
+                                                                StepFrequency="0.1" />
                                                         </StackPanel>
                                                         <TextBlock Margin="10,0,0,8" VerticalAlignment="Bottom">1</TextBlock>
                                                     </StackPanel>
@@ -1043,6 +1062,8 @@
                                             Height="48"
                                             Padding="12"
                                             Background="Transparent"
+                                            AutomationProperties.AutomationId="Player.PlaylistButton"
+                                            AutomationProperties.Name="选集"
                                             Click="BottomBtnList_Click"
                                             Foreground="White"
                                             ToolTipService.ToolTip="选集"
@@ -1075,6 +1096,8 @@
                                             Width="48"
                                             Height="48"
                                             Padding="8"
+                                            AutomationProperties.AutomationId="Player.FullWindowButton"
+                                            AutomationProperties.Name="铺满窗口"
                                             Click="BottomBtnFullWindows_Click"
                                             Foreground="White"
                                             ToolTipService.ToolTip="铺满窗口">
@@ -1085,6 +1108,8 @@
                                             Width="48"
                                             Height="48"
                                             Padding="8"
+                                            AutomationProperties.AutomationId="Player.ExitFullWindowButton"
+                                            AutomationProperties.Name="取消铺满窗口"
                                             Click="BottomBtnExitFullWindows_Click"
                                             Foreground="White"
                                             ToolTipService.ToolTip="取消铺满窗口"
@@ -1096,6 +1121,8 @@
                                             Width="48"
                                             Height="48"
                                             Padding="8"
+                                            AutomationProperties.AutomationId="Player.FullScreenButton"
+                                            AutomationProperties.Name="全屏"
                                             Click="BottomBtnFull_Click"
                                             Foreground="White"
                                             ToolTipService.ToolTip="全屏">
@@ -1106,6 +1133,8 @@
                                             Width="48"
                                             Height="48"
                                             Padding="8"
+                                            AutomationProperties.AutomationId="Player.ExitFullScreenButton"
+                                            AutomationProperties.Name="退出全屏"
                                             Click="BottomBtnExitFull_Click"
                                             Foreground="White"
                                             ToolTipService.ToolTip="退出全屏"
@@ -1199,6 +1228,8 @@
                         Margin="24,100"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Bottom"
+                        AutomationProperties.AutomationId="Player.CoverPlayButton"
+                        AutomationProperties.Name="播放"
                         Click="BottomBtnPlay_Click"
                         Visibility="Collapsed">
                         <Image Source="ms-appx:///Assets/Icon/ic_play.png" />
