@@ -141,6 +141,7 @@
             </Grid.ColumnDefinitions>
             <Grid
                 x:Name="playerGrid"
+                AutomationProperties.AutomationId="VideoDetail.PlayerGrid"
                 Grid.ColumnSpan="{x:Bind m_viewModel.PlayerGridColumnSpan, Mode=OneWay}"
                 Background="{ThemeResource NavigationViewTopPaneBackground}">
                 <Grid.RowDefinitions>
@@ -150,6 +151,7 @@
                 <Grid Background="Transparent">
                     <control:PlayerControl
                         x:Name="player"
+                        AutomationProperties.AutomationId="VideoDetail.PlayerControl"
                         AllMediaEndEvent="player_AllMediaEndEvent"
                         ChangeEpisodeEvent="PlayerControl_ChangeEpisodeEvent"
                         FullScreenEvent="PlayerControl_FullScreenEvent"
@@ -176,6 +178,8 @@
                                 x:Name="AccentLike"
                                 Width="60"
                                 Margin="0,0,4,0"
+                                AutomationProperties.AutomationId="VideoDetail.LikeButton"
+                                AutomationProperties.Name="点赞"
                                 Command="{x:Bind Path=m_viewModel.LikeCommand}"
                                 Foreground="{ThemeResource SystemAccentColor}"
                                 Holding="btnLike_Holding"
@@ -215,6 +219,8 @@
                         <Grid>
                             <AppBarButton
                                 x:Name="BtnFav"
+                                AutomationProperties.AutomationId="VideoDetail.FavoriteButton"
+                                AutomationProperties.Name="收藏"
                                 Width="60"
                                 Margin="0,0,4,0"
                                 Click="BtnFav_OnClick"
@@ -265,6 +271,8 @@
                             </AppBarButton>
                             <AppBarButton
                                 x:Name="AccentCoin"
+                                AutomationProperties.AutomationId="VideoDetail.CoinButton"
+                                AutomationProperties.Name="投币"
                                 Width="60"
                                 Margin="0"
                                 Flyout="{StaticResource CoinList}"
@@ -285,6 +293,8 @@
                     <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                         <AppBarButton
                             x:Name="btnShare"
+                            AutomationProperties.AutomationId="VideoDetail.ShareButton"
+                            AutomationProperties.Name="分享"
                             Width="56"
                             Flyout="{StaticResource ShareMenu}"
                             Foreground="{ThemeResource TextColor}"
@@ -300,6 +310,8 @@
                         </AppBarButton>
                         <AppBarButton
                             x:Name="btnDownload"
+                            AutomationProperties.AutomationId="VideoDetail.DownloadButton"
+                            AutomationProperties.Name="下载"
                             Width="56"
                             Margin="4,0"
                             Click="btnDownload_Click"
@@ -440,7 +452,11 @@
                 Height="{x:Bind m_viewModel.RightInfoHeight, Mode=OneWay}"
                 VerticalAlignment="Top"
                 Background="{x:Bind m_viewModel.RightInfoBackground, Mode=OneWay}">
-                <Pivot x:Name="pivot" PreviewKeyDown="Pivot_OnPreviewKeyDown">
+                <Pivot
+                    x:Name="pivot"
+                    AutomationProperties.AutomationId="VideoDetail.InfoPivot"
+                    PreviewKeyDown="Pivot_OnPreviewKeyDown"
+                    SelectionChanged="Pivot_SelectionChanged">
                     <PivotItem Margin="0">
                         <PivotItem.Header>
                             <TextBlock FontSize="18" Text="详情" />
@@ -482,6 +498,7 @@
                                 </Border>
                                 <TextBlock
                                     x:Name="TitleText"
+                                    AutomationProperties.AutomationId="VideoDetail.TitleText"
                                     FontSize="18"
                                     RightTapped="TitleText_RightTapped"
                                     Text="{x:Bind Path=m_viewModel.VideoInfo.Title, Mode=OneWay}"
@@ -501,6 +518,7 @@
                                     Padding="0"
                                     HorizontalAlignment="Stretch"
                                     HorizontalContentAlignment="Stretch"
+                                    AutomationProperties.AutomationId="VideoDetail.Up主Link"
                                     Click="btnOpenUser_Click"
                                     Foreground="{ThemeResource TextColor}"
                                     Visibility="{x:Bind Path=m_viewModel.VideoInfo.ShowStaff, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
@@ -606,6 +624,7 @@
                                 <StackPanel x:Name="stDesc" Margin="0,8,0,0">
                                     <TextBlock
                                         x:Name="txtDesc"
+                                        AutomationProperties.AutomationId="VideoDetail.DescriptionText"
                                         Foreground="Gray"
                                         Holding="txtDesc_Holding"
                                         IsTextSelectionEnabled="False"
@@ -677,19 +696,20 @@
                             </StackPanel>
                         </ScrollViewer>
                     </PivotItem>
-                    <PivotItem Margin="0">
+                    <PivotItem x:Name="CommentPivotItem" Margin="0">
                         <PivotItem.Header>
                             <TextBlock FontSize="18" Text="评论">
                                 <Run FontSize="12" Text="{x:Bind m_viewModel.VideoInfo.Stat.Reply, Mode=OneWay, Converter={StaticResource CountOrTextConvert}}" />
                             </TextBlock>
                         </PivotItem.Header>
-                        <control:CommentControl x:Name="comment" />
+                        <control:CommentControl x:Name="comment" AutomationProperties.AutomationId="VideoDetail.CommentSection" />
                     </PivotItem>
                     <PivotItem Margin="0">
                         <PivotItem.Header>
                             <TextBlock FontSize="18" Text="推荐" />
                         </PivotItem.Header>
                         <ListView
+                            AutomationProperties.AutomationId="VideoDetail.RelatedVideoList"
                             AllowFocusOnInteraction="False"
                             IsItemClickEnabled="True"
                             ItemClick="listRelates_ItemClick"

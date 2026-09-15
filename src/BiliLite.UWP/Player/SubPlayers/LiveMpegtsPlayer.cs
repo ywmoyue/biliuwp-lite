@@ -7,6 +7,7 @@ using BiliLite.Services;
 using System;
 using System.Threading.Tasks;
 using System.Linq;
+using Windows.UI.Xaml;
 
 namespace BiliLite.Player.SubPlayers;
 
@@ -15,6 +16,7 @@ public class LiveMpegtsPlayer : ISubPlayer, ISubWebPlayer
     private MpegtsPlayerControl m_playerControl;
     private PlayerConfig m_playerConfig;
     private string m_url;
+    private double m_position;
 
     public LiveMpegtsPlayer(PlayerConfig playerConfig, MpegtsPlayerControl playerControl)
     {
@@ -33,10 +35,15 @@ public class LiveMpegtsPlayer : ISubPlayer, ISubWebPlayer
         set => m_playerControl.SetVolume(value);
     }
 
+    public override double Position => m_position;
+
+    public override FrameworkElement PlayerView => m_playerControl;
+
     public override event EventHandler MediaOpened;
     public override event EventHandler MediaEnded;
     public override event EventHandler BufferingStarted;
     public override event EventHandler BufferingEnded;
+    public override event EventHandler<double> PositionChanged;
 
     public override CollectInfo GetCollectInfo()
     {
@@ -84,6 +91,7 @@ public class LiveMpegtsPlayer : ISubPlayer, ISubWebPlayer
         m_url = url;
 
         await m_playerControl.LoadLiveUrl(m_url, defaultPlayerMode.ToString());
+        await SetRate(m_rate);
     }
 
     public override async Task Buff()
@@ -115,6 +123,18 @@ public class LiveMpegtsPlayer : ISubPlayer, ISubWebPlayer
         await m_playerControl.Resume();
     }
 
+    public override async Task SetRate(double value)
+    {
+        m_rate = value;
+        await m_playerControl.SetRate(value);
+    }
+
+    public override async Task SetPosition(double value)
+    {
+        m_position = value;
+        await m_playerControl.Seek(value);
+    }
+
     private async Task StopCore()
     {
         await m_playerControl.Pause();
@@ -124,6 +144,13 @@ public class LiveMpegtsPlayer : ISubPlayer, ISubWebPlayer
     {
         m_playerControl.PlayerLoaded += ShakaPlayerControl_PlayerLoaded;
         m_playerControl.Ended += ShakaPlayerControlOnEnded;
+        m_playerControl.PositionChanged += ShakaPlayerControlOnPositionChanged;
+    }
+
+    private void ShakaPlayerControlOnPositionChanged(object sender, double e)
+    {
+        m_position = e;
+        PositionChanged?.Invoke(this, e);
     }
 
     private void ShakaPlayerControlOnEnded(object sender, EventArgs e)

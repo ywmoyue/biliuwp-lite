@@ -35,6 +35,13 @@ using BiliLite.Extensions.Notifications;
 
 namespace BiliLite.Controls
 {
+    /// <summary>
+    /// Legacy 播放控件。
+    ///
+    /// 该控件保留用于过渡期 UI 适配（由 LegacyPlayerAdapter 调用），
+    /// 新增播放入口请统一走 RealPlayInfoFactory + VideoPlayer 子播放器架构。
+    /// </summary>
+    [Obsolete("Legacy player control. Prefer Player/VideoPlayer state-machine architecture.")]
     //TODO 写得太复杂了，需要重写
     public sealed partial class Player : UserControl, IDisposable, INotifyPropertyChanged
     {
