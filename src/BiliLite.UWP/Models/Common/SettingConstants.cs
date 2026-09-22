@@ -1,4 +1,4 @@
-﻿using BiliLite.Models.Attributes;
+using BiliLite.Models.Attributes;
 using BiliLite.Models.Common.Player;
 using BiliLite.Services;
 using System.Collections.Generic;
@@ -446,6 +446,16 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const int DEFAULT_COMMENT_FONT_SIZE = 14;
+
+            /// <summary>
+            /// 主窗口宽度(运行时状态,不随设置导出)
+            /// </summary>
+            public const string MAIN_WINDOW_WIDTH = "mainWindowWidth";
+
+            /// <summary>
+            /// 主窗口高度(运行时状态,不随设置导出)
+            /// </summary>
+            public const string MAIN_WINDOW_HEIGHT = "mainWindowHeight";
 
         }
 

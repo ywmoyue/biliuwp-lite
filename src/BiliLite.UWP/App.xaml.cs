@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions;
+using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Events;
@@ -154,6 +154,13 @@ namespace BiliLite
             }
 
             await InitBili();
+
+            // 恢复上次保存的窗口尺寸(需在窗口激活前调用),修复"重启应用"后窗口恢复默认大小的问题
+            var windowSizeProvider = ServiceProvider.GetRequiredService<IWindowSizeProvider>();
+            windowSizeProvider.Initialize();
+            var windowSizeService = ServiceProvider.GetRequiredService<WindowSizeService>();
+            windowSizeService.RestoreWindowSize();
+
             Frame rootFrame = Window.Current.Content as Frame;
 
             // 不要在窗口已包含内容时重复应用程序初始化，
@@ -186,6 +193,9 @@ namespace BiliLite
                 }
                 // 确保当前窗口处于活动状态
                 Window.Current.Activate();
+
+                // 窗口激活后按保存的应用视图尺寸精确校正一次,避免启动偏好与窗口边界语义不一致导致高度偏差
+                windowSizeService.ApplySavedWindowSize();
 
                 var themeService = ServiceProvider.GetRequiredService<ThemeService>();
                 themeService.InitTitleBar();

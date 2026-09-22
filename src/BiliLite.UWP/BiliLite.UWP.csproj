@@ -159,6 +159,10 @@
     <Compile Include="Services\Interfaces\IDownloadOperation.cs" />
     <Compile Include="Services\Interfaces\IDownloadService.cs" />
     <Compile Include="Services\Interfaces\IDownloadTask.cs" />
+    <Compile Include="Services\Interfaces\IWindowSizeProvider.cs" />
+    <Compile Include="Services\WindowSizeService.cs" />
+    <Compile Include="Services\UwpWindowSizeProvider.cs" />
+    <Compile Include="Models\Common\WindowSize.cs" />
     <Compile Include="ViewModels\Common\DanmakuListViewModel.cs" />
     <Compile Include="Models\Common\Danmaku\DanmakuSimpleItem.cs" />
     <Compile Include="Controls\Common\PieControl.xaml.cs">
