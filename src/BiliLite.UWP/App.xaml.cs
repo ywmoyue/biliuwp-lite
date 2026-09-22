@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions;
+using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Events;
@@ -138,6 +138,10 @@ namespace BiliLite
             _window.Activate();
             splashWindow.Close();
 
+            // 窗口激活后按保存的客户区尺寸精确校正一次,避免重启后高度偏差
+            var windowSizeService = ServiceProvider.GetRequiredService<WindowSizeService>();
+            windowSizeService.ApplySavedWindowSize();
+
             await LogService.DeleteExpiredLogFile();
 
 #if !DEBUG
@@ -160,6 +164,12 @@ namespace BiliLite
             }
 
             await InitBili();
+
+            // 恢复上次保存的窗口尺寸(需在窗口激活前调用),修复"重启应用"后窗口恢复默认大小的问题
+            var windowSizeProvider = ServiceProvider.GetRequiredService<IWindowSizeProvider>();
+            windowSizeProvider.Initialize();
+            var windowSizeService = ServiceProvider.GetRequiredService<WindowSizeService>();
+            windowSizeService.RestoreWindowSize();
 
             WindowFrame rootFrame = _window.Content as WindowFrame;
 
