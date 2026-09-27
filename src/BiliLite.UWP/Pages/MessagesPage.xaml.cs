@@ -1,4 +1,5 @@
-﻿using BiliLite.Models.Common;
+﻿using BiliLite.Extensions;
+using BiliLite.Models.Common;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Services.Biz;
 using BiliLite.Services.Interfaces;
@@ -89,7 +90,7 @@ namespace BiliLite.Pages
 
         private async void OpenWeb_OnClick(object sender, RoutedEventArgs e)
         {
-            await Launcher.LaunchUriAsync(new Uri("https://message.bilibili.com/"));
+            await LauncherExtensions.OpenInBrowserAsync("https://message.bilibili.com/");
         }
 
         private async void SendButton_OnClick(object sender, RoutedEventArgs e)

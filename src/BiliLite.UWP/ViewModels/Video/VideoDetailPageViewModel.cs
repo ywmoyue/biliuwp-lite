@@ -350,6 +350,8 @@ namespace BiliLite.Modules
                 if (needGetUserReq)
                 {
                     await GetAttentionUp();
+                    // Web端详情接口不返回用户的点赞/投币/收藏状态, 需要单独查询
+                    await GetUserVideoStates();
                 }
                 Loaded = true;
 
@@ -612,6 +614,60 @@ namespace BiliLite.Modules
             if (data.data.Attribute == 2 || data.data.Attribute == 6)
             {
                 VideoInfo.ReqUser.Attention = 1;
+            }
+        }
+
+        /// <summary>
+        /// 查询用户的点赞/投币/收藏状态(Web端详情接口不含这些数据, 登录后单独补齐)
+        /// </summary>
+        private async Task GetUserVideoStates()
+        {
+            try
+            {
+                if (!SettingService.Account.Logined || VideoInfo == null)
+                {
+                    return;
+                }
+
+                VideoInfo.ReqUser ??= new VideoDetailReqUserViewModel();
+
+                var aid = VideoInfo.Aid;
+                var bvid = VideoInfo.Bvid;
+                var likeTask = videoAPI.HasLike(aid, bvid).Request();
+                var coinTask = videoAPI.HasCoin(aid, bvid).Request();
+                var favTask = videoAPI.HasFav(aid, bvid).Request();
+                await Task.WhenAll(likeTask, coinTask, favTask);
+
+                if (likeTask.Result.status)
+                {
+                    var data = await likeTask.Result.GetData<int>();
+                    if (data != null && data.success)
+                    {
+                        VideoInfo.ReqUser.Like = data.data == 1 ? 1 : 0;
+                    }
+                }
+
+                if (coinTask.Result.status)
+                {
+                    var data = await coinTask.Result.GetData<JObject>();
+                    if (data != null && data.success && data.data != null && data.data["multiply"] != null)
+                    {
+                        VideoInfo.ReqUser.Coin = data.data["multiply"].ToObject<int>() > 0 ? 1 : 0;
+                    }
+                }
+
+                if (favTask.Result.status)
+                {
+                    var data = await favTask.Result.GetData<JObject>();
+                    if (data != null && data.success && data.data != null && data.data["favoured"] != null)
+                    {
+                        VideoInfo.ReqUser.Favorite = data.data["favoured"].ToObject<bool>() ? 1 : 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn("获取用户点赞/投币/收藏状态失败", ex);
             }
         }
 
