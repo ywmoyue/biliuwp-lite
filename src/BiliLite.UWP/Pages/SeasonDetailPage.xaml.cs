@@ -493,7 +493,7 @@ namespace BiliLite.Pages
 
         private async void btnOpenWeb_Click(object sender, RoutedEventArgs e)
         {
-            await Launcher.LaunchUriAsync(new Uri("http://b23.tv/ss" + season_id));
+            await LauncherExtensions.OpenInBrowserAsync("http://b23.tv/ss" + season_id);
         }
 
         private void Image_Tapped(object sender, TappedRoutedEventArgs e)

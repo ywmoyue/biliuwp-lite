@@ -61,7 +61,7 @@ namespace BiliLite.Extensions.Notifications
                 Invoked = async (cmd) =>
                 {
                     if (uri != null)
-                        await Launcher.LaunchUriAsync(uri);
+                        await LauncherExtensions.OpenInBrowserAsync(uri);
                 }
             });
             messageDialog.Commands.Add(new UICommand() { Label = "取消", Id = false });
@@ -78,7 +78,7 @@ namespace BiliLite.Extensions.Notifications
                 Id = true,
             });
             messageDialog.Commands.Add(new UICommand() { Label = "打开浏览器手动申诉", Id = false, Invoked = command => {
-                Launcher.LaunchUriAsync(new Uri("https://www.bilibili.com/blackboard/cmmnty-appeal.html"));
+                LauncherExtensions.OpenInBrowserAsync("https://www.bilibili.com/blackboard/cmmnty-appeal.html");
             } });
             var result = await messageDialog.ShowAsync();
             return (bool)result.Id;

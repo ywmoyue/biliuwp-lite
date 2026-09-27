@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -83,7 +83,7 @@ namespace BiliLite.Pages.Other
 
             if (e.Uri != null && e.Uri.IsAbsoluteUri)
             {
-                await Windows.System.Launcher.LaunchUriAsync(e.Uri);
+                await LauncherExtensions.OpenInBrowserAsync(e.Uri);
             }
         }
 

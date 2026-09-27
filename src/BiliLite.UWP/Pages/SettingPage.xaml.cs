@@ -1,4 +1,4 @@
-﻿using BiliLite.Services.Interfaces;
+using BiliLite.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,7 +72,7 @@ namespace BiliLite.Pages
             {
                 if (e.Uri.IsAbsoluteUri)
                 {
-                    await Windows.System.Launcher.LaunchUriAsync(e.Uri);
+                    await LauncherExtensions.OpenInBrowserAsync(e.Uri);
                 }
             }
         }

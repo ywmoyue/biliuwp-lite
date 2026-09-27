@@ -636,7 +636,7 @@ namespace BiliLite.Services
                 }
                 else
                 {
-                    await Launcher.LaunchUriAsync(new Uri(url));
+                    await LauncherExtensions.OpenInBrowserAsync(url);
                     return true;
                 }
             }

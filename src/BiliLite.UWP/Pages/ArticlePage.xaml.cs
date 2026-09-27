@@ -139,7 +139,7 @@ public sealed partial class ArticlePage : BasePage
         switch (button.Tag as string)
         {
             case "OpenBrowser":
-                await Windows.System.Launcher.LaunchUriAsync(new Uri(m_articlePageNavigationInfo.Url));
+                await LauncherExtensions.OpenInBrowserAsync(m_articlePageNavigationInfo.Url);
                 break;
         }
     }
