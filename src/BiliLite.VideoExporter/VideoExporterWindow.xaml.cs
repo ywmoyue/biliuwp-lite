@@ -1,46 +1,59 @@
 using FFMpegCore;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.AppNotifications;
 using Microsoft.Windows.AppNotifications.Builder;
 using SharpCompress.Archives;
 using SharpCompress.Archives.SevenZip;
 using SharpCompress.Common;
 using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
+using System.Text.Json;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace BiliLite.VideoExporter
 {
-
     /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
+    /// VideoExporterWindow.xaml ÁöÑ‰∫§‰∫íÈÄªËæë
     /// </summary>
     public sealed partial class VideoExporterWindow : Window
     {
-        ConvertFileInfo convertFileInfo;
-        string currentDir = "";
-        string ffmpegFile = "";
-        private bool debug = false;
+        private static readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
+        {
+            // Ë∞ÉÁî®ÊñπÔºàUWP ‰æßÔºâÁî®Â∞èÈ©ºÂ≥∞Â≠óÊÆµÂêçÂ∫èÂàóÂåñ
+            PropertyNameCaseInsensitive = true,
+        };
+
+        private ConvertFileInfo m_convertFileInfo;
+        private string m_currentDir = "";
+        private string m_ffmpegFile = "";
+        private bool m_debug = false;
+        private string m_debugLogFile = "";
+        private readonly object m_logLock = new object();
+        private CancellationTokenSource m_cancelSource;
+        private TimeSpan m_totalDuration = TimeSpan.Zero;
+        private int m_lastLoggedPercent = -1;
+
         public VideoExporterWindow()
         {
             InitializeComponent();
             this.AppWindow.Resize(new Windows.Graphics.SizeInt32 { Width = 400, Height = 400 });
+            // Áõ¥Êé•ÂÖ≥Á™óÂè£Êó∂‰πüË¶ÅÁªàÊ≠¢ ffmpegÔºåÂê¶Âàô‰ºöÁïô‰∏ãÁªßÁª≠Ë∑ëÁöÑÂêéÂè∞ËøõÁ®ã
+            this.Closed += (sender, args) =>
+            {
+                try
+                {
+                    m_cancelSource?.Cancel();
+                }
+                catch
+                {
+                    // ÂøΩÁï•
+                }
+            };
         }
 
         public async void Start()
@@ -48,74 +61,91 @@ namespace BiliLite.VideoExporter
             try
             {
                 LoadInfo();
-                txtStatus.Text = "’˝‘⁄Ω‚—πFFmpeg,«Î…‘µ»";
+                txtStatus.Text = "Ê≠£Âú®Ëß£ÂéãFFmpeg,ËØ∑Á®çÁ≠â";
 
                 var result = await DecompressFFmpeg();
                 if (!result)
                 {
                     progressBar.Visibility = Visibility.Collapsed;
-                    txtStatus.Text = "Ω‚—πFFmpeg ß∞‹£¨«Îπÿ±’≥Ã–Ú∫Û‘Ÿ ‘";
+                    txtStatus.Text = "Ëß£ÂéãFFmpegÂ§±Ë¥•ÔºåËØ∑ÂÖ≥Èó≠Á®ãÂ∫èÂêéÂÜçËØï";
                     return;
                 }
-                txtStatus.Text = "’˝‘⁄µº≥ˆ ”∆µ";
-                StartTask();
+                txtStatus.Text = "Ê≠£Âú®ÂØºÂá∫ËßÜÈ¢ë";
+                await StartTask();
             }
             catch (Exception ex)
             {
                 progressBar.Visibility = Visibility.Collapsed;
-                txtStatus.Text = $"÷¥––»ŒŒÒ ß∞‹£∫\r\n{ex.Message}";
+                txtStatus.Text = $"ÊâßË°å‰ªªÂä°Â§±Ë¥•Ôºö\r\n{ex.Message}";
             }
-
         }
 
         private void LoadInfo()
         {
             var args = Environment.GetCommandLineArgs();
+            // ËÑ±Á¶ªÁïåÈù¢ÁöÑÈ™åËØÅÂÖ•Âè£ÔºåÁî®Êñá‰ª∂‰º† JSON ÈÅøÂÖçÂëΩ‰ª§Ë°åËΩ¨‰πâÈóÆÈ¢ò
+            var debugFileParam = args.FirstOrDefault(arg => arg.StartsWith("--debug-file="));
+            if (debugFileParam != null)
+            {
+                var infoFile = debugFileParam.Substring("--debug-file=".Length);
+                m_convertFileInfo = DeserializeInfo(File.ReadAllText(infoFile));
+                txtName.Text = m_convertFileInfo.Title;
+                m_debug = true;
+                return;
+            }
             var debugParam = args.FirstOrDefault(arg => arg.StartsWith("--debug="));
             var param = debugParam != null ? debugParam.Substring("--debug=".Length) : "";
             if (!string.IsNullOrEmpty(param))
             {
-                convertFileInfo = System.Text.Json.JsonSerializer.Deserialize<ConvertFileInfo>(param);
-                txtName.Text = convertFileInfo.title;
-                debug = true;
+                m_convertFileInfo = DeserializeInfo(param);
+                txtName.Text = m_convertFileInfo.Title;
+                m_debug = true;
                 return;
             }
             var str = Windows.Storage.ApplicationData.Current.LocalSettings.Values["VideoConverterInfo"] as string;
-            convertFileInfo = System.Text.Json.JsonSerializer.Deserialize<ConvertFileInfo>(str);
-            txtName.Text = convertFileInfo.title;
+            m_convertFileInfo = DeserializeInfo(str);
+            txtName.Text = m_convertFileInfo.Title;
+        }
+
+        private static ConvertFileInfo DeserializeInfo(string json)
+        {
+            return JsonSerializer.Deserialize<ConvertFileInfo>(json, _jsonOptions);
         }
 
         private async Task<bool> DecompressFFmpeg()
         {
-
             var zipDir = Assembly.GetExecutingAssembly().Location;
             zipDir = System.IO.Path.GetDirectoryName(zipDir);
-            if (debug)
+            if (m_debug)
             {
-                currentDir = Environment.CurrentDirectory;
+                m_currentDir = Environment.CurrentDirectory;
             }
             else
             {
-                currentDir = Windows.Storage.ApplicationData.Current.LocalFolder.Path;
+                m_currentDir = Windows.Storage.ApplicationData.Current.LocalFolder.Path;
+            }
+            if (m_debug)
+            {
+                m_debugLogFile = System.IO.Path.Combine(m_currentDir, "export_debug.log");
+                Log("=== export debug ===");
             }
             return await Task.Run<bool>(() =>
             {
                 try
                 {
-
                     var ffmpeg7ZipPath = System.IO.Path.Combine(zipDir, "ffmpeg.7z");
-                    ffmpegFile = System.IO.Path.Combine(currentDir, "ffmpeg.exe");
-                    //ºÏ≤ÈŒƒº˛ «∑Ò¥Ê‘⁄
-                    if (File.Exists(ffmpegFile))
+                    m_ffmpegFile = System.IO.Path.Combine(m_currentDir, "ffmpeg.exe");
+                    //Ê£ÄÊü•Êñá‰ª∂ÊòØÂê¶Â≠òÂú®
+                    if (File.Exists(m_ffmpegFile))
                     {
                         return true;
                     }
-                    //Ω‚—πŒƒº˛
+                    //Ëß£ÂéãÊñá‰ª∂
                     using (var archive = SevenZipArchive.Open(ffmpeg7ZipPath))
                     {
                         foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
                         {
-                            entry.WriteToDirectory(currentDir, new ExtractionOptions()
+                            entry.WriteToDirectory(m_currentDir, new ExtractionOptions()
                             {
                                 ExtractFullPath = true,
                                 Overwrite = true
@@ -127,7 +157,7 @@ namespace BiliLite.VideoExporter
                 catch (Exception ex)
                 {
                     var builder = new AppNotificationBuilder()
-                        .AddText($"FFmpegΩ‚—π ß∞‹:{ex.Message}");
+                        .AddText($"FFmpegËß£ÂéãÂ§±Ë¥•:{ex.Message}");
 
                     var notification = builder.BuildNotification();
 
@@ -137,195 +167,173 @@ namespace BiliLite.VideoExporter
             });
         }
 
-        private async void StartTask()
+        private async Task StartTask()
         {
-            if (convertFileInfo.inputFiles.Count == 0)
+            VideoExportPlan plan;
+            try
+            {
+                plan = VideoExportArgs.Build(m_convertFileInfo);
+            }
+            catch (Exception ex)
             {
                 progressBar.Visibility = Visibility.Collapsed;
-                txtStatus.Text = " ”∆µŒ™ø’";
+                txtStatus.Text = $"Êó†Ê≥ïÂºÄÂßãÂØºÂá∫Ôºö\r\n{ex.Message}";
+                Log("BUILD FAILED: " + ex.Message);
                 return;
             }
-            GlobalFFOptions.Configure(new FFOptions { BinaryFolder = currentDir, TemporaryFilesFolder = currentDir });
 
-            if (convertFileInfo.isDash)
+            GlobalFFOptions.Configure(new FFOptions { BinaryFolder = m_currentDir, TemporaryFilesFolder = m_currentDir });
+
+            Log("format=" + plan.Format + " transcode=" + plan.Transcode);
+            Log(plan.ToCommandLine(m_ffmpegFile));
+
+            m_totalDuration = TimeSpan.Zero;
+            m_lastLoggedPercent = -1;
+            m_cancelSource = new CancellationTokenSource();
+            progressBar.Value = 0;
+            progressBar.IsIndeterminate = true;
+            btnCancel.IsEnabled = true;
+            btnCancel.Visibility = Visibility.Visible;
+
+            try
             {
-                if (convertFileInfo.subtitle.Count <= 0)
+                var ffmpegArgs = FFMpegArguments.FromFileInput(plan.Inputs[0]);
+                foreach (var input in plan.Inputs.Skip(1))
                 {
-                    await ConvertDash();
+                    ffmpegArgs = ffmpegArgs.AddFileInput(input);
+                }
+
+                var outputArguments = string.Join(" ", plan.OutputArgs);
+                var processor = ffmpegArgs
+                    .OutputToFile(plan.OutputFile, true, options =>
+                        options.WithArgument(new FFMpegCore.Arguments.CustomArgument(outputArguments)))
+                    .NotifyOnOutput(new Action<string>(HandleFFmpegLine))
+                    .NotifyOnError(new Action<string>(HandleFFmpegLine))
+                    .NotifyOnProgress(new Action<TimeSpan>(OnProgress))
+                    .CancellableThrough(m_cancelSource.Token);
+
+                await processor.ProcessAsynchronously();
+
+                progressBar.IsIndeterminate = false;
+                progressBar.Value = 100;
+                btnCancel.Visibility = Visibility.Collapsed;
+                txtStatus.Text = "ËßÜÈ¢ëÂØºÂá∫ÊàêÂäü!";
+                Log("SUCCESS");
+            }
+            catch (Exception ex)
+            {
+                btnCancel.Visibility = Visibility.Collapsed;
+                if (m_cancelSource != null && m_cancelSource.IsCancellationRequested)
+                {
+                    txtStatus.Text = "Â∑≤ÂèñÊ∂àÂØºÂá∫";
+                    Log("CANCELLED");
+                    TryDeleteOutput(plan.OutputFile);
                 }
                 else
                 {
-                    await ConvertDashWithSubtitle();
+                    txtStatus.Text = $"ËßÜÈ¢ëÂØºÂá∫Â§±Ë¥•Ôºö\r\n{ex.Message}" + BuildFailureHint(plan);
+                    Log("FAILED: " + ex);
                 }
-
             }
-            else
-            {
-                await ConvertToMp4();
-            }
-
         }
-        private async Task ConvertDash()
+
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            btnCancel.IsEnabled = false;
+            txtStatus.Text = "Ê≠£Âú®ÂèñÊ∂à...";
+            Log("CANCEL REQUESTED");
+            m_cancelSource?.Cancel();
+        }
+
+        /// <summary>
+        /// ËÆ∞ÂΩï ffmpeg ËæìÂá∫ÔºåÂπ∂ÊäìÊÄªÊó∂Èïø‰æõËøõÂ∫¶Êù°‰ΩøÁî®„ÄÇ
+        /// ÂõûË∞ÉÂú®ÂêéÂè∞Á∫øÁ®ã‰∏äÔºåÁïåÈù¢Êõ¥Êñ∞Ë¶ÅÂàáÂõû UI Á∫øÁ®ã„ÄÇ
+        /// </summary>
+        private void HandleFFmpegLine(string line)
+        {
+            Log(line);
+            if (m_totalDuration > TimeSpan.Zero || string.IsNullOrEmpty(line)) return;
+
+            var match = Regex.Match(line, @"Duration:\s*(\d+):(\d+):(\d+(?:\.\d+)?)");
+            if (!match.Success) return;
+
+            var hours = int.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+            var minutes = int.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
+            var seconds = double.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
+            m_totalDuration = new TimeSpan(0, hours, minutes, 0, (int)(seconds * 1000));
+
+            RunOnUiThread(() =>
+            {
+                progressBar.IsIndeterminate = false;
+                progressBar.Value = 0;
+            });
+        }
+
+        private void OnProgress(TimeSpan elapsed)
+        {
+            if (m_totalDuration <= TimeSpan.Zero) return;
+            var percent = elapsed.TotalMilliseconds / m_totalDuration.TotalMilliseconds * 100;
+            if (percent > 100) percent = 100;
+            if (percent < 0) percent = 0;
+            RunOnUiThread(() => progressBar.Value = percent);
+
+            // ÊØèË∑®Ëøá 25% ËÆ∞‰∏ÄÊù°Êó•ÂøóÔºå‰æø‰∫éËÑ±Á¶ªÁïåÈù¢Á°ÆËÆ§ËøõÂ∫¶ÂõûË∞ÉÂú®Â∑•‰Ωú
+            var bucket = (int)(percent / 25);
+            if (bucket != m_lastLoggedPercent)
+            {
+                m_lastLoggedPercent = bucket;
+                Log("progress=" + (int)percent + "%");
+            }
+        }
+
+        private void RunOnUiThread(Action action)
         {
             try
             {
-                var audioPaths = convertFileInfo.inputFiles
-                    .Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("audio")).ToList();
-                var videoPaths = convertFileInfo.inputFiles
-                    .Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("video")).ToList();
-
-                var ffmpegArgs = FFMpegArguments.FromFileInput(videoPaths.FirstOrDefault());
-
-                foreach (var videoPath in videoPaths.Skip(1))
-                {
-                    ffmpegArgs = ffmpegArgs.AddFileInput(videoPath);
-                }
-                foreach (var audioPath in audioPaths)
-                {
-                    ffmpegArgs = ffmpegArgs.AddFileInput(audioPath);
-                }
-
-                // ππΩ®-map≤Œ ˝
-                var mapArguments = new StringBuilder();
-                int videoIndex = 0, audioIndex = videoPaths.Count, subtitleIndex = videoPaths.Count + audioPaths.Count;
-
-                // ”≥…‰ ”∆µ¡˜
-                for (int i = 0; i < videoPaths.Count; i++)
-                {
-                    mapArguments.Append($"-map {videoIndex}:v ");
-                    videoIndex++;
-                }
-                // ”≥…‰“Ù∆µ¡˜
-                for (int i = 0; i < audioPaths.Count; i++)
-                {
-                    mapArguments.Append($"-map {audioIndex}:a ");
-                    audioIndex++;
-                }
-
-                //  ‰≥ˆŒƒº˛≤¢ÃÌº”-map≤Œ ˝
-                var info = ffmpegArgs
-                    .OutputToFile(convertFileInfo.outFile, true, options =>
-                            options
-                                .WithArgument(new FFMpegCore.Arguments.CustomArgument(mapArguments.ToString())) // ÃÌº”-map≤Œ ˝
-                                .WithArgument(new FFMpegCore.Arguments.CustomArgument("-c copy")) // ÷±Ω”∏¥÷∆¡˜
-                                .WithArgument(new FFMpegCore.Arguments.CustomArgument("-strict -2")) // ‘ –Ì µ—È–‘±‡¬Î∆˜
-                                .WithFastStart() // ∆Ù”√øÏÀŸ∆Ù∂Ø
-                    ).ProcessAsynchronously();
-
-                await info;
-
-                progressBar.Visibility = Visibility.Collapsed;
-                txtStatus.Text = " ”∆µµº≥ˆ≥…π¶!";
+                if (DispatcherQueue.HasThreadAccess) action();
+                else DispatcherQueue.TryEnqueue(() => action());
             }
-            catch (Exception ex)
+            catch
             {
-                progressBar.Visibility = Visibility.Collapsed;
-                txtStatus.Text = $" ”∆µµº≥ˆ ß∞‹£∫\r\n{ex.Message}";
+                // Á™óÂè£Â∑≤ÂÖ≥Èó≠ÔºåÂøΩÁï•
             }
         }
-        private async Task ConvertToMp4()
+
+        private void TryDeleteOutput(string outputFile)
         {
             try
             {
-                var info = FFMpegArguments.FromFileInput(convertFileInfo.inputFiles.FirstOrDefault());
-                if (convertFileInfo.subtitle.Count > 0)
-                {
-                    info = info.AddFileInput(convertFileInfo.subtitle.FirstOrDefault());
-                }
-                var processor = info.OutputToFile(convertFileInfo.outFile, true, options =>
-                        options.WithArgument(new FFMpegCore.Arguments.CustomArgument(convertFileInfo.subtitle.Count > 0 ? "-c copy -c:s mov_text" : "-c copy"))
-                        .WithFastStart()
-                );
-                await processor.ProcessAsynchronously();
-                progressBar.Visibility = Visibility.Collapsed;
-                txtStatus.Text = " ”∆µµº≥ˆ≥…π¶!";
+                if (!string.IsNullOrEmpty(outputFile) && File.Exists(outputFile)) File.Delete(outputFile);
             }
-            catch (Exception ex)
+            catch
             {
-                progressBar.Visibility = Visibility.Collapsed;
-                txtStatus.Text = $" ”∆µµº≥ˆ ß∞‹£∫\r\n{ex.Message}";
+                // Êñá‰ª∂Ë¢´Âç†Áî®Êó∂Áïô‰∏™ÂçäÊàêÂìÅÔºå‰∏çÂΩ±ÂìçÂÖ∂ÂÆÉÊµÅÁ®ã
             }
-
         }
-        private async Task ConvertDashWithSubtitle()
+
+        /// <summary>
+        /// copy Ê®°Âºè‰∏ãÈü≥ËΩ®ÂèØËÉΩÊó†Ê≥ïÂ∞ÅË£ÖËøõ MP4ÔºåÁªôÂá∫ÂèØÊìç‰ΩúÁöÑÊèêÁ§∫ËÄå‰∏çÊòØÈùôÈªòÂ§±Ë¥•
+        /// </summary>
+        private static string BuildFailureHint(VideoExportPlan plan)
         {
+            if (plan.Format != VideoExportArgs.FORMAT_MP4 || plan.Transcode) return string.Empty;
+            return "\r\n\r\nÂ¶ÇÊûúÈü≥ËΩ®ÊòØ„ÄåÊó†Êçü„ÄçÊàñ„ÄåÊùúÊØî„ÄçÔºåËØ∑ÈáçÊñ∞ÂØºÂá∫Âπ∂ÈÄâÊã©„ÄåËΩ¨Á†Å‰∏∫ H.264 + AAC„Äç„ÄÇ";
+        }
+
+        private void Log(string message)
+        {
+            if (!m_debug || string.IsNullOrEmpty(m_debugLogFile)) return;
             try
             {
-                var audioPaths = convertFileInfo.inputFiles
-                    .Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("audio")).ToList();
-                var videoPaths = convertFileInfo.inputFiles
-                    .Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("video")).ToList();
-
-                var ffmpegArgs = FFMpegArguments.FromFileInput(videoPaths.FirstOrDefault());
-
-                foreach (var videoPath in videoPaths.Skip(1))
+                lock (m_logLock)
                 {
-                    ffmpegArgs = ffmpegArgs.AddFileInput(videoPath);
+                    File.AppendAllText(m_debugLogFile, message + Environment.NewLine);
                 }
-                foreach (var audioPath in audioPaths)
-                {
-                    ffmpegArgs = ffmpegArgs.AddFileInput(audioPath);
-                }
-                foreach (var subtitle in convertFileInfo.subtitle)
-                {
-                    ffmpegArgs = ffmpegArgs.AddFileInput(subtitle);
-                }
-
-                // ππΩ®-map≤Œ ˝
-                var mapArguments = new StringBuilder();
-                int videoIndex = 0, audioIndex = videoPaths.Count, subtitleIndex = videoPaths.Count + audioPaths.Count;
-
-                // ”≥…‰ ”∆µ¡˜
-                for (int i = 0; i < videoPaths.Count; i++)
-                {
-                    mapArguments.Append($"-map {videoIndex}:v ");
-                    videoIndex++;
-                }
-                // ”≥…‰“Ù∆µ¡˜
-                for (int i = 0; i < audioPaths.Count; i++)
-                {
-                    mapArguments.Append($"-map {audioIndex}:a ");
-                    audioIndex++;
-                }
-                // ”≥…‰◊÷ƒª¡˜
-                for (int i = 0; i < convertFileInfo.subtitle.Count; i++)
-                {
-                    mapArguments.Append($"-map {subtitleIndex}:s ");
-                    subtitleIndex++;
-                }
-
-                //  ‰≥ˆŒƒº˛≤¢ÃÌº”-map≤Œ ˝
-                var info = ffmpegArgs
-                    .OutputToFile(convertFileInfo.outFile, true, options =>
-                            options
-                                .WithArgument(new FFMpegCore.Arguments.CustomArgument(mapArguments.ToString())) // ÃÌº”-map≤Œ ˝
-                                .WithArgument(new FFMpegCore.Arguments.CustomArgument("-c copy")) // ÷±Ω”∏¥÷∆¡˜
-                                                                                                  //.WithArgument(new FFMpegCore.Arguments.CustomArgument("-c:s mov_text")) // ◊÷ƒª±‡¬Î∆˜
-                                .WithArgument(new FFMpegCore.Arguments.CustomArgument("-strict -2")) // ‘ –Ì µ—È–‘±‡¬Î∆˜
-                                .WithFastStart() // ∆Ù”√øÏÀŸ∆Ù∂Ø
-                    ).ProcessAsynchronously();
-
-                progressBar.Visibility = Visibility.Collapsed;
-
-                await info;
-
-                txtStatus.Text = " ”∆µµº≥ˆ≥…π¶!";
             }
-            catch (Exception ex)
+            catch
             {
-                progressBar.Visibility = Visibility.Collapsed;
-                txtStatus.Text = $" ”∆µµº≥ˆ ß∞‹£∫\r\n{ex.Message}";
+                // Êó•ÂøóÂ§±Ë¥•‰∏çÂΩ±ÂìçÂØºÂá∫
             }
-
         }
-    }
-
-    public class ConvertFileInfo
-    {
-        public string title { get; set; }
-        public List<string> inputFiles { get; set; }
-        public List<string> subtitle { get; set; }
-        public string outFile { get; set; }
-        public bool isDash { get; set; }
     }
 }

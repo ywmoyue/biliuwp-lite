@@ -1,4 +1,4 @@
-﻿using BiliLite.Controls;
+using BiliLite.Controls;
 using BiliLite.Controls.Dialogs;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
@@ -28,6 +28,7 @@ namespace BiliLite.Extensions
             services.AddTransient<SendDynamicDialog>();
             services.AddTransient<SendDynamicV2Dialog>();
             services.AddTransient<EditPlaySpeedMenuDialog>();
+            services.AddTransient<VideoExportOptionsDialog>();
             services.AddTransient<PlayerToast>();
             services.AddTransient<VideoListView>();
             return services;

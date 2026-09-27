@@ -1,9 +1,11 @@
-﻿using BiliLite.Extensions;
+using BiliLite.Controls.Dialogs;
+using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Download;
 using BiliLite.Models.Common.Video;
 using BiliLite.Models.Common.Video.PlayUrlInfos;
+using BiliLite.Models.Download;
 using BiliLite.Pages.Other;
 using BiliLite.Services;
 using BiliLite.Services.Interfaces;
@@ -333,42 +335,115 @@ namespace BiliLite.Pages
 
         private async void OutputFile(DownloadedItem data, DownloadedSubItem item)
         {
-            List<string> subtitles = new List<string>();
-            //处理字幕
-            if (item.SubtitlePath != null && item.SubtitlePath.Count > 0)
+            var videoOptions = item.GetVideoExportTrackOptions();
+            if (videoOptions.Count == 0)
             {
-                try
-                {
-                    var toSimplified = SettingService.GetValue<bool>(SettingConstants.Player.TO_SIMPLIFIED, true);
-                    var folder = await StorageFolder.GetFolderFromPathAsync(item.FilePath);
-                    foreach (var subtitle in item.SubtitlePath)
-                    {
-                        var outSrtFile = await folder.CreateFileAsync(subtitle.Name + ".srt", CreationCollisionOption.ReplaceExisting);
-                        var subtitleFile = await StorageFile.GetFileFromPathAsync(Path.Combine(item.FilePath, subtitle.Url));
-                        var content = await FileIO.ReadTextAsync(subtitleFile);
-                        var result = content.CcConvertToSrt(toSimplified && subtitle.Name.Contains("繁体"));
-                        await FileIO.WriteTextAsync(outSrtFile, result);
-                        subtitles.Add(outSrtFile.Path);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    NotificationShowExtensions.ShowMessageToast("转换SRT字幕失败");
-                    logger.Log("转换字幕失败", LogType.Error, ex);
-                }
-
+                NotificationShowExtensions.ShowMessageToast("没有可以导出的视频");
+                return;
             }
+            var audioOptions = item.GetAudioExportTrackOptions();
+            var subtitleInfos = item.SubtitlePath ?? new List<DownloadSubtitleInfo>();
+
+            // 上次导出用的选项，首次使用时是默认值
+            var options = new VideoExportOptions
+            {
+                Format = SettingService.GetValue(SettingConstants.Download.EXPORT_FORMAT,
+                    SettingConstants.Download.DEFAULT_EXPORT_FORMAT),
+                VideoMode = SettingService.GetValue(SettingConstants.Download.EXPORT_MP4_MODE,
+                    SettingConstants.Download.DEFAULT_EXPORT_MP4_MODE),
+                HdrToSdr = SettingService.GetValue(SettingConstants.Download.EXPORT_HDR_TO_SDR,
+                    SettingConstants.Download.DEFAULT_EXPORT_HDR_TO_SDR),
+                Downscale = SettingService.GetValue(SettingConstants.Download.EXPORT_DOWNSCALE,
+                    SettingConstants.Download.DEFAULT_EXPORT_DOWNSCALE),
+            };
+
+            var dialog = App.ServiceProvider.GetRequiredService<VideoExportOptionsDialog>();
+            dialog.XamlRoot = XamlRoot;
+            dialog.LoadOptions(options, videoOptions, audioOptions, subtitleInfos);
+            if (await dialog.ShowAsync() != ContentDialogResult.Primary) return;
+            options = dialog.BuildOptions();
+            var selectedSubtitleIndex = dialog.ViewModel.SelectedSubtitleIndex;
+            SaveExportOptions(options);
+
+            options.SubtitleTracks = await ConvertSubtitles(item, subtitleInfos, options, selectedSubtitleIndex);
 
             var savePicker = FileExtensions.GetFileSavePicker();
             savePicker.SuggestedStartLocation =
                 Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary;
-            savePicker.FileTypeChoices.Add("MKV", new List<string>() { ".mkv" });
+            if (options.IsMp4)
+            {
+                savePicker.FileTypeChoices.Add("MP4", new List<string>() { ".mp4" });
+            }
+            else
+            {
+                savePicker.FileTypeChoices.Add("MKV", new List<string>() { ".mkv" });
+            }
             var fileName = Regex.Replace(data.Title + "-" + item.Title, "[<>/\\\\|:\":?*]", "");
             savePicker.SuggestedFileName = fileName;
             var file = await savePicker.PickSaveFileAsync();
             if (file == null)
                 return;
-            await AppHelper.LaunchConverter(data.Title + "-" + item.Title, item.Paths, file.Path, subtitles, item.IsDash);
+            await AppHelper.LaunchConverter(data.Title + "-" + item.Title, options, file.Path);
+        }
+
+        private static void SaveExportOptions(VideoExportOptions options)
+        {
+            SettingService.SetValue(SettingConstants.Download.EXPORT_FORMAT, options.Format);
+            SettingService.SetValue(SettingConstants.Download.EXPORT_MP4_MODE, options.VideoMode);
+            SettingService.SetValue(SettingConstants.Download.EXPORT_HDR_TO_SDR, options.HdrToSdr);
+            SettingService.SetValue(SettingConstants.Download.EXPORT_DOWNSCALE, options.Downscale);
+        }
+
+        /// <summary>
+        /// 按需把 CC 字幕转成 SRT：MKV 全部，MP4 只有选中的那一条。
+        /// </summary>
+        private async Task<List<VideoExportTrackOption>> ConvertSubtitles(DownloadedSubItem item,
+            List<DownloadSubtitleInfo> subtitleInfos, VideoExportOptions options, int selectedSubtitleIndex)
+        {
+            var results = new List<VideoExportTrackOption>();
+            if (subtitleInfos.Count == 0) return results;
+
+            List<DownloadSubtitleInfo> needConvert;
+            if (options.Format == VideoExportOptions.FORMAT_MKV)
+            {
+                needConvert = subtitleInfos;
+            }
+            else if (selectedSubtitleIndex >= 0 && selectedSubtitleIndex < subtitleInfos.Count)
+            {
+                needConvert = new List<DownloadSubtitleInfo> { subtitleInfos[selectedSubtitleIndex] };
+            }
+            else
+            {
+                return results;
+            }
+
+            try
+            {
+                var toSimplified = SettingService.GetValue<bool>(SettingConstants.Player.TO_SIMPLIFIED, true);
+                var folder = await StorageFolder.GetFolderFromPathAsync(item.FilePath);
+                foreach (var subtitle in needConvert)
+                {
+                    var outSrtFile = await folder.CreateFileAsync(subtitle.Name + ".srt", CreationCollisionOption.ReplaceExisting);
+                    var subtitleFile = await StorageFile.GetFileFromPathAsync(Path.Combine(item.FilePath, subtitle.Url));
+                    var content = await FileIO.ReadTextAsync(subtitleFile);
+                    var result = content.CcConvertToSrt(toSimplified && subtitle.Name.Contains("繁体"));
+                    await FileIO.WriteTextAsync(outSrtFile, result);
+                    results.Add(new VideoExportTrackOption
+                    {
+                        Path = outSrtFile.Path,
+                        QualityId = -1,
+                        CodecId = -1,
+                        Label = subtitle.Name,
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                NotificationShowExtensions.ShowMessageToast("转换SRT字幕失败");
+                logger.Log("转换字幕失败", LogType.Error, ex);
+            }
+
+            return results;
         }
 
 
