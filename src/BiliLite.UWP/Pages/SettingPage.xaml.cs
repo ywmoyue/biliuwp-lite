@@ -67,7 +67,7 @@ namespace BiliLite.Pages
             {
                 if (Uri.TryCreate(e.Link, UriKind.Absolute, out var uri))
                 {
-                    await Windows.System.Launcher.LaunchUriAsync(uri);
+                    await LauncherExtensions.OpenInBrowserAsync(uri);
                 }
             }
         }

@@ -801,6 +801,7 @@
     <Compile Include="Extensions\BiliExtensions.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Extensions\HttpResultsExtensions.cs" />
+    <Compile Include="Extensions\LauncherExtensions.cs" />
     <Compile Include="Extensions\MarkdownLinkExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\ObservableCollectionExtension.cs" />
