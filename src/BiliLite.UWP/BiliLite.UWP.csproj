@@ -264,6 +264,8 @@
     <Compile Include="Models\Common\Article\ArticleReaderSetTitleData.cs" />
     <Compile Include="Models\Common\Comment\SendCommentResult.cs" />
     <Compile Include="Models\Common\Download\DownloadTrackInfo.cs" />
+    <Compile Include="Models\Common\Download\VideoExportOptions.cs" />
+    <Compile Include="Models\Common\Download\VideoExportSubtitleOption.cs" />
     <Compile Include="Models\Common\Live\LiveRoomHistoryDanmu.cs" />
     <Compile Include="Models\Common\Season\SeasonEpListResult.cs" />
     <Compile Include="Models\Common\Settings\KeyValueOption.cs" />
@@ -647,6 +649,7 @@
     <Compile Include="Services\ZXingQrCodeService.cs" />
     <Compile Include="ViewModels\Download\DownloadingSubItemViewModel.cs" />
     <Compile Include="ViewModels\Download\DownloadPageViewModel.cs" />
+    <Compile Include="ViewModels\Download\VideoExportOptionsDialogViewModel.cs" />
     <Compile Include="ViewModels\Live\LiveDetailPageViewModel.cs" />
     <Compile Include="ViewModels\Live\LiveRoomLotteryViewModel.cs" />
     <Compile Include="ViewModels\Live\SuperChatMsgViewModel.cs" />
@@ -891,6 +894,9 @@
     </Compile>
     <Compile Include="Controls\Dialogs\CreateFavFolderDialog.xaml.cs">
       <DependentUpon>CreateFavFolderDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dialogs\VideoExportOptionsDialog.xaml.cs">
+      <DependentUpon>VideoExportOptionsDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Dynamic\DynamicRepostControl.xaml.cs">
       <DependentUpon>DynamicRepostControl.xaml</DependentUpon>
@@ -1448,6 +1454,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dialogs\CreateFavFolderDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\VideoExportOptionsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

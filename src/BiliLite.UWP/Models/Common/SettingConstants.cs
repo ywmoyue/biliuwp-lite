@@ -1525,6 +1525,42 @@ namespace BiliLite.Models.Common
 
             [SettingDefaultValue]
             public const bool DEFAULT_USE_DOWNLOAD_INDEX = false;
+
+            /// <summary>
+            /// 导出视频格式(mp4/mkv)
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string EXPORT_FORMAT = "ExportFormat";
+
+            [SettingDefaultValue]
+            public const string DEFAULT_EXPORT_FORMAT = "mkv";
+
+            /// <summary>
+            /// MP4 导出方式(copy/transcode)
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string EXPORT_MP4_MODE = "ExportMp4Mode";
+
+            [SettingDefaultValue]
+            public const string DEFAULT_EXPORT_MP4_MODE = "copy";
+
+            /// <summary>
+            /// 导出时是否把 HDR 转成 SDR
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string EXPORT_HDR_TO_SDR = "ExportHdrToSdr";
+
+            [SettingDefaultValue]
+            public const bool DEFAULT_EXPORT_HDR_TO_SDR = false;
+
+            /// <summary>
+            /// 导出转码时的目标分辨率(source/1080/720)
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string EXPORT_DOWNSCALE = "ExportDownscale";
+
+            [SettingDefaultValue]
+            public const string DEFAULT_EXPORT_DOWNSCALE = "source";
         }
 
         /// <summary>
