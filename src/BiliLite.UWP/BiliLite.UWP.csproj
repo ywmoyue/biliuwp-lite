@@ -801,6 +801,7 @@
     <Compile Include="Extensions\BiliExtensions.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Extensions\HttpResultsExtensions.cs" />
+    <Compile Include="Extensions\MarkdownLinkExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\ObservableCollectionExtension.cs" />
     <Compile Include="Extensions\StreamExtensions.cs" />
@@ -1265,6 +1266,9 @@
     <Content Include="Assets\Fonts\biliicon.ttf" />
     <Content Include="Assets\GeeTest\bili_gt.cshtml" />
     <Content Include="Assets\Text\bili-merge.md" />
+    <Content Include="Assets\Text\help-garbled-text.md" />
+    <Content Include="Assets\Text\help-network.md" />
+    <Content Include="Assets\Text\help-play-stutter.md" />
     <Content Include="Assets\Reader\index.html" />
     <None Include="Assets\Text\new_version.json" />
     <AppxManifest Include="Package.appxmanifest">

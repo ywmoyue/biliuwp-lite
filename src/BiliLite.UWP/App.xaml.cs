@@ -46,6 +46,8 @@ namespace BiliLite
             LogService.Init();
             RegisterService();
             OpenCCNET.ZhConverter.Initialize();
+            // 注册Markdown自定义协议，需早于任何Markdown文本渲染
+            MarkdownLinkExtensions.RegisterCustomSchemes();
             this.Suspending += OnSuspending;
             this.InitializeComponent();
         }

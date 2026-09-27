@@ -63,9 +63,12 @@ namespace BiliLite.Pages
                 var path = Windows.Storage.ApplicationData.Current.LocalFolder.Path + @"\log\";
                 await Windows.System.Launcher.LaunchFolderPathAsync(path);
             }
-            else
+            else if (!MarkdownLinkExtensions.TryHandleCustomLink(e.Link))
             {
-                await Windows.System.Launcher.LaunchUriAsync(new Uri(e.Link));
+                if (Uri.TryCreate(e.Link, UriKind.Absolute, out var uri))
+                {
+                    await Windows.System.Launcher.LaunchUriAsync(uri);
+                }
             }
         }
 
