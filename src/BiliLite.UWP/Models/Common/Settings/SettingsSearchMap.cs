@@ -62,6 +62,7 @@ namespace BiliLite.Models.Common.Settings
             { "空降助手", "PlaySettings:SpBlockCard" },
             { "连续播放分P视频", "PlaySettings:swAutoNext:SEPlayerAuto" },
             { "自动播放加载完成的视频", "PlaySettings:swAutoPlay:SEPlayerAuto" },
+            { "播放器自动回落", "PlaySettings:swPlayerAutoFallback:SEPlayerType" },
             { "自动跳过番剧 OP/ED", "PlaySettings:SwSkipOpEd:SEPlayerAuto" },
             { "自动全屏播放", "PlaySettings:swPlayerSettingAutoFullScreen:SEPlayerAuto" },
             { "自动隐藏视频信息", "PlaySettings:swPlayerSettingAutoFullWindows:SEPlayerAuto" },

@@ -268,6 +268,7 @@ namespace BiliLite
         }
         private async Task ClosePage(TabViewItem tabItem)
         {
+            _logger.Trace($"ClosePage: 移除标签 {tabItem?.Header}");
             tabView.TabItems.Remove(tabItem);
             var frame = tabItem.Content as MyFrame;
             if (frame.Content is Page { Content: Grid grid })
@@ -286,6 +287,7 @@ namespace BiliLite
             // frame.BackStack.Clear();
             tabItem.Content = null;
             GC.Collect();
+            _logger.Trace("ClosePage: 已释放资源并触发 GC");
         }
         private void tabView_Loaded(object sender, RoutedEventArgs e)
         {

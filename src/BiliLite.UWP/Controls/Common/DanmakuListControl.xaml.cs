@@ -29,7 +29,7 @@ namespace BiliLite.Controls.Common
         private void BtnOpenDanmakuList_OnClick(object sender, RoutedEventArgs e)
         {
             m_viewModel.ShowAllDanmu = false;
-            m_viewModel.Danmakus = DanmakuController.FindDanmakus((int)(PlayerControl.PlayerInstance.Position));
+            m_viewModel.Danmakus = DanmakuController.FindDanmakus((int)PlayerControl.CurrentPosition);
         }
 
         private void BtnReplaceShowMode_OnClick(object sender, RoutedEventArgs e)
@@ -41,7 +41,7 @@ namespace BiliLite.Controls.Common
             }
             else
             {
-                m_viewModel.Danmakus = DanmakuController.FindDanmakus((int)(PlayerControl.PlayerInstance.Position));
+                m_viewModel.Danmakus = DanmakuController.FindDanmakus((int)PlayerControl.CurrentPosition);
             }
         }
 

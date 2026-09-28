@@ -21,6 +21,7 @@
     <Grid>
         <muxc:NavigationView
             x:Name="navView"
+            AutomationProperties.AutomationId="Home.NavigationView"
             IsBackButtonVisible="Collapsed"
             IsSettingsVisible="False"
             MenuItemsSource="{x:Bind Path=m_viewModel.HomeNavItems, Mode=OneWay}"
@@ -30,6 +31,7 @@
             <muxc:NavigationView.AutoSuggestBox>
                 <AutoSuggestBox
                     x:Name="SearchBox"
+                    AutomationProperties.AutomationId="Home.SearchBox"
                     MinWidth="140"
                     ItemsSource="{x:Bind Path=m_viewModel.SuggestSearchContents, Mode=OneWay}"
                     PlaceholderText="你想找什么呢？"
