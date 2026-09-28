@@ -1,7 +1,7 @@
 {
-  "version": "4.8.17",
-  "version_num": 40817,
-  "version_desc": "更新内容:\r\n\r\n- 优化单窗口模式 \r\n\r\n- 截图保存位置支持设置 \r\n\r\n- 解决播放记录上传bug \r\n\r\n- 修复播放器获取视频信息失败  \r\n\r\n \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.8.18",
+  "version_num": 40818,
+  "version_desc": "更新内容:\r\n\r\n- 导出视频可选封装格式 \r\n\r\n- 移除无用的旧版动态模板相关代码 \r\n\r\n- 分P切换时应用字幕应用修改 \r\n\r\n- 设置页帮助页中部分需跳转的帮助文档内置应用中 \r\n\r\n- 显式记录应用窗口大小变更用于重启应用时恢复 \r\n\r\n- 使用第三方浏览器打开链接失败时提示 \r\n\r\n- 更新证书\r\n\r\n- 视频详情页点赞投币收藏数据丢失 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }
