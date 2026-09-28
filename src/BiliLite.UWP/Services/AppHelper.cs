@@ -1,4 +1,4 @@
-﻿using BiliLite.Models.Requests.Api;
+using BiliLite.Models.Requests.Api;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using BiliLite.Extensions;
 using BiliLite.Models.Common;
+using BiliLite.Models.Common.Download;
 using BiliLite.Models.Common.Home;
 using System.IO;
 using System.Threading;
@@ -76,16 +77,38 @@ namespace BiliLite.Services
             }
         }
 
-        public static async Task LaunchConverter(string title, List<string> inputFiles, string outFile,
-            List<string> subtitle, bool isDash)
+        public static async Task LaunchConverter(string title, VideoExportOptions options, string outFile)
         {
             var videoConverterInfo = JsonConvert.SerializeObject(new
             {
                 title = title,
-                inputFiles = inputFiles,
                 outFile = outFile,
-                subtitle = subtitle,
-                isDash = isDash
+                format = options.Format,
+                videoMode = options.VideoMode,
+                videoTracks = options.VideoTracks.Select(x => new
+                {
+                    path = x.Path,
+                    qualityId = x.QualityId,
+                    codecId = x.CodecId,
+                    label = x.Label,
+                }),
+                audioTracks = options.AudioTracks.Select(x => new
+                {
+                    path = x.Path,
+                    qualityId = x.QualityId,
+                    codecId = x.CodecId,
+                    label = x.Label,
+                }),
+                subtitleTracks = options.SubtitleTracks.Select(x => new
+                {
+                    path = x.Path,
+                    label = x.Label,
+                }),
+                transcode = new
+                {
+                    hdrToSdr = options.HdrToSdr,
+                    downscale = options.Downscale,
+                },
             });
             logger.Debug("videoConverterInfo: " + videoConverterInfo);
             ApplicationData.Current.LocalSettings.Values["VideoConverterInfo"] = videoConverterInfo;

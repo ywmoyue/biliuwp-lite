@@ -1,4 +1,4 @@
-﻿using BiliLite.Models.Attributes;
+using BiliLite.Models.Attributes;
 using BiliLite.Models.Common.Player;
 using BiliLite.Services;
 using System.Collections.Generic;
@@ -446,6 +446,16 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const int DEFAULT_COMMENT_FONT_SIZE = 14;
+
+            /// <summary>
+            /// 主窗口宽度(运行时状态,不随设置导出)
+            /// </summary>
+            public const string MAIN_WINDOW_WIDTH = "mainWindowWidth";
+
+            /// <summary>
+            /// 主窗口高度(运行时状态,不随设置导出)
+            /// </summary>
+            public const string MAIN_WINDOW_HEIGHT = "mainWindowHeight";
 
         }
 
@@ -1248,6 +1258,12 @@ namespace BiliLite.Models.Common
             public const string AUTO_OPEN_AI_SUBTITLE = "PlayerAutoOpenAISubtitle";
 
             /// <summary>
+            /// 上次选择的字幕语言（avid|语言，仅用于同一视频切换分P时恢复）
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string SELECTED_SUBTITLE = "PlayerSelectedSubtitle";
+
+            /// <summary>
             /// 直播播放器默认模式
             /// </summary>
             [SettingKey(typeof(int))]
@@ -1557,6 +1573,42 @@ namespace BiliLite.Models.Common
 
             [SettingDefaultValue]
             public const bool DEFAULT_USE_DOWNLOAD_INDEX = false;
+
+            /// <summary>
+            /// 导出视频格式(mp4/mkv)
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string EXPORT_FORMAT = "ExportFormat";
+
+            [SettingDefaultValue]
+            public const string DEFAULT_EXPORT_FORMAT = "mkv";
+
+            /// <summary>
+            /// MP4 导出方式(copy/transcode)
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string EXPORT_MP4_MODE = "ExportMp4Mode";
+
+            [SettingDefaultValue]
+            public const string DEFAULT_EXPORT_MP4_MODE = "copy";
+
+            /// <summary>
+            /// 导出时是否把 HDR 转成 SDR
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string EXPORT_HDR_TO_SDR = "ExportHdrToSdr";
+
+            [SettingDefaultValue]
+            public const bool DEFAULT_EXPORT_HDR_TO_SDR = false;
+
+            /// <summary>
+            /// 导出转码时的目标分辨率(source/1080/720)
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string EXPORT_DOWNSCALE = "ExportDownscale";
+
+            [SettingDefaultValue]
+            public const string DEFAULT_EXPORT_DOWNSCALE = "source";
         }
 
         /// <summary>

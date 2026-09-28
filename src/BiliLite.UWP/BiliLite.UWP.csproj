@@ -169,6 +169,10 @@
     <Compile Include="Services\Interfaces\IDownloadOperation.cs" />
     <Compile Include="Services\Interfaces\IDownloadService.cs" />
     <Compile Include="Services\Interfaces\IDownloadTask.cs" />
+    <Compile Include="Services\Interfaces\IWindowSizeProvider.cs" />
+    <Compile Include="Services\WindowSizeService.cs" />
+    <Compile Include="Services\UwpWindowSizeProvider.cs" />
+    <Compile Include="Models\Common\WindowSize.cs" />
     <Compile Include="ViewModels\Common\DanmakuListViewModel.cs" />
     <Compile Include="Models\Common\Danmaku\DanmakuSimpleItem.cs" />
     <Compile Include="Controls\Common\PieControl.xaml.cs">
@@ -270,6 +274,8 @@
     <Compile Include="Models\Common\Article\ArticleReaderSetTitleData.cs" />
     <Compile Include="Models\Common\Comment\SendCommentResult.cs" />
     <Compile Include="Models\Common\Download\DownloadTrackInfo.cs" />
+    <Compile Include="Models\Common\Download\VideoExportOptions.cs" />
+    <Compile Include="Models\Common\Download\VideoExportSubtitleOption.cs" />
     <Compile Include="Models\Common\Live\LiveRoomHistoryDanmu.cs" />
     <Compile Include="Models\Common\Season\SeasonEpListResult.cs" />
     <Compile Include="Models\Common\Settings\KeyValueOption.cs" />
@@ -662,6 +668,7 @@
     <Compile Include="Services\ZXingQrCodeService.cs" />
     <Compile Include="ViewModels\Download\DownloadingSubItemViewModel.cs" />
     <Compile Include="ViewModels\Download\DownloadPageViewModel.cs" />
+    <Compile Include="ViewModels\Download\VideoExportOptionsDialogViewModel.cs" />
     <Compile Include="ViewModels\Live\LiveDetailPageViewModel.cs" />
     <Compile Include="ViewModels\Live\LiveRoomLotteryViewModel.cs" />
     <Compile Include="ViewModels\Live\SuperChatMsgViewModel.cs" />
@@ -816,6 +823,8 @@
     <Compile Include="Extensions\BiliExtensions.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Extensions\HttpResultsExtensions.cs" />
+    <Compile Include="Extensions\LauncherExtensions.cs" />
+    <Compile Include="Extensions\MarkdownLinkExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\ObservableCollectionExtension.cs" />
     <Compile Include="Extensions\StreamExtensions.cs" />
@@ -904,6 +913,9 @@
     </Compile>
     <Compile Include="Controls\Dialogs\CreateFavFolderDialog.xaml.cs">
       <DependentUpon>CreateFavFolderDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dialogs\VideoExportOptionsDialog.xaml.cs">
+      <DependentUpon>VideoExportOptionsDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Dynamic\DynamicRepostControl.xaml.cs">
       <DependentUpon>DynamicRepostControl.xaml</DependentUpon>
@@ -1278,6 +1290,9 @@
     <Content Include="Assets\Fonts\biliicon.ttf" />
     <Content Include="Assets\GeeTest\bili_gt.cshtml" />
     <Content Include="Assets\Text\bili-merge.md" />
+    <Content Include="Assets\Text\help-garbled-text.md" />
+    <Content Include="Assets\Text\help-network.md" />
+    <Content Include="Assets\Text\help-play-stutter.md" />
     <Content Include="Assets\Reader\index.html" />
     <None Include="Assets\Text\new_version.json" />
     <AppxManifest Include="Package.appxmanifest">
@@ -1456,6 +1471,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dialogs\CreateFavFolderDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\VideoExportOptionsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
