@@ -45,7 +45,7 @@ namespace BiliLite.Modules
         private readonly ISponsorBlockService m_sponsorBlockService;
         private string m_deferredDetailId;
         private bool m_deferredDetailIsBvid;
-        private bool m_needDeferredAttentionUp;
+        private bool m_needWebDetailRefetch;
         private bool m_deferredDetailLoaded;
 
         #endregion
@@ -298,7 +298,7 @@ namespace BiliLite.Modules
                 if (id.Length == 0) { throw new ArgumentException(nameof(id)); }
                 m_deferredDetailId = id;
                 m_deferredDetailIsBvid = isbvid;
-                m_needDeferredAttentionUp = false;
+                m_needWebDetailRefetch = false;
                 m_deferredDetailLoaded = false;
                 Loaded = false;
                 Loading = true;
@@ -347,16 +347,18 @@ namespace BiliLite.Modules
 
                 var videoInfoViewModel = m_mapper.Map<VideoDetailViewModel>(data.data);
                 VideoInfo = videoInfoViewModel;
-                // 标签/收藏夹/用户点赞投币收藏状态不参与首播链路，详情基础信息就绪后立刻后台预取，避免页面上仍然空白。
+                // 标签/收藏夹/粉丝数/关注状态/用户点赞投币收藏状态不参与首播链路，详情基础信息就绪后立刻后台预取，避免页面上仍然空白。
                 _ = LoadFavorite(data.data.Aid);
                 _ = LoadVideoTags(data.data.Aid);
+                _ = LoadOwnerFans();
+                _ = GetAttentionUp();
                 if (needGetUserReq)
                 {
                     // Web端详情接口不返回用户的点赞/投币/收藏状态, 需要单独查询
                     _ = GetUserVideoStates();
                 }
                 Loaded = true;
-                m_needDeferredAttentionUp = needGetUserReq;
+                m_needWebDetailRefetch = needGetUserReq;
             }
             catch (Exception ex)
             {
@@ -390,7 +392,7 @@ namespace BiliLite.Modules
 
             try
             {
-                if (!m_needDeferredAttentionUp)
+                if (!m_needWebDetailRefetch)
                 {
                     try
                     {
@@ -408,34 +410,6 @@ namespace BiliLite.Modules
                     {
                         _logger.Warn("load web detail error", ex);
                     }
-                }
-
-                if (VideoInfo.OwnerExt == null)
-                {
-                    VideoInfo.OwnerExt = new VideoDetailOwnerExtModel();
-                }
-
-                if (VideoInfo.OwnerExt.Fans <= 0)
-                {
-                    try
-                    {
-                        var request = new UserDetailAPI().UserCard(VideoInfo.Owner.Mid);
-                        var userResults = await request.Request();
-                        if (userResults.status)
-                        {
-                            var userData = await userResults.GetData<UserCardInfo>();
-                            VideoInfo.OwnerExt.Fans = userData.data.Follower;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Warn("get userCard error", ex);
-                    }
-                }
-
-                if (m_needDeferredAttentionUp)
-                {
-                    await GetAttentionUp();
                 }
 
                 LoadSponsorBlock(VideoInfo.Bvid);
@@ -664,21 +638,65 @@ namespace BiliLite.Modules
             }
         }
 
+        /// <summary>
+        /// 查询UP主关注状态(与播放状态无关, 页面打开后立即预取)
+        /// </summary>
         public async Task GetAttentionUp()
         {
-            VideoInfo.ReqUser ??= new VideoDetailReqUserViewModel();
-            VideoInfo.ReqUser.Attention = -999;
-            if (!SettingService.Account.Logined)
+            try
             {
-                return;
-            }
+                VideoInfo.ReqUser ??= new VideoDetailReqUserViewModel();
+                VideoInfo.ReqUser.Attention = -999;
+                if (!SettingService.Account.Logined)
+                {
+                    return;
+                }
 
-            var result = await followAPI.GetAttention(VideoInfo.Owner.Mid).Request();
-            if (!result.status) return;
-            var data = await result.GetJson<ApiDataModel<UserAttentionResponse>>();
-            if (data.data.Attribute == 2 || data.data.Attribute == 6)
+                var result = await followAPI.GetAttention(VideoInfo.Owner.Mid).Request();
+                if (!result.status) return;
+                var data = await result.GetJson<ApiDataModel<UserAttentionResponse>>();
+                if (data?.data != null && (data.data.Attribute == 2 || data.data.Attribute == 6))
+                {
+                    VideoInfo.ReqUser.Attention = 1;
+                }
+            }
+            catch (Exception ex)
             {
-                VideoInfo.ReqUser.Attention = 1;
+                _logger.Warn("get attention error", ex);
+            }
+        }
+
+        /// <summary>
+        /// 补查UP主粉丝数(Web端详情接口不含粉丝数时使用, 与播放状态无关, 页面打开后立即预取)
+        /// </summary>
+        private async Task LoadOwnerFans()
+        {
+            try
+            {
+                if (VideoInfo?.Owner == null || (VideoInfo.OwnerExt?.Fans ?? 0) > 0)
+                {
+                    return;
+                }
+
+                var request = new UserDetailAPI().UserCard(VideoInfo.Owner.Mid);
+                var userResults = await request.Request();
+                if (userResults.status)
+                {
+                    var userData = await userResults.GetData<UserCardInfo>();
+                    if (userData?.data != null)
+                    {
+                        // OwnerExt 是纯 Model 类，页面绑定没有监听它的 Fans 变更；
+                        // 整体重赋值触发 Fody 对 VideoInfo.OwnerExt 注入的 PropertyChanged，界面才能刷新粉丝数。
+                        VideoInfo.OwnerExt = new VideoDetailOwnerExtModel()
+                        {
+                            Fans = userData.data.Follower
+                        };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn("get userCard error", ex);
             }
         }
 

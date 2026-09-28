@@ -206,7 +206,7 @@ namespace BiliLite.Pages
                     DataTransferManager.ShowShareUI();
                     break;
                 case "OpenBrowser":
-                    await Windows.System.Launcher.LaunchUriAsync(webView.Source);
+                    await LauncherExtensions.OpenInBrowserAsync(webView.Source);
                     break;
             }
         }
