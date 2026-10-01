@@ -126,6 +126,8 @@ namespace BiliLite.Extensions
                     };
                     markdownText.OnLinkClicked += new EventHandler<LinkClickedEventArgs>(async (sender, args) =>
                     {
+                        // 链接由这里打开，置为 true 避免控件再走一次默认导航（否则会打开两次）
+                        args.Handled = true;
                         await Launcher.LaunchUriAsync(args.Uri);
                     });
                     dialog.Content = markdownText;

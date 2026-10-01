@@ -59,16 +59,20 @@ namespace BiliLite.Pages
 
         private async void txtHelp_LinkClicked(object sender, LinkClickedEventArgs e)
         {
+            // 自己处理跳转。置为 true 后控件不会再用该 Uri 走系统协议激活，
+            // 否则 help:// 会被系统当成未知协议，弹出“去应用商店找应用”的提示
+            e.Handled = true;
+
             if (e.Uri.ToString() == "OpenLog")
             {
                 var path = Windows.Storage.ApplicationData.Current.LocalFolder.Path + @"\log\";
                 await Windows.System.Launcher.LaunchFolderPathAsync(path);
             }
-            else if (!MarkdownLinkExtensions.TryHandleCustomLink(e.Link))
+            else if (!MarkdownLinkExtensions.TryHandleCustomLink(e.Uri))
             {
-                if (Uri.TryCreate(e.Link, UriKind.Absolute, out var uri))
+                if (e.Uri.IsAbsoluteUri)
                 {
-                    await Windows.System.Launcher.LaunchUriAsync(uri);
+                    await Windows.System.Launcher.LaunchUriAsync(e.Uri);
                 }
             }
         }

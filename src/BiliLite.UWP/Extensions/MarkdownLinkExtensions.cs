@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using BiliLite.Models.Common;
 using BiliLite.Pages.Other;
 using BiliLite.Services;
-using Microsoft.Toolkit.Parsers.Markdown;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 
 namespace BiliLite.Extensions
 {
     /// <summary>
     /// Markdown 文本中的自定义链接处理。
-    /// MarkdownTextBlock 使用的解析器只会把 MarkdownDocument.KnownSchemes 中的协议渲染成链接，
-    /// 不在列表中的协议（如 help://）会被当成普通文本，所以自定义协议需要先注册。
+    /// help://{名字} 这样的自定义协议会被解析成链接，点击后由这里跳转到对应的帮助详情页。
     /// </summary>
     public static class MarkdownLinkExtensions
     {
@@ -22,42 +20,12 @@ namespace BiliLite.Extensions
         /// </summary>
         public const string HelpLinkPrefix = HelpScheme + "://";
 
-        private static readonly object m_schemeLocker = new object();
-
-        private static bool m_schemeRegistered;
-
         private static readonly Dictionary<string, string> HelpPageTitles = new Dictionary<string, string>()
         {
             { "play-stutter", "播放视频掉帧或卡死" },
             { "network", "应用无法联网" },
             { "garbled-text", "中文乱码" },
         };
-
-        /// <summary>
-        /// 注册自定义协议，需要在设置 MarkdownTextBlock.Text 之前调用
-        /// </summary>
-        public static void RegisterCustomSchemes()
-        {
-            if (m_schemeRegistered)
-            {
-                return;
-            }
-
-            lock (m_schemeLocker)
-            {
-                if (m_schemeRegistered)
-                {
-                    return;
-                }
-
-                if (!MarkdownDocument.KnownSchemes.Contains(HelpScheme))
-                {
-                    MarkdownDocument.KnownSchemes.Add(HelpScheme);
-                }
-
-                m_schemeRegistered = true;
-            }
-        }
 
         /// <summary>
         /// 当前链接是否为自定义协议链接
@@ -71,8 +39,14 @@ namespace BiliLite.Extensions
         /// <summary>
         /// 处理自定义协议链接，返回是否已处理
         /// </summary>
-        public static bool TryHandleCustomLink(string link)
+        public static bool TryHandleCustomLink(Uri uri)
         {
+            if (uri == null)
+            {
+                return false;
+            }
+
+            var link = uri.OriginalString;
             if (!link.IsCustomLink())
             {
                 return false;

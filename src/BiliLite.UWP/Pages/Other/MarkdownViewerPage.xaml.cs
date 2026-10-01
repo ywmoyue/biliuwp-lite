@@ -9,7 +9,8 @@ using BiliLite.Extensions.Notifications;
 using BiliLite.Services;
 using BiliLite.Services.Interfaces;
 using Newtonsoft.Json;
-using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media.Imaging;
+using CommunityToolkit.WinUI.Controls;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -74,11 +75,15 @@ namespace BiliLite.Pages.Other
 
         private async void MdBlock_OnLinkClicked(object sender, LinkClickedEventArgs e)
         {
-            if (MarkdownLinkExtensions.TryHandleCustomLink(e.Link)) return;
+            // 自己处理跳转。置为 true 后控件不会再用该 Uri 走系统协议激活，
+            // 否则 help:// 会被系统当成未知协议，弹出“去应用商店找应用”的提示
+            e.Handled = true;
 
-            if (Uri.TryCreate(e.Link, UriKind.Absolute, out var uri))
+            if (MarkdownLinkExtensions.TryHandleCustomLink(e.Uri)) return;
+
+            if (e.Uri != null && e.Uri.IsAbsoluteUri)
             {
-                await Windows.System.Launcher.LaunchUriAsync(uri);
+                await Windows.System.Launcher.LaunchUriAsync(e.Uri);
             }
         }
 

@@ -41,7 +41,8 @@ namespace BiliLite.VideoExporter
         public VideoExporterWindow()
         {
             InitializeComponent();
-            this.AppWindow.Resize(new Windows.Graphics.SizeInt32 { Width = 400, Height = 400 });
+            // 默认窗口偏小：标题会把上面的说明行挤成多行、出错信息也放不下，这里给足宽高
+            this.AppWindow.Resize(new Windows.Graphics.SizeInt32 { Width = 720, Height = 520 });
             // 直接关窗口时也要终止 ffmpeg，否则会留下继续跑的后台进程
             this.Closed += (sender, args) =>
             {
