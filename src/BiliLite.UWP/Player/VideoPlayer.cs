@@ -462,6 +462,8 @@ namespace BiliLite.Player
             if (m_subPlayer != null)
             {
                 UnLoadPlayerEvents(m_subPlayer);
+                // 没有走 UnLoad 就换子播放器时，把子播放器自己的可释放资源（如多线程下载器）收掉
+                (m_subPlayer as IDisposable)?.Dispose();
             }
 
             m_subPlayer = CreateSubPlayer(targetType, m_realPlayInfo);
