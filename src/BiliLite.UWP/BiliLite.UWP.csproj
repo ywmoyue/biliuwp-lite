@@ -403,8 +403,11 @@
     <Compile Include="Pages\MessagesPage.xaml.cs">
       <DependentUpon>MessagesPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Common\Player\MultiThreadCdnMode.cs" />
     <Compile Include="Player\MediaInfos\ShakaPlayerCollectInfoData.cs" />
     <Compile Include="Player\MediaInfos\ShakaPlayerCollectInfoHandler.cs" />
+    <Compile Include="Player\RangeDownload\BiliVideoCdn.cs" />
+    <Compile Include="Player\RangeDownload\MultiThreadRangeDownloader.cs" />
     <Compile Include="Player\SubPlayers\ISubWebPlayer.cs" />
     <Compile Include="Player\SubPlayers\LiveMpegtsPlayer.cs" />
     <Compile Include="Player\WebPlayer\BaseWebPlayer.cs" />

@@ -123,6 +123,47 @@
         </controls:SettingsExpander>
 
         <controls:SettingsExpander
+            x:Name="SEMultiThreadDownload"
+            Description="把视频切成小块，从多个节点、多条连接同时下载并提前缓存，改善海外观看时转圈、起播慢、拖动后等很久的问题。仅对 Native 播放器生效，下次打开视频时生效"
+            Header="多线程下载（实验性）">
+            <controls:SettingsExpander.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Bolt" />
+            </controls:SettingsExpander.HeaderIcon>
+            <ToggleSwitch
+                x:Name="SwitchMultiThreadDownload"
+                Margin="0,-5,-88,-5"
+                Style="{StaticResource DefaultToggleSwitchStyle}" />
+
+            <controls:SettingsExpander.Items>
+                <controls:SettingsCard Description="同时下载的连接数，设备或网络较弱时调低" Header="线程数">
+                    <ComboBox x:Name="ComboBoxMultiThreadDownloadThreads" MinWidth="200" />
+                </controls:SettingsCard>
+                <controls:SettingsCard Description="海外观看冷门、高码率视频建议使用大陆节点；连大陆网络很差时使用海外节点" Header="下载节点">
+                    <ComboBox
+                        x:Name="ComboBoxMultiThreadDownloadCdnMode"
+                        MinWidth="200"
+                        SelectedIndex="0">
+                        <ComboBox.Items>
+                            <ComboBoxItem Content="大陆节点" />
+                            <ComboBoxItem Content="海外节点" />
+                            <ComboBoxItem Content="仅使用原始地址" />
+                        </ComboBox.Items>
+                    </ComboBox>
+                </controls:SettingsCard>
+                <controls:SettingsCard>
+                    <controls:SettingsCard.Description>
+                        <RichTextBlock>
+                            <Paragraph>
+                                <Run>思路来自</Run>
+                                <Hyperlink NavigateUri="https://github.com/MrTangLuyao/Bilibili-thread-ripper">Bilibili 线程撕裂者</Hyperlink>
+                            </Paragraph>
+                        </RichTextBlock>
+                    </controls:SettingsCard.Description>
+                </controls:SettingsCard>
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>
+
+        <controls:SettingsExpander
             Description="适用于普通视频"
             Header="播放倍速"
             IsExpanded="True">
