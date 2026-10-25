@@ -952,6 +952,7 @@ namespace BiliLite.Modules.Player.Playurl
                 SegmentBaseIndexRange = SegmentBase.IndexRange,
                 SegmentBaseInitialization = SegmentBase.Initialization,
                 Url = BaseUrl,
+                BackupUrls = BackupUrl?.ToList(),
             };
         }
     }
