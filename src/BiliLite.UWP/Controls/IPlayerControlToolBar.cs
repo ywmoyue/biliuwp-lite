@@ -1,5 +1,6 @@
 ﻿using BiliLite.Models.Common.Video.PlayUrlInfos;
 using BiliLite.Services;
+using BiliLite.ViewModels;
 using System;
 using System.Collections.Generic;
 
@@ -11,7 +12,7 @@ namespace BiliLite.Controls
         event EventHandler<BiliPlayUrlInfo> QualityChanged;
         event EventHandler<double> PlaySpeedChanged;
         PlayerToastService PlayerToastService { set; }
-        bool FirstMediaOpened { get; set; }
+        PlayControlViewModel ViewModel { get; set; }
         void InitSoundQuality(List<BiliDashAudioPlayUrlInfo> audioQualites, BiliDashAudioPlayUrlInfo currentAudioQuality);
         void InitQuality(List<BiliPlayUrlInfo> videoQualites, BiliPlayUrlInfo currentQuality);
         void InitPlaySpeed();

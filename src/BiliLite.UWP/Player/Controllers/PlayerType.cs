@@ -2,6 +2,7 @@
 {
     public enum PlayerType
     {
-        Live
+        Live,
+        Video,
     }
 }

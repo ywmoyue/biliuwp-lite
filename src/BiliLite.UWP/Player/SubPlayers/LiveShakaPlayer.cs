@@ -7,6 +7,7 @@ using BiliLite.Player.MediaInfos;
 using BiliLite.Player.WebPlayer;
 using BiliLite.Player.WebPlayer.Models;
 using BiliLite.Services;
+using Windows.UI.Xaml;
 
 namespace BiliLite.Player.SubPlayers
 {
@@ -15,6 +16,7 @@ namespace BiliLite.Player.SubPlayers
         private ShakaPlayerControl m_ShakaPlayerControl;
         private PlayerConfig m_playerConfig;
         private string m_url;
+        private double m_position;
 
         public LiveShakaPlayer(PlayerConfig playerConfig, ShakaPlayerControl shakaPlayerControl)
         {
@@ -33,10 +35,15 @@ namespace BiliLite.Player.SubPlayers
             set => m_ShakaPlayerControl.SetVolume(value);
         }
 
+        public override double Position => m_position;
+
+        public override FrameworkElement PlayerView => m_ShakaPlayerControl;
+
         public override event EventHandler MediaOpened;
         public override event EventHandler MediaEnded;
         public override event EventHandler BufferingStarted;
         public override event EventHandler BufferingEnded;
+        public override event EventHandler<double> PositionChanged;
 
         public override CollectInfo GetCollectInfo()
         {
@@ -84,6 +91,7 @@ namespace BiliLite.Player.SubPlayers
             m_url = url;
 
             await m_ShakaPlayerControl.LoadLiveUrl(m_url, defaultPlayerMode.ToString());
+            await SetRate(m_rate);
         }
 
         public override async Task Buff()
@@ -115,6 +123,18 @@ namespace BiliLite.Player.SubPlayers
             await m_ShakaPlayerControl.Resume();
         }
 
+        public override async Task SetRate(double value)
+        {
+            m_rate = value;
+            await m_ShakaPlayerControl.SetRate(value);
+        }
+
+        public override async Task SetPosition(double value)
+        {
+            m_position = value;
+            await m_ShakaPlayerControl.Seek(value);
+        }
+
         private async Task StopCore()
         {
             await m_ShakaPlayerControl.Pause();
@@ -124,6 +144,13 @@ namespace BiliLite.Player.SubPlayers
         {
             m_ShakaPlayerControl.PlayerLoaded += ShakaPlayerControl_PlayerLoaded;
             m_ShakaPlayerControl.Ended += ShakaPlayerControlOnEnded;
+            m_ShakaPlayerControl.PositionChanged += ShakaPlayerControlOnPositionChanged;
+        }
+
+        private void ShakaPlayerControlOnPositionChanged(object sender, double e)
+        {
+            m_position = e;
+            PositionChanged?.Invoke(this, e);
         }
 
         private void ShakaPlayerControlOnEnded(object sender, EventArgs e)
