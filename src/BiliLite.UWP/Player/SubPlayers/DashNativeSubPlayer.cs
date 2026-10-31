@@ -469,6 +469,13 @@ namespace BiliLite.Player.SubPlayers
                 m_timelineController.Pause();
             }
 
+            // 必须先解绑显示控件再释放播放器：反过来控件会继续持有已释放的播放器，
+            // 关闭/切换标签页后最后的画面会残留在其它页面上（见 #1498）
+            await RunOnUiThreadAsync(() =>
+            {
+                m_playerElement?.SetMediaPlayer(null);
+            });
+
             if (m_audioPlayer != null)
             {
                 if (hasTimelineController)
@@ -523,13 +530,7 @@ namespace BiliLite.Player.SubPlayers
             m_waitingForPlayableStatePromotion = false;
             await RunOnUiThreadAsync(() =>
             {
-                if (m_playerElement == null)
-                {
-                    return;
-                }
-
-                m_playerElement.SetMediaPlayer(null);
-                if (!detachElement)
+                if (m_playerElement == null || !detachElement)
                 {
                     return;
                 }
