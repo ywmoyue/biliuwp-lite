@@ -1175,6 +1175,8 @@ namespace BiliLite.Controls
             //   // Player._ffmpegConfig.FFmpegOptions["referer"] = "https://www.bilibili.com/bangumi/play/ep" + CurrentPlayItem.ep_id;
             //}
             m_hasReportedHistory = false;   //重置记录上传状态
+            // 新条目要重新经历过一次真实播放，才允许上报历史，避免“只加载未播放”也写历史
+            m_firstMediaPlayed = false;
             if (SettingService.GetValue<bool>(SettingConstants.Player.AUTO_TO_POSITION, true))
             {
                 _postion = SettingService.GetValue<double>(CurrentPlayItem.season_id != 0 ? "ep" + CurrentPlayItem.ep_id : CurrentPlayItem.cid, 0);
@@ -2930,6 +2932,9 @@ namespace BiliLite.Controls
 
             if (e.NewState.IsPlaying)
             {
+                // 自动播放也是真播放：进入播放态即视为已播放，否则退出时不上报历史
+                MarkMediaPlayed("PlayState.Playing");
+
                 // Ensure stale buffering overlay is cleared when playback is confirmed.
                 m_newPlayerBuffering = false;
                 m_newPlayerBufferCache = 0;
@@ -3007,6 +3012,12 @@ namespace BiliLite.Controls
         {
             if (!m_playerController.PlayState.IsStopped && !m_playerController.PlayState.IsFault)
             {
+                // 解除暂停即底层开始出画，自动播放走的就是这条路径
+                if (!e.NewState.IsPaused)
+                {
+                    MarkMediaPlayed("PauseState.Resume");
+                }
+
                 Player_PlayStateChanged(this, e.NewState.IsPaused ? PlayState.Pause : PlayState.Playing);
             }
         }
@@ -3588,10 +3599,7 @@ namespace BiliLite.Controls
                 await m_playerController.PlayState.Load();
             }
 
-            if (!m_firstMediaPlayed)
-            {
-                m_firstMediaPlayed = true;
-            }
+            MarkMediaPlayed("PlayerControl.Play");
 
             await m_playerController.PauseState.Resume();
         }
@@ -3600,6 +3608,23 @@ namespace BiliLite.Controls
         {
             m_danmakuController.Pause();
             _ = m_playerController.PauseState.Pause();
+        }
+
+        /// <summary>
+        /// 标记当前条目已经真正开始过播放。
+        /// 重构后自动播放由状态机直接驱动底层播放器，不再经过 <see cref="Play"/>，
+        /// 只认 Play() 会漏掉自动播放，导致播放结束时被判定为“从未播放”而不上报历史（#1498）。
+        /// </summary>
+        private void MarkMediaPlayed(string source)
+        {
+            if (m_firstMediaPlayed)
+            {
+                return;
+            }
+
+            m_firstMediaPlayed = true;
+            _logger.Info(
+                $"首次进入播放态，允许上报播放记录: source={source}, avid={CurrentPlayItem?.avid}, cid={CurrentPlayItem?.cid}");
         }
 
         public void PositionBack(double progress = 3)

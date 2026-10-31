@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using BiliLite.Models.Common.Player;
 using BiliLite.Models.Common.Video.PlayUrlInfos;
 using BiliLite.Player.MediaInfos;
+using BiliLite.Player.RangeDownload;
 using BiliLite.Services;
 using Windows.Media;
 using Windows.Media.Core;
@@ -18,7 +20,7 @@ using Windows.Storage;
 
 namespace BiliLite.Player.SubPlayers
 {
-    public class DashNativeSubPlayer : ISubPlayer
+    public class DashNativeSubPlayer : ISubPlayer, IDisposable
     {
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly Panel m_playerHost;
@@ -34,6 +36,9 @@ namespace BiliLite.Player.SubPlayers
         private bool m_isMuted;
         private MediaPlaybackState m_lastPlaybackState = MediaPlaybackState.None;
         private bool m_waitingForPlayableStatePromotion;
+
+        // 多线程下载，未开启或地址不适用时为空
+        private readonly List<MultiThreadRangeDownloader> m_rangeDownloaders = new List<MultiThreadRangeDownloader>();
 
         public DashNativeSubPlayer(Panel playerHost, MediaPlayerElement sharedPlayerElement = null)
         {
@@ -209,14 +214,38 @@ namespace BiliLite.Player.SubPlayers
                 }
 
                 source.MediaSource.AdvancedSettings.AllSegmentsIndependent = true;
-                if (!string.IsNullOrWhiteSpace(dashInfo.Audio?.Url))
+
+                // 多线程下载：未开启或地址不适用时两个下载器都是 null，行为与原来一致
+                var audioUrl = dashInfo.Audio?.Url;
+                var videoRangeDownloader = MultiThreadRangeDownloader.TryCreate(dashInfo.Video, userAgent, referer);
+                var audioRangeDownloader = MultiThreadRangeDownloader.TryCreate(dashInfo.Audio, userAgent, referer);
+                if (videoRangeDownloader != null)
+                {
+                    m_rangeDownloaders.Add(videoRangeDownloader);
+                }
+
+                if (audioRangeDownloader != null)
+                {
+                    m_rangeDownloaders.Add(audioRangeDownloader);
+                }
+
+                if (videoRangeDownloader != null || audioRangeDownloader != null)
+                {
+                    _logger.Info($"DashNative 多线程下载已启用: video={videoRangeDownloader != null}, audio={audioRangeDownloader != null}");
+                }
+
+                var hasAudio = !string.IsNullOrWhiteSpace(audioUrl);
+                if (hasAudio || videoRangeDownloader != null || audioRangeDownloader != null)
                 {
                     source.MediaSource.DownloadRequested += (sender, args) =>
                     {
-                        if (args.ResourceContentType == "audio/mp4")
+                        var isAudio = args.ResourceContentType == "audio/mp4";
+                        if (isAudio && hasAudio)
                         {
-                            args.Result.ResourceUri = new Uri(dashInfo.Audio.Url);
+                            args.Result.ResourceUri = new Uri(audioUrl);
                         }
+
+                        (isAudio ? audioRangeDownloader : videoRangeDownloader)?.HandleDownloadRequested(args);
                     };
                 }
 
@@ -227,6 +256,24 @@ namespace BiliLite.Player.SubPlayers
                 _logger.Error($"DashNative 创建 AdaptiveMediaSource 异常: url={SanitizeUrl(dashInfo?.Video?.Url)}", ex);
                 return null;
             }
+        }
+
+        /// <summary>
+        /// 释放多线程下载器。要等播放器的 Source 释放之后再调用，避免请求落在已释放的下载器上
+        /// </summary>
+        private void DisposeRangeDownloaders()
+        {
+            foreach (var rangeDownloader in m_rangeDownloaders)
+            {
+                rangeDownloader.Dispose();
+            }
+
+            m_rangeDownloaders.Clear();
+        }
+
+        public void Dispose()
+        {
+            DisposeRangeDownloaders();
         }
 
         private static string SanitizeUrl(string url)
@@ -422,6 +469,13 @@ namespace BiliLite.Player.SubPlayers
                 m_timelineController.Pause();
             }
 
+            // 必须先解绑显示控件再释放播放器：反过来控件会继续持有已释放的播放器，
+            // 关闭/切换标签页后最后的画面会残留在其它页面上（见 #1498）
+            await RunOnUiThreadAsync(() =>
+            {
+                m_playerElement?.SetMediaPlayer(null);
+            });
+
             if (m_audioPlayer != null)
             {
                 if (hasTimelineController)
@@ -466,6 +520,9 @@ namespace BiliLite.Player.SubPlayers
                 m_mediaPlayer = null;
             }
 
+            // 播放器的 Source 已经释放，多线程下载器可以收掉了
+            DisposeRangeDownloaders();
+
             m_timelineController = null;
             m_isBuffering = false;
             m_bufferCache = 0;
@@ -473,13 +530,7 @@ namespace BiliLite.Player.SubPlayers
             m_waitingForPlayableStatePromotion = false;
             await RunOnUiThreadAsync(() =>
             {
-                if (m_playerElement == null)
-                {
-                    return;
-                }
-
-                m_playerElement.SetMediaPlayer(null);
-                if (!detachElement)
+                if (m_playerElement == null || !detachElement)
                 {
                     return;
                 }

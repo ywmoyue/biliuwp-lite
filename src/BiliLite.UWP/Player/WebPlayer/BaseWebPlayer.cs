@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions;
+using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using Microsoft.UI.Xaml.Controls;
@@ -22,6 +22,9 @@ public abstract class BaseWebPlayer : Grid, IDisposable
 {
     private bool m_hasLoaded = false;
     private bool m_webViewLoaded = false;
+    // 播放器就绪(LOADED)之前收到的进度请求先暂存，就绪后立刻补上，
+    // 否则恢复历史进度/切集续播的 seek 会被直接丢弃，导致从 0 秒开始播放。
+    private double m_pendingSeekPosition = double.NaN;
     private Grid m_gridElement;
     private const string BaseUrl = "https://www.bilibili.com";
     private const string DevBaseUrl = "http://www.bilibili.com";
@@ -149,8 +152,13 @@ public abstract class BaseWebPlayer : Grid, IDisposable
             HideLoadingMask();
             var data = JsonConvert.DeserializeObject<ShakaPlayerLoadedData>(
                 JsonConvert.SerializeObject(@event.Data));
-            PlayerLoaded?.Invoke(this, data);
+            // 必须先置位再抛出事件：PlayerLoaded 的订阅者（DashShakaSubPlayer → VideoPlayer → 播放状态机）
+            // 会在回调内同步完成“离开 Loading”的状态切换，播放器控件随即调用 Seek 恢复历史进度。
+            // 若此时 m_hasLoaded 仍为 false，Seek 会被当成“未就绪”直接丢弃，
+            // 播放器就只能从 0 秒开始播放。
             m_hasLoaded = true;
+            ApplyPendingSeek();
+            PlayerLoaded?.Invoke(this, data);
             SetSyncThreshold();
             SetVolume(Volume);
             SetRate(m_rate);
@@ -274,8 +282,28 @@ public abstract class BaseWebPlayer : Grid, IDisposable
     {
         if (WebViewElement == null)
             await InitWebView2();
+        // 每次加载都会导航到新页面，旧页面里的 window.seek/window.resume 等脚本接口随之失效。
+        // 先复位就绪标记，让新页面就绪前到达的进度请求进入队列，而不是对尚未初始化的页面执行后丢失。
+        m_hasLoaded = false;
+        m_pendingSeekPosition = double.NaN;
         ShowLoadingMask();
         WebViewElement.Source = new Uri(GetPlayerUrl(playDataStr));
+    }
+
+    /// <summary>
+    /// 播放器就绪后补上加载期间排队的进度请求。
+    /// </summary>
+    private void ApplyPendingSeek()
+    {
+        var position = m_pendingSeekPosition;
+        m_pendingSeekPosition = double.NaN;
+        if (double.IsNaN(position))
+        {
+            return;
+        }
+
+        _logger.Info($"WebPlayer.ApplyPendingSeek: 播放器就绪，补上等待中的进度 position={position}");
+        _ = Seek(position);
     }
 
     private void ShowLoadingMask()
@@ -346,9 +374,25 @@ public abstract class BaseWebPlayer : Grid, IDisposable
 
     public async Task Seek(double position)
     {
-        if (!m_hasLoaded) return;
+        if (!m_hasLoaded || WebViewElement?.CoreWebView2 == null)
+        {
+            // 页面还没加载完成时 window.seek 尚不存在，此时执行也不会生效，
+            // 所以先记下来，等 LOADED 之后再补上，避免恢复历史进度丢失。
+            m_pendingSeekPosition = position;
+            _logger.Info($"WebPlayer.Seek: 播放器未就绪，暂存进度 position={position}");
+            return;
+        }
+
         var script = $"window.seek({position})";
-        await WebViewElement.CoreWebView2.ExecuteScriptAsync(script);
+        try
+        {
+            await WebViewElement.CoreWebView2.ExecuteScriptAsync(script);
+            _logger.Debug($"WebPlayer.Seek: position={position}");
+        }
+        catch (Exception ex)
+        {
+            _logger.Warn($"WebPlayer.Seek 执行失败: position={position}, {ex.Message}");
+        }
     }
 
     public async Task SetRate(double speed)
@@ -363,6 +407,9 @@ public abstract class BaseWebPlayer : Grid, IDisposable
     {
         WebViewElement?.Close();
         WebViewElement = null;
+        // WebView 已销毁，脚本接口不再可用：复位就绪标记，避免后续 Seek/Resume 落到空引用上。
+        m_hasLoaded = false;
+        m_pendingSeekPosition = double.NaN;
     }
 
     public async Task<byte[]> CaptureVideo()

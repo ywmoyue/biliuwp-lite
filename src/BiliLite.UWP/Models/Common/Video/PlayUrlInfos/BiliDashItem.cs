@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace BiliLite.Models.Common.Video.PlayUrlInfos
 {
@@ -15,6 +16,11 @@ namespace BiliLite.Models.Common.Video.PlayUrlInfos
         public int ID { get; set; }
         public int CodecID { get; set; }
         public string Url { get; set; }
+
+        /// <summary>
+        /// 备用链接，多线程下载时也作为下载节点
+        /// </summary>
+        public List<string> BackupUrls { get; set; }
 
         public string Host
         {

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using BiliLite.Modules.ExtraInterface;
+using BiliLite.Player.RangeDownload;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -73,6 +74,37 @@ namespace BiliLite.Controls.Settings
             {
                 SettingService.SetValue(SettingConstants.Player.LIVE_PLAYER_TYPE,
                     (int)cbUseRealPlayerType.SelectedValue);
+            };
+
+            //多线程下载
+            SwitchMultiThreadDownload.IsOn = SettingService.GetValue(SettingConstants.Player.MULTI_THREAD_DOWNLOAD,
+                SettingConstants.Player.DEFAULT_MULTI_THREAD_DOWNLOAD);
+            SwitchMultiThreadDownload.Loaded += (sender, e) =>
+            {
+                SwitchMultiThreadDownload.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.MULTI_THREAD_DOWNLOAD,
+                        SwitchMultiThreadDownload.IsOn);
+                };
+            };
+            var threadOptions = MultiThreadRangeDownloader.ThreadOptions.ToList();
+            ComboBoxMultiThreadDownloadThreads.ItemsSource = threadOptions;
+            ComboBoxMultiThreadDownloadThreads.SelectedIndex = Math.Max(0, threadOptions.IndexOf(SettingService.GetValue(
+                SettingConstants.Player.MULTI_THREAD_DOWNLOAD_THREADS,
+                SettingConstants.Player.DEFAULT_MULTI_THREAD_DOWNLOAD_THREADS)));
+            ComboBoxMultiThreadDownloadThreads.SelectionChanged += (e, args) =>
+            {
+                if (ComboBoxMultiThreadDownloadThreads.SelectedIndex < 0) return;
+                SettingService.SetValue(SettingConstants.Player.MULTI_THREAD_DOWNLOAD_THREADS,
+                    threadOptions[ComboBoxMultiThreadDownloadThreads.SelectedIndex]);
+            };
+            ComboBoxMultiThreadDownloadCdnMode.SelectedIndex = SettingService.GetValue(
+                SettingConstants.Player.MULTI_THREAD_DOWNLOAD_CDN_MODE,
+                (int)SettingConstants.Player.DEFAULT_MULTI_THREAD_DOWNLOAD_CDN_MODE);
+            ComboBoxMultiThreadDownloadCdnMode.SelectionChanged += (e, args) =>
+            {
+                SettingService.SetValue(SettingConstants.Player.MULTI_THREAD_DOWNLOAD_CDN_MODE,
+                    ComboBoxMultiThreadDownloadCdnMode.SelectedIndex);
             };
 
             //视频倍速
