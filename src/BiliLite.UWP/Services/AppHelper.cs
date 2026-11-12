@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Download;
 using BiliLite.Models.Common.Home;
@@ -15,6 +16,11 @@ namespace BiliLite.Services
     public static class AppHelper
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
+
+        /// <summary>
+        /// 导出任务文件名写在 LocalSettings 里，导出器进程读取后自行删除
+        /// </summary>
+        public const string EXPORT_JOB_FILE_SETTING_KEY = "VideoExportJobFile";
 
         public static List<RegionItem> Regions { get; set; }
         private static RegionAPI regionAPI = new RegionAPI();
@@ -75,42 +81,65 @@ namespace BiliLite.Services
             }
         }
 
-        public static async Task LaunchConverter(string title, VideoExportOptions options, string outFile)
+        public static async Task LaunchConverter(IReadOnlyList<VideoExportJob> jobs, bool closeOnSuccess)
         {
-            var videoConverterInfo = JsonConvert.SerializeObject(new
+            if (jobs == null || jobs.Count == 0) return;
+
+            try
             {
-                title = title,
-                outFile = outFile,
-                format = options.Format,
-                videoMode = options.VideoMode,
-                videoTracks = options.VideoTracks.Select(x => new
+                var payload = new
                 {
-                    path = x.Path,
-                    qualityId = x.QualityId,
-                    codecId = x.CodecId,
-                    label = x.Label,
-                }),
-                audioTracks = options.AudioTracks.Select(x => new
-                {
-                    path = x.Path,
-                    qualityId = x.QualityId,
-                    codecId = x.CodecId,
-                    label = x.Label,
-                }),
-                subtitleTracks = options.SubtitleTracks.Select(x => new
-                {
-                    path = x.Path,
-                    label = x.Label,
-                }),
-                transcode = new
-                {
-                    hdrToSdr = options.HdrToSdr,
-                    downscale = options.Downscale,
-                },
-            });
-            logger.Debug("videoConverterInfo: " + videoConverterInfo);
-            ApplicationData.Current.LocalSettings.Values["VideoConverterInfo"] = videoConverterInfo;
-            await Windows.ApplicationModel.FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+                    closeOnSuccess,
+                    items = jobs.Select(job => new
+                    {
+                        title = job.Title,
+                        outFile = job.OutFile,
+                        format = job.Options.Format,
+                        videoMode = job.Options.VideoMode,
+                        videoTracks = job.Options.VideoTracks.Select(x => new
+                        {
+                            path = x.Path,
+                            qualityId = x.QualityId,
+                            codecId = x.CodecId,
+                            label = x.Label,
+                        }),
+                        audioTracks = job.Options.AudioTracks.Select(x => new
+                        {
+                            path = x.Path,
+                            qualityId = x.QualityId,
+                            codecId = x.CodecId,
+                            label = x.Label,
+                        }),
+                        subtitleTracks = job.Options.SubtitleTracks.Select(x => new
+                        {
+                            path = x.Path,
+                            label = x.Label,
+                        }),
+                        transcode = new
+                        {
+                            hdrToSdr = job.Options.HdrToSdr,
+                            downscale = job.Options.Downscale,
+                        },
+                    }).ToList(),
+                };
+
+                var json = JsonConvert.SerializeObject(payload);
+                logger.Debug("videoConverterInfo: " + json);
+
+                // 批量导出的任务可能很大，走文件传递而不是 LocalSettings（单个值有大小限制）
+                var fileName = $"video-export-jobs-{Guid.NewGuid():N}.json";
+                var jobFile = await ApplicationData.Current.LocalFolder.CreateFileAsync(fileName,
+                    CreationCollisionOption.ReplaceExisting);
+                await FileIO.WriteTextAsync(jobFile, json);
+
+                ApplicationData.Current.LocalSettings.Values[EXPORT_JOB_FILE_SETTING_KEY] = fileName;
+                await Windows.ApplicationModel.FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+            }
+            catch (Exception ex)
+            {
+                logger.Log("启动视频导出进程失败", LogType.Error, ex);
+                NotificationShowExtensions.ShowMessageToast("启动导出进程失败，已记录错误");
+            }
         }
     }
 }

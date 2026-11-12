@@ -265,6 +265,7 @@
     <Compile Include="Models\Common\Comment\SendCommentResult.cs" />
     <Compile Include="Models\Common\Download\DownloadTrackInfo.cs" />
     <Compile Include="Models\Common\Download\VideoExportOptions.cs" />
+    <Compile Include="Models\Common\Download\VideoExportJob.cs" />
     <Compile Include="Models\Common\Download\VideoExportSubtitleOption.cs" />
     <Compile Include="Models\Common\Live\LiveRoomHistoryDanmu.cs" />
     <Compile Include="Models\Common\Season\SeasonEpListResult.cs" />
@@ -963,6 +964,7 @@
     <Compile Include="Services\AppHelper.cs" />
     <Compile Include="Services\BiliRequestBuilder.cs" />
     <Compile Include="Services\DownloadHelper.cs" />
+    <Compile Include="Services\VideoExportHelper.cs" />
     <Compile Include="Extensions\ExceptionHandler.cs" />
     <Compile Include="Extensions\StringHttpExtensions.cs" />
     <Compile Include="Services\GlobalLogger.cs" />

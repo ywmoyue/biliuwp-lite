@@ -1597,6 +1597,15 @@ namespace BiliLite.Models.Common
 
             [SettingDefaultValue]
             public const string DEFAULT_EXPORT_DOWNSCALE = "source";
+
+            /// <summary>
+            /// 导出全部成功后自动关闭导出窗口
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string EXPORT_AUTO_CLOSE_WINDOW = "ExportAutoCloseWindow";
+
+            [SettingDefaultValue]
+            public const bool DEFAULT_EXPORT_AUTO_CLOSE_WINDOW = true;
         }
 
         /// <summary>
