@@ -1,4 +1,4 @@
-﻿using BiliLite.Controls;
+using BiliLite.Controls;
 using BiliLite.Controls.Dialogs;
 using BiliLite.Converters;
 using BiliLite.Extensions;
@@ -673,13 +673,23 @@ namespace BiliLite.Pages
         private async void btnDownload_Click(object sender, RoutedEventArgs e)
         {
             if (m_viewModel.VideoInfo == null || m_viewModel.VideoInfo.Pages == null || m_viewModel.VideoInfo.Pages.Count == 0) return;
+
+            var isUgcSeason = m_viewModel.VideoInfo.ShowUgcSeason;
+            // 单P视频的分P标题通常就是视频标题，合集里直接用视频标题，避免出现「标题-P1 标题」
+            var isSinglePage = m_viewModel.VideoInfo.Pages.Count == 1;
+
+            // 合集里的视频用合集标题做分组标题；只有分P的视频仍用视频标题
+            var downloadTitle = isUgcSeason && !string.IsNullOrWhiteSpace(m_viewModel.VideoInfo.UgcSeason?.Title)
+                ? m_viewModel.VideoInfo.UgcSeason.Title
+                : m_viewModel.VideoInfo.Title;
+
             var downloadItem = new DownloadItem()
             {
                 Cover = m_viewModel.VideoInfo.Pic,
                 ID = m_viewModel.VideoInfo.Aid,
                 Episodes = new List<DownloadEpisodeItem>(),
                 Subtitle = m_viewModel.VideoInfo.Bvid,
-                Title = m_viewModel.VideoInfo.Title,
+                Title = downloadTitle,
                 Type = DownloadType.Video,
                 UpMid = m_viewModel.VideoInfo.Owner.Mid.ToInt64(),
             };
@@ -691,6 +701,12 @@ namespace BiliLite.Pages
                 var downloadService = App.ServiceProvider.GetRequiredService<DownloadService>();
                 state = downloadService.CheckExist(item.Cid);
                 //如果正在下载state=2,下载完成state=3
+                var pageTitle = "P" + item.Page + " " + item.Part;
+                if (isUgcSeason)
+                {
+                    // 合集里每集都是不同的视频，分P要带上所属视频的标题才不会混在一起
+                    pageTitle = isSinglePage ? m_viewModel.VideoInfo.Title : m_viewModel.VideoInfo.Title + "-" + pageTitle;
+                }
                 downloadItem.Episodes.Add(new DownloadEpisodeItem()
                 {
                     AVID = m_viewModel.VideoInfo.Aid,
@@ -698,14 +714,14 @@ namespace BiliLite.Pages
                     CID = item.Cid,
                     EpisodeID = "",
                     Index = i,
-                    Title = "P" + item.Page + " " + item.Part,
+                    Title = pageTitle,
                     State = state
                 });
                 i++;
             }
 
 
-            if (m_viewModel.VideoInfo.ShowUgcSeason)
+            if (isUgcSeason)
             {
                 foreach (var ugcSeasonSection in m_viewModel.VideoInfo.UgcSeason.Sections)
                 {
