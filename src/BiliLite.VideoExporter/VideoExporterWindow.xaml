@@ -24,6 +24,7 @@
         </Grid>
         <Grid x:Name="gridFFmpeg" Margin="8" Grid.Row="1">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock x:Name="txtProgress" Margin="0 0 0 8" HorizontalAlignment="Center" Foreground="#FF666666" />
                 <ProgressBar x:Name="progressBar" Height="24" Width="240" Maximum="100" IsIndeterminate="True"></ProgressBar>
                 <TextBlock TextAlignment="Center" Margin="0 12" x:Name="txtStatus"></TextBlock>
                 <Button x:Name="btnCancel" Width="96" HorizontalAlignment="Center" Click="BtnCancel_Click" Content="取消" Visibility="Collapsed"></Button>

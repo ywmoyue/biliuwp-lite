@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions.Notifications;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -136,6 +136,13 @@ namespace BiliLite.Controls.Settings
             swDownloadSendToast.Toggled += new RoutedEventHandler((e, args) =>
             {
                 SettingService.SetValue(SettingConstants.Download.SEND_TOAST, swDownloadSendToast.IsOn);
+            });
+            //导出完成后自动关闭导出窗口
+            swExportAutoCloseWindow.IsOn = SettingService.GetValue(SettingConstants.Download.EXPORT_AUTO_CLOSE_WINDOW,
+                SettingConstants.Download.DEFAULT_EXPORT_AUTO_CLOSE_WINDOW);
+            swExportAutoCloseWindow.Toggled += new RoutedEventHandler((e, args) =>
+            {
+                SettingService.SetValue(SettingConstants.Download.EXPORT_AUTO_CLOSE_WINDOW, swExportAutoCloseWindow.IsOn);
             });
             //使用下载索引
             SwUseDownloadIndex.IsOn = SettingService.GetValue(SettingConstants.Download.USE_DOWNLOAD_INDEX,

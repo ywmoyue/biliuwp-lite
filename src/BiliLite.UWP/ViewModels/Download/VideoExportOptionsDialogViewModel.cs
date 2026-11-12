@@ -48,6 +48,11 @@ namespace BiliLite.ViewModels.Download
 
         public VideoExportSubtitleOption SelectedSubtitle { get; set; }
 
+        /// <summary>
+        /// 批量导出：轨道按每集自动选择，界面上不提供轨道选项
+        /// </summary>
+        public bool IsBatch { get; set; }
+
         [DependsOn(nameof(Format))]
         public bool IsMp4 => Format == VideoExportOptions.FORMAT_MP4;
 
@@ -72,16 +77,16 @@ namespace BiliLite.ViewModels.Download
         public Visibility TranscodePanelVisibility =>
             IsMp4 && IsTranscodeMode ? Visibility.Visible : Visibility.Collapsed;
 
-        [DependsOn(nameof(Format), nameof(VideoTracks))]
+        [DependsOn(nameof(Format), nameof(VideoTracks), nameof(IsBatch))]
         public Visibility VideoTrackPanelVisibility =>
-            IsMp4 && VideoTracks != null && VideoTracks.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
+            !IsBatch && IsMp4 && VideoTracks != null && VideoTracks.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
 
-        [DependsOn(nameof(Format), nameof(AudioTracks))]
+        [DependsOn(nameof(Format), nameof(AudioTracks), nameof(IsBatch))]
         public Visibility AudioTrackPanelVisibility =>
-            IsMp4 && AudioTracks != null && AudioTracks.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
+            !IsBatch && IsMp4 && AudioTracks != null && AudioTracks.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
 
-        [DependsOn(nameof(Format), nameof(SubtitleOptions))]
+        [DependsOn(nameof(Format), nameof(SubtitleOptions), nameof(IsBatch))]
         public Visibility SubtitlePanelVisibility =>
-            IsMp4 && SubtitleOptions != null && SubtitleOptions.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
+            !IsBatch && IsMp4 && SubtitleOptions != null && SubtitleOptions.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
     }
 }

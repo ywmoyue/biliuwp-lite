@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="BiliLite.Controls.Settings.DownloadSettingsControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -146,6 +146,16 @@
             </controls:SettingsCard.HeaderIcon>
             <ToggleSwitch
                 x:Name="swDownloadSendToast"
+                Margin="0,-5,-88,-5"
+                Style="{StaticResource DefaultToggleSwitchStyle}" />
+        </controls:SettingsCard>
+
+        <controls:SettingsCard Description="导出视频全部成功后自动关闭导出窗口，失败或取消时窗口会保留" Header="导出完成后自动关闭导出窗口">
+            <controls:SettingsCard.HeaderIcon>
+                <SymbolIcon Symbol="Save" />
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch
+                x:Name="swExportAutoCloseWindow"
                 Margin="0,-5,-88,-5"
                 Style="{StaticResource DefaultToggleSwitchStyle}" />
         </controls:SettingsCard>
