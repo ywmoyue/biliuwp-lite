@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
@@ -22,6 +22,7 @@ namespace BiliLite.Controls.Dialogs
 {
     public sealed partial class DownloadDialog : ContentDialog
     {
+        private static readonly ILogger logger = GlobalLogger.FromCurrentType();
         PlayerVM playerVM;
         DownloadItemViewModel downloadItem;
         List<DownloadEpisodeItemViewModel> allEpisodes;
@@ -116,88 +117,125 @@ namespace BiliLite.Controls.Dialogs
 
         private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            args.Cancel = true;
-
             if (listView.SelectedItems == null || listView.SelectedItems.Count == 0)
             {
                 NotificationShowExtensions.ShowMessageToast("请选择要下载的剧集");
+                args.Cancel = true;
                 return;
             }
 
-            IsPrimaryButtonEnabled = false;
-            bool hide = true;
-
-            foreach (DownloadEpisodeItemViewModel item in listView.SelectedItems)
+            var quality = m_viewModel.Qualities != null &&
+                          m_viewModel.SelectedQualityIndex >= 0 &&
+                          m_viewModel.SelectedQualityIndex < m_viewModel.Qualities.Count
+                ? m_viewModel.Qualities[m_viewModel.SelectedQualityIndex]
+                : null;
+            if (quality == null)
             {
-                if (item.State == 3)
+                NotificationShowExtensions.ShowMessageToast("还没有读取到可下载的清晰度，请稍后再试");
+                args.Cancel = true;
+                return;
+            }
+
+            var selectedItems = listView.SelectedItems.Cast<DownloadEpisodeItemViewModel>().ToList();
+
+            // 对话框马上就会被关闭，这里先把处理要用到的设置快照下来
+            var qualityId = quality.QualityID;
+            var soundQualityId = m_viewModel.SelectedAudioQuality?.QualityID ?? 0;
+            var codecMode = m_viewModel.SelectedVideoType?.Value ?? PlayUrlCodecMode.DASH_H264;
+
+            SettingService.SetValue(SettingConstants.Download.DOWNLOAD_QUALITY, qualityId);
+            SettingService.SetValue(SettingConstants.Download.DOWNLOAD_SOUND_QUALITY, soundQualityId);
+
+            // 关闭对话框，处理过程交给右下角的进度悬浮窗
+            args.Cancel = false;
+            _ = AddDownloadsAsync(selectedItems, qualityId, soundQualityId, codecMode);
+        }
+
+        /// <summary>
+        /// 逐集读取播放地址并加入下载列表，处理进度显示在右下角悬浮窗里
+        /// </summary>
+        private async Task AddDownloadsAsync(List<DownloadEpisodeItemViewModel> items, int qualityId,
+            int soundQualityId, PlayUrlCodecMode codecMode)
+        {
+            var batch = DownloadAddToast.ShowBatch(
+                string.IsNullOrWhiteSpace(downloadItem.Title) ? "下载任务" : downloadItem.Title, items);
+            try
+            {
+                foreach (var item in items)
                 {
-                    await HandleDownloadedItem(item);
-                    continue;
-                }
-
-                if (item.State != 0 && item.State != 99)
-                {
-                    continue;
-                }
-
-                try
-                {
-                    item.State = 1;
-
-                    var downloadInfo = CreateDownloadInfo(item);
-
-                    // 读取视频信息
-                    var info = await playerVM.GetPlayInfo(item.AVID, item.CID);
-                    if (info.subtitle?.subtitles?.Count > 0)
+                    if (item.State == 3)
                     {
-                        downloadInfo.Subtitles = info.subtitle.subtitles.Select(sub => new DownloadSubtitleInfo
-                        {
-                            Name = $"{sub.lan_doc}({sub.lan})",
-                            Url = sub.subtitle_url
-                        }).ToList();
-                    }
-
-                    var playUrl = await GetPlayUrl(item);
-                    if (!playUrl.Success)
-                    {
-                        item.State = 99;
-                        item.ErrorMessage = playUrl.Message;
+                        await HandleDownloadedItem(item, qualityId, soundQualityId, codecMode);
+                        batch.NotifyProgress();
                         continue;
                     }
 
-                    downloadInfo.QualityID = playUrl.CurrentQuality.QualityID;
-                    downloadInfo.QualityName = playUrl.CurrentQuality.QualityName;
-                    downloadInfo.Urls = new List<DownloadUrlInfo>();
+                    if (item.State != 0 && item.State != 99)
+                    {
+                        continue;
+                    }
 
-                    await AddDownloadUrls(downloadInfo, playUrl);
+                    try
+                    {
+                        item.State = 1;
+                        batch.NotifyProgress();
 
-                    await DownloadHelper.AddDownload(downloadInfo);
+                        var downloadInfo = CreateDownloadInfo(item);
 
-                    item.State = 2;
-                }
-                catch (Exception ex)
-                {
-                    hide = false;
-                    item.State = 99;
-                    item.ErrorMessage = ex.Message;
+                        // 读取视频信息
+                        var info = await playerVM.GetPlayInfo(item.AVID, item.CID);
+                        if (info.subtitle?.subtitles?.Count > 0)
+                        {
+                            downloadInfo.Subtitles = info.subtitle.subtitles.Select(sub => new DownloadSubtitleInfo
+                            {
+                                Name = $"{sub.lan_doc}({sub.lan})",
+                                Url = sub.subtitle_url
+                            }).ToList();
+                        }
+
+                        var playUrl = await GetPlayUrl(item, qualityId, soundQualityId);
+                        if (!playUrl.Success)
+                        {
+                            item.State = 99;
+                            item.ErrorMessage = playUrl.Message;
+                            continue;
+                        }
+
+                        downloadInfo.QualityID = playUrl.CurrentQuality.QualityID;
+                        downloadInfo.QualityName = playUrl.CurrentQuality.QualityName;
+                        downloadInfo.Urls = new List<DownloadUrlInfo>();
+
+                        await AddDownloadUrls(downloadInfo, playUrl);
+
+                        await DownloadHelper.AddDownload(downloadInfo);
+
+                        item.State = 2;
+                    }
+                    catch (Exception ex)
+                    {
+                        item.State = 99;
+                        item.ErrorMessage = ex.Message;
+                    }
+                    finally
+                    {
+                        batch.NotifyProgress();
+                    }
                 }
             }
-
-            m_downloadService.LoadDownloading();
-            IsPrimaryButtonEnabled = true;
-
-            NotificationShowExtensions.ShowMessageToast(hide ? "已添加至下载列表" : "有视频下载失败");
-
-            SettingService.SetValue(SettingConstants.Download.DOWNLOAD_QUALITY, m_viewModel.Qualities[m_viewModel.SelectedQualityIndex].QualityID);
-            SettingService.SetValue(SettingConstants.Download.DOWNLOAD_SOUND_QUALITY, m_viewModel.SelectedAudioQuality.QualityID);
-
-            if (hide)
+            catch (Exception ex)
             {
-                this.Hide();
+                logger.Log("添加下载任务失败", LogType.Error, ex);
+                NotificationShowExtensions.ShowMessageToast("添加下载任务时出现错误，已记录");
+            }
+            finally
+            {
+                m_downloadService.LoadDownloading();
+                DownloadAddToast.FinishBatch(batch);
             }
         }
 
-        private async Task HandleDownloadedItem(DownloadEpisodeItemViewModel item)
+        private async Task HandleDownloadedItem(DownloadEpisodeItemViewModel item, int qualityId,
+            int soundQualityId, PlayUrlCodecMode codecMode)
         {
             var queryId = item.CID;
             var isSeason = downloadItem.Type == DownloadType.Season;
@@ -210,18 +248,17 @@ namespace BiliLite.Controls.Dialogs
             if (downloadSubItem == null) return;
 
             var needDownloadVideoTrack = !downloadSubItem.GetVideoDownloadTrackInfoList()
-                .Any(x => x.CodecId == m_viewModel.SelectedVideoType.Value.CodecModeToCodecId() &&
-                          x.QualityId == m_viewModel.Qualities[m_viewModel.SelectedQualityIndex].QualityID);
+                .Any(x => x.CodecId == codecMode.CodecModeToCodecId() && x.QualityId == qualityId);
 
             var needDownloadAudioTrack = downloadSubItem.GetAudioDownloadTrackInfoList()
-                .All(x => x.QualityId != m_viewModel.SelectedAudioQuality.QualityID);
+                .All(x => x.QualityId != soundQualityId);
 
             if (!needDownloadVideoTrack && !needDownloadAudioTrack) return;
 
             var downloadInfo = CreateDownloadInfo(item);
             downloadInfo.AddOthersTrack = true;
 
-            var playUrl = await GetPlayUrl(item);
+            var playUrl = await GetPlayUrl(item, qualityId, soundQualityId);
             if (!playUrl.Success)
             {
                 item.State = 99;
@@ -278,9 +315,9 @@ namespace BiliLite.Controls.Dialogs
             };
         }
 
-        private async Task<BiliPlayUrlQualitesInfo> GetPlayUrl(DownloadEpisodeItemViewModel item)
+        private async Task<BiliPlayUrlQualitesInfo> GetPlayUrl(DownloadEpisodeItemViewModel item, int qualityId,
+            int soundQualityId)
         {
-            var soundQualityId = m_viewModel.SelectedAudioQuality?.QualityID ?? 0;
             return await playerVM.GetPlayUrls(new PlayInfo
             {
                 avid = item.AVID,
@@ -290,7 +327,7 @@ namespace BiliLite.Controls.Dialogs
                 season_id = downloadItem.SeasonID,
                 season_type = downloadItem.SeasonType,
                 area = downloadItem.Title.ParseArea(downloadItem.UpMid)
-            }, qn: (cbQuality.SelectedItem as BiliPlayUrlInfo).QualityID, soundQualityId);
+            }, qn: qualityId, soundQualityId);
         }
 
         private async Task AddDownloadUrls(DownloadInfo downloadInfo, BiliPlayUrlQualitesInfo playUrl)
