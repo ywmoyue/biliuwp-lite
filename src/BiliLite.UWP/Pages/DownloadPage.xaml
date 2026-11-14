@@ -1,4 +1,4 @@
-﻿<local:BasePage
+<local:BasePage
     x:Class="BiliLite.Pages.DownloadPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -318,6 +318,17 @@
                                                 FontSize="12"
                                                 Foreground="Gray"
                                                 Text="{Binding Path=UpdateTime}" />
+                                            <Button
+                                                x:Name="BtnOutputAll"
+                                                Margin="0,8,0,0"
+                                                HorizontalAlignment="Left"
+                                                Click="BtnOutputAll_OnClick"
+                                                FontSize="12">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <SymbolIcon Margin="0,0,6,0" Symbol="Save" />
+                                                    <TextBlock Text="导出全部" />
+                                                </StackPanel>
+                                            </Button>
                                         </StackPanel>
                                     </Grid>
                                     <ListView

@@ -276,6 +276,7 @@
     <Compile Include="Models\Common\Comment\SendCommentResult.cs" />
     <Compile Include="Models\Common\Download\DownloadTrackInfo.cs" />
     <Compile Include="Models\Common\Download\VideoExportOptions.cs" />
+    <Compile Include="Models\Common\Download\VideoExportJob.cs" />
     <Compile Include="Models\Common\Download\VideoExportSubtitleOption.cs" />
     <Compile Include="Models\Common\Live\LiveRoomHistoryDanmu.cs" />
     <Compile Include="Models\Common\Season\SeasonEpListResult.cs" />
@@ -948,6 +949,9 @@
     <Compile Include="Controls\MessageToast.xaml.cs">
       <DependentUpon>MessageToast.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\DownloadAddToast.xaml.cs">
+      <DependentUpon>DownloadAddToast.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MyAdaptiveGridView.cs" />
     <Compile Include="Controls\MyFrame.cs" />
     <Compile Include="Controls\MyListView.cs" />
@@ -988,6 +992,7 @@
     <Compile Include="Services\AppHelper.cs" />
     <Compile Include="Services\BiliRequestBuilder.cs" />
     <Compile Include="Services\DownloadHelper.cs" />
+    <Compile Include="Services\VideoExportHelper.cs" />
     <Compile Include="Extensions\ExceptionHandler.cs" />
     <Compile Include="Extensions\StringHttpExtensions.cs" />
     <Compile Include="Services\GlobalLogger.cs" />
@@ -1173,6 +1178,7 @@
     <Compile Include="Services\Biz\SearchService.cs" />
     <Compile Include="ViewModels\Common\BaseViewModel.cs" />
     <Compile Include="ViewModels\Download\DownloadDialogViewModel.cs" />
+    <Compile Include="ViewModels\Download\DownloadAddBatchViewModel.cs" />
     <Compile Include="Models\Common\Video\VideoListItem.cs" />
     <Compile Include="Models\Common\Video\VideoListSection.cs" />
     <Compile Include="ViewModels\Video\VideoListSectionViewModel.cs" />
@@ -1515,6 +1521,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MessageToast.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\DownloadAddToast.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

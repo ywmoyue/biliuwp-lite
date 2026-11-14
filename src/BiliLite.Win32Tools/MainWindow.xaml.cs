@@ -25,6 +25,16 @@ namespace BiliLite.Win32Tools
     /// </summary>
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// UWP 侧写入的任务文件名，读到即删
+        /// </summary>
+        private const string JOB_FILE_SETTING_KEY = "VideoExportJobFile";
+
+        /// <summary>
+        /// 旧版单任务键，仅作兼容读取
+        /// </summary>
+        private const string LEGACY_INFO_SETTING_KEY = "VideoConverterInfo";
+
         private enum TaskKind
         {
             VideoConvert,
@@ -37,12 +47,17 @@ namespace BiliLite.Win32Tools
             PropertyNameCaseInsensitive = true,
         };
 
-        private ConvertFileInfo m_convertFileInfo;
+        private readonly List<ConvertFileInfo> m_jobs = new List<ConvertFileInfo>();
+        private readonly List<string> m_failedTitles = new List<string>();
         private AudioNormalizeInfo m_audioNormalizeInfo;
         private TaskKind m_taskKind = TaskKind.VideoConvert;
+        private bool m_closeOnSuccess = true;
+        private bool m_debug = false;
+        private bool m_cancelled = false;
+        private int m_finishedCount = 0;
+        private int m_failedCount = 0;
         private string m_currentDir = "";
         private string m_ffmpegFile = "";
-        private bool m_debug = false;
         private string m_debugLogFile = "";
         private readonly object m_logLock = new object();
         private CancellationTokenSource m_cancelSource;
@@ -54,7 +69,7 @@ namespace BiliLite.Win32Tools
             InitializeComponent();
         }
 
-        private void LoadInfo()
+        private void LoadJobs()
         {
             var args = Environment.GetCommandLineArgs();
 
@@ -81,29 +96,88 @@ namespace BiliLite.Win32Tools
             if (debugFileParam != null)
             {
                 var infoFile = debugFileParam.Substring("--debug-file=".Length);
-                m_convertFileInfo = DeserializeInfo(File.ReadAllText(infoFile));
-                txtName.Text = m_convertFileInfo.Title;
+                LoadJobsFromJson(File.ReadAllText(infoFile));
                 m_debug = true;
                 return;
             }
 
             var debugParam = args.FirstOrDefault(arg => arg.StartsWith("--debug="));
-            var param = debugParam != null ? debugParam.Substring("--debug=".Length) : "";
-            if (!string.IsNullOrEmpty(param))
+            if (debugParam != null)
             {
-                m_convertFileInfo = DeserializeInfo(param);
-                txtName.Text = m_convertFileInfo.Title;
+                LoadJobsFromJson(debugParam.Substring("--debug=".Length));
                 m_debug = true;
                 return;
             }
-            var str = Windows.Storage.ApplicationData.Current.LocalSettings.Values["VideoConverterInfo"] as string;
-            m_convertFileInfo = DeserializeInfo(str);
-            txtName.Text = m_convertFileInfo.Title;
+
+            // 批量导出：任务列表在 LocalFolder 的文件里（单个设置值有大小限制）
+            var jobFileName = Windows.Storage.ApplicationData.Current.LocalSettings.Values[JOB_FILE_SETTING_KEY] as string;
+            if (!string.IsNullOrEmpty(jobFileName))
+            {
+                Windows.Storage.ApplicationData.Current.LocalSettings.Values.Remove(JOB_FILE_SETTING_KEY);
+                var jobFile = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, jobFileName);
+                try
+                {
+                    if (File.Exists(jobFile))
+                    {
+                        LoadJobsFromJson(File.ReadAllText(jobFile));
+                        File.Delete(jobFile);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log("LOAD JOB FILE FAILED: " + ex);
+                }
+                if (m_jobs.Count > 0) return;
+            }
+
+            // 旧版单任务格式
+            var legacy = Windows.Storage.ApplicationData.Current.LocalSettings.Values[LEGACY_INFO_SETTING_KEY] as string;
+            var info = DeserializeInfo(legacy);
+            if (info != null)
+            {
+                m_jobs.Add(info);
+                m_closeOnSuccess = true;
+            }
+        }
+
+        private void LoadJobsFromJson(string json)
+        {
+            if (string.IsNullOrWhiteSpace(json)) return;
+
+            try
+            {
+                var jobList = JsonSerializer.Deserialize<VideoExportJobList>(json, _jsonOptions);
+                if (jobList?.Items != null && jobList.Items.Count > 0)
+                {
+                    m_jobs.AddRange(jobList.Items.Where(x => x != null));
+                    m_closeOnSuccess = jobList.CloseOnSuccess;
+                    return;
+                }
+            }
+            catch (JsonException)
+            {
+                // 旧版单任务格式
+            }
+
+            var info = DeserializeInfo(json);
+            if (info != null)
+            {
+                m_jobs.Add(info);
+                m_closeOnSuccess = true;
+            }
         }
 
         private static ConvertFileInfo DeserializeInfo(string json)
         {
-            return JsonSerializer.Deserialize<ConvertFileInfo>(json, _jsonOptions);
+            if (string.IsNullOrWhiteSpace(json)) return null;
+            try
+            {
+                return JsonSerializer.Deserialize<ConvertFileInfo>(json, _jsonOptions);
+            }
+            catch (JsonException)
+            {
+                return null;
+            }
         }
 
         private bool TryLoadAudioNormalizeDebugArgs(string[] args)
@@ -156,8 +230,23 @@ namespace BiliLite.Win32Tools
         {
             try
             {
-                LoadInfo();
+                LoadJobs();
                 RunAudioNormalizeInBackgroundIfNeeded();
+
+                // 音量均衡任务不走批量列表，m_jobs 为空是正常的
+                if (m_jobs.Count == 0 && m_taskKind != TaskKind.AudioNormalize)
+                {
+                    progressBar.Visibility = Visibility.Collapsed;
+                    txtStatus.Text = "没有可以导出的任务";
+                    return;
+                }
+
+                if (m_jobs.Count > 0)
+                {
+                    txtName.Text = FormatJobTitle(m_jobs[0], 0, m_jobs.Count);
+                    UpdateOverallText();
+                }
+
                 txtStatus.Text = "正在解压FFmpeg,请稍等";
 
                 var result = await DecompressFFmpeg();
@@ -172,8 +261,15 @@ namespace BiliLite.Win32Tools
                     }
                     return;
                 }
-                txtStatus.Text = m_taskKind == TaskKind.AudioNormalize ? "正在均衡音量" : "正在导出视频";
-                await StartTask();
+                if (m_taskKind == TaskKind.AudioNormalize)
+                {
+                    txtStatus.Text = "正在均衡音量";
+                    await NormalizeAudio();
+                    return;
+                }
+
+                txtStatus.Text = "正在导出视频";
+                await RunAllAsync();
             }
             catch (Exception ex)
             {
@@ -255,7 +351,86 @@ namespace BiliLite.Win32Tools
             });
         }
 
-        private async Task StartTask()
+        /// <summary>
+        /// 顺序处理任务列表：单个文件失败不影响后续文件
+        /// </summary>
+        private async Task RunAllAsync()
+        {
+            for (var i = 0; i < m_jobs.Count; i++)
+            {
+                if (m_cancelled) break;
+
+                var info = m_jobs[i];
+                txtName.Text = FormatJobTitle(info, i, m_jobs.Count);
+                txtStatus.Text = "正在导出视频";
+
+                var success = await RunJobAsync(info);
+                if (success) m_finishedCount++;
+                if (m_cancelled) break;
+
+                if (!success)
+                {
+                    m_failedCount++;
+                    m_failedTitles.Add(string.IsNullOrEmpty(info.Title) ? Path.GetFileName(info.OutFile) : info.Title);
+                }
+
+                UpdateOverallText();
+            }
+
+            FinishAll();
+        }
+
+        private async void FinishAll()
+        {
+            progressBar.IsIndeterminate = false;
+            btnCancel.Visibility = Visibility.Collapsed;
+
+            if (m_cancelled)
+            {
+                txtStatus.Text = $"已取消导出，已完成 {m_finishedCount} / 共 {m_jobs.Count}";
+                Log("BATCH CANCELLED");
+                return;
+            }
+
+            if (m_failedCount == 0)
+            {
+                progressBar.Value = 100;
+
+                if (m_closeOnSuccess && !m_debug)
+                {
+                    txtStatus.Text = m_jobs.Count > 1
+                        ? $"全部 {m_jobs.Count} 个视频导出成功，窗口将自动关闭"
+                        : "视频导出成功！窗口将自动关闭";
+                    Log("BATCH SUCCESS, WINDOW WILL CLOSE");
+                    await Task.Delay(1500);
+                    Close();
+                    return;
+                }
+
+                txtStatus.Text = m_jobs.Count > 1 ? $"全部 {m_jobs.Count} 个视频导出成功" : "视频导出成功!";
+                Log("BATCH SUCCESS");
+                return;
+            }
+
+            var failedList = string.Join("\r\n", m_failedTitles.Take(5));
+            txtStatus.Text = $"导出完成，成功 {m_finishedCount} 个，失败 {m_failedCount} 个：\r\n{failedList}";
+            Log("BATCH FAILED: " + string.Join(" | ", m_failedTitles));
+        }
+
+        private string FormatJobTitle(ConvertFileInfo info, int index, int total)
+        {
+            var title = string.IsNullOrEmpty(info?.Title) ? Path.GetFileName(info?.OutFile) : info.Title;
+            return total > 1 ? $"[{index + 1}/{total}] {title}" : title;
+        }
+
+        private void UpdateOverallText()
+        {
+            txtProgress.Text = m_jobs.Count > 1
+                ? $"已完成 {m_finishedCount} / 共 {m_jobs.Count}，失败 {m_failedCount}"
+                : string.Empty;
+        }
+
+        private async Task<bool> RunJobAsync(ConvertFileInfo info)
         {
             if (m_taskKind == TaskKind.AudioNormalize)
             {
@@ -266,14 +441,13 @@ namespace BiliLite.Win32Tools
             VideoExportPlan plan;
             try
             {
-                plan = VideoExportArgs.Build(m_convertFileInfo);
+                plan = VideoExportArgs.Build(info);
             }
             catch (Exception ex)
             {
-                progressBar.Visibility = Visibility.Collapsed;
                 txtStatus.Text = $"无法开始导出：\r\n{ex.Message}";
                 Log("BUILD FAILED: " + ex.Message);
-                return;
+                return false;
             }
 
             GlobalFFOptions.Configure(new FFOptions { BinaryFolder = m_currentDir, TemporaryFilesFolder = m_currentDir });
@@ -283,6 +457,7 @@ namespace BiliLite.Win32Tools
 
             m_totalDuration = TimeSpan.Zero;
             m_lastLoggedPercent = -1;
+            m_cancelSource?.Dispose();
             m_cancelSource = new CancellationTokenSource();
             progressBar.Value = 0;
             progressBar.IsIndeterminate = true;
@@ -310,24 +485,26 @@ namespace BiliLite.Win32Tools
 
                 progressBar.IsIndeterminate = false;
                 progressBar.Value = 100;
-                btnCancel.Visibility = Visibility.Collapsed;
-                txtStatus.Text = "视频导出成功!";
-                Log("SUCCESS");
+                Log("SUCCESS: " + plan.OutputFile);
+                return true;
             }
             catch (Exception ex)
             {
-                btnCancel.Visibility = Visibility.Collapsed;
                 if (m_cancelSource != null && m_cancelSource.IsCancellationRequested)
                 {
-                    txtStatus.Text = "已取消导出";
-                    Log("CANCELLED");
+                    m_cancelled = true;
+                    Log("CANCELLED: " + plan.OutputFile);
                     TryDeleteOutput(plan.OutputFile);
+                    return false;
                 }
-                else
-                {
-                    txtStatus.Text = $"视频导出失败：\r\n{ex.Message}" + BuildFailureHint(plan);
-                    Log("FAILED: " + ex);
-                }
+
+                txtStatus.Text = $"视频导出失败：\r\n{ex.Message}" + BuildFailureHint(plan);
+                Log("FAILED: " + ex);
+                return false;
+            }
+            finally
+            {
+                btnCancel.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -464,6 +641,7 @@ namespace BiliLite.Win32Tools
             btnCancel.IsEnabled = false;
             txtStatus.Text = "正在取消...";
             Log("CANCEL REQUESTED");
+            m_cancelled = true;
             m_cancelSource?.Cancel();
         }
 
