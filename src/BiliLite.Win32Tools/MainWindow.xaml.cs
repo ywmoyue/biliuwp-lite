@@ -432,12 +432,6 @@ namespace BiliLite.Win32Tools
 
         private async Task<bool> RunJobAsync(ConvertFileInfo info)
         {
-            if (m_taskKind == TaskKind.AudioNormalize)
-            {
-                await NormalizeAudio();
-                return;
-            }
-
             VideoExportPlan plan;
             try
             {
