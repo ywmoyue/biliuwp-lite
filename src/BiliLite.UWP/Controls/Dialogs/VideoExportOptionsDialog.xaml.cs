@@ -24,13 +24,18 @@ namespace BiliLite.Controls.Dialogs
         /// <summary>
         /// 用上次的选项和当前视频的轨道填充界面。
         /// 轨道选择不持久化（每个视频的轨道不同），默认取各自的推荐项。
+        /// 批量导出时不提供轨道选择，由导出流程按每集自动挑轨道。
         /// </summary>
         public void LoadOptions(VideoExportOptions current, List<VideoExportTrackOption> videoOptions,
-            List<VideoExportTrackOption> audioOptions, List<DownloadSubtitleInfo> subtitleInfos)
+            List<VideoExportTrackOption> audioOptions, List<DownloadSubtitleInfo> subtitleInfos,
+            bool isBatch = false)
         {
+            ViewModel.IsBatch = isBatch;
             ViewModel.VideoTracks = videoOptions ?? new List<VideoExportTrackOption>();
             ViewModel.AudioTracks = audioOptions ?? new List<VideoExportTrackOption>();
             ViewModel.SubtitleOptions = BuildSubtitleOptions(subtitleInfos);
+
+            PrimaryButtonText = isBatch ? "选择输出文件夹" : "选择保存位置";
 
             ViewModel.Format = current?.Format ?? VideoExportOptions.FORMAT_MKV;
             ViewModel.VideoMode = current?.VideoMode ?? VideoExportOptions.MODE_COPY;

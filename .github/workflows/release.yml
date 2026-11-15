@@ -77,7 +77,7 @@ jobs:
       - name: Download and process necessary files
         run: |
           curl --location $env:Webdav_addr --header "$env:Webdav_auth" -o "$env:UWP_Project_Directory/$env:SigningCertificate" --insecure
-          curl --location $env:nuget_package_addr --header "$env:Webdav_auth" -o "$env:nuget_package" --insecure
+          curl -fL -o "$env:nuget_package" "https://github.com/ywmoyue/TempFileResource/releases/download/biliuwp-nuget-packages/biliuwp-lite-nuget-packages.zip"
           Expand-Archive -path $env:nuget_package -DestinationPath ./
           cp -r ./packages ./src/
 
@@ -105,12 +105,7 @@ jobs:
 
       - name: document processing
         run: |
-          git clone https://github.com/ywmoyue/OnlinePageToPDF-Node.git
-          cd OnlinePageToPDF-Node
-          npm install
-          node index.js --waitTime=35000 --pageUrl="http://markdown.muyan233.top:352/?fileUrl=https%3A%2F%2Fraw.githubusercontent.com%2Fywmoyue%2Fbiliuwp-lite%2Fdev%2Fdocument%2Finstall-readme.md" --pdfFilePath="安装教程.pdf"
-          cd ..
-          cp ./OnlinePageToPDF-Node/安装教程.pdf C:\Package\安装教程.pdf
+          curl -fL -o C:\Package\安装教程.pdf "https://github.com/ywmoyue/TempFileResource/releases/download/biliuwp-docs/install-tutorial.pdf"
 
       - name: Check if x64 asset exists
         id: check-x64-asset

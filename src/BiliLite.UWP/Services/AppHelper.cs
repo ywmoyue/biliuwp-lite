@@ -6,15 +6,23 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using BiliLite.Extensions;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Download;
 using BiliLite.Models.Common.Home;
+using System.IO;
+using System.Threading;
 
 namespace BiliLite.Services
 {
     public static class AppHelper
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
+
+        /// <summary>
+        /// 导出任务文件名写在 LocalSettings 里，导出器进程读取后自行删除
+        /// </summary>
+        public const string EXPORT_JOB_FILE_SETTING_KEY = "VideoExportJobFile";
 
         public static List<RegionItem> Regions { get; set; }
         private static RegionAPI regionAPI = new RegionAPI();
@@ -75,42 +83,135 @@ namespace BiliLite.Services
             }
         }
 
-        public static async Task LaunchConverter(string title, VideoExportOptions options, string outFile)
+        public static async Task LaunchConverter(IReadOnlyList<VideoExportJob> jobs, bool closeOnSuccess)
         {
-            var videoConverterInfo = JsonConvert.SerializeObject(new
+            if (jobs == null || jobs.Count == 0) return;
+
+            try
             {
-                title = title,
-                outFile = outFile,
-                format = options.Format,
-                videoMode = options.VideoMode,
-                videoTracks = options.VideoTracks.Select(x => new
+                var payload = new
                 {
-                    path = x.Path,
-                    qualityId = x.QualityId,
-                    codecId = x.CodecId,
-                    label = x.Label,
-                }),
-                audioTracks = options.AudioTracks.Select(x => new
-                {
-                    path = x.Path,
-                    qualityId = x.QualityId,
-                    codecId = x.CodecId,
-                    label = x.Label,
-                }),
-                subtitleTracks = options.SubtitleTracks.Select(x => new
-                {
-                    path = x.Path,
-                    label = x.Label,
-                }),
-                transcode = new
-                {
-                    hdrToSdr = options.HdrToSdr,
-                    downscale = options.Downscale,
-                },
+                    closeOnSuccess,
+                    items = jobs.Select(job => new
+                    {
+                        title = job.Title,
+                        outFile = job.OutFile,
+                        format = job.Options.Format,
+                        videoMode = job.Options.VideoMode,
+                        videoTracks = job.Options.VideoTracks.Select(x => new
+                        {
+                            path = x.Path,
+                            qualityId = x.QualityId,
+                            codecId = x.CodecId,
+                            label = x.Label,
+                        }),
+                        audioTracks = job.Options.AudioTracks.Select(x => new
+                        {
+                            path = x.Path,
+                            qualityId = x.QualityId,
+                            codecId = x.CodecId,
+                            label = x.Label,
+                        }),
+                        subtitleTracks = job.Options.SubtitleTracks.Select(x => new
+                        {
+                            path = x.Path,
+                            label = x.Label,
+                        }),
+                        transcode = new
+                        {
+                            hdrToSdr = job.Options.HdrToSdr,
+                            downscale = job.Options.Downscale,
+                        },
+                    }).ToList(),
+                };
+
+                var json = JsonConvert.SerializeObject(payload);
+                logger.Debug("videoConverterInfo: " + json);
+
+                // 批量导出的任务可能很大，走文件传递而不是 LocalSettings（单个值有大小限制）
+                var fileName = $"video-export-jobs-{Guid.NewGuid():N}.json";
+                var jobFile = await ApplicationData.Current.LocalFolder.CreateFileAsync(fileName,
+                    CreationCollisionOption.ReplaceExisting);
+                await FileIO.WriteTextAsync(jobFile, json);
+
+                ApplicationData.Current.LocalSettings.Values[EXPORT_JOB_FILE_SETTING_KEY] = fileName;
+                await Windows.ApplicationModel.FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+            }
+            catch (Exception ex)
+            {
+                logger.Log("启动视频导出进程失败", LogType.Error, ex);
+                NotificationShowExtensions.ShowMessageToast("启动导出进程失败，已记录错误");
+            }
+        }
+
+        public static async Task<string> NormalizeAudioWithFfmpegAsync(string inputFile, double targetLufs,
+            CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrEmpty(inputFile) || !File.Exists(inputFile))
+            {
+                return null;
+            }
+
+            var operationId = Guid.NewGuid().ToString("N");
+            var resultKey = $"AudioNormalizeResult_{operationId}";
+
+            var payload = JsonConvert.SerializeObject(new
+            {
+                operationId,
+                inputFile,
+                targetLufs
             });
-            logger.Debug("videoConverterInfo: " + videoConverterInfo);
-            ApplicationData.Current.LocalSettings.Values["VideoConverterInfo"] = videoConverterInfo;
-            await Windows.ApplicationModel.FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+
+            ApplicationData.Current.LocalSettings.Values["AudioNormalizeRequest"] = payload;
+            ApplicationData.Current.LocalSettings.Values.Remove(resultKey);
+
+            try
+            {
+                await Windows.ApplicationModel.FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+            }
+            catch (Exception ex)
+            {
+                logger.Warn("Launch fulltrust process for audio normalization failed", ex);
+                return null;
+            }
+
+            var timeoutAt = DateTime.UtcNow.AddSeconds(90);
+            while (DateTime.UtcNow < timeoutAt)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                var resultStr = ApplicationData.Current.LocalSettings.Values[resultKey] as string;
+                if (!string.IsNullOrWhiteSpace(resultStr))
+                {
+                    ApplicationData.Current.LocalSettings.Values.Remove(resultKey);
+                    try
+                    {
+                        var result = JsonConvert.DeserializeAnonymousType(resultStr, new
+                        {
+                            success = false,
+                            outputFile = string.Empty,
+                            error = string.Empty
+                        });
+
+                        if (result?.success == true && !string.IsNullOrWhiteSpace(result.outputFile) && File.Exists(result.outputFile))
+                        {
+                            return result.outputFile;
+                        }
+
+                        logger.Warn($"Audio normalization failed in fulltrust process: {result?.error}");
+                        return null;
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Warn("Parse audio normalization result failed", ex);
+                        return null;
+                    }
+                }
+
+                await Task.Delay(250, cancellationToken);
+            }
+
+            logger.Warn("Audio normalization timeout");
+            return null;
         }
     }
 }
