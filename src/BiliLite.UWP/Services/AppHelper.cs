@@ -1,18 +1,18 @@
+using BiliLite.Models.Requests.Api;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Windows.Storage;
 using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Download;
 using BiliLite.Models.Common.Home;
-using BiliLite.Models.Requests.Api;
-using BiliLite.VideoExporter;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Windows.Storage;
+using System.Threading;
+using BiliLite.VideoExporter;
 
 namespace BiliLite.Services
 {
@@ -127,16 +127,17 @@ namespace BiliLite.Services
                 };
 
                 var json = JsonConvert.SerializeObject(payload);
-                logger.Debug("videoExportJobs: " + json);
+                logger.Debug("videoConverterInfo: " + json);
 
                 // 批量导出的任务可能很大，走文件传递而不是 LocalSettings（单个值有大小限制）
-                // winui3 的导出器与主程序同进程：写完文件、设好键后直接开窗
-                var jobFileName = $"video-export-jobs-{Guid.NewGuid():N}.json";
-                var jobFile = await ApplicationData.Current.LocalFolder.CreateFileAsync(jobFileName,
+                var fileName = $"video-export-jobs-{Guid.NewGuid():N}.json";
+                var jobFile = await ApplicationData.Current.LocalFolder.CreateFileAsync(fileName,
                     CreationCollisionOption.ReplaceExisting);
                 await FileIO.WriteTextAsync(jobFile, json);
-                ApplicationData.Current.LocalSettings.Values[EXPORT_JOB_FILE_SETTING_KEY] = jobFileName;
 
+                ApplicationData.Current.LocalSettings.Values[EXPORT_JOB_FILE_SETTING_KEY] = fileName;
+
+                // winui3 的导出器与主程序同进程，写完任务文件后直接开窗，不经过 FullTrust 进程
                 var exporterWindow = new VideoExporterWindow();
                 exporterWindow.Activate();
                 exporterWindow.Start();
@@ -146,6 +147,17 @@ namespace BiliLite.Services
                 logger.Log("启动视频导出进程失败", LogType.Error, ex);
                 NotificationShowExtensions.ShowMessageToast("启动导出进程失败，已记录错误");
             }
+        }
+
+        /// <summary>
+        /// 音量均衡：winui3 分支的导出器是进程内的 BiliLite.VideoExporter，没有 FullTrust 进程可用，
+        /// 这里暂不实现，返回 null 让调用方回落到原音频（VideoPlayer.Load 已有该分支）。
+        /// </summary>
+        public static Task<string> NormalizeAudioWithFfmpegAsync(string inputFile, double targetLufs,
+            CancellationToken cancellationToken = default)
+        {
+            logger.Warn("NormalizeAudioWithFfmpegAsync: winui3 分支未实现音量均衡，已跳过");
+            return Task.FromResult<string>(null);
         }
     }
 }

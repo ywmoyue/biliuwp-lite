@@ -1,4 +1,4 @@
-﻿using BiliLite.Controls;
+using BiliLite.Controls;
 using BiliLite.Controls.Common;
 using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.System;
 using Windows.UI.Core;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -278,6 +278,7 @@ namespace BiliLite
         }
         private async Task ClosePage(TabViewItem tabItem)
         {
+            _logger.Trace($"ClosePage: 移除标签 {tabItem?.Header}");
             tabView.TabItems.Remove(tabItem);
             var frame = tabItem.Content as MyFrame;
             if (frame.Content is Page { Content: Grid grid })
@@ -296,6 +297,7 @@ namespace BiliLite
             // frame.BackStack.Clear();
             tabItem.Content = null;
             GC.Collect();
+            _logger.Trace("ClosePage: 已释放资源并触发 GC");
         }
         private void tabView_Loaded(object sender, RoutedEventArgs e)
         {

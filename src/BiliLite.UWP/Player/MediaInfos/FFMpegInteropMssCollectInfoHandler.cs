@@ -1,4 +1,4 @@
-﻿using System.Timers;
+using System.Timers;
 
 namespace BiliLite.Player.MediaInfos
 {
@@ -32,6 +32,7 @@ namespace BiliLite.Player.MediaInfos
 
         private void CollectMediaInfo()
         {
+            // winui3 分支未引入 FFmpegInteropX（FFMpegInteropMss 相关成员不可用），这里保持空实现
             //if (!(m_collectInfo.Data is FFMpegInteropMssCollectInfoData collectInfoData)) return;
             //var ffMpegInteropMss = collectInfoData.FFMpegInteropMss;
             //if (ffMpegInteropMss.VideoStreams.Count > 0)
@@ -51,8 +52,16 @@ namespace BiliLite.Player.MediaInfos
 
             //m_mediaInfosCollector.MediaInfo.BufferingProgress = collectInfoData.MediaPlayer.PlaybackSession.DownloadProgress;
             //m_mediaInfosCollector.MediaInfo.BufferTime = ffMpegInteropMss.BufferTime.ToString("g");
-            
+
             //m_mediaInfosCollector.EmitUpdateMediaInfos();
+        }
+
+        public override void Dispose()
+        {
+            m_timer.Stop();
+            m_timer.Elapsed -= Timer_Elapsed;
+            m_timer.Dispose();
+            m_collectInfo = null;
         }
     }
 }
