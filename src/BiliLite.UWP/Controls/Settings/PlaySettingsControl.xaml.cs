@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using BiliLite.Modules.ExtraInterface;
+using BiliLite.Player.RangeDownload;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -73,6 +74,37 @@ namespace BiliLite.Controls.Settings
             {
                 SettingService.SetValue(SettingConstants.Player.LIVE_PLAYER_TYPE,
                     (int)cbUseRealPlayerType.SelectedValue);
+            };
+
+            //多线程下载
+            SwitchMultiThreadDownload.IsOn = SettingService.GetValue(SettingConstants.Player.MULTI_THREAD_DOWNLOAD,
+                SettingConstants.Player.DEFAULT_MULTI_THREAD_DOWNLOAD);
+            SwitchMultiThreadDownload.Loaded += (sender, e) =>
+            {
+                SwitchMultiThreadDownload.Toggled += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.MULTI_THREAD_DOWNLOAD,
+                        SwitchMultiThreadDownload.IsOn);
+                };
+            };
+            var threadOptions = MultiThreadRangeDownloader.ThreadOptions.ToList();
+            ComboBoxMultiThreadDownloadThreads.ItemsSource = threadOptions;
+            ComboBoxMultiThreadDownloadThreads.SelectedIndex = Math.Max(0, threadOptions.IndexOf(SettingService.GetValue(
+                SettingConstants.Player.MULTI_THREAD_DOWNLOAD_THREADS,
+                SettingConstants.Player.DEFAULT_MULTI_THREAD_DOWNLOAD_THREADS)));
+            ComboBoxMultiThreadDownloadThreads.SelectionChanged += (e, args) =>
+            {
+                if (ComboBoxMultiThreadDownloadThreads.SelectedIndex < 0) return;
+                SettingService.SetValue(SettingConstants.Player.MULTI_THREAD_DOWNLOAD_THREADS,
+                    threadOptions[ComboBoxMultiThreadDownloadThreads.SelectedIndex]);
+            };
+            ComboBoxMultiThreadDownloadCdnMode.SelectedIndex = SettingService.GetValue(
+                SettingConstants.Player.MULTI_THREAD_DOWNLOAD_CDN_MODE,
+                (int)SettingConstants.Player.DEFAULT_MULTI_THREAD_DOWNLOAD_CDN_MODE);
+            ComboBoxMultiThreadDownloadCdnMode.SelectionChanged += (e, args) =>
+            {
+                SettingService.SetValue(SettingConstants.Player.MULTI_THREAD_DOWNLOAD_CDN_MODE,
+                    ComboBoxMultiThreadDownloadCdnMode.SelectedIndex);
             };
 
             //视频倍速
@@ -172,6 +204,55 @@ namespace BiliLite.Controls.Settings
                 swAutoPlay.Toggled += new RoutedEventHandler((obj, args) =>
                 {
                     SettingService.SetValue(SettingConstants.Player.AUTO_PLAY, swAutoPlay.IsOn);
+                });
+            });
+            // 播放前临时下载完整音频
+            swPreloadFullAudio.IsOn = SettingService.GetValue<bool>(SettingConstants.Player.PRELOAD_FULL_AUDIO_BEFORE_PLAY, SettingConstants.Player.DEFAULT_PRELOAD_FULL_AUDIO_BEFORE_PLAY);
+            swPreloadFullAudio.Loaded += new RoutedEventHandler((sender, e) =>
+            {
+                swPreloadFullAudio.Toggled += new RoutedEventHandler((obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.PRELOAD_FULL_AUDIO_BEFORE_PLAY, swPreloadFullAudio.IsOn);
+                    UpdateVolumeNormalizationControlsState();
+                });
+            });
+            // 音量均衡（依赖播放前完整音频预下载）
+            swVolumeNormalization.IsOn = SettingService.GetValue(
+                SettingConstants.Player.VOLUME_NORMALIZATION,
+                SettingConstants.Player.DEFAULT_VOLUME_NORMALIZATION);
+            swVolumeNormalization.Loaded += new RoutedEventHandler((sender, e) =>
+            {
+                swVolumeNormalization.Toggled += new RoutedEventHandler((obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.VOLUME_NORMALIZATION, swVolumeNormalization.IsOn);
+                    UpdateVolumeNormalizationControlsState();
+                });
+            });
+
+            sliderVolumeNormalizationLoudness.Value = ClampVolumeNormalizationLoudness(SettingService.GetValue(
+                SettingConstants.Player.VOLUME_NORMALIZATION_LOUDNESS,
+                SettingConstants.Player.DEFAULT_VOLUME_NORMALIZATION_LOUDNESS));
+            sliderVolumeNormalizationLoudness.Loaded += (sender, e) =>
+            {
+                sliderVolumeNormalizationLoudness.ValueChanged += (obj, args) =>
+                {
+                    var loudness = ClampVolumeNormalizationLoudness(sliderVolumeNormalizationLoudness.Value);
+                    txtVolumeNormalizationLoudness.Text = $"{loudness:F1} LUFS";
+                    SettingService.SetValue(SettingConstants.Player.VOLUME_NORMALIZATION_LOUDNESS, loudness);
+                };
+            };
+            txtVolumeNormalizationLoudness.Text = $"{sliderVolumeNormalizationLoudness.Value:F1} LUFS";
+            UpdateVolumeNormalizationControlsState();
+            //播放器自动回落
+            swPlayerAutoFallback.IsOn = SettingService.GetValue(
+                SettingConstants.Player.AUTO_FALLBACK,
+                SettingConstants.Player.DEFAULT_AUTO_FALLBACK);
+            swPlayerAutoFallback.Loaded += new RoutedEventHandler((sender, e) =>
+            {
+                swPlayerAutoFallback.Toggled += new RoutedEventHandler((obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.AUTO_FALLBACK,
+                        swPlayerAutoFallback.IsOn);
                 });
             });
             //自动跳过OP/ED
@@ -563,6 +644,17 @@ namespace BiliLite.Controls.Settings
             await Task.Delay(50);
             SettingService.SetValue(SettingConstants.Player.FFMPEG_INTEROP_X_OPTIONS,
                 m_viewModel.FFmpegInteropXOptions);
+        }
+
+        private void UpdateVolumeNormalizationControlsState()
+        {
+            sliderVolumeNormalizationLoudness.IsEnabled = swPreloadFullAudio.IsOn && swVolumeNormalization.IsOn;
+            txtVolumeNormalizationLoudness.Opacity = sliderVolumeNormalizationLoudness.IsEnabled ? 1.0 : 0.6;
+        }
+
+        private static double ClampVolumeNormalizationLoudness(double loudness)
+        {
+            return Math.Max(-20d, Math.Min(-5d, loudness));
         }
     }
 }

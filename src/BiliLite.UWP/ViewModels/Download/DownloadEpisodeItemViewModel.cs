@@ -1,4 +1,5 @@
-﻿using BiliLite.ViewModels.Common;
+using BiliLite.ViewModels.Common;
+using PropertyChanged;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 
@@ -22,5 +23,34 @@ namespace BiliLite.ViewModels.Download
 
         public string ErrorMessage { get; set; }
         public bool IsPreview { get; set; } = false;
+
+        /// <summary>
+        /// 添加下载时的状态文案，用于右下角进度悬浮窗
+        /// </summary>
+        [DependsOn(nameof(State), nameof(ErrorMessage))]
+        public string StateText
+        {
+            get
+            {
+                switch (State)
+                {
+                    case 0:
+                        return "等待中";
+                    case 1:
+                        return "读取地址中";
+                    case 2:
+                        return "已加入下载列表";
+                    case 3:
+                        return "已下载，跳过";
+                    case 99:
+                        return string.IsNullOrEmpty(ErrorMessage) ? "添加失败" : $"添加失败：{ErrorMessage}";
+                    default:
+                        return string.Empty;
+                }
+            }
+        }
+
+        [DependsOn(nameof(State))]
+        public bool IsStateError => State == 99;
     }
 }
