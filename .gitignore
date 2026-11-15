@@ -340,3 +340,4 @@ ASALocalRun/
 healthchecksdb
 /src/BiliLite.UWP/Assets/ShakaPlayer
 .nuget/nuget.exe
+.github/instructions/

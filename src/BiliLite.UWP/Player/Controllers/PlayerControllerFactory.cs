@@ -9,7 +9,8 @@ namespace BiliLite.Player.Controllers
         {
             var createPlayerControllerMap = new Dictionary<PlayerType, Func<BasePlayerController>>()
             {
-                { PlayerType.Live, () => new LivePlayerController() }
+                { PlayerType.Live, () => new LivePlayerController() },
+                { PlayerType.Video, () => new VideoPlayerController() }
             };
             var success = createPlayerControllerMap.TryGetValue(type, out var createPlayerControllerAction);
             return !success ? null : createPlayerControllerAction();

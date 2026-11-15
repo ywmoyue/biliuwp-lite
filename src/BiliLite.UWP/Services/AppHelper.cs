@@ -10,6 +10,8 @@ using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Download;
 using BiliLite.Models.Common.Home;
+using System.IO;
+using System.Threading;
 
 namespace BiliLite.Services
 {
@@ -140,6 +142,76 @@ namespace BiliLite.Services
                 logger.Log("启动视频导出进程失败", LogType.Error, ex);
                 NotificationShowExtensions.ShowMessageToast("启动导出进程失败，已记录错误");
             }
+        }
+
+        public static async Task<string> NormalizeAudioWithFfmpegAsync(string inputFile, double targetLufs,
+            CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrEmpty(inputFile) || !File.Exists(inputFile))
+            {
+                return null;
+            }
+
+            var operationId = Guid.NewGuid().ToString("N");
+            var resultKey = $"AudioNormalizeResult_{operationId}";
+
+            var payload = JsonConvert.SerializeObject(new
+            {
+                operationId,
+                inputFile,
+                targetLufs
+            });
+
+            ApplicationData.Current.LocalSettings.Values["AudioNormalizeRequest"] = payload;
+            ApplicationData.Current.LocalSettings.Values.Remove(resultKey);
+
+            try
+            {
+                await Windows.ApplicationModel.FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+            }
+            catch (Exception ex)
+            {
+                logger.Warn("Launch fulltrust process for audio normalization failed", ex);
+                return null;
+            }
+
+            var timeoutAt = DateTime.UtcNow.AddSeconds(90);
+            while (DateTime.UtcNow < timeoutAt)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                var resultStr = ApplicationData.Current.LocalSettings.Values[resultKey] as string;
+                if (!string.IsNullOrWhiteSpace(resultStr))
+                {
+                    ApplicationData.Current.LocalSettings.Values.Remove(resultKey);
+                    try
+                    {
+                        var result = JsonConvert.DeserializeAnonymousType(resultStr, new
+                        {
+                            success = false,
+                            outputFile = string.Empty,
+                            error = string.Empty
+                        });
+
+                        if (result?.success == true && !string.IsNullOrWhiteSpace(result.outputFile) && File.Exists(result.outputFile))
+                        {
+                            return result.outputFile;
+                        }
+
+                        logger.Warn($"Audio normalization failed in fulltrust process: {result?.error}");
+                        return null;
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Warn("Parse audio normalization result failed", ex);
+                        return null;
+                    }
+                }
+
+                await Task.Delay(250, cancellationToken);
+            }
+
+            logger.Warn("Audio normalization timeout");
+            return null;
         }
     }
 }
