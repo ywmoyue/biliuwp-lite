@@ -606,6 +606,12 @@ namespace BiliLite.Player
                 var canStartPlayback = m_realPlayInfo?.IsAutoPlay == true || !m_playerController.PauseState.IsPaused;
                 if (!canStartPlayback)
                 {
+                    // 不起播也必须收尾：缓冲遮罩无条件收起，并把播放状态从缓冲收回到可播态。
+                    // 否则状态机会永久停留在缓冲态（画面已可播/已在播，中间的“正在缓冲”转圈却一直不消失）。
+                    _logger.Debug(
+                        $"VideoPlayer.SubPlayer_BufferingEnded: keep paused, settle play state, isAutoPlay={m_realPlayInfo?.IsAutoPlay}, keepPausedAfterSeek={m_keepPausedAfterSeek}");
+                    EmitBufferingChanged(false);
+                    m_playerController.SettlePlayStateToPlaying();
                     m_keepPausedAfterSeek = false;
                     return;
                 }
