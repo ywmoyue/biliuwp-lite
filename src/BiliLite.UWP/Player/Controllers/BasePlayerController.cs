@@ -125,6 +125,21 @@ namespace BiliLite.Player.Controllers
             await Player.SetMuted(muted);
         }
 
+        /// <summary>
+        /// 媒体已确认可播、但不应该驱动底层起播时（自动播放关闭、暂停态拖动进度），
+        /// 只把播放状态从缓冲收回到可播态，不调用底层 Play()。
+        /// 若不做这一步，状态机会永久停留在缓冲态：缓冲遮罩不消失，后续 BufferingStarted 也会被吞掉。
+        /// </summary>
+        public void SettlePlayStateToPlaying()
+        {
+            if (PlayState?.IsBuffering != true)
+            {
+                return;
+            }
+
+            m_playStateHandler.ChangeToPlaying();
+        }
+
         public void PushError(PlayerException exception)
         {
             if (exception == null)
