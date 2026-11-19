@@ -6,6 +6,7 @@ using BiliLite.Models.Common.Download;
 using BiliLite.Models.Download;
 using BiliLite.ViewModels.Download;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +15,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Windows.UI.Xaml.Controls;
 
 namespace BiliLite.Services
 {
@@ -56,6 +56,8 @@ namespace BiliLite.Services
             var isBatch = records.Count > 1;
 
             var dialog = App.ServiceProvider.GetRequiredService<VideoExportOptionsDialog>();
+            // WinUI3 的 ContentDialog 必须挂到 XamlRoot 上才能弹出
+            dialog.XamlRoot = App.MainWindow.Content.XamlRoot;
             var first = records[0];
             dialog.LoadOptions(LoadLastOptions(), first.VideoOptions, first.AudioOptions,
                 first.Item.SubtitlePath ?? new List<DownloadSubtitleInfo>(), isBatch);
@@ -151,11 +153,10 @@ namespace BiliLite.Services
 
         private static async Task<StorageFolder> PickOutputFolder()
         {
-            var picker = new FolderPicker
-            {
-                SuggestedStartLocation = PickerLocationId.Downloads,
-                ViewMode = PickerViewMode.List,
-            };
+            // WinUI3 桌面的 FolderPicker 必须先绑定窗口句柄，否则 PickSingleFolderAsync 会抛 COMException
+            var picker = FileExtensions.GetFolderPicker();
+            picker.SuggestedStartLocation = PickerLocationId.Downloads;
+            picker.ViewMode = PickerViewMode.List;
             picker.FileTypeFilter.Add("*");
             return await picker.PickSingleFolderAsync();
         }

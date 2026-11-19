@@ -1,12 +1,12 @@
 using BiliLite.ViewModels.Download;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -28,12 +28,15 @@ namespace BiliLite.Controls
         public DownloadAddToast()
         {
             InitializeComponent();
+            // WinUI3 没有 Window.Current：弹层的 XamlRoot 必须显式取自窗口，否则 Popup 不会显示
+            var window = App.MainWindow;
             m_popup = new Popup
             {
+                XamlRoot = window.Content.XamlRoot,
                 Child = this
             };
-            Width = Window.Current.Bounds.Width;
-            Height = Window.Current.Bounds.Height;
+            Width = window.Bounds.Width;
+            Height = window.Bounds.Height;
             Loaded += OnLoaded;
             Unloaded += OnUnloaded;
         }
@@ -105,15 +108,15 @@ namespace BiliLite.Controls
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            Window.Current.SizeChanged += Current_SizeChanged;
+            App.MainWindow.SizeChanged += Current_SizeChanged;
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
-            Window.Current.SizeChanged -= Current_SizeChanged;
+            App.MainWindow.SizeChanged -= Current_SizeChanged;
         }
 
-        private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
+        private void Current_SizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
             Width = e.Size.Width;
             Height = e.Size.Height;
