@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using System.Timers;
 using Windows.UI.Core;
 using BiliLite.Pages;
+using Microsoft.UI.Dispatching;
 using BiliLite.Extensions;
-
 namespace BiliLite.Models.Functions
 {
     public class PositionBackPressShortcutFunction : BaseShortcutFunction
@@ -17,7 +17,7 @@ namespace BiliLite.Models.Functions
             var timer = new Timer(100);
             timer.Elapsed += (sender, e) =>
             {
-                page.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                _ = page.DispatcherQueue.RunAsync(DispatcherQueuePriority.Normal, () =>
                 {
                     page.PositionBack();
                 });

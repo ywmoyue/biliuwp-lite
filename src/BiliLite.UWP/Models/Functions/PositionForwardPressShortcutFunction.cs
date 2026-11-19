@@ -1,4 +1,5 @@
 using System;
+using Microsoft.UI.Dispatching;
 using BiliLite.Extensions;
 using BiliLite.Pages;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ namespace BiliLite.Models.Functions
             var elapsedTimes = 0;
             timer.Elapsed += (sender, e) =>
             {
-                page.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                _ = page.DispatcherQueue.RunAsync(DispatcherQueuePriority.Normal, () =>
                 {
                     // 根据档位设置步进时间
                     SetStepTimeBasedOnPosition();

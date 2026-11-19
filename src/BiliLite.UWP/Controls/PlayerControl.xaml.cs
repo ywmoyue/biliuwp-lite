@@ -2750,7 +2750,7 @@ namespace BiliLite.Controls
 
         private void Player_PlayStateChanged(object sender, PlayState e)
         {
-            if (!Dispatcher.HasThreadAccess)
+            if (!DispatcherQueue.HasThreadAccess)
             {
                 _ = DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () => Player_PlayStateChanged(sender, e));
                 return;
@@ -2826,7 +2826,7 @@ namespace BiliLite.Controls
 
         private void RefreshBufferingUi(bool force = false)
         {
-            if (!Dispatcher.HasThreadAccess)
+            if (!DispatcherQueue.HasThreadAccess)
             {
                 _ = DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () => RefreshBufferingUi(force));
                 return;
@@ -2900,7 +2900,7 @@ namespace BiliLite.Controls
         {
             PlayStateChangedV2?.Invoke(this, e);
 
-            if (Dispatcher.HasThreadAccess)
+            if (DispatcherQueue.HasThreadAccess)
             {
                 m_viewModel.CurrentPlayState = e.NewState;
             }
@@ -2927,7 +2927,7 @@ namespace BiliLite.Controls
             if (e.OldState?.IsLoading == true && !e.NewState.IsLoading)
             {
                 var duration = GetCurrentDuration();
-                if (Dispatcher.HasThreadAccess)
+                if (DispatcherQueue.HasThreadAccess)
                 {
                     m_viewModel.Duration = duration;
                 }
@@ -3013,7 +3013,7 @@ namespace BiliLite.Controls
             var seek = m_pendingSeekPosition;
             m_pendingSeekPosition = -1;
 
-            if (Dispatcher.HasThreadAccess)
+            if (DispatcherQueue.HasThreadAccess)
             {
                 m_viewModel.Position = seek;
             }
@@ -3059,7 +3059,7 @@ namespace BiliLite.Controls
 
         private Task RunOnUiThreadAsync(Func<Task> action)
         {
-            if (Dispatcher.HasThreadAccess)
+            if (DispatcherQueue.HasThreadAccess)
             {
                 return action();
             }
@@ -3142,7 +3142,7 @@ namespace BiliLite.Controls
         private void PlayerController_MediaInfosUpdated(object sender, MediaInfo e)
         {
             var text = e?.ToString() ?? string.Empty;
-            if (Dispatcher.HasThreadAccess)
+            if (DispatcherQueue.HasThreadAccess)
             {
                 txtInfo.Text = text;
                 return;

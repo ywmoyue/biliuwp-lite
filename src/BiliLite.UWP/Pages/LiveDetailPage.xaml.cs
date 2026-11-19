@@ -1,4 +1,4 @@
-﻿using BiliLite.Controls;
+using BiliLite.Controls;
 using BiliLite.Converters;
 using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
@@ -29,6 +29,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using System;
+using Microsoft.UI.Dispatching;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -456,7 +457,7 @@ namespace BiliLite.Pages
 
         private async Task MediaFailed(PlayerException exception)
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            await DispatcherQueue.RunAsync(DispatcherQueuePriority.Normal, async () =>
             {
                 logger.Log("直播加载失败", LogType.Error, new Exception(exception.Description));
                 await NotificationShowExtensions.ShowMessageDialog($"啊，直播加载失败了\r\n错误信息:{exception.Description}\r\n请尝试在直播设置中打开/关闭硬解试试", "播放失败");

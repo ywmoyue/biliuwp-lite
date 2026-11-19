@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions.Notifications;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Pages;
 using Flurl.Http;
@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using Microsoft.UI.Dispatching;
+using BiliLite.Extensions;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -251,7 +253,7 @@ namespace BiliLite.Services
             {
                 var mainPage = App.ServiceProvider.GetRequiredService<IMainPage>();
                 var mainPageObj = mainPage as Page;
-                mainPageObj.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                _ = mainPageObj.DispatcherQueue.RunAsync(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
                 {
                     if (msg.Action == "ShowMessageToast")
                     {

@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions;
+using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Live;
@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
 using System;
+using Microsoft.UI.Dispatching;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -71,7 +72,7 @@ namespace BiliLite.ViewModels.Live
 
         private async void AnchorLottery_Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await App.MainWindow.DispatcherQueue.RunAsync(DispatcherQueuePriority.Normal, () =>
             {
                 if (AnchorLotteryInfo == null) return;
 
@@ -101,7 +102,7 @@ namespace BiliLite.ViewModels.Live
 
         private async void RedPocket_Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await App.MainWindow.DispatcherQueue.RunAsync(DispatcherQueuePriority.Normal, () =>
             {
                 if (RedPocketLotteryInfo == null) return;
 

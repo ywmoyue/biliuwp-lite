@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions;
+using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Common;
@@ -16,6 +16,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
 using System;
+using Microsoft.UI.Dispatching;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -350,7 +351,7 @@ namespace BiliLite.ViewModels.Live
                 var startTime = TimeExtensions.TimestampToDatetime(LiveInfo.RoomInfo.LiveStartTime);
                 var ts = DateTime.Now - startTime;
 
-                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                await App.MainWindow.DispatcherQueue.RunAsync(DispatcherQueuePriority.Normal, () =>
                 {
                     LiveTime = ts.ToString(@"hh\:mm\:ss");
                 });
@@ -365,7 +366,7 @@ namespace BiliLite.ViewModels.Live
         {
             try
             {
-                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                await App.MainWindow.DispatcherQueue.RunAsync(DispatcherQueuePriority.Normal, () =>
                 {
                     for (var i = 0; i < SuperChats.Count; i++)
                     {
@@ -476,7 +477,7 @@ namespace BiliLite.ViewModels.Live
 
         private async void Timer_box_Elapsed(object sender, ElapsedEventArgs e)
         {
-            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            await App.MainWindow.DispatcherQueue.RunAsync(DispatcherQueuePriority.Normal, async () =>
             {
                 if (DateTime.Now >= freeSilverTime)
                 {
@@ -1473,7 +1474,7 @@ namespace BiliLite.ViewModels.Live
         {
             Live = false;
             m_timerLiveTime.Stop();
-            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await App.MainWindow.DispatcherQueue.RunAsync(DispatcherQueuePriority.Normal, () =>
             {
                 LiveTime = "未开播";
             });
