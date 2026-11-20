@@ -896,7 +896,14 @@ namespace BiliLite.Player.SubPlayers
             byte[] result = null;
             await RunOnUiThreadAsync(async () =>
             {
-                result = await VideoPlayer.RenderElementToPngBytesAsync(m_playerElement, 96);
+                // 视频画面由合成器渲染，RenderTargetBitmap 只会拿到黑图，优先走 MediaPlayer 帧服务模式
+                result = await VideoPlayer.CaptureMediaPlayerFrameToPngBytesAsync(m_mediaPlayer,
+                    m_playerElement?.ActualWidth ?? 0, m_playerElement?.ActualHeight ?? 0);
+                if (result == null)
+                {
+                    _logger.Warn("DashNative 帧捕获失败，回退到 RenderTargetBitmap（画面可能为黑图）");
+                    result = await VideoPlayer.RenderElementToPngBytesAsync(m_playerElement, 96);
+                }
             });
             return result;
         }

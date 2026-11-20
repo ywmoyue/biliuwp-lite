@@ -3266,23 +3266,22 @@ namespace BiliLite.Controls
         {
             try
             {
-                string fileName = DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
-                StorageFolder folder = await ScreenshotHelper.GetScreenshotFolder();
-                StorageFile saveFile = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
-
+                // 先截图再落盘：目录不可用时也能保证拿到图像，保存交给 ScreenshotHelper 兜底
                 var imageBytes = await m_videoPlayer.CaptureAsync();
                 if (imageBytes == null || imageBytes.Length == 0)
                 {
                     throw new Exception("截图数据为空");
                 }
 
-                await FileIO.WriteBytesAsync(saveFile, imageBytes);
-                this.ShowMessageToastV2("截图已经保存至图片库");
+                var fileName = DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
+                var savedPath = await ScreenshotHelper.SaveScreenshotAsync(fileName, imageBytes);
+                _logger.Info($"截图已保存: {savedPath}");
+                this.ShowMessageToastV2($"截图已保存: {savedPath}");
             }
             catch (Exception ex)
             {
                 _logger.Error("截图失败", ex);
-                this.ShowMessageToastV2("截图失败");
+                this.ShowMessageToastV2($"截图失败: {ex.Message}");
             }
         }
 

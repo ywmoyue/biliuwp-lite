@@ -301,7 +301,16 @@ namespace BiliLite.Player.SubPlayers
         public override async Task<byte[]> CaptureAsync()
         {
             EnsurePlayerElement();
-            return await VideoPlayer.RenderElementToPngBytesAsync(m_playerElement, 96);
+            // 视频画面由合成器渲染，RenderTargetBitmap 只会拿到黑图，优先走 MediaPlayer 帧服务模式
+            var result = await VideoPlayer.CaptureMediaPlayerFrameToPngBytesAsync(m_mediaPlayer,
+                m_playerElement?.ActualWidth ?? 0, m_playerElement?.ActualHeight ?? 0);
+            if (result == null)
+            {
+                _logger.Warn("Mp4Native 帧捕获失败，回退到 RenderTargetBitmap（画面可能为黑图）");
+                result = await VideoPlayer.RenderElementToPngBytesAsync(m_playerElement, 96);
+            }
+
+            return result;
         }
 
         private void MediaPlayerOnMediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)

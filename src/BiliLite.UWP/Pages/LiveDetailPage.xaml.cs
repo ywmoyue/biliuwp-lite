@@ -1085,40 +1085,28 @@ namespace BiliLite.Pages
         {
             try
             {
-                string fileName = DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
-                StorageFolder folder = await ScreenshotHelper.GetScreenshotFolder();
-                StorageFile saveFile = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
-
-                if (m_viewModel.ShowWebPlayer)
+                if (!m_viewModel.ShowWebPlayer)
                 {
-                    var imageData = await m_player.WebPlayer.CaptureVideo();
-                    await FileIO.WriteBytesAsync(saveFile, imageData);
-                    NotificationShowExtensions.ShowMessageToast("截图已保存");
-                    return;
+                    // RenderTargetBitmap 在 WinUI3 下不可用（原有实现即如此），保持未实现
+                    throw new NotImplementedException();
                 }
 
-                throw new NotImplementedException();
-                // RenderTargetBitmap bitmap = new RenderTargetBitmap();
-                // await bitmap.RenderAsync(playerElement);
-                // var pixelBuffer = await bitmap.GetPixelsAsync();
-                // using (var fileStream = await saveFile.OpenAsync(FileAccessMode.ReadWrite))
-                // {
-                //     var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
-                //     encoder.SetPixelData(BitmapPixelFormat.Bgra8,
-                //         BitmapAlphaMode.Ignore,
-                //          (uint)bitmap.PixelWidth,
-                //          (uint)bitmap.PixelHeight,
-                //          DisplayInformation.GetForCurrentView().LogicalDpi,
-                //          DisplayInformation.GetForCurrentView().LogicalDpi,
-                //          pixelBuffer.ToArray());
-                //     await encoder.FlushAsync();
-                // }
-                // NotificationShowExtensions.ShowMessageToast("截图已保存");
+                // 先截图再落盘：目录不可用时也能保证拿到图像，保存交给 ScreenshotHelper 兜底
+                var imageData = await m_player.WebPlayer.CaptureVideo();
+                if (imageData == null || imageData.Length == 0)
+                {
+                    throw new Exception("截图数据为空");
+                }
+
+                var fileName = DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
+                var savedPath = await ScreenshotHelper.SaveScreenshotAsync(fileName, imageData);
+                logger.Info($"直播截图已保存: {savedPath}");
+                NotificationShowExtensions.ShowMessageToast($"截图已保存: {savedPath}");
             }
             catch (Exception ex)
             {
                 logger.Error("截图失败", ex);
-                NotificationShowExtensions.ShowMessageToast("截图失败");
+                NotificationShowExtensions.ShowMessageToast($"截图失败: {ex.Message}");
             }
         }
 

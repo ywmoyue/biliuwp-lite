@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Graphics.Canvas;
 using Microsoft.UI.Dispatching;
 using System.Collections.Generic;
 using System.IO;
@@ -6,6 +7,8 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Graphics.Imaging;
+using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Microsoft.Extensions.DependencyInjection;
@@ -1072,6 +1075,111 @@ namespace BiliLite.Player
             dataReader.ReadBytes(bytes);
             dataReader.Dispose();
             return bytes;
+        }
+
+        /// <summary>
+        /// 抓取 MediaPlayer 当前画面并编码成 PNG。
+        /// 视频画面是合成器渲染的，RenderTargetBitmap 只能拿到黑图，必须走帧服务模式
+        /// （IsVideoFrameServerEnabled + VideoFrameAvailable + CopyFrameToVideoSurface）。
+        /// 帧服务模式期间 MediaPlayerElement 不会自动渲染，所以拿到帧后立刻恢复原状态。
+        /// </summary>
+        internal static async Task<byte[]> CaptureMediaPlayerFrameToPngBytesAsync(MediaPlayer mediaPlayer,
+            double fallbackWidth, double fallbackHeight)
+        {
+            if (mediaPlayer?.PlaybackSession == null)
+            {
+                return null;
+            }
+
+            var session = mediaPlayer.PlaybackSession;
+            var width = session.NaturalVideoWidth;
+            var height = session.NaturalVideoHeight;
+            if (width == 0 || height == 0)
+            {
+                width = (uint)Math.Max(0, Math.Round(fallbackWidth));
+                height = (uint)Math.Max(0, Math.Round(fallbackHeight));
+            }
+
+            if (width == 0 || height == 0)
+            {
+                _logger.Warn($"MediaPlayer 帧捕获跳过：拿不到画面尺寸 width={width}, height={height}");
+                return null;
+            }
+
+            var wasFrameServerEnabled = mediaPlayer.IsVideoFrameServerEnabled;
+            var completionSource = new TaskCompletionSource<bool>();
+            CanvasBitmap canvasBitmap = null;
+
+            void OnVideoFrameAvailable(MediaPlayer sender, object args)
+            {
+                if (completionSource.Task.IsCompleted)
+                {
+                    return;
+                }
+
+                try
+                {
+                    sender.CopyFrameToVideoSurface(canvasBitmap);
+                    completionSource.TrySetResult(true);
+                }
+                catch (Exception ex)
+                {
+                    completionSource.TrySetException(ex);
+                }
+            }
+
+            try
+            {
+                var canvasDevice = CanvasDevice.GetSharedDevice();
+                using var softwareBitmap = new SoftwareBitmap(BitmapPixelFormat.Rgba8, (int)width, (int)height,
+                    BitmapAlphaMode.Ignore);
+                canvasBitmap = CanvasBitmap.CreateFromSoftwareBitmap(canvasDevice, softwareBitmap);
+
+                mediaPlayer.VideoFrameAvailable += OnVideoFrameAvailable;
+                mediaPlayer.IsVideoFrameServerEnabled = true;
+
+                // 暂停时不产生新帧，主动步进一帧触发解码；播放中则等下一帧即可
+                if (session.PlaybackState != MediaPlaybackState.Playing)
+                {
+                    try
+                    {
+                        mediaPlayer.StepForwardOneFrame();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Warn("MediaPlayer 步进帧触发失败", ex);
+                    }
+                }
+
+                var completed = await Task.WhenAny(completionSource.Task, Task.Delay(2000));
+                if (completed != completionSource.Task ||
+                    completionSource.Task.Status != TaskStatus.RanToCompletion)
+                {
+                    _logger.Warn("MediaPlayer 帧捕获超时或失败");
+                    return null;
+                }
+
+                using var stream = new InMemoryRandomAccessStream();
+                await canvasBitmap.SaveAsync(stream, CanvasBitmapFileFormat.Png);
+                stream.Seek(0);
+                var bytes = new byte[stream.Size];
+                using var dataReader = new DataReader(stream.GetInputStreamAt(0));
+                await dataReader.LoadAsync((uint)stream.Size);
+                dataReader.ReadBytes(bytes);
+                _logger.Info($"MediaPlayer 帧捕获成功: {width}x{height}, {bytes.Length} bytes");
+                return bytes;
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn("MediaPlayer 帧捕获异常", ex);
+                return null;
+            }
+            finally
+            {
+                mediaPlayer.VideoFrameAvailable -= OnVideoFrameAvailable;
+                mediaPlayer.IsVideoFrameServerEnabled = wasFrameServerEnabled;
+                canvasBitmap?.Dispose();
+            }
         }
 
         internal static void ApplyStretch(MediaPlayerElement playerElement, RealPlayInfo playInfo, int mode)

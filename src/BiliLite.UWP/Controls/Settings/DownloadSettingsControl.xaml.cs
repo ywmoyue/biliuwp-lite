@@ -104,16 +104,24 @@ namespace BiliLite.Controls.Settings
             });
             ScreenshotChangePath.Click += new RoutedEventHandler(async (e, args) =>
             {
-                FolderPicker folderPicker = new FolderPicker();
-                folderPicker.FileTypeFilter.Add("*");
-                folderPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-                var folder = await folderPicker.PickSingleFolderAsync();
-                if (folder != null)
+                try
                 {
-                    var token = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(folder);
-                    SettingService.SetValue(SettingConstants.Player.SCREENSHOT_PATH, folder.Path);
-                    SettingService.SetValue(SettingConstants.Player.SCREENSHOT_PATH_TOKEN, token);
-                    txtScreenshotPath.Text = folder.Path;
+                    // WinUI3 桌面的 FolderPicker 必须先绑定窗口句柄，否则 PickSingleFolderAsync 抛 0x80070578
+                    FolderPicker folderPicker = FileExtensions.GetFolderPicker();
+                    folderPicker.FileTypeFilter.Add("*");
+                    folderPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+                    var folder = await folderPicker.PickSingleFolderAsync();
+                    if (folder != null)
+                    {
+                        var token = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(folder);
+                        SettingService.SetValue(SettingConstants.Player.SCREENSHOT_PATH, folder.Path);
+                        SettingService.SetValue(SettingConstants.Player.SCREENSHOT_PATH_TOKEN, token);
+                        txtScreenshotPath.Text = folder.Path;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    NotificationShowExtensions.ShowMessageToast($"修改截图保存目录失败: {ex.Message}");
                 }
             });
 
