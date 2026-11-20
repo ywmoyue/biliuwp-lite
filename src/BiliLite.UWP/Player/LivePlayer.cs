@@ -30,6 +30,8 @@ namespace BiliLite.Player
         private readonly ShakaPlayerControl m_shakaPlayerControl;
         private readonly MpegtsPlayerControl m_mpegtsPlayerControl;
         private int m_handlingPlayerError;
+        private RealPlayerType? m_pendingFallbackFrom;
+        private RealPlayerType? m_pendingFallbackTo;
 
         public LivePlayer(PlayerConfig playerConfig, MediaPlayerElement playerElement,
             BasePlayerController playerController, ShakaPlayerControl shakaPlayerControl,
@@ -40,21 +42,80 @@ namespace BiliLite.Player
             m_playerElement = playerElement;
             m_shakaPlayerControl = shakaPlayerControl;
             m_mpegtsPlayerControl = mpegtsPlayerControl;
-            if (playerConfig.PlayerType == RealPlayerType.FFmpegInterop)
+
+            var requestedType = playerConfig.PlayerType;
+            m_subPlayer = CreateSubPlayer(requestedType);
+
+            if (m_subPlayer == null)
             {
-                // winui3 分支未引入 FFmpegInteropX，LiveHlsPlayer 整文件已注释，这里同样跳过
-                //m_subPlayer = new LiveHlsPlayer(playerConfig, playerElement);
-            }
-            else if (playerConfig.PlayerType == RealPlayerType.ShakaPlayer)
-            {
-                m_subPlayer = new LiveShakaPlayer(playerConfig, shakaPlayerControl);
-            }
-            else if (playerConfig.PlayerType == RealPlayerType.Mpegts)
-            {
-                m_subPlayer = new LiveMpegtsPlayer(playerConfig, mpegtsPlayerControl);
+                // winui3 分支未引入 FFmpegInteropX（LiveHlsPlayer 整文件已注释）。
+                // 与「Native 高分辨率回落」同一套思路：先按回落链挑一个本分支可用的播放方式顶上，
+                // 保证页面构造不炸；等 Load() 时再通过 NeedReplacePlayer 让页面把配置切过来并重建播放器。
+                var fallbackChain = BuildFallbackChain();
+                var fallbackType = fallbackChain
+                    .Where(IsPlayerTypeAvailable)
+                    .DefaultIfEmpty(RealPlayerType.ShakaPlayer)
+                    .First();
+                _logger.Warn(
+                    $"直播播放方式不可用，回落: from={requestedType}, to={fallbackType}, chain={string.Join(",", fallbackChain)}");
+                m_subPlayer = CreateSubPlayer(fallbackType);
+                if (m_subPlayer != null)
+                {
+                    if (SettingService.GetValue(SettingConstants.Player.AUTO_FALLBACK,
+                            SettingConstants.Player.DEFAULT_AUTO_FALLBACK))
+                    {
+                        m_pendingFallbackFrom = requestedType;
+                        m_pendingFallbackTo = fallbackType;
+                    }
+                    else
+                    {
+                        _logger.Warn($"自动回落已关闭，配置保持 {requestedType}，本次改用 {fallbackType} 播放");
+                    }
+                }
             }
 
             InitPlayerEvents(m_subPlayer);
+        }
+
+        /// <summary>
+        /// 本分支可用的直播播放方式（winui3 没有 FFmpegInteropX）
+        /// </summary>
+        private static bool IsPlayerTypeAvailable(RealPlayerType playerType)
+        {
+            return playerType != RealPlayerType.FFmpegInterop;
+        }
+
+        private ISubPlayer CreateSubPlayer(RealPlayerType playerType)
+        {
+            return playerType switch
+            {
+                RealPlayerType.ShakaPlayer => new LiveShakaPlayer(m_playerConfig, m_shakaPlayerControl),
+                RealPlayerType.Mpegts => new LiveMpegtsPlayer(m_playerConfig, m_mpegtsPlayerControl),
+                _ => null,
+            };
+        }
+
+        /// <summary>
+        /// 与高分辨率 Native 回落同一套处理：记录日志并请求页面切换播放方式（页面会重建 LivePlayer）
+        /// </summary>
+        private void RequestFallbackPlayer(RealPlayerType currentType, RealPlayerType nextType, string reason)
+        {
+            var toastMessage = string.IsNullOrWhiteSpace(reason)
+                ? $"当前播放方式播放失败，正在从 {currentType} 切换到 {nextType}"
+                : $"{reason}，正在从 {currentType} 切换到 {nextType}";
+            _logger.Warn($"直播播放方式回落触发: from={currentType}, to={nextType}, reason={reason}");
+            RequestToast(toastMessage);
+            NeedReplacePlayer?.Invoke(this, nextType);
+        }
+
+        private void RequestToast(string message)
+        {
+            if (string.IsNullOrWhiteSpace(message))
+            {
+                return;
+            }
+
+            PlayerToastRequested?.Invoke(this, message);
         }
 
         public BaseWebPlayer WebPlayer
@@ -92,6 +153,11 @@ namespace BiliLite.Player
         public event EventHandler BufferingEnded;
         public event EventHandler<RealPlayerType> NeedReplacePlayer;
         public event EventHandler<double> PositionChanged;
+
+        /// <summary>
+        /// 播放器内部提示（与点播侧 PlayerControl.PlayerToastRequested 同一用途），由页面决定怎么显示
+        /// </summary>
+        public event EventHandler<string> PlayerToastRequested;
 
         private void InitPlayerEvents(ISubPlayer subPlayer)
         {
@@ -312,6 +378,18 @@ namespace BiliLite.Player
 
         public async Task Load()
         {
+            if (m_pendingFallbackTo.HasValue)
+            {
+                var from = m_pendingFallbackFrom ?? m_playerConfig.PlayerType;
+                var to = m_pendingFallbackTo.Value;
+                m_pendingFallbackFrom = null;
+                m_pendingFallbackTo = null;
+                // 与高分辨率 Native 回落一致：这里只发起切换请求，由页面切配置并重建播放器，
+                // 避免用回落类型静默播下去、配置与实际播放方式不一致
+                RequestFallbackPlayer(from, to, "当前播放方式不可用");
+                return;
+            }
+
             await m_subPlayer.SetRate(m_rate);
             await m_subPlayer.Load();
         }

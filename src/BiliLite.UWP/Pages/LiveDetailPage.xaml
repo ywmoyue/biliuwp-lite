@@ -1,4 +1,4 @@
-﻿<local:BasePage
+<local:BasePage
     x:Class="BiliLite.Pages.LiveDetailPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -305,6 +305,8 @@
                     <Grid Visibility="{x:Bind m_viewModel.ShowCanvas2D}" >
                         <canvas:CanvasAnimatedControl x:Name="DanmakuCanvas" />
                     </Grid>
+                    <!--  播放器内部 Toast 容器（与点播 PlayerControl.ToolTipContainer 同用途）  -->
+                    <Canvas x:Name="PlayerToastContainer" IsHitTestVisible="False" />
                     <!--  亮度  -->
                     <Grid
                         x:Name="BrightnessShield"

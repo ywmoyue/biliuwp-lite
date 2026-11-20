@@ -1,11 +1,11 @@
 ﻿using BiliLite.Controls;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Timers;
-using Windows.UI.Core;
-using Microsoft.UI.Xaml.Controls;
 using BiliLite.Models.Common.Player;
 using Microsoft.UI.Dispatching;
 
@@ -13,7 +13,12 @@ namespace BiliLite.Services
 {
     public class PlayerToastService
     {
+        /// <summary>
+        /// 仅点播播放器有跳转能力（SponsorBlock 的跳过按钮用），直播页没有
+        /// </summary>
         private PlayerControl m_playerControl;
+        private FrameworkElement m_playerHost;
+        private Canvas m_toastContainer;
         private int[] m_bottomList = new[] { 170, 240, 310, 380, 450, 520 };
         private readonly Dictionary<string, PlayerToast> m_showPlayerToasts = new Dictionary<string, PlayerToast>();
         private readonly Dictionary<string, Timer> m_showPlayerToastTimers = new Dictionary<string, Timer>();
@@ -33,6 +38,17 @@ namespace BiliLite.Services
         public void Init(PlayerControl control)
         {
             m_playerControl = control;
+            m_playerHost = control;
+            m_toastContainer = control.PlayerToastContainer;
+        }
+
+        /// <summary>
+        /// 非 PlayerControl 宿主（例如直播页）：只需要一个高度参照元素和一个 Canvas 容器
+        /// </summary>
+        public void Init(FrameworkElement host, Canvas container)
+        {
+            m_playerHost = host;
+            m_toastContainer = container;
         }
 
         public async void KeepStart(string key, string msg)
@@ -49,22 +65,22 @@ namespace BiliLite.Services
             newToast.Text = msg;
             Canvas.SetLeft(newToast, 0);
             double distanceFromBottom = m_bottomList[m_showPlayerToasts.Count];
-            while (m_playerControl.ActualHeight == 0)
+            while (m_playerHost.ActualHeight == 0)
             {
                 await Task.Delay(500);
             }
 
-            Canvas.SetTop(newToast, m_playerControl.ActualHeight - distanceFromBottom);
+            Canvas.SetTop(newToast, m_playerHost.ActualHeight - distanceFromBottom);
 
             m_showPlayerToasts.Add(key, newToast);
-            m_playerControl.PlayerToastContainer.Children.Add(newToast);
+            m_toastContainer.Children.Add(newToast);
             newToast.Show();
         }
 
         public async void KeepClose(string key)
         {
             if (!m_showPlayerToasts.TryGetValue(key, out var toast)) return;
-            m_playerControl.PlayerToastContainer.Children.Remove(toast);
+            m_toastContainer.Children.Remove(toast);
             m_showPlayerToasts.Remove(key);
         }
 
@@ -109,19 +125,25 @@ namespace BiliLite.Services
                 newToast.Width = 300;
                 if (showSkipButton) newToast.ShowSkipButton = true;
                 newToast.IconBrush = seg.Brush;
-                newToast.SkipButtonClick += (_, _) => m_playerControl.SetPosition(seg.End);
+                newToast.SkipButtonClick += (_, _) =>
+                {
+                    if (m_playerHost is PlayerControl playerControl)
+                    {
+                        playerControl.SetPosition(seg.End);
+                    }
+                };
             }
 
             Canvas.SetLeft(newToast, 0);
             double distanceFromBottom = m_bottomList[m_showPlayerToasts.Count];
-            while (m_playerControl.ActualHeight == 0)
+            while (m_playerHost.ActualHeight == 0)
             {
                 await Task.Delay(500);
             }
-            Canvas.SetTop(newToast, m_playerControl.ActualHeight - distanceFromBottom);
+            Canvas.SetTop(newToast, m_playerHost.ActualHeight - distanceFromBottom);
 
             m_showPlayerToasts.Add(key, newToast);
-            m_playerControl.PlayerToastContainer.Children.Add(newToast);
+            m_toastContainer.Children.Add(newToast);
             newToast.Show();
 
             var newTimer = new Timer();
@@ -149,10 +171,10 @@ namespace BiliLite.Services
 
         public async Task Hide(string key, PlayerToast toast, Timer timer)
         {
-            m_playerControl.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () =>
+            m_playerHost.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () =>
             {
                 timer.Stop();
-                m_playerControl.PlayerToastContainer.Children.Remove(toast);
+                m_toastContainer.Children.Remove(toast);
                 m_showPlayerToasts.Remove(key);
                 m_showPlayerToastTimers.Remove(key);
             });

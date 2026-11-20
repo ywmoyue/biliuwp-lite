@@ -52,6 +52,7 @@ namespace BiliLite.Pages
     public sealed partial class LiveDetailPage : BasePage, IPlayPage, IUpdatePivotLayout
     {
         private static readonly ILogger logger = GlobalLogger.FromCurrentType();
+        private readonly PlayerToastService m_playerToastService;
 
         private readonly BasePlayerController m_playerController;
         private LivePlayer m_player;
@@ -80,6 +81,10 @@ namespace BiliLite.Pages
             m_viewModel = new LiveDetailPageViewModel();
             DataContext = m_viewModel;
             this.InitializeComponent();
+
+            // 与点播 PlayerControl 一致：播放器内部提示走 PlayerToastService，挂在播放器区域上
+            m_playerToastService = App.ServiceProvider.GetRequiredService<PlayerToastService>();
+            m_playerToastService.Init(PlayerView, PlayerToastContainer);
 
             m_playerConfig = new PlayerConfig();
             m_realPlayInfo = new RealPlayInfo();
@@ -345,6 +350,7 @@ namespace BiliLite.Pages
             m_playerController.ScreenStateChanged += PlayerController_ScreenStateChanged;
             m_player.ErrorOccurred += Player_ErrorOccurred;
             m_player.NeedReplacePlayer += Player_NeedReplacePlayer;
+            m_player.PlayerToastRequested += Player_PlayerToastRequested;
             m_playerController.MediaInfosUpdated += PlayerController_MediaInfosUpdated;
         }
 
@@ -360,6 +366,7 @@ namespace BiliLite.Pages
             {
                 m_player.ErrorOccurred -= Player_ErrorOccurred;
                 m_player.NeedReplacePlayer -= Player_NeedReplacePlayer;
+                m_player.PlayerToastRequested -= Player_PlayerToastRequested;
             }
         }
 
@@ -368,14 +375,37 @@ namespace BiliLite.Pages
             await m_player.UnLoad();
             m_player.ErrorOccurred -= Player_ErrorOccurred;
             m_player.NeedReplacePlayer -= Player_NeedReplacePlayer;
+            m_player.PlayerToastRequested -= Player_PlayerToastRequested;
             m_playerConfig.PlayerType = e;
             m_realPlayInfo.PreferredPlayerType = e;
             m_realPlayInfo.FallbackPlayerTypes = BuildLiveFallbackChain(e);
+            m_viewModel.RealPlayerType = e;
             m_player = new LivePlayer(m_playerConfig, playerElement, m_playerController, ShakaPlayer, MpegtsPlayer);
             m_playerController.SetPlayer(m_player);
             m_player.SetRealPlayInfo(m_realPlayInfo);
             m_player.ErrorOccurred += Player_ErrorOccurred;
             m_player.NeedReplacePlayer += Player_NeedReplacePlayer;
+            m_player.PlayerToastRequested += Player_PlayerToastRequested;
+
+            // 与点播侧 PlayerControl.VideoPlayer_NeedReplacePlayer 一致：重建播放器后重新走 Stop -> Load，
+            // 否则新播放器不会起播（页面能打开但一直没有画面）
+            await m_playerController.PlayState.Stop();
+            await m_playerController.PlayState.Load();
+        }
+
+        /// <summary>
+        /// 播放器内部提示（回落切换、缓冲提示等），与点播侧 PlayerControl.VideoPlayer_PlayerToastRequested 一致
+        /// </summary>
+        private void Player_PlayerToastRequested(object sender, string message)
+        {
+            if (string.IsNullOrWhiteSpace(message))
+            {
+                return;
+            }
+
+            logger.Info($"播放器内部Toast: {message}");
+            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal,
+                () => m_playerToastService?.Show(PlayerToastService.MSG_KEY, message));
         }
 
         private async void PlayerController_MediaInfosUpdated(object sender, Player.MediaInfos.MediaInfo e)
