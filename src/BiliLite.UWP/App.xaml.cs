@@ -15,6 +15,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Globalization;
 using Windows.Graphics.Display;
 using System.IO;
 
@@ -45,6 +46,8 @@ namespace BiliLite
             // RegisterExceptionHandlingSynchronizationContext();
 
             LogService.Init();
+            // 放在 InitializeComponent() 之前：App.xaml 里的资源一旦加载就按当时的语言解析了
+            SetPrimaryLanguage();
             RegisterService();
 
             var dir = AppContext.BaseDirectory;
@@ -55,6 +58,29 @@ namespace BiliLite
             OpenCCNET.ZhConverter.Initialize(dictDir, resDir);
 
             this.InitializeComponent();
+        }
+
+        /// <summary>
+        /// 强制把应用语言(以及由此决定的 XAML 文本语言/字体回退)钉在 zh-CN。
+        /// 应用只有中文界面，但安装包同时声明了 en 语言(见 Package.appxmanifest 的 x-generate
+        /// 与 Strings/en)，英文系统下应用语言会解析成 en-US，汉字在字体回退时会落到
+        /// 日文(Yu Gothic UI)/繁中(Microsoft JhengHei)等非中文字体上，表现为大量文本字体异常。
+        /// 必须在 InitializeComponent 之前调用，否则 App.xaml 里的资源已按旧语言加载。
+        /// </summary>
+        private static void SetPrimaryLanguage()
+        {
+            try
+            {
+                if (ApplicationLanguages.PrimaryLanguageOverride != "zh-CN")
+                {
+                    ApplicationLanguages.PrimaryLanguageOverride = "zh-CN";
+                }
+            }
+            catch (Exception ex)
+            {
+                // 无包标识(unpackaged)等情况下该属性不可用，忽略即可，不影响启动
+                logger.Log("设置应用语言为 zh-CN 失败", LogType.Error, ex);
+            }
         }
 
         private void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
