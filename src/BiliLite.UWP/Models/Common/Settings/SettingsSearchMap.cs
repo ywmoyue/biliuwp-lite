@@ -153,6 +153,7 @@ namespace BiliLite.Models.Common.Settings
             // ShortcutKeySettings
             { "快捷键自定义", "ShortcutKeySettings:ShortcutKeySettingPanel" },
             { "选择鼠标中键/侧键行为", "ShortcutKeySettings:cbMouseMiddleAction" },
+            { "滚轮调节音量", "ShortcutKeySettings:swWheelVolume" },
         };
 
         public static IReadOnlyDictionary<string, string> Map => _map;

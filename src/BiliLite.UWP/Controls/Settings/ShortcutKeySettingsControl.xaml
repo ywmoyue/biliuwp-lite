@@ -41,6 +41,16 @@
             </ComboBox>
         </controls:SettingsCard>
 
+        <controls:SettingsCard Description="鼠标在播放器上滚动滚轮时调节音量" Header="滚轮调节音量">
+            <controls:SettingsCard.HeaderIcon>
+                <font:FontAwesome Icon="Solid_Mouse" />
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch
+                x:Name="swWheelVolume"
+                Margin="0,-5,-88,-5"
+                Style="{StaticResource DefaultToggleSwitchStyle}" />
+        </controls:SettingsCard>
+
         <Grid Margin="17,20,17,5">
             <TextBlock VerticalAlignment="Center">快捷键自定义</TextBlock>
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">

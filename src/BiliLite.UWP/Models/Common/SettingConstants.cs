@@ -1123,6 +1123,18 @@ namespace BiliLite.Models.Common
             public const double DEFAULT_PLAYER_VOLUME = 1.0;
 
             /// <summary>
+            /// 鼠标滚轮调节音量
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string ENABLE_MOUSE_WHEEL_VOLUME = "PlayerEnableMouseWheelVolume";
+
+            /// <summary>
+            /// 鼠标滚轮调节音量默认值
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_ENABLE_MOUSE_WHEEL_VOLUME = true;
+
+            /// <summary>
             /// 亮度
             /// </summary>
             [SettingKey(typeof(double))]

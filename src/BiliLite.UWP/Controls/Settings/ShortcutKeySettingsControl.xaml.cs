@@ -51,6 +51,17 @@ namespace BiliLite.Controls.Settings
                 });
             });
 
+            // 滚轮调节音量
+            swWheelVolume.IsOn = SettingService.GetValue(SettingConstants.Player.ENABLE_MOUSE_WHEEL_VOLUME,
+                SettingConstants.Player.DEFAULT_ENABLE_MOUSE_WHEEL_VOLUME);
+            swWheelVolume.Loaded += new RoutedEventHandler((sender, e) =>
+            {
+                swWheelVolume.Toggled += new RoutedEventHandler((obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.Player.ENABLE_MOUSE_WHEEL_VOLUME, swWheelVolume.IsOn);
+                });
+            });
+
             Loaded += ShortcutKeySettingsControl_Loaded;
         }
 

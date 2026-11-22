@@ -91,6 +91,12 @@ namespace BiliLite.Controls
         private static readonly TimeSpan BufferingUiUpdateInterval = TimeSpan.FromMilliseconds(120);
         private bool m_lockPlayerVolume;
         private bool m_updatingVolumeSlider;
+
+        /// <summary>
+        /// 鼠标滚轮每一格（120）调节的音量比例
+        /// </summary>
+        private const double WHEEL_VOLUME_STEP = 0.05;
+        private const int WHEEL_DELTA_UNIT = 120;
         private bool m_hasReportedHistory = false;
 
         private void UpdatePlayerHostVisibility(RealPlayerType playerType)
@@ -2494,14 +2500,23 @@ namespace BiliLite.Controls
             try
             {
                 var par = e.GetCurrentPoint(sender as Frame).Properties.PointerUpdateKind;
-                if (SettingService.GetValue(SettingConstants.UI.MOUSE_MIDDLE_ACTION, (int)MouseMiddleActions.Back) == (int)MouseMiddleActions.Back
-                && par == Microsoft.UI.Input.PointerUpdateKind.XButton1Pressed || par == Microsoft.UI.Input.PointerUpdateKind.MiddleButtonPressed)
+                var mouseMiddleAction = SettingService.GetValue(SettingConstants.UI.MOUSE_MIDDLE_ACTION, (int)MouseMiddleActions.Back);
+                if (mouseMiddleAction == (int)MouseMiddleActions.Back
+                    && (par == PointerUpdateKind.XButton1Pressed || par == PointerUpdateKind.MiddleButtonPressed))
                 {
                     ShowCursor();
                     //Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
                     MessageCenter.GoBack(this);
                     return;
                 }
+
+                // 中键/侧键未设置为返回时，播放器内不做任何处理
+                if (par == PointerUpdateKind.XButton1Pressed
+                    || par == PointerUpdateKind.MiddleButtonPressed)
+                {
+                    return;
+                }
+
                 var ps = e.GetIntermediatePoints(null);
                 if (ps != null && ps.Count > 0 && HandlingGesture != true)
                 {
@@ -2524,6 +2539,31 @@ namespace BiliLite.Controls
                 e.Handled = true;
                 gestureRecognizer.CompleteGesture();
             }
+        }
+
+        /// <summary>
+        /// 鼠标在播放器上滚动滚轮时调节音量
+        /// </summary>
+        private void Grid_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
+        {
+            if (m_videoPlayer == null) return;
+
+            if (!SettingService.GetValue(SettingConstants.Player.ENABLE_MOUSE_WHEEL_VOLUME,
+                    SettingConstants.Player.DEFAULT_ENABLE_MOUSE_WHEEL_VOLUME))
+            {
+                return;
+            }
+
+            var delta = e.GetCurrentPoint(this).Properties.MouseWheelDelta;
+            if (delta == 0) return;
+
+            UpdatePlayerVolume(m_videoPlayer.Volume + delta / (double)WHEEL_DELTA_UNIT * WHEEL_VOLUME_STEP);
+            var volume = m_videoPlayer.Volume;
+            m_playerToastService.Show(PlayerToastService.VOLUME_KEY,
+                volume > 0 ? "音量:" + volume.ToString("P") : "静音");
+
+            // 阻止滚轮继续冒泡到页面，避免同时滚动页面
+            e.Handled = true;
         }
 
         private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)
