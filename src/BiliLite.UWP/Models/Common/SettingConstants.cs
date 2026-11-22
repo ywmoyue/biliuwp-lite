@@ -1492,6 +1492,14 @@ namespace BiliLite.Models.Common
             public const string FILTER_RECOMMEND_LIVE = "FilterRecommendLive";
         }
 
+        public class Search
+        {
+            /// <summary>
+            /// 搜索历史关键字(运行时数据,不随设置导出)
+            /// </summary>
+            public const string SEARCH_HISTORY = "SearchHistoryKeywords";
+        }
+
         public class Roaming
         {
             /// <summary>
