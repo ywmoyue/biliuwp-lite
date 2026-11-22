@@ -46,8 +46,12 @@ try {
 catch {
     Write-Error "获取GitHub release信息失败: $_"
     # 检查是否是API限制且本地版本文件存在
-    if ($_.Exception.Response -and $_.Exception.Response.StatusCode -eq 403 -and 
-        $_.Exception.Message -like "*API rate limit*" -and 
+    # 路径一（原有判定）：异常消息里直接带 API rate limit
+    $isRateLimitByMessage = $_.Exception.Message -like "*API rate limit*"
+    # 路径二（新增判定）：GitHub 现在把限流说明放进了响应体，异常消息只剩本地化的状态行
+    $isRateLimitByResponseBody = "$($_.ErrorDetails.Message)$($_.Exception.Message)" -like "*API rate limit*"
+    if ($_.Exception.Response -and $_.Exception.Response.StatusCode -eq 403 -and
+        ($isRateLimitByMessage -or $isRateLimitByResponseBody) -and
         (Test-Path -Path $versionFile)) {
         Write-Warning "GitHub API限制，但本地版本文件存在，跳过更新"
         exit 0
