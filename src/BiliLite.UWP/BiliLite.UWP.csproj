@@ -147,6 +147,10 @@
     <Compile Include="Controls\Common\DanmakuListControl.xaml.cs">
       <DependentUpon>DanmakuListControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Search\SearchHistoryBehavior.cs" />
+    <Compile Include="Controls\Search\SearchHistoryPanel.xaml.cs">
+      <DependentUpon>SearchHistoryPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\Common\Player\PlayerOpenParam.cs" />
     <Compile Include="Models\Common\User\WatchLater\WatchlaterItemModel.cs" />
     <Compile Include="Models\Common\User\WatchLater\WatchlaterOwnerModel.cs" />
@@ -1344,6 +1348,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Common\PieControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Search\SearchHistoryPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
