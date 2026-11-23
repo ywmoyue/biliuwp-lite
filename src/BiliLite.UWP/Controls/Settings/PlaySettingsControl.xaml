@@ -88,6 +88,16 @@
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
+                <controls:SettingsCard Description="切换播放方式、自动回落已关闭时是否提示，提示中的 × 可单次关闭" Header="自动回落提示">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE7BA;" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <ToggleSwitch
+                        x:Name="swPlayerAutoFallbackTip"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
+                </controls:SettingsCard>
+
                 <controls:SettingsCard>
                     <controls:SettingsCard.Description>
                         <TextBlock HorizontalAlignment="Center">FFMpegInteropX 播放器设置</TextBlock>

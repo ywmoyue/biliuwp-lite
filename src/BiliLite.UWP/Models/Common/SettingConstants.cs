@@ -1037,6 +1037,18 @@ namespace BiliLite.Models.Common
             public const bool DEFAULT_AUTO_FALLBACK = true;
 
             /// <summary>
+            /// 自动回落相关提示（切换播放方式、自动回落已关闭）
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string AUTO_FALLBACK_TIP = "PlayerAutoFallbackTip";
+
+            /// <summary>
+            /// 默认显示自动回落相关提示
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_AUTO_FALLBACK_TIP = true;
+
+            /// <summary>
             /// 自动切换下一个视频
             /// </summary>
             [SettingKey(typeof(bool))]

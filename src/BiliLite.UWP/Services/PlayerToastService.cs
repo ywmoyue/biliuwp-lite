@@ -74,12 +74,16 @@ namespace BiliLite.Services
         /// <param name="msg">显示信息</param>
         /// <param name="showTime">显示时间(毫秒) 默认2000</param>
         /// <param name="seg">用于SponsorBlock功能，可选</param>
-        public async void Show(string key, string msg, long showTime = 2000, PlayerSkipItem seg = null, bool showSkipButton = false)
+        /// <param name="showSkipButton">是否显示「跳过」按钮</param>
+        /// <param name="showCloseButton">是否显示「关闭」按钮（仅关闭当前这次提示）</param>
+        public async void Show(string key, string msg, long showTime = 2000, PlayerSkipItem seg = null, bool showSkipButton = false,
+            bool showCloseButton = false)
         {
             var safeShowTime = NormalizeShowTime(showTime);
             if (m_showPlayerToasts.TryGetValue(key, out var toast))
             {
                 toast.Text = msg;
+                toast.ShowCloseButton = showCloseButton;
                 if (m_showPlayerToastTimers.TryGetValue(key, out var timer))
                 {
                     timer.Stop();
@@ -103,6 +107,7 @@ namespace BiliLite.Services
             newToast.Height = double.NaN;
             newToast.Width = IsLongMessageToast(key, msg) ? 360 : 200;
             newToast.Text = msg;
+            if (showCloseButton) newToast.ShowCloseButton = true;
             if (seg != null)
             {
                 newToast.Width = 300;

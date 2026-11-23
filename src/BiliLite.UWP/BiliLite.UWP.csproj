@@ -558,6 +558,7 @@
     <Compile Include="Models\Common\Player\PlayerError.cs" />
     <Compile Include="Models\Common\Player\BasePlayUrlInfo.cs" />
     <Compile Include="Models\Common\Player\RealPlayInfo.cs" />
+    <Compile Include="Models\Common\Player\PlayerToastMessage.cs" />
     <Compile Include="Models\Common\UserDynamic\IUserDynamicContentDisplayInfo.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicCtrlItem.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicDisplayTypesMap.cs" />
