@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions.Notifications;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Article;
 using BiliLite.Models.Common.User;
@@ -179,6 +179,33 @@ namespace BiliLite.Pages
                 page = typeof(WebPage),
                 parameters = $"https://message.bilibili.com/#whisper/mid{m_viewModel.Mid}"
             });
+        }
+
+        private async void BtnCreateShortcut_OnClick(object sender, RoutedEventArgs e)
+        {
+            var userSpaceInfo = m_viewModel.UserSpaceInfo;
+            if (userSpaceInfo == null || string.IsNullOrEmpty(userSpaceInfo.Face))
+            {
+                NotificationShowExtensions.ShowMessageToast("用户信息尚未加载完成");
+                return;
+            }
+
+            BtnCreateShortcut.IsEnabled = false;
+            try
+            {
+                var desktopShortcutService = App.ServiceProvider.GetRequiredService<DesktopShortcutService>();
+                var created = await desktopShortcutService.CreateUserSpaceShortcutAsync(
+                    m_viewModel.Mid ?? userSpaceInfo.Mid,
+                    userSpaceInfo.Name,
+                    userSpaceInfo.Face);
+                NotificationShowExtensions.ShowMessageToast(created
+                    ? "已创建桌面快捷方式"
+                    : "创建桌面快捷方式失败，详情见日志");
+            }
+            finally
+            {
+                BtnCreateShortcut.IsEnabled = true;
+            }
         }
 
         private void searchVideo_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)

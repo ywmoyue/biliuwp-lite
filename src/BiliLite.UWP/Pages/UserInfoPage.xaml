@@ -1,4 +1,4 @@
-﻿<local:BasePage
+<local:BasePage
     x:Class="BiliLite.Pages.UserInfoPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -789,6 +789,10 @@
                                             </Grid.RowDefinitions>
                                             <Grid Visibility="{x:Bind m_viewModel.NeedCaptcha, Mode=OneWay}" />
                                             <Grid Visibility="{x:Bind m_viewModel.NeedCaptcha, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
                                                 <Image
                                                     Width="340"
                                                     Height="100"
@@ -879,6 +883,43 @@
                                                             Text="{x:Bind Path=m_viewModel.UserSpaceInfo.Sign, Mode=OneWay}"
                                                             TextWrapping="Wrap" />
                                                     </StackPanel>
+                                                </Grid>
+
+                                                <!-- 卡片底部工具栏 -->
+                                                <Grid
+                                                    Grid.Row="1"
+                                                    Margin="12,10"
+                                                    ColumnSpacing="8">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Button
+                                                        x:Name="BtnCreateShortcut"
+                                                        Grid.Column="0"
+                                                        HorizontalAlignment="Stretch"
+                                                        Click="BtnCreateShortcut_OnClick">
+                                                        <StackPanel
+                                                            HorizontalAlignment="Center"
+                                                            Orientation="Horizontal"
+                                                            Spacing="6">
+                                                            <FontIcon FontSize="14" Glyph="&#xE718;" />
+                                                            <TextBlock FontSize="13" Text="桌面快捷方式" />
+                                                        </StackPanel>
+                                                    </Button>
+                                                    <Button
+                                                        Grid.Column="1"
+                                                        Click="BtnSetLocalAttention_OnClick"
+                                                        ToolTipService.ToolTip="设置本地关注">
+                                                        <FontIcon FontSize="14" Glyph="&#xE006;" />
+                                                    </Button>
+                                                    <Button
+                                                        Grid.Column="2"
+                                                        Click="BtnCancelLocalAttention_OnClick"
+                                                        ToolTipService.ToolTip="取消本地关注">
+                                                        <FontIcon FontSize="14" Glyph="&#xE00B;" />
+                                                    </Button>
                                                 </Grid>
                                             </Grid>
                                         </Grid>
