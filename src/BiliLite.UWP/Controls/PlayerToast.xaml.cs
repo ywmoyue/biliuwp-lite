@@ -31,6 +31,15 @@ namespace BiliLite.Controls
 
         public bool ShowSkipButton { get; set; } = false;
 
+        /// <summary>
+        /// 是否显示「关闭」按钮，仅关闭当前这一次提示
+        /// </summary>
+        public bool ShowCloseButton
+        {
+            get => BtnClose.Visibility == Visibility.Visible;
+            set => BtnClose.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+        }
+
         public SolidColorBrush IconBrush { get; set; }
 
         public bool ShowIcon => IconBrush != null && IconBrush != new SolidColorBrush(Colors.Transparent);
@@ -58,6 +67,11 @@ namespace BiliLite.Controls
         private async void SkipButton_OnClick(object sender, RoutedEventArgs e)
         {
             SkipButtonClick?.Invoke(this, EventArgs.Empty);
+            HideToast?.Invoke(sender, EventArgs.Empty);
+        }
+
+        private void CloseButton_OnClick(object sender, RoutedEventArgs e)
+        {
             HideToast?.Invoke(sender, EventArgs.Empty);
         }
     }

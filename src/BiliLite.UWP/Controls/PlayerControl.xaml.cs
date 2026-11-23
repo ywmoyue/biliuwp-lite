@@ -3158,17 +3158,18 @@ namespace BiliLite.Controls
             }
         }
 
-        private void VideoPlayer_PlayerToastRequested(object sender, string message)
+        private void VideoPlayer_PlayerToastRequested(object sender, PlayerToastMessage message)
         {
-            if (string.IsNullOrWhiteSpace(message))
+            if (message == null || string.IsNullOrWhiteSpace(message.Text))
             {
                 return;
             }
 
-            _logger.Info($"播放器内部Toast: {message}");
+            _logger.Info($"播放器内部Toast: {message.Text}");
             _ = RunOnUiThreadAsync(() =>
             {
-                m_playerToastService?.Show(PlayerToastService.MSG_KEY, message);
+                m_playerToastService?.Show(PlayerToastService.MSG_KEY, message.Text,
+                    showCloseButton: message.ShowCloseButton);
                 return Task.CompletedTask;
             });
         }
