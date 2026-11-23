@@ -1,9 +1,11 @@
-﻿using BiliLite.Extensions;
+using BiliLite.Controls.Dialogs;
+using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Download;
 using BiliLite.Models.Common.Video;
 using BiliLite.Models.Common.Video.PlayUrlInfos;
+using BiliLite.Models.Download;
 using BiliLite.Pages.Other;
 using BiliLite.Services;
 using BiliLite.Services.Interfaces;
@@ -306,71 +308,36 @@ namespace BiliLite.Pages
             });
         }
 
-        private void btnEpisodesOutput_Click(object sender, RoutedEventArgs e)
+        private async void btnEpisodesOutput_Click(object sender, RoutedEventArgs e)
         {
             var data = Pane.DataContext as DownloadedItem;
             var item = (sender as AppBarButton).DataContext as DownloadedSubItem;
-            OutputFile(data, item);
+            if (data == null || item == null) return;
+            await VideoExportHelper.ExportAsync(data, new List<DownloadedSubItem>() { item });
         }
 
-        private void btnMenuOutputFile_Click(object sender, RoutedEventArgs e)
+        private async void btnMenuOutputFile_Click(object sender, RoutedEventArgs e)
         {
             var data = (sender as MenuFlyoutItem).DataContext as DownloadedItem;
-            if (data.Epsidoes == null || data.Epsidoes.Count == 0)
+            if (data?.Epsidoes == null || data.Epsidoes.Count == 0)
             {
                 NotificationShowExtensions.ShowMessageToast("没有可以导出的视频");
                 return;
             }
-            if (data.Epsidoes.Count > 1)
-            {
-                NotificationShowExtensions.ShowMessageToast("多集视频，请选择指定集数导出");
-                Pane.DataContext = data;
-                splitView.IsPaneOpen = true;
-                return;
-            }
-            OutputFile(data, data.Epsidoes.First());
+            // 多集视频直接批量导出，不再要求逐集选择
+            await VideoExportHelper.ExportAsync(data, data.Epsidoes.ToList());
         }
 
-        private async void OutputFile(DownloadedItem data, DownloadedSubItem item)
+        private async void BtnOutputAll_OnClick(object sender, RoutedEventArgs e)
         {
-            List<string> subtitles = new List<string>();
-            //处理字幕
-            if (item.SubtitlePath != null && item.SubtitlePath.Count > 0)
+            var data = Pane.DataContext as DownloadedItem;
+            if (data?.Epsidoes == null || data.Epsidoes.Count == 0)
             {
-                try
-                {
-                    var toSimplified = SettingService.GetValue<bool>(SettingConstants.Player.TO_SIMPLIFIED, true);
-                    var folder = await StorageFolder.GetFolderFromPathAsync(item.FilePath);
-                    foreach (var subtitle in item.SubtitlePath)
-                    {
-                        var outSrtFile = await folder.CreateFileAsync(subtitle.Name + ".srt", CreationCollisionOption.ReplaceExisting);
-                        var subtitleFile = await StorageFile.GetFileFromPathAsync(Path.Combine(item.FilePath, subtitle.Url));
-                        var content = await FileIO.ReadTextAsync(subtitleFile);
-                        var result = content.CcConvertToSrt(toSimplified && subtitle.Name.Contains("繁体"));
-                        await FileIO.WriteTextAsync(outSrtFile, result);
-                        subtitles.Add(outSrtFile.Path);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    NotificationShowExtensions.ShowMessageToast("转换SRT字幕失败");
-                    logger.Log("转换字幕失败", LogType.Error, ex);
-                }
-
-            }
-
-            var savePicker = new Windows.Storage.Pickers.FileSavePicker();
-            savePicker.SuggestedStartLocation =
-                Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary;
-            savePicker.FileTypeChoices.Add("MKV", new List<string>() { ".mkv" });
-            var fileName = Regex.Replace(data.Title + "-" + item.Title, "[<>/\\\\|:\":?*]", "");
-            savePicker.SuggestedFileName = fileName;
-            var file = await savePicker.PickSaveFileAsync();
-            if (file == null)
+                NotificationShowExtensions.ShowMessageToast("没有可以导出的视频");
                 return;
-            await AppHelper.LaunchConverter(data.Title + "-" + item.Title, item.Paths, file.Path, subtitles, item.IsDash);
+            }
+            await VideoExportHelper.ExportAsync(data, data.Epsidoes.ToList());
         }
-
 
         private void SearchBox_OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
@@ -455,6 +422,47 @@ namespace BiliLite.Pages
         {
             if(await DownloadHelper.UpdateDanmaku(item.CID, item.EpisodeID, data.ID, data.ID, data.IsSeason))
                 NotificationShowExtensions.ShowMessageToast($"{item.Title}弹幕更新完成");
+        }
+
+        private void DownloadedCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            listDowned.SelectAll();
+        }
+
+        private void DownloadedCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            listDowned.SelectedItems.Clear();
+        }
+
+        private async void BtnDeleteDownloadedSelected_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (listDowned.SelectedItems.Count > 0)
+            {
+                if (!await NotificationShowExtensions.ShowMessageDialog("批量删除", $"确定要删除选中的{listDowned.SelectedItems.Count}个下载视频吗?\r\n文件将会被永久删除!"))
+                {
+                    return;
+                }
+                var items = new List<DownloadedItem>();
+                foreach (DownloadedItem item in listDowned.SelectedItems)
+                {
+                    items.Add(item);
+                }
+                foreach (var item in items)
+                {
+                    try
+                    {
+                        var folder = await StorageFolder.GetFolderFromPathAsync(item.Path);
+                        await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                        m_viewModel.DownloadedViewModels.Remove(item);
+                        m_downloadService.RemoveDbItem(item.ID);
+                    }
+                    catch (Exception ex)
+                    {
+                        NotificationShowExtensions.ShowMessageToast($"删除《{item.Title}》失败，请检查文件是否被占用");
+                        logger.Log("批量删除下载视频失败", LogType.Fatal, ex);
+                    }
+                }
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions;
+using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using Microsoft.UI.Xaml.Controls;
@@ -8,6 +8,7 @@ using System;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Controls;
 using BiliLite.Models.Common.Player;
@@ -21,6 +22,9 @@ public abstract class BaseWebPlayer : Grid, IDisposable
 {
     private bool m_hasLoaded = false;
     private bool m_webViewLoaded = false;
+    // 播放器就绪(LOADED)之前收到的进度请求先暂存，就绪后立刻补上，
+    // 否则恢复历史进度/切集续播的 seek 会被直接丢弃，导致从 0 秒开始播放。
+    private double m_pendingSeekPosition = double.NaN;
     private Grid m_gridElement;
     private const string BaseUrl = "https://www.bilibili.com";
     private const string DevBaseUrl = "http://www.bilibili.com";
@@ -29,6 +33,7 @@ public abstract class BaseWebPlayer : Grid, IDisposable
     private readonly SemaphoreSlim m_captureLock = new SemaphoreSlim(1, 1);
     private string m_localVideoLibsPath;
     private string m_localOldVideoLibsPath;
+    private Border m_loadingMask;
 
     private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
 
@@ -36,6 +41,15 @@ public abstract class BaseWebPlayer : Grid, IDisposable
     {
         m_gridElement = this;
         m_gridElement.Background = new SolidColorBrush(Colors.Black);
+        m_loadingMask = new Border
+        {
+            Background = new SolidColorBrush(Colors.Black),
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            Visibility = Visibility.Collapsed,
+            IsHitTestVisible = false,
+        };
+        m_gridElement.Children.Add(m_loadingMask);
     }
 
     public abstract string PlayerView { get; }
@@ -58,13 +72,51 @@ public abstract class BaseWebPlayer : Grid, IDisposable
 
     public event EventHandler<WebPlayerStatsUpdatedData> StatsUpdated;
 
+    /// <summary>
+    /// 设置 WebView2 环境变量，需在 EnsureCoreWebView2Async 之前调用。
+    /// </summary>
+    private static void ApplyWebView2EnvironmentVariables()
+    {
+        // UWP WebView2 不暴露 DefaultBackgroundColor/CoreWebView2Controller，使用环境变量设置透明底色。
+        // 该环境变量固定不可由设置修改。
+        Environment.SetEnvironmentVariable("WEBVIEW2_DEFAULT_BACKGROUND_COLOR", "00FFFFFF");
+
+        var environmentVariables = SettingService.GetValue(
+            SettingConstants.Player.WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES,
+            SettingConstants.Player.DEFAULT_WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES);
+        if (string.IsNullOrWhiteSpace(environmentVariables))
+        {
+            environmentVariables =
+                SettingConstants.Player.DEFAULT_WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES;
+        }
+
+        // 每行一个环境变量，格式为 名称=值，仅应用 WEBVIEW2_ 开头的变量；空行、注释行及格式不正确的行直接忽略。
+        foreach (var rawLine in environmentVariables.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
+        {
+            var line = rawLine.Trim();
+            if (line.Length == 0 || line.StartsWith("#")) continue;
+
+            var separatorIndex = line.IndexOf('=');
+            if (separatorIndex <= 0) continue;
+
+            var name = line.Substring(0, separatorIndex).Trim();
+            var value = line.Substring(separatorIndex + 1).Trim();
+            if (!name.StartsWith("WEBVIEW2_", StringComparison.OrdinalIgnoreCase)) continue;
+            if (name.Equals("WEBVIEW2_DEFAULT_BACKGROUND_COLOR", StringComparison.OrdinalIgnoreCase)) continue;
+
+            Environment.SetEnvironmentVariable(name, value);
+            _logger.Info($"设置 WebView2 环境变量：{name}={value}");
+        }
+    }
+
     private async Task InitWebView2()
     {
+        ApplyWebView2EnvironmentVariables();
         WebViewElement = new WebView2();
-        WebViewElement.Background = new SolidColorBrush(Colors.Black);
+        WebViewElement.Background = new SolidColorBrush(Colors.Transparent);
         // 由于加载白屏，需要设置WebViewElement高度为0，loaded事件后再恢复默认高度
-        // TODO： 这个做法效果不大，需要设置一个遮罩在loaded事件后隐藏该遮罩
         WebViewElement.Height = 0;
+        ShowLoadingMask();
         m_gridElement.Children.Add(WebViewElement);
 
         var tempFolder = ApplicationData.Current.TemporaryFolder;
@@ -133,10 +185,16 @@ public abstract class BaseWebPlayer : Grid, IDisposable
         else if (@event.Event == ShakaPlayerEventLists.LOADED)
         {
             WebViewElement.Height = double.NaN;
+            HideLoadingMask();
             var data = JsonConvert.DeserializeObject<ShakaPlayerLoadedData>(
                 JsonConvert.SerializeObject(@event.Data));
-            PlayerLoaded?.Invoke(this, data);
+            // 必须先置位再抛出事件：PlayerLoaded 的订阅者（DashShakaSubPlayer → VideoPlayer → 播放状态机）
+            // 会在回调内同步完成“离开 Loading”的状态切换，播放器控件随即调用 Seek 恢复历史进度。
+            // 若此时 m_hasLoaded 仍为 false，Seek 会被当成“未就绪”直接丢弃，
+            // 播放器就只能从 0 秒开始播放。
             m_hasLoaded = true;
+            ApplyPendingSeek();
+            PlayerLoaded?.Invoke(this, data);
             SetSyncThreshold();
             SetVolume(Volume);
             SetRate(m_rate);
@@ -213,6 +271,8 @@ public abstract class BaseWebPlayer : Grid, IDisposable
             await Task.Delay(100);
         }
 
+        var tempFolder = ApplicationData.Current.TemporaryFolder;
+
         if (isLocal)
         {
             var folder = await DownloadHelper.GetDownloadFolder();
@@ -223,12 +283,20 @@ public abstract class BaseWebPlayer : Grid, IDisposable
             videoUrl = videoUrl
                 .Replace(folder.Path, "https://videolibs.bililte.service")
                 .Replace(oldFolder.Path, "https://oldvideolibs.bililte.service")
+                .Replace(tempFolder.Path, "https://temp.bililte.service")
                 .Replace("\\", "/");
 
             audioUrl = audioUrl
                 .Replace(folder.Path, "https://videolibs.bililte.service")
                 .Replace(oldFolder.Path, "https://oldvideolibs.bililte.service")
+                .Replace(tempFolder.Path, "https://temp.bililte.service")
                 .Replace("\\", "/");
+        }
+
+        // 如果没有设置 isLocal，但 audioUrl 指向临时目录，也需要做映射，保证 WebView 能访问临时音频文件
+        if (!string.IsNullOrWhiteSpace(audioUrl) && audioUrl.Contains(tempFolder.Path))
+        {
+            audioUrl = audioUrl.Replace(tempFolder.Path, "https://temp.bililte.service").Replace("\\", "/");
         }
 
         var playData = new
@@ -250,7 +318,44 @@ public abstract class BaseWebPlayer : Grid, IDisposable
     {
         if (WebViewElement == null)
             await InitWebView2();
+        // 每次加载都会导航到新页面，旧页面里的 window.seek/window.resume 等脚本接口随之失效。
+        // 先复位就绪标记，让新页面就绪前到达的进度请求进入队列，而不是对尚未初始化的页面执行后丢失。
+        m_hasLoaded = false;
+        m_pendingSeekPosition = double.NaN;
+        ShowLoadingMask();
         WebViewElement.Source = new Uri(GetPlayerUrl(playDataStr));
+    }
+
+    /// <summary>
+    /// 播放器就绪后补上加载期间排队的进度请求。
+    /// </summary>
+    private void ApplyPendingSeek()
+    {
+        var position = m_pendingSeekPosition;
+        m_pendingSeekPosition = double.NaN;
+        if (double.IsNaN(position))
+        {
+            return;
+        }
+
+        _logger.Info($"WebPlayer.ApplyPendingSeek: 播放器就绪，补上等待中的进度 position={position}");
+        _ = Seek(position);
+    }
+
+    private void ShowLoadingMask()
+    {
+        if (m_loadingMask != null)
+        {
+            m_loadingMask.Visibility = Visibility.Visible;
+        }
+    }
+
+    private void HideLoadingMask()
+    {
+        if (m_loadingMask != null)
+        {
+            m_loadingMask.Visibility = Visibility.Collapsed;
+        }
     }
 
     public async Task SetVolume(double volume)
@@ -305,9 +410,25 @@ public abstract class BaseWebPlayer : Grid, IDisposable
 
     public async Task Seek(double position)
     {
-        if (!m_hasLoaded) return;
+        if (!m_hasLoaded || WebViewElement?.CoreWebView2 == null)
+        {
+            // 页面还没加载完成时 window.seek 尚不存在，此时执行也不会生效，
+            // 所以先记下来，等 LOADED 之后再补上，避免恢复历史进度丢失。
+            m_pendingSeekPosition = position;
+            _logger.Info($"WebPlayer.Seek: 播放器未就绪，暂存进度 position={position}");
+            return;
+        }
+
         var script = $"window.seek({position})";
-        await WebViewElement.CoreWebView2.ExecuteScriptAsync(script);
+        try
+        {
+            await WebViewElement.CoreWebView2.ExecuteScriptAsync(script);
+            _logger.Debug($"WebPlayer.Seek: position={position}");
+        }
+        catch (Exception ex)
+        {
+            _logger.Warn($"WebPlayer.Seek 执行失败: position={position}, {ex.Message}");
+        }
     }
 
     public async Task SetRate(double speed)
@@ -322,6 +443,9 @@ public abstract class BaseWebPlayer : Grid, IDisposable
     {
         WebViewElement?.Close();
         WebViewElement = null;
+        // WebView 已销毁，脚本接口不再可用：复位就绪标记，避免后续 Seek/Resume 落到空引用上。
+        m_hasLoaded = false;
+        m_pendingSeekPosition = double.NaN;
     }
 
     public async Task<byte[]> CaptureVideo()

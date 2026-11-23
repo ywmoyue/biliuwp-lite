@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.UI.Xaml.Controls;
 
 namespace BiliLite.Modules.User;
 
@@ -30,6 +31,7 @@ public class WatchLaterViewModel : BaseViewModel
         CleanCommand = new RelayCommand(Clear);
         DeleteCommand = new RelayCommand<WatchlaterItemModel>(Del);
         CleanViewedCommand = new RelayCommand(ClearViewed);
+        SelectCommand = new RelayCommand<object>(SetSelectMode);
     }
 
     public ICommand AddCommand { get; private set; }
@@ -40,10 +42,15 @@ public class WatchLaterViewModel : BaseViewModel
     public ICommand CleanViewedCommand { get; private set; }
     public ICommand DeleteCommand { get; private set; }
     public ICommand RefreshCommand { get; private set; }
+    public ICommand SelectCommand { get; private set; }
 
     public bool Loading { get; set; }
 
     public bool Nothing { get; set; }
+
+    public ListViewSelectionMode SelectionMode { get; set; } = ListViewSelectionMode.None;
+
+    public bool IsItemClickEnabled { get; set; } = true;
 
     public ObservableCollection<WatchlaterItemModel> Videos { get; set; }
 
@@ -134,5 +141,38 @@ public class WatchLaterViewModel : BaseViewModel
             return true;
         }
         return false;
+    }
+
+    private void SetSelectMode(object data)
+    {
+        if (data == null)
+        {
+            IsItemClickEnabled = true;
+            SelectionMode = ListViewSelectionMode.None;
+        }
+        else
+        {
+            IsItemClickEnabled = false;
+            SelectionMode = ListViewSelectionMode.Multiple;
+        }
+    }
+
+    public async Task DelBatch(IList<WatchlaterItemModel> items)
+    {
+        int successCount = 0;
+        NotificationShowExtensions.ShowMessageToast("批量操作中...");
+        foreach (var item in items)
+        {
+            if (await m_watchLaterService.Remove(item.aid))
+            {
+                successCount++;
+            }
+            await Task.Delay(500);
+        }
+        foreach (var item in items)
+        {
+            Videos?.Remove(item);
+        }
+        NotificationShowExtensions.ShowMessageToast($"已成功移除{successCount}个视频");
     }
 }

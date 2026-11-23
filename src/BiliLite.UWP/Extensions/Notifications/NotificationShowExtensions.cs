@@ -1,7 +1,6 @@
 ﻿using BiliLite.Controls;
 using BiliLite.Controls.Dialogs;
 using BiliLite.Models.Common.Notifications.Template;
-using BiliLite.Models.Requests.Api;
 using BiliLite.Services;
 using BiliLite.Services.Notification;
 using Microsoft.Extensions.DependencyInjection;
@@ -55,7 +54,7 @@ namespace BiliLite.Extensions.Notifications
                 Invoked = async (cmd) =>
                 {
                     if (uri != null)
-                        await Launcher.LaunchUriAsync(uri);
+                        await LauncherExtensions.OpenInBrowserAsync(uri);
                 }
             });
             messageDialog.Commands.Add(new UICommand() { Label = "取消", Id = false });
@@ -72,7 +71,7 @@ namespace BiliLite.Extensions.Notifications
                 Id = true,
             });
             messageDialog.Commands.Add(new UICommand() { Label = "打开浏览器手动申诉", Id = false, Invoked = command => {
-                Launcher.LaunchUriAsync(new Uri("https://www.bilibili.com/blackboard/cmmnty-appeal.html"));
+                LauncherExtensions.OpenInBrowserAsync("https://www.bilibili.com/blackboard/cmmnty-appeal.html");
             } });
             var result = await messageDialog.ShowAsync();
             return (bool)result.Id;
@@ -130,18 +129,6 @@ namespace BiliLite.Extensions.Notifications
             {
                 return false;
             }
-        }
-
-        /// <summary>
-        /// Comment 专用
-        /// </summary>
-        /// <param name="oid"></param>
-        /// <param name="commentMode"></param>
-        /// <param name="commentSort"></param>
-        public static void ShowCommentDialog(string oid, int commentMode, CommentApi.CommentSort commentSort)
-        {
-            CommentDialog ms = new CommentDialog();
-            ms.Show(oid, commentMode, commentSort);
         }
     }
 }

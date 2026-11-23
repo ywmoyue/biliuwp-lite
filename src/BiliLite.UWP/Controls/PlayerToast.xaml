@@ -35,30 +35,57 @@
             <Border.RenderTransform>
                 <CompositeTransform TranslateY="0" />
             </Border.RenderTransform>
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
-                <fa:FontAwesome Icon="Solid_ShieldAlt" 
-                                FontSize="36" 
-                                Margin="0 2 12 0"
-                                Foreground="{x:Bind IconBrush}"
-                                VerticalAlignment="Center"
-                                Visibility="{x:Bind ShowIcon}"/>
-                <TextBlock
-                    x:Name="TxtToolTip"
-                    FontSize="14"
-                    Foreground="Black"
-                    VerticalAlignment="Center"
-                    Text="{x:Bind m_viewModel.Text, Mode=OneWay}" />
-                <Button Margin="6 0 0 0" 
-                        VerticalAlignment="Center"
-                        FontSize="14" 
-                        Visibility="{x:Bind ShowSkipButton}"
-                        Click="SkipButton_OnClick"
-                        Content="跳过"
-                        BorderBrush="DarkGray"
-                        BorderThickness="1"
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel
+                    Grid.Column="0"
+                    Orientation="Horizontal"
+                    VerticalAlignment="Stretch">
+                    <fa:FontAwesome Icon="Solid_ShieldAlt" 
+                                    FontSize="36" 
+                                    Margin="0 2 12 0"
+                                    Foreground="{x:Bind IconBrush}"
+                                    VerticalAlignment="Center"
+                                    Visibility="{x:Bind ShowIcon}"/>
+                    <TextBlock
+                        x:Name="TxtToolTip"
+                        FontSize="14"
                         Foreground="Black"
-                        Background="Transparent"/>
-            </StackPanel>
+                        VerticalAlignment="Center"
+                        TextWrapping="WrapWholeWords"
+                        MaxWidth="300"
+                        Text="{x:Bind m_viewModel.Text, Mode=OneWay}" />
+                    <Button Margin="6 0 0 0" 
+                            VerticalAlignment="Center"
+                            FontSize="14" 
+                            Visibility="{x:Bind ShowSkipButton}"
+                            Click="SkipButton_OnClick"
+                            Content="跳过"
+                            BorderBrush="DarkGray"
+                            BorderThickness="1"
+                            Foreground="Black"
+                            Background="Transparent"/>
+                </StackPanel>
+                <Button
+                    x:Name="BtnClose"
+                    Grid.Column="1"
+                    MinWidth="0"
+                    MinHeight="0"
+                    Margin="8,0,0,0"
+                    Padding="6,0,6,0"
+                    VerticalAlignment="Top"
+                    FontSize="12"
+                    Visibility="Collapsed"
+                    Click="CloseButton_OnClick"
+                    Content="✕"
+                    BorderBrush="DarkGray"
+                    BorderThickness="1"
+                    Foreground="Black"
+                    Background="Transparent"/>
+            </Grid>
         </Border>
     </Grid>
 </UserControl>

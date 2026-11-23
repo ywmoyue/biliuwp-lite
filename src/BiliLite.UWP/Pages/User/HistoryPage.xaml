@@ -87,15 +87,45 @@
                 </Grid>
             </Pivot.RightHeader>-->
             <Pivot.RightHeader>
-                <StackPanel Background="{StaticResource PivotHeaderBackground}" Orientation="Horizontal">
-                    <AutoSuggestBox
-                        x:Name="SearchBox"
-                        MinWidth="200"
-                        Margin="8,12"
-                        PlaceholderText="寻找记录"
-                        QueryIcon="Find"
-                        QuerySubmitted="SearchBox_OnQuerySubmitted" />
-                </StackPanel>
+                <Grid Background="{StaticResource PivotHeaderBackground}">
+                    <StackPanel
+                        Orientation="Horizontal"
+                        Visibility="{x:Bind Path=m_viewModel.IsItemClickEnabled, Mode=OneWay}">
+                        <AutoSuggestBox
+                            x:Name="SearchBox"
+                            MinWidth="200"
+                            Margin="8,12"
+                            PlaceholderText="寻找记录"
+                            QueryIcon="Find"
+                            QuerySubmitted="SearchBox_OnQuerySubmitted" />
+                        <AppBarButton
+                            Height="48"
+                            Command="{x:Bind Path=m_viewModel.SelectCommand}"
+                            CommandParameter="1"
+                            Icon="List"
+                            ToolTipService.ToolTip="批量操作" />
+                    </StackPanel>
+                    <StackPanel
+                        Orientation="Horizontal"
+                        Visibility="{x:Bind Path=m_viewModel.IsItemClickEnabled, Converter={StaticResource DisplayConvert}, Mode=OneWay}">
+                        <CheckBox
+                            Checked="CheckBox_Checked"
+                            Unchecked="CheckBox_Unchecked">
+                            全选/反选
+                        </CheckBox>
+                        <Button
+                            x:Name="btnDeleteSelected"
+                            Margin="0,0,4,0"
+                            Click="BtnDeleteSelected_OnClick">
+                            删除选中
+                        </Button>
+                        <AppBarButton
+                            Height="48"
+                            Command="{x:Bind Path=m_viewModel.SelectCommand}"
+                            Icon="Cancel"
+                            ToolTipService.ToolTip="退出批量操作" />
+                    </StackPanel>
+                </Grid>
             </Pivot.RightHeader>
             <PivotItem Margin="0">
                 <PivotItem.Header>
@@ -103,16 +133,17 @@
                 </PivotItem.Header>
                 <Grid>
                     <controls:MyAdaptiveGridView
+                        x:Name="listView"
                         Grid.ColumnSpan="2"
                         Padding="15,0"
                         DesiredWidth="550"
-                        IsItemClickEnabled="True"
+                        IsItemClickEnabled="{x:Bind Path=m_viewModel.IsItemClickEnabled, Mode=OneWay}"
                         ItemClick="Video_ItemClick"
                         ItemHeight="120"
                         ItemTemplate="{StaticResource VideoDataTemplate}"
                         ItemsSource="{x:Bind Path=m_viewModel.Videos, Mode=OneWay}"
                         PointerPressed="VideoItem_OnPointerPressed"
-                        SelectionMode="None"
+                        SelectionMode="{x:Bind Path=m_viewModel.SelectionMode, Mode=OneWay}"
                         StretchContentForSingleRow="False">
 
                         <controls:MyAdaptiveGridView.Footer>

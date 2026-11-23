@@ -17,9 +17,9 @@
 
 ### 应用无法联网
 
-大概率是系统开启了网络代理的问题，请关闭网络代理或按以下文章设置代理：
+大概率是系统开启了网络代理的问题，请关闭网络代理，或按下面的方法解除本应用的网络隔离：
 
-[https://www.jianshu.com/p/9d1566aa94cf](https://www.jianshu.com/p/9d1566aa94cf)
+[点击查看解决方法](help://network)
 
 ### 视频或直播无法播放
 
@@ -42,11 +42,9 @@
 
 ### 播放视频掉帧或卡死
 
-可能是显卡垂直同步问题
+可能是显卡垂直同步/可变刷新率（G-SYNC、FreeSync）问题
 
-N卡参考：[https://www.ithome.com/html/it/318382.htm](https://www.ithome.com/html/it/318382.htm)
-
-A卡参考: [http://bbs.pcbeta.com/viewthread-1830950-1-1.html](http://bbs.pcbeta.com/viewthread-1830950-1-1.html)
+[点击查看解决方法](help://play-stutter)
 
 ### 视频或直播出现绿屏
 
@@ -97,9 +95,9 @@ Webp图片扩展安装地址:[ms-windows-store://pdp/?productid=9PG2DK419DRG](ms
 
 ### 中文乱码
 
-系统设置-时间和语言-语言-管理语言设置-管理-非Unicode程序的语言-更改系统区域设置为中文,重启电脑
+系统区域设置不是中文（简体，中国）导致的，需要更改系统区域设置后重启电脑：
 
-参考:https://jingyan.baidu.com/article/d8072ac4ba20cfec94cefd48.html
+[点击查看解决方法](help://garbled-text)
 
 ### 视频没有弹幕
 

@@ -51,17 +51,23 @@ namespace BiliLite.Models.Common.Settings
             { "优先视频编码", "PlaySettings:cbVideoType" },
             { "优先播放器类型", "PlaySettings:ComboBoxUseRealPlayerType" },
             { "FFMpegInteropX 额外播放参数", "PlaySettings:m_viewModel.FFmpegInteropXOptions:SEPlayerType" },
+            { "WebView2 环境变量", "PlaySettings:TxtWebView2EnvironmentVariables:SEPlayerType" },
             { "挂载本地文件", "PlaySettings:BtnSelectWebPlayerFile:SEPlayerType" },
             { "启用调试模式", "PlaySettings:SwitchEnableWebPlayerDebugMode:SEPlayerType" },
             { "启用开发模式", "PlaySettings:SwitchEnableWebPlayerDevMode:SEPlayerType" },
             { "WebPlayer 音视频进度同步阈值1", "PlaySettings:NumberBoxWebPlayerAVPositionSyncThreshold1:SEPlayerType" },
             { "WebPlayer 音视频进度同步阈值2", "PlaySettings:NumberBoxWebPlayerAVPositionSyncThreshold2:SEPlayerType" },
+            { "多线程下载", "PlaySettings:SwitchMultiThreadDownload" },
+            { "多线程下载线程数", "PlaySettings:ComboBoxMultiThreadDownloadThreads:SEMultiThreadDownload" },
+            { "多线程下载节点", "PlaySettings:ComboBoxMultiThreadDownloadCdnMode:SEMultiThreadDownload" },
             { "播放倍速", "PlaySettings:BtnEditPlaySpeedMenu" },
             { "默认播放倍速", "PlaySettings:cbVideoSpeed" },
             { "临时播放倍速", "PlaySettings:cbRatePlaySpeed" },
             { "空降助手", "PlaySettings:SpBlockCard" },
             { "连续播放分P视频", "PlaySettings:swAutoNext:SEPlayerAuto" },
             { "自动播放加载完成的视频", "PlaySettings:swAutoPlay:SEPlayerAuto" },
+            { "播放器自动回落", "PlaySettings:swPlayerAutoFallback:SEPlayerType" },
+            { "自动回落提示", "PlaySettings:swPlayerAutoFallbackTip:SEPlayerType" },
             { "自动跳过番剧 OP/ED", "PlaySettings:SwSkipOpEd:SEPlayerAuto" },
             { "自动全屏播放", "PlaySettings:swPlayerSettingAutoFullScreen:SEPlayerAuto" },
             { "自动隐藏视频信息", "PlaySettings:swPlayerSettingAutoFullWindows:SEPlayerAuto" },
@@ -91,7 +97,7 @@ namespace BiliLite.Models.Common.Settings
             { "使用内置浏览器", "PerformanceSettings:swOpenUrlWithBrowser" },
             { "恢复未关闭的页面", "PerformanceSettings:SwitchOpenLastPage" },
             { "需要恢复的数量", "PerformanceSettings:NumberOpenLastPageCount" },
-            { "单窗口模式保持页面数量", "PerformanceSettings:NumberSingleWindowKeepPageCount" },
+
             { "每次滚动加载更多数据", "PerformanceSettings:NumberScrollViewLoadMoreBottomOffset" },
 
             // Proxy Settings
@@ -121,6 +127,7 @@ namespace BiliLite.Models.Common.Settings
             // Download Settings
             { "下载存放目录", "DownloadSettings:txtDownloadPath" },
             { "旧版下载目录", "DownloadSettings:txtDownloadOldPath" },
+            { "截图保存目录", "DownloadSettings:txtScreenshotPath" },
             { "加载旧版下载的视频", "DownloadSettings:swDownloadLoadOld" },
             { "优先下载视频类型", "DownloadSettings:cbDownloadVideoType" },
             { "同时下载多个任务", "DownloadSettings:swDownloadParallelDownload" },
@@ -147,6 +154,7 @@ namespace BiliLite.Models.Common.Settings
             // ShortcutKeySettings
             { "快捷键自定义", "ShortcutKeySettings:ShortcutKeySettingPanel" },
             { "选择鼠标中键/侧键行为", "ShortcutKeySettings:cbMouseMiddleAction" },
+            { "滚轮调节音量", "ShortcutKeySettings:swWheelVolume" },
         };
 
         public static IReadOnlyDictionary<string, string> Map => _map;

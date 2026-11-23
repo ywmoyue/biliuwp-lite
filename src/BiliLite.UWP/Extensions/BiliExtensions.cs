@@ -124,7 +124,7 @@ namespace BiliLite.Extensions
                     };
                     markdownText.LinkClicked += new EventHandler<LinkClickedEventArgs>(async (sender, args) =>
                     {
-                        await Launcher.LaunchUriAsync(new Uri(args.Link));
+                        await LauncherExtensions.OpenInBrowserAsync(args.Link);
                     });
                     dialog.Content = markdownText;
                     dialog.PrimaryButtonText = "查看详情";
@@ -133,7 +133,7 @@ namespace BiliLite.Extensions
 
                     dialog.PrimaryButtonClick += new Windows.Foundation.TypedEventHandler<ContentDialog, ContentDialogButtonClickEventArgs>(async (sender, e) =>
                     {
-                        await Launcher.LaunchUriAsync(new Uri(ver.Url));
+                        await LauncherExtensions.OpenInBrowserAsync(ver.Url);
                     });
                     dialog.SecondaryButtonClick += (sender, e) =>
                     {

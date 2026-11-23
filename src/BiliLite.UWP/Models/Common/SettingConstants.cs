@@ -1,4 +1,4 @@
-﻿using BiliLite.Models.Attributes;
+using BiliLite.Models.Attributes;
 using BiliLite.Models.Common.Player;
 using BiliLite.Services;
 using System.Collections.Generic;
@@ -95,6 +95,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string RIGHT_WIDTH_CHANGEABLE = "PlayerRightDetailWidthChangeable";
+
+            /// <summary>
+            /// 视频详情页右侧栏启用响应式抽屉
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string DETAIL_RIGHT_INFO_RESPONSIVE = "DetailRightInfoResponsive";
+
+            /// <summary>
+            /// 默认启用视频详情页右侧栏响应式抽屉
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_DETAIL_RIGHT_INFO_RESPONSIVE = true;
 
             /// <summary>
             /// 动态评论页总宽度
@@ -436,16 +448,15 @@ namespace BiliLite.Models.Common
             public const int DEFAULT_COMMENT_FONT_SIZE = 14;
 
             /// <summary>
-            /// 单窗口模式保持页面数量，超出释放
+            /// 主窗口宽度(运行时状态,不随设置导出)
             /// </summary>
-            [SettingKey(typeof(int))]
-            public const string SINGLE_WINDOW_KEEP_PAGE_COUNT = "SingleWindowKeepPageCount";
+            public const string MAIN_WINDOW_WIDTH = "mainWindowWidth";
 
             /// <summary>
-            /// 单窗口模式保持页面数量默认10
+            /// 主窗口高度(运行时状态,不随设置导出)
             /// </summary>
-            [SettingDefaultValue]
-            public const int DEFAULT_SINGLE_WINDOW_KEEP_PAGE_COUNT = 10;
+            public const string MAIN_WINDOW_HEIGHT = "mainWindowHeight";
+
         }
 
         public class Account
@@ -888,6 +899,42 @@ namespace BiliLite.Models.Common
             public const RealPlayerType DEFAULT_USE_REAL_PLAYER_TYPE = RealPlayerType.Native;
 
             /// <summary>
+            /// 多线程下载（Native 播放器）
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string MULTI_THREAD_DOWNLOAD = "PlayerMultiThreadDownload";
+
+            /// <summary>
+            /// 多线程下载默认关闭
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_MULTI_THREAD_DOWNLOAD = false;
+
+            /// <summary>
+            /// 多线程下载线程数
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const string MULTI_THREAD_DOWNLOAD_THREADS = "PlayerMultiThreadDownloadThreads";
+
+            /// <summary>
+            /// 多线程下载线程数默认值
+            /// </summary>
+            [SettingDefaultValue]
+            public const int DEFAULT_MULTI_THREAD_DOWNLOAD_THREADS = 16;
+
+            /// <summary>
+            /// 多线程下载使用的节点
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const string MULTI_THREAD_DOWNLOAD_CDN_MODE = "PlayerMultiThreadDownloadCdnMode";
+
+            /// <summary>
+            /// 多线程下载默认使用大陆节点
+            /// </summary>
+            [SettingDefaultValue]
+            public const MultiThreadCdnMode DEFAULT_MULTI_THREAD_DOWNLOAD_CDN_MODE = MultiThreadCdnMode.Mainland;
+
+            /// <summary>
             /// 自定义参数 FFmpegOptions
             /// </summary>
             [SettingKey(typeof(string))]
@@ -940,6 +987,66 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string AUTO_PLAY = "PlayerAutoPlay";
+
+            /// <summary>
+            /// 播放前临时下载完整音频（可能增加加载时间） bool
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string PRELOAD_FULL_AUDIO_BEFORE_PLAY = "PlayerPreloadFullAudioBeforePlay";
+
+            /// <summary>
+            /// 播放前临时下载完整音频默认值
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_PRELOAD_FULL_AUDIO_BEFORE_PLAY = false;
+
+            /// <summary>
+            /// 音量均衡（依赖播放前临时下载完整音频） bool
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string VOLUME_NORMALIZATION = "PlayerVolumeNormalization";
+
+            /// <summary>
+            /// 音量均衡默认值
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_VOLUME_NORMALIZATION = false;
+
+            /// <summary>
+            /// 音量均衡目标响度（LUFS）
+            /// </summary>
+            [SettingKey(typeof(double))]
+            public const string VOLUME_NORMALIZATION_LOUDNESS = "PlayerVolumeNormalizationLoudness";
+
+            /// <summary>
+            /// 音量均衡目标响度默认值（LUFS）
+            /// </summary>
+            [SettingDefaultValue]
+            public const double DEFAULT_VOLUME_NORMALIZATION_LOUDNESS = -14d;
+
+            /// <summary>
+            /// 播放器自动回落
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string AUTO_FALLBACK = "PlayerAutoFallback";
+
+            /// <summary>
+            /// 默认启用播放器自动回落
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_AUTO_FALLBACK = true;
+
+            /// <summary>
+            /// 自动回落相关提示（切换播放方式、自动回落已关闭）
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string AUTO_FALLBACK_TIP = "PlayerAutoFallbackTip";
+
+            /// <summary>
+            /// 默认显示自动回落相关提示
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_AUTO_FALLBACK_TIP = true;
 
             /// <summary>
             /// 自动切换下一个视频
@@ -1020,6 +1127,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const double DEFAULT_PLAYER_VOLUME = 1.0;
+
+            /// <summary>
+            /// 鼠标滚轮调节音量
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string ENABLE_MOUSE_WHEEL_VOLUME = "PlayerEnableMouseWheelVolume";
+
+            /// <summary>
+            /// 鼠标滚轮调节音量默认值
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_ENABLE_MOUSE_WHEEL_VOLUME = true;
 
             /// <summary>
             /// 亮度
@@ -1199,6 +1318,12 @@ namespace BiliLite.Models.Common
             public const string AUTO_OPEN_AI_SUBTITLE = "PlayerAutoOpenAISubtitle";
 
             /// <summary>
+            /// 上次选择的字幕语言（avid|语言，仅用于同一视频切换分P时恢复）
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string SELECTED_SUBTITLE = "PlayerSelectedSubtitle";
+
+            /// <summary>
             /// 直播播放器默认模式
             /// </summary>
             [SettingKey(typeof(int))]
@@ -1295,6 +1420,23 @@ namespace BiliLite.Models.Common
             public const string WEB_PLAYER_ENABLE_DEV_MODE = "WebPlayerEnableDevMode";
 
             /// <summary>
+            /// WebPlayer 的 WebView2 环境变量，每行一个，格式为 名称=值
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES =
+                "WebPlayerWebView2EnvironmentVariables";
+
+            /// <summary>
+            /// WebPlayer 的 WebView2 环境变量默认值：启用 Media Foundation 直通，支持杜比视界（DV）与 DD+（Atmos）直通
+            /// </summary>
+            [SettingDefaultValue]
+            public const string DEFAULT_WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES =
+                "WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS=" +
+                "--enable-features=MediaFoundationClearPlayback," +
+                "AllowClearDolbyVisionInMseWhenPlatformEncryptedDvEnabled," +
+                "PlatformAC3Audio";
+
+            /// <summary>
             /// WebPlayer音视频进度同步阈值1
             /// </summary>
             [SettingKey(typeof(double))]
@@ -1347,6 +1489,24 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const int DEFAULT_PLAYER_TOOL_BAR_STYLE_TYPE = (int)PlayerToolBarStyleTypes.ComboBox;
+
+            /// <summary>
+            /// 截图保存目录
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string SCREENSHOT_PATH = "PlayerScreenshotPath";
+
+            /// <summary>
+            /// 默认截图保存目录
+            /// </summary>
+            [SettingDefaultValue]
+            public const string DEFAULT_SCREENSHOT_PATH = "图片库/哔哩哔哩截图";
+
+            /// <summary>
+            /// 截图保存目录的 FutureAccessList 令牌
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string SCREENSHOT_PATH_TOKEN = "PlayerScreenshotPathToken";
         }
 
         public class Filter
@@ -1365,6 +1525,14 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string FILTER_RECOMMEND_LIVE = "FilterRecommendLive";
+        }
+
+        public class Search
+        {
+            /// <summary>
+            /// 搜索历史关键字(运行时数据,不随设置导出)
+            /// </summary>
+            public const string SEARCH_HISTORY = "SearchHistoryKeywords";
         }
 
         public class Roaming
@@ -1490,6 +1658,51 @@ namespace BiliLite.Models.Common
 
             [SettingDefaultValue]
             public const bool DEFAULT_USE_DOWNLOAD_INDEX = false;
+
+            /// <summary>
+            /// 导出视频格式(mp4/mkv)
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string EXPORT_FORMAT = "ExportFormat";
+
+            [SettingDefaultValue]
+            public const string DEFAULT_EXPORT_FORMAT = "mkv";
+
+            /// <summary>
+            /// MP4 导出方式(copy/transcode)
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string EXPORT_MP4_MODE = "ExportMp4Mode";
+
+            [SettingDefaultValue]
+            public const string DEFAULT_EXPORT_MP4_MODE = "copy";
+
+            /// <summary>
+            /// 导出时是否把 HDR 转成 SDR
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string EXPORT_HDR_TO_SDR = "ExportHdrToSdr";
+
+            [SettingDefaultValue]
+            public const bool DEFAULT_EXPORT_HDR_TO_SDR = false;
+
+            /// <summary>
+            /// 导出转码时的目标分辨率(source/1080/720)
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string EXPORT_DOWNSCALE = "ExportDownscale";
+
+            [SettingDefaultValue]
+            public const string DEFAULT_EXPORT_DOWNSCALE = "source";
+
+            /// <summary>
+            /// 导出全部成功后自动关闭导出窗口
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string EXPORT_AUTO_CLOSE_WINDOW = "ExportAutoCloseWindow";
+
+            [SettingDefaultValue]
+            public const bool DEFAULT_EXPORT_AUTO_CLOSE_WINDOW = true;
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions;
+using BiliLite.Extensions;
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using BiliLite.Services.Biz;
@@ -35,6 +35,8 @@ namespace BiliLite
             services.AddSingleton<PlaySpeedMenuService>();
             services.AddSingleton<ContentFilterService>();
             services.AddSingleton<SearchService>();
+            services.AddSingleton<IWindowSizeProvider, UwpWindowSizeProvider>();
+            services.AddSingleton<WindowSizeService>();
 
             services.AddSingleton<GrpcService>();
             services.AddAttributeService(displayMode);

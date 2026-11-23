@@ -1,11 +1,13 @@
 ﻿using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
+using BiliLite.Models;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Recommend;
 using BiliLite.Models.Common.Settings;
 using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests;
 using BiliLite.Models.Requests.Api.Home;
+using BiliLite.Models.Requests.Api.User;
 using BiliLite.Modules;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
@@ -25,6 +27,7 @@ namespace BiliLite.ViewModels.Home
         #region Fields
 
         private readonly RecommendAPI m_recommendApi;
+        private readonly FollowAPI m_followApi;
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
         private readonly ContentFilterService m_contentFilterService;
 
@@ -36,6 +39,7 @@ namespace BiliLite.ViewModels.Home
         {
             m_contentFilterService = contentFilterService;
             m_recommendApi = new RecommendAPI();
+            m_followApi = new FollowAPI();
             Banner = new ObservableCollection<RecommendBannerItemModel>();
             RefreshCommand = new RelayCommand(Refresh);
             LoadMoreCommand = new RelayCommand(LoadMore);
@@ -204,6 +208,14 @@ namespace BiliLite.ViewModels.Home
                             Subtitle = item.Args.UpName,
                             Type = "fastFilter"
                         });
+                        item.ThreePointV2.Insert(1, new RecommendThreePointV2ItemModel()
+                        {
+                            Idx = item.Idx,
+                            Title = $"拉黑UP主",
+                            Subtitle = item.Args.UpName,
+                            UpId = item.Args.UpId,
+                            Type = "blockUser"
+                        });
                     }
                 }
 
@@ -316,6 +328,45 @@ namespace BiliLite.ViewModels.Home
             foreach (var filterItem in filterItems)
             {
                 Items.Remove(filterItem);
+            }
+        }
+
+        public async Task BlockUser(string upId, string upName)
+        {
+            try
+            {
+                if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
+                {
+                    NotificationShowExtensions.ShowMessageToast("请先登录");
+                    return;
+                }
+                var results = await m_followApi.BlockUser(upId).Request();
+                if (!results.status)
+                {
+                    throw new CustomizedErrorException(results.message);
+                }
+                var data = await results.GetJson<ApiDataModel<object>>();
+                if (!data.success)
+                {
+                    throw new CustomizedErrorException(data.message);
+                }
+                NotificationShowExtensions.ShowMessageToast($"已拉黑 {upName}");
+                var blockItems = Items.Where(x => x.Args.UpId == upId).ToList();
+                foreach (var blockItem in blockItems)
+                {
+                    Items.Remove(blockItem);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex is CustomizedErrorException)
+                {
+                    _logger.Error(ex.Message, ex);
+                    NotificationShowExtensions.ShowMessageToast(ex.Message);
+                    return;
+                }
+                var handel = HandelError<RecommendPageViewModel>(ex);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
             }
         }
 

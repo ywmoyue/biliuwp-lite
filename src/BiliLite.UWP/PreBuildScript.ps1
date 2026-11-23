@@ -46,8 +46,12 @@ try {
 catch {
     Write-Error "获取GitHub release信息失败: $_"
     # 检查是否是API限制且本地版本文件存在
-    if ($_.Exception.Response -and $_.Exception.Response.StatusCode -eq 403 -and 
-        $_.Exception.Message -like "*API rate limit*" -and 
+    # 路径一（原有判定）：异常消息里直接带 API rate limit
+    $isRateLimitByMessage = $_.Exception.Message -like "*API rate limit*"
+    # 路径二（新增判定）：GitHub 现在把限流说明放进了响应体，异常消息只剩本地化的状态行
+    $isRateLimitByResponseBody = "$($_.ErrorDetails.Message)$($_.Exception.Message)" -like "*API rate limit*"
+    if ($_.Exception.Response -and $_.Exception.Response.StatusCode -eq 403 -and
+        ($isRateLimitByMessage -or $isRateLimitByResponseBody) -and
         (Test-Path -Path $versionFile)) {
         Write-Warning "GitHub API限制，但本地版本文件存在，跳过更新"
         exit 0
@@ -91,7 +95,33 @@ if ($needUpdate) {
         Get-ChildItem -Path $assetsPath -Exclude version.json | Remove-Item -Force -Recurse
         
         Write-Host "解压文件..."
-        Expand-Archive -Path $tempZipPath -DestinationPath $assetsPath -Force
+        # 不使用 Expand-Archive：它依赖 Microsoft.PowerShell.Archive 模块，而该模块在部分环境下
+        # （例如 PowerShell 7.6.10 自带的版本被 Windows PowerShell 5.1 加载时）会调用 .NET Framework
+        # 并不存在的 ExtractToDirectory 三参重载，导致构建失败。
+        # 这里直接用 .NET Framework 自带的 ZipFile API 逐条解压，Windows PowerShell 5.1 与 PowerShell 7 都可用。
+        Add-Type -AssemblyName System.IO.Compression.FileSystem
+        $zip = [System.IO.Compression.ZipFile]::OpenRead($tempZipPath)
+        try {
+            foreach ($entry in $zip.Entries) {
+                # 目录条目（Name 为空）跳过，解压文件时会按需创建目录
+                if ([string]::IsNullOrEmpty($entry.Name)) {
+                    continue
+                }
+
+                $relativePath = $entry.FullName -replace '/', '\'
+                $targetPath = Join-Path -Path $assetsPath -ChildPath $relativePath
+                $targetDir = Split-Path -Path $targetPath -Parent
+                if (-not (Test-Path -Path $targetDir)) {
+                    New-Item -ItemType Directory -Path $targetDir -Force | Out-Null
+                }
+
+                # 第三个参数为 true，表示覆盖已存在的文件
+                [System.IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $targetPath, $true)
+            }
+        }
+        finally {
+            $zip.Dispose()
+        }
         
         # 创建/更新version.json
         @{

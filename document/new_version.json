@@ -1,7 +1,7 @@
 {
-  "version": "4.8.12",
-  "version_num": 40812,
-  "version_desc": "更新内容:\r\n\r\n- 抽象下载器实现代码，以便于后续或其他版本更换不同下载器实现 \r\n\r\n- 评论区字体大小可设置 \r\n\r\n- 首页推荐页支持自定义元素宽度 \r\n\r\n- 优化播放器回落机制  \r\n\r\n- 更新动态专栏接口，修复首页动态页专栏tab内容不正常问题 \r\n\r\n- 修复番剧详情页选季问题 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
+  "version": "4.8.20",
+  "version_num": 40820,
+  "version_desc": "更新内容:\r\n\r\n- 重构播放器架构 \r\n\r\n- Native 播放器新增多线程下载（实验性）\r\n\r\n- 下载相关优化 \r\n\r\n- 视频详情页首屏与播放解耦：标签、收藏夹、粉丝数等详情数据延后加载，评论改为切换到评论页签后才请求 \r\n\r\n- 新增「播放前临时下载完整音频」设置（默认关闭），Native 播放器支持播放本地已下载的视频\r\n\r\n- 修复循环播放时播完黑屏、无法继续播放的问题 \r\n\r\n- 修复窗口化时标签栏滚动按钮报错、切换选项卡不生效的问题 \r\n\r\n\r\n\r\n\r\n 如果无法打开下载地址，请访问:https://github.com/ywmoyue/biliuwp-lite/releases",
   "url": "https://github.com/ywmoyue/biliuwp-lite/releases",
   "download_url": "https://github.com/ywmoyue/biliuwp-lite/releases"
 }

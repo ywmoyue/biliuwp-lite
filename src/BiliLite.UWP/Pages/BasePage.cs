@@ -13,7 +13,6 @@ namespace BiliLite.Pages
     public class BasePage : Page
     {
         public string Title { get; set; }
-        public object NavigationParameter { get; set; }
         public BasePage()
         {
             this.NavigationCacheMode = (SettingService.GetValue<int>(SettingConstants.UI.DISPLAY_MODE, 0) == 1) ? Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled : Windows.UI.Xaml.Navigation.NavigationCacheMode.Disabled;
@@ -35,7 +34,6 @@ namespace BiliLite.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            NavigationParameter = e.Parameter;
             this.Visibility = Visibility.Visible;
         }
     }
@@ -59,7 +57,7 @@ namespace BiliLite.Pages
             {
                 m_customTabViewItem.IsPlayButtonVisible = true;
                 m_customTabViewItem.PlayButtonClick += CustomTabViewItem_PlayButtonClick;
-                Player.PlayerInstance.PlayStateChanged += PlayerInstance_PlayStateChanged;
+                Player.PlayStateChanged += PlayerInstance_PlayStateChanged;
             }
         }
 
@@ -226,6 +224,12 @@ namespace BiliLite.Pages
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
+            if (m_customTabViewItem != null && Player != null)
+            {
+                m_customTabViewItem.PlayButtonClick -= CustomTabViewItem_PlayButtonClick;
+                Player.PlayStateChanged -= PlayerInstance_PlayStateChanged;
+            }
+
             if (e.NavigationMode == NavigationMode.Back || e.SourcePageType == typeof(BlankPage))
             {
                 // (this.Content as Grid).Children.Clear();

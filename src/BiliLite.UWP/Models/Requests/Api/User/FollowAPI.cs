@@ -109,7 +109,41 @@ namespace BiliLite.Models.Requests.Api.User
         }
 
         /// <summary>
-        /// 查询用户与自己关系_仅查关注
+        /// 拉黑用户
+        /// </summary>
+        /// <param name="mid">用户ID</param>
+        /// <returns></returns>
+        public ApiModel BlockUser(string mid)
+        {
+            var api = new ApiModel()
+            {
+                method = HttpMethods.Post,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/relation/modify",
+                body = ApiHelper.MustParameter(AppKey, true) + $"&act=5&fid={mid}&re_src=32"
+            };
+            api.body += ApiHelper.GetSign(api.body, AppKey);
+            return api;
+        }
+
+        /// <summary>
+        /// 取消拉黑用户
+        /// </summary>
+        /// <param name="mid">用户ID</param>
+        /// <returns></returns>
+        public ApiModel UnblockUser(string mid)
+        {
+            var api = new ApiModel()
+            {
+                method = HttpMethods.Post,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/relation/modify",
+                body = ApiHelper.MustParameter(AppKey, true) + $"&act=6&fid={mid}&re_src=32"
+            };
+            api.body += ApiHelper.GetSign(api.body, AppKey);
+            return api;
+        }
+
+        /// <summary>
+        /// 查询用户与自己关系（attribute: 0=未关注, 2=已关注, 6=已互关, 128=已拉黑）
         /// </summary>
         /// <param name="mid"></param>
         /// <returns></returns>

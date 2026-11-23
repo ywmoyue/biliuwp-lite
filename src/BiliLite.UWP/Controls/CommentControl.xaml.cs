@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,6 +40,12 @@ namespace BiliLite.Controls
 
         private int m_page = 1;
         private LoadCommentInfo m_loadCommentInfo;
+        // 只在控件可用时执行请求，避免 Unloaded 后回写 UI。
+        private bool m_isLoaded;
+        // 若触发时机早于 Loaded，先缓存一次请求，Loaded 后自动补发。
+        private bool m_hasPendingLoad;
+        private LoadCommentInfo m_pendingLoadCommentInfo;
+        private bool m_pendingDisableShowPicture;
 
         private CommentViewModel m_selectComment;
 
@@ -54,6 +61,7 @@ namespace BiliLite.Controls
             DataContext = m_viewModel;
             InitializeComponent();
             m_commentApi = new CommentApi();
+            Loaded += CommentControl_Loaded;
             Unloaded += CommentControl_Unloaded;
         }
 
@@ -67,9 +75,23 @@ namespace BiliLite.Controls
 
         #region Private Methods
 
+        private void CommentControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            m_isLoaded = true;
+            // 保证“自动加载评论”不会因时序问题被吞掉。
+            if (m_hasPendingLoad && m_pendingLoadCommentInfo != null)
+            {
+                var pendingInfo = m_pendingLoadCommentInfo;
+                var pendingDisableShowPicture = m_pendingDisableShowPicture;
+                m_hasPendingLoad = false;
+                m_pendingLoadCommentInfo = null;
+                LoadComment(pendingInfo, pendingDisableShowPicture);
+            }
+        }
+
         private void CommentControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Bindings.StopTracking();
+            m_isLoaded = false;
         }
 
         private void BtnUser_Click(object sender, RoutedEventArgs e)
@@ -85,15 +107,21 @@ namespace BiliLite.Controls
 
         private async Task GetComment()
         {
-            if (m_page == 1)
-            {
-                m_viewModel.NoRepostVisibility = false;
-                m_viewModel.CloseRepostVisibility = false;
-                m_viewModel.Comments.Clear();
-                m_nextCursor = null;
-            }
             try
             {
+                if (!m_isLoaded || m_viewModel == null || m_loadCommentInfo == null)
+                {
+                    return;
+                }
+
+                if (m_page == 1)
+                {
+                    m_viewModel.NoRepostVisibility = false;
+                    m_viewModel.CloseRepostVisibility = false;
+                    m_viewModel.Comments?.Clear();
+                    m_nextCursor = null;
+                }
+
                 m_viewModel.BtnLoadMoreVisibility = false;
                 m_viewModel.Loading = true;
 
@@ -127,7 +155,10 @@ namespace BiliLite.Controls
             }
             finally
             {
-                m_viewModel.Loading = false;
+                if (m_viewModel != null)
+                {
+                    m_viewModel.Loading = false;
+                }
             }
         }
 
@@ -593,10 +624,42 @@ namespace BiliLite.Controls
             var notePicture = e.ClickedItem as NotePicture;
             var notePicturesView = sender as GridView;
             if (notePicture == null || notePicturesView == null) return;
-            var comment = notePicturesView.DataContext as CommentViewModel;
-            if (comment == null) return;
-            var notePictures = comment.Content.Pictures;
+            var notePictures = notePicturesView.Tag as IList<NotePicture>;
+            if (notePictures == null || notePictures.Count == 0)
+            {
+                notePictures = (notePicturesView.DataContext as CommentViewModel)?.Content?.Pictures;
+            }
+
+            OpenPictureViewer(notePictures, notePicture);
+        }
+
+        private void SinglePictureView_Click(object sender, RoutedEventArgs e)
+        {
+            if (m_disableShowPicture)
+            {
+                NotificationShowExtensions.ShowMessageToast("暂不支持查看图片");
+                return;
+            }
+
+            var comment = (sender as FrameworkElement)?.DataContext as CommentViewModel;
+            var notePictures = comment?.Content?.Pictures;
+            var notePicture = notePictures?.FirstOrDefault();
+            OpenPictureViewer(notePictures, notePicture);
+        }
+
+        private void OpenPictureViewer(IList<NotePicture> notePictures, NotePicture notePicture)
+        {
+            if (notePictures == null || notePictures.Count == 0 || notePicture == null)
+            {
+                return;
+            }
+
             var index = notePictures.IndexOf(notePicture);
+            if (index < 0)
+            {
+                return;
+            }
+
             var pictures = notePictures.Select(x => x.ImgSrc).ToList();
             MessageCenter.OpenImageViewer(pictures, index);
         }
@@ -653,23 +716,55 @@ namespace BiliLite.Controls
         /// <param name="loadCommentInfo"></param>
         public async void LoadComment(LoadCommentInfo loadCommentInfo, bool disableShowPicture = false)
         {
-            m_disableShowPicture = disableShowPicture;
-            if (loadCommentInfo.CommentSort == CommentSort.Hot)
+            try
             {
-                m_viewModel.HotCommentsVisibility = true;
-                m_viewModel.NewCommentVisibility = false;
-            }
-            else
-            {
-                m_viewModel.HotCommentsVisibility = false;
-                m_viewModel.NewCommentVisibility = true;
-            }
+                if (loadCommentInfo == null)
+                {
+                    _logger.Warn("CommentControl.LoadComment skipped: loadCommentInfo is null");
+                    return;
+                }
 
-            m_viewModel.IsCommentDialog = loadCommentInfo.IsDialog;
-            m_loadCommentInfo = loadCommentInfo;
-            m_page = 1;
-            await GetComment();
-            await emoteVM.GetEmote(EmoteBusiness.reply);
+                if (m_viewModel == null)
+                {
+                    _logger.Warn("CommentControl.LoadComment skipped: viewModel is null");
+                    return;
+                }
+
+                if (!m_isLoaded)
+                {
+                    // 控件未完成加载时先排队，避免首次自动触发丢失。
+                    m_hasPendingLoad = true;
+                    m_pendingLoadCommentInfo = loadCommentInfo;
+                    m_pendingDisableShowPicture = disableShowPicture;
+                    return;
+                }
+
+                m_disableShowPicture = disableShowPicture;
+                if (loadCommentInfo.CommentSort == CommentSort.Hot)
+                {
+                    m_viewModel.HotCommentsVisibility = true;
+                    m_viewModel.NewCommentVisibility = false;
+                }
+                else
+                {
+                    m_viewModel.HotCommentsVisibility = false;
+                    m_viewModel.NewCommentVisibility = true;
+                }
+
+                m_viewModel.IsCommentDialog = loadCommentInfo.IsDialog;
+                m_loadCommentInfo = loadCommentInfo;
+                m_page = 1;
+                await GetComment();
+
+                if (emoteVM != null)
+                {
+                    await emoteVM.GetEmote(EmoteBusiness.reply);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn("CommentControl.LoadComment error", ex);
+            }
         }
 
         #endregion

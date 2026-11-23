@@ -22,10 +22,6 @@
 
     <Page.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Dynamic/DynamicTemplate.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="White" />
             <ItemsPanelTemplate x:Key="GridPanel">
                 <toolkit:StaggeredPanel
@@ -945,6 +941,24 @@
                                             Margin="-2,-2,-2,0"
                                             FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                             Glyph="&#xE960;" />
+                                    </AppBarButton.Icon>
+                                </AppBarButton>
+
+                                <AppBarButton
+                                    Command="{x:Bind Path=m_viewModel.BlockUserCommand, Mode=OneWay}"
+                                    Label="拉黑"
+                                    Visibility="{x:Bind Path=m_viewModel.IsBlocked, Mode=OneWay, Converter={StaticResource DisplayConvert}}">
+                                    <AppBarButton.Icon>
+                                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE8F8;" />
+                                    </AppBarButton.Icon>
+                                </AppBarButton>
+
+                                <AppBarButton
+                                    Command="{x:Bind Path=m_viewModel.BlockUserCommand, Mode=OneWay}"
+                                    Label="取消拉黑"
+                                    Visibility="{x:Bind Path=m_viewModel.IsBlocked, Mode=OneWay}">
+                                    <AppBarButton.Icon>
+                                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE8F8;" />
                                     </AppBarButton.Icon>
                                 </AppBarButton>
                             </StackPanel>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -26,7 +26,7 @@
     <AppxBundle>Never</AppxBundle>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <PackageCertificateThumbprint>C4FA34A878A0528F84922932FEC6746BCBCA5CEA</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>83EDFAFDEFCB2D80913C8B982808A8A9B2871532</PackageCertificateThumbprint>
     <PackageCertificateKeyFile />
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
     <PreBuildEvent>powershell.exe -ExecutionPolicy RemoteSigned -File "$(MSBuildThisFileDirectory)PreBuildScript.ps1"</PreBuildEvent>
@@ -147,19 +147,37 @@
     <Compile Include="Controls\Common\DanmakuListControl.xaml.cs">
       <DependentUpon>DanmakuListControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\FakeFrame.cs" />
+    <Compile Include="Controls\Search\SearchHistoryBehavior.cs" />
+    <Compile Include="Controls\Search\SearchHistoryPanel.xaml.cs">
+      <DependentUpon>SearchHistoryPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\Common\Player\PlayerOpenParam.cs" />
     <Compile Include="Models\Common\User\WatchLater\WatchlaterItemModel.cs" />
     <Compile Include="Models\Common\User\WatchLater\WatchlaterOwnerModel.cs" />
     <Compile Include="Models\Common\User\WatchLater\WatchlaterPagesModel.cs" />
     <Compile Include="Modules\SpBlock\Services\SponsorBlockHttpClientFactory.cs" />
+    <Compile Include="Player\Controllers\PlayerErrorRecord.cs" />
+    <Compile Include="Player\Controllers\VideoPlayerController.cs" />
+    <Compile Include="Player\SubPlayers\DashFFmpegInteropSubPlayer.cs" />
+    <Compile Include="Player\SubPlayers\DashNativeSubPlayer.cs" />
+    <Compile Include="Player\SubPlayers\DashShakaSubPlayer.cs" />
+    <Compile Include="Player\SubPlayers\FlvFFmpegInteropSubPlayer.cs" />
+    <Compile Include="Player\SubPlayers\FlvSYEngineSubPlayer.cs" />
+    <Compile Include="Player\SubPlayers\Mp4NativeSubPlayer.cs" />
+    <Compile Include="Player\SubPlayers\MultiFlvSYEngineSubPlayer.cs" />
+    <Compile Include="Player\VideoPlayer.cs" />
     <Compile Include="Services\BackgroundDownloadOperation.cs" />
     <Compile Include="Services\BackgroundDownloadService.cs" />
     <Compile Include="Services\BackgroundDownloadTask.cs" />
+    <Compile Include="Services\WebView2UserAgentProvider.cs" />
     <Compile Include="Services\Biz\WatchLaterService.cs" />
     <Compile Include="Services\Interfaces\IDownloadOperation.cs" />
     <Compile Include="Services\Interfaces\IDownloadService.cs" />
     <Compile Include="Services\Interfaces\IDownloadTask.cs" />
+    <Compile Include="Services\Interfaces\IWindowSizeProvider.cs" />
+    <Compile Include="Services\WindowSizeService.cs" />
+    <Compile Include="Services\UwpWindowSizeProvider.cs" />
+    <Compile Include="Models\Common\WindowSize.cs" />
     <Compile Include="ViewModels\Common\DanmakuListViewModel.cs" />
     <Compile Include="Models\Common\Danmaku\DanmakuSimpleItem.cs" />
     <Compile Include="Controls\Common\PieControl.xaml.cs">
@@ -261,6 +279,9 @@
     <Compile Include="Models\Common\Article\ArticleReaderSetTitleData.cs" />
     <Compile Include="Models\Common\Comment\SendCommentResult.cs" />
     <Compile Include="Models\Common\Download\DownloadTrackInfo.cs" />
+    <Compile Include="Models\Common\Download\VideoExportOptions.cs" />
+    <Compile Include="Models\Common\Download\VideoExportJob.cs" />
+    <Compile Include="Models\Common\Download\VideoExportSubtitleOption.cs" />
     <Compile Include="Models\Common\Live\LiveRoomHistoryDanmu.cs" />
     <Compile Include="Models\Common\Season\SeasonEpListResult.cs" />
     <Compile Include="Models\Common\Settings\KeyValueOption.cs" />
@@ -406,8 +427,11 @@
     <Compile Include="Pages\MessagesPage.xaml.cs">
       <DependentUpon>MessagesPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Common\Player\MultiThreadCdnMode.cs" />
     <Compile Include="Player\MediaInfos\ShakaPlayerCollectInfoData.cs" />
     <Compile Include="Player\MediaInfos\ShakaPlayerCollectInfoHandler.cs" />
+    <Compile Include="Player\RangeDownload\BiliVideoCdn.cs" />
+    <Compile Include="Player\RangeDownload\MultiThreadRangeDownloader.cs" />
     <Compile Include="Player\SubPlayers\ISubWebPlayer.cs" />
     <Compile Include="Player\SubPlayers\LiveMpegtsPlayer.cs" />
     <Compile Include="Player\WebPlayer\BaseWebPlayer.cs" />
@@ -543,6 +567,7 @@
     <Compile Include="Models\Common\Player\PlayerError.cs" />
     <Compile Include="Models\Common\Player\BasePlayUrlInfo.cs" />
     <Compile Include="Models\Common\Player\RealPlayInfo.cs" />
+    <Compile Include="Models\Common\Player\PlayerToastMessage.cs" />
     <Compile Include="Models\Common\UserDynamic\IUserDynamicContentDisplayInfo.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicCtrlItem.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicDisplayTypesMap.cs" />
@@ -612,10 +637,14 @@
     <Compile Include="Player\Controllers\PlayerControllerFactory.cs" />
     <Compile Include="Player\Controllers\PlayerType.cs" />
     <Compile Include="Player\IBiliPlayer2.cs" />
+    <Compile Include="Player\RealPlayInfoFactory.cs" />
+    <Compile Include="Player\Adapters\LegacyPlayerAdapter.cs" />
     <Compile Include="Player\LivePlayer.cs" />
     <Compile Include="Player\MediaInfos\BaseCollectInfoHandler.cs" />
     <Compile Include="Player\MediaInfos\CollectInfo.cs" />
     <Compile Include="Player\MediaInfos\FFMpegInteropMssCollectInfoHandler.cs" />
+    <Compile Include="Player\MediaInfos\MediaPlayerCollectInfoData.cs" />
+    <Compile Include="Player\MediaInfos\MediaPlayerCollectInfoHandler.cs" />
     <Compile Include="Player\MediaInfos\MediaInfo.cs" />
     <Compile Include="Player\MediaInfos\MediaInfoDoNotToStringAttribute.cs" />
     <Compile Include="Player\MediaInfos\MediaInfosCollector.cs" />
@@ -636,6 +665,11 @@
     <Compile Include="Player\States\ScreenStates\FullscreenState.cs" />
     <Compile Include="Player\States\ScreenStates\IScreenState.cs" />
     <Compile Include="Player\States\ScreenStates\NormalScreenState.cs" />
+    <Compile Include="Player\States\MuteStates\IMuteState.cs" />
+    <Compile Include="Player\States\MuteStates\MuteStateChangedEventArgs.cs" />
+    <Compile Include="Player\States\MuteStates\MuteStateHandler.cs" />
+    <Compile Include="Player\States\MuteStates\MutedState.cs" />
+    <Compile Include="Player\States\MuteStates\UnMutedState.cs" />
     <Compile Include="Player\SubPlayers\ISubPlayer.cs" />
     <Compile Include="Player\SubPlayers\LiveHlsPlayer.cs" />
     <Compile Include="Player\States\PauseStates\IPauseState.cs" />
@@ -652,6 +686,7 @@
     <Compile Include="Services\ZXingQrCodeService.cs" />
     <Compile Include="ViewModels\Download\DownloadingSubItemViewModel.cs" />
     <Compile Include="ViewModels\Download\DownloadPageViewModel.cs" />
+    <Compile Include="ViewModels\Download\VideoExportOptionsDialogViewModel.cs" />
     <Compile Include="ViewModels\Live\LiveDetailPageViewModel.cs" />
     <Compile Include="ViewModels\Live\LiveRoomLotteryViewModel.cs" />
     <Compile Include="ViewModels\Live\SuperChatMsgViewModel.cs" />
@@ -806,6 +841,8 @@
     <Compile Include="Extensions\BiliExtensions.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Extensions\HttpResultsExtensions.cs" />
+    <Compile Include="Extensions\LauncherExtensions.cs" />
+    <Compile Include="Extensions\MarkdownLinkExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\ObservableCollectionExtension.cs" />
     <Compile Include="Extensions\StreamExtensions.cs" />
@@ -889,14 +926,14 @@
     <Compile Include="Converters\CountDisplayConvert.cs" />
     <Compile Include="Converters\DanmakuStyleConvert.cs" />
     <Compile Include="Converters\DownloadStatusConvert.cs" />
-    <Compile Include="Controls\Dialogs\CommentDialog.xaml.cs">
-      <DependentUpon>CommentDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Dialogs\CopyOrMoveFavVideoDialog.xaml.cs">
       <DependentUpon>CopyOrMoveFavVideoDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Dialogs\CreateFavFolderDialog.xaml.cs">
       <DependentUpon>CreateFavFolderDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dialogs\VideoExportOptionsDialog.xaml.cs">
+      <DependentUpon>VideoExportOptionsDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Dynamic\DynamicRepostControl.xaml.cs">
       <DependentUpon>DynamicRepostControl.xaml</DependentUpon>
@@ -904,10 +941,6 @@
     <Compile Include="Controls\Dynamic\DynamicControl.xaml.cs">
       <DependentUpon>DynamicControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Dynamic\DynamicItemControl.xaml.cs">
-      <DependentUpon>DynamicItemControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\DataTemplateSelectors\UserDynamicItemDataTemplateSelector.cs" />
     <Compile Include="Extensions\DynamicParseExtensions.cs" />
     <Compile Include="Controls\ImageViewerControl.xaml.cs">
       <DependentUpon>ImageViewerControl.xaml</DependentUpon>
@@ -920,6 +953,9 @@
     </Compile>
     <Compile Include="Controls\MessageToast.xaml.cs">
       <DependentUpon>MessageToast.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DownloadAddToast.xaml.cs">
+      <DependentUpon>DownloadAddToast.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MyAdaptiveGridView.cs" />
     <Compile Include="Controls\MyFrame.cs" />
@@ -961,6 +997,7 @@
     <Compile Include="Services\AppHelper.cs" />
     <Compile Include="Services\BiliRequestBuilder.cs" />
     <Compile Include="Services\DownloadHelper.cs" />
+    <Compile Include="Services\VideoExportHelper.cs" />
     <Compile Include="Extensions\ExceptionHandler.cs" />
     <Compile Include="Extensions\StringHttpExtensions.cs" />
     <Compile Include="Services\GlobalLogger.cs" />
@@ -969,6 +1006,7 @@
     <Compile Include="Services\MessageCenter.cs" />
     <Compile Include="Services\SettingService.cs" />
     <Compile Include="Services\SqlHelper.cs" />
+    <Compile Include="Services\ScreenshotHelper.cs" />
     <Compile Include="Services\VideoPlayHistoryHelper.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -1016,7 +1054,6 @@
     <Compile Include="ViewModels\Live\LiveRoomViewModel.cs" />
     <Compile Include="ViewModels\Home\LiveViewModel.cs" />
     <Compile Include="ViewModels\UserDynamic\UserDynamicRepostViewModel.cs" />
-    <Compile Include="ViewModels\UserDynamic\UserDynamicViewModel.cs" />
     <Compile Include="Modules\User\LoginVM.cs" />
     <Compile Include="ViewModels\User\SendDynamic\AtViewModel.cs" />
     <Compile Include="ViewModels\User\HistoryViewModel.cs" />
@@ -1101,9 +1138,6 @@
     <Compile Include="Pages\Other\ImageViewerPage.xaml.cs">
       <DependentUpon>ImageViewerPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Other\TopicPage.xaml.cs">
-      <DependentUpon>TopicPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\RankPage.xaml.cs">
       <DependentUpon>RankPage.xaml</DependentUpon>
     </Compile>
@@ -1143,14 +1177,13 @@
     <Compile Include="Pages\WebPage.xaml.cs">
       <DependentUpon>WebPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Player\BiliPlayer.cs" />
-    <Compile Include="Player\IBiliPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\Requests\ApiModel.cs" />
     <Compile Include="Models\Common\ApiKeyInfo.cs" />
     <Compile Include="Services\Biz\SearchService.cs" />
     <Compile Include="ViewModels\Common\BaseViewModel.cs" />
     <Compile Include="ViewModels\Download\DownloadDialogViewModel.cs" />
+    <Compile Include="ViewModels\Download\DownloadAddBatchViewModel.cs" />
     <Compile Include="Models\Common\Video\VideoListItem.cs" />
     <Compile Include="Models\Common\Video\VideoListSection.cs" />
     <Compile Include="ViewModels\Video\VideoListSectionViewModel.cs" />
@@ -1280,6 +1313,9 @@
     <Content Include="Assets\Fonts\biliicon.ttf" />
     <Content Include="Assets\GeeTest\bili_gt.cshtml" />
     <Content Include="Assets\Text\bili-merge.md" />
+    <Content Include="Assets\Text\help-garbled-text.md" />
+    <Content Include="Assets\Text\help-network.md" />
+    <Content Include="Assets\Text\help-play-stutter.md" />
     <Content Include="Assets\Reader\index.html" />
     <None Include="Assets\Text\new_version.json" />
     <AppxManifest Include="Package.appxmanifest">
@@ -1322,6 +1358,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Common\PieControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Search\SearchHistoryPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1457,10 +1497,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Dialogs\CommentDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Dialogs\CopyOrMoveFavVideoDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1469,19 +1505,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Dialogs\VideoExportOptionsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Dynamic\DynamicRepostControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dynamic\DynamicControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Dynamic\DynamicItemControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Dynamic\DynamicTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1498,6 +1530,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MessageToast.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\DownloadAddToast.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1618,10 +1654,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\Other\ImageViewerPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\Other\TopicPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

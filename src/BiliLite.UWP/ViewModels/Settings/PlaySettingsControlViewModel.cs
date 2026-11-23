@@ -29,17 +29,28 @@ namespace BiliLite.ViewModels.Settings
             };
             FFmpegInteropXOptions = SettingService
                 .GetValue(SettingConstants.Player.FFMPEG_INTEROP_X_OPTIONS, "");
+            WebView2EnvironmentVariables = SettingService
+                .GetValue(SettingConstants.Player.WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES,
+                    SettingConstants.Player.DEFAULT_WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES);
+            // 留空时按默认值处理，与播放器中实际生效的环境变量保持一致
+            if (string.IsNullOrWhiteSpace(WebView2EnvironmentVariables))
+            {
+                WebView2EnvironmentVariables =
+                    SettingConstants.Player.DEFAULT_WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES;
+            }
         }
 
         public List<CDNServerItemViewModel> CDNServers { get; set; }
 
         public string FFmpegInteropXOptions { get; set; }
 
+        public string WebView2EnvironmentVariables { get; set; }
+
         public bool ShowCustomCDNTimeOut => CustomCDNDelay < 0;
 
         public bool ShowCustomCDNDelay => CustomCDNDelay > 0;
 
-        [AlsoNotifyFor(nameof(ShowCustomCDNDelay),nameof(ShowCustomCDNTimeOut))]
+        [AlsoNotifyFor(nameof(ShowCustomCDNDelay), nameof(ShowCustomCDNTimeOut))]
         public long CustomCDNDelay { get; set; }
 
         /// <summary>
@@ -74,7 +85,7 @@ namespace BiliLite.ViewModels.Settings
             {
                 var res = await testUrl.WithHeader(
                         "user-agent",
-                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36")
+                        WebView2UserAgentProvider.DesktopUserAgent)
                     .WithTimeout(2).GetAsync();
             }
             catch (FlurlHttpException ex)

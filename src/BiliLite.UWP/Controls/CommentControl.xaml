@@ -38,6 +38,20 @@
             <Setter Property="BorderBrush" Value="#33808080" />
             <Setter Property="Padding" Value="0" />
         </Style>
+        <Style x:Key="commentPictureGridItemStyle" TargetType="GridViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style x:Key="commentPicturePageStyle" TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
         <Flyout x:Key="FaceFlyout" x:Name="FaceFlyout">
             <Grid Width="320">
                 <Pivot x:Name="PivotFace" ItemsSource="{x:Bind Path=emoteVM.Packages, Mode=OneWay}">
@@ -344,32 +358,163 @@
                     Content="{x:Bind ExtendBtnText, Mode=OneWay}"
                     Visibility="{x:Bind Path=IsContentNeedExpand, Mode=OneWay}" />
 
-                <GridView
-                    x:Name="NotePicturesView"
+                <Border
                     Grid.Row="2"
+                    MaxWidth="280"
+                    MaxHeight="280"
                     Margin="0,0,4,0"
+                    HorizontalAlignment="Left"
+                    Visibility="{x:Bind Path=Content.HasSinglePicture, Mode=OneWay}">
+                    <Button
+                        Padding="0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Click="SinglePictureView_Click">
+                        <toolkit:ImageEx
+                            Width="{x:Bind Path=Content.SinglePictureDisplayWidth, Mode=OneWay}"
+                            Height="{x:Bind Path=Content.SinglePictureDisplayHeight, Mode=OneWay}"
+                            CornerRadius="{ThemeResource ControlCornerRadius}"
+                            PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
+                            Source="{x:Bind Path=Content.SinglePicture.ImgSrc, Mode=OneWay}"
+                            Stretch="Uniform" />
+                    </Button>
+                </Border>
+
+                <GridView
+                    Grid.Row="2"
+                    Width="280"
+                    Height="{x:Bind Path=Content.GridPictureContainerHeight, Mode=OneWay}"
+                    Margin="0,0,4,0"
+                    HorizontalAlignment="Left"
                     IsItemClickEnabled="True"
                     ItemClick="NotePicturesView_ItemClick"
+                    ItemContainerStyle="{StaticResource commentPictureGridItemStyle}"
                     ItemsSource="{x:Bind Path=Content.Pictures}"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    ScrollViewer.HorizontalScrollMode="Disabled"
                     ScrollViewer.VerticalScrollBarVisibility="Disabled"
                     ScrollViewer.VerticalScrollMode="Disabled"
                     SelectionMode="None"
-                    Visibility="{x:Bind Path=ShowPics}">
+                    Tag="{x:Bind Path=Content.Pictures}"
+                    Visibility="{x:Bind Path=Content.HasQuadGridPictures, Mode=OneWay}">
                     <GridView.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <toolkit:StaggeredPanel DesiredColumnWidth="240" />
+                            <ItemsWrapGrid Orientation="Horizontal" />
                         </ItemsPanelTemplate>
                     </GridView.ItemsPanel>
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="common:NotePicture">
-                            <toolkit:ImageEx
-                                Margin="10"
-                                CornerRadius="{ThemeResource ControlCornerRadius}"
-                                PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                Source="{x:Bind ImgSrc}" />
+                            <Grid Width="140" Height="140">
+                                <toolkit:ImageEx
+                                    Margin="2"
+                                    CornerRadius="{ThemeResource ControlCornerRadius}"
+                                    PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
+                                    Source="{x:Bind ImgSrc}"
+                                    Stretch="UniformToFill" />
+                            </Grid>
                         </DataTemplate>
                     </GridView.ItemTemplate>
                 </GridView>
+
+                <GridView
+                    Grid.Row="2"
+                    Width="280"
+                    Height="{x:Bind Path=Content.GridPictureContainerHeight, Mode=OneWay}"
+                    Margin="0,0,4,0"
+                    HorizontalAlignment="Left"
+                    IsItemClickEnabled="True"
+                    ItemClick="NotePicturesView_ItemClick"
+                    ItemContainerStyle="{StaticResource commentPictureGridItemStyle}"
+                    ItemsSource="{x:Bind Path=Content.Pictures}"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    ScrollViewer.HorizontalScrollMode="Disabled"
+                    ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                    ScrollViewer.VerticalScrollMode="Disabled"
+                    SelectionMode="None"
+                    Tag="{x:Bind Path=Content.Pictures}"
+                    Visibility="{x:Bind Path=Content.HasNineGridPictures, Mode=OneWay}">
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="common:NotePicture">
+                            <Grid Width="93.333" Height="93.333">
+                                <toolkit:ImageEx
+                                    Margin="2"
+                                    CornerRadius="{ThemeResource ControlCornerRadius}"
+                                    PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
+                                    Source="{x:Bind ImgSrc}"
+                                    Stretch="UniformToFill" />
+                            </Grid>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+
+                <ListView
+                    Grid.Row="2"
+                    Width="280"
+                    Height="280"
+                    Margin="0,0,4,0"
+                    HorizontalAlignment="Left"
+                    IsItemClickEnabled="False"
+                    ItemContainerStyle="{StaticResource commentPicturePageStyle}"
+                    ItemsSource="{x:Bind Path=Content.PicturePages, Mode=OneWay}"
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                    ScrollViewer.HorizontalScrollMode="Enabled"
+                    ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                    ScrollViewer.VerticalScrollMode="Disabled"
+                    SelectionMode="None"
+                    Visibility="{x:Bind Path=Content.HasPagedPictures, Mode=OneWay}">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsStackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="comment:CommentPicturePageViewModel">
+                            <Grid
+                                Width="280"
+                                Height="280"
+                                Margin="0,0,8,0">
+                                <GridView
+                                    Width="280"
+                                    Height="280"
+                                    IsItemClickEnabled="True"
+                                    ItemClick="NotePicturesView_ItemClick"
+                                    ItemContainerStyle="{StaticResource commentPictureGridItemStyle}"
+                                    ItemsSource="{x:Bind Pictures, Mode=OneWay}"
+                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                    ScrollViewer.HorizontalScrollMode="Disabled"
+                                    ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                    ScrollViewer.VerticalScrollMode="Disabled"
+                                    SelectionMode="None"
+                                    Tag="{x:Bind AllPictures, Mode=OneWay}">
+                                    <GridView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <ItemsWrapGrid Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </GridView.ItemsPanel>
+                                    <GridView.ItemTemplate>
+                                        <DataTemplate x:DataType="common:NotePicture">
+                                            <Grid Width="93.333" Height="93.333">
+                                                <toolkit:ImageEx
+                                                    Margin="2"
+                                                    CornerRadius="{ThemeResource ControlCornerRadius}"
+                                                    PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
+                                                    Source="{x:Bind ImgSrc}"
+                                                    Stretch="UniformToFill" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridView.ItemTemplate>
+                                </GridView>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
 
                 <Grid Grid.Row="3" Margin="0,4">
                     <StackPanel VerticalAlignment="Center" Orientation="{Binding ElementName=CommentControlContent, Path=DataContext.CommentActionOrientation}">

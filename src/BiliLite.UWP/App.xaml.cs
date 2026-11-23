@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions;
+using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Events;
@@ -46,6 +46,8 @@ namespace BiliLite
             LogService.Init();
             RegisterService();
             OpenCCNET.ZhConverter.Initialize();
+            // 注册Markdown自定义协议，需早于任何Markdown文本渲染
+            MarkdownLinkExtensions.RegisterCustomSchemes();
             this.Suspending += OnSuspending;
             this.InitializeComponent();
         }
@@ -140,6 +142,9 @@ namespace BiliLite
             {
                 SYEngine.Core.Initialize();
             }
+
+            await WebView2UserAgentProvider.InitializeAsync();
+
             try
             {
                 var systemId = Windows.System.Profile.SystemIdentification.GetSystemIdForPublisher();
@@ -151,6 +156,13 @@ namespace BiliLite
             }
 
             await InitBili();
+
+            // 恢复上次保存的窗口尺寸(需在窗口激活前调用),修复"重启应用"后窗口恢复默认大小的问题
+            var windowSizeProvider = ServiceProvider.GetRequiredService<IWindowSizeProvider>();
+            windowSizeProvider.Initialize();
+            var windowSizeService = ServiceProvider.GetRequiredService<WindowSizeService>();
+            windowSizeService.RestoreWindowSize();
+
             Frame rootFrame = Window.Current.Content as Frame;
 
             // 不要在窗口已包含内容时重复应用程序初始化，
@@ -179,10 +191,24 @@ namespace BiliLite
 
                 if (arguments != null && !string.IsNullOrEmpty(arguments.ToString()))
                 {
-                    await MessageCenter.HandelUrl(arguments.ToString());
+                    var url = arguments.ToString();
+
+                    // 快捷方式冷启动标记：桌面快捷方式的 URL 必须带上该 query 参数，冷启动时才等待外壳布局完成再导航。
+                    // 否则目标页面会在外壳尚未完成首帧布局时按 0 尺寸布局，之后不再触发重排，表现为内容区空白。
+                    if (IsShortcutLaunch(url))
+                    {
+                        Window.Current.Activate();
+                        await Task.Delay(500);
+                        url = RemoveShortcutLaunchMark(url);
+                    }
+
+                    await MessageCenter.HandelUrl(url);
                 }
                 // 确保当前窗口处于活动状态
                 Window.Current.Activate();
+
+                // 窗口激活后按保存的应用视图尺寸精确校正一次,避免启动偏好与窗口边界语义不一致导致高度偏差
+                windowSizeService.ApplySavedWindowSize();
 
                 var themeService = ServiceProvider.GetRequiredService<ThemeService>();
                 themeService.InitTitleBar();
@@ -196,7 +222,88 @@ namespace BiliLite
 
                 var tempFileService = ServiceProvider.GetRequiredService<TempFileService>();
                 tempFileService.ClearTempFiles();
+
+                // 启动时刷新动态磁贴
+                _ = NotificationShowExtensions.ShowTile();
             }
+        }
+
+        /// <summary>
+        /// 桌面快捷方式冷启动标记参数，快捷方式 URL 必须带上它，例如
+        /// bilibili://space.bilibili.com/266765166?shortcut=1
+        /// </summary>
+        private const string ShortcutLaunchQueryKey = "shortcut";
+
+        /// <summary>
+        /// 是否为带冷启动标记的快捷方式链接
+        /// </summary>
+        private static bool IsShortcutLaunch(string url)
+        {
+            if (string.IsNullOrEmpty(url) || !Uri.TryCreate(url, UriKind.Absolute, out var uri))
+            {
+                return false;
+            }
+
+            var query = uri.Query;
+            if (string.IsNullOrEmpty(query))
+            {
+                return false;
+            }
+
+            return GetQueryValue(uri, ShortcutLaunchQueryKey) != null;
+        }
+
+        /// <summary>
+        /// 去掉冷启动标记参数，避免影响后续链接解析
+        /// </summary>
+        private static string RemoveShortcutLaunchMark(string url)
+        {
+            var queryIndex = url.IndexOf('?');
+            if (queryIndex < 0)
+            {
+                return url;
+            }
+
+            var baseUrl = url.Substring(0, queryIndex);
+            var parameters = url.Substring(queryIndex + 1).Split('&');
+            var remain = "";
+            foreach (var parameter in parameters)
+            {
+                var key = parameter.Split('=')[0];
+                if (string.Equals(key, ShortcutLaunchQueryKey, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                if (parameter.Length == 0)
+                {
+                    continue;
+                }
+
+                remain = remain.Length == 0 ? parameter : remain + "&" + parameter;
+            }
+
+            return remain.Length == 0 ? baseUrl : baseUrl + "?" + remain;
+        }
+
+        private static string GetQueryValue(Uri uri, string key)
+        {
+            var query = uri.Query;
+            if (string.IsNullOrEmpty(query))
+            {
+                return null;
+            }
+
+            foreach (var parameter in query.TrimStart('?').Split('&'))
+            {
+                var pair = parameter.Split('=');
+                if (pair.Length > 0 && string.Equals(pair[0], key, StringComparison.OrdinalIgnoreCase))
+                {
+                    return pair.Length > 1 ? pair[1] : "";
+                }
+            }
+
+            return null;
         }
 
         private async Task InitBili()

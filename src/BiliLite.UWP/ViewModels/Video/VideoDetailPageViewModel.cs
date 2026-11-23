@@ -43,6 +43,10 @@ namespace BiliLite.Modules
         private readonly IMapper m_mapper;
         private readonly ThemeService m_themeService;
         private readonly ISponsorBlockService m_sponsorBlockService;
+        private string m_deferredDetailId;
+        private bool m_deferredDetailIsBvid;
+        private bool m_needWebDetailRefetch;
+        private bool m_deferredDetailLoaded;
 
         #endregion
 
@@ -127,22 +131,27 @@ namespace BiliLite.Modules
 
         public double PageWidth { get; set; }
 
+        [DoNotNotify]
+        public bool EnableResponsiveRightInfo => SettingService.GetValue(
+            SettingConstants.UI.DETAIL_RIGHT_INFO_RESPONSIVE,
+            SettingConstants.UI.DEFAULT_DETAIL_RIGHT_INFO_RESPONSIVE);
+
         [DependsOn(nameof(PageWidth))]
-        public int PlayerGridColumnSpan => PageWidth < 1000 ? 2 : 1;
+        public int PlayerGridColumnSpan => PageWidth < 1000 && EnableResponsiveRightInfo ? 2 : 1;
 
         public GridLength DefaultRightInfoWidth { get; set; } = new GridLength(320);
 
         public bool IsOpenRightInfo { get; set; }
 
         [DependsOn(nameof(PageWidth))]
-        public bool ShowOpenRightInfoBtn => (PageWidth < 1000);
+        public bool ShowOpenRightInfoBtn => (PageWidth < 1000 && EnableResponsiveRightInfo);
 
         [DependsOn(nameof(PageWidth), nameof(IsOpenRightInfo))]
         public GridLength RightInfoWidth
         {
             get
             {
-                if (PageWidth < 1000 && !IsOpenRightInfo)
+                if (PageWidth < 1000 && EnableResponsiveRightInfo && !IsOpenRightInfo)
                 {
                     return new GridLength(0);
                 }
@@ -156,7 +165,7 @@ namespace BiliLite.Modules
         {
             get
             {
-                if (PageWidth < 1000)
+                if (PageWidth < 1000 && EnableResponsiveRightInfo)
                 {
                     return (Brush)m_themeService.DefaultThemeResource["PlayerControlAcrylicBrush"];
                 }
@@ -170,7 +179,7 @@ namespace BiliLite.Modules
         {
             get
             {
-                if (PageWidth < 1000)
+                if (PageWidth < 1000 && EnableResponsiveRightInfo)
                 {
                     return PageHeight - BottomActionBarHeight;
                 }
@@ -204,20 +213,28 @@ namespace BiliLite.Modules
 
         private async Task LoadVideoTags(string avid)
         {
-            var api = videoAPI.Tags(avid);
-            var results = await api.Request();
-            if (!results.status)
+            try
             {
-                _logger.Warn(results.message);
-            }
+                var api = videoAPI.Tags(avid);
+                var results = await api.Request();
+                if (!results.status)
+                {
+                    _logger.Warn(results.message);
+                }
 
-            var data = await results.GetJson<ApiDataModel<List<BiliVideoTag>>>();
-            if (!data.success)
+                var data = await results.GetJson<ApiDataModel<List<BiliVideoTag>>>();
+                if (!data.success)
+                {
+                    _logger.Warn(data.message);
+                }
+
+                Tags = data.data ?? new List<BiliVideoTag>();
+            }
+            catch (Exception ex)
             {
-                _logger.Warn(data.message);
+                _logger.Warn("load video tags error", ex);
+                Tags = new List<BiliVideoTag>();
             }
-
-            Tags = data.data;
         }
 
         #endregion
@@ -230,6 +247,9 @@ namespace BiliLite.Modules
             {
                 if (!SettingService.Account.Logined)
                 {
+                    // 未登录也保持为空集合，避免界面绑定和收藏更新逻辑访问 null。
+                    MyFavorite = new ObservableCollection<FavoriteItemViewModel>();
+                    ExistFavIdList = new List<string>();
                     return;
                 }
                 var results = await favoriteAPI.MyCreatedFavorite(avid).Request();
@@ -276,29 +296,24 @@ namespace BiliLite.Modules
             try
             {
                 if (id.Length == 0) { throw new ArgumentException(nameof(id)); }
+                m_deferredDetailId = id;
+                m_deferredDetailIsBvid = isbvid;
+                m_needWebDetailRefetch = false;
+                m_deferredDetailLoaded = false;
                 Loaded = false;
                 Loading = true;
                 ShowError = false;
                 var needGetUserReq = false;
-                // 正常app获取视频详情
-                var results = await videoAPI.Detail(id, isbvid).Request();
-                if (!results.status)
+                // 正常web获取视频详情
+                var webResult = await videoAPI.DetailWebInterface(id, isbvid).Request();
+                // 通过web获取推荐视频
+                var webRelatesResult = await videoAPI.RelatesWebInterface(id, isbvid).Request();
+                ApiDataModel<VideoDetailModel> data = null;
+                if (webResult.status && webRelatesResult.status)
                 {
-                    throw new CustomizedErrorException(results.message);
-                }
-
-                var data = await results.GetJson<ApiDataModel<VideoDetailModel>>();
-
-                // 通过web获取, 作为后备使用
-                if (!data.success)
-                {
-                    // 通过web获取视频详情
-                    var webResult = await videoAPI.DetailWebInterface(id, isbvid).Request();
-                    // 通过web获取推荐视频
-                    var webRelatesResult = await videoAPI.RelatesWebInterface(id, isbvid).Request();
-                    if (webResult.status && webRelatesResult.status)
+                    data = await webResult.GetJson<ApiDataModel<VideoDetailModel>>();
+                    if (data.success)
                     {
-                        data = await webResult.GetJson<ApiDataModel<VideoDetailModel>>();
                         data.data.ShortLink = "https://b23.tv/" + data.data.Bvid;
 
                         // 解析推荐视频
@@ -313,58 +328,37 @@ namespace BiliLite.Modules
                     }
                 }
 
+                // 通过app获取, 作为后备使用
+                if (data == null || !data.success)
+                {
+                    var results = await videoAPI.Detail(id, isbvid).Request();
+                    if (!results.status)
+                    {
+                        throw new CustomizedErrorException(results.message);
+                    }
+
+                    data = await results.GetJson<ApiDataModel<VideoDetailModel>>();
+                }
+
                 if (!data.success)
                 {
                     throw new CustomizedErrorException(data.message);
                 }
 
-                var webResults = await videoAPI.DetailWebInterface(id, isbvid).Request();
-                if (!webResults.status)
-                {
-                    throw new CustomizedErrorException(webResults.message);
-                }
-                var webData = await webResults.GetJson<ApiDataModel<VideoDetailModel>>();
-                if (!webData.success)
-                {
-                    throw new CustomizedErrorException(webData.message);
-                }
-                if (data.data.UgcSeason == null && webData.data.UgcSeason != null)
-                {
-                    data.data.UgcSeason = webData.data.UgcSeason;
-                }
-
-                if (data.data.OwnerExt == null)
-                {
-                    data.data.OwnerExt = new VideoDetailOwnerExtModel();
-                    try
-                    {
-                        var request = new UserDetailAPI().UserCard(data.data.Owner.Mid);
-                        var userResults = await request.Request();
-                        if (userResults.status)
-                        {
-                            var userData = await userResults.GetData<UserCardInfo>();
-                            data.data.OwnerExt.Fans = userData.data.Follower;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Warn("get userCard error", ex);
-                    }
-                }
-
                 var videoInfoViewModel = m_mapper.Map<VideoDetailViewModel>(data.data);
                 VideoInfo = videoInfoViewModel;
+                // 标签/收藏夹/粉丝数/关注状态/用户点赞投币收藏状态不参与首播链路，详情基础信息就绪后立刻后台预取，避免页面上仍然空白。
+                _ = LoadFavorite(data.data.Aid);
+                _ = LoadVideoTags(data.data.Aid);
+                _ = LoadOwnerFans();
+                _ = GetAttentionUp();
                 if (needGetUserReq)
                 {
-                    await GetAttentionUp();
+                    // Web端详情接口不返回用户的点赞/投币/收藏状态, 需要单独查询
+                    _ = GetUserVideoStates();
                 }
                 Loaded = true;
-
-                await LoadFavorite(data.data.Aid);
-
-                await LoadVideoTags(data.data.Aid);
-
-                LoadSponsorBlock(data.data.Bvid);
+                m_needWebDetailRefetch = needGetUserReq;
             }
             catch (Exception ex)
             {
@@ -384,6 +378,46 @@ namespace BiliLite.Modules
             finally
             {
                 Loading = false;
+            }
+        }
+
+        public async Task LoadDeferredVideoDetailData()
+        {
+            if (m_deferredDetailLoaded || VideoInfo == null)
+            {
+                return;
+            }
+
+            m_deferredDetailLoaded = true;
+
+            try
+            {
+                if (!m_needWebDetailRefetch)
+                {
+                    try
+                    {
+                        var webResults = await videoAPI.DetailWebInterface(m_deferredDetailId, m_deferredDetailIsBvid).Request();
+                        if (webResults.status)
+                        {
+                            var webData = await webResults.GetJson<ApiDataModel<VideoDetailModel>>();
+                            if (webData.success && VideoInfo.UgcSeason == null && webData.data.UgcSeason != null)
+                            {
+                                VideoInfo.UgcSeason = m_mapper.Map<VideoUgcSeason>(webData.data.UgcSeason);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Warn("load web detail error", ex);
+                    }
+                }
+
+                LoadSponsorBlock(VideoInfo.Bvid);
+            }
+            catch (Exception ex)
+            {
+                m_deferredDetailLoaded = false;
+                _logger.Warn("load deferred video detail data error", ex);
             }
         }
 
@@ -604,21 +638,119 @@ namespace BiliLite.Modules
             }
         }
 
+        /// <summary>
+        /// 查询UP主关注状态(与播放状态无关, 页面打开后立即预取)
+        /// </summary>
         public async Task GetAttentionUp()
         {
-            VideoInfo.ReqUser ??= new VideoDetailReqUserViewModel();
-            VideoInfo.ReqUser.Attention = -999;
-            if (!SettingService.Account.Logined)
+            try
             {
-                return;
-            }
+                VideoInfo.ReqUser ??= new VideoDetailReqUserViewModel();
+                VideoInfo.ReqUser.Attention = -999;
+                if (!SettingService.Account.Logined)
+                {
+                    return;
+                }
 
-            var result = await followAPI.GetAttention(VideoInfo.Owner.Mid).Request();
-            if (!result.status) return;
-            var data = await result.GetJson<ApiDataModel<UserAttentionResponse>>();
-            if (data.data.Attribute == 2 || data.data.Attribute == 6)
+                var result = await followAPI.GetAttention(VideoInfo.Owner.Mid).Request();
+                if (!result.status) return;
+                var data = await result.GetJson<ApiDataModel<UserAttentionResponse>>();
+                if (data?.data != null && (data.data.Attribute == 2 || data.data.Attribute == 6))
+                {
+                    VideoInfo.ReqUser.Attention = 1;
+                }
+            }
+            catch (Exception ex)
             {
-                VideoInfo.ReqUser.Attention = 1;
+                _logger.Warn("get attention error", ex);
+            }
+        }
+
+        /// <summary>
+        /// 补查UP主粉丝数(Web端详情接口不含粉丝数时使用, 与播放状态无关, 页面打开后立即预取)
+        /// </summary>
+        private async Task LoadOwnerFans()
+        {
+            try
+            {
+                if (VideoInfo?.Owner == null || (VideoInfo.OwnerExt?.Fans ?? 0) > 0)
+                {
+                    return;
+                }
+
+                var request = new UserDetailAPI().UserCard(VideoInfo.Owner.Mid);
+                var userResults = await request.Request();
+                if (userResults.status)
+                {
+                    var userData = await userResults.GetData<UserCardInfo>();
+                    if (userData?.data != null)
+                    {
+                        // OwnerExt 是纯 Model 类，页面绑定没有监听它的 Fans 变更；
+                        // 整体重赋值触发 Fody 对 VideoInfo.OwnerExt 注入的 PropertyChanged，界面才能刷新粉丝数。
+                        VideoInfo.OwnerExt = new VideoDetailOwnerExtModel()
+                        {
+                            Fans = userData.data.Follower
+                        };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn("get userCard error", ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询用户的点赞/投币/收藏状态(Web端详情接口不含这些数据, 登录后单独补齐)
+        /// </summary>
+        private async Task GetUserVideoStates()
+        {
+            try
+            {
+                if (!SettingService.Account.Logined || VideoInfo == null)
+                {
+                    return;
+                }
+
+                VideoInfo.ReqUser ??= new VideoDetailReqUserViewModel();
+
+                var aid = VideoInfo.Aid;
+                var bvid = VideoInfo.Bvid;
+                var likeTask = videoAPI.HasLike(aid, bvid).Request();
+                var coinTask = videoAPI.HasCoin(aid, bvid).Request();
+                var favTask = videoAPI.HasFav(aid, bvid).Request();
+                await Task.WhenAll(likeTask, coinTask, favTask);
+
+                if (likeTask.Result.status)
+                {
+                    var data = await likeTask.Result.GetData<int>();
+                    if (data != null && data.success)
+                    {
+                        VideoInfo.ReqUser.Like = data.data == 1 ? 1 : 0;
+                    }
+                }
+
+                if (coinTask.Result.status)
+                {
+                    var data = await coinTask.Result.GetData<JObject>();
+                    if (data != null && data.success && data.data != null && data.data["multiply"] != null)
+                    {
+                        VideoInfo.ReqUser.Coin = data.data["multiply"].ToObject<int>() > 0 ? 1 : 0;
+                    }
+                }
+
+                if (favTask.Result.status)
+                {
+                    var data = await favTask.Result.GetData<JObject>();
+                    if (data != null && data.success && data.data != null && data.data["favoured"] != null)
+                    {
+                        VideoInfo.ReqUser.Favorite = data.data["favoured"].ToObject<bool>() ? 1 : 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn("获取用户点赞/投币/收藏状态失败", ex);
             }
         }
 
@@ -673,6 +805,17 @@ namespace BiliLite.Modules
 
             try
             {
+                if (MyFavorite == null || ExistFavIdList == null)
+                {
+                    // 收藏夹列表尚未准备好时，先补拉一次，避免空集合直接进入更新逻辑。
+                    await LoadFavorite(avid);
+                }
+
+                if (MyFavorite == null || ExistFavIdList == null)
+                {
+                    throw new CustomizedErrorException("收藏夹数据尚未加载完成，请稍后重试");
+                }
+
                 var newIdList = new List<string>();
 
                 var defaultUseFav = SettingService.GetValue(SettingConstants.UI.DEFAULT_USE_FAV,

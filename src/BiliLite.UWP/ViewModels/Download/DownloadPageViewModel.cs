@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using BiliLite.Models.Common.Download;
+using BiliLite.Modules;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
 using PropertyChanged;
@@ -11,6 +12,7 @@ using Windows.Networking.BackgroundTransfer;
 using AutoMapper;
 using BiliLite.Models.Common;
 using BiliLite.Models.Attributes;
+using Windows.UI.Xaml.Controls;
 
 namespace BiliLite.ViewModels.Download
 {
@@ -35,6 +37,7 @@ namespace BiliLite.ViewModels.Download
             DownloadedViewModels = new ObservableCollection<DownloadedItem>();
             Downloadings = new ObservableCollection<DownloadingItemViewModel>();
             Downloadeds = new List<DownloadedItem>();
+            SelectDownloadedCommand = new RelayCommand<object>(SetSelectDownloadedMode);
         }
 
         #endregion
@@ -55,6 +58,9 @@ namespace BiliLite.ViewModels.Download
 
         [DoNotNotify]
         public ICommand RefreshDownloadedCommand { get; set; }
+
+        [DoNotNotify]
+        public ICommand SelectDownloadedCommand { get; private set; }
 
         public ObservableCollection<DownloadingItemViewModel> Downloadings { get; set; }
 
@@ -85,6 +91,28 @@ namespace BiliLite.ViewModels.Download
 
         [DoNotNotify]
         public string SearchKeyword { get; set; }
+
+        public ListViewSelectionMode DownloadedSelectionMode { get; set; } = ListViewSelectionMode.None;
+
+        public bool IsDownloadedItemClickEnabled { get; set; } = true;
+
+        #endregion
+
+        #region Private Methods
+
+        private void SetSelectDownloadedMode(object data)
+        {
+            if (data == null)
+            {
+                IsDownloadedItemClickEnabled = true;
+                DownloadedSelectionMode = ListViewSelectionMode.None;
+            }
+            else
+            {
+                IsDownloadedItemClickEnabled = false;
+                DownloadedSelectionMode = ListViewSelectionMode.Multiple;
+            }
+        }
 
         #endregion
     }

@@ -117,10 +117,13 @@ namespace BiliLite.Pages.Home
                     await m_viewModel.Dislike(threePoint.Idx, threePoint, null);
                     return;
                 case "browser":
-                    await Launcher.LaunchUriAsync(new Uri(threePoint.Url));
+                    await LauncherExtensions.OpenInBrowserAsync(threePoint.Url);
                     return;
                 case "fastFilter":
                     m_viewModel.AddFilterUser(threePoint.Subtitle);
+                    return;
+                case "blockUser":
+                    await m_viewModel.BlockUser(threePoint.UpId, threePoint.Subtitle);
                     return;
             }
         }

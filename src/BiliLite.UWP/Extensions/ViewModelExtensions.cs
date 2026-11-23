@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using BiliLite.Models.Attributes;
 using BiliLite.ViewModels;
 using BiliLite.ViewModels.Comment;

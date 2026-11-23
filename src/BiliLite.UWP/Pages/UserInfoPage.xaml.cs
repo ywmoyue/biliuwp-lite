@@ -11,7 +11,6 @@ using BiliLite.Services;
 using BiliLite.Services.Biz;
 using BiliLite.Services.Interfaces;
 using BiliLite.ViewModels.User;
-using BiliLite.ViewModels.UserDynamic;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
@@ -48,7 +47,6 @@ namespace BiliLite.Pages
     public sealed partial class UserInfoPage : BasePage, IRefreshablePage, IUpdatePivotLayout
     {
         private readonly MediaListService m_mediaListService;
-        readonly UserDynamicViewModel m_userDynamicViewModel;
         UserDetailViewModel m_viewModel;
         UserSubmitVideoViewModel m_userSubmitVideoViewModel;
         UserSubmitCollectionViewModel m_userSubmitCollectionViewModel;
@@ -68,10 +66,8 @@ namespace BiliLite.Pages
             m_userSubmitCollectionViewModel = App.ServiceProvider.GetService<UserSubmitCollectionViewModel>();
             userSubmitArticleVM = new UserSubmitArticleVM();
             userFavlistVM = new UserFavlistVM();
-            m_userDynamicViewModel = new UserDynamicViewModel();
             fansVM = new UserFollowVM(true);
             followVM = new UserFollowVM(false);
-            m_userDynamicViewModel.OpenCommentEvent += UserDynamicViewModelOpenCommentEvent;
             splitView.PaneClosed += SplitView_PaneClosed;
             m_viewModel.LiveStreaming += (_, e) => btnLiveRoom.Label = "正在直播";
         }
@@ -79,55 +75,6 @@ namespace BiliLite.Pages
         {
             comment.ClearComment();
             repost.UserDynamicRepostViewModel.Clear();
-        }
-        string dynamic_id;
-        private void UserDynamicViewModelOpenCommentEvent(object sender, UserDynamicItemDisplayViewModel e)
-        {
-            //splitView.IsPaneOpen = true;
-            dynamic_id = e.DynamicID;
-            pivotRight.SelectedIndex = 1;
-            repostCount.Text = e.ShareCount.ToString();
-            commentCount.Text = e.CommentCount.ToString();
-            CommentApi.CommentType commentType = CommentApi.CommentType.Dynamic;
-            var id = e.ReplyID;
-            switch (e.Type)
-            {
-
-                case UserDynamicDisplayType.Photo:
-                    commentType = CommentApi.CommentType.Photo;
-                    break;
-                case UserDynamicDisplayType.Video:
-
-                    commentType = CommentApi.CommentType.Video;
-                    break;
-                case UserDynamicDisplayType.Season:
-                    id = e.OneRowInfo.AID;
-                    commentType = CommentApi.CommentType.Video;
-                    break;
-                case UserDynamicDisplayType.ShortVideo:
-                    commentType = CommentApi.CommentType.MiniVideo;
-                    break;
-                case UserDynamicDisplayType.Music:
-                    commentType = CommentApi.CommentType.Song;
-                    break;
-                case UserDynamicDisplayType.Article:
-                    commentType = CommentApi.CommentType.Article;
-                    break;
-                case UserDynamicDisplayType.MediaList:
-                    if (e.OneRowInfo.Tag != "收藏夹")
-                        commentType = CommentApi.CommentType.Video;
-                    break;
-                default:
-                    id = e.DynamicID;
-                    break;
-            }
-            NotificationShowExtensions.ShowCommentDialog(id, (int)commentType, CommentApi.CommentSort.Hot);
-            //comment.LoadComment(new Controls.LoadCommentInfo()
-            //{
-            //    CommentMode = (int)commentType,
-            //    CommentSort = Api.CommentApi.commentSort.Hot,
-            //    Oid = id
-            //});
         }
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -177,8 +124,6 @@ namespace BiliLite.Pages
                     isSelf = false;
                     followHeader.Visibility = Visibility.Collapsed;
                 }
-                m_userDynamicViewModel.DynamicType = DynamicType.Space;
-                m_userDynamicViewModel.Uid = mid;
                 m_viewModel.GetUserInfo();
                 await UserFollowingTagsFlyout.Init(mid);
                 if (tabIndex != 0)
@@ -317,7 +262,6 @@ namespace BiliLite.Pages
             if (pivot.SelectedIndex == 1 && DynamicSpaceFrame.Content == null)
             {
                 DynamicSpaceFrame.Navigate(typeof(DynamicSpacePage), m_viewModel.Mid);
-                //await m_userDynamicViewModel.GetDynamicItems();
             }
             if (pivot.SelectedIndex == 2 && userSubmitArticleVM.SubmitArticleItems == null)
             {
@@ -484,8 +428,14 @@ namespace BiliLite.Pages
 
         private void UpdateSize()
         {
-            m_viewModel.PivotHeaderWidth =
-                pivot.Items.Select(x => (((x as PivotItem).Header as FrameworkElement).Parent as FrameworkElement).ActualWidth).Sum();
+            // 冷启动（协议激活）时窗口尚未激活，Pivot 还没把 Header 内容挂到 PivotHeaderItem 上，
+            // 此时 Header.Parent 为 null，直接取 ActualWidth 会抛空引用。这里只统计已挂到视觉树的表头，
+            // 未就绪的等布局完成后的 SizeChanged 再补算。
+            m_viewModel.PivotHeaderWidth = pivot.Items
+                .OfType<PivotItem>()
+                .Select(x => (x.Header as FrameworkElement)?.Parent as FrameworkElement)
+                .Where(parent => parent != null)
+                .Sum(parent => parent.ActualWidth);
             m_viewModel.UserBarWidth = UserBar.ActualWidth;
             m_viewModel.PageWidth = ActualWidth;
         }

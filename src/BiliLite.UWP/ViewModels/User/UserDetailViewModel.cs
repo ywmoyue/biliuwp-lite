@@ -10,6 +10,7 @@ using BiliLite.Models.Requests.Api.User;
 using BiliLite.Modules;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
+using BiliLite.Models.Responses;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
 using System;
@@ -39,6 +40,7 @@ namespace BiliLite.ViewModels.User
             m_userDetailApi = new UserDetailAPI();
             m_followApi = new FollowAPI();
             AttentionCommand = new RelayCommand(DoAttentionUP);
+            BlockUserCommand = new RelayCommand(DoBlockUser);
         }
 
         #endregion
@@ -46,6 +48,8 @@ namespace BiliLite.ViewModels.User
         #region Properties
 
         public ICommand AttentionCommand { get; private set; }
+
+        public ICommand BlockUserCommand { get; private set; }
 
         [DoNotNotify]
         public string Mid { get; set; }
@@ -59,6 +63,8 @@ namespace BiliLite.ViewModels.User
         public UserSpaceInfo UserSpaceInfo { get; set; }
 
         public bool IsFollowed { get; set; }
+
+        public bool IsBlocked { get; set; }
 
         [DoNotNotify]
         public double PivotHeaderWidth { get; set; }
@@ -156,6 +162,30 @@ namespace BiliLite.ViewModels.User
             };
 
             IsFollowed = (data.data["card"]?["relation"]?["is_follow"] ?? 0).ToInt32() == 1;
+            IsBlocked = false;
+
+            if (SettingService.Account.Logined)
+            {
+                await GetRelationCore();
+            }
+        }
+
+        private async Task GetRelationCore()
+        {
+            var result = await m_followApi.GetAttention(Mid).Request();
+            if (!result.status)
+            {
+                _logger.Log("查询用户关系失败", LogType.Warn);
+                return;
+            }
+            var data = await result.GetJson<ApiDataModel<UserAttentionResponse>>();
+            if (data?.data == null)
+            {
+                _logger.Log("查询用户关系返回数据为空", LogType.Warn);
+                return;
+            }
+            // attribute=128 表示已拉黑
+            IsBlocked = data.data.Attribute == 128;
         }
 
         private async Task AttentionUPCore(string mid, int mode)
@@ -233,6 +263,83 @@ namespace BiliLite.ViewModels.User
             try
             {
                 await AttentionUPCore(mid, mode);
+                return true;
+            }
+            catch (CustomizedErrorException ex)
+            {
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                var handel = HandelError<object>(ex);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
+                return false;
+            }
+        }
+
+        public async void DoBlockUser()
+        {
+            var result = IsBlocked ? await UnblockUser(Mid) : await BlockUser(Mid);
+            if (result)
+            {
+                IsBlocked = !IsBlocked;
+            }
+        }
+
+        public async Task<bool> BlockUser(string mid)
+        {
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
+            {
+                NotificationShowExtensions.ShowMessageToast("请先登录后再操作");
+                return false;
+            }
+
+            try
+            {
+                var results = await m_followApi.BlockUser(mid).Request();
+                if (!results.status)
+                    throw new CustomizedErrorException(results.message);
+
+                var data = await results.GetJson<ApiDataModel<object>>();
+                if (!data.success)
+                    throw new CustomizedErrorException(data.message);
+
+                NotificationShowExtensions.ShowMessageToast("已拉黑该用户");
+                return true;
+            }
+            catch (CustomizedErrorException ex)
+            {
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                var handel = HandelError<object>(ex);
+                NotificationShowExtensions.ShowMessageToast(handel.message);
+                return false;
+            }
+        }
+
+        public async Task<bool> UnblockUser(string mid)
+        {
+            if (!SettingService.Account.Logined && !await NotificationShowExtensions.ShowLoginDialog())
+            {
+                NotificationShowExtensions.ShowMessageToast("请先登录后再操作");
+                return false;
+            }
+
+            try
+            {
+                var results = await m_followApi.UnblockUser(mid).Request();
+                if (!results.status)
+                    throw new CustomizedErrorException(results.message);
+
+                var data = await results.GetJson<ApiDataModel<object>>();
+                if (!data.success)
+                    throw new CustomizedErrorException(data.message);
+
+                NotificationShowExtensions.ShowMessageToast("已取消拉黑");
                 return true;
             }
             catch (CustomizedErrorException ex)

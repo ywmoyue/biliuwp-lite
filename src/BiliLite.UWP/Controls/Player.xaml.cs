@@ -27,6 +27,7 @@ using BiliLite.Models;
 using BiliLite.Player.ShakaPlayer.Extensions;
 using BiliLite.Player.WebPlayer;
 using BiliLite.Player.WebPlayer.Models;
+using BiliLite.Player.RangeDownload;
 using PropertyChanged;
 using Bilibili.Community.Service.Dm.V1;
 using BiliLite.Extensions.Notifications;
@@ -35,6 +36,13 @@ using BiliLite.Extensions.Notifications;
 
 namespace BiliLite.Controls
 {
+    /// <summary>
+    /// Legacy 播放控件。
+    ///
+    /// 该控件保留用于过渡期 UI 适配（由 LegacyPlayerAdapter 调用），
+    /// 新增播放入口请统一走 RealPlayInfoFactory + VideoPlayer 子播放器架构。
+    /// </summary>
+    [Obsolete("Legacy player control. Prefer Player/VideoPlayer state-machine architecture.")]
     //TODO 写得太复杂了，需要重写
     public sealed partial class Player : UserControl, IDisposable, INotifyPropertyChanged
     {
@@ -59,6 +67,9 @@ namespace BiliLite.Controls
         private MediaPlaybackList m_mediaPlaybackList;
         private BaseWebPlayer m_webPlayer;
         private WebPlayerStatsUpdatedData m_webPlayerStatsData;
+
+        //多线程下载
+        private readonly List<MultiThreadRangeDownloader> m_rangeDownloaders = new List<MultiThreadRangeDownloader>();
 
         #endregion
 
@@ -329,12 +340,18 @@ namespace BiliLite.Controls
                 soure.MediaSource.AdvancedSettings.AllSegmentsIndependent = true;
 
                 var s = soure.Status;
+                // 多线程下载，未开启时为 null
+                var videoRangeDownloader = MultiThreadRangeDownloader.TryCreate(dashInfo.Video, userAgent, referer);
+                var audioRangeDownloader = MultiThreadRangeDownloader.TryCreate(dashInfo.Audio, userAgent, referer);
+                m_rangeDownloaders.AddRange(new[] { videoRangeDownloader, audioRangeDownloader }.Where(x => x != null));
                 soure.MediaSource.DownloadRequested += (sender, args) =>
                 {
-                    if (args.ResourceContentType == "audio/mp4")
+                    var isAudio = args.ResourceContentType == "audio/mp4";
+                    if (isAudio)
                     {
                         args.Result.ResourceUri = new Uri(dashInfo.Audio.Url);
                     }
+                    (isAudio ? audioRangeDownloader : videoRangeDownloader)?.HandleDownloadRequested(args);
                 };
                 return soure.MediaSource;
             }
@@ -1533,6 +1550,11 @@ namespace BiliLite.Controls
                 m_ffmpegMssItems.Clear();
                 m_ffmpegMssItems = null;
             }
+            foreach (var rangeDownloader in m_rangeDownloaders)
+            {
+                rangeDownloader.Dispose();
+            }
+            m_rangeDownloaders.Clear();
 
 
             PlayState = PlayState.End;

@@ -49,7 +49,7 @@ namespace BiliLite.Modules.Player.Playurl
         /// </summary>
         public string Message { get; set; } = "";
 
-        public const string WebUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36";
+        public static string WebUserAgent => WebView2UserAgentProvider.DesktopUserAgent;
         public const string WebReferer = "https://www.bilibili.com";
         public const string AndroidUserAgent = "Bilibili Freedoooooom/MarkII";
 
@@ -107,6 +107,30 @@ namespace BiliLite.Modules.Player.Playurl
             {
                 return url;
             }
+        }
+
+        private static int ResolveFallbackQualityId(IReadOnlyCollection<int> availableQualities, int requestedQuality)
+        {
+            if (availableQualities == null || availableQualities.Count == 0)
+            {
+                return requestedQuality;
+            }
+
+            if (availableQualities.Contains(requestedQuality))
+            {
+                return requestedQuality;
+            }
+
+            var lowerOrEqual = availableQualities
+                .Where(x => x <= requestedQuality)
+                .OrderByDescending(x => x)
+                .FirstOrDefault();
+            if (lowerOrEqual != 0)
+            {
+                return lowerOrEqual;
+            }
+
+            return availableQualities.Min();
         }
 
         private void ParseBiliPlayUrlInfoSupportFormats(BiliPlayUrlQualitesInfo info, JObject playUrlInfoResult, string userAgent, string referer)
@@ -242,14 +266,7 @@ namespace BiliLite.Modules.Player.Playurl
             var duration = playUrlInfoResult["dash"]["duration"].ToInt32();
             var minBufferTime = playUrlInfoResult["dash"]["minBufferTime"].ToString();
 
-            if (qn > qualites.Max())
-            {
-                qn = qualites.Max();
-            }
-            if (!qualites.Contains(qn))
-            {
-                qn = qualites.Max();
-            }
+            qn = ResolveFallbackQualityId(qualites, qn);
             foreach (var item in info.Qualites)
             {
                 item.PlayUrlType = BiliPlayUrlType.DASH;
@@ -296,7 +313,12 @@ namespace BiliLite.Modules.Player.Playurl
             var current = info.Qualites.FirstOrDefault(x => x.QualityID == qn);
             if (current == null)
             {
-                current = info.Qualites.OrderByDescending(x => x.QualityID).FirstOrDefault(x => x.HasPlayUrl);
+                current = info.Qualites
+                    .Where(x => x.HasPlayUrl)
+                    .Where(x => x.QualityID <= qn)
+                    .OrderByDescending(x => x.QualityID)
+                    .FirstOrDefault()
+                    ?? info.Qualites.Where(x => x.HasPlayUrl).OrderBy(x => x.QualityID).FirstOrDefault();
             }
             info.CurrentQuality = current;
             return info;
@@ -306,10 +328,11 @@ namespace BiliLite.Modules.Player.Playurl
             int quality, List<int> qualites, string userAgent, string referer, bool isProxy)
         {
             var durl = JsonConvert.DeserializeObject<List<FlvDurlModel>>(playUrlInfoResult["durl"].ToString());
-            var index = qualites.IndexOf(quality);
+            var resolvedQuality = ResolveFallbackQualityId(qualites, quality);
+            var index = qualites.IndexOf(resolvedQuality);
             if (index == -1)
             {
-                index = 0;
+                index = qualites.IndexOf(qualites.Min());
             }
             //替换链接
             foreach (var item in durl)
@@ -453,14 +476,7 @@ namespace BiliLite.Modules.Player.Playurl
 
 
                     var qn = quality;
-                    if (qn > qualites.Max())
-                    {
-                        qn = qualites.Max();
-                    }
-                    if (!qualites.Contains(qn))
-                    {
-                        qn = qualites.Max();
-                    }
+                    qn = ResolveFallbackQualityId(qualites, qn);
                     for (int i = 0; i < info.Qualites.Count; i++)
                     {
                         var item = info.Qualites[i];
@@ -532,7 +548,12 @@ namespace BiliLite.Modules.Player.Playurl
                     var current = info.Qualites.FirstOrDefault(x => x.QualityID == qn);
                     if (current == null)
                     {
-                        current = info.Qualites.OrderByDescending(x => x.QualityID).FirstOrDefault(x => x.HasPlayUrl);
+                        current = info.Qualites
+                            .Where(x => x.HasPlayUrl)
+                            .Where(x => x.QualityID <= qn)
+                            .OrderByDescending(x => x.QualityID)
+                            .FirstOrDefault()
+                            ?? info.Qualites.Where(x => x.HasPlayUrl).OrderBy(x => x.QualityID).FirstOrDefault();
                     }
                     info.CurrentQuality = current;
                     return info;
@@ -559,10 +580,11 @@ namespace BiliLite.Modules.Player.Playurl
                     {
                         item.url = await HandleUrl(item.url, item.backup_url, userAgent, referer, false);
                     }
-                    var index = qualites.IndexOf(quality);
+                    var resolvedQuality = ResolveFallbackQualityId(qualites, quality);
+                    var index = qualites.IndexOf(resolvedQuality);
                     if (index == -1)
                     {
-                        index = 0;
+                        index = qualites.IndexOf(qualites.Min());
                     }
 
                     info.Qualites[index].Codec = BiliPlayUrlVideoCodec.AVC;
@@ -930,6 +952,7 @@ namespace BiliLite.Modules.Player.Playurl
                 SegmentBaseIndexRange = SegmentBase.IndexRange,
                 SegmentBaseInitialization = SegmentBase.Initialization,
                 Url = BaseUrl,
+                BackupUrls = BackupUrl?.ToList(),
             };
         }
     }

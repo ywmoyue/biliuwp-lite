@@ -60,6 +60,7 @@ namespace BiliLite
             // Window.Current.Content.PointerPressed += Content_PointerPressed;
 
             Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
+            SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
         }
 
         public event EventHandler MainPageLoaded;
@@ -267,6 +268,7 @@ namespace BiliLite
         }
         private async Task ClosePage(TabViewItem tabItem)
         {
+            _logger.Trace($"ClosePage: 移除标签 {tabItem?.Header}");
             tabView.TabItems.Remove(tabItem);
             var frame = tabItem.Content as MyFrame;
             if (frame.Content is Page { Content: Grid grid })
@@ -285,6 +287,7 @@ namespace BiliLite
             // frame.BackStack.Clear();
             tabItem.Content = null;
             GC.Collect();
+            _logger.Trace("ClosePage: 已释放资源并触发 GC");
         }
         private void tabView_Loaded(object sender, RoutedEventArgs e)
         {
@@ -384,6 +387,13 @@ namespace BiliLite
             {
                 tabStyle.Setters.Add(new Setter(heightProperty, m_viewModel.TabHeight));
             }
+        }
+
+        private void System_BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            if (tabView.SelectedItem == tabView.TabItems[0]) return;
+            e.Handled = true;
+            GoBack();
         }
 
         private void MainPage_OnLoaded(object sender, RoutedEventArgs e)
