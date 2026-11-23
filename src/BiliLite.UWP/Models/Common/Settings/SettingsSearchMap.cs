@@ -51,6 +51,7 @@ namespace BiliLite.Models.Common.Settings
             { "优先视频编码", "PlaySettings:cbVideoType" },
             { "优先播放器类型", "PlaySettings:ComboBoxUseRealPlayerType" },
             { "FFMpegInteropX 额外播放参数", "PlaySettings:m_viewModel.FFmpegInteropXOptions:SEPlayerType" },
+            { "WebView2 环境变量", "PlaySettings:TxtWebView2EnvironmentVariables:SEPlayerType" },
             { "挂载本地文件", "PlaySettings:BtnSelectWebPlayerFile:SEPlayerType" },
             { "启用调试模式", "PlaySettings:SwitchEnableWebPlayerDebugMode:SEPlayerType" },
             { "启用开发模式", "PlaySettings:SwitchEnableWebPlayerDevMode:SEPlayerType" },

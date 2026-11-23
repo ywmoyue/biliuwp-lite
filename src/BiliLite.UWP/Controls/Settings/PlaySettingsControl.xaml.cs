@@ -658,6 +658,33 @@ namespace BiliLite.Controls.Settings
                 m_viewModel.FFmpegInteropXOptions);
         }
 
+        private void BtnSaveWebView2EnvironmentVariables_OnClick(object sender, RoutedEventArgs e)
+        {
+            var environmentVariables = TxtWebView2EnvironmentVariables.Text;
+            // 留空视为使用默认值，避免 WebView2 拿到空的环境变量
+            if (string.IsNullOrWhiteSpace(environmentVariables))
+            {
+                environmentVariables =
+                    SettingConstants.Player.DEFAULT_WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES;
+                TxtWebView2EnvironmentVariables.Text = environmentVariables;
+            }
+
+            SettingService.SetValue(
+                SettingConstants.Player.WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES,
+                environmentVariables);
+            NotificationShowExtensions.ShowMessageToast("保存成功，重启后生效");
+        }
+
+        private void BtnResetWebView2EnvironmentVariables_OnClick(object sender, RoutedEventArgs e)
+        {
+            TxtWebView2EnvironmentVariables.Text =
+                SettingConstants.Player.DEFAULT_WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES;
+            SettingService.SetValue(
+                SettingConstants.Player.WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES,
+                SettingConstants.Player.DEFAULT_WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES);
+            NotificationShowExtensions.ShowMessageToast("已恢复默认环境变量，重启后生效");
+        }
+
         private void UpdateVolumeNormalizationControlsState()
         {
             sliderVolumeNormalizationLoudness.IsEnabled = swPreloadFullAudio.IsOn && swVolumeNormalization.IsOn;

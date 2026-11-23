@@ -72,10 +72,46 @@ public abstract class BaseWebPlayer : Grid, IDisposable
 
     public event EventHandler<WebPlayerStatsUpdatedData> StatsUpdated;
 
-    private async Task InitWebView2()
+    /// <summary>
+    /// 设置 WebView2 环境变量，需在 EnsureCoreWebView2Async 之前调用。
+    /// </summary>
+    private static void ApplyWebView2EnvironmentVariables()
     {
         // UWP WebView2 不暴露 DefaultBackgroundColor/CoreWebView2Controller，使用环境变量设置透明底色。
+        // 该环境变量固定不可由设置修改。
         Environment.SetEnvironmentVariable("WEBVIEW2_DEFAULT_BACKGROUND_COLOR", "00FFFFFF");
+
+        var environmentVariables = SettingService.GetValue(
+            SettingConstants.Player.WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES,
+            SettingConstants.Player.DEFAULT_WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES);
+        if (string.IsNullOrWhiteSpace(environmentVariables))
+        {
+            environmentVariables =
+                SettingConstants.Player.DEFAULT_WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES;
+        }
+
+        // 每行一个环境变量，格式为 名称=值，仅应用 WEBVIEW2_ 开头的变量；空行、注释行及格式不正确的行直接忽略。
+        foreach (var rawLine in environmentVariables.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
+        {
+            var line = rawLine.Trim();
+            if (line.Length == 0 || line.StartsWith("#")) continue;
+
+            var separatorIndex = line.IndexOf('=');
+            if (separatorIndex <= 0) continue;
+
+            var name = line.Substring(0, separatorIndex).Trim();
+            var value = line.Substring(separatorIndex + 1).Trim();
+            if (!name.StartsWith("WEBVIEW2_", StringComparison.OrdinalIgnoreCase)) continue;
+            if (name.Equals("WEBVIEW2_DEFAULT_BACKGROUND_COLOR", StringComparison.OrdinalIgnoreCase)) continue;
+
+            Environment.SetEnvironmentVariable(name, value);
+            _logger.Info($"设置 WebView2 环境变量：{name}={value}");
+        }
+    }
+
+    private async Task InitWebView2()
+    {
+        ApplyWebView2EnvironmentVariables();
         WebViewElement = new WebView2();
         WebViewElement.Background = new SolidColorBrush(Colors.Transparent);
         // 由于加载白屏，需要设置WebViewElement高度为0，loaded事件后再恢复默认高度
