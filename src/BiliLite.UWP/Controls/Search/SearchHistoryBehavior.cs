@@ -4,11 +4,10 @@ using System;
 using System.Linq;
 using Windows.Foundation;
 using Windows.System;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Input;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Input;
 
 namespace BiliLite.Controls.Search
 {
@@ -92,7 +91,7 @@ namespace BiliLite.Controls.Search
 
             // 面板在独立的 Popup 树里，点击面板以外的地方都收不到事件，
             // 所以挂在根节点上统一关面板（包含已经 e.Handled 的点击）
-            if (Window.Current?.Content is UIElement root)
+            if (MainWindow.Current?.Content is UIElement root)
             {
                 root.AddHandler(UIElement.PointerPressedEvent, new PointerEventHandler((sender, e) =>
                 {
@@ -137,7 +136,7 @@ namespace BiliLite.Controls.Search
         /// </summary>
         private static void PositionBelow(Popup popup, FrameworkElement anchor)
         {
-            if (Window.Current?.Content is not UIElement root) return;
+            if (MainWindow.Current?.Content is not UIElement root) return;
 
             var position = anchor.TransformToVisual(root)
                 .TransformPoint(new Point(0, anchor.ActualHeight));
@@ -166,7 +165,7 @@ namespace BiliLite.Controls.Search
             var textBox = searchBox.FindChildrenByType<TextBox>().FirstOrDefault();
             if (textBox == null) return;
 
-            _ = textBox.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            _ = textBox.DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
             {
                 if (textBox.FocusState != FocusState.Unfocused) return;
                 textBox.Focus(FocusState.Programmatic);
