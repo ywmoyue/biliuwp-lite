@@ -73,8 +73,42 @@ public abstract class BaseWebPlayer : Grid, IDisposable
 
     public event EventHandler<WebPlayerStatsUpdatedData> StatsUpdated;
 
+    /// <summary>
+    /// 设置 WebView2 环境变量，需在 EnsureCoreWebView2Async 之前调用。
+    /// </summary>
+    private static void ApplyWebView2EnvironmentVariables()
+    {
+        var environmentVariables = SettingService.GetValue(
+            SettingConstants.Player.WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES,
+            SettingConstants.Player.DEFAULT_WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES);
+        if (string.IsNullOrWhiteSpace(environmentVariables))
+        {
+            environmentVariables =
+                SettingConstants.Player.DEFAULT_WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES;
+        }
+
+        // 每行一个环境变量，格式为 名称=值，仅应用 WEBVIEW2_ 开头的变量；空行、注释行及格式不正确的行直接忽略。
+        foreach (var rawLine in environmentVariables.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
+        {
+            var line = rawLine.Trim();
+            if (line.Length == 0 || line.StartsWith("#")) continue;
+
+            var separatorIndex = line.IndexOf('=');
+            if (separatorIndex <= 0) continue;
+
+            var name = line.Substring(0, separatorIndex).Trim();
+            var value = line.Substring(separatorIndex + 1).Trim();
+            if (!name.StartsWith("WEBVIEW2_", StringComparison.OrdinalIgnoreCase)) continue;
+            if (name.Equals("WEBVIEW2_DEFAULT_BACKGROUND_COLOR", StringComparison.OrdinalIgnoreCase)) continue;
+
+            Environment.SetEnvironmentVariable(name, value);
+            _logger.Info($"设置 WebView2 环境变量：{name}={value}");
+        }
+    }
+
     private async Task InitWebView2()
     {
+        ApplyWebView2EnvironmentVariables();
         WebViewElement = new WebView2();
         // WinUI3 的 WebView2 直接暴露 DefaultBackgroundColor，不再需要 UWP 那套环境变量兜底
         WebViewElement.DefaultBackgroundColor = Colors.Transparent;

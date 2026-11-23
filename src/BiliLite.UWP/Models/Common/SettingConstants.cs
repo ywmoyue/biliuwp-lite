@@ -1426,6 +1426,23 @@ namespace BiliLite.Models.Common
             public const string WEB_PLAYER_ENABLE_DEV_MODE = "WebPlayerEnableDevMode";
 
             /// <summary>
+            /// WebPlayer 的 WebView2 环境变量，每行一个，格式为 名称=值
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES =
+                "WebPlayerWebView2EnvironmentVariables";
+
+            /// <summary>
+            /// WebPlayer 的 WebView2 环境变量默认值：启用 Media Foundation 直通，支持杜比视界（DV）与 DD+（Atmos）直通
+            /// </summary>
+            [SettingDefaultValue]
+            public const string DEFAULT_WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES =
+                "WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS=" +
+                "--enable-features=MediaFoundationClearPlayback," +
+                "AllowClearDolbyVisionInMseWhenPlatformEncryptedDvEnabled," +
+                "PlatformAC3Audio";
+
+            /// <summary>
             /// WebPlayer音视频进度同步阈值1
             /// </summary>
             [SettingKey(typeof(double))]
