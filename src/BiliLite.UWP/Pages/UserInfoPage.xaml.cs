@@ -429,8 +429,14 @@ namespace BiliLite.Pages
 
         private void UpdateSize()
         {
-            m_viewModel.PivotHeaderWidth =
-                pivot.Items.Select(x => (((x as PivotItem).Header as FrameworkElement).Parent as FrameworkElement).ActualWidth).Sum();
+            // 冷启动（协议激活）时窗口尚未激活，Pivot 还没把 Header 内容挂到 PivotHeaderItem 上，
+            // 此时 Header.Parent 为 null，直接取 ActualWidth 会抛空引用。这里只统计已挂到视觉树的表头，
+            // 未就绪的等布局完成后的 SizeChanged 再补算。
+            m_viewModel.PivotHeaderWidth = pivot.Items
+                .OfType<PivotItem>()
+                .Select(x => (x.Header as FrameworkElement)?.Parent as FrameworkElement)
+                .Where(parent => parent != null)
+                .Sum(parent => parent.ActualWidth);
             m_viewModel.UserBarWidth = UserBar.ActualWidth;
             m_viewModel.PageWidth = ActualWidth;
         }
