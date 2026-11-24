@@ -39,13 +39,10 @@ namespace BiliLite.Services
 
         public bool IsActive => m_window != null;
 
-        public void Enter(PlayerHandoffInfo? handoff, IPlayerMiniWindowHost? owner)
-        {
-            if (handoff == null || owner == null)
-            {
-                return;
-            }
+        public bool RequiresPlaybackHandoff => true;
 
+        public void Enter(PlayerHandoffInfo handoff, IPlayerMiniWindowHost owner)
+        {
             if (m_window != null)
             {
                 Activate();
@@ -174,7 +171,7 @@ namespace BiliLite.Services
             PersistBounds();
             Cleanup();
 
-            if (owner == null)
+            if (owner == null || exitInfo == null)
             {
                 m_suppressResume = false;
                 return;

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using BiliLite.Extensions.Notifications;
+using BiliLite.Models.Common;
 using BiliLite.Models.Common.Player;
 using BiliLite.Models.Common.Video;
 using BiliLite.Services;
@@ -52,30 +53,28 @@ namespace BiliLite.Controls
                     return;
                 }
 
-                var pausedByUs = false;
-                if (!service.IsActive)
+                // 独立小窗需要主窗口让出播放；同窗口切换时播放器本就是同一个实例，无需暂停
+                if (service.RequiresPlaybackHandoff && !service.IsActive)
                 {
-                    // 主窗口先暂停：两路同时解码会抢带宽，还会出现回声
                     Pause();
-                    pausedByUs = true;
                 }
 
+                // 先置位：呈现切换会触发字幕/弹幕的设置控件变化，
+                // 这些守卫依赖 miniWin，避免把程序化的临时值写回设置
+                miniWin = true;
                 service.Enter(ExportHandoff(), this);
                 miniWin = service.IsActive;
-
-                // 小窗没起来就别把主窗口停在那里
-                if (!miniWin && pausedByUs)
-                {
-                    _ = Play();
-                }
-
                 return;
             }
 
+            // 同理先复位，退出时的恢复逻辑不应被小窗守卫拦掉
+            miniWin = false;
             if (service.IsActive)
             {
                 service.Exit();
             }
+
+            miniWin = service.IsActive;
         }
 
         public void ToggleMiniWindows()
@@ -93,7 +92,8 @@ namespace BiliLite.Controls
                 return;
             }
 
-            CloseMiniWindowWithoutResume();
+            miniWin = false;
+            MiniWindowService.CloseWithoutResume();
         }
 
         /// <summary>
@@ -109,12 +109,6 @@ namespace BiliLite.Controls
 
             _postion = m_handoffPosition;
             m_handoffPosition = -1;
-        }
-
-        private void CloseMiniWindowWithoutResume()
-        {
-            miniWin = false;
-            MiniWindowService.CloseWithoutResume();
         }
 
         #region IPlayerMiniWindowHost
@@ -136,13 +130,13 @@ namespace BiliLite.Controls
                 Index = CurrentPlayIndex,
                 Position = GetCurrentPosition(),
                 Speed = GetPlaySpeed(),
-                Volume = m_videoPlayer?.Volume ?? 1,
-                IsMuted = m_videoPlayer?.IsMuted ?? false,
-                Title = CurrentPlayItem?.title,
+                Volume = m_videoPlayer == null ? 1 : m_videoPlayer.Volume,
+                IsMuted = m_videoPlayer != null && m_videoPlayer.IsMuted,
+                Title = CurrentPlayItem == null ? null : CurrentPlayItem.title,
             };
         }
 
-        void IPlayerMiniWindowHost.ApplyHandoff(PlayerHandoffInfo? handoff)
+        void IPlayerMiniWindowHost.ApplyHandoff(PlayerHandoffInfo handoff)
         {
             if (handoff == null)
             {
@@ -168,7 +162,7 @@ namespace BiliLite.Controls
             }
         }
 
-        void IPlayerMiniWindowHost.ResumeFromHandoff(PlayerHandoffInfo? handoff)
+        void IPlayerMiniWindowHost.ResumeFromHandoff(PlayerHandoffInfo handoff)
         {
             miniWin = false;
             if (handoff == null)
@@ -178,8 +172,8 @@ namespace BiliLite.Controls
 
             // 暂停态直接 seek；若已 Stop/Idle，Play() 会重新 Load，
             // 这时要登记待处理位置，否则位置会被重置回 0
-            var playState = m_playerController?.PlayState;
-            if (playState?.IsStopped == true || playState?.IsIdle == true)
+            var playState = m_playerController == null ? null : m_playerController.PlayState;
+            if (playState != null && (playState.IsStopped || playState.IsIdle))
             {
                 m_pendingSeekPosition = handoff.Position;
             }
@@ -196,10 +190,59 @@ namespace BiliLite.Controls
             _ = Play();
         }
 
-        void IPlayerMiniWindowHost.SetMiniPresentation(bool mini)
+        void IPlayerMiniWindowHost.SetMiniPresentation(bool mini, MiniWindowPresentation presentation)
         {
             StandardControl.Visibility = mini ? Visibility.Collapsed : Visibility.Visible;
             MiniControl.Visibility = mini ? Visibility.Visible : Visibility.Collapsed;
+
+            if (presentation == null)
+            {
+                return;
+            }
+
+            if (mini)
+            {
+                if (presentation.FullWindow)
+                {
+                    IsFullWindow = true;
+                }
+
+                Margin = new Thickness(0, presentation.ContentTopOffset, 0, 0);
+
+                if (presentation.DanmakuFontZoom > 0)
+                {
+                    m_danmakuController.SetFontZoom(presentation.DanmakuFontZoom);
+                }
+
+                if (presentation.DanmakuSpeed > 0)
+                {
+                    m_danmakuController.SetSpeed(presentation.DanmakuSpeed);
+                }
+
+                if (presentation.SubtitleSize > 0)
+                {
+                    SubtitleSettingSize.Value = presentation.SubtitleSize;
+                }
+
+                m_danmakuController.Clear();
+                return;
+            }
+
+            // 退出小窗：恢复用户设置
+            Margin = new Thickness(0, 0, 0, 0);
+            m_danmakuController.SetFontZoom(SettingService.GetValue<double>(SettingConstants.VideoDanmaku.FONT_ZOOM, 1));
+            m_danmakuController.SetSpeed(SettingService.GetValue<int>(SettingConstants.VideoDanmaku.SPEED, 10));
+            m_danmakuController.Clear();
+            if (SettingService.GetValue<Visibility>(SettingConstants.VideoDanmaku.SHOW, Visibility.Visible) == Visibility.Visible)
+            {
+                m_danmakuController.Show();
+            }
+            else
+            {
+                m_danmakuController.Hide();
+            }
+
+            SubtitleSettingSize.Value = SettingService.GetValue<double>(SettingConstants.Player.SUBTITLE_SIZE, 40);
         }
 
         void IPlayerMiniWindowHost.SetAutoFocusEnabled(bool enabled)
@@ -210,7 +253,11 @@ namespace BiliLite.Controls
                 return;
             }
 
-            timer_focus?.Stop();
+            if (timer_focus != null)
+            {
+                timer_focus.Stop();
+            }
+
             // 焦点定时器在 Loaded 里启动，若本次调用早于 Loaded，Loaded 后补停一次
             Loaded -= PlayerControl_MiniWindowLoaded;
             Loaded += PlayerControl_MiniWindowLoaded;
@@ -219,9 +266,9 @@ namespace BiliLite.Controls
         private void PlayerControl_MiniWindowLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= PlayerControl_MiniWindowLoaded;
-            if (m_autoFocusDisabled)
+            if (m_autoFocusDisabled && timer_focus != null)
             {
-                timer_focus?.Stop();
+                timer_focus.Stop();
             }
         }
 

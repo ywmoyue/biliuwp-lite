@@ -5,9 +5,9 @@ namespace BiliLite.Services
     /// <summary>
     /// 小窗置顶（画中画）能力接口。
     /// UWP 与 WinUI3 两个分支各自实现，接口定义保持一致：
-    /// UWP 使用 ApplicationView 的 CompactOverlay 在同一窗口内切换；
-    /// WinUI3 使用独立的置顶窗口（播放面无法跨窗口搬移，因此走播放交接）。
-    /// 调用方只依赖本接口，两个分支的播放器接入代码可以完全共用。
+    /// UWP 使用 ApplicationView 的 CompactOverlay 在同一窗口内切换，不需要播放交接；
+    /// WinUI3 使用独立的置顶窗口（播放面无法跨窗口搬移，因此需要播放交接）。
+    /// 调用方（播放器、页面、快捷键）只依赖本接口。
     /// </summary>
     public interface IPlayerMiniWindowService
     {
@@ -22,11 +22,18 @@ namespace BiliLite.Services
         bool IsActive { get; }
 
         /// <summary>
+        /// 是否需要播放交接。
+        /// 独立小窗（WinUI3）为 true，进入小窗前需要主窗口让出播放，避免两路解码抢带宽；
+        /// 同窗口切换（UWP）为 false，播放器始终是同一个实例。
+        /// </summary>
+        bool RequiresPlaybackHandoff { get; }
+
+        /// <summary>
         /// 打开小窗并接管播放。已打开时由实现负责激活已有窗口。
         /// </summary>
-        /// <param name="handoff">进入小窗时需要交接的播放状态</param>
-        /// <param name="owner">主窗口的播放器，用于小窗关闭后接回播放</param>
-        void Enter(PlayerHandoffInfo? handoff, IPlayerMiniWindowHost? owner);
+        /// <param name="handoff">进入小窗时的播放状态快照，同窗口实现会忽略它</param>
+        /// <param name="owner">主窗口的播放器，用于呈现切换与退出后的播放接回</param>
+        void Enter(PlayerHandoffInfo handoff, IPlayerMiniWindowHost owner);
 
         /// <summary>
         /// 关闭小窗，并让 owner 接回播放

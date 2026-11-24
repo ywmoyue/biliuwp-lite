@@ -20,6 +20,12 @@ namespace BiliLite.Pages
     {
         private const int STATE_CAPTURE_INTERVAL_MILLISECONDS = 250;
 
+        /// <summary>
+        /// WinUI3 小窗的呈现策略：窗口是独立的置顶窗口，布局由本页自己承担，
+        /// 播放器侧只需要切到精简控制条，因此这里用默认值。
+        /// </summary>
+        private static readonly MiniWindowPresentation MiniPresentation = new MiniWindowPresentation();
+
         private PlayerHandoffInfo? m_handoff;
         private DispatcherTimer? m_stateTimer;
 
@@ -55,7 +61,7 @@ namespace BiliLite.Pages
             {
                 // 小窗是独立窗口：禁用周期性抢焦点，并改用精简控制条
                 host.SetAutoFocusEnabled(false);
-                host.SetMiniPresentation(true);
+                host.SetMiniPresentation(true, MiniPresentation);
                 // 交接状态在取流前应用，避免起播瞬间音量/倍速不对
                 host.ApplyHandoff(handoff);
             }
