@@ -1,4 +1,4 @@
-﻿using Bilibili.Pgc.Gateway.Player.V2;
+using Bilibili.Pgc.Gateway.Player.V2;
 using BiliLite.Controls;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Video;

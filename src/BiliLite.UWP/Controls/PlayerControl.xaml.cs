@@ -1217,6 +1217,9 @@ namespace BiliLite.Controls
                 _postion = 0;
             }
 
+            // 小窗交接过来的进度覆盖历史续播位置
+            ApplyHandoffPositionIfNeeded();
+
             // 重构后进度展示绑定到 ViewModel，
             // 这里提前同步历史进度，避免等待播放状态切换后 UI 仍停留在 0。
             m_viewModel.Position = _postion;
@@ -3407,6 +3410,8 @@ namespace BiliLite.Controls
         public async void Dispose()
         {
             _logger.Trace("Dispose PlayerControl");
+            // 播放器销毁前关掉小窗，且不回接播放
+            CloseMiniWindowIfPlaying();
             m_isDisposing = true;
             try
             {
@@ -3526,62 +3531,6 @@ namespace BiliLite.Controls
         private void BottomBtnMiniWindows_Click(object sender, RoutedEventArgs e)
         {
             MiniWidnows(true);
-        }
-
-        public async void MiniWidnows(bool mini)
-        {
-            if (mini) 
-                this.ShowMessageToastV2("功能未实现");
-            //miniWin = mini;
-            //var window = this.GetCurrentWindow();
-            
-            //FullWindowEvent?.Invoke(this, IsFullWindow);
-            //if (mini)
-            //{
-            //    IsFullWindow = true;
-            //    StandardControl.Visibility = Visibility.Collapsed;
-            //    MiniControl.Visibility = Visibility.Visible;
-            //    //处理CC字幕
-            //    if (window.AppWindow.Presenter.Kind==(AppWindowPresenterKind.CompactOverlay))
-            //    {
-            //        Margin = new Thickness(0, -40, 0, 0);
-            //        window.AppWindow.SetPresenter(AppWindowPresenterKind.CompactOverlay);
-            //        //await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay);
-            //        SubtitleSettingSize.Value = 14;
-
-            //        m_danmakuController.SetFontZoom(0.5);
-            //        m_danmakuController.SetSpeed(6);
-            //        m_danmakuController.Clear();
-            //    }
-            //}
-            //else
-            //{
-            //    Margin = new Thickness(0, 0, 0, 0);
-            //    StandardControl.Visibility = Visibility.Visible;
-            //    MiniControl.Visibility = Visibility.Collapsed;
-            //    await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default);
-
-            //    m_danmakuController.SetFontZoom(SettingService.GetValue<double>(SettingConstants.VideoDanmaku.FONT_ZOOM, 1));
-            //    m_danmakuController.SetSpeed(SettingService.GetValue<int>(SettingConstants.VideoDanmaku.SPEED, 10));
-            //    m_danmakuController.Clear();
-            //    if (SettingService.GetValue<Visibility>(SettingConstants.VideoDanmaku.SHOW, Visibility.Visible) == Visibility.Visible)
-            //    {
-            //        m_danmakuController.Show();
-            //    }
-            //    else
-            //    {
-            //        m_danmakuController.Hide();
-            //    }
-
-            //    SubtitleSettingSize.Value = SettingService.GetValue<double>(SettingConstants.Player.SUBTITLE_SIZE, 40);
-            //}
-            //BtnFoucs.Focus(FocusState.Programmatic);
-            //MessageCenter.SetMiniWindow(mini);
-        }
-
-        public void ToggleMiniWindows()
-        {
-            MiniWidnows(!miniWin);
         }
 
         public void ToggleFullWindow()

@@ -1,0 +1,47 @@
+<Page
+    x:Class="BiliLite.Pages.MiniPlayerPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:BiliLite.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Background="Black"
+    mc:Ignorable="d">
+
+    <Page.KeyboardAccelerators>
+        <KeyboardAccelerator Key="Escape" Invoked="ExitKeyboardAccelerator_Invoked" />
+    </Page.KeyboardAccelerators>
+
+    <Grid x:Name="RootGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <!--  自绘标题栏：既是拖拽区，也是小窗唯一的应用级控件  -->
+        <Grid x:Name="DragBar" Grid.Row="0" Background="#CC000000">
+            <TextBlock
+                x:Name="txtTitle"
+                Margin="12,0,0,0"
+                VerticalAlignment="Center"
+                FontSize="12"
+                Foreground="White"
+                TextTrimming="CharacterEllipsis" />
+            <Button
+                x:Name="btnBackToMain"
+                Height="32"
+                Padding="12,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Background="Transparent"
+                BorderThickness="0"
+                Click="btnBackToMain_Click"
+                Foreground="White"
+                ToolTipService.ToolTip="回到主窗口继续播放">
+                <TextBlock FontSize="12" Text="回到主窗口" />
+            </Button>
+        </Grid>
+
+        <controls:PlayerControl x:Name="player" Grid.Row="1" />
+    </Grid>
+</Page>

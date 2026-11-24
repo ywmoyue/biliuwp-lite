@@ -1,4 +1,4 @@
-﻿using BiliLite.Controls;
+using BiliLite.Controls;
 
 using BiliLite.Controls.Dialogs;
 using BiliLite.Extensions;

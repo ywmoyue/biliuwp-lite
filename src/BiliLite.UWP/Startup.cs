@@ -46,6 +46,7 @@ namespace BiliLite
             services.AddSingleton<SearchService>();
             services.AddSingleton<IWindowSizeProvider, WinUIWindowSizeProvider>();
             services.AddSingleton<WindowSizeService>();
+            services.AddSingleton<IPlayerMiniWindowService, WinUIMiniPlayerWindowService>();
 
             services.AddSingleton<GrpcService>();
             services.AddAttributeService(displayMode);
