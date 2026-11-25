@@ -178,6 +178,11 @@ namespace BiliLite
                 Window.Current.Content = rootFrame;
             }
 
+            var themeService = ServiceProvider.GetRequiredService<ThemeService>();
+
+            // 界面字体必须在页面加载前应用，否则已加载的控件不会重新解析字体资源
+            themeService.InitFontFamily();
+
             if (prelaunch == false)
             {
                 if (rootFrame.Content == null)
@@ -210,10 +215,10 @@ namespace BiliLite
                 // 窗口激活后按保存的应用视图尺寸精确校正一次,避免启动偏好与窗口边界语义不一致导致高度偏差
                 windowSizeService.ApplySavedWindowSize();
 
-                var themeService = ServiceProvider.GetRequiredService<ThemeService>();
                 themeService.InitTitleBar();
                 themeService.InitAccentColor();
                 themeService.InitMicaBrushBackgroundSource();
+                themeService.InitPageBackgroundColor();
                 //themeService.InitStyle();
 
 #if !DEBUG

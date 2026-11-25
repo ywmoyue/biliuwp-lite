@@ -42,6 +42,20 @@ namespace BiliLite.Models.Common
             public const string THEME = "theme";
 
             /// <summary>
+            /// 界面字体
+            /// 字体名称，为空时使用系统默认字体
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string FONT_FAMILY = "UIFontFamily";
+
+            /// <summary>
+            /// 页面背景颜色
+            /// ARGB颜色字符串，为空时跟随系统材质
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string PAGE_BACKGROUND_COLOR = "PageBackgroundColor";
+
+            /// <summary>
             /// 显示模式
             /// 0 为多标签，1 为单窗口，2 为多窗口
             /// </summary>
