@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions.Notifications;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Home;
 using BiliLite.Models.Common.Settings;
@@ -362,6 +362,18 @@ namespace BiliLite.Controls.Settings
                     SettingService.SetValue(SettingConstants.UI.RECMEND_DISPLAY_MODE, cbRecommendDisplayMode.SelectedIndex);
                 });
             });
+
+            //推荐来源(App 端 / 网页版)
+            cbRecommendSource.SelectedIndex = Math.Clamp(
+                SettingService.GetValue<int>(SettingConstants.UI.RECOMMEND_SOURCE, SettingConstants.UI.DEFAULT_RECOMMEND_SOURCE),
+                SettingConstants.UI.RECOMMEND_SOURCE_APP, SettingConstants.UI.RECOMMEND_SOURCE_WEB);
+            cbRecommendSource.Loaded += (sender, e) =>
+            {
+                cbRecommendSource.SelectionChanged += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.RECOMMEND_SOURCE, cbRecommendSource.SelectedIndex);
+                };
+            };
 
             //固定标签宽度
             SwitchTabItemFixedWidth.IsOn =

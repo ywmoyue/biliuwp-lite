@@ -99,6 +99,30 @@ namespace BiliLite.Models.Common
             public const bool DEFAULT_DISPLAY_RECOMMEND_BANNER = true;
 
             /// <summary>
+            /// 首页推荐来源。两套**不同的服务端模型**，不是同一个接口换参数：
+            /// 0 = App 端推荐流(app.bilibili.com/x/v2/feed/index，idx 游标，每次 10 条)；
+            /// 1 = 网页版「为你推荐」(x/web-interface/wbi/index/top/feed/rcmd，wbi 签名，单次最多 30 条)。
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const string RECOMMEND_SOURCE = "RecommendSource";
+
+            /// <summary>
+            /// 推荐来源：App 端（加入该设置前唯一的来源，保持默认行为不变）
+            /// </summary>
+            public const int RECOMMEND_SOURCE_APP = 0;
+
+            /// <summary>
+            /// 推荐来源：网页版
+            /// </summary>
+            public const int RECOMMEND_SOURCE_WEB = 1;
+
+            /// <summary>
+            /// 默认推荐来源
+            /// </summary>
+            [SettingDefaultValue]
+            public const int DEFAULT_RECOMMEND_SOURCE = RECOMMEND_SOURCE_APP;
+
+            /// <summary>
             /// 右侧详情宽度
             /// </summary>
             [SettingKey(typeof(double))]

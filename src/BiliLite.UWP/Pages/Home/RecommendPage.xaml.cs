@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions;
+using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Recommend;
@@ -116,6 +116,13 @@ namespace BiliLite.Pages.Home
                 case "dislike":
                     await m_viewModel.Dislike(threePoint.Idx, threePoint, null);
                     return;
+                // 网页版自己拼的两项(内容不感兴趣 / 不想看此UP主): 走服务端反馈, 见 RecommendAPI.WebDislike
+                case "webDislike":
+                    {
+                        var item = (sender as ListView).DataContext as RecommendItemModel;
+                        await m_viewModel.WebDislike(item, threePoint.ReasonId);
+                        return;
+                    }
                 case "browser":
                     await LauncherExtensions.OpenInBrowserAsync(threePoint.Url);
                     return;

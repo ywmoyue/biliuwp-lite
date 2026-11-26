@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace BiliLite.Models.Common.Settings
 {
@@ -31,6 +31,7 @@ namespace BiliLite.Models.Common.Settings
             { "使用新窗口预览图片", "UISettings:swPreviewImageNavigateToPage:SEImagePre" },
             { "全屏化图片新窗口", "UISettings:swPreviewImageNavigateToPageFully:SEImagePre" },
             { "推荐页", "UISettings:SERecommend" },
+            { "推荐来源", "UISettings:cbRecommendSource:SERecommend" },
             { "推荐页列表视图单元宽度", "UISettings:NumBoxRecommentPageListItemWidth:SERecommend" },
             { "推荐页网格视图单元宽度", "UISettings:NumBoxRecommentPageGridItemWidth:SERecommend" },
             { "评论页", "UISettings:SEComment" },

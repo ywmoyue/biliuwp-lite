@@ -443,6 +443,7 @@
     <Compile Include="Services\Biz\BaseBizService.cs" />
     <Compile Include="Services\Biz\LocalAttentionUserService.cs" />
     <Compile Include="Services\Biz\MessagesService.cs" />
+    <Compile Include="Services\Biz\RecommendService.cs" />
     <Compile Include="Services\Biz\UserDynamicService.cs" />
     <Compile Include="Services\Interfaces\IUpdatePivotLayout.cs" />
     <Compile Include="Services\PageSaveService.cs" />
@@ -783,6 +784,7 @@
     <Compile Include="Models\Common\Recommend\RecommendThreePointV2ItemModel.cs" />
     <Compile Include="Models\Common\Recommend\RecommendThreePointV2ItemReasonsModel.cs" />
     <Compile Include="Models\Common\Recommend\RecommendItemModel.cs" />
+    <Compile Include="Models\Common\Recommend\RecommendWebItemModel.cs" />
     <Compile Include="Models\Exceptions\DynamicDisplayTypeUnsupportedException.cs" />
     <Compile Include="Models\Requests\ApiParams\RecommondFeedbackParams.cs" />
     <Compile Include="Controls\DataTemplateSelectors\DynamicItemDataTemplateSelector.cs" />
