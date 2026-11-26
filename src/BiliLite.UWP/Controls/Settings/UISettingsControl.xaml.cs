@@ -6,6 +6,8 @@ using BiliLite.Services;
 using BiliLite.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +15,7 @@ using Windows.ApplicationModel.Background;
 using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using CommunityToolkit.WinUI.Helpers;
 using BiliLite.Extensions;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
@@ -441,6 +444,26 @@ namespace BiliLite.Controls.Settings
             //    //        x.Value == m_UISettingsControlViewModel.MicaBackgroundSource);
             //};
 
+            //界面字体
+            txtUIFontFamily.Text = SettingService.GetValue(SettingConstants.UI.FONT_FAMILY, "");
+            txtUIFontFamily.ItemsSource = GetSystemFontFamilies();
+            txtUIFontFamily.QuerySubmitted += (_, _) => SaveFontFamily();
+            txtUIFontFamily.LostFocus += (_, _) => SaveFontFamily();
+
+            //页面背景颜色
+            var pageBackgroundColor = SettingService.GetValue(SettingConstants.UI.PAGE_BACKGROUND_COLOR, "");
+            if (cpPageBackgroundColor != null && !string.IsNullOrWhiteSpace(pageBackgroundColor))
+            {
+                try
+                {
+                    cpPageBackgroundColor.Color = pageBackgroundColor.ToColor();
+                }
+                catch (Exception)
+                {
+                    // 颜色值异常时保持默认颜色
+                }
+            }
+
             var navItems = SettingService.GetValue(SettingConstants.UI.HOEM_ORDER, DefaultHomeNavItems.GetDefaultHomeNavItems());
             gridHomeCustom.ItemsSource = new ObservableCollection<HomeNavItem>(navItems);
             ExceptHomeNavItems();
@@ -559,6 +582,61 @@ namespace BiliLite.Controls.Settings
                     ? "当前系统不支持亚克力，已回退为纯色背景"
                     : "当前系统不支持云母，已回退为纯色背景（需要 Windows 11）");
             }
+        }
+
+        private void BtnApplyPageBackgroundColor_OnClick(object sender, RoutedEventArgs e)
+        {
+            var color = cpPageBackgroundColor.Color;
+            SettingService.SetValue(SettingConstants.UI.PAGE_BACKGROUND_COLOR, color.ToString());
+            m_themeService.SetPageBackgroundColor(color);
+            NotificationShowExtensions.ShowMessageToast("背景颜色已应用");
+        }
+
+        private void BtnResetPageBackgroundColor_OnClick(object sender, RoutedEventArgs e)
+        {
+            SettingService.SetValue(SettingConstants.UI.PAGE_BACKGROUND_COLOR, "");
+            m_themeService.SetPageBackgroundColor(null);
+            NotificationShowExtensions.ShowMessageToast("已恢复默认背景");
+        }
+
+        private void SaveFontFamily()
+        {
+            var fontFamily = (txtUIFontFamily.Text ?? "").Trim();
+            if (fontFamily == SettingService.GetValue(SettingConstants.UI.FONT_FAMILY, "")) return;
+
+            SettingService.SetValue(SettingConstants.UI.FONT_FAMILY, fontFamily);
+            NotificationShowExtensions.ShowMessageToast(string.IsNullOrEmpty(fontFamily)
+                ? "已恢复默认字体，重启应用生效"
+                : "已保存字体，重启应用生效");
+        }
+
+        /// <summary>
+        /// 获取系统已安装的字体，供输入提示使用；获取失败时回退到常用字体
+        /// </summary>
+        private static IReadOnlyList<string> GetSystemFontFamilies()
+        {
+            try
+            {
+                var fontFamilies = Microsoft.Graphics.Canvas.Text.CanvasTextFormat.GetSystemFontFamilies();
+                if (fontFamilies != null && fontFamilies.Any())
+                {
+                    return fontFamilies.ToList();
+                }
+            }
+            catch (Exception)
+            {
+            }
+
+            return new List<string>()
+            {
+                "Microsoft YaHei UI",
+                "Microsoft YaHei",
+                "DengXian",
+                "SimSun",
+                "SimHei",
+                "Segoe UI",
+                "Consolas",
+            };
         }
     }
 }

@@ -29,6 +29,7 @@ namespace BiliLite.Services
 		private readonly object m_lightPageBackgroundBrush;
 		private readonly object m_darkPageBackgroundBrush;
 		private bool m_systemBackdropApplied;
+		private Color? m_customPageBackgroundColor;
 		private ElementTheme m_theme;
 
 		public ResourceDictionary DefaultThemeResource => m_theme == ElementTheme.Light
@@ -105,6 +106,32 @@ namespace BiliLite.Services
 		}
 
 		/// <summary>
+		/// 应用自定义界面字体。
+		/// 必须在页面加载前调用，已加载的控件不会重新解析字体资源，修改后需重启生效。
+		/// </summary>
+		public void InitFontFamily()
+		{
+			var fontFamilyName = SettingService.GetValue<string>(SettingConstants.UI.FONT_FAMILY, "");
+			if (string.IsNullOrWhiteSpace(fontFamilyName)) return;
+
+			try
+			{
+				var fontFamily = new FontFamily(fontFamilyName.Trim());
+
+				// WinUI 控件样式里写死了 {ThemeResource ContentControlThemeFontFamily}，
+				// 只设置 Frame 字体覆盖不到按钮、列表项、导航等控件，这里在应用资源里覆盖同名资源
+				App.Current.Resources["ContentControlThemeFontFamily"] = fontFamily;
+
+				if (rootFrame != null)
+					rootFrame.FontFamily = fontFamily;
+			}
+			catch (Exception)
+			{
+				// 字体无效时保持默认字体
+			}
+		}
+
+		/// <summary>
 		/// 应用窗口背景材质。
 		/// 材质不可用（例如 Windows 10 上的云母）时不会把页面背景改成透明，
 		/// 而是保留原来的纯色笔刷作为兜底，避免出现整窗透明的异常表现。
@@ -120,13 +147,67 @@ namespace BiliLite.Services
 			if (MainWindow.Current != null)
 				MainWindow.Current.SystemBackdrop = backdrop;
 
-			// 材质生效时页面要透明才能透出窗口材质，否则恢复原本的纯色背景
-			SetPageBackgroundBrush(m_systemBackdropApplied ? new SolidColorBrush(Colors.Transparent) : null);
+			ApplyPageBackgroundBrush();
 
 			if (isNeedRefreshTheme)
 				RefreshTheme();
 
 			return m_systemBackdropApplied;
+		}
+
+		/// <summary>
+		/// 按设置初始化自定义页面背景颜色，需在页面加载前调用。
+		/// </summary>
+		public void InitPageBackgroundColor()
+		{
+			var colorText = SettingService.GetValue<string>(SettingConstants.UI.PAGE_BACKGROUND_COLOR, "");
+			if (string.IsNullOrWhiteSpace(colorText)) return;
+
+			try
+			{
+				SetPageBackgroundColor(colorText.ToColor(), false);
+			}
+			catch (Exception)
+			{
+				// 颜色值异常时保持默认背景
+			}
+		}
+
+		/// <summary>
+		/// 设置自定义页面背景颜色，传入 null 时恢复默认背景。
+		/// 自定义颜色优先于窗口背景材质，设置后页面不再透出材质。
+		/// </summary>
+		/// <param name="color">自定义颜色，null 表示恢复默认</param>
+		/// <param name="isNeedRefreshTheme">是否强制刷新主题，页面已加载后修改时需要</param>
+		public void SetPageBackgroundColor(Color? color, bool isNeedRefreshTheme = true)
+		{
+			m_customPageBackgroundColor = color;
+
+			ApplyPageBackgroundBrush();
+
+			if (isNeedRefreshTheme)
+				RefreshTheme();
+		}
+
+		/// <summary>
+		/// 按当前状态决定页面背景笔刷，是 PageBackgroundMicaBrush 的唯一写入者。
+		/// 优先级：自定义背景色 &gt; 窗口材质透明 &gt; 主题字典里的原始纯色笔刷。
+		/// </summary>
+		private void ApplyPageBackgroundBrush()
+		{
+			if (m_customPageBackgroundColor.HasValue)
+			{
+				SetPageBackgroundBrush(new SolidColorBrush(m_customPageBackgroundColor.Value));
+			}
+			else if (m_systemBackdropApplied)
+			{
+				SetPageBackgroundBrush(new SolidColorBrush(Colors.Transparent));
+			}
+			else
+			{
+				// 两者都没有时恢复主题字典里的原始纯色笔刷
+				SetPageBackgroundBrush(null);
+			}
 		}
 
 		/// <summary>

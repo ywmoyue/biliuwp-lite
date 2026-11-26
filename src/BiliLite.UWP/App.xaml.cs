@@ -214,10 +214,13 @@ namespace BiliLite
 
             if (prelaunch == false)
             {
-                // 窗口背景材质和页面背景笔刷必须在页面加载前确定，
+                // 窗口背景材质、自定义背景色和页面背景笔刷必须在页面加载前确定，
                 // 否则已加载的页面不会重新解析 PageBackgroundMicaBrush
                 var themeService = ServiceProvider.GetRequiredService<ThemeService>();
                 themeService.InitSystemBackdrop();
+                themeService.InitPageBackgroundColor();
+                // 界面字体同样必须在页面加载前应用，否则已加载的控件不会重新解析字体资源
+                themeService.InitFontFamily();
 
                 if (rootFrame.Content == null)
                 {
