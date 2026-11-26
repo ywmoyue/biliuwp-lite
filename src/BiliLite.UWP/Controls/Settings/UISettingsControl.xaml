@@ -105,25 +105,23 @@
                             <TextBlock>更改应用背景的透明材质</TextBlock>
                         </StackPanel>
                     </controls:SettingsCard.Description>
-                        <StackPanel>
-                            <TextBlock>暂不可用</TextBlock>
-                        </StackPanel>
-                    <!--<StackPanel Margin="0,0,-4,0" Orientation="Horizontal">
+                    <StackPanel Margin="0,0,-4,0" Orientation="Horizontal">
                         <ToggleSwitch
                             x:Name="SwitchMicaTransparent"
                             Margin="0,-5,-58,-5"
                             IsOn="{x:Bind m_UISettingsControlViewModel.EnableMicaBackground, Mode=TwoWay}"
                             Style="{StaticResource DefaultToggleSwitchStyle}"
-                            Toggled="UpdateMicaSettings" />
+                            Toggled="SwitchMicaTransparent_Toggled" />
                         <ComboBox
                             x:Name="CbMicaBackgroundSource"
                             MinWidth="200"
                             DisplayMemberPath="Key"
+                            IsEnabled="{x:Bind m_UISettingsControlViewModel.EnableMicaBackground, Mode=OneWay}"
                             ItemsSource="{x:Bind m_UISettingsControlViewModel.MicaBackgroundSources}"
                             SelectedValue="{x:Bind m_UISettingsControlViewModel.MicaBackgroundSource, Mode=TwoWay}"
                             SelectedValuePath="Value"
-                            SelectionChanged="UpdateMicaSettings" />
-                    </StackPanel>-->
+                            SelectionChanged="CbMicaBackgroundSource_SelectionChanged" />
+                    </StackPanel>
                 </controls:SettingsCard>
 
                 <controls:SettingsCard

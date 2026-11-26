@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using BiliLite.Models.Common.Settings;
 using BiliLite.Services;
 using BiliLite.ViewModels.Common;
@@ -24,9 +25,14 @@ namespace BiliLite.ViewModels.Settings
         {
             m_themeService = themeService;
             Colors = new ObservableCollection<ColorItemModel>(m_themeService.GetColorMenu());
-            //MicaBackgroundSources = new MicaBackgroundSources().Options;
-
-            //MicaBackgroundSource = (BackgroundSource)SettingService.GetValue<int>(SettingConstants.UI.MICA_BACKGROUND_SOURCE, SettingConstants.UI.DEFAULT_MICA_BACKGROUND_SOURCE);
+            MicaBackgroundSources = new MicaBackgroundSources().Options;
+            var savedBackdropSource = (SystemBackdropSource)SettingService.GetValue<int>(
+                SettingConstants.UI.MICA_BACKGROUND_SOURCE,
+                SettingConstants.UI.DEFAULT_MICA_BACKGROUND_SOURCE);
+            // 兼容历史数据或从旧版本导入的设置值，避免下拉框空白
+            MicaBackgroundSource = Enum.IsDefined(typeof(SystemBackdropSource), savedBackdropSource)
+                ? savedBackdropSource
+                : (SystemBackdropSource)SettingConstants.UI.DEFAULT_MICA_BACKGROUND_SOURCE;
             EnableMicaBackground = SettingService.GetValue(SettingConstants.UI.ENABLE_MICA_BACKGROUND_SOURCE, SettingConstants.UI.DEFAULT_ENABLE_MICA_BACKGROUND_SOURCE);
         }
 
@@ -34,10 +40,10 @@ namespace BiliLite.ViewModels.Settings
 
         public Color SysColor => new UISettings().GetColorValue(UIColorType.Accent);
 
-        //[DoNotNotify]
-        //public List<KeyValueOption<BackgroundSource>> MicaBackgroundSources { get; } 
+        [DoNotNotify]
+        public List<KeyValueOption<SystemBackdropSource>> MicaBackgroundSources { get; }
 
-        //public BackgroundSource MicaBackgroundSource { get; set; }
+        public SystemBackdropSource MicaBackgroundSource { get; set; }
 
         public bool EnableMicaBackground { get; set; }
 

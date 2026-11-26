@@ -24,6 +24,7 @@ namespace BiliLite.Controls.Settings
         private readonly ThemeService m_themeService;
         private readonly UISettingsControlViewModel m_UISettingsControlViewModel;
         private readonly SettingSqlService m_settingSqlService;
+        private bool m_isMicaSettingsLoaded;
 
         public UISettingsControl()
         {
@@ -443,6 +444,9 @@ namespace BiliLite.Controls.Settings
             var navItems = SettingService.GetValue(SettingConstants.UI.HOEM_ORDER, DefaultHomeNavItems.GetDefaultHomeNavItems());
             gridHomeCustom.ItemsSource = new ObservableCollection<HomeNavItem>(navItems);
             ExceptHomeNavItems();
+
+            // 界面初始化完成后才允许响应背景材质设置事件
+            m_isMicaSettingsLoaded = true;
         }
 
         private void ExceptHomeNavItems()
@@ -523,13 +527,38 @@ namespace BiliLite.Controls.Settings
             m_settingSqlService.SetValue(SettingConstants.UI.THEME_COLOR_MENU, m_UISettingsControlViewModel.Colors);
         }
 
-        private async void UpdateMicaSettings(object sender, object e)
+        private void SwitchMicaTransparent_Toggled(object sender, RoutedEventArgs e)
         {
-            //await Task.Delay(50);
-            //m_themeService.SetMicaBrushBackgroundSource(m_UISettingsControlViewModel.MicaBackgroundSource,
-            //    !m_UISettingsControlViewModel.EnableMicaBackground);
-            //SettingService.SetValue(SettingConstants.UI.MICA_BACKGROUND_SOURCE, (int)m_UISettingsControlViewModel.MicaBackgroundSource);
-            //SettingService.SetValue(SettingConstants.UI.ENABLE_MICA_BACKGROUND_SOURCE, m_UISettingsControlViewModel.EnableMicaBackground);
+            UpdateMicaSettings();
+        }
+
+        private void CbMicaBackgroundSource_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateMicaSettings();
+        }
+
+        private void UpdateMicaSettings()
+        {
+            // 初始化期间控件由绑定赋值会触发一次事件，此时不重复应用
+            if (!m_isMicaSettingsLoaded) return;
+
+            var enable = m_UISettingsControlViewModel.EnableMicaBackground;
+            var source = m_UISettingsControlViewModel.MicaBackgroundSource;
+
+            SettingService.SetValue(SettingConstants.UI.ENABLE_MICA_BACKGROUND_SOURCE, enable);
+            SettingService.SetValue(SettingConstants.UI.MICA_BACKGROUND_SOURCE, (int)source);
+
+            // 页面已加载，切换材质后需要强制刷新主题才能让页面重新解析背景笔刷
+            var applied = m_themeService.SetSystemBackdrop(enable ? source : null);
+
+            if (!enable) return;
+
+            if (!applied)
+            {
+                NotificationShowExtensions.ShowMessageToast(source == SystemBackdropSource.Acrylic
+                    ? "当前系统不支持亚克力，已回退为纯色背景"
+                    : "当前系统不支持云母，已回退为纯色背景（需要 Windows 11）");
+            }
         }
     }
 }

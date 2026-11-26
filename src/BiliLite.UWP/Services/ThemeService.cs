@@ -11,7 +11,11 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Composition.SystemBackdrops;
+using Microsoft.UI;
 using CommunityToolkit.WinUI.Helpers;
+using System;
 
 namespace BiliLite.Services
 {
@@ -22,6 +26,9 @@ namespace BiliLite.Services
 		private XamlControlsResources m_accentColorsResource = GetXamlControlsResources();
 		private readonly Frame rootFrame = MainWindow.Current.Content as Frame;
 		private readonly SettingSqlService m_settingSqlService;
+		private readonly object m_lightPageBackgroundBrush;
+		private readonly object m_darkPageBackgroundBrush;
+		private bool m_systemBackdropApplied;
 		private ElementTheme m_theme;
 
 		public ResourceDictionary DefaultThemeResource => m_theme == ElementTheme.Light
@@ -41,6 +48,9 @@ namespace BiliLite.Services
 		public ThemeService(SettingSqlService settingSqlService)
 		{
 			m_settingSqlService = settingSqlService;
+			// 保存默认的页面背景笔刷，关闭材质时用于恢复
+			m_lightPageBackgroundBrush = GetPageBackgroundBrush("Light");
+			m_darkPageBackgroundBrush = GetPageBackgroundBrush("Dark");
 			if (rootFrame != null)
 				rootFrame.RequestedTheme =
 					m_theme = (ElementTheme)SettingService.GetValue<int>(SettingConstants.UI.THEME, 0);
@@ -73,11 +83,107 @@ namespace BiliLite.Services
 			}
 		}
 
-		public void InitMicaBrushBackgroundSource()
+		/// <summary>
+		/// 按设置初始化窗口背景材质。
+		/// 必须在页面加载前调用，这样页面解析 PageBackgroundMicaBrush 时取到的就是最终值，
+		/// 不需要再强制刷新主题。
+		/// </summary>
+		public void InitSystemBackdrop()
 		{
-			//var backgroundSource = (BackgroundSource)SettingService.GetValue<int>(SettingConstants.UI.MICA_BACKGROUND_SOURCE, SettingConstants.UI.DEFAULT_MICA_BACKGROUND_SOURCE);
-			//var enableBackgroundSource = SettingService.GetValue(SettingConstants.UI.ENABLE_MICA_BACKGROUND_SOURCE, SettingConstants.UI.DEFAULT_ENABLE_MICA_BACKGROUND_SOURCE);
-			//SetMicaBrushBackgroundSource(backgroundSource, !enableBackgroundSource);
+			var enable = SettingService.GetValue(SettingConstants.UI.ENABLE_MICA_BACKGROUND_SOURCE,
+				SettingConstants.UI.DEFAULT_ENABLE_MICA_BACKGROUND_SOURCE);
+			if (!enable)
+			{
+				SetSystemBackdrop(null, false);
+				return;
+			}
+
+			var source = (SystemBackdropSource)SettingService.GetValue<int>(
+				SettingConstants.UI.MICA_BACKGROUND_SOURCE,
+				SettingConstants.UI.DEFAULT_MICA_BACKGROUND_SOURCE);
+			SetSystemBackdrop(source, false);
+		}
+
+		/// <summary>
+		/// 应用窗口背景材质。
+		/// 材质不可用（例如 Windows 10 上的云母）时不会把页面背景改成透明，
+		/// 而是保留原来的纯色笔刷作为兜底，避免出现整窗透明的异常表现。
+		/// </summary>
+		/// <param name="source">要应用的材质，null 表示关闭材质</param>
+		/// <param name="isNeedRefreshTheme">是否强制刷新主题，页面已加载后切换材质时需要</param>
+		/// <returns>是否成功应用了材质</returns>
+		public bool SetSystemBackdrop(SystemBackdropSource? source, bool isNeedRefreshTheme = true)
+		{
+			var backdrop = source.HasValue ? CreateSystemBackdrop(source.Value) : null;
+			m_systemBackdropApplied = backdrop != null;
+
+			if (MainWindow.Current != null)
+				MainWindow.Current.SystemBackdrop = backdrop;
+
+			// 材质生效时页面要透明才能透出窗口材质，否则恢复原本的纯色背景
+			SetPageBackgroundBrush(m_systemBackdropApplied ? new SolidColorBrush(Colors.Transparent) : null);
+
+			if (isNeedRefreshTheme)
+				RefreshTheme();
+
+			return m_systemBackdropApplied;
+		}
+
+		/// <summary>
+		/// 当前窗口材质是否已生效
+		/// </summary>
+		public bool IsSystemBackdropApplied => m_systemBackdropApplied;
+
+		private static SystemBackdrop CreateSystemBackdrop(SystemBackdropSource source)
+		{
+			try
+			{
+				if (source == SystemBackdropSource.Acrylic)
+				{
+					if (!DesktopAcrylicController.IsSupported()) return null;
+					return new DesktopAcrylicBackdrop();
+				}
+
+				if (!MicaController.IsSupported()) return null;
+				return new MicaBackdrop { Kind = MicaKind.Base };
+			}
+			catch (Exception)
+			{
+				// 材质初始化失败时回落为纯色背景
+				return null;
+			}
+		}
+
+		/// <summary>
+		/// 切换页面背景笔刷，传入 null 时恢复系统默认笔刷
+		/// </summary>
+		private void SetPageBackgroundBrush(Brush brush)
+		{
+			var lightBrush = (object)brush ?? m_lightPageBackgroundBrush;
+			var darkBrush = (object)brush ?? m_darkPageBackgroundBrush;
+
+			SetThemeResource("Light", "PageBackgroundMicaBrush", lightBrush);
+			SetThemeResource("Dark", "PageBackgroundMicaBrush", darkBrush);
+			// 高对比度等场景按亮色兜底
+			SetThemeResource("Default", "PageBackgroundMicaBrush", lightBrush);
+			SetThemeResource("HighContrast", "PageBackgroundMicaBrush", lightBrush);
+		}
+
+		private object GetPageBackgroundBrush(string themeKey)
+		{
+			if (m_defaultColorsResource?.ThemeDictionaries == null) return null;
+			if (!m_defaultColorsResource.ThemeDictionaries.TryGetValue(themeKey, out var value)) return null;
+			if (!(value is ResourceDictionary themeDictionary)) return null;
+			return themeDictionary.TryGetValue("PageBackgroundMicaBrush", out var brush) ? brush : null;
+		}
+
+		private void SetThemeResource(string themeKey, string key, object value)
+		{
+			if (value == null) return;
+			if (m_defaultColorsResource?.ThemeDictionaries == null) return;
+			if (!m_defaultColorsResource.ThemeDictionaries.TryGetValue(themeKey, out var existing)) return;
+			if (!(existing is ResourceDictionary themeDictionary)) return;
+			themeDictionary[key] = value;
 		}
 
 		public void InitStyle()
@@ -113,21 +219,6 @@ namespace BiliLite.Services
 			if (isNeedRefreshTheme)
 				RefreshTheme();
 		}
-
-		//public void SetMicaBrushBackgroundSource(BackgroundSource backgroundSource, bool alwaysUseFallback)
-		//{
-
-		//	// 查找PageBackgroundMicaBrush
-		//	if (DefaultThemeResource.TryGetValue("PageBackgroundMicaBrush", out var brush) &&
-		//		brush is BackdropMicaBrush micaBrush)
-		//	{
-		//		micaBrush.BackgroundSource = backgroundSource;
-		//		micaBrush.AlwaysUseFallback = alwaysUseFallback;
-
-		//		// 强制刷新UI以应用更改
-		//		RefreshTheme();
-		//	}
-		//}
 
 		/// <summary>
 		/// 强制刷新主题

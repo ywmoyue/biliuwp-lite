@@ -214,6 +214,11 @@ namespace BiliLite
 
             if (prelaunch == false)
             {
+                // 窗口背景材质和页面背景笔刷必须在页面加载前确定，
+                // 否则已加载的页面不会重新解析 PageBackgroundMicaBrush
+                var themeService = ServiceProvider.GetRequiredService<ThemeService>();
+                themeService.InitSystemBackdrop();
+
                 if (rootFrame.Content == null)
                 {
                     var mainPage = ServiceProvider.GetRequiredService<IMainPage>();
@@ -239,11 +244,8 @@ namespace BiliLite
                     await MessageCenter.HandelUrl(url);
                 }
 
-                var themeService = ServiceProvider.GetRequiredService<ThemeService>();
                 //themeService.InitTitleBar();
                 themeService.InitAccentColor();
-                // WinUI 3 中 Mica 的处理方式不同，可能需要调整
-                // themeService.InitMicaBrushBackgroundSource();
                 //themeService.InitStyle();
 
                 var tempFileService = ServiceProvider.GetRequiredService<TempFileService>();
