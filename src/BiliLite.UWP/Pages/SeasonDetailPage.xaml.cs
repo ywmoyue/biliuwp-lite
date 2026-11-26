@@ -50,8 +50,6 @@ namespace BiliLite.Pages
             this.Loaded += SeasonDetailPage_Loaded;
             this.Player = this.player;
             NavigationCacheMode = NavigationCacheMode.Enabled;
-            //DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
-            //dataTransferManager.DataRequested += DataTransferManager_DataRequested;
             m_viewModel.DefaultRightInfoWidth = new GridLength(SettingService.GetValue<double>(SettingConstants.UI.RIGHT_DETAIL_WIDTH, 320), GridUnitType.Pixel);
             this.RightInfoGridSplitter.IsEnabled = SettingService.GetValue<bool>(SettingConstants.UI.RIGHT_WIDTH_CHANGEABLE, false);
         }
@@ -255,8 +253,7 @@ namespace BiliLite.Pages
         }
         private void btnShare_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
-            //DataTransferManager.ShowShareUI();
+            this.ShowShareUI(DataTransferManager_DataRequested);
         }
         private void btnShareCopy_Click(object sender, RoutedEventArgs e)
         {

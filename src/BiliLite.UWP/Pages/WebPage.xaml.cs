@@ -37,8 +37,6 @@ namespace BiliLite.Pages
             this.InitializeComponent();
             Title = "网页浏览";
             this.Loaded += WebPage_Loaded;
-            //DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
-            //dataTransferManager.DataRequested += DataTransferManager_DataRequested;
         }
 
         private void WebPage_Loaded(object sender, RoutedEventArgs e)
@@ -155,6 +153,7 @@ namespace BiliLite.Pages
         {
             DataPackage dataPackage = e.Request.Data;
             dataPackage.Properties.Title = "共享链接";
+            if (webView?.Source == null) return;
             dataPackage.SetWebLink(webView.Source);
         }
 
@@ -203,8 +202,7 @@ namespace BiliLite.Pages
                     UseMoblieUserAgent();
                     break;
                 case "Share":
-                    throw new NotImplementedException();
-                    //DataTransferManager.ShowShareUI();
+                    this.ShowShareUI(DataTransferManager_DataRequested);
                     break;
                 case "OpenBrowser":
                     await LauncherExtensions.OpenInBrowserAsync(webView.Source);

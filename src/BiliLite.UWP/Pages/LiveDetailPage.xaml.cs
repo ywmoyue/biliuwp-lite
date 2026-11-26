@@ -99,8 +99,6 @@ namespace BiliLite.Pages
             Title = "直播间";
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
             dispRequest = new DisplayRequest();
-            //DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
-            //dataTransferManager.DataRequested += DataTransferManager_DataRequested;
             //每过2秒就设置焦点
             timer_focus = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(2) };
             timer_focus.Tick += Timer_focus_Tick;
@@ -1519,8 +1517,7 @@ namespace BiliLite.Pages
 
         private void btnShare_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
-            //DataTransferManager.ShowShareUI();
+            this.ShowShareUI(DataTransferManager_DataRequested);
         }
 
         private void btnShareCopy_Click(object sender, RoutedEventArgs e)
