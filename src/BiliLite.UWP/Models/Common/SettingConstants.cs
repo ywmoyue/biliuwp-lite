@@ -1810,11 +1810,6 @@ namespace BiliLite.Models.Common
             public const string IGNORE_VERSION = "ignoreVersion";
 
             /// <summary>
-            /// WebApi 地址
-            /// </summary>
-            public const string BILI_LITE_WEB_API_BASE_URL = "BiliLiteWebApiBaseUrl";
-
-            /// <summary>
             /// 优先使用 Grpc 请求动态
             /// </summary>
             public const string FIRST_GRPC_REQUEST_DYNAMIC = "FirstGrpcRequestDynamic";

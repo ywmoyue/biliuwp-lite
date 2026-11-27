@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="BiliLite.Pages.Home.AnimePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -80,6 +80,32 @@
                         TextWrapping="Wrap" />
                 </Grid>
 
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="AnimeFallItemTemplate" x:DataType="anime:AnimeFallItemModel">
+            <Grid Width="180" Background="{ThemeResource CardBackground}">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <toolkit:ImageEx
+                    MaxHeight="240"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
+                    Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='300w'}"
+                    Stretch="UniformToFill" />
+                <Grid
+                    Grid.Row="1"
+                    MinHeight="50"
+                    Margin="8,4">
+                    <TextBlock
+                        MaxLines="2"
+                        Text="{x:Bind Path=Title}"
+                        TextAlignment="Justify"
+                        TextTrimming="CharacterEllipsis"
+                        TextWrapping="Wrap" />
+                </Grid>
             </Grid>
         </DataTemplate>
     </Page.Resources>
@@ -374,88 +400,58 @@
                         </controls:HorizontalGridView>
                     </StackPanel>
                     <ItemsControl Margin="-5,8,-5,0" ItemsSource="{x:Bind Path=m_viewModel.AnimeFalls, Mode=OneWay}">
+                        <!--  用普通 StackPanel 而不是 ItemsStackPanel：虚拟化面板在集合变化时会重置实现窗口，
+                              表现为追加一行时整块内容重建（图片重新加载、闪一下）  -->
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <ItemsStackPanel Orientation="Vertical" />
+                                <StackPanel Orientation="Vertical" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="home:AnimeFallViewModel">
-                                <StackPanel>
-                                    <controls:MyAdaptiveGridView
-                                        DesiredWidth="550"
+                                <StackPanel Margin="0,8,0,0">
+                                    <Grid Margin="4,0,0,0">
+                                        <TextBlock
+                                            FontSize="18"
+                                            FontWeight="Bold"
+                                            Text="{x:Bind Title}" />
+                                    </Grid>
+                                    <controls:HorizontalGridView
+                                        Margin="-5,0,0,0"
+                                        AlwaysShowButton="False"
                                         IsItemClickEnabled="True"
                                         ItemClick="gvFall_ItemClick"
-                                        ItemHeight="168"
+                                        ItemTemplate="{StaticResource AnimeFallItemTemplate}"
                                         ItemsSource="{x:Bind Path=Items, Mode=OneWay}"
-                                        ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                                        ScrollViewer.VerticalScrollMode="Disabled"
-                                        SelectionMode="None"
-                                        StretchContentForSingleRow="False">
-                                        <controls:MyAdaptiveGridView.Header>
-                                            <Grid>
-                                                <TextBlock
-                                                    Margin="4,0,0,0"
-                                                    FontSize="18"
-                                                    FontWeight="Bold"
-                                                    Text="{Binding Title}" />
-                                            </Grid>
-                                        </controls:MyAdaptiveGridView.Header>
-                                        <controls:MyAdaptiveGridView.ItemTemplate>
-                                            <DataTemplate x:DataType="anime:AnimeFallItemModel">
-                                                <Grid Background="{ThemeResource CardBackground}">
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition />
-                                                        <RowDefinition Height="Auto" />
-                                                    </Grid.RowDefinitions>
-                                                    <toolkit:ImageEx
-                                                        HorizontalAlignment="Stretch"
-                                                        VerticalAlignment="Stretch"
-                                                        PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                                        Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='180h'}"
-                                                        Stretch="UniformToFill" />
-                                                    <Grid Grid.Row="1" Margin="8,4">
-                                                        <TextBlock
-                                                            MaxLines="1"
-                                                            Text="{x:Bind Title}"
-                                                            TextAlignment="Justify"
-                                                            TextTrimming="CharacterEllipsis"
-                                                            TextWrapping="Wrap" />
-                                                        <!--<TextBlock
-                                                            Margin="5"
-                                                            VerticalAlignment="Bottom"
-                                                            FontSize="12"
-                                                            Foreground="Gray"
-                                                            MaxLines="2"
-                                                            Text="{Binding desc}"
-                                                            TextTrimming="CharacterEllipsis"
-                                                            TextWrapping="Wrap" TextAlignment="Justify" />-->
-                                                    </Grid>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </controls:MyAdaptiveGridView.ItemTemplate>
-                                    </controls:MyAdaptiveGridView>
-                                    <Grid>
-                                        <HyperlinkButton
-                                            x:Name="btnLoadMoreFall"
-                                            Padding="4"
-                                            HorizontalAlignment="Center"
-                                            Click="btnLoadMoreFall_Click"
-                                            Foreground="Gray"
-                                            Visibility="{x:Bind Path=ShowMore, Mode=OneWay}">
-                                            <TextBlock>加载更多</TextBlock>
-                                        </HyperlinkButton>
-                                        <muxc:ProgressRing
-                                            Width="50"
-                                            Height="50"
-                                            HorizontalAlignment="Center"
-                                            IsActive="True"
-                                            Visibility="{x:Bind Path=ShowMore, Converter={StaticResource DisplayConvert}, Mode=OneWay}" />
-                                    </Grid>
+                                        MoveOffset="600"
+                                        SelectionMode="None">
+                                        <GridView.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <ItemsStackPanel Orientation="Horizontal" />
+                                            </ItemsPanelTemplate>
+                                        </GridView.ItemsPanel>
+                                    </controls:HorizontalGridView>
                                 </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+                    <Grid Margin="0,8,0,16">
+                        <HyperlinkButton
+                            x:Name="btnLoadMoreFeed"
+                            Padding="6"
+                            HorizontalAlignment="Center"
+                            Click="btnLoadMoreFeed_Click"
+                            Foreground="Gray"
+                            Visibility="{x:Bind Path=m_viewModel.CanLoadMoreFeed, Mode=OneWay}">
+                            <TextBlock>加载更多</TextBlock>
+                        </HyperlinkButton>
+                        <muxc:ProgressRing
+                            Width="40"
+                            Height="40"
+                            HorizontalAlignment="Center"
+                            IsActive="True"
+                            Visibility="{x:Bind Path=m_viewModel.LoadingMoreFeed, Mode=OneWay}" />
+                    </Grid>
                 </StackPanel>
             </ScrollViewer>
         </muxc:RefreshContainer>

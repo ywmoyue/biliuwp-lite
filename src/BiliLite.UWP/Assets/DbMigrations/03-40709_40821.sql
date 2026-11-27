@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS "CacheItems" (
+    "Key" TEXT NOT NULL CONSTRAINT "PK_CacheItems" PRIMARY KEY,
+    "Value" TEXT NULL,
+    "ExpireAt" INTEGER NOT NULL
+);

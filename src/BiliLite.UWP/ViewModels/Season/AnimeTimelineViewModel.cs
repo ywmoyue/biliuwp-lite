@@ -1,13 +1,14 @@
-﻿using BiliLite.Extensions;
+using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Attributes;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Anime;
 using BiliLite.Models.Exceptions;
-using BiliLite.Models.Requests.Api.Home;
 using BiliLite.Services;
+using BiliLite.Services.Biz;
 using BiliLite.ViewModels.Common;
+using Microsoft.Extensions.DependencyInjection;
 using PropertyChanged;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace BiliLite.ViewModels.Season
     {
         #region Fields
 
-        private readonly AnimeAPI m_animeApi;
+        private readonly AnimeBizService m_animeService;
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
 
         #endregion
@@ -30,7 +31,7 @@ namespace BiliLite.ViewModels.Season
 
         public AnimeTimelineViewModel()
         {
-            m_animeApi = new AnimeAPI();
+            m_animeService = App.ServiceProvider.GetRequiredService<AnimeBizService>();
             AnimeTypeItems = new List<AnimeTypeItem>()
             {
                 new AnimeTypeItem()
@@ -78,14 +79,8 @@ namespace BiliLite.ViewModels.Season
             try
             {
                 Loading = true;
-                var api = m_animeApi.Timeline((int)AnimeType);
-
-                var results = await api.Request();
-                if (!results.status) throw new CustomizedErrorException(results.message);
-                var data = await results.GetJson<ApiDataModel<List<AnimeTimelineModel>>>();
-                if (!data.success) throw new CustomizedErrorException(data.message);
-                Timelines = data.data;
-                Today = data.data.FirstOrDefault(x => x.IsToday);
+                Timelines = await m_animeService.GetTimeline((int)AnimeType);
+                Today = Timelines.FirstOrDefault(x => x.IsToday);
             }
             catch (CustomizedErrorException ex)
             {

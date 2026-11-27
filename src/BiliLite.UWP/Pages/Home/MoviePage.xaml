@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="BiliLite.Pages.Home.MoviePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -499,91 +499,6 @@
                             </GridView.ItemsPanel>
                         </controls:HorizontalGridView>
                     </StackPanel>
-                    <ItemsControl Margin="0,5,0,0" ItemsSource="{x:Bind Path=m_viewModel.HomeData.Falls, Mode=OneWay}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <ItemsStackPanel Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate x:DataType="home:CinemaHomeFallViewModel">
-                                <StackPanel>
-                                    <controls:MyAdaptiveGridView
-                                        Margin="-5,0,0,0"
-                                        DesiredWidth="540"
-                                        IsItemClickEnabled="True"
-                                        ItemClick="gvFall_ItemClick"
-                                        ItemHeight="168"
-                                        ItemsSource="{x:Bind Path=Items, Mode=OneWay}"
-                                        PointerPressed="gvFall_PointerPressed"
-                                        ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                                        ScrollViewer.VerticalScrollMode="Disabled"
-                                        SelectionMode="None"
-                                        StretchContentForSingleRow="False">
-                                        <controls:MyAdaptiveGridView.Header>
-                                            <Grid>
-                                                <TextBlock
-                                                    Margin="4,0,0,0"
-                                                    FontSize="18"
-                                                    FontWeight="Bold"
-                                                    Text="{Binding Title}" />
-                                            </Grid>
-                                        </controls:MyAdaptiveGridView.Header>
-                                        <controls:MyAdaptiveGridView.ItemTemplate>
-                                            <DataTemplate x:DataType="homeModel:CinemaHomeFallItemModel">
-                                                <Grid Background="{ThemeResource CardBackground}">
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition />
-                                                        <RowDefinition Height="28" />
-                                                        <!--<RowDefinition Height="48"/>-->
-                                                    </Grid.RowDefinitions>
-                                                    <toolkit:ImageEx
-                                                        HorizontalAlignment="Stretch"
-                                                        VerticalAlignment="Stretch"
-                                                        PlaceholderSource="ms-appx:///Assets/Thumbnails/Placeholde.png"
-                                                        Source="{x:Bind Path=Cover, Converter={StaticResource ImageCompressionConvert}, ConverterParameter='180h'}"
-                                                        Stretch="UniformToFill" />
-                                                    <TextBlock
-                                                        Grid.Row="1"
-                                                        Margin="8,4"
-                                                        MaxLines="1"
-                                                        Text="{x:Bind Title}"
-                                                        TextAlignment="Justify"
-                                                        TextTrimming="CharacterEllipsis"
-                                                        TextWrapping="Wrap" />
-                                                    <!--<TextBlock
-                                                        Grid.Row="2"
-                                                        Margin="4,0,4,4"
-                                                        FontSize="12"
-                                                        Foreground="Gray"
-                                                        MaxLines="2"
-                                                        Text="{Binding desc}"
-                                                        TextTrimming="CharacterEllipsis"
-                                                        TextWrapping="Wrap" TextAlignment="Justify" />-->
-                                                </Grid>
-                                            </DataTemplate>
-                                        </controls:MyAdaptiveGridView.ItemTemplate>
-                                    </controls:MyAdaptiveGridView>
-                                    <Grid>
-                                        <HyperlinkButton
-                                            x:Name="btnLoadMoreFall"
-                                            HorizontalAlignment="Center"
-                                            Click="btnLoadMoreFall_Click"
-                                            Foreground="Gray"
-                                            Visibility="{x:Bind Path=ShowMore, Mode=OneWay}">
-                                            <TextBlock>加载更多</TextBlock>
-                                        </HyperlinkButton>
-                                        <muxc:ProgressRing
-                                            Width="50"
-                                            Height="50"
-                                            HorizontalAlignment="Center"
-                                            IsActive="True"
-                                            Visibility="{x:Bind Path=ShowMore, Converter={StaticResource DisplayConvert}, Mode=OneWay}" />
-                                    </Grid>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
                 </StackPanel>
             </ScrollViewer>
         </muxc:RefreshContainer>
