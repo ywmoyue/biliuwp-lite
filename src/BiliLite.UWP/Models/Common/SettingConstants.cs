@@ -1471,8 +1471,7 @@ namespace BiliLite.Models.Common
             public const string DEFAULT_WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES =
                 "WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS=" +
                 "--enable-features=MediaFoundationClearPlayback," +
-                "AllowClearDolbyVisionInMseWhenPlatformEncryptedDvEnabled," +
-                "PlatformAC3Audio";
+                "AllowClearDolbyVisionInMseWhenPlatformEncryptedDvEnabled";
 
             /// <summary>
             /// WebPlayer音视频进度同步阈值1
