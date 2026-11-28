@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Atelier39;
@@ -14,6 +14,7 @@ using BiliLite.Models.Common.Download;
 using BiliLite.Models.Common.Dynamic;
 using BiliLite.Models.Common.Home;
 using BiliLite.Models.Common.Msg;
+using BiliLite.Models.Common.Recommend;
 using BiliLite.Models.Common.Season;
 using BiliLite.Models.Common.Settings;
 using BiliLite.Models.Common.User;
@@ -128,6 +129,57 @@ namespace BiliLite.Extensions
                     .ForMember(dest => dest.Aid, opt => opt.MapFrom(src => src.Aid))
                     .ForMember(dest => dest.Created, opt => opt.MapFrom(src => src.CTime))
                     .ForMember(dest => dest.VideoReview, opt => opt.MapFrom(src => src.Danmaku));
+
+                // 网页版首页推荐流(x/web-interface/wbi/index/top/feed/rcmd) -> 推荐页卡片模型。
+                // 与 App 端那套推荐接口字段名完全不同(见 RecommendWebItemModel), 两套在 RecommendService
+                // 里统一成 RecommendItemModel, 页面只认一套。
+                expression.CreateMap<RecommendWebItemModel, RecommendItemModel>()
+                    .ForMember(dest => dest.CardGoto, opt => opt.MapFrom(_ => "av"))
+                    .ForMember(dest => dest.Param,
+                        opt => opt.MapFrom(src =>
+                            src.Aid > 0 ? src.Aid.ToString() : src.Bvid))
+                    .ForMember(dest => dest.Uri,
+                        opt => opt.MapFrom(src =>
+                            string.IsNullOrEmpty(src.Uri)
+                                ? "https://www.bilibili.com/video/" + src.Bvid
+                                : src.Uri))
+                    // 网页版封面偶尔是协议相对地址(//i0.hdslb.com/...), 不补协议图片加载不出来
+                    .ForMember(dest => dest.Cover,
+                        opt => opt.MapFrom(src =>
+                            src.Pic != null && src.Pic.StartsWith("//") ? "https:" + src.Pic : src.Pic))
+                    .ForMember(dest => dest.CoverLeftIcon1, opt => opt.MapFrom(_ => 1))
+                    .ForMember(dest => dest.CoverLeftText1,
+                        opt => opt.MapFrom(src => src.Stat.View.ToCountString()))
+                    .ForMember(dest => dest.CoverLeftIcon2, opt => opt.MapFrom(_ => 3))
+                    .ForMember(dest => dest.CoverLeftText2,
+                        opt => opt.MapFrom(src => src.Stat.Danmaku.ToCountString()))
+                    .ForMember(dest => dest.CoverRightText,
+                        opt => opt.MapFrom(src => src.Duration.ProgressToTime()))
+                    // ★ UpName 必须给值(哪怕是空串): 全局列表屏蔽按它判定"这条能不能显示",
+                    //   留 null 会让整批网页内容在屏蔽那一步被全部丢掉(见 ContentFilterService)
+                    .ForMember(dest => dest.Args,
+                        opt => opt.MapFrom(src => new RecommendItemArgsModel
+                        {
+                            Aid = src.Aid,
+                            UpId = src.Owner.Mid > 0 ? src.Owner.Mid.ToString() : "",
+                            UpName = src.Owner.Name ?? "",
+                        }))
+                    // 网页版不下发 three_point_v2: 给个空列表, 推荐页后处理才会补上"过滤UP主 / 拉黑UP主"
+                    .ForMember(dest => dest.ThreePointV2,
+                        opt => opt.MapFrom(_ => new List<RecommendThreePointV2ItemModel>()))
+                    // 「不感兴趣 / 不想看此UP主」接口必填, 必须跟着卡片带到菜单点击那一步
+                    .ForMember(dest => dest.TrackId, opt => opt.MapFrom(src => src.TrackId))
+                    // 推荐理由: reason_type 1 = 已关注, 3 = 高点赞量(带 content, 如"11万点赞")。
+                    // 挂在 Badge 上(强调色小标签), 不需要颜色字段, 比 RcmdReasonStyle 省事
+                    .ForMember(dest => dest.Badge,
+                        opt => opt.MapFrom(src =>
+                            src.RcmdReason == null
+                                ? null
+                                : src.RcmdReason.ReasonType == 1
+                                    ? "已关注"
+                                    : src.RcmdReason.ReasonType == 3 ? src.RcmdReason.Content : null))
+                    // 翻页号是客户端游标状态, 不是接口字段: 由 RecommendService 拿到本批结果后逐条填
+                    .ForMember(dest => dest.Idx, opt => opt.Ignore());
 
                 expression.CreateMap<DynamicCardDescModel, UserDynamicItemDisplayViewModel>()
                     .ForMember(dest => dest.CommentCount, opt => opt.MapFrom(src => src.comment))

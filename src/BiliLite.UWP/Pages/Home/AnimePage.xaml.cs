@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions;
+using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Common;
@@ -68,11 +68,9 @@ namespace BiliLite.Pages.Home
             }
         }
 
-        private async void btnLoadMoreFall_Click(object sender, RoutedEventArgs e)
+        private async void btnLoadMoreFeed_Click(object sender, RoutedEventArgs e)
         {
-            var element = (sender as HyperlinkButton);
-            var data = element.DataContext as AnimeFallViewModel;
-            await m_viewModel.GetFallMore(element.DataContext as AnimeFallViewModel);
+            await m_viewModel.LoadMoreFeed();
         }
 
 

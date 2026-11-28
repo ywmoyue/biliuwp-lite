@@ -88,6 +88,16 @@
                         Style="{StaticResource DefaultToggleSwitchStyle}" />
                 </controls:SettingsCard>
 
+                <controls:SettingsCard Description="切换播放方式、自动回落已关闭时是否提示，提示中的 × 可单次关闭" Header="自动回落提示">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Glyph="&#xE7BA;" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <ToggleSwitch
+                        x:Name="swPlayerAutoFallbackTip"
+                        Margin="0,-5,-88,-5"
+                        Style="{StaticResource DefaultToggleSwitchStyle}" />
+                </controls:SettingsCard>
+
                 <controls:SettingsCard>
                     <controls:SettingsCard.Description>
                         <TextBlock HorizontalAlignment="Center">FFMpegInteropX 播放器设置</TextBlock>
@@ -110,6 +120,26 @@
                     <controls:SettingsCard.Description>
                         <TextBlock HorizontalAlignment="Center">Web 播放器设置(ShakaPlayer/Mpegts)</TextBlock>
                     </controls:SettingsCard.Description>
+                </controls:SettingsCard>
+                <controls:SettingsCard Description="每行一个，格式为 名称=值，仅支持 WEBVIEW2_ 开头的变量，重启后生效。透明背景环境变量固定不可改；默认已启用 Media Foundation 直通，支持杜比视界（DV）与 DD+（Atmos）直通" Header="WebView2 环境变量">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox
+                            x:Name="TxtWebView2EnvironmentVariables"
+                            Width="280"
+                            Height="100"
+                            Margin="0,0,10,0"
+                            AcceptsReturn="True"
+                            PlaceholderText="WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS=..."
+                            Text="{x:Bind m_viewModel.WebView2EnvironmentVariables, Mode=TwoWay}"
+                            TextWrapping="Wrap" />
+                        <StackPanel VerticalAlignment="Center" Orientation="Vertical">
+                            <Button Click="BtnSaveWebView2EnvironmentVariables_OnClick" Content="保存" />
+                            <Button
+                                Margin="0,8,0,0"
+                                Click="BtnResetWebView2EnvironmentVariables_OnClick"
+                                Content="恢复默认" />
+                        </StackPanel>
+                    </StackPanel>
                 </controls:SettingsCard>
                 <controls:SettingsCard Description="选择本地 html 文件替代内置播放器 html 进行挂载" Header="挂载本地文件">
                     <Button x:Name="BtnSelectWebPlayerFile" IsEnabled="False">开发中，敬请期待</Button>

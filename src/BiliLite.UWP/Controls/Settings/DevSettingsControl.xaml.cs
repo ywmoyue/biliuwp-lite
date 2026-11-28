@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions.Notifications;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Services;
 using BiliLite.ViewModels.Plugins;
@@ -79,34 +79,6 @@ namespace BiliLite.Controls.Settings
 
             RequestBuildTextBox.Text = SettingService.GetValue(SettingConstants.Other.REQUEST_BUILD,
                 SettingConstants.Other.DEFAULT_REQUEST_BUILD);
-
-            // BiliLiteWebApi
-            BiliLiteWebApiTextBox.Text = SettingService.GetValue(SettingConstants.Other.BILI_LITE_WEB_API_BASE_URL,
-                ApiConstants.BILI_LITE_WEB_API_DEFAULT_BASE_URL);
-            BiliLiteWebApiTextBox.Loaded += (sender, e) =>
-            {
-                BiliLiteWebApiTextBox.QuerySubmitted += (sender2, args) =>
-                {
-                    var text = sender2.Text;
-                    if (string.IsNullOrEmpty(text))
-                    {
-                        NotificationShowExtensions.ShowMessageToast("已取消自定义BiliLiteWebApi服务器");
-                        SettingService.SetValue(SettingConstants.Other.BILI_LITE_WEB_API_BASE_URL, "");
-                        return;
-                    }
-
-                    if (!text.EndsWith("/")) text += "/";
-                    if (!Uri.IsWellFormedUriString(text, UriKind.Absolute))
-                    {
-                        NotificationShowExtensions.ShowMessageToast("地址格式错误");
-                        return;
-                    }
-
-                    SettingService.SetValue(SettingConstants.Other.BILI_LITE_WEB_API_BASE_URL, text);
-                    sender2.Text = text;
-                    NotificationShowExtensions.ShowMessageToast("保存成功");
-                };
-            };
 
             // 更新json来源
             var selectedValue = SettingService.GetValue(SettingConstants.Other.UPDATE_JSON_ADDRESS,

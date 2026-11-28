@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="BiliLite.Controls.Settings.UISettingsControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -120,6 +120,61 @@
                             SelectedValue="{x:Bind m_UISettingsControlViewModel.MicaBackgroundSource, Mode=TwoWay}"
                             SelectedValuePath="Value"
                             SelectionChanged="UpdateMicaSettings" />
+                    </StackPanel>
+                </controls:SettingsCard>
+
+                <controls:SettingsCard
+                    x:Name="SCFontFamily"
+                    Description="实验性功能，覆盖范围可能不完整；重启应用生效，留空为系统默认字体"
+                    Header="界面字体（实验性）">
+                    <controls:SettingsCard.HeaderIcon>
+                        <font:FontAwesome Icon="Solid_Font" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <AutoSuggestBox
+                        x:Name="txtUIFontFamily"
+                        MinWidth="240"
+                        AutomationProperties.Name="界面字体"
+                        PlaceholderText="输入字体名，如 Microsoft YaHei"
+                        QueryIcon="Accept" />
+                </controls:SettingsCard>
+
+                <controls:SettingsCard
+                    x:Name="SCPageBackgroundColor"
+                    Description="实验性功能，自定义后不再跟随系统材质，可恢复默认"
+                    Header="背景颜色（实验性）">
+                    <controls:SettingsCard.HeaderIcon>
+                        <font:FontAwesome Icon="Solid_Fill" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <StackPanel Orientation="Horizontal">
+                        <Button
+                            x:Name="btnPageBackgroundColor"
+                            MinWidth="100"
+                            ToolTipService.ToolTip="选择自定义背景颜色">
+                            <TextBlock Text="选择颜色" />
+                            <Button.Flyout>
+                                <Flyout Placement="LeftEdgeAlignedBottom">
+                                    <StackPanel>
+                                        <muxc:ColorPicker
+                                            x:Name="cpPageBackgroundColor"
+                                            Margin="0,10,-55,0"
+                                            IsAlphaEnabled="False"
+                                            IsColorPreviewVisible="False" />
+                                        <Button
+                                            x:Name="btnApplyPageBackgroundColor"
+                                            Margin="0,10,0,0"
+                                            HorizontalAlignment="Stretch"
+                                            Click="BtnApplyPageBackgroundColor_OnClick"
+                                            Content="应用"
+                                            Style="{StaticResource AccentButtonStyle}" />
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                        <Button
+                            x:Name="btnResetPageBackgroundColor"
+                            Margin="8,0,0,0"
+                            Click="BtnResetPageBackgroundColor_OnClick"
+                            Content="恢复默认" />
                     </StackPanel>
                 </controls:SettingsCard>
 
@@ -476,6 +531,12 @@
                 <font:FontAwesome Icon="Solid_Comments" />
             </controls:SettingsExpander.HeaderIcon>
             <controls:SettingsExpander.Items>
+                <controls:SettingsCard Description="网页版「为你推荐」通常更贴近网页端口味；切换后需在推荐页刷新一次" Header="推荐来源">
+                    <ComboBox x:Name="cbRecommendSource" MinWidth="200">
+                        <ComboBoxItem Content="App 端推荐" />
+                        <ComboBoxItem Content="网页版推荐" />
+                    </ComboBox>
+                </controls:SettingsCard>
                 <controls:SettingsCard Description="默认550，宽度越小列数越多" Header="推荐页列表视图单元宽度">
                     <muxc:NumberBox
                         x:Name="NumBoxRecommentPageListItemWidth"

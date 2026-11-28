@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions.Notifications;
+using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Home;
 using BiliLite.Models.Common.Settings;
@@ -6,6 +6,8 @@ using BiliLite.Services;
 using BiliLite.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -361,6 +363,18 @@ namespace BiliLite.Controls.Settings
                 });
             });
 
+            //推荐来源(App 端 / 网页版)
+            cbRecommendSource.SelectedIndex = Math.Clamp(
+                SettingService.GetValue<int>(SettingConstants.UI.RECOMMEND_SOURCE, SettingConstants.UI.DEFAULT_RECOMMEND_SOURCE),
+                SettingConstants.UI.RECOMMEND_SOURCE_APP, SettingConstants.UI.RECOMMEND_SOURCE_WEB);
+            cbRecommendSource.Loaded += (sender, e) =>
+            {
+                cbRecommendSource.SelectionChanged += (obj, args) =>
+                {
+                    SettingService.SetValue(SettingConstants.UI.RECOMMEND_SOURCE, cbRecommendSource.SelectedIndex);
+                };
+            };
+
             //固定标签宽度
             SwitchTabItemFixedWidth.IsOn =
                 SettingService.GetValue(SettingConstants.UI.ENABLE_TAB_ITEM_FIXED_WIDTH,
@@ -438,6 +452,26 @@ namespace BiliLite.Controls.Settings
                     m_UISettingsControlViewModel.MicaBackgroundSources.FindIndex(x =>
                         x.Value == m_UISettingsControlViewModel.MicaBackgroundSource);
             };
+
+            //界面字体
+            txtUIFontFamily.Text = SettingService.GetValue(SettingConstants.UI.FONT_FAMILY, "");
+            txtUIFontFamily.ItemsSource = GetSystemFontFamilies();
+            txtUIFontFamily.QuerySubmitted += (_, _) => SaveFontFamily();
+            txtUIFontFamily.LostFocus += (_, _) => SaveFontFamily();
+
+            //页面背景颜色
+            var pageBackgroundColor = SettingService.GetValue(SettingConstants.UI.PAGE_BACKGROUND_COLOR, "");
+            if (!string.IsNullOrWhiteSpace(pageBackgroundColor))
+            {
+                try
+                {
+                    cpPageBackgroundColor.Color = Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor(pageBackgroundColor);
+                }
+                catch (Exception)
+                {
+                    // 颜色值异常时保持默认颜色
+                }
+            }
 
             var navItems = SettingService.GetValue(SettingConstants.UI.HOEM_ORDER, DefaultHomeNavItems.GetDefaultHomeNavItems());
             gridHomeCustom.ItemsSource = new ObservableCollection<HomeNavItem>(navItems);
@@ -529,6 +563,61 @@ namespace BiliLite.Controls.Settings
                 !m_UISettingsControlViewModel.EnableMicaBackground);
             SettingService.SetValue(SettingConstants.UI.MICA_BACKGROUND_SOURCE, (int)m_UISettingsControlViewModel.MicaBackgroundSource);
             SettingService.SetValue(SettingConstants.UI.ENABLE_MICA_BACKGROUND_SOURCE, m_UISettingsControlViewModel.EnableMicaBackground);
+        }
+
+        private void SaveFontFamily()
+        {
+            var fontFamily = (txtUIFontFamily.Text ?? "").Trim();
+            if (fontFamily == SettingService.GetValue(SettingConstants.UI.FONT_FAMILY, "")) return;
+
+            SettingService.SetValue(SettingConstants.UI.FONT_FAMILY, fontFamily);
+            NotificationShowExtensions.ShowMessageToast(string.IsNullOrEmpty(fontFamily)
+                ? "已恢复默认字体，重启应用生效"
+                : "已保存字体，重启应用生效");
+        }
+
+        /// <summary>
+        /// 获取系统已安装的字体，用于输入提示，获取失败时给一份常用字体
+        /// </summary>
+        private static IReadOnlyList<string> GetSystemFontFamilies()
+        {
+            try
+            {
+                var fontFamilies = Microsoft.Graphics.Canvas.Text.CanvasTextFormat.GetSystemFontFamilies();
+                if (fontFamilies != null && fontFamilies.Any())
+                {
+                    return fontFamilies.ToList();
+                }
+            }
+            catch (Exception)
+            {
+            }
+
+            return new List<string>()
+            {
+                "Microsoft YaHei UI",
+                "Microsoft YaHei",
+                "DengXian",
+                "SimSun",
+                "SimHei",
+                "Segoe UI",
+                "Consolas",
+            };
+        }
+
+        private void BtnApplyPageBackgroundColor_OnClick(object sender, RoutedEventArgs e)
+        {
+            var color = cpPageBackgroundColor.Color;
+            SettingService.SetValue(SettingConstants.UI.PAGE_BACKGROUND_COLOR, color.ToString());
+            m_themeService.SetPageBackgroundColor(color);
+            NotificationShowExtensions.ShowMessageToast("背景颜色已应用");
+        }
+
+        private void BtnResetPageBackgroundColor_OnClick(object sender, RoutedEventArgs e)
+        {
+            SettingService.SetValue(SettingConstants.UI.PAGE_BACKGROUND_COLOR, "");
+            m_themeService.SetPageBackgroundColor(null);
+            NotificationShowExtensions.ShowMessageToast("已恢复默认背景");
         }
     }
 }

@@ -1,0 +1,85 @@
+﻿<UserControl
+    x:Class="BiliLite.Controls.Search.SearchHistoryPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="320"
+    d:DesignWidth="320"
+    mc:Ignorable="d">
+
+    <Border
+        Padding="0,4"
+        Background="{ThemeResource FlyoutPresenterBackground}"
+        CornerRadius="{ThemeResource OverlayCornerRadius}">
+        <Grid MinWidth="260" MaxWidth="360">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid Margin="12,2,6,0">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="搜索历史" />
+                <Button
+                    Padding="8,2"
+                    HorizontalAlignment="Right"
+                    AllowFocusOnInteraction="False"
+                    Click="BtnClear_OnClick"
+                    Content="清空"
+                    IsTabStop="False"
+                    Style="{StaticResource TransparentButtonStyle}" />
+            </Grid>
+            <ScrollViewer
+                Grid.Row="1"
+                MaxHeight="320"
+                VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{x:Bind m_history}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <FontIcon
+                                    Margin="12,0,0,0"
+                                    VerticalAlignment="Center"
+                                    FontSize="14"
+                                    Glyph="&#xE81C;" />
+                                <Button
+                                    Grid.Column="1"
+                                    Padding="10,6"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Left"
+                                    AllowFocusOnInteraction="False"
+                                    Click="BtnHistoryItem_OnClick"
+                                    IsTabStop="False"
+                                    Style="{StaticResource TransparentButtonStyle}"
+                                    Tag="{x:Bind}">
+                                    <TextBlock Text="{x:Bind}" TextTrimming="CharacterEllipsis" />
+                                </Button>
+                                <Button
+                                    Grid.Column="2"
+                                    Width="28"
+                                    Height="28"
+                                    Padding="0"
+                                    AllowFocusOnInteraction="False"
+                                    Click="BtnRemoveItem_OnClick"
+                                    IsTabStop="False"
+                                    Style="{StaticResource TransparentButtonStyle}"
+                                    Tag="{x:Bind}"
+                                    ToolTipService.ToolTip="删除">
+                                    <FontIcon FontSize="12" Glyph="&#xE711;" />
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</UserControl>

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
@@ -8,13 +8,14 @@ using BiliLite.Models.Common.Anime;
 using BiliLite.Models.Common.Home;
 using BiliLite.Models.Common.Season;
 using BiliLite.Models.Exceptions;
-using BiliLite.Models.Requests.Api.Home;
 using BiliLite.Models.Requests.Api.User;
 using BiliLite.Modules;
 using BiliLite.Pages.Bangumi;
 using BiliLite.Pages.User;
 using BiliLite.Services;
+using BiliLite.Services.Biz;
 using BiliLite.ViewModels.Common;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,7 @@ namespace BiliLite.ViewModels.Home
         #region Fields
 
         private readonly FollowAPI m_followApi;
-        private readonly CinemaAPI m_cinemaApi;
+        private readonly CinemaBizService m_cinemaService;
         private readonly IMapper m_mapper;
         private static readonly ILogger _logger = GlobalLogger.FromCurrentType();
 
@@ -44,7 +45,7 @@ namespace BiliLite.ViewModels.Home
         public CinemaViewModel(IMapper mapper)
         {
             m_mapper = mapper;
-            m_cinemaApi = new CinemaAPI();
+            m_cinemaService = App.ServiceProvider.GetRequiredService<CinemaBizService>();
             m_followApi = new FollowAPI();
             Entrances = new List<PageEntranceModel>() {
                 new PageEntranceModel(){
@@ -210,13 +211,8 @@ namespace BiliLite.ViewModels.Home
             try
             {
                 Loading = true;
-                var api = m_cinemaApi.CinemaHome();
-
-                var results = await api.Request();
-                if (!results.status) throw new CustomizedErrorException(results.message);
-                var data = await results.GetJson<ApiDataModel<CinemaHomeModel>>();
-                if (!data.success) throw new CustomizedErrorException(data.message);
-                HomeData = m_mapper.Map<CinemaHomeViewModel>(data.data);
+                var homeData = await m_cinemaService.GetHome();
+                HomeData = m_mapper.Map<CinemaHomeViewModel>(homeData);
             }
             catch (CustomizedErrorException ex)
             {
@@ -259,35 +255,6 @@ namespace BiliLite.ViewModels.Home
             finally
             {
                 LoadingFollow = false;
-            }
-        }
-
-        public async Task GetFallMore(CinemaHomeFallViewModel animeFallViewModel)
-        {
-            try
-            {
-                animeFallViewModel.ShowMore = false;
-                var results = await m_cinemaApi.CinemaFallMore(animeFallViewModel.Wid, animeFallViewModel.Items.LastOrDefault().Cursor).Request();
-                if (!results.status) throw new CustomizedErrorException(results.message);
-                var data = await results.GetJson<List<CinemaHomeFallItemModel>>();
-                foreach (var item in data)
-                {
-                    animeFallViewModel.Items.Add(item);
-                }
-            }
-            catch (CustomizedErrorException ex)
-            {
-                NotificationShowExtensions.ShowMessageToast(ex.Message);
-                _logger.Error(ex.Message, ex);
-            }
-            catch (Exception ex)
-            {
-                var handel = HandelError<List<CinemaHomeFallItemModel>>(ex);
-                NotificationShowExtensions.ShowMessageToast(handel.message);
-            }
-            finally
-            {
-                animeFallViewModel.ShowMore = true;
             }
         }
 

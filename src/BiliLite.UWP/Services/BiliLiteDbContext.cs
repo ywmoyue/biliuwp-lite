@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Windows.Storage;
@@ -32,6 +32,8 @@ namespace BiliLite.Services
         public DbSet<DownloadedSubItemDTO> DownloadedSubItems { get; set; }
 
         public DbSet<PageSavedDTO> PageSavedItems { get; set; }
+
+        public DbSet<CacheItem> CacheItems { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

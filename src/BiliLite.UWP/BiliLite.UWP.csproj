@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -147,6 +147,10 @@
     <Compile Include="Controls\Common\DanmakuListControl.xaml.cs">
       <DependentUpon>DanmakuListControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Search\SearchHistoryBehavior.cs" />
+    <Compile Include="Controls\Search\SearchHistoryPanel.xaml.cs">
+      <DependentUpon>SearchHistoryPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\Common\Player\PlayerOpenParam.cs" />
     <Compile Include="Models\Common\User\WatchLater\WatchlaterItemModel.cs" />
     <Compile Include="Models\Common\User\WatchLater\WatchlaterOwnerModel.cs" />
@@ -170,7 +174,10 @@
     <Compile Include="Services\Interfaces\IDownloadService.cs" />
     <Compile Include="Services\Interfaces\IDownloadTask.cs" />
     <Compile Include="Services\Interfaces\IWindowSizeProvider.cs" />
+    <Compile Include="Services\Interfaces\IPlayerMiniWindowService.cs" />
+    <Compile Include="Services\Interfaces\IPlayerMiniWindowHost.cs" />
     <Compile Include="Services\WindowSizeService.cs" />
+    <Compile Include="Services\UwpMiniPlayerWindowService.cs" />
     <Compile Include="Services\UwpWindowSizeProvider.cs" />
     <Compile Include="Models\Common\WindowSize.cs" />
     <Compile Include="ViewModels\Common\DanmakuListViewModel.cs" />
@@ -324,6 +331,7 @@
     <Compile Include="Models\Common\Video\MediaListResources.cs" />
     <Compile Include="Models\Databases\DownloadItemDTO.cs" />
     <Compile Include="Models\Databases\PageSavedDTO.cs" />
+    <Compile Include="Models\Databases\CacheItem.cs" />
     <Compile Include="Models\Databases\SettingItem.cs" />
     <Compile Include="Models\Functions\BaseShortcutFunction.cs" />
     <Compile Include="Models\Functions\CancelFullscreenFunction.cs" />
@@ -441,11 +449,16 @@
     <Compile Include="Player\WebPlayer\WebPlayerToolbarControl.xaml.cs">
       <DependentUpon>WebPlayerToolbarControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Services\Biz\AnimeBizService.cs" />
     <Compile Include="Services\Biz\BaseBizService.cs" />
+    <Compile Include="Services\Biz\CinemaBizService.cs" />
     <Compile Include="Services\Biz\LocalAttentionUserService.cs" />
     <Compile Include="Services\Biz\MessagesService.cs" />
+    <Compile Include="Services\Biz\RecommendService.cs" />
     <Compile Include="Services\Biz\UserDynamicService.cs" />
+    <Compile Include="Services\Biz\UtilsBizService.cs" />
     <Compile Include="Services\Interfaces\IUpdatePivotLayout.cs" />
+    <Compile Include="Services\CacheService.cs" />
     <Compile Include="Services\PageSaveService.cs" />
     <Compile Include="Models\Common\Msg\BiliMessageSession.cs" />
     <Compile Include="Models\Common\Msg\BiliMessageSessionResponse.cs" />
@@ -562,6 +575,9 @@
     <Compile Include="Models\Common\Player\PlayerError.cs" />
     <Compile Include="Models\Common\Player\BasePlayUrlInfo.cs" />
     <Compile Include="Models\Common\Player\RealPlayInfo.cs" />
+    <Compile Include="Models\Common\Player\PlayerToastMessage.cs" />
+    <Compile Include="Models\Common\Player\PlayerHandoffInfo.cs" />
+    <Compile Include="Models\Common\Player\MiniWindowPresentation.cs" />
     <Compile Include="Models\Common\UserDynamic\IUserDynamicContentDisplayInfo.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicCtrlItem.cs" />
     <Compile Include="Models\Common\UserDynamic\UserDynamicDisplayTypesMap.cs" />
@@ -781,6 +797,7 @@
     <Compile Include="Models\Common\Recommend\RecommendThreePointV2ItemModel.cs" />
     <Compile Include="Models\Common\Recommend\RecommendThreePointV2ItemReasonsModel.cs" />
     <Compile Include="Models\Common\Recommend\RecommendItemModel.cs" />
+    <Compile Include="Models\Common\Recommend\RecommendWebItemModel.cs" />
     <Compile Include="Models\Exceptions\DynamicDisplayTypeUnsupportedException.cs" />
     <Compile Include="Models\Requests\ApiParams\RecommondFeedbackParams.cs" />
     <Compile Include="Controls\DataTemplateSelectors\DynamicItemDataTemplateSelector.cs" />
@@ -792,6 +809,7 @@
     <Compile Include="Models\Common\Dynamic\DynamicVideoCardOwnerModel.cs" />
     <Compile Include="Models\Common\Dynamic\DynamicVideoCardStatModel.cs" />
     <Compile Include="Models\Common\Anime\AnimeBannerModel.cs" />
+    <Compile Include="Models\Common\Anime\AnimeFeedModel.cs" />
     <Compile Include="Models\Common\Anime\AnimeFallItemModel.cs" />
     <Compile Include="Models\Common\Anime\AnimeRankModel.cs" />
     <Compile Include="Models\Common\Anime\AnimeFallModel.cs" />
@@ -821,7 +839,6 @@
     <Compile Include="ViewModels\Download\DownloadItemViewModel.cs" />
     <Compile Include="Models\Common\Account\CheckCookieResult.cs" />
     <Compile Include="Models\Common\Account\WebInterfaceNav.cs" />
-    <Compile Include="Models\Common\ApiConstants.cs" />
     <Compile Include="Models\Common\Danmaku\CompareDanmakuModel.cs" />
     <Compile Include="Models\Common\Video\LocalPlayInfo.cs" />
     <Compile Include="Models\Common\Video\PlayInfo.cs" />
@@ -957,6 +974,7 @@
     <Compile Include="Controls\Player.xaml.cs">
       <DependentUpon>Player.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PlayerControl.MiniWindow.cs" />
     <Compile Include="Controls\PlayerControl.xaml.cs">
       <DependentUpon>PlayerControl.xaml</DependentUpon>
     </Compile>
@@ -1186,6 +1204,7 @@
   <ItemGroup>
     <Content Include="Assets\DbMigrations\01-0_40704.sql" />
     <Content Include="Assets\DbMigrations\02-40704_40709.sql" />
+    <Content Include="Assets\DbMigrations\03-40709_40821.sql" />
     <Content Include="Assets\GeeTest\bili_gt.html" />
     <Content Include="Assets\GeeTest\gt.js" />
     <Content Include="Assets\Icon\icon_view_point.png" />
@@ -1352,6 +1371,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Common\PieControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Search\SearchHistoryPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="BiliLite.Controls.Settings.DevSettingsControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -159,18 +159,6 @@
                     恢复默认
                 </Button>
             </StackPanel>
-        </controls:SettingsCard>
-
-        <controls:SettingsCard Description="用于处理 UWP 无法完成的事项" Header="BiliLite-WebApi">
-            <controls:SettingsCard.HeaderIcon>
-                <font:FontAwesome Icon="Solid_Wrench" />
-            </controls:SettingsCard.HeaderIcon>
-            <AutoSuggestBox
-                x:Name="BiliLiteWebApiTextBox"
-                Margin="0,8"
-                HorizontalAlignment="Left"
-                PlaceholderText="https://example.com/"
-                QueryIcon="Accept" />
         </controls:SettingsCard>
 
         <controls:SettingsCard Header="更新 JSON 请求地址">

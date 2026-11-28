@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -45,6 +45,12 @@ namespace BiliLite.Models.Common.Recommend
         public string CardGoto { get; set; }
 
         public string Idx { get; set; }
+
+        /// <summary>
+        /// 推荐流的跟踪标识(仅网页版有)。「不感兴趣 / 不想看此UP主」必须把它原样带回服务端。
+        /// ★ App 端接口不下发这个字段, 那边为 null 属于正常。
+        /// </summary>
+        public string TrackId { get; set; }
 
         private List<RecommendThreePointV2ItemModel> m_threePointV2;
 

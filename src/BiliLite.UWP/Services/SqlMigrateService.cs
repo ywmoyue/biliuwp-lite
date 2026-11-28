@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BiliLite.Models.Common;
 using Windows.Storage;
-using BiliLite.Extensions;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,19 +21,27 @@ namespace BiliLite.Services
             m_biliLiteDbContext = biliLiteDbContext;
         }
 
+        /// <summary>
+        /// APP 版本号（四段全部参与比较）与上次迁移的版本不一致时，执行 DbMigrations 下的全部脚本。
+        /// 也就是说：正常升级、只改第四段 Revision 的热修、以及降级重装都会重新走一遍迁移，
+        /// 因此 Assets/DbMigrations 下的每个脚本都必须可重复执行：
+        /// 建表建索引一律带 IF NOT EXISTS，加列先判断列是否存在，数据回填要写成重复执行结果不变。
+        /// 脚本按文件名序号（NN-升级前版本_升级后版本.sql）升序执行。
+        /// </summary>
         public async Task MigrateDatabase()
         {
             try
             {
                 var currentAppVersion = GetCurrentAppVersion();
-                var currentDbVersion = GetCurrentDatabaseVersion();
-                if (currentDbVersion == currentAppVersion) return;
-                var migrationScripts = await GetMigrationScriptsToRun(0);
+                if (GetMigratedVersion() == currentAppVersion) return;
+
+                var migrationScripts = await GetMigrationScriptsToRun();
                 foreach (var script in migrationScripts)
                 {
                     await ExecuteMigrationScript(script);
                 }
-                UpdateDatabaseVersion();
+
+                UpdateDatabaseVersion(currentAppVersion);
             }
             catch (Exception ex)
             {
@@ -42,11 +49,14 @@ namespace BiliLite.Services
             }
         }
 
+        /// <summary>
+        /// 开发调试用：不校验版本，直接按顺序重放全部迁移脚本（脚本需可重复执行）
+        /// </summary>
         public async Task ExcuteAllMigrationScripts()
         {
             try
             {
-                var migrationScripts = await GetMigrationScriptsToRun(0);
+                var migrationScripts = await GetMigrationScriptsToRun();
                 foreach (var script in migrationScripts)
                 {
                     await ExecuteMigrationScript(script);
@@ -67,13 +77,16 @@ namespace BiliLite.Services
             return m_migrateFolder;
         }
 
-        private int GetCurrentDatabaseVersion()
+        private static string GetMigratedVersion()
         {
-            var version = SettingService.GetValue(SettingConstants.Other.SQL_DB_VERSION, 0);
-            return version;
+            var key = SettingConstants.Other.SQL_DB_VERSION;
+            if (!SettingService.HasValue(key)) return string.Empty;
+            return SettingService.TryGetValue(key, string.Empty, out var version)
+                ? version
+                : string.Empty;
         }
 
-        private async Task<List<MigrationScriptInfo>> GetMigrationScriptsToRun(int currentVersion)
+        private async Task<List<MigrationScriptInfo>> GetMigrationScriptsToRun()
         {
             var folder = await GetMigrationsFolder();
             var files = await folder.GetFilesAsync();
@@ -83,10 +96,7 @@ namespace BiliLite.Services
             {
                 var migrationInfo = ExtractMigrationInfo(file.Name);
                 migrationInfo.File = file;
-                if (migrationInfo.AfterVersion.ToInt32() > currentVersion)
-                {
-                    migrationScripts.Add(migrationInfo);
-                }
+                migrationScripts.Add(migrationInfo);
             }
 
             return migrationScripts.OrderBy(script => script.SequenceNumber).ToList();
@@ -101,16 +111,19 @@ namespace BiliLite.Services
             var result = await m_biliLiteDbContext.Database.ExecuteSqlRawAsync(content);
         }
 
-        private void UpdateDatabaseVersion()
+        private static void UpdateDatabaseVersion(string version)
         {
-            SettingService.SetValue(SettingConstants.Other.SQL_DB_VERSION, GetCurrentAppVersion());
+            SettingService.SetValue(SettingConstants.Other.SQL_DB_VERSION, version);
         }
 
-        private int GetCurrentAppVersion()
+        /// <summary>
+        /// 完整版本号字符串：Major.Minor.Build.Revision。
+        /// 四段都取，保证只改 Revision 的更新也能触发迁移。
+        /// </summary>
+        private static string GetCurrentAppVersion()
         {
-            var num = ($"{SystemInformation.ApplicationVersion.Major}{SystemInformation.ApplicationVersion.Minor.ToString("00")}" +
-                      $"{SystemInformation.ApplicationVersion.Build.ToString("00")}").ToInt32();
-            return num.ToInt32();
+            var version = SystemInformation.ApplicationVersion;
+            return $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
         }
 
         private static MigrationScriptInfo ExtractMigrationInfo(string fileName)
