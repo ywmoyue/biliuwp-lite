@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions;
+using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Common;
@@ -68,12 +68,6 @@ namespace BiliLite.Pages.Home
                 await m_viewModel.GetFollows();
             }
         }
-        private async void btnLoadMoreFall_Click(object sender, RoutedEventArgs e)
-        {
-            var element = (sender as HyperlinkButton);
-            var data = element.DataContext as CinemaHomeFallViewModel;
-            await m_viewModel.GetFallMore(element.DataContext as CinemaHomeFallViewModel);
-        }
 
 
         private async void btnRefresh_Click(object sender, RoutedEventArgs e)
@@ -81,27 +75,6 @@ namespace BiliLite.Pages.Home
             await LoadData();
         }
 
-        private async Task OpenGvFall(CinemaHomeFallItemModel cinemaHomeFallItem, bool dontGoTo = false)
-        {
-            var result = await MessageCenter.HandelUrl(cinemaHomeFallItem.Link, dontGoTo);
-            if (!result)
-            {
-                NotificationShowExtensions.ShowMessageToast("不支持打开的链接");
-            }
-        }
-
-        private async void gvFall_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            await OpenGvFall(e.ClickedItem as CinemaHomeFallItemModel);
-        }
-
-        private async void gvFall_PointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            if (!e.IsMiddleButtonNewTap(sender)) return;
-            var element = e.OriginalSource as FrameworkElement;
-            var item = element.DataContext as CinemaHomeFallItemModel;
-            await OpenGvFall(item, true);
-        }
 
         private async void RefreshContainer_RefreshRequested(Microsoft.UI.Xaml.Controls.RefreshContainer sender, Microsoft.UI.Xaml.Controls.RefreshRequestedEventArgs args)
         {

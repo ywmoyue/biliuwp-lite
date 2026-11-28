@@ -1,4 +1,5 @@
-﻿using BiliLite.Extensions;
+﻿using BiliLite.Controls.Search;
+using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Search;
@@ -44,6 +45,7 @@ namespace BiliLite.Pages
             m_searchService = App.ServiceProvider.GetRequiredService<SearchService>();
             // m_cookieService = App.ServiceProvider.GetRequiredService<CookieService>();
             this.DataContext = m_viewModel;
+            SearchHistoryBehavior.Attach(SearchBox, m_searchService, keyword => _ = NavigateToSearch(keyword));
         }
 
         public async Task Refresh()
@@ -176,25 +178,33 @@ namespace BiliLite.Pages
 
         private async void SearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            if (string.IsNullOrEmpty(SearchBox.Text))
+            await NavigateToSearch(args.QueryText);
+        }
+
+        private async Task NavigateToSearch(string keyword)
+        {
+            keyword = keyword?.Trim();
+            if (string.IsNullOrEmpty(keyword))
             {
                 NotificationShowExtensions.ShowMessageToast("关键字不能为空");
                 return;
             }
 
-            if (await MessageCenter.HandelUrl(args.QueryText))
+            if (await MessageCenter.HandelUrl(keyword))
             {
                 return;
             }
+
+            m_searchService.AddSearchHistory(keyword);
 
             MessageCenter.NavigateToPage(this, new NavigationInfo()
             {
                 icon = Symbol.Find,
                 page = typeof(SearchPage),
-                title = "搜索:" + args.QueryText,
+                title = "搜索:" + keyword,
                 parameters = new SearchParameter()
                 {
-                    Keyword = args.QueryText,
+                    Keyword = keyword,
                     SearchType = SearchType.Video
                 }
             });

@@ -42,6 +42,20 @@ namespace BiliLite.Models.Common
             public const string THEME = "theme";
 
             /// <summary>
+            /// 界面字体
+            /// 字体名称，为空时使用系统默认字体
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string FONT_FAMILY = "UIFontFamily";
+
+            /// <summary>
+            /// 页面背景颜色
+            /// ARGB颜色字符串，为空时跟随系统材质
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string PAGE_BACKGROUND_COLOR = "PageBackgroundColor";
+
+            /// <summary>
             /// 显示模式
             /// 0 为多标签，1 为单窗口，2 为多窗口
             /// </summary>
@@ -83,6 +97,30 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const bool DEFAULT_DISPLAY_RECOMMEND_BANNER = true;
+
+            /// <summary>
+            /// 首页推荐来源。两套**不同的服务端模型**，不是同一个接口换参数：
+            /// 0 = App 端推荐流(app.bilibili.com/x/v2/feed/index，idx 游标，每次 10 条)；
+            /// 1 = 网页版「为你推荐」(x/web-interface/wbi/index/top/feed/rcmd，wbi 签名，单次最多 30 条)。
+            /// </summary>
+            [SettingKey(typeof(int))]
+            public const string RECOMMEND_SOURCE = "RecommendSource";
+
+            /// <summary>
+            /// 推荐来源：App 端（加入该设置前唯一的来源，保持默认行为不变）
+            /// </summary>
+            public const int RECOMMEND_SOURCE_APP = 0;
+
+            /// <summary>
+            /// 推荐来源：网页版
+            /// </summary>
+            public const int RECOMMEND_SOURCE_WEB = 1;
+
+            /// <summary>
+            /// 默认推荐来源
+            /// </summary>
+            [SettingDefaultValue]
+            public const int DEFAULT_RECOMMEND_SOURCE = RECOMMEND_SOURCE_APP;
 
             /// <summary>
             /// 右侧详情宽度
@@ -1037,6 +1075,18 @@ namespace BiliLite.Models.Common
             public const bool DEFAULT_AUTO_FALLBACK = true;
 
             /// <summary>
+            /// 自动回落相关提示（切换播放方式、自动回落已关闭）
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string AUTO_FALLBACK_TIP = "PlayerAutoFallbackTip";
+
+            /// <summary>
+            /// 默认显示自动回落相关提示
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_AUTO_FALLBACK_TIP = true;
+
+            /// <summary>
             /// 自动切换下一个视频
             /// </summary>
             [SettingKey(typeof(bool))]
@@ -1115,6 +1165,18 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingDefaultValue]
             public const double DEFAULT_PLAYER_VOLUME = 1.0;
+
+            /// <summary>
+            /// 鼠标滚轮调节音量
+            /// </summary>
+            [SettingKey(typeof(bool))]
+            public const string ENABLE_MOUSE_WHEEL_VOLUME = "PlayerEnableMouseWheelVolume";
+
+            /// <summary>
+            /// 鼠标滚轮调节音量默认值
+            /// </summary>
+            [SettingDefaultValue]
+            public const bool DEFAULT_ENABLE_MOUSE_WHEEL_VOLUME = true;
 
             /// <summary>
             /// 亮度
@@ -1396,6 +1458,22 @@ namespace BiliLite.Models.Common
             public const string WEB_PLAYER_ENABLE_DEV_MODE = "WebPlayerEnableDevMode";
 
             /// <summary>
+            /// WebPlayer 的 WebView2 环境变量，每行一个，格式为 名称=值
+            /// </summary>
+            [SettingKey(typeof(string))]
+            public const string WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES =
+                "WebPlayerWebView2EnvironmentVariables";
+
+            /// <summary>
+            /// WebPlayer 的 WebView2 环境变量默认值：启用 Media Foundation 直通，支持杜比视界（DV）与 DD+（Atmos）直通
+            /// </summary>
+            [SettingDefaultValue]
+            public const string DEFAULT_WEB_PLAYER_WEBVIEW2_ENVIRONMENT_VARIABLES =
+                "WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS=" +
+                "--enable-features=MediaFoundationClearPlayback," +
+                "AllowClearDolbyVisionInMseWhenPlatformEncryptedDvEnabled";
+
+            /// <summary>
             /// WebPlayer音视频进度同步阈值1
             /// </summary>
             [SettingKey(typeof(double))]
@@ -1484,6 +1562,14 @@ namespace BiliLite.Models.Common
             /// </summary>
             [SettingKey(typeof(bool))]
             public const string FILTER_RECOMMEND_LIVE = "FilterRecommendLive";
+        }
+
+        public class Search
+        {
+            /// <summary>
+            /// 搜索历史关键字(运行时数据,不随设置导出)
+            /// </summary>
+            public const string SEARCH_HISTORY = "SearchHistoryKeywords";
         }
 
         public class Roaming
@@ -1721,11 +1807,6 @@ namespace BiliLite.Models.Common
             /// 忽略版本
             /// </summary>
             public const string IGNORE_VERSION = "ignoreVersion";
-
-            /// <summary>
-            /// WebApi 地址
-            /// </summary>
-            public const string BILI_LITE_WEB_API_BASE_URL = "BiliLiteWebApiBaseUrl";
 
             /// <summary>
             /// 优先使用 Grpc 请求动态

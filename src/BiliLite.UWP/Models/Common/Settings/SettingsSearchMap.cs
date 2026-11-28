@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace BiliLite.Models.Common.Settings
 {
@@ -12,6 +12,9 @@ namespace BiliLite.Models.Common.Settings
             { "更改应用的边角锐度", "UISettings:SCStyle" },
             { "色彩", "UISettings:rootColor" },
             { "主题背景透明", "UISettings:PageBackgroundMicaBrush" },
+            { "界面字体", "UISettings:SCFontFamily" },
+            { "背景颜色", "UISettings:SCPageBackgroundColor" },
+            { "自定义背景颜色", "UISettings:SCPageBackgroundColor" },
             { "选择应用的显示模式", "UISettings:SCDisplayMode" },
             { "固定标签页宽度", "UISettings:SwitchTabItemFixedWidth:SETabPage" },
             { "设置标签页最小宽度", "UISettings:NumTabItemMinWidth:SETabPage" },
@@ -28,6 +31,7 @@ namespace BiliLite.Models.Common.Settings
             { "使用新窗口预览图片", "UISettings:swPreviewImageNavigateToPage:SEImagePre" },
             { "全屏化图片新窗口", "UISettings:swPreviewImageNavigateToPageFully:SEImagePre" },
             { "推荐页", "UISettings:SERecommend" },
+            { "推荐来源", "UISettings:cbRecommendSource:SERecommend" },
             { "推荐页列表视图单元宽度", "UISettings:NumBoxRecommentPageListItemWidth:SERecommend" },
             { "推荐页网格视图单元宽度", "UISettings:NumBoxRecommentPageGridItemWidth:SERecommend" },
             { "评论页", "UISettings:SEComment" },
@@ -51,6 +55,7 @@ namespace BiliLite.Models.Common.Settings
             { "优先视频编码", "PlaySettings:cbVideoType" },
             { "优先播放器类型", "PlaySettings:ComboBoxUseRealPlayerType" },
             { "FFMpegInteropX 额外播放参数", "PlaySettings:m_viewModel.FFmpegInteropXOptions:SEPlayerType" },
+            { "WebView2 环境变量", "PlaySettings:TxtWebView2EnvironmentVariables:SEPlayerType" },
             { "挂载本地文件", "PlaySettings:BtnSelectWebPlayerFile:SEPlayerType" },
             { "启用调试模式", "PlaySettings:SwitchEnableWebPlayerDebugMode:SEPlayerType" },
             { "启用开发模式", "PlaySettings:SwitchEnableWebPlayerDevMode:SEPlayerType" },
@@ -66,6 +71,7 @@ namespace BiliLite.Models.Common.Settings
             { "连续播放分P视频", "PlaySettings:swAutoNext:SEPlayerAuto" },
             { "自动播放加载完成的视频", "PlaySettings:swAutoPlay:SEPlayerAuto" },
             { "播放器自动回落", "PlaySettings:swPlayerAutoFallback:SEPlayerType" },
+            { "自动回落提示", "PlaySettings:swPlayerAutoFallbackTip:SEPlayerType" },
             { "自动跳过番剧 OP/ED", "PlaySettings:SwSkipOpEd:SEPlayerAuto" },
             { "自动全屏播放", "PlaySettings:swPlayerSettingAutoFullScreen:SEPlayerAuto" },
             { "自动隐藏视频信息", "PlaySettings:swPlayerSettingAutoFullWindows:SEPlayerAuto" },
@@ -140,7 +146,6 @@ namespace BiliLite.Models.Common.Settings
             { "自动清理几天前的日志", "DevSettings:numAutoClearLogDay" },
             { "优先使用 Grpc 请求动态", "DevSettings:swFirstGrpcRequestDynamic" },
             { "发起请求时使用的 Build 值", "DevSettings:RequestBuildTextBox" },
-            { "BiliLite-WebApi", "DevSettings:BiliLiteWebApiTextBox" },
             { "更新 JSON 请求地址", "DevSettings:updateJsonAddress" },
 
             // Filter Settings
@@ -152,6 +157,7 @@ namespace BiliLite.Models.Common.Settings
             // ShortcutKeySettings
             { "快捷键自定义", "ShortcutKeySettings:ShortcutKeySettingPanel" },
             { "选择鼠标中键/侧键行为", "ShortcutKeySettings:cbMouseMiddleAction" },
+            { "滚轮调节音量", "ShortcutKeySettings:swWheelVolume" },
         };
 
         public static IReadOnlyDictionary<string, string> Map => _map;

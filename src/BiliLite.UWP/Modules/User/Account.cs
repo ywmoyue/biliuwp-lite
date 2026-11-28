@@ -1,4 +1,4 @@
-﻿using BiliLite.Extensions;
+using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Common;
@@ -6,6 +6,7 @@ using BiliLite.Models.Common.Account;
 using BiliLite.Models.Requests.Api;
 using BiliLite.Models.Responses;
 using BiliLite.Services;
+using BiliLite.Services.Biz;
 using HtmlAgilityPack;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -538,12 +539,10 @@ namespace BiliLite.Modules
             return checkCookieResult.data;
         }
 
-        private async Task<string> GetCorrespondPath(long timestamp)
+        private Task<string> GetCorrespondPath(long timestamp)
         {
-            var baseUrl = SettingService.GetValue(SettingConstants.Other.BILI_LITE_WEB_API_BASE_URL, ApiConstants.BILI_LITE_WEB_API_DEFAULT_BASE_URL);
-            var apiUrl = $"{baseUrl}{ApiConstants.Utils.GET_CORRESPOND_PATH}";
-            var result = await $"{apiUrl}?timestamp={timestamp}".GetString();
-            return result;
+            return Task.FromResult(App.ServiceProvider.GetRequiredService<UtilsBizService>()
+                .BuildCorrespondPath(timestamp));
         }
 
         private async Task RefreshCookies(string csrf, string refreshToken)
@@ -559,35 +558,6 @@ namespace BiliLite.Modules
             var api = new AccountApi().ConfirmRefreshCookie(refreshToken);
             var result = await api.Request();
         }
-
-        ///// <summary>
-        ///// 构造CorrespondPath，.net standard2.1以上可用，以后更新WinUI再启用
-        ///// </summary>
-        ///// <param name="timestamp"></param>
-        ///// <returns></returns>
-        //private string BuildCorrespondPath(long timestamp)
-        //{
-        //    // 定义公钥
-        //    string publicKey = "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDLgd2OAkcGVtoE3ThUREbio0Eg\nUc/prcajMKXvkCKFCWhJYJcLkcM2DKKcSeFpD/j6Boy538YXnR6VhcuUJOhH2x71\nnzPjfdTcqMz7djHum0qSZA0AyCBDABUqCrfNgCiJ00Ra7GmRj+YCK1NJEuewlb40\nJNrRuoEUXpabUzGB8QIDAQAB\n-----END PUBLIC KEY-----";
-        //    // 定义字符串payload
-        //    string payload = $"refresh_{timestamp}";
-
-        //    // 将字符串payload转换为字节数组
-        //    byte[] data = Encoding.UTF8.GetBytes(payload);
-
-        //    RSAEncryptionPadding oaepsha256 = RSAEncryptionPadding.OaepSHA256;
-        //    using RSA rsaImpl = new RSACng();
-
-        //    rsaImpl.ImportFromPem(publicKey);
-        //    var ciphertext = rsaImpl.Encrypt(data, oaepsha256);
-
-        //    // 将字节数组转换为十六进制字符串
-        //    var hex = BitConverter.ToString(ciphertext);
-
-        //    // 去掉分隔符
-        //    hex = hex.Replace("-", "");
-        //    return hex.ToLower();
-        //}
 
         private async Task<string> GetCsrfRefresh(string correspondPath)
         {

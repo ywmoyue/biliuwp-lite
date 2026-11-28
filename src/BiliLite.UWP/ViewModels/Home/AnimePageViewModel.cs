@@ -1,16 +1,17 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BiliLite.Extensions;
 using BiliLite.Extensions.Notifications;
 using BiliLite.Models;
 using BiliLite.Models.Common;
 using BiliLite.Models.Common.Anime;
 using BiliLite.Models.Common.Season;
-using BiliLite.Models.Requests.Api.Home;
+using BiliLite.Models.Exceptions;
 using BiliLite.Models.Requests.Api.User;
 using BiliLite.Modules;
 using BiliLite.Pages.Bangumi;
 using BiliLite.Pages.User;
 using BiliLite.Services;
+using BiliLite.Services.Biz;
 using BiliLite.ViewModels.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
@@ -31,7 +32,7 @@ namespace BiliLite.ViewModels.Home
         #region Fields
 
         private readonly FollowAPI m_followApi;
-        private readonly AnimeAPI m_bangumiApi;
+        private readonly AnimeBizService m_animeService;
         private readonly IMapper m_mapper;
         private AnimeType m_animeType;
 
@@ -42,7 +43,7 @@ namespace BiliLite.ViewModels.Home
         public AnimePageViewModel()
         {
             m_mapper = App.ServiceProvider.GetService<IMapper>();
-            m_bangumiApi = new AnimeAPI();
+            m_animeService = App.ServiceProvider.GetRequiredService<AnimeBizService>();
             m_followApi = new FollowAPI();
         }
 
@@ -50,7 +51,7 @@ namespace BiliLite.ViewModels.Home
 
         #region Properties
 
-        public List<AnimeFallViewModel> AnimeFalls { get; set; }
+        public ObservableCollection<AnimeFallViewModel> AnimeFalls { get; set; }
 
         [DoNotNotify]
         public List<PageEntranceModel> Entrances { get; set; }
@@ -64,6 +65,13 @@ namespace BiliLite.ViewModels.Home
         public ObservableCollection<FollowSeasonModel> Follows { get; set; }
 
         public AnimeHomeModel HomeData { get; set; }
+
+        /// <summary>
+        /// 推荐流是否还有下一页
+        /// </summary>
+        public bool CanLoadMoreFeed { get; set; }
+
+        public bool LoadingMoreFeed { get; set; }
 
         #endregion
 
@@ -172,25 +180,14 @@ namespace BiliLite.ViewModels.Home
             try
             {
                 Loading = true;
-                var api = m_bangumiApi.BangumiHome();
-                if (m_animeType == AnimeType.GuoChuang)
-                {
-                    api = m_bangumiApi.GuochuangHome();
-                }
-                var results = await api.Request();
-                if (!results.status)
-                {
-                    throw new Exception(results.message);
-                }
-
-                var data = await results.GetJson<ApiDataModel<AnimeHomeModel>>();
-                if (!data.success)
-                {
-                    throw new Exception(data.message);
-                }
-
-                HomeData = data.data;
-                AnimeFalls = m_mapper.Map<List<AnimeFallViewModel>>(HomeData.Falls);
+                HomeData = await m_animeService.GetHome(GetSeasonType());
+                AnimeFalls = new ObservableCollection<AnimeFallViewModel>(
+                    m_mapper.Map<List<AnimeFallViewModel>>(HomeData.Falls));
+                CanLoadMoreFeed = HomeData.HasMoreFeed;
+            }
+            catch (CustomizedErrorException ex)
+            {
+                NotificationShowExtensions.ShowMessageToast(ex.Message);
             }
             catch (Exception ex)
             {
@@ -234,22 +231,48 @@ namespace BiliLite.ViewModels.Home
             }
         }
 
-        public async Task GetFallMore(AnimeFallViewModel animeFallViewModel)
+        /// <summary>
+        /// 首页推荐流加载更多（追加下一个题材榜 + 下一批猜你喜欢卡片）
+        /// </summary>
+        public async Task LoadMoreFeed()
         {
             try
             {
-                animeFallViewModel.ShowMore = false;
-                var results = await m_bangumiApi.AnimeFallMore(animeFallViewModel.Wid, animeFallViewModel.Items.LastOrDefault().Cursor).Request();
-                if (!results.status)
+                if (LoadingMoreFeed || HomeData == null || !HomeData.HasMoreFeed)
                 {
-                    throw new Exception(results.message);
+                    return;
                 }
 
-                var data = await results.GetJson<List<AnimeFallItemModel>>();
-                foreach (var item in data)
+                LoadingMoreFeed = true;
+
+                var feed = await m_animeService.GetFeedMore(GetSeasonType(), HomeData.FeedCursor);
+                if (feed.Sections.Count == 0 && !feed.HasMore)
                 {
-                    animeFallViewModel.Items.Add(item);
+                    HomeData.HasMoreFeed = false;
+                    CanLoadMoreFeed = false;
+                    return;
                 }
+
+                if (AnimeFalls == null)
+                {
+                    return;
+                }
+
+                // 只追加全新的分组（题材榜）；已存在的同名分组（猜你喜欢）不再增长——
+                // 往已有 GridView 里塞条目会让整行重排、重渲染，视觉上就是"闪一下"
+                foreach (var section in feed.Sections)
+                {
+                    if (AnimeFalls.Any(x => x.Title == section.Title))
+                    {
+                        continue;
+                    }
+
+                    AnimeFalls.Add(m_mapper.Map<AnimeFallViewModel>(section));
+                }
+
+                HomeData.FeedCursor = feed.NextCursor;
+                HomeData.HasMoreFeed = feed.HasMore;
+                CanLoadMoreFeed = feed.HasMore;
             }
             catch (Exception ex)
             {
@@ -258,8 +281,13 @@ namespace BiliLite.ViewModels.Home
             }
             finally
             {
-                animeFallViewModel.ShowMore = true;
+                LoadingMoreFeed = false;
             }
+        }
+
+        private int GetSeasonType()
+        {
+            return m_animeType == AnimeType.GuoChuang ? (int)AnimeType.GuoChuang : (int)AnimeType.Bangumi;
         }
 
         #endregion

@@ -1,4 +1,4 @@
-﻿using BiliLite.Services.Biz;
+using BiliLite.Services.Biz;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BiliLite.Extensions

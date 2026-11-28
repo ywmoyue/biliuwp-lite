@@ -124,7 +124,7 @@ namespace BiliLite.Player
 
         public event EventHandler<PlayerException> ErrorOccurred;
         public event EventHandler<RealPlayerType> NeedReplacePlayer;
-        public event EventHandler<string> PlayerToastRequested;
+        public event EventHandler<PlayerToastMessage> PlayerToastRequested;
         public event EventHandler<double> PositionChanged;
         public event EventHandler<bool> BufferingChanged;
         public event EventHandler<double> BufferCacheChanged;
@@ -180,18 +180,18 @@ namespace BiliLite.Player
                         if (m_playerConfig.EnableVolumeNormalization)
                         {
                             var loudness = ClampVolumeNormalizationLoudness(m_playerConfig.VolumeNormalizationLoudness);
-                            PlayerToastRequested?.Invoke(this, "正在进行音量均衡，请稍候");
+                            PlayerToastRequested?.Invoke(this, new PlayerToastMessage("正在进行音量均衡，请稍候"));
                             _logger.Info($"VideoPlayer.Load: start normalize preloaded audio, loudness={loudness:F1}LUFS, source={tempFile.Path}");
                             var normalizedFile = await AppHelper.NormalizeAudioWithFfmpegAsync(tempFile.Path, loudness);
                             if (!string.IsNullOrWhiteSpace(normalizedFile))
                             {
                                 m_realPlayInfo.DashInfo.Audio.Url = normalizedFile;
-                                PlayerToastRequested?.Invoke(this, "音量均衡完成");
+                                PlayerToastRequested?.Invoke(this, new PlayerToastMessage("音量均衡完成"));
                                 _logger.Info($"VideoPlayer.Load: normalize preloaded audio success, normalizedPath={normalizedFile}");
                             }
                             else
                             {
-                                PlayerToastRequested?.Invoke(this, "音量均衡失败，已回落到原音频");
+                                PlayerToastRequested?.Invoke(this, new PlayerToastMessage("音量均衡失败，已回落到原音频"));
                                 _logger.Warn("VideoPlayer.Load: normalize preloaded audio failed, fallback to original temp audio");
                             }
                         }
@@ -603,6 +603,12 @@ namespace BiliLite.Player
                 var canStartPlayback = m_realPlayInfo?.IsAutoPlay == true || !m_playerController.PauseState.IsPaused;
                 if (!canStartPlayback)
                 {
+                    // 不起播也必须收尾：缓冲遮罩无条件收起，并把播放状态从缓冲收回到可播态。
+                    // 否则状态机会永久停留在缓冲态（画面已可播/已在播，中间的“正在缓冲”转圈却一直不消失）。
+                    _logger.Debug(
+                        $"VideoPlayer.SubPlayer_BufferingEnded: keep paused, settle play state, isAutoPlay={m_realPlayInfo?.IsAutoPlay}, keepPausedAfterSeek={m_keepPausedAfterSeek}");
+                    EmitBufferingChanged(false);
+                    m_playerController.SettlePlayStateToPlaying();
                     m_keepPausedAfterSeek = false;
                     return;
                 }
@@ -687,7 +693,7 @@ namespace BiliLite.Player
                         if (isNativeHighResolutionOnline && !autoFallbackEnabled)
                         {
                             _logger.Warn($"检测到自动回落关闭，强行继续当前播放方式: current={m_subPlayer?.Type}, qn={currentQn}");
-                            PlayerToastRequested?.Invoke(this, "自动回落已关闭，正在强行使用当前播放方式播放视频");
+                            RequestAutoFallbackToast("自动回落已关闭，正在强行使用当前播放方式播放视频");
                             shouldReloadCurrentPlayer = true;
                         }
 
@@ -782,8 +788,25 @@ namespace BiliLite.Player
                 ? $"当前播放方式播放失败，正在从 {currentType} 切换到 {nextType}"
                 : $"{reason}，正在从 {currentType} 切换到 {nextType}";
 
-            PlayerToastRequested?.Invoke(this, toastMessage);
+            RequestAutoFallbackToast(toastMessage);
             NeedReplacePlayer?.Invoke(this, nextType);
+        }
+
+        /// <summary>
+        /// 自动回落相关提示，提示中的「关闭」按钮可单次关闭，设置中可永久关闭
+        /// </summary>
+        private void RequestAutoFallbackToast(string message)
+        {
+            if (!SettingService.GetValue(SettingConstants.Player.AUTO_FALLBACK_TIP,
+                    SettingConstants.Player.DEFAULT_AUTO_FALLBACK_TIP))
+            {
+                return;
+            }
+
+            PlayerToastRequested?.Invoke(this, new PlayerToastMessage(message)
+            {
+                ShowCloseButton = true,
+            });
         }
 
         private async Task<bool> TryHandleNativeHighResolutionFallbackBeforeLoadAsync(int loadVersion)
@@ -810,7 +833,7 @@ namespace BiliLite.Player
             if (!autoFallbackEnabled)
             {
                 _logger.Warn($"Native高分辨率前置检测命中，但自动回落已关闭，继续当前播放方式: qn={qn}");
-                PlayerToastRequested?.Invoke(this, "自动回落已关闭，正在强行使用当前播放方式播放视频");
+                RequestAutoFallbackToast("自动回落已关闭，正在强行使用当前播放方式播放视频");
                 return false;
             }
 
